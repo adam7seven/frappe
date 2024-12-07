@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: developers@frappe.io\n"
 "POT-Creation-Date: 2024-12-01 17:58+0000\n"
-"PO-Revision-Date: 2024-12-04 19:52\n"
+"PO-Revision-Date: 2024-12-07 20:03\n"
 "Last-Translator: developers@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -14841,7 +14841,7 @@ msgstr ""
 
 #: frappe/public/js/frappe/data_import/import_preview.js:290
 msgid "Map columns from {0} to fields in {1}"
-msgstr "ستون‌های نقشه از {0} تا فیلدها در {1}"
+msgstr "نگاشت ستون‌ها از {0} به فیلدها در {1}"
 
 #. Description of the 'Dynamic Route' (Check) field in DocType 'Web Page'
 #: frappe/website/doctype/web_page/web_page.json
@@ -15666,7 +15666,7 @@ msgstr "فیلد ضرب"
 #. Import'
 #: frappe/core/doctype/data_import/data_import.json
 msgid "Must be a publicly accessible Google Sheets URL"
-msgstr "باید یک URL برای عموم کاربرگ‌نگار باشد"
+msgstr "باید یک URL کاربرگ‌نگار در دسترس عموم باشد"
 
 #. Description of the 'LDAP Search String' (Data) field in DocType 'LDAP
 #. Settings'
@@ -24497,7 +24497,7 @@ msgstr ""
 
 #: frappe/core/doctype/data_import/data_import.js:151
 msgid "Successfully {0} {1} records."
-msgstr ""
+msgstr "{1} رکورد با موفقیت {0} شد."
 
 #: frappe/core/doctype/recorder/recorder.js:15
 msgid "Suggest Optimizations"
