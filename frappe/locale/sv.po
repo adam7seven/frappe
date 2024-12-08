@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: developers@frappe.io\n"
 "POT-Creation-Date: 2024-12-01 17:58+0000\n"
-"PO-Revision-Date: 2024-12-04 19:52\n"
+"PO-Revision-Date: 2024-12-08 20:00\n"
 "Last-Translator: developers@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -4418,12 +4418,12 @@ msgstr "Kedjehash"
 #: frappe/public/js/frappe/form/templates/form_sidebar.html:11
 #: frappe/tests/test_translate.py:98
 msgid "Change"
-msgstr "Växel"
+msgstr "Ändra"
 
 #: frappe/tests/test_translate.py:99
 msgctxt "Coins"
 msgid "Change"
-msgstr "Växel"
+msgstr "Ändra"
 
 #: frappe/public/js/print_format_builder/LetterHeadEditor.vue:38
 msgid "Change Image"
@@ -24536,7 +24536,7 @@ msgstr "Godkänn efter Import"
 
 #: frappe/core/page/permission_manager/permission_manager_help.html:39
 msgid "Submit an Issue"
-msgstr "Anmäl Ärende"
+msgstr "Godkänn Ärende"
 
 #: frappe/website/doctype/web_form/templates/web_form.html:153
 msgctxt "Button in web form"
@@ -24775,7 +24775,7 @@ msgstr "Ändra Tema"
 
 #: frappe/templates/includes/navbar/navbar_login.html:17
 msgid "Switch To Desk"
-msgstr "Ändra till Skrivbord"
+msgstr "Växla till Skrivbord"
 
 #: frappe/public/js/frappe/ui/capture.js:273
 msgid "Switching Camera"
@@ -31359,7 +31359,7 @@ msgstr "{0} är inte Direkt Utskrift Mall."
 
 #: frappe/public/js/frappe/views/calendar/calendar.js:82
 msgid "{0} is not a valid Calendar. Redirecting to default Calendar."
-msgstr "{0} är inte en giltig kalender. Omdirigerar till standardkalendern."
+msgstr "{0} är inte giltig Kalender. Omdirigerar till standard Kalender."
 
 #: frappe/core/doctype/scheduled_job_type/scheduled_job_type.py:65
 msgid "{0} is not a valid Cron expression."
