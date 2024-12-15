@@ -11,12 +11,12 @@ frappe.ui.form.on("Contact", {
 			if (
 				frappe.dynamic_link &&
 				frappe.dynamic_link.doc &&
-				frappe.dynamic_link.doc.name == last_doc.docname
+				frappe.dynamic_link.doc.id == last_doc.docid
 			) {
 				frm.set_value("links", "");
 				frm.add_child("links", {
 					link_doctype: frappe.dynamic_link.doctype,
-					link_name: frappe.dynamic_link.doc[frappe.dynamic_link.fieldname],
+					link_id: frappe.dynamic_link.doc[frappe.dynamic_link.fieldid],
 				});
 			}
 		}
@@ -31,7 +31,7 @@ frappe.ui.form.on("Contact", {
 				return frappe.call({
 					method: "frappe.contacts.doctype.contact.contact.invite_user",
 					args: {
-						contact: frm.doc.name,
+						contact: frm.doc.id,
 					},
 					callback: function (r) {
 						frm.set_value("user", r.message);
@@ -44,7 +44,7 @@ frappe.ui.form.on("Contact", {
 				query: "frappe.contacts.address_and_contact.filter_dynamic_link_doctypes",
 				filters: {
 					fieldtype: "HTML",
-					fieldname: "contact_html",
+					fieldid: "contact_html",
 				},
 			};
 		});
@@ -62,7 +62,7 @@ frappe.ui.form.on("Contact", {
 
 		if (frm.doc.links && frm.doc.links.length > 0) {
 			const filtered_links = frm.doc.links.filter(
-				(link) => link.link_doctype && link.link_name
+				(link) => link.link_doctype && link.link_id
 			);
 
 			if (filtered_links.length > 0) {
@@ -74,7 +74,7 @@ frappe.ui.form.on("Contact", {
 							frm.set_query("address", function () {
 								return {
 									filters: {
-										name: ["in", r.message],
+										id: ["in", r.message],
 									},
 								};
 							});
@@ -85,9 +85,9 @@ frappe.ui.form.on("Contact", {
 
 			for (const link of filtered_links) {
 				frm.add_custom_button(
-					__("{0}: {1}", [__(link.link_doctype), __(link.link_name)]),
+					__("{0}: {1}", [__(link.link_doctype), __(link.link_id)]),
 					function () {
-						frappe.set_route("Form", link.link_doctype, link.link_name);
+						frappe.set_route("Form", link.link_doctype, link.link_id);
 					},
 					__("Links")
 				);
@@ -98,7 +98,7 @@ frappe.ui.form.on("Contact", {
 		// clear linked customer / supplier / sales partner on saving...
 		if (frm.doc.links) {
 			frm.doc.links.forEach(function (d) {
-				frappe.model.remove_from_locals(d.link_doctype, d.link_name);
+				frappe.model.remove_from_locals(d.link_doctype, d.link_id);
 			});
 		}
 	},
@@ -110,15 +110,15 @@ frappe.ui.form.on("Contact", {
 				if (
 					frappe.dynamic_link &&
 					frappe.dynamic_link.doc &&
-					frappe.dynamic_link.doc.name == last_doc.docname
+					frappe.dynamic_link.doc.id == last_doc.docid
 				) {
 					for (let i in frm.doc.links) {
 						let link = frm.doc.links[i];
 						if (
 							last_doc.doctype == link.link_doctype &&
-							last_doc.docname == link.link_name
+							last_doc.docid == link.link_id
 						) {
-							frappe.set_route("Form", last_doc.doctype, last_doc.docname);
+							frappe.set_route("Form", last_doc.doctype, last_doc.docid);
 						}
 					}
 				}
@@ -130,10 +130,10 @@ frappe.ui.form.on("Contact", {
 			frappe.db.get_value(
 				"Google Contacts",
 				{ email_id: frappe.session.user },
-				"name",
+				"id",
 				(r) => {
-					if (r && r.name) {
-						frm.set_value("google_contacts", r.name);
+					if (r && r.id) {
+						frm.set_value("google_contacts", r.id);
 					}
 				}
 			);
@@ -142,14 +142,14 @@ frappe.ui.form.on("Contact", {
 });
 
 frappe.ui.form.on("Dynamic Link", {
-	link_name: function (frm, cdt, cdn) {
+	link_id: function (frm, cdt, cdn) {
 		var child = locals[cdt][cdn];
-		if (child.link_name) {
+		if (child.link_id) {
 			frappe.model.with_doctype(child.link_doctype, function () {
-				var title_field = frappe.get_meta(child.link_doctype).title_field || "name";
+				var title_field = frappe.get_meta(child.link_doctype).title_field || "id";
 				frappe.model.get_value(
 					child.link_doctype,
-					child.link_name,
+					child.link_id,
 					title_field,
 					function (r) {
 						frappe.model.set_value(cdt, cdn, "link_title", r[title_field]);

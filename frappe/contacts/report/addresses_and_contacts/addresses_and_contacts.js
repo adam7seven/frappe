@@ -12,14 +12,14 @@ frappe.query_reports["Addresses And Contacts"] = {
 			get_query: function () {
 				return {
 					filters: {
-						name: ["in", "Contact, Address"],
+						id: ["in", "Contact, Address"],
 					},
 				};
 			},
 		},
 		{
-			fieldname: "reference_name",
-			label: __("Entity Name"),
+			fieldname: "reference_id",
+			label: __("Entity ID"),
 			fieldtype: "Dynamic Link",
 			get_options: function () {
 				let reference_doctype = frappe.query_report.get_filter_value("reference_doctype");

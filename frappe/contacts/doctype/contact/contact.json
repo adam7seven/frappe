@@ -24,7 +24,7 @@
         "gender",
         "phone",
         "mobile_no",
-        "company_name",
+        "company_id",
         "image",
         "sb_00",
         "google_contacts",
@@ -240,9 +240,9 @@
             "read_only": 1
         },
         {
-            "fieldname": "company_name",
+            "fieldname": "company_id",
             "fieldtype": "Data",
-            "label": "Company Name"
+            "label": "Company ID"
         },
         {
             "fieldname": "full_name",
