@@ -10,7 +10,7 @@ class MariaDBTable(DBTable):
         additional_definitions = []
         engine = self.meta.get("engine") or "InnoDB"
         varchar_len = frappe.db.VARCHAR_LEN
-        name_column = f"name varchar({varchar_len}) primary key"
+        id_column = f"id varchar({varchar_len}) primary key"
 
         # columns
         column_defs = self.get_column_definitions()
@@ -41,13 +41,13 @@ class MariaDBTable(DBTable):
             # NOTE: not used nextval func as default as the ability to restore
             # database with sequences has bugs in mariadb and gives a scary error.
             # issue link: https://jira.mariadb.org/browse/MDEV-20070
-            name_column = "name bigint primary key"
+            id_column = "id bigint primary key"
 
         additional_definitions = ",\n".join(additional_definitions)
 
         # create table
         query = f"""create table `{self.table_name}` (
-			{name_column},
+			{id_column},
 			creation datetime(6),
 			modified datetime(6),
 			modified_by varchar({varchar_len}),
@@ -97,7 +97,7 @@ class MariaDBTable(DBTable):
         drop_index_query = []
 
         for col in {*self.drop_index, *self.drop_unique}:
-            if col.fieldname == "name":
+            if col.fieldname == "id":
                 continue
 
             current_column = self.current_columns.get(col.fieldname.lower())

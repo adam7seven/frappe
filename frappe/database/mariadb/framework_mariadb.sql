@@ -8,7 +8,7 @@
 
 DROP TABLE IF EXISTS `tabDocField`;
 CREATE TABLE `tabDocField` (
-  `name` varchar(255) NOT NULL,
+  `id` varchar(255) NOT NULL,
   `creation` datetime(6) DEFAULT NULL,
   `modified` datetime(6) DEFAULT NULL,
   `modified_by` varchar(255) DEFAULT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE `tabDocField` (
   `hide_border` int(1) NOT NULL DEFAULT 0,
   `hide_days` int(1) NOT NULL DEFAULT 0,
   `hide_seconds` int(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`name`),
+  PRIMARY KEY (`id`),
   KEY `parent` (`parent`),
   KEY `label` (`label`),
   KEY `fieldtype` (`fieldtype`),
@@ -82,7 +82,7 @@ CREATE TABLE `tabDocField` (
 
 DROP TABLE IF EXISTS `tabDocPerm`;
 CREATE TABLE `tabDocPerm` (
-  `name` varchar(255) NOT NULL,
+  `id` varchar(255) NOT NULL,
   `creation` datetime(6) DEFAULT NULL,
   `modified` datetime(6) DEFAULT NULL,
   `modified_by` varchar(255) DEFAULT NULL,
@@ -108,7 +108,7 @@ CREATE TABLE `tabDocPerm` (
   `share` int(1) NOT NULL DEFAULT 1,
   `print` int(1) NOT NULL DEFAULT 1,
   `email` int(1) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`name`),
+  PRIMARY KEY (`id`),
   KEY `parent` (`parent`)
 ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -118,7 +118,7 @@ CREATE TABLE `tabDocPerm` (
 
 DROP TABLE IF EXISTS `tabDocType Action`;
 CREATE TABLE `tabDocType Action` (
-  `name` varchar(140) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(140) COLLATE utf8mb4_unicode_ci NOT NULL,
   `creation` datetime(6) DEFAULT NULL,
   `modified` datetime(6) DEFAULT NULL,
   `modified_by` varchar(140) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -132,7 +132,7 @@ CREATE TABLE `tabDocType Action` (
   `group` varchar(140) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `action_type` varchar(140) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `action` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`name`),
+  PRIMARY KEY (`id`),
   KEY `parent` (`parent`),
   KEY `modified` (`modified`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
@@ -143,7 +143,7 @@ CREATE TABLE `tabDocType Action` (
 
 DROP TABLE IF EXISTS `tabDocType Link`;
 CREATE TABLE `tabDocType Link` (
-  `name` varchar(140) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(140) COLLATE utf8mb4_unicode_ci NOT NULL,
   `creation` datetime(6) DEFAULT NULL,
   `modified` datetime(6) DEFAULT NULL,
   `modified_by` varchar(140) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -156,7 +156,7 @@ CREATE TABLE `tabDocType Link` (
   `group` varchar(140) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `link_doctype` varchar(140) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `link_fieldname` varchar(140) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`name`),
+  PRIMARY KEY (`id`),
   KEY `parent` (`parent`),
   KEY `modified` (`modified`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
@@ -167,7 +167,7 @@ CREATE TABLE `tabDocType Link` (
 
 DROP TABLE IF EXISTS `tabDocType`;
 CREATE TABLE `tabDocType` (
-  `name` varchar(255) NOT NULL,
+  `id` varchar(255) NOT NULL,
   `creation` datetime(6) DEFAULT NULL,
   `modified` datetime(6) DEFAULT NULL,
   `modified_by` varchar(255) DEFAULT NULL,
@@ -214,7 +214,7 @@ CREATE TABLE `tabDocType` (
   `engine` varchar(20) DEFAULT 'InnoDB',
   `default_print_format` varchar(255) DEFAULT NULL,
   `is_submittable` int(1) NOT NULL DEFAULT 0,
-  `show_name_in_global_search` int(1) NOT NULL DEFAULT 0,
+  `show_id_in_global_search` int(1) NOT NULL DEFAULT 0,
   `_user_tags` varchar(255) DEFAULT NULL,
   `custom` int(1) NOT NULL DEFAULT 0,
   `beta` int(1) NOT NULL DEFAULT 0,
@@ -229,7 +229,7 @@ CREATE TABLE `tabDocType` (
   `show_title_field_in_link` int(1) NOT NULL DEFAULT 0,
   `migration_hash` varchar(255) DEFAULT NULL,
   `translated_doctype` int(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`name`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -238,9 +238,9 @@ CREATE TABLE `tabDocType` (
 
 DROP TABLE IF EXISTS `tabSeries`;
 CREATE TABLE `tabSeries` (
-  `name` varchar(100),
+  `id` varchar(100),
   `current` int(10) NOT NULL DEFAULT 0,
-  PRIMARY KEY(`name`)
+  PRIMARY KEY(`id`)
 ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
@@ -279,11 +279,11 @@ CREATE TABLE `tabSingles` (
 DROP TABLE IF EXISTS `__Auth`;
 CREATE TABLE `__Auth` (
 	`doctype` VARCHAR(140) NOT NULL,
-	`name` VARCHAR(255) NOT NULL,
+	`id` VARCHAR(255) NOT NULL,
 	`fieldname` VARCHAR(140) NOT NULL,
 	`password` TEXT NOT NULL,
 	`encrypted` INT(1) NOT NULL DEFAULT 0,
-	PRIMARY KEY (`doctype`, `name`, `fieldname`)
+	PRIMARY KEY (`doctype`, `id`, `fieldname`)
 ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -292,7 +292,7 @@ CREATE TABLE `__Auth` (
 
 DROP TABLE IF EXISTS `tabFile`;
 CREATE TABLE `tabFile` (
-  `name` varchar(255) NOT NULL,
+  `id` varchar(255) NOT NULL,
   `creation` datetime(6) DEFAULT NULL,
   `modified` datetime(6) DEFAULT NULL,
   `modified_by` varchar(255) DEFAULT NULL,
@@ -305,12 +305,12 @@ CREATE TABLE `tabFile` (
   `file_name` varchar(255) DEFAULT NULL,
   `file_url` varchar(255) DEFAULT NULL,
   `module` varchar(255) DEFAULT NULL,
-  `attached_to_name` varchar(255) DEFAULT NULL,
+  `attached_to_id` varchar(255) DEFAULT NULL,
   `file_size` int(11) NOT NULL DEFAULT 0,
   `attached_to_doctype` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`name`),
+  PRIMARY KEY (`id`),
   KEY `parent` (`parent`),
-  KEY `attached_to_name` (`attached_to_name`),
+  KEY `attached_to_id` (`attached_to_id`),
   KEY `attached_to_doctype` (`attached_to_doctype`)
 ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -320,7 +320,7 @@ CREATE TABLE `tabFile` (
 
 DROP TABLE IF EXISTS `tabDefaultValue`;
 CREATE TABLE `tabDefaultValue` (
-  `name` varchar(255) NOT NULL,
+  `id` varchar(255) NOT NULL,
   `creation` datetime(6) DEFAULT NULL,
   `modified` datetime(6) DEFAULT NULL,
   `modified_by` varchar(255) DEFAULT NULL,
@@ -332,7 +332,7 @@ CREATE TABLE `tabDefaultValue` (
   `idx` int(8) NOT NULL DEFAULT 0,
   `defvalue` text,
   `defkey` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`name`),
+  PRIMARY KEY (`id`),
   KEY `parent` (`parent`),
   KEY `defaultvalue_parent_defkey_index` (`parent`,`defkey`)
 ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

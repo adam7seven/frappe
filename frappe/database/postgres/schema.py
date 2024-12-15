@@ -7,7 +7,7 @@ from frappe.utils import cint, flt
 class PostgresTable(DBTable):
     def create(self):
         varchar_len = frappe.db.VARCHAR_LEN
-        name_column = f"name varchar({varchar_len}) primary key"
+        id_column = f"id varchar({varchar_len}) primary key"
 
         additional_definitions = ""
         # columns
@@ -31,13 +31,13 @@ class PostgresTable(DBTable):
         # creating sequence(s)
         if not self.meta.issingle and self.meta.autoid == "autoincrement":
             frappe.db.create_sequence(self.doctype, check_not_exists=True)
-            name_column = "name bigint primary key"
+            id_column = "id bigint primary key"
 
         # TODO: set docstatus length
         # create table
         frappe.db.sql(
             f"""create table `{self.table_name}` (
-			{name_column},
+			{id_column},
 			creation timestamp(6),
 			modified timestamp(6),
 			modified_by varchar({varchar_len}),
@@ -94,7 +94,7 @@ class PostgresTable(DBTable):
             )
 
         for col in self.set_default:
-            if col.fieldname == "name":
+            if col.fieldname == "id":
                 continue
 
             if col.fieldtype in ("Check", "Int"):
@@ -127,13 +127,13 @@ class PostgresTable(DBTable):
         drop_contraint_query = ""
         for col in self.drop_index:
             # primary key
-            if col.fieldname != "name":
+            if col.fieldname != "id":
                 # if index key exists
                 drop_contraint_query += f'DROP INDEX IF EXISTS "{col.fieldname}" ;'
 
         for col in self.drop_unique:
             # primary key
-            if col.fieldname != "name":
+            if col.fieldname != "id":
                 # if index key exists
                 drop_contraint_query += (
                     f'DROP INDEX IF EXISTS "unique_{col.fieldname}" ;'
