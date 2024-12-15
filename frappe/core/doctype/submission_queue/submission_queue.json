@@ -14,7 +14,7 @@
         "column_break_5",
         "ended_at",
         "ref_doctype",
-        "ref_docname",
+        "ref_docid",
         "section_break_8",
         "exception"
     ],
@@ -35,10 +35,10 @@
             "read_only": 1
         },
         {
-            "fieldname": "ref_docname",
+            "fieldname": "ref_docid",
             "fieldtype": "Dynamic Link",
             "in_list_view": 1,
-            "label": "Reference Docname",
+            "label": "Reference Docid",
             "options": "ref_doctype",
             "read_only": 1,
             "search_index": 1

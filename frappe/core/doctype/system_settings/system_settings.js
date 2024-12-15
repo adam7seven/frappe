@@ -18,7 +18,7 @@ frappe.ui.form.on("System Settings", {
 		});
 
 		frappe.xcall("frappe.apps.get_apps").then((r) => {
-			let apps = r?.map((r) => r.name) || [];
+			let apps = r?.map((r) => r.id) || [];
 			frm.set_df_property("default_app", "options", [" ", ...apps]);
 		});
 
@@ -72,7 +72,7 @@ frappe.ui.form.on("System Settings", {
 
 		frappe.confirm(
 			msg,
-			() => {},
+			() => { },
 			() => {
 				frm.set_value("rounding_method", frappe.boot.sysdefaults.rounding_method);
 			}

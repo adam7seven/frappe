@@ -3,21 +3,21 @@ frappe.listview_settings["Deleted Document"] = {
 		const action = () => {
 			const selected_docs = doclist.get_checked_items();
 			if (selected_docs.length > 0) {
-				let docnames = selected_docs.map((doc) => doc.name);
+				let docids = selected_docs.map((doc) => doc.id);
 				frappe.call({
 					method: "frappe.core.doctype.deleted_document.deleted_document.bulk_restore",
-					args: { docnames },
+					args: { docids },
 					callback: function (r) {
 						if (r.message) {
-							let body = (docnames) => {
-								const html = docnames.map((docname) => {
-									return `<li><a href='/app/deleted-document/${docname}'>${docname}</a></li>`;
+							let body = (docids) => {
+								const html = docids.map((docid) => {
+									return `<li><a href='/app/deleted-document/${docid}'>${docid}</a></li>`;
 								});
 								return "<br><ul>" + html.join("");
 							};
 
-							let message = (title, docnames) => {
-								return docnames.length > 0 ? title + body(docnames) + "</ul>" : "";
+							let message = (title, docids) => {
+								return docids.length > 0 ? title + body(docids) + "</ul>" : "";
 							};
 
 							const { restored, invalid, failed } = r.message;

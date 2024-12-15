@@ -48,7 +48,7 @@ class ScheduledJobType(Document):
 
     # end: auto-generated types
     def autoid(self):
-        self.name = ".".join(self.method.split(".")[-2:])
+        self.id = ".".join(self.method.split(".")[-2:])
 
     def validate(self):
         if self.frequency != "All":
@@ -76,7 +76,7 @@ class ScheduledJobType(Document):
             if not self.is_job_in_queue():
                 enqueue(
                     "frappe.core.doctype.scheduled_job_type.scheduled_job_type.run_scheduled_job",
-                    queue=self.get_queue_name(),
+                    queue=self.get_queue_id(),
                     job_type=self.method,
                     job_id=self.rq_job_id,
                 )
@@ -140,10 +140,10 @@ class ScheduledJobType(Document):
         try:
             self.log_status("Start")
             if self.server_script:
-                script_name = frappe.db.get_value("Server Script", self.server_script)
-                if script_name:
+                script_id = frappe.db.get_value("Server Script", self.server_script)
+                if script_id:
                     frappe.get_doc(
-                        "Server Script", script_name
+                        "Server Script", script_id
                     ).execute_scheduled_method()
             else:
                 frappe.get_attr(self.method)()
@@ -168,7 +168,7 @@ class ScheduledJobType(Document):
             return
         if not self.scheduler_log:
             self.scheduler_log = frappe.get_doc(
-                dict(doctype="Scheduled Job Log", scheduled_job_type=self.name)
+                dict(doctype="Scheduled Job Log", scheduled_job_type=self.id)
             ).insert(ignore_permissions=True)
         self.scheduler_log.db_set("status", status)
         if frappe.debug_log:
@@ -181,18 +181,18 @@ class ScheduledJobType(Document):
             self.db_set("last_execution", now_datetime(), update_modified=False)
         frappe.db.commit()
 
-    def get_queue_name(self):
+    def get_queue_id(self):
         return "long" if ("Long" in self.frequency) else "default"
 
     def on_trash(self):
-        frappe.db.delete("Scheduled Job Log", {"scheduled_job_type": self.name})
+        frappe.db.delete("Scheduled Job Log", {"scheduled_job_type": self.id})
 
 
 @frappe.whitelist()
 def execute_event(doc: str):
     frappe.only_for("System Manager")
     doc = json.loads(doc)
-    frappe.get_doc("Scheduled Job Type", doc.get("name")).enqueue(force=True)
+    frappe.get_doc("Scheduled Job Type", doc.get("id")).enqueue(force=True)
     return doc
 
 
@@ -273,10 +273,10 @@ def insert_single_event(frequency: str, event: str, cron_format: str | None = No
 
 def clear_events(all_events: list):
     for event in frappe.get_all(
-        "Scheduled Job Type", fields=["name", "method", "server_script"]
+        "Scheduled Job Type", fields=["id", "method", "server_script"]
     ):
         is_server_script = event.server_script
         is_defined_in_hooks = event.method in all_events
 
         if not (is_defined_in_hooks or is_server_script):
-            frappe.delete_doc("Scheduled Job Type", event.name)
+            frappe.delete_doc("Scheduled Job Type", event.id)

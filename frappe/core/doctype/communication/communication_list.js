@@ -8,7 +8,7 @@ frappe.listview_settings["Communication"] = {
 		"sender",
 		"seen",
 		"reference_doctype",
-		"reference_name",
+		"reference_id",
 		"has_attachment",
 		"communication_date",
 	],

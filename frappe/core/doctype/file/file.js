@@ -96,7 +96,7 @@ frappe.ui.form.on("File", {
 		frappe.call({
 			method: "frappe.core.api.file.unzip_file",
 			args: {
-				name: frm.doc.name,
+				id: frm.doc.id,
 			},
 			callback: function () {
 				frappe.set_route("List", "File");

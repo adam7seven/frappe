@@ -60,7 +60,7 @@ class PackageRelease(Document):
 
     def autoid(self):
         self.set_version()
-        self.name = "{}-{}.{}.{}".format(
+        self.id = "{}-{}.{}.{}".format(
             frappe.db.get_value("Package", self.package, "package_name"),
             self.major,
             self.minor,
@@ -81,13 +81,13 @@ class PackageRelease(Document):
 
     def export_modules(self):
         for m in frappe.get_all("Module Def", dict(package=self.package)):
-            module = frappe.get_doc("Module Def", m.name)
+            module = frappe.get_doc("Module Def", m.id)
             for l in module.meta.links:
                 if l.link_doctype == "Module Def":
                     continue
                 # all documents of the type in the module
-                for d in frappe.get_all(l.link_doctype, dict(module=m.name)):
-                    export_doc(frappe.get_doc(l.link_doctype, d.name))
+                for d in frappe.get_all(l.link_doctype, dict(module=m.id)):
+                    export_doc(frappe.get_doc(l.link_doctype, d.id))
 
     def export_package_files(self, package):
         # write readme
@@ -115,7 +115,7 @@ class PackageRelease(Document):
 
     def make_tarfile(self, package):
         # make tarfile
-        filename = f"{self.name}.tar.gz"
+        filename = f"{self.id}.tar.gz"
         subprocess.check_output(
             ["tar", "czf", filename, package.package_name],
             cwd=frappe.get_site_path("packages"),
@@ -136,7 +136,7 @@ class PackageRelease(Document):
                 doctype="File",
                 file_url="/" + os.path.join("files", filename),
                 attached_to_doctype=self.doctype,
-                attached_to_name=self.name,
+                attached_to_id=self.id,
             )
         )
 

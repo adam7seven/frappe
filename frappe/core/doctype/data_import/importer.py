@@ -53,7 +53,7 @@ class Importer:
 		out.import_log = frappe.get_all(
 			"Data Import Log",
 			fields=["row_indexes", "success"],
-			filters={"data_import": self.data_import.name},
+			filters={"data_import": self.data_import.id},
 			order_by="log_index",
 			limit=10,
 		)
@@ -93,7 +93,7 @@ class Importer:
 			frappe.get_all(
 				"Data Import Log",
 				fields=["row_indexes", "success", "log_index"],
-				filters={"data_import": self.data_import.name},
+				filters={"data_import": self.data_import.id},
 				order_by="log_index",
 			)
 			or []
@@ -108,7 +108,7 @@ class Importer:
 		):
 			# remove previous failures from import log only in case of retry after partial success
 			import_log = [log for log in import_log if log.get("success")]
-			frappe.db.delete("Data Import Log", {"success": 0, "data_import": self.data_import.name})
+			frappe.db.delete("Data Import Log", {"success": 0, "data_import": self.data_import.id})
 
 		# get successfully imported rows
 		imported_rows = []
@@ -138,7 +138,7 @@ class Importer:
 								"current": current_index,
 								"total": total_payload_count,
 								"skipping": True,
-								"data_import": self.data_import.name,
+								"data_import": self.data_import.id,
 							},
 							user=frappe.session.user,
 						)
@@ -162,8 +162,8 @@ class Importer:
 							{
 								"current": current_index,
 								"total": total_payload_count,
-								"docname": doc.name,
-								"data_import": self.data_import.name,
+								"docid": doc.id,
+								"data_import": self.data_import.id,
 								"success": True,
 								"row_indexes": row_indexes,
 								"eta": eta,
@@ -172,9 +172,9 @@ class Importer:
 						)
 
 					create_import_log(
-						self.data_import.name,
+						self.data_import.id,
 						log_index,
-						{"success": True, "docname": doc.name, "row_indexes": row_indexes},
+						{"success": True, "docid": doc.id, "row_indexes": row_indexes},
 					)
 
 					log_index += 1
@@ -193,7 +193,7 @@ class Importer:
 					frappe.db.rollback()
 
 					create_import_log(
-						self.data_import.name,
+						self.data_import.id,
 						log_index,
 						{
 							"success": False,
@@ -210,7 +210,7 @@ class Importer:
 			frappe.get_all(
 				"Data Import Log",
 				fields=["row_indexes", "success", "log_index"],
-				filters={"data_import": self.data_import.name},
+				filters={"data_import": self.data_import.id},
 				order_by="log_index",
 			)
 			or []
@@ -257,13 +257,13 @@ class Importer:
 		new_doc = frappe.new_doc(self.doctype)
 		new_doc.update(doc)
 
-		if not doc.name and (meta.autoid or "").lower() != "prompt":
-			# name can only be set directly if autoid is prompt
-			new_doc.set("name", None)
+		if not doc.id and (meta.autoid or "").lower() != "prompt":
+			# id can only be set directly if autoid is prompt
+			new_doc.set("id", None)
 
 		new_doc.flags.updater_reference = {
 			"doctype": self.data_import.doctype,
-			"docname": self.data_import.name,
+			"docid": self.data_import.id,
 			"label": _("via Data Import"),
 		}
 
@@ -284,7 +284,7 @@ class Importer:
 			# update doc if there are changes
 			updated_doc.flags.updater_reference = {
 				"doctype": self.data_import.doctype,
-				"docname": self.data_import.name,
+				"docid": self.data_import.id,
 				"label": _("via Data Import"),
 			}
 			updated_doc.save()
@@ -311,7 +311,7 @@ class Importer:
 			frappe.get_all(
 				"Data Import Log",
 				fields=["row_indexes", "success"],
-				filters={"data_import": self.data_import.name},
+				filters={"data_import": self.data_import.id},
 				order_by="log_index",
 			)
 			or []
@@ -340,8 +340,8 @@ class Importer:
 
 		import_log = frappe.get_all(
 			"Data Import Log",
-			fields=["row_indexes", "success", "messages", "exception", "docname"],
-			filters={"data_import": self.data_import.name},
+			fields=["row_indexes", "success", "messages", "exception", "docid"],
+			filters={"data_import": self.data_import.id},
 			order_by="log_index",
 		)
 
@@ -353,7 +353,7 @@ class Importer:
 			row_number = json.loads(log.get("row_indexes"))[0]
 			status = "Success" if log.get("success") else "Failure"
 			message = (
-				"Successfully Imported {}".format(log.get("docname"))
+				"Successfully Imported {}".format(log.get("docid"))
 				if log.get("success")
 				else log.get("messages")
 			)
@@ -486,7 +486,7 @@ class ImportFile:
 			if col.df:
 				col.df = {
 					"fieldtype": col.df.fieldtype,
-					"fieldname": col.df.fieldname,
+					"fieldname": col.df.fieldid,
 					"label": col.df.label,
 					"options": col.df.options,
 					"parent": col.df.parent,
@@ -998,7 +998,7 @@ class Column:
 		if self.df.fieldtype == "Link":
 			# find all values that dont exist
 			values = list({cstr(v) for v in self.column_values if v})
-			exists = [cstr(d.name) for d in frappe.get_all(self.df.options, filters={"name": ("in", values)})]
+			exists = [cstr(d.id) for d in frappe.get_all(self.df.options, filters={"id": ("in", values)})]
 			not_exists = list(set(values) - set(exists))
 			if not_exists:
 				missing_values = ", ".join(not_exists)
@@ -1109,11 +1109,11 @@ def build_fields_dict_for_column_matching(parent_doctype):
 	for doctype, table_df in doctypes:
 		translated_table_label = _(table_df.label) if table_df else None
 
-		# name field
-		name_df = frappe._dict(
+		# id field
+		id_df = frappe._dict(
 			{
 				"fieldtype": "Data",
-				"fieldname": "name",
+				"fieldname": "id",
 				"label": "ID",
 				"reqd": 1,  # self.import_type == UPDATE,
 				"parent": doctype,
@@ -1121,23 +1121,23 @@ def build_fields_dict_for_column_matching(parent_doctype):
 		)
 
 		if doctype == parent_doctype:
-			name_headers = (
-				"name",  # fieldname
+			id_headers = (
+				"id",  # fieldname
 				"ID",  # label
 				_("ID"),  # translated label
 			)
 		else:
-			name_headers = (
-				f"{table_df.fieldname}.name",  # fieldname
+			id_headers = (
+				f"{table_df.fieldname}.id",  # fieldname
 				f"ID ({table_df.label})",  # label
 				"{} ({})".format(_("ID"), translated_table_label),  # translated label
 			)
 
-			name_df.is_child_table_field = True
-			name_df.child_table_df = table_df
+			id_df.is_child_table_field = True
+			id_df.child_table_df = table_df
 
-		for header in name_headers:
-			out[header] = name_df
+		for header in id_headers:
+			out[header] = id_df
 
 		fields = get_standard_fields(doctype) + frappe.get_meta(doctype).fields
 		for df in fields:
@@ -1199,7 +1199,7 @@ def build_fields_dict_for_column_matching(parent_doctype):
 			# ID field should also map to the autoid field
 			"ID",
 			_("ID"),
-			"name",
+			"id",
 		):
 			out[header] = autoid_field
 
@@ -1223,7 +1223,7 @@ def get_id_field(doctype):
 	autoid_field = get_autoid_field(doctype)
 	if autoid_field:
 		return autoid_field
-	return frappe._dict({"label": "ID", "fieldname": "name", "fieldtype": "Data"})
+	return frappe._dict({"label": "ID", "fieldname": "id", "fieldtype": "Data"})
 
 
 def get_autoid_field(doctype):
@@ -1268,7 +1268,7 @@ def create_import_log(data_import, log_index, log_details):
 			"success": log_details.get("success"),
 			"data_import": data_import,
 			"row_indexes": json.dumps(log_details.get("row_indexes")),
-			"docname": log_details.get("docname"),
+			"docid": log_details.get("docid"),
 			"messages": json.dumps(log_details.get("messages", "[]")),
 			"exception": log_details.get("exception"),
 		}

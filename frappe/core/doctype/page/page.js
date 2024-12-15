@@ -8,8 +8,8 @@ frappe.ui.form.on("Page", {
 			frm.set_read_only();
 		}
 		if (!frm.is_new() && !frm.doc.istable) {
-			frm.add_custom_button(__("Go to {0} Page", [frm.doc.title || frm.doc.name]), () => {
-				frappe.set_route(frm.doc.name);
+			frm.add_custom_button(__("Go to {0} Page", [frm.doc.title || frm.doc.id]), () => {
+				frappe.set_route(frm.doc.id);
 			});
 		}
 	},

@@ -41,12 +41,12 @@ class Dashboard {
 				// default dashboard
 				frappe.db.get_list("Dashboard", { filters: { is_default: 1 } }).then((data) => {
 					if (data && data.length) {
-						frappe.set_re_route("dashboard-view", data[0].name);
+						frappe.set_re_route("dashboard-view", data[0].id);
 					} else {
 						// no default, get the latest one
 						frappe.db.get_list("Dashboard", { limit: 1 }).then((data) => {
 							if (data && data.length) {
-								frappe.set_re_route("dashboard-view", data[0].name);
+								frappe.set_re_route("dashboard-view", data[0].id);
 							} else {
 								// create a new dashboard!
 								frappe.new_doc("Dashboard");
@@ -58,11 +58,11 @@ class Dashboard {
 		}
 	}
 
-	show_dashboard(current_dashboard_name) {
-		if (this.dashboard_name !== current_dashboard_name) {
-			this.dashboard_name = current_dashboard_name;
-			let title = this.dashboard_name;
-			if (!this.dashboard_name.toLowerCase().includes(__("dashboard"))) {
+	show_dashboard(current_dashboard_id) {
+		if (this.dashboard_id !== current_dashboard_id) {
+			this.dashboard_id = current_dashboard_id;
+			let title = this.dashboard_id;
+			if (!this.dashboard_id.toLowerCase().includes(__("dashboard"))) {
 				// ensure dashboard title has "dashboard"
 				title = __("{0} Dashboard", [__(title)]);
 			}
@@ -72,7 +72,7 @@ class Dashboard {
 			this.refresh();
 		}
 		this.charts = {};
-		frappe.last_dashboard = current_dashboard_name;
+		frappe.last_dashboard = current_dashboard_id;
 	}
 
 	set_breadcrumbs() {
@@ -98,7 +98,7 @@ class Dashboard {
 				let chart_config = settings.chart_config ? JSON.parse(settings.chart_config) : {};
 				this.charts = charts.map((chart) => {
 					return {
-						chart_name: chart.chart,
+						chart_id: chart.chart,
 						label: chart.chart,
 						chart_settings: chart_config[chart.chart] || {},
 						...chart,
@@ -133,7 +133,7 @@ class Dashboard {
 
 			this.number_cards = cards.map((card) => {
 				return {
-					name: card.card,
+					id: card.card,
 				};
 			});
 
@@ -156,7 +156,7 @@ class Dashboard {
 	get_permitted_items(method) {
 		return frappe
 			.xcall(method, {
-				dashboard_name: this.dashboard_name,
+				dashboard_id: this.dashboard_id,
 			})
 			.then((items) => {
 				return items;
@@ -167,7 +167,7 @@ class Dashboard {
 		this.page.clear_menu();
 
 		this.page.add_menu_item(__("Edit"), () => {
-			frappe.set_route("Form", "Dashboard", frappe.dashboard.dashboard_name);
+			frappe.set_route("Form", "Dashboard", frappe.dashboard.dashboard_id);
 		});
 
 		this.page.add_menu_item(__("New"), () => {
@@ -182,11 +182,11 @@ class Dashboard {
 
 		frappe.db.get_list("Dashboard").then((dashboards) => {
 			dashboards.map((dashboard) => {
-				let name = dashboard.name;
-				if (name != this.dashboard_name) {
+				let id = dashboard.id;
+				if (id != this.dashboard_id) {
 					this.page.add_menu_item(
-						name,
-						() => frappe.set_route("dashboard-view", name),
+						id,
+						() => frappe.set_route("dashboard-view", id),
 						1
 					);
 				}

@@ -29,7 +29,7 @@ class TestNamingSeries(FrappeTestCase):
                 is_submittable=1,
             )
             .insert()
-            .name
+            .id
         )
 
     def setUp(self):
@@ -103,11 +103,11 @@ class TestNamingSeries(FrappeTestCase):
             dict(
                 doctype=self.ns_doctype,
                 some_fieldname="test doc with submit",
-                amended_from=submittable_doc.name,
+                amended_from=submittable_doc.id,
             )
         ).insert()
 
-        self.assertIn(submittable_doc.name, amended_doc.name)
+        self.assertIn(submittable_doc.id, amended_doc.id)
         amended_doc.delete()
 
         self.dns.default_amend_naming = "Default Naming"
@@ -117,7 +117,7 @@ class TestNamingSeries(FrappeTestCase):
             dict(
                 doctype=self.ns_doctype,
                 some_fieldname="test doc with submit",
-                amended_from=submittable_doc.name,
+                amended_from=submittable_doc.id,
             )
         ).insert()
-        self.assertNotIn(submittable_doc.name, new_amended_doc.name)
+        self.assertNotIn(submittable_doc.id, new_amended_doc.id)

@@ -50,7 +50,7 @@ class File(Document):
 
         attached_to_doctype: DF.Link | None
         attached_to_field: DF.Data | None
-        attached_to_name: DF.Data | None
+        attached_to_id: DF.Data | None
         content_hash: DF.Data | None
         file_name: DF.Data | None
         file_size: DF.Int
@@ -83,15 +83,15 @@ class File(Document):
         return not self.content
 
     def autoid(self):
-        """Set name for folder"""
+        """Set id for folder"""
         if self.is_folder:
             if self.folder:
-                self.name = self.get_name_based_on_parent_folder()
+                self.id = self.get_id_based_on_parent_folder()
             else:
                 # home
-                self.name = self.file_name
+                self.id = self.file_name
         else:
-            self.name = frappe.generate_hash(length=10)
+            self.id = frappe.generate_hash(length=10)
 
     def before_insert(self):
         self.set_folder_name()
@@ -141,11 +141,9 @@ class File(Document):
         if not self.attached_to_doctype:
             return
 
-        if not self.attached_to_name or not isinstance(
-            self.attached_to_name, str | int
-        ):
+        if not self.attached_to_id or not isinstance(self.attached_to_id, str | int):
             frappe.throw(
-                _("Attached To Name must be a string or an integer"),
+                _("Attached To ID must be a string or an integer"),
                 frappe.ValidationError,
             )
 
@@ -156,9 +154,9 @@ class File(Document):
                 _("The fieldname you've specified in Attached To Field is invalid")
             )
 
-    def after_rename(self, *args, **kwargs):
+    def after_reid(self, *args, **kwargs):
         for successor in self.get_successors():
-            setup_folder_path(successor, self.name)
+            setup_folder_path(successor, self.id)
 
     def on_trash(self):
         if self.is_home_folder or self.is_attachments_folder:
@@ -204,12 +202,12 @@ class File(Document):
             shutil.move(source, target)
             pop_rollback_flags()
 
-    def get_name_based_on_parent_folder(self) -> str | None:
+    def get_id_based_on_parent_folder(self) -> str | None:
         if self.folder:
             return os.path.join(self.folder, self.file_name)
 
     def get_successors(self):
-        return frappe.get_all("File", filters={"folder": self.name}, pluck="name")
+        return frappe.get_all("File", filters={"folder": self.id}, pluck="id")
 
     def validate_file_path(self):
         if self.is_remote_file:
@@ -281,7 +279,7 @@ class File(Document):
 
         if (
             not self.attached_to_doctype
-            or not self.attached_to_name
+            or not self.attached_to_id
             or not self.fetch_attached_to_field(old_file_url)
         ):
             return
@@ -295,7 +293,7 @@ class File(Document):
         else:
             frappe.db.set_value(
                 self.attached_to_doctype,
-                self.attached_to_name,
+                self.attached_to_id,
                 self.attached_to_field,
                 self.file_url,
             )
@@ -305,7 +303,7 @@ class File(Document):
             return True
 
         reference_dict = frappe.get_doc(
-            self.attached_to_doctype, self.attached_to_name
+            self.attached_to_doctype, self.attached_to_id
         ).as_dict()
 
         for key, value in reference_dict.items():
@@ -315,7 +313,7 @@ class File(Document):
 
     def validate_attachment_limit(self):
         attachment_limit = 0
-        if self.attached_to_doctype and self.attached_to_name:
+        if self.attached_to_doctype and self.attached_to_id:
             attachment_limit = cint(
                 frappe.get_meta(self.attached_to_doctype).max_attachments
             )
@@ -326,7 +324,7 @@ class File(Document):
                     "File",
                     filters={
                         "attached_to_doctype": self.attached_to_doctype,
-                        "attached_to_name": self.attached_to_name,
+                        "attached_to_id": self.attached_to_id,
                     },
                     limit=attachment_limit + 1,
                 )
@@ -339,7 +337,7 @@ class File(Document):
                     ).format(
                         frappe.bold(attachment_limit),
                         self.attached_to_doctype,
-                        self.attached_to_name,
+                        self.attached_to_id,
                     ),
                     exc=AttachmentLimitReached,
                     title=_("Attachment Limit Reached"),
@@ -356,7 +354,7 @@ class File(Document):
             self.file_url = self.file_url.split(site_url, 1)[1]
 
     def set_folder_name(self):
-        """Make parent folders if not exists based on reference doctype and name"""
+        """Make parent folders if not exists based on reference doctype and id"""
         if self.folder:
             return
 
@@ -407,26 +405,26 @@ class File(Document):
             if not self.content_hash:
                 self.generate_content_hash()
 
-            # check duplicate name
+            # check duplicate id
             # check duplicate assignment
             filters = {
                 "content_hash": self.content_hash,
                 "is_private": self.is_private,
-                "name": ("!=", self.name),
+                "id": ("!=", self.id),
             }
-            if self.attached_to_doctype and self.attached_to_name:
+            if self.attached_to_doctype and self.attached_to_id:
                 filters.update(
                     {
                         "attached_to_doctype": self.attached_to_doctype,
-                        "attached_to_name": self.attached_to_name,
+                        "attached_to_id": self.attached_to_id,
                     }
                 )
             duplicate_file = frappe.db.get_value(
-                "File", filters, ["name", "file_url"], as_dict=1
+                "File", filters, ["id", "file_url"], as_dict=1
             )
 
             if duplicate_file:
-                duplicate_file_doc = frappe.get_cached_doc("File", duplicate_file.name)
+                duplicate_file_doc = frappe.get_cached_doc("File", duplicate_file.id)
                 if duplicate_file_doc.exists_on_disk():
                     # just use the url, to avoid uploading a duplicate
                     self.file_url = duplicate_file.file_url
@@ -499,9 +497,9 @@ class File(Document):
     def validate_empty_folder(self):
         """Throw exception if folder is not empty"""
         if self.is_folder and frappe.get_all(
-            "File", filters={"folder": self.name}, limit=1
+            "File", filters={"folder": self.id}, limit=1
         ):
-            frappe.throw(_("Folder {0} is not empty").format(self.name), FolderNotEmpty)
+            frappe.throw(_("Folder {0} is not empty").format(self.id), FolderNotEmpty)
 
     def _delete_file_on_disk(self):
         """If file not attached to any other record, delete it"""
@@ -509,7 +507,7 @@ class File(Document):
             "File",
             filters={
                 "content_hash": self.content_hash,
-                "name": ["!=", self.name],
+                "id": ["!=", self.id],
                 # NOTE: Some old Files might share file_urls while not sharing the is_private value
                 # "is_private": self.is_private,
             },
@@ -550,11 +548,11 @@ class File(Document):
                 file_doc.folder = self.folder
                 file_doc.is_private = self.is_private
                 file_doc.attached_to_doctype = self.attached_to_doctype
-                file_doc.attached_to_name = self.attached_to_name
+                file_doc.attached_to_id = self.attached_to_id
                 file_doc.save()
                 files.append(file_doc)
 
-        frappe.delete_doc("File", self.name)
+        frappe.delete_doc("File", self.id)
         return files
 
     def exists_on_disk(self):
@@ -628,7 +626,7 @@ class File(Document):
         return file_path
 
     def write_file(self):
-        """write file to disk with a random name (to compare)"""
+        """write file to disk with a random id (to compare)"""
         if self.is_remote_file:
             return
 
@@ -688,12 +686,12 @@ class File(Document):
             duplicate_file = frappe.get_value(
                 "File",
                 {"content_hash": self.content_hash, "is_private": self.is_private},
-                ["file_url", "name"],
+                ["file_url", "id"],
                 as_dict=True,
             )
 
         if duplicate_file:
-            file_doc: "File" = frappe.get_cached_doc("File", duplicate_file.name)
+            file_doc: "File" = frappe.get_cached_doc("File", duplicate_file.id)
             if file_doc.exists_on_disk():
                 self.file_url = duplicate_file.file_url
                 file_exists = True
@@ -701,7 +699,7 @@ class File(Document):
         if not file_exists:
             if not overwrite:
                 self.file_name = generate_file_name(
-                    name=self.file_name,
+                    id=self.file_name,
                     suffix=self.content_hash[-6:],
                     is_private=self.is_private,
                 )
@@ -776,9 +774,9 @@ class File(Document):
         )
 
     def add_comment_in_reference_doc(self, comment_type, text):
-        if self.attached_to_doctype and self.attached_to_name:
+        if self.attached_to_doctype and self.attached_to_id:
             try:
-                doc = frappe.get_doc(self.attached_to_doctype, self.attached_to_name)
+                doc = frappe.get_doc(self.attached_to_doctype, self.attached_to_id)
                 doc.add_comment(comment_type, text)
             except frappe.DoesNotExistError:
                 frappe.clear_messages()
@@ -817,7 +815,7 @@ class File(Document):
         from urllib.parse import urlencode
 
         if self.is_private:
-            return self.file_url + "?" + urlencode({"fid": self.name})
+            return self.file_url + "?" + urlencode({"fid": self.id})
         else:
             return self.file_url
 
@@ -840,7 +838,7 @@ class File(Document):
 
 
 def on_doctype_update():
-    frappe.db.add_index("File", ["attached_to_doctype", "attached_to_name"])
+    frappe.db.add_index("File", ["attached_to_doctype", "attached_to_id"])
 
 
 def has_permission(doc, ptype=None, user=None, debug=False):
@@ -858,12 +856,12 @@ def has_permission(doc, ptype=None, user=None, debug=False):
     if user != "Guest" and doc.owner == user:
         return True
 
-    if doc.attached_to_doctype and doc.attached_to_name:
+    if doc.attached_to_doctype and doc.attached_to_id:
         attached_to_doctype = doc.attached_to_doctype
-        attached_to_name = doc.attached_to_name
+        attached_to_id = doc.attached_to_id
 
         try:
-            ref_doc = frappe.get_doc(attached_to_doctype, attached_to_name)
+            ref_doc = frappe.get_doc(attached_to_doctype, attached_to_id)
         except frappe.DoesNotExistError:
             frappe.clear_last_message()
             return False

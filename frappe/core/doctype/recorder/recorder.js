@@ -14,7 +14,7 @@ frappe.ui.form.on("Recorder", {
 		frm.trigger("format_grid");
 		frm.add_custom_button(__("Suggest Optimizations"), () => {
 			frappe.xcall("frappe.core.doctype.recorder.recorder.optimize", {
-				recorder_id: frm.doc.name,
+				recorder_id: frm.doc.id,
 			});
 		});
 
@@ -94,7 +94,7 @@ frappe.ui.form.on("Recorder Query", "form_render", function (frm, cdt, cdn) {
 		}
 
 		let field_wrapper =
-			frm.fields_dict[row.parentfield].grid.grid_rows_by_docname[cdn].grid_form.fields_dict[
+			frm.fields_dict[row.parentfield].grid.grid_rows_by_docid[cdn].grid_form.fields_dict[
 				fieldname
 			].wrapper;
 		$(html).appendTo(field_wrapper);
@@ -108,22 +108,22 @@ frappe.ui.form.on("Recorder Query", "form_render", function (frm, cdt, cdn) {
 					<thead>
 						<tr>
 							${Object.keys(table_content[0])
-								.map((key) => `<th>${key}<th>`)
-								.join("")}
+				.map((key) => `<th>${key}<th>`)
+				.join("")}
 						</tr>
 					</thead>
 					<tbody>
 						${table_content
-							.map((content) => {
-								return `
+				.map((content) => {
+					return `
 									<tr>
 										${Object.values(content)
-											.map((key) => `<td>${key}<td>`)
-											.join("")}
+							.map((key) => `<td>${key}<td>`)
+							.join("")}
 									</tr>
 								`;
-							})
-							.join("")}
+				})
+				.join("")}
 					</tbody>
 				</table>
 			</div>

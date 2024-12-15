@@ -5,15 +5,15 @@ frappe.ui.form.on("Data Import", {
 	setup(frm) {
 		frappe.realtime.on("data_import_refresh", ({ data_import }) => {
 			frm.import_in_progress = false;
-			if (data_import !== frm.doc.name) return;
-			frappe.model.clear_doc("Data Import", frm.doc.name);
-			frappe.model.with_doc("Data Import", frm.doc.name).then(() => {
+			if (data_import !== frm.doc.id) return;
+			frappe.model.clear_doc("Data Import", frm.doc.id);
+			frappe.model.with_doc("Data Import", frm.doc.id).then(() => {
 				frm.refresh();
 			});
 		});
 		frappe.realtime.on("data_import_progress", (data) => {
 			frm.import_in_progress = true;
-			if (data.data_import !== frm.doc.name) {
+			if (data.data_import !== frm.doc.id) {
 				return;
 			}
 			let percent = Math.floor((data.current * 100) / data.total);
@@ -54,7 +54,7 @@ frappe.ui.form.on("Data Import", {
 		frm.set_query("reference_doctype", () => {
 			return {
 				filters: {
-					name: ["in", frappe.boot.user.can_import],
+					id: ["in", frappe.boot.user.can_import],
 				},
 			};
 		});
@@ -128,7 +128,7 @@ frappe.ui.form.on("Data Import", {
 		frappe.call({
 			method: "frappe.core.doctype.data_import.data_import.get_import_status",
 			args: {
-				data_import_name: frm.doc.name,
+				data_import_id: frm.doc.id,
 			},
 			callback: function (r) {
 				let successful_records = cint(r.message.success);
@@ -179,7 +179,7 @@ frappe.ui.form.on("Data Import", {
 		if (frm.doc.status === "Error") {
 			frappe.db
 				.get_list("Error Log", {
-					filters: { method: frm.doc.name },
+					filters: { method: frm.doc.id },
 					fields: ["method", "error"],
 					order_by: "creation desc",
 					limit: 1,
@@ -202,7 +202,7 @@ frappe.ui.form.on("Data Import", {
 	start_import(frm) {
 		frm.call({
 			method: "form_start_import",
-			args: { data_import: frm.doc.name },
+			args: { data_import: frm.doc.id },
 			btn: frm.page.btn_primary,
 		}).then((r) => {
 			if (r.message === true) {
@@ -265,7 +265,7 @@ frappe.ui.form.on("Data Import", {
 		frm.call({
 			method: "get_preview_from_template",
 			args: {
-				data_import: frm.doc.name,
+				data_import: frm.doc.id,
 				import_file: frm.doc.import_file,
 				google_sheets_url: frm.doc.google_sheets_url,
 			},
@@ -316,7 +316,7 @@ frappe.ui.form.on("Data Import", {
 		open_url_post(
 			"/api/method/frappe.core.doctype.data_import.data_import.download_errored_template",
 			{
-				data_import_name: frm.doc.name,
+				data_import_id: frm.doc.id,
 			}
 		);
 	},
@@ -325,7 +325,7 @@ frappe.ui.form.on("Data Import", {
 		open_url_post(
 			"/api/method/frappe.core.doctype.data_import.data_import.download_import_log",
 			{
-				data_import_name: frm.doc.name,
+				data_import_id: frm.doc.id,
 			}
 		);
 	},
@@ -411,7 +411,7 @@ frappe.ui.form.on("Data Import", {
 		frappe.call({
 			method: "frappe.core.doctype.data_import.data_import.get_import_logs",
 			args: {
-				data_import: frm.doc.name,
+				data_import: frm.doc.id,
 			},
 			callback: function (r) {
 				let logs = r.message;
@@ -428,7 +428,7 @@ frappe.ui.form.on("Data Import", {
 								html = __("Successfully imported {0}", [
 									`<span class="underline">${frappe.utils.get_form_link(
 										frm.doc.reference_doctype,
-										log.docname,
+										log.docid,
 										true
 									)}<span>`,
 								]);
@@ -436,7 +436,7 @@ frappe.ui.form.on("Data Import", {
 								html = __("Successfully updated {0}", [
 									`<span class="underline">${frappe.utils.get_form_link(
 										frm.doc.reference_doctype,
-										log.docname,
+										log.docid,
 										true
 									)}<span>`,
 								]);
@@ -511,7 +511,7 @@ frappe.ui.form.on("Data Import", {
 			args: {
 				doctype: "Data Import Log",
 				filters: {
-					data_import: frm.doc.name,
+					data_import: frm.doc.id,
 				},
 			},
 			callback: function (r) {

@@ -12,7 +12,7 @@ frappe.ui.form.on("Server Script", {
 
 		if (!frm.is_new()) {
 			frm.add_custom_button(__("Compare Versions"), () => {
-				new frappe.ui.DiffView("Server Script", "script", frm.doc.name);
+				new frappe.ui.DiffView("Server Script", "script", frm.doc.id);
 			});
 		}
 
@@ -88,7 +88,7 @@ tenant_id = frappe.db.get_value(...)
 conditions = f'tenant_id = {tenant_id}'
 
 # resulting select query
-select name from \`tabPerson\`
+select id from \`tabPerson\`
 where tenant_id = 2
 order by creation desc
 </code></pre>

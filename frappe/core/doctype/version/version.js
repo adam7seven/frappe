@@ -6,7 +6,7 @@ frappe.ui.form.on("Version", "refresh", function (frm) {
 	frm.add_custom_button(__("Show all Versions"), function () {
 		frappe.set_route("List", "Version", {
 			ref_doctype: frm.doc.ref_doctype,
-			docname: frm.doc.docname,
+			docid: frm.doc.docid,
 		});
 	});
 });

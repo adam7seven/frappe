@@ -160,8 +160,8 @@ class DocType(Document):
         route: DF.Data | None
         search_fields: DF.Data | None
         sender_field: DF.Data | None
-        sender_name_field: DF.Data | None
-        show_name_in_global_search: DF.Check
+        sender_id_field: DF.Data | None
+        show_id_in_global_search: DF.Check
         show_preview_popup: DF.Check
         show_title_field_in_link: DF.Check
         sort_field: DF.Data | None
@@ -190,7 +190,7 @@ class DocType(Document):
 
         self.check_developer_mode()
 
-        self.validate_name()
+        self.validate_id()
 
         self.set_defaults_for_single_and_table()
         self.set_defaults_for_autoincremented()
@@ -198,7 +198,7 @@ class DocType(Document):
         self.set_default_in_list_view()
         self.set_default_translatable()
         validate_series(self)
-        self.set("can_change_name_type", validate_autoincrement_autoid(self))
+        self.set("can_change_id_type", validate_autoincrement_autoid(self))
         self.validate_document_type()
         validate_fields(self)
         self.check_indexing_for_dashboard_links()
@@ -215,7 +215,7 @@ class DocType(Document):
         validate_links_table_fieldnames(self)
 
         if not self.is_new():
-            self.before_update = frappe.get_doc("DocType", self.name)
+            self.before_update = frappe.get_doc("DocType", self.id)
             self.setup_fields_to_fetch()
             self.validate_field_name_conflicts()
 
@@ -239,11 +239,11 @@ class DocType(Document):
             "DocField",
         ]
 
-        if self.name in core_doctypes:
+        if self.id in core_doctypes:
             return
 
         try:
-            controller = get_controller(self.name)
+            controller = get_controller(self.id)
         except ImportError:
             controller = Document
 
@@ -273,8 +273,8 @@ class DocType(Document):
             if conflict_type:
                 frappe.throw(
                     _(
-                        "Fieldname '{0}' conflicting with a {1} of the name {2} in {3}"
-                    ).format(field_label, conflict_type, field, self.name)
+                        "Fieldname '{0}' conflicting with a {1} of the id {2} in {3}"
+                    ).format(field_label, conflict_type, field, self.id)
                 )
 
     def set_defaults_for_single_and_table(self):
@@ -322,7 +322,7 @@ class DocType(Document):
                     "DocType Link",
                     {
                         "parent": d.options,
-                        "link_doctype": self.name,
+                        "link_doctype": self.id,
                         "link_fieldname": d.fieldname,
                     },
                 )
@@ -363,9 +363,7 @@ class DocType(Document):
     def setup_fields_to_fetch(self):
         """Setup query to update values for newly set fetch values"""
         try:
-            old_meta = frappe.get_meta(
-                frappe.get_doc("DocType", self.name), cached=False
-            )
+            old_meta = frappe.get_meta(frappe.get_doc("DocType", self.id), cached=False)
             old_fields_to_fetch = [
                 df.fieldname for df in old_meta.get_fields_to_fetch()
             ]
@@ -391,14 +389,14 @@ class DocType(Document):
 							UPDATE `tab{doctype}`
 							SET `{fieldname}` = source.`{source_fieldname}`
 							FROM `tab{link_doctype}` as source
-							WHERE `{link_fieldname}` = source.name
+							WHERE `{link_fieldname}` = source.id
 							AND ifnull(`{fieldname}`, '')=''
 						"""
                     else:
                         update_query = """
 							UPDATE `tab{doctype}` as target
 							INNER JOIN `tab{link_doctype}` as source
-							ON `target`.`{link_fieldname}` = `source`.`name`
+							ON `target`.`{link_fieldname}` = `source`.`id`
 							SET `target`.`{fieldname}` = `source`.`{source_fieldname}`
 							WHERE ifnull(`target`.`{fieldname}`, '')=""
 						"""
@@ -407,7 +405,7 @@ class DocType(Document):
                         update_query.format(
                             link_doctype=link_df.options,
                             source_fieldname=source_fieldname,
-                            doctype=self.name,
+                            doctype=self.id,
                             fieldname=df.fieldname,
                             link_fieldname=link_fieldname,
                         )
@@ -446,7 +444,7 @@ class DocType(Document):
 
         from frappe.model.virtual_doctype import validate_controller
 
-        validate_controller(self.name)
+        validate_controller(self.id)
 
     def ensure_minimum_max_attachment_limit(self):
         """Ensure that max_attachments is *at least* bigger than number of attach fields."""
@@ -476,7 +474,7 @@ class DocType(Document):
         parent_list = frappe.get_all(
             "DocField",
             "parent",
-            dict(fieldtype=["in", frappe.model.table_fields], options=self.name),
+            dict(fieldtype=["in", frappe.model.table_fields], options=self.id),
         )
         for p in parent_list:
             frappe.db.set_value("DocType", p.parent, {})
@@ -484,7 +482,7 @@ class DocType(Document):
     def scrub_field_names(self):
         """Sluggify fieldnames if not set from Label."""
         restricted = (
-            "name",
+            "id",
             "parent",
             "creation",
             "owner",
@@ -540,13 +538,13 @@ class DocType(Document):
     def on_update(self):
         """Update database schema, make controller templates if `custom` is not set and clear cache."""
 
-        if self.get("can_change_name_type"):
+        if self.get("can_change_id_type"):
             self.setup_autoincrement_and_sequence()
 
         try:
-            frappe.db.updatedb(self.name, Meta(self))
+            frappe.db.updatedb(self.id, Meta(self))
         except Exception as e:
-            print(f"\n\nThere was an issue while migrating the DocType: {self.name}\n")
+            print(f"\n\nThere was an issue while migrating the DocType: {self.id}\n")
             raise e
 
         self.change_modified_of_parent()
@@ -572,9 +570,9 @@ class DocType(Document):
                 self.run_module_method("after_doctype_insert")
 
         self.sync_doctype_layouts()
-        delete_notification_count_for(doctype=self.name)
+        delete_notification_count_for(doctype=self.id)
 
-        frappe.clear_cache(doctype=self.name)
+        frappe.clear_cache(doctype=self.id)
 
         # clear user cache so that on the next reload this doctype is included in boot
         clear_user_cache(frappe.session.user)
@@ -589,8 +587,8 @@ class DocType(Document):
         """Sync Doctype Layout"""
         doctype_layouts = frappe.get_all(
             "DocType Layout",
-            filters={"document_type": self.name},
-            pluck="name",
+            filters={"document_type": self.id},
+            pluck="id",
             ignore_ddl=True,
         )
         for layout in doctype_layouts:
@@ -599,29 +597,29 @@ class DocType(Document):
             layout_doc.save()
 
     def setup_autoincrement_and_sequence(self):
-        """Changes name type and makes sequence on change (if required)"""
+        """Changes id type and makes sequence on change (if required)"""
 
-        name_type = f"varchar({frappe.db.VARCHAR_LEN})"
+        id_type = f"varchar({frappe.db.VARCHAR_LEN})"
 
         if self.autoid == "autoincrement":
-            name_type = "bigint"
-            frappe.db.create_sequence(self.name, check_not_exists=True)
+            id_type = "bigint"
+            frappe.db.create_sequence(self.id, check_not_exists=True)
 
-        change_name_column_type(self.name, name_type)
+        change_id_column_type(self.id, id_type)
 
     def sync_global_search(self):
         """If global search settings are changed, rebuild search properties for this table"""
         global_search_fields_before_update = [
             d.fieldname for d in self.before_update.fields if d.in_global_search
         ]
-        if self.before_update.show_name_in_global_search:
-            global_search_fields_before_update.append("name")
+        if self.before_update.show_id_in_global_search:
+            global_search_fields_before_update.append("id")
 
         global_search_fields_after_update = [
             d.fieldname for d in self.fields if d.in_global_search
         ]
-        if self.show_name_in_global_search:
-            global_search_fields_after_update.append("name")
+        if self.show_id_in_global_search:
+            global_search_fields_after_update.append("id")
 
         if set(global_search_fields_before_update) != set(
             global_search_fields_after_update
@@ -632,7 +630,7 @@ class DocType(Document):
             frappe.enqueue(
                 "frappe.utils.global_search.rebuild_for_doctype",
                 now=now,
-                doctype=self.name,
+                doctype=self.id,
             )
 
     def set_base_class_for_controller(self):
@@ -642,8 +640,8 @@ class DocType(Document):
         if not self.has_value_changed("has_web_view"):
             return
 
-        despaced_name = self.name.replace(" ", "_")
-        scrubbed_name = frappe.scrub(self.name)
+        despaced_name = self.id.replace(" ", "_")
+        scrubbed_name = frappe.scrub(self.id)
         scrubbed_module = frappe.scrub(self.module)
         controller_path = frappe.get_module_path(
             scrubbed_module, "doctype", scrubbed_name, f"{scrubbed_name}.py"
@@ -680,22 +678,22 @@ class DocType(Document):
     def run_module_method(self, method):
         from frappe.modules import load_doctype_module
 
-        module = load_doctype_module(self.name, self.module)
+        module = load_doctype_module(self.id, self.module)
         if hasattr(module, method):
             getattr(module, method)()
 
-    def before_rename(self, old, new, merge=False):
+    def before_reid(self, old, new, merge=False):
         """Throw exception if merge. DocTypes cannot be merged."""
         if not self.custom and frappe.session.user != "Administrator":
-            frappe.throw(_("DocType can only be renamed by Administrator"))
+            frappe.throw(_("DocType can only be reided by Administrator"))
 
         self.check_developer_mode()
-        self.validate_name(new)
+        self.validate_id(new)
 
         if merge:
             frappe.throw(_("DocType can not be merged"))
 
-    def after_rename(self, old, new, merge=False):
+    def after_reid(self, old, new, merge=False):
         """Change table name using `RENAME TABLE` if table exists. Or update
         `doctype` property for Single type."""
 
@@ -705,7 +703,7 @@ class DocType(Document):
             )
             frappe.db.sql(
                 """update tabSingles set value=%s
-				where doctype=%s and field='name' and value = %s""",
+				where doctype=%s and field='id' and value = %s""",
                 (new, new, old),
             )
         else:
@@ -721,7 +719,7 @@ class DocType(Document):
 
     def after_delete(self):
         if not self.custom:
-            clear_controller_cache(self.name)
+            clear_controller_cache(self.id)
 
     def rename_files_and_folders(self, old, new):
         # move files
@@ -775,7 +773,7 @@ class DocType(Document):
         # updating json file with new name
         doctype_json_path = os.path.join(new_path, f"{frappe.scrub(new)}.json")
         current_data = frappe.get_file_json(doctype_json_path)
-        current_data["name"] = new
+        current_data["id"] = new
 
         with open(doctype_json_path, "w") as f:
             json.dump(current_data, f, indent=1)
@@ -794,15 +792,15 @@ class DocType(Document):
 
         # check if atleast 1 record exists
         if not (
-            frappe.db.table_exists(self.name)
-            and frappe.get_all(self.name, fields=["name"], limit=1, as_list=True)
+            frappe.db.table_exists(self.id)
+            and frappe.get_all(self.id, fields=["id"], limit=1, as_list=True)
         ):
             return
 
         existing_property_setter = frappe.db.get_value(
             "Property Setter",
             {
-                "doc_type": self.name,
+                "doc_type": self.id,
                 "property": "options",
                 "field_name": "naming_series",
             },
@@ -810,7 +808,7 @@ class DocType(Document):
 
         if not existing_property_setter:
             make_property_setter(
-                self.name,
+                self.id,
                 "naming_series",
                 "options",
                 naming_series[0].options,
@@ -819,7 +817,7 @@ class DocType(Document):
             )
             if naming_series[0].default:
                 make_property_setter(
-                    self.name,
+                    self.id,
                     "naming_series",
                     "default",
                     naming_series[0].default,
@@ -849,7 +847,7 @@ class DocType(Document):
         if self.custom:
             return
 
-        path = get_file_path(self.module, "DocType", self.name)
+        path = get_file_path(self.module, "DocType", self.id)
         if os.path.exists(path):
             try:
                 with open(path) as txtfile:
@@ -907,10 +905,10 @@ class DocType(Document):
             del docdict["field_order"]
 
     def export_doc(self):
-        """Export to standard folder `[module]/doctype/[name]/[name].json`."""
+        """Export to standard folder `[module]/doctype/[id]/[id].json`."""
         from frappe.modules.export_file import export_to_files
 
-        export_to_files(record_list=[["DocType", self.name]], create_init=True)
+        export_to_files(record_list=[["DocType", self.id]], create_init=True)
 
     def make_controller_template(self):
         """Make boilerplate controller template."""
@@ -925,7 +923,7 @@ class DocType(Document):
             templates_path = frappe.get_module_path(
                 frappe.scrub(self.module),
                 "doctype",
-                frappe.scrub(self.name),
+                frappe.scrub(self.id),
                 "templates",
             )
             if not os.path.exists(templates_path):
@@ -950,8 +948,8 @@ class DocType(Document):
         if self.is_submittable:
             docfield_exists = frappe.get_all(
                 "DocField",
-                filters={"fieldname": "amended_from", "parent": self.name},
-                pluck="name",
+                filters={"fieldname": "amended_from", "parent": self.id},
+                pluck="id",
                 limit=1,
             )
             if not docfield_exists:
@@ -961,7 +959,7 @@ class DocType(Document):
                         "label": "Amended From",
                         "fieldtype": "Link",
                         "fieldname": "amended_from",
-                        "options": self.name,
+                        "options": self.id,
                         "read_only": 1,
                         "print_hide": 1,
                         "no_copy": 1,
@@ -973,9 +971,9 @@ class DocType(Document):
         """If allow_auto_repeat is set, add auto_repeat custom field."""
         if self.allow_auto_repeat:
             if not frappe.db.exists(
-                "Custom Field", {"fieldname": "auto_repeat", "dt": self.name}
+                "Custom Field", {"fieldname": "auto_repeat", "dt": self.id}
             ) and not frappe.db.exists(
-                "DocField", {"fieldname": "auto_repeat", "parent": self.name}
+                "DocField", {"fieldname": "auto_repeat", "parent": self.id}
             ):
                 insert_after = self.fields[len(self.fields) - 1].fieldname
                 df = dict(
@@ -988,7 +986,7 @@ class DocType(Document):
                     no_copy=1,
                     print_hide=1,
                 )
-                create_custom_field(self.name, df)
+                create_custom_field(self.id, df)
 
     def validate_nestedset(self):
         if not self.get("is_tree"):
@@ -1047,19 +1045,19 @@ class DocType(Document):
             {
                 "label": "Old Parent",
                 "fieldtype": "Link",
-                "options": self.name,
+                "options": self.id,
                 "fieldname": "old_parent",
             },
         )
 
-        parent_field_label = f"Parent {self.name}"
+        parent_field_label = f"Parent {self.id}"
         parent_field_name = frappe.scrub(parent_field_label)
         self.append(
             "fields",
             {
                 "label": parent_field_label,
                 "fieldtype": "Link",
-                "options": self.name,
+                "options": self.id,
                 "fieldname": parent_field_name,
                 "ignore_user_permissions": 1,
             },
@@ -1078,53 +1076,53 @@ class DocType(Document):
     def add_child_table_fields(self):
         from frappe.database.schema import add_column
 
-        add_column(self.name, "parent", "Data")
-        add_column(self.name, "parenttype", "Data")
-        add_column(self.name, "parentfield", "Data")
+        add_column(self.id, "parent", "Data")
+        add_column(self.id, "parenttype", "Data")
+        add_column(self.id, "parentfield", "Data")
 
     def get_max_idx(self):
         """Returns the highest `idx`"""
         max_idx = frappe.db.sql(
-            """select max(idx) from `tabDocField` where parent = %s""", self.name
+            """select max(idx) from `tabDocField` where parent = %s""", self.id
         )
         return max_idx and max_idx[0][0] or 0
 
-    def validate_name(self, name=None):
-        if not name:
-            name = self.name
+    def validate_id(self, id=None):
+        if not id:
+            id = self.id
 
-        # a Doctype name is the tablename created in database
+        # a Doctype id is the tablename created in database
         # `tab<Doctype Name>` the length of tablename is limited to 64 characters
         max_length = frappe.db.MAX_COLUMN_LENGTH - 3
-        if len(name) > max_length:
+        if len(id) > max_length:
             # length(tab + <Doctype Name>) should be equal to 64 characters hence doctype should be 61 characters
             frappe.throw(
-                _("Doctype name is limited to {0} characters ({1})").format(
-                    max_length, name
+                _("Doctype id is limited to {0} characters ({1})").format(
+                    max_length, id
                 ),
                 frappe.NameError,
             )
 
-        # a DocType name should not start or end with an empty space
-        if WHITESPACE_PADDING_PATTERN.search(name):
+        # a DocType id should not start or end with an empty space
+        if WHITESPACE_PADDING_PATTERN.search(id):
             frappe.throw(
-                _("DocType's name should not start or end with whitespace"),
+                _("DocType's id should not start or end with whitespace"),
                 frappe.NameError,
             )
 
-        # a DocType's name should not start with a number or underscore
+        # a DocType's id should not start with a number or underscore
         # and should only contain letters, numbers, underscore, and hyphen
-        if not START_WITH_LETTERS_PATTERN.match(name):
+        if not START_WITH_LETTERS_PATTERN.match(id):
             frappe.throw(
                 _(
-                    "A DocType's name should start with a letter and can only "
+                    "A DocType's id should start with a letter and can only "
                     "consist of letters, numbers, spaces, underscores and hyphens"
                 ),
                 frappe.NameError,
                 title="Invalid Name",
             )
 
-        validate_route_conflict(self.doctype, self.name)
+        validate_route_conflict(self.doctype, self.id)
 
     @frappe.whitelist()
     def check_pending_migration(self) -> bool:
@@ -1132,7 +1130,7 @@ class DocType(Document):
         if self.is_new() or self.custom:
             return
 
-        file = Path(get_file_path(frappe.scrub(self.module), self.doctype, self.name))
+        file = Path(get_file_path(frappe.scrub(self.module), self.doctype, self.id))
         content = json.loads(file.read_text())
         if content.get("modified") and get_datetime(self.modified) < get_datetime(
             content.get("modified")
@@ -1147,12 +1145,12 @@ class DocType(Document):
             return True
 
 
-def validate_series(dt, autoid=None, name=None):
+def validate_series(dt, autoid=None, id=None):
     """Validate if `autoid` property is correctly set."""
     if not autoid:
         autoid = dt.autoid
-    if not name:
-        name = dt.name
+    if not id:
+        id = dt.id
 
     if not autoid and dt.get("fields", {"fieldname": "naming_series"}):
         dt.autoid = "naming_series:"
@@ -1190,9 +1188,9 @@ def validate_series(dt, autoid=None, name=None):
         doctype = frappe.qb.DocType("DocType")
         used_in = (
             frappe.qb.from_(doctype)
-            .select(doctype.name)
+            .select(doctype.id)
             .where(doctype.autoid.like(Concat(prefix, ".%")))
-            .where(doctype.name != name)
+            .where(doctype.id != id)
         ).run()
         if used_in:
             frappe.throw(
@@ -1233,10 +1231,10 @@ def validate_autoincrement_autoid(dt: Union[DocType, "CustomizeForm"]) -> bool:
                     _("Cannot change to/from autoincrement autoid in Customize Form")
                 )
 
-            if frappe.get_meta(dt.name).issingle:
+            if frappe.get_meta(dt.id).issingle:
                 return False
 
-            if not frappe.get_all(dt.name, limit=1):
+            if not frappe.get_all(dt.id, limit=1):
                 # allow changing the column type if there is no data
                 return True
 
@@ -1249,13 +1247,13 @@ def validate_autoincrement_autoid(dt: Union[DocType, "CustomizeForm"]) -> bool:
     return False
 
 
-def change_name_column_type(doctype_name: str, type: str) -> None:
-    """Changes name column type"""
+def change_id_column_type(doctype_id: str, type: str) -> None:
+    """Changes id column type"""
 
     args = (
-        (doctype_name, "name", type, False, True)
+        (doctype_id, "id", type, False, True)
         if (frappe.db.db_type == "postgres")
-        else (doctype_name, "name", type, True)
+        else (doctype_id, "id", type, True)
     )
 
     frappe.db.change_column_type(*args)
@@ -1292,7 +1290,7 @@ def validate_links_table_fieldnames(meta):
             ).format(index)
             frappe.throw(message, frappe.ValidationError, _("Table Fieldname Missing"))
 
-        if meta.name == link.parent_doctype:
+        if meta.id == link.parent_doctype:
             field_exists = link.table_fieldname in fieldnames
         else:
             field_exists = frappe.get_meta(link.parent_doctype).has_field(
@@ -1302,7 +1300,7 @@ def validate_links_table_fieldnames(meta):
         if not field_exists:
             message = _(
                 "Document Links Row #{0}: Could not find field {1} in {2} DocType"
-            ).format(index, frappe.bold(link.table_fieldname), frappe.bold(meta.name))
+            ).format(index, frappe.bold(link.table_fieldname), frappe.bold(meta.id))
             frappe.throw(message, frappe.ValidationError, _("Invalid Table Fieldname"))
 
 
@@ -1356,17 +1354,17 @@ def validate_fields(meta: Meta):
     def check_illegal_characters(fieldname):
         validate_column_name(fieldname)
 
-    def check_invalid_fieldnames(docname, fieldname):
+    def check_invalid_fieldnames(docid, fieldname):
         if fieldname in Document._reserved_keywords:
             frappe.throw(
                 _("{0}: fieldname cannot be set to reserved keyword {1}").format(
-                    frappe.bold(docname),
+                    frappe.bold(docid),
                     frappe.bold(fieldname),
                 ),
                 title=_("Invalid Fieldname"),
             )
 
-    def check_unique_fieldname(docname, fieldname):
+    def check_unique_fieldname(docid, fieldname):
         duplicates = list(
             filter(
                 None,
@@ -1378,7 +1376,7 @@ def validate_fields(meta: Meta):
         if len(duplicates) > 1:
             frappe.throw(
                 _("{0}: Fieldname {1} appears multiple times in rows {2}").format(
-                    docname, fieldname, ", ".join(duplicates)
+                    docid, fieldname, ", ".join(duplicates)
                 ),
                 UniqueFieldnameError,
             )
@@ -1386,7 +1384,7 @@ def validate_fields(meta: Meta):
     def check_fieldname_length(fieldname):
         validate_column_length(fieldname)
 
-    def check_illegal_mandatory(docname, d):
+    def check_illegal_mandatory(docid, d):
         if (
             (d.fieldtype in no_value_fields)
             and d.fieldtype not in table_fields
@@ -1394,12 +1392,12 @@ def validate_fields(meta: Meta):
         ):
             frappe.throw(
                 _("{0}: Field {1} of type {2} cannot be mandatory").format(
-                    docname, d.label, d.fieldtype
+                    docid, d.label, d.fieldtype
                 ),
                 IllegalMandatoryError,
             )
 
-    def check_link_table_options(docname, d):
+    def check_link_table_options(docid, d):
         if frappe.flags.in_patch or frappe.flags.in_fixtures:
             return
 
@@ -1408,37 +1406,37 @@ def validate_fields(meta: Meta):
                 frappe.throw(
                     _(
                         "{0}: Options required for Link or Table type field {1} in row {2}"
-                    ).format(docname, d.label, d.idx),
+                    ).format(docid, d.label, d.idx),
                     DoctypeLinkError,
                 )
             if d.options == "[Select]" or d.options == d.parent:
                 return
             if d.options != d.parent:
-                options = frappe.db.get_value("DocType", d.options, "name")
+                options = frappe.db.get_value("DocType", d.options, "id")
                 if not options:
                     frappe.throw(
                         _(
                             "{0}: Options must be a valid DocType for field {1} in row {2}"
-                        ).format(docname, d.label, d.idx),
+                        ).format(docid, d.label, d.idx),
                         WrongOptionsDoctypeLinkError,
                     )
                 elif not (options == d.options):
                     frappe.throw(
                         _(
-                            "{0}: Options {1} must be the same as doctype name {2} for the field {3}"
-                        ).format(docname, d.options, options, d.label),
+                            "{0}: Options {1} must be the same as doctype id {2} for the field {3}"
+                        ).format(docid, d.options, options, d.label),
                         DoctypeLinkError,
                     )
                 else:
                     # fix case
                     d.options = options
 
-    def check_hidden_and_mandatory(docname, d):
+    def check_hidden_and_mandatory(docid, d):
         if d.hidden and d.reqd and not d.default and not frappe.flags.in_migrate:
             frappe.throw(
                 _(
                     "{0}: Field {1} in row {2} cannot be hidden and mandatory without default"
-                ).format(docname, d.label, d.idx),
+                ).format(docid, d.label, d.idx),
                 HiddenAndMandatoryWithoutDefaultError,
             )
 
@@ -1513,7 +1511,7 @@ def validate_fields(meta: Meta):
         ):
             frappe.throw(_("Precision should be between 1 and 6"))
 
-    def check_unique_and_text(docname, d):
+    def check_unique_and_text(docid, d):
         if meta.is_virtual:
             return
 
@@ -1525,7 +1523,7 @@ def validate_fields(meta: Meta):
             if d.fieldtype not in ("Data", "Link", "Read Only", "Int"):
                 frappe.throw(
                     _("{0}: Fieldtype {1} for {2} cannot be unique").format(
-                        docname, d.fieldtype, d.label
+                        docid, d.fieldtype, d.label
                     ),
                     NonUniqueError,
                 )
@@ -1541,7 +1539,7 @@ def validate_fields(meta: Meta):
                     frappe.throw(
                         _(
                             "{0}: Field '{1}' cannot be set as Unique as it has non-unique values"
-                        ).format(docname, d.label),
+                        ).format(docid, d.label),
                         NonUniqueError,
                     )
 
@@ -1554,7 +1552,7 @@ def validate_fields(meta: Meta):
         ):
             frappe.throw(
                 _("{0}:Fieldtype {1} for {2} cannot be indexed").format(
-                    docname, d.fieldtype, d.label
+                    docid, d.fieldtype, d.label
                 ),
                 CannotIndexedError,
             )
@@ -1846,19 +1844,19 @@ def validate_fields(meta: Meta):
             d.fieldname = d.fieldname.lower().strip("?")
 
         check_illegal_characters(d.fieldname)
-        check_invalid_fieldnames(meta.get("name"), d.fieldname)
+        check_invalid_fieldnames(meta.get("id"), d.fieldname)
         check_fieldname_length(d.fieldname)
-        check_hidden_and_mandatory(meta.get("name"), d)
-        check_unique_and_text(meta.get("name"), d)
+        check_hidden_and_mandatory(meta.get("id"), d)
+        check_unique_and_text(meta.get("id"), d)
         check_table_multiselect_option(d)
         scrub_options_in_select(d)
         validate_fetch_from(d)
         validate_data_field_type(d)
 
         if not frappe.flags.in_migrate:
-            check_unique_fieldname(meta.get("name"), d.fieldname)
-            check_link_table_options(meta.get("name"), d)
-            check_illegal_mandatory(meta.get("name"), d)
+            check_unique_fieldname(meta.get("id"), d.fieldname)
+            check_link_table_options(meta.get("id"), d)
+            check_illegal_mandatory(meta.get("id"), d)
             check_dynamic_link_options(d)
             check_in_list_view(meta.get("istable"), d)
             check_in_global_search(d)
@@ -1897,7 +1895,7 @@ def validate_permissions_for_doctype(doctype, for_remove=False, alert=False):
     for perm in doctype.get("permissions"):
         perm.db_update()
 
-    clear_permissions_cache(doctype.name)
+    clear_permissions_cache(doctype.id)
 
 
 def clear_permissions_cache(doctype):
@@ -2028,9 +2026,7 @@ def validate_permissions(doctype, for_remove=False, alert=False):
                     title=_("Permissions Error"),
                 )
 
-            roles = [
-                row.name for row in frappe.get_all("Role", filters={"is_custom": 1})
-            ]
+            roles = [row.id for row in frappe.get_all("Role", filters={"is_custom": 1})]
 
             if d.role in roles:
                 frappe.throw(
@@ -2087,7 +2083,7 @@ def make_module_and_roles(doc, perm_fieldname="permissions"):
                 "Role", role
             ):
                 r = frappe.new_doc("Role")
-                r.role_name = role
+                r.role_id = role
                 r.desk_access = 1
                 r.flags.ignore_mandatory = r.flags.ignore_permissions = True
                 r.insert()

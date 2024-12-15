@@ -13,8 +13,8 @@ frappe.listview_settings["User Permission"] = {
 						reqd: 1,
 						onchange: function () {
 							dialog.fields_dict.doctype.set_input(undefined);
-							dialog.fields_dict.docname.set_input(undefined);
-							dialog.set_df_property("docname", "hidden", 1);
+							dialog.fields_dict.docid.set_input(undefined);
+							dialog.set_df_property("docid", "hidden", 1);
 							dialog.set_df_property("is_default", "hidden", 1);
 							dialog.set_df_property("apply_to_all_doctypes", "hidden", 1);
 							dialog.set_df_property("applicable_doctypes", "hidden", 1);
@@ -32,24 +32,24 @@ frappe.listview_settings["User Permission"] = {
 						},
 					},
 					{
-						fieldname: "docname",
-						label: __("Document Name"),
+						fieldname: "docid",
+						label: __("Document ID"),
 						fieldtype: "Dynamic Link",
 						options: "doctype",
 						hidden: 1,
 						onchange: function () {
-							let field = dialog.fields_dict["docname"];
+							let field = dialog.fields_dict["docid"];
 							if (field.value != field.last_value) {
 								if (
 									dialog.fields_dict.doctype.value &&
-									dialog.fields_dict.docname.value &&
+									dialog.fields_dict.docid.value &&
 									dialog.fields_dict.user.value
 								) {
 									me.get_applicable_doctype(dialog).then((applicable) => {
 										me.get_multi_select_options(dialog, applicable).then(
 											(options) => {
 												me.applicable_options = options;
-												me.on_docname_change(dialog, options, applicable);
+												me.on_docid_change(dialog, options, applicable);
 												if (options.length > 5) {
 													dialog.fields_dict.applicable_doctypes.setup_select_all();
 												}
@@ -78,7 +78,7 @@ frappe.listview_settings["User Permission"] = {
 						onchange: function () {
 							if (
 								dialog.fields_dict.doctype.value &&
-								dialog.fields_dict.docname.value &&
+								dialog.fields_dict.docid.value &&
 								dialog.fields_dict.user.value
 							) {
 								me.on_apply_to_all_doctypes_change(dialog, me.applicable_options);
@@ -214,7 +214,7 @@ frappe.listview_settings["User Permission"] = {
 					args: {
 						user: dialog.fields_dict.user.value,
 						doctype: dialog.fields_dict.doctype.value,
-						docname: dialog.fields_dict.docname.value,
+						docid: dialog.fields_dict.docid.value,
 					},
 				})
 				.then((r) => {
@@ -232,7 +232,7 @@ frappe.listview_settings["User Permission"] = {
 					args: {
 						user: dialog.fields_dict.user.value,
 						doctype: dialog.fields_dict.doctype.value,
-						docname: dialog.fields_dict.docname.value,
+						docid: dialog.fields_dict.docid.value,
 					},
 				})
 				.then((r) => {
@@ -247,8 +247,8 @@ frappe.listview_settings["User Permission"] = {
 	},
 
 	on_doctype_change: function (dialog) {
-		dialog.set_df_property("docname", "hidden", 0);
-		dialog.set_df_property("docname", "reqd", 1);
+		dialog.set_df_property("docid", "hidden", 0);
+		dialog.set_df_property("docid", "reqd", 1);
 		dialog.set_df_property("is_default", "hidden", 0);
 		dialog.set_df_property("apply_to_all_doctypes", "hidden", 0);
 		dialog.set_value("apply_to_all_doctypes", "checked", 1);
@@ -257,7 +257,7 @@ frappe.listview_settings["User Permission"] = {
 		dialog.refresh();
 	},
 
-	on_docname_change: function (dialog, options, applicable) {
+	on_docid_change: function (dialog, options, applicable) {
 		if (applicable.length != 0) {
 			dialog.set_primary_action("Update");
 			dialog.set_title("Update User Permissions");

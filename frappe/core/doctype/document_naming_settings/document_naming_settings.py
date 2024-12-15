@@ -6,7 +6,7 @@ import frappe
 from frappe import _
 from frappe.core.doctype.doctype.doctype import validate_series
 from frappe.model.document import Document
-from frappe.model.naming import NamingSeries
+from frappe.model.iding import NamingSeries
 from frappe.permissions import get_doctypes_with_read
 
 
@@ -75,7 +75,7 @@ class DocumentNamingSettings(Document):
             "DocType",
             fields=["autoid"],
             filters={
-                "name": ("not in", doctypes),
+                "id": ("not in", doctypes),
                 "autoid": ("like", "%.#%"),
                 "module": ("not in", ["Core"]),
             },
@@ -91,7 +91,7 @@ class DocumentNamingSettings(Document):
         evalauted_prefix = set()
 
         series = frappe.qb.DocType("Series")
-        prefixes_from_db = frappe.qb.from_(series).select(series.name).run(pluck=True)
+        prefixes_from_db = frappe.qb.from_(series).select(series.id).run(pluck=True)
         evalauted_prefix.update(prefixes_from_db)
 
         for series_template in series_templates:
@@ -132,9 +132,9 @@ class DocumentNamingSettings(Document):
     def set_series_options_in_meta(self, doctype: str, options: str) -> None:
         options = self.get_options_list(options)
 
-        # validate names
+        # validate ids
         for series in options:
-            self.validate_series_name(series)
+            self.validate_series_id(series)
 
         if options and self.user_must_always_select:
             options = ["", *options]
@@ -190,7 +190,7 @@ class DocumentNamingSettings(Document):
                 )
             validate_series(dt, series)
 
-    def validate_series_name(self, series):
+    def validate_series_id(self, series):
         NamingSeries(series).validate()
 
     @frappe.whitelist()
@@ -219,8 +219,8 @@ class DocumentNamingSettings(Document):
 
         existing_overrides = frappe.db.get_all(
             "Amended Document Naming Settings",
-            filters={"name": ["not in", [d.name for d in self.amend_naming_override]]},
-            pluck="name",
+            filters={"id": ["not in", [d.id for d in self.amend_naming_override]]},
+            pluck="id",
         )
         for override in existing_overrides:
             frappe.delete_doc("Amended Document Naming Settings", override)
@@ -258,7 +258,7 @@ class DocumentNamingSettings(Document):
     def create_version_log_for_change(self, series, old, new):
         version = frappe.new_doc("Version")
         version.ref_doctype = "Series"
-        version.docname = series or ".#"
+        version.docid = series or ".#"
         version.data = frappe.as_json({"changed": [["current", old, new]]})
         version.flags.ignore_links = True  # series is not a "real" doctype
         version.flags.ignore_permissions = True
@@ -276,7 +276,7 @@ class DocumentNamingSettings(Document):
             return "\n".join(NamingSeries(series).get_preview(doc=doc))
         except Exception as e:
             frappe.clear_last_message()
-            return _("Failed to generate names from the series") + f"\n{e!s}"
+            return _("Failed to generate ids from the series") + f"\n{e!s}"
 
     def _fetch_last_doc_if_available(self):
         """Fetch last doc for evaluating naming series with fields."""

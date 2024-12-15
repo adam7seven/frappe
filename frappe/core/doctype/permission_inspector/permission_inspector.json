@@ -8,7 +8,7 @@
     "field_order": [
         "ref_doctype",
         "column_break_mcqo",
-        "docname",
+        "docid",
         "column_break_xbrd",
         "user",
         "column_break_nvaa",
@@ -26,7 +26,7 @@
             "reqd": 1
         },
         {
-            "fieldname": "docname",
+            "fieldname": "docid",
             "fieldtype": "Dynamic Link",
             "in_list_view": 1,
             "label": "Document",

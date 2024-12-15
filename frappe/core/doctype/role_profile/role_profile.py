@@ -22,8 +22,8 @@ class RoleProfile(Document):
 
     # end: auto-generated types
     def autoid(self):
-        """set name as Role Profile name"""
-        self.name = self.role_profile
+        """set id as Role Profile id"""
+        self.id = self.role_profile
 
     def on_update(self):
         self.queue_action(
@@ -40,9 +40,9 @@ class RoleProfile(Document):
         all_current_roles = (
             frappe.qb.from_(user)
             .join(has_role)
-            .on(user.name == has_role.parent)
-            .where(user.role_profile_name == self.name)
-            .select(user.name, has_role.role)
+            .on(user.id == has_role.parent)
+            .where(user.role_profile_id == self.id)
+            .select(user.id, has_role.role)
         ).run()
 
         user_roles = defaultdict(set)

@@ -6,7 +6,7 @@
 	"doctype": "Report",
 	"is_standard": "No",
 	"javascript": null,
-	"json": "{\"filters\":[],\"columns\":[[\"name\",\"User\"],[\"user_type\",\"User\"],[\"first_name\",\"User\"],[\"last_name\",\"User\"],[\"last_active\",\"User\"],[\"role\",\"Has Role\"]],\"sort_order\":\"desc\",\"sort_by_next\":null,\"sort_order_next\":\"desc\"}",
+	"json": "{\"filters\":[],\"columns\":[[\"id\",\"User\"],[\"user_type\",\"User\"],[\"first_name\",\"User\"],[\"last_name\",\"User\"],[\"last_active\",\"User\"],[\"role\",\"Has Role\"]],\"sort_order\":\"desc\",\"sort_by_next\":null,\"sort_order_next\":\"desc\"}",
 	"modified": "2018-12-17 18:27:07.728890",
 	"module": "Core",
 	"id": "User Activity Report Without Sort",
@@ -14,4 +14,4 @@
 	"ref_doctype": "User",
 	"report_name": "User Activity Report Without Sort",
 	"report_type": "Report Builder"
-  }
+}

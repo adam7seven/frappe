@@ -7,8 +7,8 @@ frappe.listview_settings["DocType"] = {
 		let non_developer = frappe.session.user !== "Administrator" || !frappe.boot.developer_mode;
 		let fields = [
 			{
-				label: __("Name"),
-				fieldname: "name",
+				label: __("ID"),
+				fieldname: "id",
 				fieldtype: "Data",
 				reqd: 1,
 			},
@@ -107,7 +107,7 @@ frappe.listview_settings["DocType"] = {
 						fields: [{ fieldtype: "Section Break" }],
 					})
 					.then((doc) => {
-						frappe.set_route("Form", "DocType", doc.name);
+						frappe.set_route("Form", "DocType", doc.id);
 					});
 			},
 			secondary_action_label: __("Cancel"),

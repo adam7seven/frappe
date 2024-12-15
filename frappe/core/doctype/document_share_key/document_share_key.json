@@ -8,7 +8,7 @@
     "engine": "InnoDB",
     "field_order": [
         "reference_doctype",
-        "reference_docname",
+        "reference_docid",
         "key",
         "expires_on"
     ],
@@ -22,9 +22,9 @@
             "search_index": 1
         },
         {
-            "fieldname": "reference_docname",
+            "fieldname": "reference_docid",
             "fieldtype": "Dynamic Link",
-            "label": "Reference Document Name",
+            "label": "Reference Document ID",
             "options": "reference_doctype",
             "read_only": 1,
             "search_index": 1

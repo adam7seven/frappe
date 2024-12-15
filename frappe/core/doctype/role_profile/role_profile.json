@@ -39,7 +39,7 @@
     "links": [
         {
             "link_doctype": "User",
-            "link_fieldname": "role_profile_name"
+            "link_fieldname": "role_profile_id"
         }
     ],
     "modified": "2021-12-03 15:45:45.270963",

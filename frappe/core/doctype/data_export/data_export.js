@@ -14,7 +14,7 @@ frappe.ui.form.on("Data Export", {
 				filters: {
 					issingle: 0,
 					istable: 0,
-					name: ["in", frappe.boot.user.can_export],
+					id: ["in", frappe.boot.user.can_export],
 				},
 			};
 		});
@@ -91,7 +91,7 @@ const set_field_options = (frm) => {
 	frm.filter_list = new frappe.ui.FilterGroup({
 		parent: filter_wrapper,
 		doctype: doctype,
-		on_change: () => {},
+		on_change: () => { },
 	});
 
 	// Add 'Select All' and 'Unselect All' button

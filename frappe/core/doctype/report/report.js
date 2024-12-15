@@ -14,16 +14,16 @@ frappe.ui.form.on("Report", {
 				function () {
 					switch (doc.report_type) {
 						case "Report Builder":
-							frappe.set_route("List", doc.ref_doctype, "Report", doc.name);
+							frappe.set_route("List", doc.ref_doctype, "Report", doc.id);
 							break;
 						case "Query Report":
-							frappe.set_route("query-report", doc.name);
+							frappe.set_route("query-report", doc.id);
 							break;
 						case "Script Report":
-							frappe.set_route("query-report", doc.name);
+							frappe.set_route("query-report", doc.id);
 							break;
 						case "Custom Report":
-							frappe.set_route("query-report", doc.name);
+							frappe.set_route("query-report", doc.id);
 							break;
 					}
 				},

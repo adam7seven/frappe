@@ -54,7 +54,7 @@ class TestPackage(FrappeTestCase):
         ) as f:
             doctype = json.loads(f.read())
             self.assertEqual(doctype["doctype"], "DocType")
-            self.assertEqual(doctype["name"], "Test DocType for Package")
+            self.assertEqual(doctype["id"], "Test DocType for Package")
             self.assertEqual(doctype["fields"][0]["fieldname"], "test_field")
 
 
@@ -63,7 +63,7 @@ def make_test_package():
         frappe.get_doc(
             dict(
                 doctype="Package",
-                name="Test Package",
+                id="Test Package",
                 package_name="test-package",
                 readme="# Test Package",
             )
@@ -88,7 +88,7 @@ def make_test_doctype():
         frappe.get_doc(
             dict(
                 doctype="DocType",
-                name="Test DocType for Package",
+                id="Test DocType for Package",
                 custom=1,
                 module="Test Module for Package",
                 autoid="Prompt",
@@ -104,7 +104,7 @@ def make_test_server_script():
         frappe.get_doc(
             dict(
                 doctype="Server Script",
-                name="Test Script for Package",
+                id="Test Script for Package",
                 module="Test Module for Package",
                 script_type="DocType Event",
                 reference_doctype="Test DocType for Package",
