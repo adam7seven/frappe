@@ -18,7 +18,7 @@
   "beta": 0,
   "is_virtual": 0,
   "naming_rule": "",
-  "allow_rename": 1,
+  "allow_reid": 1,
   "hide_toolbar": 0,
   "allow_copy": 0,
   "allow_import": 0,

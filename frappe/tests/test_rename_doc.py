@@ -113,7 +113,7 @@ class TestRenameDoc(FrappeTestCase):
                     "doctype": "Property Setter",
                     "doctype_or_field": "DocType",
                     "doc_type": self.test_doctype,
-                    "property": "allow_rename",
+                    "property": "allow_reid",
                     "property_type": "Check",
                     "value": "1",
                 }
@@ -284,10 +284,10 @@ class TestRenameDoc(FrappeTestCase):
         }
 
         parent_a = new_doctype(
-            fields=[table_field], allow_rename=1, autoid="Prompt"
+            fields=[table_field], allow_reid=1, autoid="Prompt"
         ).insert()
         parent_b = new_doctype(
-            fields=[table_field], allow_rename=1, autoid="Prompt"
+            fields=[table_field], allow_reid=1, autoid="Prompt"
         ).insert()
 
         parent_a_instance = frappe.get_doc(

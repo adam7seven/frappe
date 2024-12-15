@@ -1,6 +1,6 @@
 {
     "actions": [],
-    "allow_rename": 1,
+    "allow_reid": 1,
     "autoid": "field:country",
     "creation": "2014-06-05 02:22:36.029850",
     "doctype": "DocType",

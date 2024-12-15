@@ -2,7 +2,7 @@
     "allow_copy": 0,
     "allow_guest_to_view": 0,
     "allow_import": 1,
-    "allow_rename": 1,
+    "allow_reid": 1,
     "autoid": "field:print_heading",
     "beta": 0,
     "creation": "2013-01-10 16:34:24",

@@ -105,7 +105,7 @@ class DocType(Document):
         allow_events_in_timeline: DF.Check
         allow_guest_to_view: DF.Check
         allow_import: DF.Check
-        allow_rename: DF.Check
+        allow_reid: DF.Check
         autoid: DF.Data | None
         beta: DF.Check
         color: DF.Data | None
@@ -289,7 +289,7 @@ class DocType(Document):
 
     def set_defaults_for_autoincremented(self):
         if self.autoid and self.autoid == "autoincrement":
-            self.allow_rename = 0
+            self.allow_reid = 0
 
     def set_default_in_list_view(self):
         """Set default in-list-view for first 4 mandatory fields"""

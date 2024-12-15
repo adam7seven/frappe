@@ -1,6 +1,6 @@
 {
     "actions": [],
-    "allow_rename": 1,
+    "allow_reid": 1,
     "autoid": "format:Package Import at {creation}",
     "creation": "2021-09-05 16:36:46.680094",
     "doctype": "DocType",

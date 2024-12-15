@@ -1,6 +1,6 @@
 {
     "actions": [],
-    "allow_rename": 1,
+    "allow_reid": 1,
     "autoid": "field:chart_name",
     "creation": "2019-01-10 12:28:06.282875",
     "doctype": "DocType",

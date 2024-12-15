@@ -199,7 +199,7 @@ CREATE TABLE `tabDocType` (
   `parent_node` varchar(255) DEFAULT NULL,
   `smallicon` varchar(255) DEFAULT NULL,
   `allow_copy` int(1) NOT NULL DEFAULT 0,
-  `allow_rename` int(1) NOT NULL DEFAULT 0,
+  `allow_reid` int(1) NOT NULL DEFAULT 0,
   `allow_import` int(1) NOT NULL DEFAULT 0,
   `hide_toolbar` int(1) NOT NULL DEFAULT 0,
   `track_seen` int(1) NOT NULL DEFAULT 0,
