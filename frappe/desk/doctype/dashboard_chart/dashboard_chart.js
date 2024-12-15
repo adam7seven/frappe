@@ -33,7 +33,7 @@ frappe.ui.form.on("Dashboard Chart", {
 		if (!frm.is_new()) {
 			frm.add_custom_button("Add Chart to Dashboard", () => {
 				const dialog = frappe.dashboard_utils.get_add_to_dashboard_dialog(
-					frm.doc.name,
+					frm.doc.id,
 					"Dashboard Chart",
 					"frappe.desk.doctype.dashboard_chart.dashboard_chart.add_chart_to_dashboard"
 				);
@@ -199,7 +199,7 @@ frappe.ui.form.on("Dashboard Chart", {
 							let y_field_df = frappe.meta.get_docfield(
 								"Dashboard Chart Field",
 								"y_field",
-								frm.doc.name
+								frm.doc.id
 							);
 							y_field_df.options = frm.field_options.numeric_fields;
 						}
@@ -406,7 +406,7 @@ frappe.ui.form.on("Dashboard Chart", {
 					parent: dialog.get_field("filter_area").$wrapper,
 					doctype: frm.doc.document_type,
 					parent_doctype: frm.doc.parent_document_type,
-					on_change: () => {},
+					on_change: () => { },
 				});
 
 				frm.filter_group.add_filters_to_filter_group(filters);
@@ -546,7 +546,7 @@ frappe.ui.form.on("Dashboard Chart", {
 				frm.set_query("parent_document_type", function () {
 					return {
 						filters: {
-							name: ["in", parents],
+							id: ["in", parents],
 						},
 					};
 				});

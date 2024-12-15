@@ -6,15 +6,15 @@
     "editable_grid": 1,
     "engine": "InnoDB",
     "field_order": [
-        "number_card_name",
+        "number_card_id",
         "label"
     ],
     "fields": [
         {
-            "fieldname": "number_card_name",
+            "fieldname": "number_card_id",
             "fieldtype": "Link",
             "in_list_view": 1,
-            "label": "Number Card Name",
+            "label": "Number Card ID",
             "options": "Number Card",
             "reqd": 1
         },

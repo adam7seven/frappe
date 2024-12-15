@@ -8,7 +8,7 @@ frappe.ui.form.on("Calendar View", {
 	refresh: function (frm) {
 		if (!frm.is_new()) {
 			frm.add_custom_button(__("Show Calendar"), () =>
-				frappe.set_route("List", frm.doc.reference_doctype, "Calendar", frm.doc.name)
+				frappe.set_route("List", frm.doc.reference_doctype, "Calendar", frm.doc.id)
 			);
 		}
 	},

@@ -19,8 +19,8 @@ frappe.setup = {
 		frappe.setup.slides.push(slide);
 	},
 
-	remove_slide: function (slide_name) {
-		frappe.setup.slides = frappe.setup.slides.filter((slide) => slide.name !== slide_name);
+	remove_slide: function (slide_id) {
+		frappe.setup.slides = frappe.setup.slides.filter((slide) => slide.id !== slide_id);
 	},
 
 	run_event: function (event) {
@@ -65,7 +65,7 @@ frappe.pages["setup-wizard"].on_page_show = function () {
 frappe.setup.on("before_load", function () {
 	// load slides
 	frappe.setup.slides_settings.forEach((s) => {
-		if (!(s.name === "user" && frappe.boot.developer_mode)) {
+		if (!(s.id === "user" && frappe.boot.developer_mode)) {
 			// if not user slide with developer mode
 			frappe.setup.add_slide(s);
 		}
@@ -77,7 +77,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 		super(args);
 		$.extend(this, args);
 
-		this.page_name = "setup-wizard";
+		this.page_id = "setup-wizard";
 		this.welcomed = true;
 		frappe.set_route("setup-wizard/0");
 	}
@@ -115,7 +115,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
 	before_show_slide() {
 		if (!this.welcomed) {
-			frappe.set_route(this.page_name);
+			frappe.set_route(this.page_id);
 			return false;
 		}
 		return true;
@@ -126,7 +126,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 			return;
 		}
 		super.show_slide(id);
-		frappe.set_route(this.page_name, cstr(id));
+		frappe.set_route(this.page_id, cstr(id));
 	}
 
 	show_hide_prev_next(id) {
@@ -216,8 +216,8 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 		fail_msg = fail_msg
 			? fail_msg
 			: frappe.last_response.setup_wizard_failure_message
-			? frappe.last_response.setup_wizard_failure_message
-			: __("Failed to complete setup");
+				? frappe.last_response.setup_wizard_failure_message
+				: __("Failed to complete setup");
 
 		this.update_setup_message("Could not start up: " + fail_msg);
 
@@ -267,7 +267,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
 	show_working_state() {
 		this.container.hide();
-		frappe.set_route(this.page_name);
+		frappe.set_route(this.page_id);
 
 		this.$working_state = this.get_message(
 			__("Setting up your system"),
@@ -289,7 +289,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 		this.$abort_btn.on("click", () => {
 			$(this.parent).find(".setup-in-progress").remove();
 			this.container.show();
-			frappe.set_route(this.page_name, this.slides.length - 1);
+			frappe.set_route(this.page_id, this.slides.length - 1);
 		});
 
 		this.$abort_btn.hide();
@@ -368,7 +368,7 @@ frappe.setup.SetupWizardSlide = class SetupWizardSlide extends frappe.ui.Slide {
 frappe.setup.slides_settings = [
 	{
 		// Welcome (language) slide
-		name: "welcome",
+		id: "welcome",
 		title: __("Welcome"),
 
 		fields: [
@@ -448,7 +448,7 @@ frappe.setup.slides_settings = [
 	},
 	{
 		// Profile slide
-		name: "user",
+		id: "user",
 		title: __("Let's set up your account"),
 		icon: "fa fa-user",
 		fields: [

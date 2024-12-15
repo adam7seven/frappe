@@ -111,7 +111,7 @@ class UserProfile {
 			value_based_on: "points",
 			chart_type: "Sum",
 			document_type: "Energy Point Log",
-			name: "Energy Points",
+			id: "Energy Points",
 			width: "half",
 			based_on: "creation",
 		};

@@ -18,7 +18,7 @@
         "description",
         "section_break_6",
         "reference_type",
-        "reference_name",
+        "reference_id",
         "column_break_10",
         "role",
         "assigned_by",
@@ -102,10 +102,10 @@
             "options": "DocType"
         },
         {
-            "fieldname": "reference_name",
+            "fieldname": "reference_id",
             "fieldtype": "Dynamic Link",
-            "label": "Reference Name",
-            "oldfieldname": "reference_name",
+            "label": "Reference ID",
+            "oldfieldname": "reference_id",
             "oldfieldtype": "Data",
             "options": "reference_type"
         },
@@ -191,7 +191,7 @@
         }
     ],
     "quick_entry": 1,
-    "search_fields": "description, reference_type, reference_name",
+    "search_fields": "description, reference_type, reference_id",
     "sender_field": "sender",
     "sort_field": "modified",
     "sort_order": "DESC",

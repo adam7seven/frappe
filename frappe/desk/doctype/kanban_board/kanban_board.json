@@ -1,13 +1,13 @@
 {
     "actions": [],
     "allow_reid": 1,
-    "autoid": "field:kanban_board_name",
+    "autoid": "field:kanban_board_id",
     "creation": "2016-10-19 12:26:04.809812",
     "doctype": "DocType",
     "editable_grid": 1,
     "engine": "InnoDB",
     "field_order": [
-        "kanban_board_name",
+        "kanban_board_id",
         "reference_doctype",
         "field_name",
         "column_break_4",
@@ -20,9 +20,9 @@
     ],
     "fields": [
         {
-            "fieldname": "kanban_board_name",
+            "fieldname": "kanban_board_id",
             "fieldtype": "Data",
-            "label": "Kanban Board Name",
+            "label": "Kanban Board ID",
             "reqd": 1,
             "unique": 1
         },

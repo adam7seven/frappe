@@ -17,7 +17,7 @@ frappe.ui.form.on("Number Card", {
 			frm.set_value("type", "Document Type");
 		}
 
-		if (frm.doc.type == "Report" && frm.doc.report_name) {
+		if (frm.doc.type == "Report" && frm.doc.report_id) {
 			frm.trigger("set_report_filters");
 		}
 
@@ -35,12 +35,12 @@ frappe.ui.form.on("Number Card", {
 	create_add_to_dashboard_button: function (frm) {
 		frm.add_custom_button("Add Card to Dashboard", () => {
 			const dialog = frappe.dashboard_utils.get_add_to_dashboard_dialog(
-				frm.doc.name,
+				frm.doc.id,
 				"Number Card",
 				"frappe.desk.doctype.number_card.number_card.add_card_to_dashboard"
 			);
 
-			if (!frm.doc.name) {
+			if (!frm.doc.id) {
 				frappe.msgprint(__("Please create Card first"));
 			} else {
 				dialog.show();
@@ -68,7 +68,7 @@ frappe.ui.form.on("Number Card", {
 
 	type: function (frm) {
 		if (frm.doc.type == "Report") {
-			frm.set_query("report_name", () => {
+			frm.set_query("report_id", () => {
 				return {
 					filters: {
 						report_type: ["!=", "Report Builder"],
@@ -78,7 +78,7 @@ frappe.ui.form.on("Number Card", {
 		}
 	},
 
-	report_name: function (frm) {
+	report_id: function (frm) {
 		frm.filters = [];
 		frm.set_value("filters_json", "{}");
 		frm.set_value("dynamic_filters_json", "{}");
@@ -142,9 +142,9 @@ frappe.ui.form.on("Number Card", {
 	},
 
 	set_report_filters: function (frm) {
-		const report_name = frm.doc.report_name;
-		if (report_name) {
-			frappe.report_utils.get_report_filters(report_name).then((filters) => {
+		const report_id = frm.doc.report_id;
+		if (report_id) {
+			frappe.report_utils.get_report_filters(report_id).then((filters) => {
 				if (filters) {
 					frm.filters = filters;
 					const filter_values = frappe.report_utils.get_filter_values(filters);
@@ -166,7 +166,7 @@ frappe.ui.form.on("Number Card", {
 		}
 		frappe
 			.xcall("frappe.desk.query_report.run", {
-				report_name: frm.doc.report_name,
+				report_id: frm.doc.report_id,
 				filters: filters,
 				ignore_prepared_report: 1,
 			})
@@ -183,13 +183,13 @@ frappe.ui.form.on("Number Card", {
 					);
 					if (!frm.field_options.numeric_fields.length) {
 						frappe.msgprint(
-							__("Report has no numeric fields, please change the Report Name")
+							__("Report has no numeric fields, please change the Report ID")
 						);
 					}
 				} else {
 					frappe.msgprint(
 						__(
-							"Report has no data, please modify the filters or change the Report Name"
+							"Report has no data, please modify the filters or change the Report ID"
 						)
 					);
 				}
@@ -300,7 +300,7 @@ frappe.ui.form.on("Number Card", {
 					parent: dialog.get_field("filter_area").$wrapper,
 					doctype: frm.doc.document_type,
 					parent_doctype: frm.doc.parent_document_type,
-					on_change: () => {},
+					on_change: () => { },
 				});
 				filters && frm.filter_group.add_filters_to_filter_group(filters);
 			}
@@ -312,9 +312,9 @@ frappe.ui.form.on("Number Card", {
 				frappe.query_report = new frappe.views.QueryReport({
 					filters: dialog.fields_list,
 				});
-				frappe.query_reports[frm.doc.report_name] &&
-					frappe.query_reports[frm.doc.report_name].onload &&
-					frappe.query_reports[frm.doc.report_name].onload(frappe.query_report);
+				frappe.query_reports[frm.doc.report_id] &&
+					frappe.query_reports[frm.doc.report_id].onload &&
+					frappe.query_reports[frm.doc.report_id].onload(frappe.query_report);
 			}
 
 			dialog.set_values(filters);
@@ -444,7 +444,7 @@ frappe.ui.form.on("Number Card", {
 			frm.set_query("parent_document_type", function () {
 				return {
 					filters: {
-						name: ["in", parents],
+						id: ["in", parents],
 					},
 				};
 			});

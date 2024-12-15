@@ -3,10 +3,10 @@
 
 import frappe
 from frappe import _
-from frappe.boot import get_allowed_report_names
+from frappe.boot import get_allowed_report_ids
 from frappe.config import get_modules_from_all_apps_for_user
 from frappe.model.document import Document
-from frappe.model.naming import append_number_if_name_exists
+from frappe.model.iding import append_number_if_id_exists
 from frappe.modules.export_file import export_to_files
 from frappe.query_builder import Criterion
 from frappe.query_builder.utils import DocType
@@ -37,18 +37,18 @@ class NumberCard(Document):
         parent_document_type: DF.Link | None
         report_field: DF.Literal[None]
         report_function: DF.Literal["Sum", "Average", "Minimum", "Maximum"]
-        report_name: DF.Link | None
+        report_id: DF.Link | None
         show_percentage_stats: DF.Check
         stats_time_interval: DF.Literal["Daily", "Weekly", "Monthly", "Yearly"]
         type: DF.Literal["Document Type", "Report", "Custom"]
 
     # end: auto-generated types
     def autoid(self):
-        if not self.name:
-            self.name = self.label
+        if not self.id:
+            self.id = self.label
 
-        if frappe.db.exists("Number Card", self.name):
-            self.name = append_number_if_name_exists("Number Card", self.name)
+        if frappe.db.exists("Number Card", self.id):
+            self.id = append_number_if_id_exists("Number Card", self.id)
 
     def validate(self):
         if self.type == "Document Type":
@@ -69,10 +69,10 @@ class NumberCard(Document):
                 )
 
         elif self.type == "Report":
-            if not (self.report_name and self.report_field and self.function):
+            if not (self.report_id and self.report_field and self.function):
                 frappe.throw(
                     _(
-                        "Report Name, Report Field and Fucntion are required to create a number card"
+                        "Report ID, Report Field and Fucntion are required to create a number card"
                     )
                 )
 
@@ -83,7 +83,7 @@ class NumberCard(Document):
     def on_update(self):
         if frappe.conf.developer_mode and self.is_standard:
             export_to_files(
-                record_list=[["Number Card", self.name]], record_module=self.module
+                record_list=[["Number Card", self.id]], record_module=self.module
             )
 
 
@@ -135,7 +135,7 @@ def has_permission(doc, ptype, user):
         return True
 
     if doc.type == "Report":
-        if doc.report_name in get_allowed_report_names():
+        if doc.report_id in get_allowed_report_ids():
             return True
     else:
         allowed_doctypes = tuple(frappe.permissions.get_doctypes_with_read())
@@ -188,7 +188,7 @@ def get_percentage_difference(doc, filters, result):
     doc = frappe.parse_json(doc)
     result = frappe.parse_json(result)
 
-    doc = frappe.get_doc("Number Card", doc.name)
+    doc = frappe.get_doc("Number Card", doc.id)
 
     if not doc.get("show_percentage_stats"):
         return
@@ -254,7 +254,7 @@ def get_cards_for_user(doctype, txt, searchfield, start, page_len, filters):
 
     return (
         condition_query.select(
-            numberCard.name, numberCard.label, numberCard.document_type
+            numberCard.id, numberCard.label, numberCard.document_type
         )
         .where((numberCard.owner == frappe.session.user) | (numberCard.is_public == 1))
         .where(Criterion.any(search_conditions))
@@ -265,7 +265,7 @@ def get_cards_for_user(doctype, txt, searchfield, start, page_len, filters):
 def create_report_number_card(args):
     card = create_number_card(args)
     args = frappe.parse_json(args)
-    args.name = card.name
+    args.id = card.id
     if args.dashboard:
         add_card_to_dashboard(frappe.as_json(args))
 
@@ -276,7 +276,7 @@ def add_card_to_dashboard(args):
 
     dashboard = frappe.get_doc("Dashboard", args.dashboard)
     dashboard_link = frappe.new_doc("Number Card Link")
-    dashboard_link.card = args.name
+    dashboard_link.card = args.id
 
     if args.set_standard and dashboard.is_standard:
         card = frappe.get_doc("Number Card", dashboard_link.card)

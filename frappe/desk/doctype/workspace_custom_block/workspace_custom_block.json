@@ -6,15 +6,15 @@
     "editable_grid": 1,
     "engine": "InnoDB",
     "field_order": [
-        "custom_block_name",
+        "custom_block_id",
         "label"
     ],
     "fields": [
         {
-            "fieldname": "custom_block_name",
+            "fieldname": "custom_block_id",
             "fieldtype": "Link",
             "in_list_view": 1,
-            "label": "Custom Block Name",
+            "label": "Custom Block ID",
             "options": "Custom HTML Block"
         },
         {
