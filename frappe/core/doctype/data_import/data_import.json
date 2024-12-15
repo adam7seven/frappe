@@ -174,7 +174,7 @@
  "modified": "2024-01-30 17:08:05.566686",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Data Import",
+ "id": "Data Import",
  "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [

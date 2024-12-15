@@ -69,7 +69,7 @@
  "modified": "2023-08-28 22:17:18.351025",
  "modified_by": "Administrator",
  "module": "Automation",
- "name": "Reminder",
+ "id": "Reminder",
  "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [

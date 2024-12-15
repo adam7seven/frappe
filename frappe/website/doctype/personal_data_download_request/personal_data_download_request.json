@@ -38,7 +38,7 @@
  "modified": "2019-05-14 13:02:58.175687",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Personal Data Download Request",
+ "id": "Personal Data Download Request",
  "owner": "Administrator",
  "permissions": [
   {

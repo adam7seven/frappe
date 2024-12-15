@@ -89,7 +89,7 @@
  "modified": "2023-06-15 18:02:51.877533",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "DocShare",
+ "id": "DocShare",
  "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [

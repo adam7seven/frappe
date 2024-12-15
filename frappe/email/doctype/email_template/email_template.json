@@ -60,7 +60,7 @@
  "modified": "2023-12-12 20:01:07.080625",
  "modified_by": "Administrator",
  "module": "Email",
- "name": "Email Template",
+ "id": "Email Template",
  "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [

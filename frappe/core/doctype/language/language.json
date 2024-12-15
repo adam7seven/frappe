@@ -54,7 +54,7 @@
  "modified": "2024-06-06 18:25:01.010821",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Language",
+ "id": "Language",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

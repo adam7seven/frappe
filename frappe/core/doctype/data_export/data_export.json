@@ -63,7 +63,7 @@
  "modified": "2022-09-28 03:51:02.404681",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Data Export",
+ "id": "Data Export",
  "owner": "Administrator",
  "permissions": [
   {

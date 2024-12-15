@@ -106,7 +106,7 @@
  "modified": "2024-08-03 09:38:10.497711",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Notification Log",
+ "id": "Notification Log",
  "owner": "Administrator",
  "permissions": [
   {

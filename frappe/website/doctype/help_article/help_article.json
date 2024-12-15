@@ -116,7 +116,7 @@
  "modified": "2024-01-02 11:34:43.594309",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Help Article",
+ "id": "Help Article",
  "owner": "Administrator",
  "permissions": [
   {

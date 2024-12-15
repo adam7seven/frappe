@@ -44,7 +44,7 @@
  "modified": "2023-11-25 16:54:59.828669",
  "modified_by": "Administrator",
  "module": "Email",
- "name": "Email Group Member",
+ "id": "Email Group Member",
  "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [

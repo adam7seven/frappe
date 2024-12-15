@@ -30,7 +30,7 @@
  "modified": "2022-07-07 16:28:44.828514",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "LDAP Group Mapping",
+ "id": "LDAP Group Mapping",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

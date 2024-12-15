@@ -7,7 +7,7 @@
  "modified": "2021-11-22 15:26:53.878805",
  "modified_by": "Administrator",
  "module": "Printing",
- "name": "Letter Head",
+ "id": "Letter Head",
  "owner": "Administrator",
  "reference_doctype": "Letter Head",
  "save_on_complete": 1,

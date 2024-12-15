@@ -23,7 +23,7 @@
  "modified": "2022-08-03 12:20:49.917059",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Website Script",
+ "id": "Website Script",
  "owner": "Administrator",
  "permissions": [
   {

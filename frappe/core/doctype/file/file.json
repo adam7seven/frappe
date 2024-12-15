@@ -193,7 +193,7 @@
  "modified": "2024-05-09 11:46:42.917146",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "File",
+ "id": "File",
  "owner": "Administrator",
  "permissions": [
   {

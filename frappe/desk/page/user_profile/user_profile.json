@@ -7,7 +7,7 @@
  "modified": "2020-03-02 15:17:13.041650",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "user-profile",
+ "id": "user-profile",
  "owner": "Administrator",
  "page_name": "User Profile",
  "roles": [

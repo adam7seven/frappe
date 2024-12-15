@@ -142,7 +142,7 @@
  "modified": "2022-01-07 05:28:45.073041",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "Connected App",
+ "id": "Connected App",
  "owner": "Administrator",
  "permissions": [
   {

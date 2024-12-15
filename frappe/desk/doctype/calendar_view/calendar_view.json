@@ -56,7 +56,7 @@
  "modified": "2023-08-28 22:29:39.662726",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Calendar View",
+ "id": "Calendar View",
  "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [

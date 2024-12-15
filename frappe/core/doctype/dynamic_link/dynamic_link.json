@@ -37,7 +37,7 @@
  "modified": "2019-10-10 22:05:54.736093",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Dynamic Link",
+ "id": "Dynamic Link",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

@@ -31,7 +31,7 @@
  "modified": "2024-04-22 11:46:53.574720",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "System Health Report Failing Jobs",
+ "id": "System Health Report Failing Jobs",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "creation",

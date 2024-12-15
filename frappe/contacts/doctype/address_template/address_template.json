@@ -43,7 +43,7 @@
  "modified": "2022-08-03 12:20:49.095228",
  "modified_by": "Administrator",
  "module": "Contacts",
- "name": "Address Template",
+ "id": "Address Template",
  "owner": "Administrator",
  "permissions": [
   {

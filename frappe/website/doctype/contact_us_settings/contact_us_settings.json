@@ -124,7 +124,7 @@
  "modified": "2021-03-02 17:42:32.947404",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Contact Us Settings",
+ "id": "Contact Us Settings",
  "owner": "Administrator",
  "permissions": [
   {

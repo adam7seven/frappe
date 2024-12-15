@@ -134,7 +134,7 @@
  "modified": "2022-06-13 05:59:26.866004",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Access Log",
+ "id": "Access Log",
  "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [

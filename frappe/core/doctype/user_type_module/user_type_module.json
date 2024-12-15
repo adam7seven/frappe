@@ -23,7 +23,7 @@
  "modified": "2021-01-24 03:07:43.602927",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "User Type Module",
+ "id": "User Type Module",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

@@ -15,7 +15,7 @@
  "modified": "2023-07-28 20:15:32.222029",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Welcome Workspace",
+ "id": "Welcome Workspace",
  "number_cards": [],
  "owner": "Administrator",
  "parent_page": "",

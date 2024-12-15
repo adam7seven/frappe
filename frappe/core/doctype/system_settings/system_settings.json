@@ -700,7 +700,7 @@
  "modified": "2024-11-04 15:51:39.954876",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "System Settings",
+ "id": "System Settings",
  "owner": "Administrator",
  "permissions": [
   {

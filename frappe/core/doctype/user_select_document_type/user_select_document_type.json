@@ -23,7 +23,7 @@
  "modified": "2021-01-17 18:45:44.993190",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "User Select Document Type",
+ "id": "User Select Document Type",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

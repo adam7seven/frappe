@@ -22,7 +22,7 @@
  "modified": "2020-09-22 08:08:17.521361",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Website Theme Ignore App",
+ "id": "Website Theme Ignore App",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

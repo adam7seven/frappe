@@ -81,7 +81,7 @@
  "modified": "2023-11-24 18:35:17.268492",
  "modified_by": "Administrator",
  "module": "Email",
- "name": "Email Group",
+ "id": "Email Group",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

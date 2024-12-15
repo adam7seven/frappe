@@ -874,7 +874,7 @@
  "modified": "2024-09-27 11:41:13.336662",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "User",
+ "id": "User",
  "owner": "Administrator",
  "permissions": [
   {

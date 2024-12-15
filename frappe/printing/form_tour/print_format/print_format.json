@@ -9,7 +9,7 @@
  "modified": "2021-11-24 17:58:00.807972",
  "modified_by": "Administrator",
  "module": "Printing",
- "name": "Print Format",
+ "id": "Print Format",
  "owner": "Administrator",
  "reference_doctype": "Print Format",
  "save_on_complete": 1,

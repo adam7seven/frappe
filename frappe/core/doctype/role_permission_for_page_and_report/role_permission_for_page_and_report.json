@@ -74,7 +74,7 @@
  "modified": "2022-11-23 12:39:05.750386",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Role Permission for Page and Report",
+ "id": "Role Permission for Page and Report",
  "owner": "Administrator",
  "permissions": [
   {

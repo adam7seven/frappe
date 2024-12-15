@@ -20,7 +20,7 @@
  "modified": "2020-09-18 17:26:09.703215",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Domain",
+ "id": "Domain",
  "owner": "Administrator",
  "permissions": [
   {

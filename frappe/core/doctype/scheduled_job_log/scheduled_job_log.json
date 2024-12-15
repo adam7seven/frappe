@@ -48,7 +48,7 @@
  "modified": "2023-11-09 12:06:41.781270",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Scheduled Job Log",
+ "id": "Scheduled Job Log",
  "owner": "Administrator",
  "permissions": [
   {

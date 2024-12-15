@@ -91,7 +91,7 @@
  "modified": "2024-11-15 14:12:19.803995",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Navbar Item",
+ "id": "Navbar Item",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

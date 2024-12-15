@@ -40,7 +40,7 @@
  "modified": "2021-12-14 14:14:55.716378",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "DocType State",
+ "id": "DocType State",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

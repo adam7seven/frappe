@@ -53,7 +53,7 @@
  "modified": "2022-03-21 16:03:46.339279",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Section with Videos",
+ "id": "Section with Videos",
  "owner": "Administrator",
  "standard": 1,
  "template": "",

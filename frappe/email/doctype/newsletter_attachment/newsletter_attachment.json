@@ -23,7 +23,7 @@
  "modified": "2021-12-06 16:37:47.481057",
  "modified_by": "Administrator",
  "module": "Email",
- "name": "Newsletter Attachment",
+ "id": "Newsletter Attachment",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

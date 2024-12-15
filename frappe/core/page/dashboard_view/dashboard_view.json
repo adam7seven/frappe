@@ -7,7 +7,7 @@
  "modified": "2020-12-16 12:29:08.610352",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "dashboard-view",
+ "id": "dashboard-view",
  "owner": "Administrator",
  "page_name": "dashboard-view",
  "roles": [],

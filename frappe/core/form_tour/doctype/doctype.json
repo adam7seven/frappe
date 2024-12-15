@@ -9,7 +9,7 @@
  "modified": "2021-11-25 17:03:01.646360",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Doctype",
+ "id": "Doctype",
  "owner": "Administrator",
  "reference_doctype": "DocType",
  "save_on_complete": 1,

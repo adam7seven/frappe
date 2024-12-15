@@ -9,7 +9,7 @@
  "modified": "2021-11-24 19:15:34.244244",
  "modified_by": "Administrator",
  "module": "Custom",
- "name": "Custom Field",
+ "id": "Custom Field",
  "owner": "Administrator",
  "reference_doctype": "Custom Field",
  "save_on_complete": 1,

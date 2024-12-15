@@ -49,7 +49,7 @@
  "modified": "2022-08-03 12:20:50.025294",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Help Category",
+ "id": "Help Category",
  "owner": "Administrator",
  "permissions": [
   {

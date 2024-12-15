@@ -161,7 +161,7 @@
  "modified": "2024-02-24 16:31:16.253153",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Activity Log",
+ "id": "Activity Log",
  "owner": "Administrator",
  "permissions": [
   {

@@ -91,7 +91,7 @@
  "idx": 0,
  "modified": "2020-09-11 15:52:40.687774",
  "modified_by": "Administrator",
- "name": "Section with Tabs",
+ "id": "Section with Tabs",
  "owner": "Administrator",
  "standard": 1,
  "type": "Section"

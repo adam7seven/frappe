@@ -15,7 +15,7 @@
    "fieldname": "webhook_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Name",
+   "label": "id",
    "reqd": 1,
    "unique": 1
   },
@@ -38,7 +38,7 @@
  "modified": "2021-05-12 18:24:37.810235",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "Slack Webhook URL",
+ "id": "Slack Webhook URL",
  "owner": "Administrator",
  "permissions": [
   {

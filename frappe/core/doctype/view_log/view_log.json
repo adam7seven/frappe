@@ -36,7 +36,7 @@
  "modified": "2022-09-07 05:16:14.587628",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "View Log",
+ "id": "View Log",
  "owner": "Administrator",
  "permissions": [
   {

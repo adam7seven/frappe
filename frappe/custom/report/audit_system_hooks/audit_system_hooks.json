@@ -12,7 +12,7 @@
  "modified": "2023-01-31 14:53:37.778576",
  "modified_by": "Administrator",
  "module": "Custom",
- "name": "Audit System Hooks",
+ "id": "Audit System Hooks",
  "owner": "Administrator",
  "prepared_report": 0,
  "query": "",

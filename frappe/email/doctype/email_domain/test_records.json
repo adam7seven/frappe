@@ -15,7 +15,7 @@
  },
  {
   "doctype": "Email Account",
-  "name": "_Test Email Account 1",
+  "id": "_Test Email Account 1",
   "enable_incoming": 1,
   "email_id": "_test@test.com",
   "domain": "test.com",

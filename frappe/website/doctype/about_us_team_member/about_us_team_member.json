@@ -40,7 +40,7 @@
  "modified": "2022-08-03 12:20:50.254472",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "About Us Team Member",
+ "id": "About Us Team Member",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

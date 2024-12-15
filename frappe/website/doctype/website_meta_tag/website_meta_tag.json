@@ -29,7 +29,7 @@
  "modified": "2022-08-03 12:20:49.259886",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Website Meta Tag",
+ "id": "Website Meta Tag",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

@@ -24,7 +24,7 @@
  "modified": "2023-08-28 22:26:04.298759",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Marketing Campaign",
+ "id": "Marketing Campaign",
  "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [

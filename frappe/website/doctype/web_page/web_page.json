@@ -342,7 +342,7 @@
  "modified": "2024-04-12 10:30:49.022735",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Web Page",
+ "id": "Web Page",
  "owner": "Administrator",
  "permissions": [
   {

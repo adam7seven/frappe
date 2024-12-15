@@ -102,7 +102,7 @@
  "modified": "2023-12-08 15:52:37.525003",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "Google Contacts",
+ "id": "Google Contacts",
  "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [

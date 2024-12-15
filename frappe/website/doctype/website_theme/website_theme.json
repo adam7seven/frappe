@@ -184,7 +184,7 @@
  "modified": "2022-10-25 22:15:53.601571",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Website Theme",
+ "id": "Website Theme",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

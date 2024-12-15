@@ -9,7 +9,7 @@
  "modified": "2018-12-27 18:10:29.785415", 
  "modified_by": "Administrator", 
  "module": "Core", 
- "name": "Transaction Log Report", 
+ "id": "Transaction Log Report", 
  "owner": "Administrator", 
  "prepared_report": 0, 
  "ref_doctype": "Transaction Log", 

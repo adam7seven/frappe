@@ -52,7 +52,7 @@
  "modified": "2022-08-03 12:20:51.295775",
  "modified_by": "Administrator",
  "module": "Printing",
- "name": "Print Style",
+ "id": "Print Style",
  "owner": "Administrator",
  "permissions": [
   {

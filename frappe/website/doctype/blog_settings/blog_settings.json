@@ -134,7 +134,7 @@
  "modified": "2024-01-30 14:13:12.477755",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Blog Settings",
+ "id": "Blog Settings",
  "owner": "Administrator",
  "permissions": [
   {

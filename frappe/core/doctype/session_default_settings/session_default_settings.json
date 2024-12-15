@@ -18,7 +18,7 @@
  "modified": "2019-07-19 16:04:33.971089",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Session Default Settings",
+ "id": "Session Default Settings",
  "owner": "Administrator",
  "permissions": [
   {

@@ -179,7 +179,7 @@
  "modified": "2023-05-30 14:55:25.740691",
  "modified_by": "Administrator",
  "module": "Printing",
- "name": "Print Settings",
+ "id": "Print Settings",
  "owner": "Administrator",
  "permissions": [
   {

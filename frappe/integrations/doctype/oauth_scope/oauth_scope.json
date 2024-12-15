@@ -20,7 +20,7 @@
  "modified": "2020-07-15 22:15:18.930632",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "OAuth Scope",
+ "id": "OAuth Scope",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

@@ -49,7 +49,7 @@
  "modified": "2021-11-16 23:24:01.366928",
  "modified_by": "Administrator",
  "module": "Social",
- "name": "Energy Point Settings",
+ "id": "Energy Point Settings",
  "owner": "Administrator",
  "permissions": [
   {

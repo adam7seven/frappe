@@ -40,7 +40,7 @@
  "modified": "2020-04-06 18:28:10.486220",
  "modified_by": "Administrator",
  "module": "Contacts",
- "name": "Contact Phone",
+ "id": "Contact Phone",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

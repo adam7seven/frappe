@@ -35,7 +35,7 @@
  "modified": "2023-06-16 18:26:16.247475",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Amended Document Naming Settings",
+ "id": "Amended Document Naming Settings",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

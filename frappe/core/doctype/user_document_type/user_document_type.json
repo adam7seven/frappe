@@ -132,7 +132,7 @@
  "modified": "2024-07-12 17:32:15.721862",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "User Document Type",
+ "id": "User Document Type",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

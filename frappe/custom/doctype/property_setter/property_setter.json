@@ -120,7 +120,7 @@
  "modified": "2022-02-28 22:24:12.377693",
  "modified_by": "Administrator",
  "module": "Custom",
- "name": "Property Setter",
+ "id": "Property Setter",
  "owner": "Administrator",
  "permissions": [
   {

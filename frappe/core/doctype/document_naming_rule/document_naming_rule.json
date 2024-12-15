@@ -90,7 +90,7 @@
  "modified": "2023-04-24 15:14:32.054272",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Document Naming Rule",
+ "id": "Document Naming Rule",
  "owner": "Administrator",
  "permissions": [
   {

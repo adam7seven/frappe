@@ -90,7 +90,7 @@
  "modified": "2017-05-03 05:59:09.131569",
  "modified_by": "Administrator",
  "module": "Printing",
- "name": "Print Heading",
+ "id": "Print Heading",
  "owner": "Administrator",
  "permissions": [
   {

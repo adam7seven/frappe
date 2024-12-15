@@ -64,7 +64,7 @@
  "modified": "2024-01-08 12:05:25.782635",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Top Bar Item",
+ "id": "Top Bar Item",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

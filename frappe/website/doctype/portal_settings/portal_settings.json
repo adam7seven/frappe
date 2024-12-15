@@ -59,7 +59,7 @@
  "modified": "2020-08-06 15:43:36.387050",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Portal Settings",
+ "id": "Portal Settings",
  "owner": "Administrator",
  "permissions": [
   {

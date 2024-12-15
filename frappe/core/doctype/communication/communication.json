@@ -405,7 +405,7 @@
  "modified": "2024-02-09 12:10:01.200845",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Communication",
+ "id": "Communication",
  "owner": "Administrator",
  "permissions": [
   {

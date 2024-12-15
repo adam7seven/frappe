@@ -417,7 +417,7 @@
  "modified": "2024-10-21 12:04:47.314849",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Web Form",
+ "id": "Web Form",
  "owner": "Administrator",
  "permissions": [
   {

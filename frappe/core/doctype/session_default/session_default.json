@@ -19,7 +19,7 @@
  "modified": "2019-07-21 13:22:25.752553",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Session Default",
+ "id": "Session Default",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

@@ -29,7 +29,7 @@
  "modified": "2019-09-24 17:47:30.565805",
  "modified_by": "Administrator",
  "module": "Contacts",
- "name": "Contact Email",
+ "id": "Contact Email",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

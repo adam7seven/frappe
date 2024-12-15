@@ -30,7 +30,7 @@
  "modified": "2024-04-19 17:10:43.199907",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "System Health Report Errors",
+ "id": "System Health Report Errors",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "creation",

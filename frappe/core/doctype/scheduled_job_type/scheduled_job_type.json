@@ -104,7 +104,7 @@
  "modified": "2023-10-14 11:26:05.005930",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Scheduled Job Type",
+ "id": "Scheduled Job Type",
  "owner": "Administrator",
  "permissions": [
   {

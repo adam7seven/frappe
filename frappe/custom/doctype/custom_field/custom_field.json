@@ -473,7 +473,7 @@
  "modified": "2024-09-28 20:19:35.935720",
  "modified_by": "Administrator",
  "module": "Custom",
- "name": "Custom Field",
+ "id": "Custom Field",
  "owner": "Administrator",
  "permissions": [
   {

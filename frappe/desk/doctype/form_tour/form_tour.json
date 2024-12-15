@@ -181,7 +181,7 @@
  "modified": "2023-08-28 20:24:42.594360",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Form Tour",
+ "id": "Form Tour",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

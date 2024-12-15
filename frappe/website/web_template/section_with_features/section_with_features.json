@@ -58,7 +58,7 @@
  "modified": "2023-06-05 13:26:34.470232",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Section with Features",
+ "id": "Section with Features",
  "owner": "Administrator",
  "standard": 1,
  "type": "Section"

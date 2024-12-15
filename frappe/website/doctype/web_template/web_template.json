@@ -57,7 +57,7 @@
  "modified": "2023-12-12 20:01:21.524022",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Web Template",
+ "id": "Web Template",
  "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [

@@ -31,7 +31,7 @@
  "modified": "2023-02-15 01:16:26.216201",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Workspace Number Card",
+ "id": "Workspace Number Card",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

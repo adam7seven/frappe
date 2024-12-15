@@ -86,7 +86,7 @@
  "modified": "2022-07-04 06:53:54.997004",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Translation",
+ "id": "Translation",
  "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [

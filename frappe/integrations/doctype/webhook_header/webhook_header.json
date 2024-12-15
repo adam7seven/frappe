@@ -27,7 +27,7 @@
  "modified": "2023-12-11 12:20:51.949422",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "Webhook Header",
+ "id": "Webhook Header",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

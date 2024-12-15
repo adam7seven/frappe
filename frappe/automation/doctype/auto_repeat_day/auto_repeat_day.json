@@ -23,7 +23,7 @@
  "modified": "2020-11-10 22:30:53.690228",
  "modified_by": "Administrator",
  "module": "Automation",
- "name": "Auto Repeat Day",
+ "id": "Auto Repeat Day",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

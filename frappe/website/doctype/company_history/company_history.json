@@ -30,7 +30,7 @@
  "modified": "2022-08-03 12:20:50.361022",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Company History",
+ "id": "Company History",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

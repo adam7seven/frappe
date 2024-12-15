@@ -260,7 +260,7 @@
  "modified": "2023-12-08 15:52:37.525003",
  "modified_by": "Administrator",
  "module": "Contacts",
- "name": "Contact",
+ "id": "Contact",
  "name_case": "Title Case",
  "naming_rule": "By script",
  "owner": "Administrator",

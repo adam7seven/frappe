@@ -48,7 +48,7 @@
  "modified": "2021-11-30 09:51:34.489932",
  "modified_by": "Administrator",
  "module": "Email",
- "name": "Email Flag Queue",
+ "id": "Email Flag Queue",
  "owner": "Administrator",
  "permissions": [
   {

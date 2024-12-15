@@ -77,7 +77,7 @@
  "modified": "2023-10-04 12:45:49.099121",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Audit Trail",
+ "id": "Audit Trail",
  "owner": "Administrator",
  "permissions": [
   {

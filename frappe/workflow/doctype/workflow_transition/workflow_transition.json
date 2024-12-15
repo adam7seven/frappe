@@ -99,7 +99,7 @@
  "modified": "2023-05-02 19:57:42.370841",
  "modified_by": "Administrator",
  "module": "Workflow",
- "name": "Workflow Transition",
+ "id": "Workflow Transition",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

@@ -105,7 +105,7 @@
  "modified": "2023-12-08 15:52:37.525003",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Page",
+ "id": "Page",
  "owner": "Administrator",
  "permissions": [
   {

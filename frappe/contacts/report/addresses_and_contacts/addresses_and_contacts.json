@@ -10,7 +10,7 @@
  "modified": "2017-04-10 15:04:12.498920", 
  "modified_by": "Administrator", 
  "module": "Contacts", 
- "name": "Addresses And Contacts", 
+ "id": "Addresses And Contacts", 
  "owner": "Administrator", 
  "ref_doctype": "Address", 
  "report_name": "Addresses And Contacts", 

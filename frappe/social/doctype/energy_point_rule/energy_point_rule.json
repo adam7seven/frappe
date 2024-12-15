@@ -118,7 +118,7 @@
  "modified": "2019-10-28 14:16:09.710167",
  "modified_by": "Administrator",
  "module": "Social",
- "name": "Energy Point Rule",
+ "id": "Energy Point Rule",
  "owner": "Administrator",
  "permissions": [
   {

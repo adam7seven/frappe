@@ -7,7 +7,7 @@
  "modified": "2017-05-03 05:59:33.702308", 
  "modified_by": "Administrator", 
  "module": "Printing", 
- "name": "print-format-builder", 
+ "id": "print-format-builder", 
  "owner": "Administrator", 
  "page_name": "print-format-builder", 
  "roles": [

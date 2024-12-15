@@ -30,7 +30,7 @@
  "modified": "2023-05-17 14:50:45.575609",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Workspace Custom Block",
+ "id": "Workspace Custom Block",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

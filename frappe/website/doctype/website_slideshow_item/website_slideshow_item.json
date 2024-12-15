@@ -48,7 +48,7 @@
  "modified": "2020-09-10 14:44:54.537285",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Website Slideshow Item",
+ "id": "Website Slideshow Item",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

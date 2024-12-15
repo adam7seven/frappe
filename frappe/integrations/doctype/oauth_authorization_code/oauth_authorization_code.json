@@ -93,7 +93,7 @@
  "modified": "2021-04-26 07:23:02.980612",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "OAuth Authorization Code",
+ "id": "OAuth Authorization Code",
  "owner": "Administrator",
  "permissions": [
   {

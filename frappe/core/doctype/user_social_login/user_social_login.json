@@ -47,7 +47,7 @@
  "modified": "2022-08-03 12:20:53.800689",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "User Social Login",
+ "id": "User Social Login",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

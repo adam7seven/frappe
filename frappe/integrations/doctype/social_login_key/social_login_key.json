@@ -179,7 +179,7 @@
  "modified": "2024-09-06 15:22:46.342392",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "Social Login Key",
+ "id": "Social Login Key",
  "owner": "Administrator",
  "permissions": [
   {

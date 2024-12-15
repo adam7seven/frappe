@@ -57,7 +57,7 @@
  "modified": "2020-10-26 17:38:40.798713",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Web Template Field",
+ "id": "Web Template Field",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

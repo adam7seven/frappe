@@ -78,7 +78,7 @@
  "modified": "2023-04-07 07:08:00.249740",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "OAuth Bearer Token",
+ "id": "OAuth Bearer Token",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

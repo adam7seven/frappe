@@ -9,7 +9,7 @@
   "json": "{\"filters\":[],\"columns\":[[\"name\",\"User\"],[\"user_type\",\"User\"],[\"first_name\",\"User\"],[\"last_name\",\"User\"],[\"last_active\",\"User\"],[\"role\",\"Has Role\"]],\"sort_by\":\"User.modified\",\"sort_order\":\"desc\",\"sort_by_next\":null,\"sort_order_next\":\"desc\"}",
   "modified": "2016-09-01 02:59:07.728890",
   "module": "Core",
-  "name": "User Activity Report",
+  "id": "User Activity Report",
   "query": null,
   "ref_doctype": "User",
   "report_name": "User Activity Report",

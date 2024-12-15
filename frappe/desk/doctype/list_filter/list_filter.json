@@ -39,7 +39,7 @@
  "modified": "2023-08-28 22:32:51.465521",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "List Filter",
+ "id": "List Filter",
  "owner": "Administrator",
  "permissions": [
   {

@@ -10,7 +10,7 @@
  "modified": "2020-04-17 16:10:30.168312",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Website Analytics",
+ "id": "Website Analytics",
  "owner": "Administrator",
  "prepared_report": 0,
  "ref_doctype": "Web Page View",

@@ -31,7 +31,7 @@
  "idx": 0,
  "modified": "2020-09-11 15:52:40.588688",
  "modified_by": "Administrator",
- "name": "Section with Small CTA",
+ "id": "Section with Small CTA",
  "owner": "Administrator",
  "standard": 1,
  "type": "Section"

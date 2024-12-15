@@ -64,7 +64,7 @@
  "modified": "2022-06-03 14:25:46.944733",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "User Email",
+ "id": "User Email",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

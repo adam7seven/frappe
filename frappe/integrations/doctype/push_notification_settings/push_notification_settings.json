@@ -49,7 +49,7 @@
  "modified": "2024-02-28 11:03:30.518196",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "Push Notification Settings",
+ "id": "Push Notification Settings",
  "owner": "Administrator",
  "permissions": [
   {

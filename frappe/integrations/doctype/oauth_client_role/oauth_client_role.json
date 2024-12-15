@@ -22,7 +22,7 @@
  "modified": "2024-04-29 12:16:48.018031",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "OAuth Client Role",
+ "id": "OAuth Client Role",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "creation",

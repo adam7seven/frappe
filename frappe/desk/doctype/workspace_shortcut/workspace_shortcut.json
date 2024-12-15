@@ -118,7 +118,7 @@
  "modified": "2023-11-27 14:13:38.489737",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Workspace Shortcut",
+ "id": "Workspace Shortcut",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

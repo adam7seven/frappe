@@ -48,7 +48,7 @@
  "modified": "2021-12-16 10:39:27.058371",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Personal Data Deletion Request",
+ "id": "Personal Data Deletion Request",
  "owner": "Administrator",
  "permissions": [
   {

@@ -57,7 +57,7 @@
  "modified": "2021-04-23 13:48:59.658681",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Personal Data Deletion Step",
+ "id": "Personal Data Deletion Step",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

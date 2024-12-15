@@ -59,7 +59,7 @@
  "modified": "2024-05-01 14:09:54.587137",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Navbar Settings",
+ "id": "Navbar Settings",
  "owner": "Administrator",
  "permissions": [
   {

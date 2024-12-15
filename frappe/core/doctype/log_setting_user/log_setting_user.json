@@ -25,7 +25,7 @@
  "modified": "2020-10-08 17:22:04.690348",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Log Setting User",
+ "id": "Log Setting User",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

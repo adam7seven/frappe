@@ -220,7 +220,7 @@
  "modified": "2023-05-23 13:09:15.923043",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Form Tour Step",
+ "id": "Form Tour Step",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

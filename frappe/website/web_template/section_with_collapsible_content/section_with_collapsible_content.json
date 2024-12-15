@@ -46,7 +46,7 @@
  "modified": "2020-10-26 17:40:20.365936",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Section with Collapsible Content",
+ "id": "Section with Collapsible Content",
  "owner": "Administrator",
  "standard": 1,
  "template": "",

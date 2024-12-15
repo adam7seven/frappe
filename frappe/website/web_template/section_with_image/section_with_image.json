@@ -40,7 +40,7 @@
  "modified": "2020-10-26 17:40:11.558331",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Section with Image",
+ "id": "Section with Image",
  "owner": "Administrator",
  "standard": 1,
  "type": "Section"

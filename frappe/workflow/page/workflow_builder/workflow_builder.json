@@ -7,7 +7,7 @@
  "modified": "2023-05-01 13:02:17.223595",
  "modified_by": "Administrator",
  "module": "Workflow",
- "name": "workflow-builder",
+ "id": "workflow-builder",
  "owner": "Administrator",
  "page_name": "workflow-builder",
  "roles": [

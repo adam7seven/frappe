@@ -40,7 +40,7 @@
  "modified": "2023-12-08 15:52:37.525003",
  "modified_by": "Administrator",
  "module": "Social",
- "name": "Review Level",
+ "id": "Review Level",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

@@ -82,7 +82,7 @@
  "modified": "2023-05-21 15:50:10.414002",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "Webhook Request Log",
+ "id": "Webhook Request Log",
  "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [

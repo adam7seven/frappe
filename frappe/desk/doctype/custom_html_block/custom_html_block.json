@@ -96,7 +96,7 @@
  "modified": "2023-08-28 20:25:00.740795",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Custom HTML Block",
+ "id": "Custom HTML Block",
  "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [

@@ -102,7 +102,7 @@
  "modified": "2024-05-13 17:13:20.785329",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Recorder Query",
+ "id": "Recorder Query",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

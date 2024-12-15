@@ -24,7 +24,7 @@
  "modified": "2022-07-18 16:51:30.949738",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "request-to-delete-data",
+ "id": "request-to-delete-data",
  "owner": "Administrator",
  "published": 1,
  "route": "request-for-account-deletion",

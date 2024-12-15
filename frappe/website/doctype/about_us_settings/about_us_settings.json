@@ -85,7 +85,7 @@
  "modified": "2020-10-12 13:26:20.277859",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "About Us Settings",
+ "id": "About Us Settings",
  "owner": "Administrator",
  "permissions": [
   {

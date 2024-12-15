@@ -8,7 +8,7 @@
  "doctype": "Web Form",
  "introduction_text": "Add events",
  "login_required": 1,
- "name": "manage-events",
+ "id": "manage-events",
  "owner": "Administrator",
  "page_name": "manage-events",
  "published": 1,

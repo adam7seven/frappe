@@ -21,7 +21,7 @@
  "modified": "2022-06-11 02:17:30.803721",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Log Settings",
+ "id": "Log Settings",
  "owner": "Administrator",
  "permissions": [
   {

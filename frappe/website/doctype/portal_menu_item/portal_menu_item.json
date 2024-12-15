@@ -65,7 +65,7 @@
  "modified": "2022-08-03 12:20:49.792747",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Portal Menu Item",
+ "id": "Portal Menu Item",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

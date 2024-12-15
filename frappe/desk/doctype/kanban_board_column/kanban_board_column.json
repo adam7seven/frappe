@@ -44,7 +44,7 @@
  "modified": "2021-12-14 13:13:38.804259",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Kanban Board Column",
+ "id": "Kanban Board Column",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

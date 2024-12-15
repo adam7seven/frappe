@@ -46,7 +46,7 @@
  "modified": "2023-08-28 22:24:08.103972",
  "modified_by": "Administrator",
  "module": "Custom",
- "name": "DocType Layout",
+ "id": "DocType Layout",
  "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [

@@ -223,7 +223,7 @@
  "modified": "2024-02-04 13:31:08.624648",
  "modified_by": "Administrator",
  "module": "Email",
- "name": "Auto Email Report",
+ "id": "Auto Email Report",
  "owner": "Administrator",
  "permissions": [
   {

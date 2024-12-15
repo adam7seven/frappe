@@ -219,7 +219,7 @@
  "modified": "2023-02-17 11:31:32.223524",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Blog Post",
+ "id": "Blog Post",
  "owner": "Administrator",
  "permissions": [
   {

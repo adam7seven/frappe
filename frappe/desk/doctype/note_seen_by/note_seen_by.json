@@ -22,7 +22,7 @@
  "modified": "2023-04-24 16:14:53.684098",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Note Seen By",
+ "id": "Note Seen By",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

@@ -10,7 +10,7 @@
  "modified": "2017-06-21 18:18:50.748793", 
  "modified_by": "Administrator", 
  "module": "Desk", 
- "name": "ToDo", 
+ "id": "ToDo", 
  "owner": "Administrator", 
  "ref_doctype": "ToDo", 
  "report_name": "ToDo", 

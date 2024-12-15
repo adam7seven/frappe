@@ -117,7 +117,7 @@
  "modified": "2024-02-29 19:31:08.502527",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "RQ Worker",
+ "id": "RQ Worker",
  "owner": "Administrator",
  "permissions": [
   {

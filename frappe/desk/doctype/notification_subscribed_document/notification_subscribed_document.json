@@ -20,7 +20,7 @@
  "modified": "2019-10-09 16:02:00.049237",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Notification Subscribed Document",
+ "id": "Notification Subscribed Document",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

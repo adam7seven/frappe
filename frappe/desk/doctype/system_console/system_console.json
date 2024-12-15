@@ -89,7 +89,7 @@
  "modified": "2023-11-03 13:02:00.706806",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "System Console",
+ "id": "System Console",
  "owner": "Administrator",
  "permissions": [
   {

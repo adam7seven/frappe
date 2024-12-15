@@ -486,7 +486,7 @@
  "modified": "2024-01-08 11:50:34.750809",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Website Settings",
+ "id": "Website Settings",
  "owner": "Administrator",
  "permissions": [
   {

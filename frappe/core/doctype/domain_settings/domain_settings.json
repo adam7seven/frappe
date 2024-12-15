@@ -34,7 +34,7 @@
  "modified": "2022-08-03 12:20:53.256607",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Domain Settings",
+ "id": "Domain Settings",
  "owner": "Administrator",
  "permissions": [
   {

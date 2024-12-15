@@ -51,7 +51,7 @@
  "modified": "2020-09-03 10:52:03.895817",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Report Column",
+ "id": "Report Column",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

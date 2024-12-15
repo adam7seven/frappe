@@ -22,7 +22,7 @@
  "modified": "2020-04-30 18:28:40.423802",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Onboarding Permission",
+ "id": "Onboarding Permission",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

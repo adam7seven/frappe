@@ -29,7 +29,7 @@
  "modified": "2020-11-16 15:18:35.887149",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "Query Parameters",
+ "id": "Query Parameters",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

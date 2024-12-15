@@ -40,7 +40,7 @@
  "modified": "2023-06-07 00:00:01.369265",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Patch Log",
+ "id": "Patch Log",
  "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [

@@ -294,7 +294,7 @@
  "modified": "2024-07-04 05:53:40.595130",
  "modified_by": "Administrator",
  "module": "Email",
- "name": "Notification",
+ "id": "Notification",
  "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [

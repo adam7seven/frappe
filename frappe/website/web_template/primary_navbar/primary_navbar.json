@@ -9,7 +9,7 @@
  "modified": "2021-01-20 13:20:46.147656",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Primary Navbar",
+ "id": "Primary Navbar",
  "owner": "Administrator",
  "standard": 1,
  "template": "",

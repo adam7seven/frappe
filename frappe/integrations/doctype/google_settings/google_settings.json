@@ -78,7 +78,7 @@
  "modified": "2024-01-16 13:19:22.365362",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "Google Settings",
+ "id": "Google Settings",
  "owner": "Administrator",
  "permissions": [
   {

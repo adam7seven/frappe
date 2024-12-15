@@ -21,7 +21,7 @@
  "modified": "2023-01-18 10:26:26.766414",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "edit-profile",
+ "id": "edit-profile",
  "owner": "Administrator",
  "published": 1,
  "route": "update-profile",

@@ -62,7 +62,7 @@
  "modified": "2024-04-29 18:44:17.050909",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Data Import Log",
+ "id": "Data Import Log",
  "owner": "Administrator",
  "permissions": [
   {

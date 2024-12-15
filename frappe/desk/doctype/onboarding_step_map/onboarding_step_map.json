@@ -22,7 +22,7 @@
  "modified": "2020-04-28 22:06:09.503406",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Onboarding Step Map",
+ "id": "Onboarding Step Map",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

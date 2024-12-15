@@ -21,7 +21,7 @@
  "modified": "2020-04-19 17:45:11.878472",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Number Card Link",
+ "id": "Number Card Link",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

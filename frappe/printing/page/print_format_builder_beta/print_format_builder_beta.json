@@ -7,7 +7,7 @@
  "modified": "2021-07-10 12:22:16.138485",
  "modified_by": "Administrator",
  "module": "Printing",
- "name": "print-format-builder-beta",
+ "id": "print-format-builder-beta",
  "owner": "Administrator",
  "page_name": "Print Format Builder Beta",
  "roles": [

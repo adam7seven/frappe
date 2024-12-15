@@ -30,7 +30,7 @@
  "modified": "2021-09-28 12:09:10.875929",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Discussion Reply",
+ "id": "Discussion Reply",
  "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [

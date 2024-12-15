@@ -213,7 +213,7 @@
  "modified": "2023-02-20 13:21:45.071310",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "DocPerm",
+ "id": "DocPerm",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

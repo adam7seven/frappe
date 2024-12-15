@@ -36,7 +36,7 @@
  "modified": "2022-09-06 13:38:10.644417",
  "modified_by": "Administrator",
  "module": "Email",
- "name": "Email Queue Recipient",
+ "id": "Email Queue Recipient",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

@@ -113,7 +113,7 @@
  "modified": "2023-08-28 22:21:44.238862",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "Google Calendar",
+ "id": "Google Calendar",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

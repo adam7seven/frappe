@@ -64,7 +64,7 @@
  "modified": "2020-09-24 14:19:05.549835",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "DocType Action",
+ "id": "DocType Action",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

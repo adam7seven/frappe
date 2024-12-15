@@ -18,7 +18,7 @@
  "modified": "2019-09-25 17:47:41.712237",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Tag",
+ "id": "Tag",
  "owner": "Administrator",
  "permissions": [
   {

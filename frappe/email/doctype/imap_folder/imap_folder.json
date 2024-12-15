@@ -44,7 +44,7 @@
  "modified": "2021-09-21 11:53:00.811236",
  "modified_by": "Administrator",
  "module": "Email",
- "name": "IMAP Folder",
+ "id": "IMAP Folder",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

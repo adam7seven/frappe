@@ -19,7 +19,7 @@
  "modified": "2019-09-18 17:59:44.354052",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Global Search DocType",
+ "id": "Global Search DocType",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

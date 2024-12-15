@@ -82,7 +82,7 @@
  "modified": "2023-08-28 22:32:58.947849",
  "modified_by": "Administrator",
  "module": "Workflow",
- "name": "Workflow Action",
+ "id": "Workflow Action",
  "owner": "Administrator",
  "permissions": [
   {

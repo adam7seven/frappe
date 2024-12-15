@@ -42,7 +42,7 @@
  "modified": "2021-09-05 21:30:04.796090",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Package Import",
+ "id": "Package Import",
  "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [

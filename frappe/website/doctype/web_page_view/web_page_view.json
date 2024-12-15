@@ -89,7 +89,7 @@
  "modified": "2023-03-20 23:38:27.067285",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Web Page View",
+ "id": "Web Page View",
  "owner": "Administrator",
  "permissions": [
   {

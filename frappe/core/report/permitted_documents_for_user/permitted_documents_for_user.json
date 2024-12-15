@@ -9,7 +9,7 @@
  "modified": "2018-06-29 15:46:42.805039", 
  "modified_by": "Administrator", 
  "module": "Core", 
- "name": "Permitted Documents For User", 
+ "id": "Permitted Documents For User", 
  "owner": "Administrator", 
  "prepared_report": 0, 
  "ref_doctype": "User", 

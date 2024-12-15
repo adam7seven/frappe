@@ -132,7 +132,7 @@
  "modified": "2024-09-10 14:16:11.991216",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Workspace Link",
+ "id": "Workspace Link",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

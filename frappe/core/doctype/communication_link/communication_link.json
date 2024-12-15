@@ -37,7 +37,7 @@
  "modified": "2019-05-21 09:47:23.043960",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Communication Link",
+ "id": "Communication Link",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

@@ -55,7 +55,7 @@
  "modified": "2022-08-03 12:20:50.742376",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Bulk Update",
+ "id": "Bulk Update",
  "owner": "Administrator",
  "permissions": [
   {

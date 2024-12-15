@@ -115,7 +115,7 @@
    "fieldname": "fieldname",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Name",
+   "label": "id",
    "oldfieldname": "fieldname",
    "oldfieldtype": "Data",
    "search_index": 1
@@ -598,7 +598,7 @@
  "modified": "2024-10-01 07:26:16.380090",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "DocField",
+ "id": "DocField",
  "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [],

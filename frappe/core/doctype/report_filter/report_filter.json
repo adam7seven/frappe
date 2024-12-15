@@ -79,7 +79,7 @@
  "modified": "2023-06-15 11:37:35.961036",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Report Filter",
+ "id": "Report Filter",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

@@ -38,7 +38,7 @@
  "modified": "2021-09-28 12:11:50.016352",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Discussion Topic",
+ "id": "Discussion Topic",
  "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [

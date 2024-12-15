@@ -154,7 +154,7 @@
  "modified": "2024-04-08 16:18:52.901097",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Server Script",
+ "id": "Server Script",
  "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [

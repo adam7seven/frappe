@@ -29,7 +29,7 @@
  "modified": "2021-01-12 13:13:25.781925",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Workspace Chart",
+ "id": "Workspace Chart",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

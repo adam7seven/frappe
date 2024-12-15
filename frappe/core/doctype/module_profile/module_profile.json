@@ -43,7 +43,7 @@
  "modified": "2021-12-03 15:47:21.296443",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Module Profile",
+ "id": "Module Profile",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

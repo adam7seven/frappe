@@ -19,7 +19,7 @@
  "modified": "2019-09-21 16:55:09.376291",
  "modified_by": "Administrator",
  "module": "Automation",
- "name": "Assignment Rule Day",
+ "id": "Assignment Rule Day",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

@@ -39,7 +39,7 @@
  "modified": "2020-09-08 10:19:56.192949",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Document Naming Rule Condition",
+ "id": "Document Naming Rule Condition",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

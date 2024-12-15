@@ -256,7 +256,7 @@
  "modified": "2024-11-12 12:41:02.569631",
  "modified_by": "Administrator",
  "module": "Email",
- "name": "Newsletter",
+ "id": "Newsletter",
  "owner": "Administrator",
  "permissions": [
   {

@@ -43,7 +43,7 @@
  "idx": 0,
  "modified": "2020-09-11 15:52:40.669334",
  "modified_by": "Administrator",
- "name": "Section with CTA",
+ "id": "Section with CTA",
  "owner": "Administrator",
  "standard": 1,
  "type": "Section"

@@ -7,7 +7,7 @@
  "modified": "2020-10-09 17:23:15.163030",
  "modified_by": "Administrator",
  "module": "Printing",
- "name": "print",
+ "id": "print",
  "owner": "Administrator",
  "page_name": "Print",
  "roles": [],

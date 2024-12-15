@@ -45,7 +45,7 @@
  "modified": "2021-12-03 15:45:45.270963",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Role Profile",
+ "id": "Role Profile",
  "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [

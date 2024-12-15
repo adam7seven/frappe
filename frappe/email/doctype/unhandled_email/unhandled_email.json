@@ -46,7 +46,7 @@
  "modified": "2022-08-03 12:20:51.822287",
  "modified_by": "Administrator",
  "module": "Email",
- "name": "Unhandled Email",
+ "id": "Unhandled Email",
  "owner": "Administrator",
  "permissions": [
   {

@@ -21,7 +21,7 @@
  "modified": "2022-08-03 12:20:53.381248",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Has Domain",
+ "id": "Has Domain",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,

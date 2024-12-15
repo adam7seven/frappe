@@ -78,7 +78,7 @@
  "modified": "2021-10-19 17:47:59.577949",
  "modified_by": "Administrator",
  "module": "Printing",
- "name": "Print Format Field Template",
+ "id": "Print Format Field Template",
  "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [

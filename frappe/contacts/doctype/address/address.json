@@ -153,7 +153,7 @@
  "modified": "2023-11-20 17:28:41.698356",
  "modified_by": "Administrator",
  "module": "Contacts",
- "name": "Address",
+ "id": "Address",
  "owner": "Administrator",
  "permissions": [
   {

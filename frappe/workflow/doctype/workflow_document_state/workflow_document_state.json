@@ -113,7 +113,7 @@
  "modified": "2023-11-13 18:27:08.633239",
  "modified_by": "Administrator",
  "module": "Workflow",
- "name": "Workflow Document State",
+ "id": "Workflow Document State",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

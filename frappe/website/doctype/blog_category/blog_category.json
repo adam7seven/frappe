@@ -70,7 +70,7 @@
  "modified": "2022-10-18 15:43:39.789982",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Blog Category",
+ "id": "Blog Category",
  "owner": "Administrator",
  "permissions": [
   {

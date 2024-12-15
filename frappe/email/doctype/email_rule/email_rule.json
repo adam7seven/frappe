@@ -29,7 +29,7 @@
  "modified": "2022-08-03 12:20:51.443237",
  "modified_by": "Administrator",
  "module": "Email",
- "name": "Email Rule",
+ "id": "Email Rule",
  "owner": "Administrator",
  "permissions": [
   {

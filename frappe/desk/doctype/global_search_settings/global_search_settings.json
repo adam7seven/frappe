@@ -18,7 +18,7 @@
  "modified": "2019-10-10 22:05:02.692689",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Global Search Settings",
+ "id": "Global Search Settings",
  "owner": "Administrator",
  "permissions": [
   {

@@ -229,7 +229,7 @@
  "modified": "2024-10-28 12:21:52.172428",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "Webhook",
+ "id": "Webhook",
  "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [

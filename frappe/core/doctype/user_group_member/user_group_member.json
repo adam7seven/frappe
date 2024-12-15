@@ -23,7 +23,7 @@
  "modified": "2021-04-12 15:17:18.773046",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "User Group Member",
+ "id": "User Group Member",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

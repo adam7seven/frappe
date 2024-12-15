@@ -11,7 +11,7 @@
  "is_skipped": 0,
  "modified": "2021-11-23 12:30:04.407568",
  "modified_by": "Administrator",
- "name": "Custom Doctype",
+ "id": "Custom Doctype",
  "owner": "Administrator",
  "reference_document": "DocType",
  "show_form_tour": 1,

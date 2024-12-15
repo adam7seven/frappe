@@ -127,7 +127,7 @@
  "modified": "2024-04-29 12:07:07.946980",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "OAuth Client",
+ "id": "OAuth Client",
  "owner": "Administrator",
  "permissions": [
   {

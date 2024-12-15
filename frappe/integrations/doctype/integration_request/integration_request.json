@@ -132,7 +132,7 @@
  "modified": "2023-10-09 09:36:23.856188",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "Integration Request",
+ "id": "Integration Request",
  "owner": "Administrator",
  "permissions": [
   {

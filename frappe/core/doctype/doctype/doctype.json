@@ -753,7 +753,7 @@
  "modified": "2023-12-01 18:37:16.799471",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "DocType",
+ "id": "DocType",
  "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [

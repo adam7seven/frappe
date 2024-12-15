@@ -29,7 +29,7 @@
  "modified": "2021-05-19 16:27:40.585865",
  "modified_by": "Administrator",
  "module": "Custom",
- "name": "DocType Layout Field",
+ "id": "DocType Layout Field",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

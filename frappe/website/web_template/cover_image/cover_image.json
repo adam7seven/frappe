@@ -26,7 +26,7 @@
  "modified": "2022-03-15 14:17:49.482939",
  "modified_by": "Administrator",
  "module": "Website",
- "name": "Cover Image",
+ "id": "Cover Image",
  "owner": "Administrator",
  "standard": 1,
  "template": "",

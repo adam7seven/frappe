@@ -61,7 +61,7 @@
  "modified": "2022-08-03 12:20:54.532708",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Success Action",
+ "id": "Success Action",
  "owner": "Administrator",
  "permissions": [
   {
