@@ -691,18 +691,18 @@ frappe.ui.form.Form = class FrappeForm {
 		}
 
 		if (
-			this.meta.autoname &&
-			this.meta.autoname.substr(0, 6) == "field:" &&
+			this.meta.autoid &&
+			this.meta.autoid.substr(0, 6) == "field:" &&
 			!this.doc.__islocal
 		) {
-			var fn = this.meta.autoname.substr(6);
+			var fn = this.meta.autoid.substr(6);
 
 			if (this.doc[fn]) {
 				this.toggle_display(fn, false);
 			}
 		}
 
-		if (this.meta.autoname == "naming_series:" && !this.doc.__islocal) {
+		if (this.meta.autoid == "naming_series:" && !this.doc.__islocal) {
 			this.toggle_display("naming_series", false);
 		}
 	}
@@ -1128,9 +1128,9 @@ frappe.ui.form.Form = class FrappeForm {
 				this.dashboard.clear_headline();
 				this.dashboard.set_headline_alert(
 					__("This form has been modified after you have loaded it") +
-						'<button class="btn btn-xs btn-primary pull-right" onclick="cur_frm.reload_doc()">' +
-						__("Refresh") +
-						"</button>",
+					'<button class="btn btn-xs btn-primary pull-right" onclick="cur_frm.reload_doc()">' +
+					__("Refresh") +
+					"</button>",
 					"alert-warning"
 				);
 			} else {
@@ -1165,7 +1165,7 @@ frappe.ui.form.Form = class FrappeForm {
 	add_web_link(path, label) {
 		label = __(label) || __("See on Website");
 		this.web_link = this.sidebar
-			.add_user_action(__(label), function () {})
+			.add_user_action(__(label), function () { })
 			.attr("href", path || this.doc.route)
 			.attr("target", "_blank");
 	}
@@ -2124,8 +2124,8 @@ frappe.ui.form.Form = class FrappeForm {
 						</div>
 						<div class="col-md-6">
 							<a href='/app/submission-queue?ref_doctype=${encodeURIComponent(
-								this.doctype
-							)}&ref_docname=${encodeURIComponent(this.docname)}'>${__(
+							this.doctype
+						)}&ref_docname=${encodeURIComponent(this.docname)}'>${__(
 							"All Submissions"
 						)}</a>
 						`;

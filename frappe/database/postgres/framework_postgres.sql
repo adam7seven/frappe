@@ -187,7 +187,7 @@ CREATE TABLE "tabDocType" (
   "module" varchar(255) DEFAULT NULL,
   "restrict_to_domain" varchar(255) DEFAULT NULL,
   "app" varchar(255) DEFAULT NULL,
-  "autoname" varchar(255) DEFAULT NULL,
+  "autoid" varchar(255) DEFAULT NULL,
   "naming_rule" varchar(40) DEFAULT NULL,
   "title_field" varchar(255) DEFAULT NULL,
   "image_field" varchar(255) DEFAULT NULL,

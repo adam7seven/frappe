@@ -3,7 +3,7 @@ export default {
 	actions: [],
 	custom: 1,
 	is_submittable: 1,
-	autoname: "field:title",
+	autoid: "field:title",
 	creation: "2022-03-30 06:29:07.215072",
 	doctype: "DocType",
 	engine: "InnoDB",

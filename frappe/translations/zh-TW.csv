@@ -2567,7 +2567,7 @@ Custom Translations,翻譯定制
 Progress,進展
  by Role ,依角色
 Missing Fields,丟失的字段
-Invalid fieldname '{0}' in autoname,在自動命名無效字段名“{0}”
+Invalid fieldname '{0}' in autoid,在自動命名無效字段名“{0}”
 Search in a document type,對文檔類型搜索
 Allow field to remain editable even after submission,讓外地甚至提交後仍然可編輯
 Role and Level,角色和級別

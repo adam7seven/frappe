@@ -149,7 +149,7 @@ frappe.ui.form.save = function (frm, action, callback, btn) {
 				}
 			});
 
-			if (frm.is_new() && frm.meta.autoname === "Prompt" && !frm.doc.__newname) {
+			if (frm.is_new() && frm.meta.autoid === "Prompt" && !frm.doc.__newname) {
 				has_errors = true;
 				error_fields = [__("Name"), ...error_fields];
 			}

@@ -4175,7 +4175,7 @@ msgid "Cannot change state of Cancelled Document. Transition row {0}"
 msgstr "Nije moguće promijeniti stanje otkazanog dokumenta. Prijelazni red {0}"
 
 #: frappe/core/doctype/doctype/doctype.py:1115
-msgid "Cannot change to/from autoincrement autoname in Customize Form"
+msgid "Cannot change to/from autoincrement autoid in Customize Form"
 msgstr "Nije moguće promijeniti u/iz autoinkrement autoimenovanje u Prilagodi obrazac"
 
 #: frappe/core/doctype/communication/communication.py:192
@@ -13136,7 +13136,7 @@ msgid "Invalid field name {0}"
 msgstr "Nevažeći naziv polja {0}"
 
 #: frappe/core/doctype/doctype/doctype.py:1061
-msgid "Invalid fieldname '{0}' in autoname"
+msgid "Invalid fieldname '{0}' in autoid"
 msgstr "Nevažeći naziv polja '{0}' u automatskom nazivu"
 
 #: frappe/client.py:344

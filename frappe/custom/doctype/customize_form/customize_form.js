@@ -148,9 +148,9 @@ frappe.ui.form.on("Customize Form", {
 					__("Actions")
 				);
 
-				const is_autoname_autoincrement = frm.doc.autoname === "autoincrement";
-				frm.set_df_property("naming_rule", "hidden", is_autoname_autoincrement);
-				frm.set_df_property("autoname", "read_only", is_autoname_autoincrement);
+				const is_autoid_autoincrement = frm.doc.autoid === "autoincrement";
+				frm.set_df_property("naming_rule", "hidden", is_autoid_autoincrement);
+				frm.set_df_property("autoid", "read_only", is_autoid_autoincrement);
 				frm.toggle_display(
 					["queue_in_background"],
 					frappe.get_meta(frm.doc.doc_type).is_submittable || 0

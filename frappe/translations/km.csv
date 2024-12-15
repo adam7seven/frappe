@@ -1349,7 +1349,7 @@ Invalid Token,សញ្ញាសម្ងាត់មិនត្រឹមត្
 Invalid User Name or Support Password. Please rectify and try again.,ឈ្មោះអ្នកប្រើឬពាក្យសម្ងាត់មិនត្រឹមត្រូវការគាំទ្រ។ សូមកែតម្រូវនិងព្យាយាមម្ដងទៀត។,
 Invalid column,ជួរឈរមិនត្រឹមត្រូវ,
 Invalid field name {0},ឈ្មោះវាលមិនត្រឹមត្រូវ {0},
-Invalid fieldname '{0}' in autoname,fieldname មិនត្រឹមត្រូវ &#39;{0} &quot;នៅក្នុង autoname,
+Invalid fieldname '{0}' in autoid,fieldname មិនត្រឹមត្រូវ &#39;{0} &quot;នៅក្នុង autoid,
 Invalid file path: {0},ផ្លូវឯកសារមិនត្រឹមត្រូវ: {0},
 Invalid login or password,ការចូលឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ,
 Invalid module path,ផ្លូវម៉ូឌុលមិនត្រឹមត្រូវ,

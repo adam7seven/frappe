@@ -3993,7 +3993,7 @@ msgid "Cannot change state of Cancelled Document. Transition row {0}"
 msgstr "crwdns114420:0{0}crwdne114420:0"
 
 #: frappe/core/doctype/doctype/doctype.py:1115
-msgid "Cannot change to/from autoincrement autoname in Customize Form"
+msgid "Cannot change to/from autoincrement autoid in Customize Form"
 msgstr "crwdns114422:0crwdne114422:0"
 
 #: frappe/core/doctype/communication/communication.py:192
@@ -12946,7 +12946,7 @@ msgid "Invalid field name {0}"
 msgstr "crwdns118732:0{0}crwdne118732:0"
 
 #: frappe/core/doctype/doctype/doctype.py:1061
-msgid "Invalid fieldname '{0}' in autoname"
+msgid "Invalid fieldname '{0}' in autoid"
 msgstr "crwdns118734:0{0}crwdne118734:0"
 
 #: frappe/client.py:344

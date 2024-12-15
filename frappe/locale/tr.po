@@ -4176,7 +4176,7 @@ msgid "Cannot change state of Cancelled Document. Transition row {0}"
 msgstr "İptal Edilen Belgenin durumu değiştirilemiyor. Geçiş satırı {0}"
 
 #: frappe/core/doctype/doctype/doctype.py:1115
-msgid "Cannot change to/from autoincrement autoname in Customize Form"
+msgid "Cannot change to/from autoincrement autoid in Customize Form"
 msgstr "Özelleştir Formunda otomatik artırma otomatik adı olarak değiştirilemiyor"
 
 #: frappe/core/doctype/communication/communication.py:192
@@ -13134,7 +13134,7 @@ msgid "Invalid field name {0}"
 msgstr "Geçersiz alan adı {0}"
 
 #: frappe/core/doctype/doctype/doctype.py:1061
-msgid "Invalid fieldname '{0}' in autoname"
+msgid "Invalid fieldname '{0}' in autoid"
 msgstr "Otomatik adlandırmada geçersiz alan adı '{0}'"
 
 #: frappe/client.py:344

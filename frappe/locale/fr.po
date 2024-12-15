@@ -4120,7 +4120,7 @@ msgid "Cannot change state of Cancelled Document. Transition row {0}"
 msgstr "Impossible de changer l'état d'un Document Annulé. Ligne de transition {0}"
 
 #: frappe/core/doctype/doctype/doctype.py:1115
-msgid "Cannot change to/from autoincrement autoname in Customize Form"
+msgid "Cannot change to/from autoincrement autoid in Customize Form"
 msgstr ""
 
 #: frappe/core/doctype/communication/communication.py:192
@@ -13076,7 +13076,7 @@ msgid "Invalid field name {0}"
 msgstr "Nom de champ {0} invalide"
 
 #: frappe/core/doctype/doctype/doctype.py:1061
-msgid "Invalid fieldname '{0}' in autoname"
+msgid "Invalid fieldname '{0}' in autoid"
 msgstr "Champ invalide '{0}' dans nom automatique"
 
 #: frappe/client.py:344

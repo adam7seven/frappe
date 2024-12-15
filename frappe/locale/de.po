@@ -4176,7 +4176,7 @@ msgid "Cannot change state of Cancelled Document. Transition row {0}"
 msgstr "Zustand des aufgehobenen Dokumentes kann nicht geändert werden. Übergangszeile {0}"
 
 #: frappe/core/doctype/doctype/doctype.py:1115
-msgid "Cannot change to/from autoincrement autoname in Customize Form"
+msgid "Cannot change to/from autoincrement autoid in Customize Form"
 msgstr "In „Formular anpassen“ kann nicht von/zu Benennungsschema „Autoinkrementierung“ gewechselt werden"
 
 #: frappe/core/doctype/communication/communication.py:192
@@ -13138,7 +13138,7 @@ msgid "Invalid field name {0}"
 msgstr "Ungültiger Feldname {0}"
 
 #: frappe/core/doctype/doctype/doctype.py:1061
-msgid "Invalid fieldname '{0}' in autoname"
+msgid "Invalid fieldname '{0}' in autoid"
 msgstr "Ungültige Feldname &#39;{0}&#39; in auton"
 
 #: frappe/client.py:344

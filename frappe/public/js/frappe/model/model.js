@@ -580,8 +580,8 @@ $.extend(frappe.model, {
 		*/
 		/* example: frappe.model.on("Customer", "age", function(fieldname, value, doc) {
 		  if(doc.age < 16) {
-		   	frappe.msgprint("Warning, Customer must atleast be 16 years old.");
-		    raise "CustomerAgeError";
+				  frappe.msgprint("Warning, Customer must atleast be 16 years old.");
+			raise "CustomerAgeError";
 		  }
 		}) */
 		frappe.provide("frappe.model.events." + doctype);
@@ -704,7 +704,7 @@ $.extend(frappe.model, {
 	delete_doc: function (doctype, docname, callback) {
 		let title = docname;
 		const title_field = frappe.get_meta(doctype).title_field;
-		if (frappe.get_meta(doctype).autoname == "hash" && title_field) {
+		if (frappe.get_meta(doctype).autoid == "hash" && title_field) {
 			const value = frappe.model.get_value(doctype, docname, title_field);
 			if (value) {
 				title = `${value} (${docname})`;
@@ -801,8 +801,8 @@ $.extend(frappe.model, {
 		if (!doc[fieldname]) {
 			frappe.throw(
 				__("Please specify") +
-					": " +
-					__(frappe.meta.get_label(doc.doctype, fieldname, doc.parent || doc.name))
+				": " +
+				__(frappe.meta.get_label(doc.doctype, fieldname, doc.parent || doc.name))
 			);
 		}
 	},

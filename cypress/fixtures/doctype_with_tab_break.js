@@ -47,7 +47,7 @@ export default {
 		},
 	],
 	quick_entry: 1,
-	autoname: "format: Test-{####}",
+	autoid: "format: Test-{####}",
 	sort_field: "modified",
 	sort_order: "ASC",
 	track_changes: 1,
