@@ -8,7 +8,7 @@ context("Client Script", () => {
 		cy.insert_doc(
 			"Client Script",
 			{
-				name: "Todo form script",
+				id: "Todo form script",
 				dt: "ToDo",
 				view: "Form",
 				enabled: 1,
@@ -28,7 +28,7 @@ context("Client Script", () => {
 		cy.insert_doc(
 			"Client Script",
 			{
-				name: "Todo list script",
+				id: "Todo list script",
 				dt: "ToDo",
 				view: "List",
 				enabled: 1,
@@ -48,7 +48,7 @@ context("Client Script", () => {
 		cy.insert_doc(
 			"Client Script",
 			{
-				name: "Todo disabled list",
+				id: "Todo disabled list",
 				dt: "ToDo",
 				view: "List",
 				enabled: 0,
@@ -68,7 +68,7 @@ context("Client Script", () => {
 		cy.insert_doc(
 			"Client Script",
 			{
-				name: "Todo form script 1",
+				id: "Todo form script 1",
 				dt: "ToDo",
 				view: "Form",
 				enabled: 1,
@@ -79,7 +79,7 @@ context("Client Script", () => {
 		cy.insert_doc(
 			"Client Script",
 			{
-				name: "Todo form script 2",
+				id: "Todo form script 2",
 				dt: "ToDo",
 				view: "Form",
 				enabled: 1,

@@ -120,11 +120,11 @@ class CustomField(Document):
     # end: auto-generated types
     def autoid(self):
         self.set_fieldname()
-        self.name = self.dt + "-" + self.fieldname
+        self.id = self.dt + "-" + self.fieldname
 
     def set_fieldname(self):
         restricted = (
-            "name",
+            "id",
             "parent",
             "creation",
             "modified",
@@ -234,7 +234,7 @@ class CustomField(Document):
 
         # update doctype layouts
         doctype_layouts = frappe.get_all(
-            "DocType Layout", filters={"document_type": self.dt}, pluck="name"
+            "DocType Layout", filters={"document_type": self.dt}, pluck="id"
         )
 
         for layout in doctype_layouts:
@@ -252,7 +252,7 @@ class CustomField(Document):
             frappe.throw(
                 _(
                     "Insert After field '{0}' mentioned in Custom Field '{1}', with label '{2}', does not exist"
-                ).format(self.insert_after, self.name, self.label),
+                ).format(self.insert_after, self.id, self.label),
                 frappe.DoesNotExistError,
             )
 

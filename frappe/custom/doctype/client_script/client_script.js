@@ -33,7 +33,7 @@ frappe.ui.form.on("Client Script", {
 									return {
 										filters: {
 											istable: 1,
-											name: ["in", child_tables],
+											id: ["in", child_tables],
 										},
 									};
 								},
@@ -52,7 +52,7 @@ frappe.ui.form.on("Client Script", {
 
 			if (!frm.is_new()) {
 				frm.add_custom_button(__("Compare Versions"), () => {
-					new frappe.ui.DiffView("Client Script", "script", frm.doc.name);
+					new frappe.ui.DiffView("Client Script", "script", frm.doc.id);
 				});
 			}
 		}

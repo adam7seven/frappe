@@ -28,7 +28,7 @@
   "sort_order": "DESC",
   "document_type": "",
   "show_preview_popup": 0,
-  "show_name_in_global_search": 0,
+  "show_id_in_global_search": 0,
   "email_append_to": 0,
   "read_only": 0,
   "in_create": 0,
@@ -67,7 +67,7 @@
       "role": "System Manager"
     }
   ],
-  "__newname": "temp_singles",
+  "__newid": "temp_singles",
   "module": "Custom",
   "fields": [
     {

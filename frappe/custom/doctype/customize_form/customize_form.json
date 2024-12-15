@@ -46,7 +46,7 @@
         "column_break_26",
         "email_append_to",
         "sender_field",
-        "sender_name_field",
+        "sender_id_field",
         "subject_field",
         "section_break_8",
         "sort_field",
@@ -300,10 +300,10 @@
             "label": "Naming"
         },
         {
-            "description": "Naming Options:\n<ol><li><b>field:[fieldname]</b> - By Field</li><li><b>naming_series:</b> - By Naming Series (field called naming_series must be present)</li><li><b>Prompt</b> - Prompt user for a name</li><li><b>[series]</b> - Series by prefix (separated by a dot); for example PRE.#####</li>\n<li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Replace all braced words (fieldnames, date words (DD, MM, YY), series) with their value. Outside braces, any characters can be used.</li></ol>",
+            "description": "Naming Options:\n<ol><li><b>field:[fieldname]</b> - By Field</li><li><b>naming_series:</b> - By Naming Series (field called naming_series must be present)</li><li><b>Prompt</b> - Prompt user for a id</li><li><b>[series]</b> - Series by prefix (separated by a dot); for example PRE.#####</li>\n<li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Replace all braced words (fieldnames, date words (DD, MM, YY), series) with their value. Outside braces, any characters can be used.</li></ol>",
             "fieldname": "autoid",
             "fieldtype": "Data",
-            "label": "Auto Name"
+            "label": "Auto ID"
         },
         {
             "collapsible": 1,
@@ -396,9 +396,9 @@
         },
         {
             "depends_on": "email_append_to",
-            "fieldname": "sender_name_field",
+            "fieldname": "sender_id_field",
             "fieldtype": "Data",
-            "label": "Sender Name Field"
+            "label": "Sender ID Field"
         }
     ],
     "hide_toolbar": 1,

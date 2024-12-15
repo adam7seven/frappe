@@ -32,7 +32,7 @@ class PropertySetter(Document):
 
     # end: auto-generated types
     def autoid(self):
-        self.name = "{doctype}-{field}-{property}".format(
+        self.id = "{doctype}-{field}-{property}".format(
             doctype=self.doc_type,
             field=self.field_name or self.row_name or "main",
             property=self.property,

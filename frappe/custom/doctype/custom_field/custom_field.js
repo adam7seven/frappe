@@ -10,7 +10,7 @@ frappe.ui.form.on("Custom Field", {
 			var filters = [
 				["DocType", "issingle", "=", 0],
 				["DocType", "custom", "=", 0],
-				["DocType", "name", "not in", frappe.model.core_doctypes_list],
+				["DocType", "id", "not in", frappe.model.core_doctypes_list],
 				["DocType", "restrict_to_domain", "in", frappe.boot.active_domains],
 			];
 			if (frappe.session.user !== "Administrator") {
@@ -25,7 +25,7 @@ frappe.ui.form.on("Custom Field", {
 		frm.toggle_enable("dt", frm.doc.__islocal);
 		frm.trigger("dt");
 		frm.toggle_reqd("label", !frm.doc.fieldname);
-		frm.trigger("add_rename_field");
+		frm.trigger("add_reid_field");
 
 		if (frm.doc.is_system_generated) {
 			frm.dashboard.add_comment(
@@ -111,9 +111,9 @@ frappe.ui.form.on("Custom Field", {
 			frm.fields_dict["options_help"].disp_area.innerHTML = "";
 		}
 	},
-	add_rename_field(frm) {
+	add_reid_field(frm) {
 		if (!frm.is_new()) {
-			frm.add_custom_button(__("Rename Fieldname"), () => {
+			frm.add_custom_button(__("Reid Fieldname"), () => {
 				frappe.prompt(
 					{
 						fieldtype: "Data",
@@ -125,16 +125,16 @@ frappe.ui.form.on("Custom Field", {
 					function (data) {
 						frappe
 							.xcall(
-								"frappe.custom.doctype.custom_field.custom_field.rename_fieldname",
+								"frappe.custom.doctype.custom_field.custom_field.reid_fieldname",
 								{
-									custom_field: frm.doc.name,
+									custom_field: frm.doc.id,
 									fieldname: data.fieldname,
 								}
 							)
 							.then(() => frm.reload());
 					},
-					__("Rename Fieldname"),
-					__("Rename")
+					__("Reid Fieldname"),
+					__("Reid")
 				);
 			});
 		}

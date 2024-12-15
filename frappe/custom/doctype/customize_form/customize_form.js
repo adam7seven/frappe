@@ -19,7 +19,7 @@ frappe.ui.form.on("Customize Form", {
 				filters: [
 					["DocType", "issingle", "=", 0],
 					["DocType", "custom", "=", 0],
-					["DocType", "name", "not in", frappe.model.core_doctypes_list],
+					["DocType", "id", "not in", frappe.model.core_doctypes_list],
 					["DocType", "restrict_to_domain", "in", frappe.boot.active_domains],
 				],
 			};
@@ -291,7 +291,7 @@ frappe.ui.form.on("Customize Form", {
 			var fields = $.map(frm.doc.fields, function (df) {
 				return frappe.model.is_value_type(df.fieldtype) ? df.fieldname : null;
 			});
-			fields = ["", "name", "creation", "modified"].concat(fields);
+			fields = ["", "id", "creation", "modified"].concat(fields);
 			frm.set_df_property("sort_field", "options", fields);
 		}
 	},
@@ -303,8 +303,8 @@ frappe.ui.form.on("Customize Form", {
 
 // can't delete standard fields
 frappe.ui.form.on("Customize Form Field", {
-	before_fields_remove: function (frm, doctype, name) {
-		const row = frappe.get_doc(doctype, name);
+	before_fields_remove: function (frm, doctype, id) {
+		const row = frappe.get_doc(doctype, id);
 
 		if (row.is_system_generated) {
 			frappe.throw(
@@ -330,8 +330,8 @@ frappe.ui.form.on("Customize Form Field", {
 		frm.trigger("setup_default_views");
 	},
 
-	form_render(frm, doctype, docname) {
-		frm.trigger("setup_fetch_from_fields", doctype, docname);
+	form_render(frm, doctype, docid) {
+		frm.trigger("setup_fetch_from_fields", doctype, docid);
 	},
 });
 
@@ -339,8 +339,8 @@ let parenttype, parent; // used in the form events for the child tables: links, 
 
 // can't delete standard links
 frappe.ui.form.on("DocType Link", {
-	before_links_remove: function (frm, doctype, name) {
-		let row = frappe.get_doc(doctype, name);
+	before_links_remove: function (frm, doctype, id) {
+		let row = frappe.get_doc(doctype, id);
 		parenttype = row.parenttype; // used in the event links_remove
 		parent = row.parent; // used in the event links_remove
 		if (!(row.custom || row.__islocal)) {
@@ -352,7 +352,7 @@ frappe.ui.form.on("DocType Link", {
 		let f = frappe.model.get_doc(cdt, cdn);
 		f.custom = 1;
 	},
-	links_remove: function (frm, doctype, name) {
+	links_remove: function (frm, doctype, id) {
 		// replicate the changed rows from the browser's copy of the parent doc to the current 'Customize Form' doc
 		let parent_doc = locals[parenttype][parent];
 		frm.doc.links = parent_doc.links;
@@ -361,8 +361,8 @@ frappe.ui.form.on("DocType Link", {
 
 // can't delete standard actions
 frappe.ui.form.on("DocType Action", {
-	before_actions_remove: function (frm, doctype, name) {
-		let row = frappe.get_doc(doctype, name);
+	before_actions_remove: function (frm, doctype, id) {
+		let row = frappe.get_doc(doctype, id);
 		parenttype = row.parenttype; // used in the event actions_remove
 		parent = row.parent; // used in the event actions_remove
 		if (!(row.custom || row.__islocal)) {
@@ -374,7 +374,7 @@ frappe.ui.form.on("DocType Action", {
 		let f = frappe.model.get_doc(cdt, cdn);
 		f.custom = 1;
 	},
-	actions_remove: function (frm, doctype, name) {
+	actions_remove: function (frm, doctype, id) {
 		// replicate the changed rows from the browser's copy of the parent doc to the current 'Customize Form' doc
 		let parent_doc = locals[parenttype][parent];
 		frm.doc.actions = parent_doc.actions;
@@ -383,8 +383,8 @@ frappe.ui.form.on("DocType Action", {
 
 // can't delete standard states
 frappe.ui.form.on("DocType State", {
-	before_states_remove: function (frm, doctype, name) {
-		let row = frappe.get_doc(doctype, name);
+	before_states_remove: function (frm, doctype, id) {
+		let row = frappe.get_doc(doctype, id);
 		parenttype = row.parenttype; // used in the event states_remove
 		parent = row.parent; // used in the event states_remove
 		if (!(row.custom || row.__islocal)) {
@@ -396,7 +396,7 @@ frappe.ui.form.on("DocType State", {
 		let f = frappe.model.get_doc(cdt, cdn);
 		f.custom = 1;
 	},
-	states_remove: function (frm, doctype, name) {
+	states_remove: function (frm, doctype, id) {
 		// replicate the changed rows from the browser's copy of the parent doc to the current 'Customize Form' doc
 		let parent_doc = locals[parenttype][parent];
 		frm.doc.states = parent_doc.states;
