@@ -65,7 +65,7 @@ class NamingSeries:
                 exc=InvalidNamingSeriesError,
             )
 
-    def generate_next_name(self, doc: "Document", *, ignore_validate=False) -> str:
+    def generate_next_id(self, doc: "Document", *, ignore_validate=False) -> str:
         if not ignore_validate:
             self.validate()
 
@@ -98,7 +98,7 @@ class NamingSeries:
 
     def get_preview(self, doc=None) -> list[str]:
         """Generate preview of naming series without using DB counters"""
-        generated_names = []
+        generated_ids = []
         for count in range(1, 4):
 
             def fake_counter(_prefix, digits):
@@ -107,10 +107,10 @@ class NamingSeries:
                 # because of function signature requirement
                 return str(count).zfill(digits)
 
-            generated_names.append(
+            generated_ids.append(
                 parse_naming_series(self.series, doc=doc, number_generator=fake_counter)
             )
-        return generated_names
+        return generated_ids
 
     def update_counter(self, new_count: int) -> None:
         """Warning: Incorrectly updating series can result in unusable transactions"""
@@ -118,30 +118,30 @@ class NamingSeries:
         prefix = self.get_prefix()
 
         # Initialize if not present in DB
-        if frappe.db.get_value("Series", prefix, "name", order_by="name") is None:
-            frappe.qb.into(Series).insert(prefix, 0).columns("name", "current").run()
+        if frappe.db.get_value("Series", prefix, "id", order_by="id") is None:
+            frappe.qb.into(Series).insert(prefix, 0).columns("id", "current").run()
 
         (
             frappe.qb.update(Series)
             .set(Series.current, cint(new_count))
-            .where(Series.name == prefix)
+            .where(Series.id == prefix)
         ).run()
 
     def get_current_value(self) -> int:
         prefix = self.get_prefix()
-        return cint(frappe.db.get_value("Series", prefix, "current", order_by="name"))
+        return cint(frappe.db.get_value("Series", prefix, "current", order_by="id"))
 
 
-def set_new_name(doc):
+def set_new_id(doc):
     """
-    Sets the `name` property for the document based on various rules.
+    Sets the `id` property for the document based on various rules.
 
     1. If amended doc, set suffix.
     2. If `autoid` method is declared, then call it.
     3. If `autoid` property is set in the DocType (`meta`), then build it using the `autoid` property.
     4. If no rule defined, use hash.
 
-    :param doc: Document to be named.
+    :param doc: Document to be ided.
     """
 
     doc.run_method("before_naming")
@@ -150,34 +150,34 @@ def set_new_name(doc):
     autoid = meta.autoid or ""
 
     if autoid.lower() != "prompt" and not frappe.flags.in_import:
-        doc.name = None
+        doc.id = None
 
     if is_autoincremented(doc.doctype, meta):
-        doc.name = frappe.db.get_next_sequence_val(doc.doctype)
+        doc.id = frappe.db.get_next_sequence_val(doc.doctype)
         return
 
     if getattr(doc, "amended_from", None):
-        _set_amended_name(doc)
-        if doc.name:
+        _set_amended_id(doc)
+        if doc.id:
             return
 
     elif getattr(doc.meta, "issingle", False):
-        doc.name = doc.doctype
+        doc.id = doc.doctype
 
-    if not doc.name:
+    if not doc.id:
         set_naming_from_document_naming_rule(doc)
 
-    if not doc.name:
+    if not doc.id:
         doc.run_method("autoid")
 
-    if not doc.name and autoid:
-        set_name_from_naming_options(autoid, doc)
+    if not doc.id and autoid:
+        set_id_from_naming_options(autoid, doc)
 
-    # at this point, we fall back to name generation with the hash option
-    if not doc.name:
-        doc.name = make_autoid("hash", doc.doctype)
+    # at this point, we fall back to id generation with the hash option
+    if not doc.id:
+        doc.id = make_autoid("hash", doc.doctype)
 
-    doc.name = validate_name(doc.doctype, doc.name)
+    doc.id = validate_id(doc.doctype, doc.id)
 
 
 def is_autoincremented(doctype: str, meta: Optional["Meta"] = None) -> bool:
@@ -192,30 +192,30 @@ def is_autoincremented(doctype: str, meta: Optional["Meta"] = None) -> bool:
     return False
 
 
-def set_name_from_naming_options(autoid, doc):
+def set_id_from_naming_options(autoid, doc):
     """
-    Get a name based on the autoid field option
+    Get a id based on the autoid field option
     """
 
     _autoid = autoid.lower()
 
     if _autoid.startswith("field:"):
-        doc.name = _field_autoid(autoid, doc)
+        doc.id = _field_autoid(autoid, doc)
 
-        # if the autoid option is 'field:' and no name was derived, we need to
+        # if the autoid option is 'field:' and no id was derived, we need to
         # notify
-        if not doc.name:
+        if not doc.id:
             fieldname = autoid[6:]
             frappe.throw(_("{0} is required").format(doc.meta.get_label(fieldname)))
 
     elif _autoid.startswith("naming_series:"):
-        set_name_by_naming_series(doc)
+        set_id_by_naming_series(doc)
     elif _autoid.startswith("prompt"):
         _prompt_autoid(autoid, doc)
     elif _autoid.startswith("format:"):
-        doc.name = _format_autoid(autoid, doc)
+        doc.id = _format_autoid(autoid, doc)
     elif "#" in autoid:
-        doc.name = make_autoid(autoid, doc=doc)
+        doc.id = make_autoid(autoid, doc=doc)
 
 
 def set_naming_from_document_naming_rule(doc):
@@ -237,20 +237,20 @@ def set_naming_from_document_naming_rule(doc):
     )
 
     for d in document_naming_rules:
-        frappe.get_cached_doc("Document Naming Rule", d.name).apply(doc)
-        if doc.name:
+        frappe.get_cached_doc("Document Naming Rule", d.id).apply(doc)
+        if doc.id:
             break
 
 
-def set_name_by_naming_series(doc):
-    """Sets name by the `naming_series` property"""
+def set_id_by_naming_series(doc):
+    """Sets id by the `naming_series` property"""
     if not doc.naming_series:
         doc.naming_series = get_default_naming_series(doc.doctype)
 
     if not doc.naming_series:
         frappe.throw(frappe._("Naming Series mandatory"))
 
-    doc.name = make_autoid(doc.naming_series + ".#####", "", doc)
+    doc.id = make_autoid(doc.naming_series + ".#####", "", doc)
 
 
 def make_autoid(key="", doctype="", doc="", *, ignore_validate=False):
@@ -275,7 +275,7 @@ def make_autoid(key="", doctype="", doc="", *, ignore_validate=False):
         return _generate_random_string(10)
 
     series = NamingSeries(key)
-    return series.generate_next_name(doc, ignore_validate=ignore_validate)
+    return series.generate_next_id(doc, ignore_validate=ignore_validate)
 
 
 def _get_timestamp_prefix():
@@ -311,7 +311,7 @@ def parse_naming_series(
     doc: Optional["Document"] = None,
     number_generator: Callable[[str, int], str] | None = None,
 ) -> str:
-    """Parse the naming series and get next name.
+    """Parse the naming series and get next id.
 
     args:
             parts: naming series parts (split by `.`)
@@ -319,7 +319,7 @@ def parse_naming_series(
             number_generator: Use different counter backend other than `tabSeries`. Primarily used for testing.
     """
 
-    name = ""
+    id = ""
     _sentinel = object()
     if isinstance(parts, str):
         parts = parts.split(".")
@@ -337,7 +337,7 @@ def parse_naming_series(
         if e.startswith("#"):
             if not series_set:
                 digits = len(e)
-                part = number_generator(name, digits)
+                part = number_generator(id, digits)
                 series_set = True
         elif e == "YY":
             part = today.strftime("%y")
@@ -360,11 +360,11 @@ def parse_naming_series(
             part = e
 
         if isinstance(part, str):
-            name += part
+            id += part
         elif isinstance(part, NAMING_SERIES_PART_TYPES):
-            name += cstr(part).strip()
+            id += cstr(part).strip()
 
-    return name
+    return id
 
 
 def has_custom_parser(e):
@@ -390,30 +390,30 @@ def getseries(key, digits):
     # Using frappe.qb as frappe.get_values does not allow order_by=None
     series = DocType("Series")
     current = (
-        frappe.qb.from_(series).where(series.name == key).for_update().select("current")
+        frappe.qb.from_(series).where(series.id == key).for_update().select("current")
     ).run()
 
     if current and current[0][0] is not None:
         current = current[0][0]
         # yes, update it
         frappe.db.sql(
-            "UPDATE `tabSeries` SET `current` = `current` + 1 WHERE `name`=%s", (key,)
+            "UPDATE `tabSeries` SET `current` = `current` + 1 WHERE `id`=%s", (key,)
         )
         current = cint(current) + 1
     else:
         # no, create it
         frappe.db.sql(
-            "INSERT INTO `tabSeries` (`name`, `current`) VALUES (%s, 1)", (key,)
+            "INSERT INTO `tabSeries` (`id`, `current`) VALUES (%s, 1)", (key,)
         )
         current = 1
     return ("%0" + str(digits) + "d") % current
 
 
-def revert_series_if_last(key, name, doc=None):
+def revert_series_if_last(key, id, doc=None):
     """
     Reverts the series for particular naming series:
     * key is naming series		- SINV-.YYYY-.####
-    * name is actual name		- SINV-2021-0001
+    * id is actual id		- SINV-2021-0001
 
     1. This function split the key into two parts prefix (SINV-YYYY) & hashes (####).
     2. Use prefix to get the current index of that naming series from Series table
@@ -421,7 +421,7 @@ def revert_series_if_last(key, name, doc=None):
 
     *For custom naming series:*
     1. hash can exist anywhere, if it exist in hashes then it take normal flow.
-    2. If hash doesn't exit in hashes, we get the hash from prefix, then update name and prefix accordingly.
+    2. If hash doesn't exit in hashes, we get the hash from prefix, then update id and prefix accordingly.
 
     *Example:*
             1. key = SINV-.YYYY.-
@@ -441,7 +441,7 @@ def revert_series_if_last(key, name, doc=None):
             hash = re.search("#+", key)
             if not hash:
                 return
-            name = name.replace(hashes, "")
+            id = id.replace(hashes, "")
             prefix = prefix.replace(hash.group(), "")
     else:
         prefix = key
@@ -449,18 +449,18 @@ def revert_series_if_last(key, name, doc=None):
     if "." in prefix:
         prefix = parse_naming_series(prefix.split("."), doc=doc)
 
-    count = cint(name.replace(prefix, ""))
+    count = cint(id.replace(prefix, ""))
     series = DocType("Series")
     current = (
         frappe.qb.from_(series)
-        .where(series.name == prefix)
+        .where(series.id == prefix)
         .for_update()
         .select("current")
     ).run()
 
     if current and current[0][0] == count:
         frappe.db.sql(
-            "UPDATE `tabSeries` SET `current` = `current` - 1 WHERE `name`=%s", prefix
+            "UPDATE `tabSeries` SET `current` = `current` - 1 WHERE `id`=%s", prefix
         )
 
 
@@ -475,52 +475,50 @@ def get_default_naming_series(doctype: str) -> str | None:
             return option
 
 
-def validate_name(doctype: str, name: int | str):
-    if not name:
-        frappe.throw(_("No Name Specified for {0}").format(doctype))
+def validate_id(doctype: str, id: int | str):
+    if not id:
+        frappe.throw(_("No ID Specified for {0}").format(doctype))
 
-    if isinstance(name, int):
+    if isinstance(id, int):
         if is_autoincremented(doctype):
             # this will set the sequence value to be the provided name/value and set it to be used
             # so that the sequence will start from the next value
-            frappe.db.set_next_sequence_val(doctype, name, is_val_used=True)
-            return name
+            frappe.db.set_next_sequence_val(doctype, id, is_val_used=True)
+            return id
 
         frappe.throw(
-            _("Invalid name type (integer) for varchar name column"), frappe.NameError
+            _("Invalid id type (integer) for varchar id column"), frappe.NameError
         )
 
-    if name.startswith("New " + doctype):
+    if id.startswith("New " + doctype):
         frappe.throw(
             _(
-                "There were some errors setting the name, please contact the administrator"
+                "There were some errors setting the id, please contact the administrator"
             ),
             frappe.NameError,
         )
-    name = name.strip()
+    id = id.strip()
 
     if (
         not frappe.get_meta(doctype).get("issingle")
-        and (doctype == name)
-        and (name != "DocType")
+        and (doctype == id)
+        and (id != "DocType")
     ):
-        frappe.throw(
-            _("Name of {0} cannot be {1}").format(doctype, name), frappe.NameError
-        )
+        frappe.throw(_("ID of {0} cannot be {1}").format(doctype, id), frappe.NameError)
 
     special_characters = "<>"
-    if re.findall(f"[{special_characters}]+", name):
+    if re.findall(f"[{special_characters}]+", id):
         message = ", ".join(f"'{c}'" for c in special_characters)
         frappe.throw(
             _("Name cannot contain special characters like {0}").format(message),
             frappe.NameError,
         )
 
-    return name
+    return id
 
 
-def append_number_if_name_exists(
-    doctype, value, fieldname="name", separator="-", filters=None
+def append_number_if_id_exists(
+    doctype, value, fieldname="id", separator="-", filters=None
 ):
     if not filters:
         filters = dict()
@@ -548,7 +546,7 @@ def append_number_if_name_exists(
     return value
 
 
-def _set_amended_name(doc):
+def _set_amended_id(doc):
     amend_naming_rule = frappe.db.get_value(
         "Amended Document Naming Settings",
         {"document_type": doc.doctype},
@@ -569,13 +567,13 @@ def _set_amended_name(doc):
         am_id = cint(doc.amended_from.split("-")[-1]) + 1
         am_prefix = "-".join(doc.amended_from.split("-")[:-1])  # except the last hyphen
 
-    doc.name = am_prefix + "-" + str(am_id)
-    return doc.name
+    doc.id = am_prefix + "-" + str(am_id)
+    return doc.id
 
 
 def _field_autoid(autoid, doc, skip_slicing=None):
     """
-    Generate a name using `DocType` field. This is called when the doctype's
+    Generate a id using `DocType` field. This is called when the doctype's
     `autoid` field starts with 'field:'
     """
     fieldname = autoid if skip_slicing else autoid[6:]
@@ -584,12 +582,12 @@ def _field_autoid(autoid, doc, skip_slicing=None):
 
 def _prompt_autoid(autoid, doc):
     """
-    Generate a name using Prompt option. This simply means the user will have to set the name manually.
+    Generate a id using Prompt option. This simply means the user will have to set the id manually.
     This is called when the doctype's `autoid` field starts with 'prompt'.
     """
-    # set from __newname in save.py
-    if not doc.name:
-        frappe.throw(_("Please set the document name"))
+    # set from __newid in save.py
+    if not doc.id:
+        frappe.throw(_("Please set the document id"))
 
 
 def _format_autoid(autoid: str, doc):
@@ -608,6 +606,6 @@ def _format_autoid(autoid: str, doc):
         return parse_naming_series([param[1:-1]], doc=doc)
 
     # Replace braced params with their parsed value
-    name = BRACED_PARAMS_PATTERN.sub(get_param_value_for_match, autoid_value)
+    id = BRACED_PARAMS_PATTERN.sub(get_param_value_for_match, autoid_value)
 
-    return name
+    return id

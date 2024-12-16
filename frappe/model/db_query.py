@@ -86,7 +86,7 @@ class DatabaseQuery:
 		limit_start=False,
 		limit_page_length=None,
 		as_list=False,
-		with_childnames=False,
+		with_childids=False,
 		debug=False,
 		ignore_permissions=False,
 		user=None,
@@ -126,7 +126,7 @@ class DatabaseQuery:
 		if fields:
 			self.fields = fields
 		else:
-			self.fields = [f"`tab{self.doctype}`.`{pluck or 'name'}`"]
+			self.fields = [f"`tab{self.doctype}`.`{pluck or 'id'}`"]
 
 		if start:
 			limit_start = start
@@ -142,7 +142,7 @@ class DatabaseQuery:
 		self.order_by = order_by
 		self.limit_start = cint(limit_start)
 		self.limit_page_length = cint(limit_page_length) if limit_page_length else None
-		self.with_childnames = with_childnames
+		self.with_childids = with_childids
 		self.debug = debug
 		self.join = join
 		self.distinct = distinct
@@ -248,22 +248,22 @@ class DatabaseQuery:
 
 		args = frappe._dict()
 
-		if self.with_childnames:
+		if self.with_childids:
 			for t in self.tables:
 				if t != f"`tab{self.doctype}`":
-					self.fields.append(f"{t}.name as '{t[4:-1]}:name'")
+					self.fields.append(f"{t}.id as '{t[4:-1]}:id'")
 
 		# query dict
 		args.tables = self.tables[0]
 
 		# left join parent, child tables
 		for child in self.tables[1:]:
-			parent_name = cast_name(f"{self.tables[0]}.name")
-			args.tables += f" {self.join} {child} on ({child}.parenttype = {frappe.db.escape(self.doctype)} and {child}.parent = {parent_name})"
+			parent_id = cast_id(f"{self.tables[0]}.id")
+			args.tables += f" {self.join} {child} on ({child}.parenttype = {frappe.db.escape(self.doctype)} and {child}.parent = {parent_id})"
 
 		# left join link tables
 		for link in self.link_tables:
-			args.tables += f" {self.join} {link.table_name} {link.table_alias} on ({link.table_alias}.`name` = {self.tables[0]}.`{link.fieldname}`)"
+			args.tables += f" {self.join} {link.table_name} {link.table_alias} on ({link.table_alias}.`id` = {self.tables[0]}.`{link.fieldname}`)"
 
 		if self.grouped_or_conditions:
 			self.conditions.append(f"({' or '.join(self.grouped_or_conditions)})")
@@ -274,7 +274,7 @@ class DatabaseQuery:
 			args.conditions += (" or " if args.conditions else "") + " or ".join(self.or_conditions)
 
 		self.set_field_tables()
-		self.cast_name_fields()
+		self.cast_id_fields()
 
 		fields = []
 
@@ -536,10 +536,10 @@ class DatabaseQuery:
 				if field is not None and "." not in field and not _in_standard_sql_methods(field):
 					self.fields[idx] = f"{self.tables[0]}.{field}"
 
-	def cast_name_fields(self):
+	def cast_id_fields(self):
 		for i, field in enumerate(self.fields):
 			if field is not None:
-				self.fields[i] = cast_name(field)
+				self.fields[i] = cast_id(field)
 
 	def get_table_columns(self):
 		try:
@@ -617,7 +617,7 @@ class DatabaseQuery:
 		Example:
 		        - User has read permission only on `title` for DocType `Note`
 		        - Query: fields=["*"]
-		        - Result: fields=["title", ...] // will also include Frappe's meta field like `name`, `owner`, etc.
+		        - Result: fields=["title", ...] // will also include Frappe's meta field like `id`, `owner`, etc.
 		"""
 		from frappe.desk.reportview import extract_fieldnames
 
@@ -633,10 +633,10 @@ class DatabaseQuery:
 		)
 
 		for i, field in enumerate(self.fields):
-			# field: 'count(distinct `tabPhoto`.name) as total_count'
-			# column: 'tabPhoto.name'
-			# field: 'count(`tabPhoto`.name) as total_count'
-			# column: 'tabPhoto.name'
+			# field: 'count(distinct `tabPhoto`.id) as total_count'
+			# column: 'tabPhoto.id'
+			# field: 'count(`tabPhoto`.id) as total_count'
+			# column: 'tabPhoto.id'
 			columns = extract_fieldnames(field)
 			if not columns:
 				continue
@@ -715,7 +715,7 @@ class DatabaseQuery:
 		if tname not in self.tables:
 			self.append_table(tname)
 
-		column_name = cast_name(f.fieldname if "ifnull(" in f.fieldname else f"{tname}.`{f.fieldname}`")
+		column_name = cast_id(f.fieldname if "ifnull(" in f.fieldname else f"{tname}.`{f.fieldname}`")
 
 		if f.operator.lower() in additional_filters_config:
 			f.update(get_additional_filter_field(additional_filters_config, f, f.value))
@@ -723,7 +723,7 @@ class DatabaseQuery:
 		meta = frappe.get_meta(f.doctype)
 
 		# primary key is never nullable, modified is usually indexed by default and always present
-		can_be_null = f.fieldname not in ("name", "modified", "creation")
+		can_be_null = f.fieldname not in ("id", "modified", "creation")
 
 		# prepare in condition
 		if f.operator.lower() in NestedSetHierarchy:
@@ -748,7 +748,7 @@ class DatabaseQuery:
 					ref_doctype,
 					filters={"lft": [">", lft], "rgt": ["<", rgt]},
 					order_by="`lft` ASC",
-					pluck="name",
+					pluck="id",
 				)
 				if f.operator.lower() == "descendants of (inclusive)":
 					nodes += [f.value]
@@ -758,7 +758,7 @@ class DatabaseQuery:
 					ref_doctype,
 					filters={"lft": ["<", lft], "rgt": [">", rgt]},
 					order_by="`lft` DESC",
-					pluck="name",
+					pluck="id",
 				)
 
 			fallback = "''"
@@ -882,7 +882,7 @@ class DatabaseQuery:
 				value = f.value or "''"
 				fallback = "''"
 
-			elif f.fieldname == "name":
+			elif f.fieldname == "id":
 				value = f.value or "''"
 				fallback = "''"
 
@@ -981,7 +981,7 @@ class DatabaseQuery:
 
 	def get_share_condition(self):
 		return (
-			cast_name(f"`tab{self.doctype}`.name")
+			cast_id(f"`tab{self.doctype}`.id")
 			+ f" in ({', '.join(frappe.db.escape(s, percent=False) for s in self.shared)})"
 		)
 
@@ -989,11 +989,11 @@ class DatabaseQuery:
 		doctype_link_fields = []
 		doctype_link_fields = self.doctype_meta.get_link_fields()
 
-		# append current doctype with fieldname as 'name' as first link field
+		# append current doctype with fieldname as 'id' as first link field
 		doctype_link_fields.append(
 			dict(
 				options=self.doctype,
-				fieldname="name",
+				fieldname="id",
 			)
 		)
 
@@ -1010,7 +1010,7 @@ class DatabaseQuery:
 				if frappe.get_system_settings("apply_strict_user_permissions"):
 					condition = ""
 				else:
-					empty_value_condition = cast_name(
+					empty_value_condition = cast_id(
 						f"ifnull(`tab{self.doctype}`.`{df.get('fieldname')}`, '')=''"
 					)
 					condition = empty_value_condition + " or "
@@ -1024,7 +1024,7 @@ class DatabaseQuery:
 					# in this case parent doctype of the link
 					# will be the reference doctype
 
-					elif df.get("fieldname") == "name" and self.reference_doctype:
+					elif df.get("fieldname") == "id" and self.reference_doctype:
 						if permission.get("applicable_for") == self.reference_doctype:
 							docs.append(permission.get("doc"))
 
@@ -1033,7 +1033,7 @@ class DatabaseQuery:
 
 				if docs:
 					values = ", ".join(frappe.db.escape(doc, percent=False) for doc in docs)
-					condition += cast_name(f"`tab{self.doctype}`.`{df.get('fieldname')}`") + f" in ({values})"
+					condition += cast_id(f"`tab{self.doctype}`.`{df.get('fieldname')}`") + f" in ({values})"
 					match_conditions.append(f"({condition})")
 					match_filters[df.get("options")] = docs
 
@@ -1053,8 +1053,8 @@ class DatabaseQuery:
 			if c := frappe.call(frappe.get_attr(method), self.user, doctype=self.doctype):
 				conditions.append(c)
 
-		if permission_script_name := get_server_script_map().get("permission_query", {}).get(self.doctype):
-			script = frappe.get_doc("Server Script", permission_script_name)
+		if permission_script_id := get_server_script_map().get("permission_query", {}).get(self.doctype):
+			script = frappe.get_doc("Server Script", permission_script_id)
 			if condition := script.get_permission_query_conditions(self.user):
 				conditions.append(condition)
 
@@ -1139,7 +1139,7 @@ class DatabaseQuery:
 
 	def add_comment_count(self, result):
 		for r in result:
-			if not r.name:
+			if not r.id:
 				continue
 
 			r._comment_count = 0
@@ -1159,8 +1159,8 @@ class DatabaseQuery:
 		update_user_settings(self.doctype, user_settings)
 
 
-def cast_name(column: str) -> str:
-	"""Casts name field to varchar for postgres
+def cast_id(column: str) -> str:
+	"""Casts id field to varchar for postgres
 
 	Handles majorly 4 cases:
 	1. locate
@@ -1171,8 +1171,8 @@ def cast_name(column: str) -> str:
 	Uses regex substitution.
 
 	Example:
-	input - "ifnull(`tabBlog Post`.`name`, '')=''"
-	output - "ifnull(cast(`tabBlog Post`.`name` as varchar), '')=''" """
+	input - "ifnull(`tabBlog Post`.`id`, '')=''"
+	output - "ifnull(cast(`tabBlog Post`.`id` as varchar), '')=''" """
 
 	if frappe.db.db_type == "mariadb":
 		return column
@@ -1184,7 +1184,7 @@ def cast_name(column: str) -> str:
 
 		elif match := FUNC_IFNULL_PATTERN.search(**kwargs):
 			func = match.groups()[0]
-			return re.sub(rf"{func}\(\s*([`\"]?name[`\"]?)\s*,", rf"{func}(cast(\1 as varchar),", **kwargs)
+			return re.sub(rf"{func}\(\s*([`\"]?id[`\"]?)\s*,", rf"{func}(cast(\1 as varchar),", **kwargs)
 
 		return CAST_VARCHAR_PATTERN.sub(r"cast(\1 as varchar)", **kwargs)
 

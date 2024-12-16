@@ -7,14 +7,14 @@ import frappe
 from frappe import _, bold
 from frappe.model.document import Document
 from frappe.model.dynamic_links import get_dynamic_link_map
-from frappe.model.naming import validate_name
+from frappe.model.iding import validate_id
 from frappe.model.utils.user_settings import (
     sync_user_settings,
     update_user_settings_data,
 )
 from frappe.query_builder import Field
 from frappe.utils.data import sbool
-from frappe.utils.password import rename_password
+from frappe.utils.password import reid_password
 from frappe.utils.scheduler import is_scheduler_inactive
 
 if TYPE_CHECKING:
@@ -25,31 +25,31 @@ if TYPE_CHECKING:
 def update_document_title(
     *,
     doctype: str,
-    docname: str,
+    docid: str,
     title: str | None = None,
-    name: str | None = None,
+    id: str | None = None,
     merge: bool = False,
     enqueue: bool = False,
     **kwargs,
 ) -> str:
     """
-    Update the name or title of a document. Returns `name` if document was renamed,
-    `docname` if renaming operation was queued.
+    Update the id or title of a document. Returns `id` if document was reided,
+    `docid` if renaming operation was queued.
 
     :param doctype: DocType of the document
-    :param docname: Name of the document
+    :param docid: ID of the document
     :param title: New Title of the document
-    :param name: New Name of the document
+    :param id: New ID of the document
     :param merge: Merge the current Document with the existing one if exists
-    :param enqueue: Enqueue the rename operation, title is updated in current process
+    :param enqueue: Enqueue the reid operation, title is updated in current process
     """
 
     # to maintain backwards API compatibility
     updated_title = kwargs.get("new_title") or title
-    updated_name = kwargs.get("new_name") or name
+    updated_id = kwargs.get("new_id") or id
 
     # TODO: omit this after runtime type checking (ref: https://github.com/frappe/frappe/pull/14927)
-    for obj in [docname, updated_title, updated_name]:
+    for obj in [docid, updated_title, updated_id]:
         if not isinstance(obj, str | NoneType):
             frappe.throw(f"{obj=} must be of type str or None")
 
@@ -58,55 +58,55 @@ def update_document_title(
     enqueue = sbool(enqueue)
     action_enqueued = enqueue and not is_scheduler_inactive()
 
-    doc = frappe.get_doc(doctype, docname)
+    doc = frappe.get_doc(doctype, docid)
     doc.check_permission(permtype="write")
 
     title_field = doc.meta.get_title_field()
 
     title_updated = (
         updated_title
-        and (title_field != "name")
+        and (title_field != "id")
         and (updated_title != doc.get(title_field))
     )
-    name_updated = updated_name and (updated_name != doc.name)
+    id_updated = updated_id and (updated_id != doc.id)
 
     queue = kwargs.get("queue") or "long"
 
-    if name_updated:
+    if id_updated:
         if action_enqueued:
-            current_name = doc.name
+            current_id = doc.id
 
-            # before_name hook may have DocType specific validations or transformations
-            transformed_name = doc.run_method(
-                "before_rename", current_name, updated_name, merge
+            # before_id hook may have DocType specific validations or transformations
+            transformed_id = doc.run_method(
+                "before_reid", current_id, updated_id, merge
             )
-            if isinstance(transformed_name, dict):
-                transformed_name = transformed_name.get("new")
-            transformed_name = transformed_name or updated_name
+            if isinstance(transformed_id, dict):
+                transformed_id = transformed_id.get("new")
+            transformed_id = transformed_id or updated_id
 
-            # run rename validations before queueing
-            # use savepoints to avoid partial renames / commits
-            validate_rename(
+            # run reid validations before queueing
+            # use savepoints to avoid partial reids / commits
+            validate_reid(
                 doctype=doctype,
-                old=current_name,
-                new=transformed_name,
+                old=current_id,
+                new=transformed_id,
                 meta=doc.meta,
                 merge=merge,
                 save_point=True,
             )
 
             doc.queue_action(
-                "rename", name=transformed_name, merge=merge, queue=queue, timeout=36000
+                "reid", id=transformed_id, merge=merge, queue=queue, timeout=36000
             )
         else:
-            doc.rename(updated_name, merge=merge)
+            doc.reid(updated_id, merge=merge)
 
     if title_updated:
-        if action_enqueued and name_updated:
+        if action_enqueued and id_updated:
             frappe.enqueue(
                 "frappe.client.set_value",
                 doctype=doc.doctype,
-                name=updated_name,
+                id=updated_id,
                 fieldname=title_field,
                 value=updated_title,
             )
@@ -118,18 +118,16 @@ def update_document_title(
             except Exception as e:
                 if frappe.db.is_duplicate_entry(e):
                     frappe.throw(
-                        _("{0} {1} already exists").format(
-                            doctype, frappe.bold(docname)
-                        ),
-                        title=_("Duplicate Name"),
+                        _("{0} {1} already exists").format(doctype, frappe.bold(docid)),
+                        title=_("Duplicate ID"),
                         exc=frappe.DuplicateEntryError,
                     )
                 raise
 
-    return doc.name
+    return doc.id
 
 
-def rename_doc(
+def reid_doc(
     doctype: str | None = None,
     old: str | None = None,
     new: str | None = None,
@@ -142,17 +140,17 @@ def rename_doc(
     doc: Document | None = None,
     validate: bool = True,
 ) -> str:
-    """Rename a doc(dt, old) to doc(dt, new) and update all linked fields of type "Link".
+    """Reid a doc(dt, old) to doc(dt, new) and update all linked fields of type "Link".
 
-    doc: Document object to be renamed.
-    new: New name for the record. If None, and doctype is specified, new name may be automatically generated via before_rename hooks.
+    doc: Document object to be reided.
+    new: New id for the record. If None, and doctype is specified, new id may be automatically generated via before_reid hooks.
     doctype: DocType of the document. Not required if doc is passed.
-    old: Current name of the document. Not required if doc is passed.
-    force: Allow even if document is not allowed to be renamed.
-    merge: Merge with existing document of new name.
+    old: Current id of the document. Not required if doc is passed.
+    force: Allow even if document is not allowed to be reided.
+    merge: Merge with existing document of new id.
     ignore_permissions: Ignore user permissions while renaming.
-    ignore_if_exists: Don't raise exception if document with new name already exists. This will quietely overwrite the existing document.
-    show_alert: Display alert if document is renamed successfully.
+    ignore_if_exists: Don't raise exception if document with new id already exists. This will quietely overwrite the existing document.
+    show_alert: Display alert if document is reided successfully.
     rebuild_search: Rebuild linked doctype search after renaming.
     validate: Validate before renaming. If False, it is assumed that the caller has already validated.
     """
@@ -161,10 +159,10 @@ def rename_doc(
 
     if not (new_usage_style or old_usage_style):
         raise TypeError(
-            "{doctype, old, new} or {doc, new} are required arguments for frappe.model.rename_doc"
+            "{doctype, old, new} or {doc, new} are required arguments for frappe.model.reid_doc"
         )
 
-    old = old or doc.name
+    old = old or doc.id
     doctype = doctype or doc.doctype
     force = sbool(force)
     merge = sbool(merge)
@@ -172,9 +170,9 @@ def rename_doc(
 
     if validate:
         old_doc = doc or frappe.get_doc(doctype, old)
-        out = old_doc.run_method("before_rename", old, new, merge) or {}
+        out = old_doc.run_method("before_reid", old, new, merge) or {}
         new = (out.get("new") or new) if isinstance(out, dict) else (out or new)
-        new = validate_rename(
+        new = validate_reid(
             doctype=doctype,
             old=old,
             new=new,
@@ -187,7 +185,7 @@ def rename_doc(
         )
 
     if not merge:
-        rename_parent_and_child(doctype, old, new, meta)
+        reid_parent_and_child(doctype, old, new, meta)
     else:
         update_assignments(old, new, doctype)
 
@@ -195,32 +193,32 @@ def rename_doc(
     link_fields = get_link_fields(doctype)
     update_link_field_values(link_fields, old, new, doctype)
 
-    rename_dynamic_links(doctype, old, new)
+    reid_dynamic_links(doctype, old, new)
 
     # save the user settings in the db
     update_user_settings(old, new, link_fields)
 
     if doctype == "DocType":
-        rename_doctype(doctype, old, new)
+        reid_doctype(doctype, old, new)
         update_customizations(old, new)
 
     update_attachments(doctype, old, new)
 
-    rename_versions(doctype, old, new)
+    reid_versions(doctype, old, new)
 
-    rename_eps_records(doctype, old, new)
+    reid_eps_records(doctype, old, new)
 
-    # call after_rename
+    # call after_reid
     new_doc = frappe.get_doc(doctype, new)
 
     if validate:
         # copy any flags if required
         new_doc._local = getattr(old_doc, "_local", None)
 
-    new_doc.run_method("after_rename", old, new, merge)
+    new_doc.run_method("after_reid", old, new, merge)
 
     if not merge:
-        rename_password(doctype, old, new)
+        reid_password(doctype, old, new)
 
     if merge:
         new_doc.add_comment(
@@ -229,7 +227,7 @@ def rename_doc(
     else:
         new_doc.add_comment(
             "Edit",
-            _("renamed from {0} to {1}").format(frappe.bold(old), frappe.bold(new)),
+            _("reided from {0} to {1}").format(frappe.bold(old), frappe.bold(new)),
         )
 
     if merge:
@@ -244,7 +242,7 @@ def rename_doc(
 
     if show_alert:
         frappe.msgprint(
-            _("Document renamed from {0} to {1}").format(bold(old), bold(new)),
+            _("Document reided from {0} to {1}").format(bold(old), bold(new)),
             alert=True,
             indicator="green",
         )
@@ -268,13 +266,13 @@ def update_assignments(old: str, new: str, doctype: str) -> None:
             {
                 "owner": user,
                 "reference_type": doctype,
-                "reference_name": old,
+                "reference_id": old,
             },
-            ["name", "description"],
+            ["id", "description"],
         )
 
         for todo in todos:
-            frappe.delete_doc("ToDo", todo.name)
+            frappe.delete_doc("ToDo", todo.id)
 
     unique_assignments = list(set(old_assignments + new_assignments))
     frappe.db.set_value(
@@ -304,14 +302,14 @@ def update_user_settings(old: str, new: str, link_fields: list[dict]) -> None:
         .run(as_dict=True)
     )
 
-    # create the dict using the doctype name as key and values as list of the user settings
+    # create the dict using the doctype id as key and values as list of the user settings
     from collections import defaultdict
 
     user_settings_dict = defaultdict(list)
     for user_setting in user_settings_details:
         user_settings_dict[user_setting.doctype].append(user_setting)
 
-    # update the name in linked doctype whose user settings exists
+    # update the id in linked doctype whose user settings exists
     for fields in link_fields:
         user_settings = user_settings_dict.get(fields.parent)
         if user_settings:
@@ -333,45 +331,43 @@ def update_attachments(doctype: str, old: str, new: str) -> None:
     if doctype != "DocType":
         File = frappe.qb.DocType("File")
 
-        frappe.qb.update(File).set(File.attached_to_name, new).where(
-            (File.attached_to_name == old) & (File.attached_to_doctype == doctype)
+        frappe.qb.update(File).set(File.attached_to_id, new).where(
+            (File.attached_to_id == old) & (File.attached_to_doctype == doctype)
         ).run()
 
 
-def rename_versions(doctype: str, old: str, new: str) -> None:
+def reid_versions(doctype: str, old: str, new: str) -> None:
     Version = frappe.qb.DocType("Version")
 
-    frappe.qb.update(Version).set(Version.docname, new).where(
-        (Version.docname == old) & (Version.ref_doctype == doctype)
+    frappe.qb.update(Version).set(Version.docid, new).where(
+        (Version.docid == old) & (Version.ref_doctype == doctype)
     ).run()
 
 
-def rename_eps_records(doctype: str, old: str, new: str) -> None:
+def reid_eps_records(doctype: str, old: str, new: str) -> None:
     EPL = frappe.qb.DocType("Energy Point Log")
 
-    frappe.qb.update(EPL).set(EPL.reference_name, new).where(
-        (EPL.reference_doctype == doctype) & (EPL.reference_name == old)
+    frappe.qb.update(EPL).set(EPL.reference_id, new).where(
+        (EPL.reference_doctype == doctype) & (EPL.reference_id == old)
     ).run()
 
 
-def rename_parent_and_child(doctype: str, old: str, new: str, meta: "Meta") -> None:
-    frappe.qb.update(doctype).set("name", new).where(Field("name") == old).run()
+def reid_parent_and_child(doctype: str, old: str, new: str, meta: "Meta") -> None:
+    frappe.qb.update(doctype).set("id", new).where(Field("id") == old).run()
 
     update_autoid_field(doctype, new, meta)
     update_child_docs(old, new, meta)
 
 
 def update_autoid_field(doctype: str, new: str, meta: "Meta") -> None:
-    # update the value of the autoid field on rename of the docname
+    # update the value of the autoid field on reid of the docid
     if meta.get("autoid"):
         field = meta.get("autoid").split(":")
         if field and field[0] == "field":
-            frappe.qb.update(doctype).set(field[1], new).where(
-                Field("name") == new
-            ).run()
+            frappe.qb.update(doctype).set(field[1], new).where(Field("id") == new).run()
 
 
-def validate_rename(
+def validate_reid(
     doctype: str,
     old: str,
     new: str,
@@ -383,28 +379,28 @@ def validate_rename(
     save_point=False,
     old_doc: Document | None = None,
 ) -> str:
-    # using for update so that it gets locked and someone else cannot edit it while this rename is going on!
+    # using for update so that it gets locked and someone else cannot edit it while this reid is going on!
     if save_point:
-        _SAVE_POINT = f"validate_rename_{frappe.generate_hash(length=8)}"
+        _SAVE_POINT = f"validate_reid_{frappe.generate_hash(length=8)}"
         frappe.db.savepoint(_SAVE_POINT)
 
     exists = (
         frappe.qb.from_(doctype)
-        .where(Field("name") == new)
+        .where(Field("id") == new)
         .for_update()
-        .select("name")
+        .select("id")
         .run(pluck=True)
     )
     exists = exists[0] if exists else None
 
     if not frappe.db.exists(doctype, old):
         frappe.throw(
-            _("Can't rename {0} to {1} because {0} doesn't exist.").format(old, new)
+            _("Can't reid {0} to {1} because {0} doesn't exist.").format(old, new)
         )
 
     if old == new:
         frappe.throw(
-            _("No changes made because old and new name are the same.").format(old, new)
+            _("No changes made because old and new id are the same.").format(old, new)
         )
 
     if exists and exists != new:
@@ -420,9 +416,7 @@ def validate_rename(
 
     if not merge and exists and not ignore_if_exists:
         frappe.throw(
-            _("Another {0} with name {1} exists, select another name").format(
-                doctype, new
-            )
+            _("Another {0} with id {1} exists, select another id").format(doctype, new)
         )
 
     kwargs = {"doctype": doctype, "ptype": "write", "raise_exception": False}
@@ -431,7 +425,7 @@ def validate_rename(
 
     if not (ignore_permissions or frappe.permissions.has_permission(**kwargs)):
         frappe.throw(
-            _("You need write permission on {0} {1} to rename").format(doctype, old)
+            _("You need write permission on {0} {1} to reid").format(doctype, old)
         )
 
     if merge:
@@ -442,10 +436,10 @@ def validate_rename(
             )
 
     if not (force or ignore_permissions) and not meta.allow_reid:
-        frappe.throw(_("{0} not allowed to be renamed").format(_(doctype)))
+        frappe.throw(_("{0} not allowed to be reided").format(_(doctype)))
 
     # validate naming like it's done in doc.py
-    new = validate_name(doctype, new)
+    new = validate_id(doctype, new)
 
     if save_point:
         frappe.db.rollback(save_point=_SAVE_POINT)
@@ -453,7 +447,7 @@ def validate_rename(
     return new
 
 
-def rename_doctype(doctype: str, old: str, new: str) -> None:
+def reid_doctype(doctype: str, old: str, new: str) -> None:
     # change options for fieldtype Table, Table MultiSelect and Link
     fields_with_options = ("Link", *frappe.model.table_fields)
 
@@ -470,7 +464,7 @@ def update_child_docs(old: str, new: str, meta: "Meta") -> None:
         (
             frappe.qb.update(df.options)
             .set("parent", new)
-            .where((Field("parent") == old) & (Field("parenttype") == meta.name))
+            .where((Field("parent") == old) & (Field("parenttype") == meta.id))
         ).run()
 
 
@@ -489,7 +483,7 @@ def update_link_field_values(
                     single_doc.flags.ignore_links = True
                     single_doc.save(ignore_permissions=True)
             except ImportError:
-                # fails in patches where the doctype has been renamed
+                # fails in patches where the doctype has been reided
                 # or no longer exists
                 pass
         else:
@@ -497,7 +491,7 @@ def update_link_field_values(
             docfield = field["fieldname"]
 
             # Handles the case where one of the link fields belongs to
-            # the DocType being renamed.
+            # the DocType being reided.
             # Here this field could have the current DocType as its value too.
 
             # In this case while updating link field value, the field's parent
@@ -539,9 +533,7 @@ def get_link_fields(doctype: str) -> list[dict]:
 
         virtual_doctypes = []
         if frappe.db.has_column("DocType", "is_virtual"):
-            virtual_doctypes = frappe.get_all(
-                "DocType", {"is_virtual": 1}, pluck="name"
-            )
+            virtual_doctypes = frappe.get_all("DocType", {"is_virtual": 1}, pluck="id")
             standard_fields_query = standard_fields_query.where(dt.is_virtual == 0)
 
         standard_fields = standard_fields_query.run(as_dict=True)
@@ -596,13 +588,11 @@ def update_options_for_fieldtype(fieldtype: str, old: str, new: str) -> None:
     PropertySetter = frappe.qb.DocType("Property Setter")
 
     if frappe.conf.developer_mode:
-        for name in frappe.get_all(
-            "DocField", filters={"options": old}, pluck="parent"
-        ):
-            if name in (old, new):
+        for id in frappe.get_all("DocField", filters={"options": old}, pluck="parent"):
+            if id in (old, new):
                 continue
 
-            doctype = frappe.get_doc("DocType", name)
+            doctype = frappe.get_doc("DocType", id)
             save = False
             for f in doctype.fields:
                 if f.options == old:
@@ -627,7 +617,7 @@ def update_options_for_fieldtype(fieldtype: str, old: str, new: str) -> None:
 
 def get_select_fields(old: str, new: str) -> list[dict]:
     """
-    get select type fields where doctype's name is hardcoded as
+    get select type fields where doctype's id is hardcoded as
     new line separated list
     """
     df = frappe.qb.DocType("DocField")
@@ -761,7 +751,7 @@ def update_parenttype_values(old: str, new: str):
         ).run()
 
 
-def rename_dynamic_links(doctype: str, old: str, new: str):
+def reid_dynamic_links(doctype: str, old: str, new: str):
     Singles = frappe.qb.DocType("Singles")
     for df in get_dynamic_link_map().get(doctype, []):
         # dynamic link in single, just one value to check
@@ -777,7 +767,7 @@ def rename_dynamic_links(doctype: str, old: str, new: str):
                     & (Singles.value == old)
                 ).run()
         else:
-            # because the table hasn't been renamed yet!
+            # because the table hasn't been reided yet!
             parent = df.parent if df.parent != new else old
 
             frappe.qb.update(parent).set(df.fieldname, new).where(
@@ -785,13 +775,13 @@ def rename_dynamic_links(doctype: str, old: str, new: str):
             ).run()
 
 
-def bulk_rename(
+def bulk_reid(
     doctype: str, rows: list[list] | None = None, via_console: bool = False
 ) -> list[str] | None:
-    """Bulk rename documents
+    """Bulk reid documents
 
-    :param doctype: DocType to be renamed
-    :param rows: list of documents as `((oldname, newname, merge(optional)), ..)`"""
+    :param doctype: DocType to be reided
+    :param rows: list of documents as `((oldid, newid, merge(optional)), ..)`"""
     if not rows:
         frappe.throw(_("Please select a valid csv file with data"))
 
@@ -800,15 +790,13 @@ def bulk_rename(
         if len(rows) > max_rows:
             frappe.throw(_("Maximum {0} rows allowed").format(max_rows))
 
-    rename_log = []
+    reid_log = []
     for row in rows:
         # if row has some content
         if len(row) > 1 and row[0] and row[1]:
             merge = len(row) > 2 and (row[2] == "1" or row[2].lower() == "true")
             try:
-                if rename_doc(
-                    doctype, row[0], row[1], merge=merge, rebuild_search=False
-                ):
+                if reid_doc(doctype, row[0], row[1], merge=merge, rebuild_search=False):
                     msg = _("Successful: {0} to {1}").format(row[0], row[1])
                     frappe.db.commit()
                 else:
@@ -821,9 +809,9 @@ def bulk_rename(
                 if via_console:
                     print(msg)
                 else:
-                    rename_log.append(msg)
+                    reid_log.append(msg)
 
     frappe.enqueue("frappe.utils.global_search.rebuild_for_doctype", doctype=doctype)
 
     if not via_console:
-        return rename_log
+        return reid_log
