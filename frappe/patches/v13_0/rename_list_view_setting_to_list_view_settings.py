@@ -21,16 +21,16 @@ def execute():
             "disable_count",
             "disable_sidebar_stats",
             "disable_auto_refresh",
-            "name",
+            "id",
         ],
         order_by="modified",
     ):
-        name = list_view_setting.pop("name")
-        if name not in [x[0] for x in existing_list_view_settings]:
+        id = list_view_setting.pop("id")
+        if id not in [x[0] for x in existing_list_view_settings]:
             list_view_setting["doctype"] = "List View Settings"
             list_view_settings = frappe.get_doc(list_view_setting)
-            # setting name here is necessary because autoid is set as prompt
-            list_view_settings.name = name
+            # setting id here is necessary because autoid is set as prompt
+            list_view_settings.id = id
             list_view_settings.insert()
 
     frappe.delete_doc("DocType", "List View Setting", force=True)
