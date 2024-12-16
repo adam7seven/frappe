@@ -1,12 +1,12 @@
 {% if topic %}
 
-{% set replies = frappe.get_all("Discussion Reply", {"topic": topic.name},
-	["reply", "owner", "creation", "name"], order_by="creation")%}
+{% set replies = frappe.get_all("Discussion Reply", {"topic": topic.id},
+	["reply", "owner", "creation", "id"], order_by="creation")%}
 
 {% endif %}
 
 <div class=" {% if not single_thread %} collapse {% endif %} discussion-on-page" data-parent="#discussion-group"
-	{% if topic %} id="t{{ topic.name }}" data-topic="{{ topic.name }}" {% endif %}>
+	{% if topic %} id="t{{ topic.id }}" data-topic="{{ topic.id }}" {% endif %}>
 
 	{% if not single_thread %}
 	<div class="reply-section-header">
@@ -43,7 +43,7 @@
 			<div class="btn btn-default btn-md login-from-discussion"> {{ _("Login") }} </div>
 			{% elif condition is defined and not condition %}
 			<div class="btn btn-default btn-md login-from-discussion" data-redirect="{{ redirect_to }}">
-				{{ button_name }}
+				{{ button_id }}
 			</div>
 			{% endif %}
 		</div>

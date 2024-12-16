@@ -1,6 +1,6 @@
 {% from "frappe/templates/includes/avatar_macro.html" import avatar %}
-<div class="reply-card" data-reply="{{ reply.name }}">
-	{% set member = frappe.db.get_value("User", reply.owner, ["name", "full_name", "username"], as_dict=True) %}
+<div class="reply-card" data-reply="{{ reply.id }}">
+	{% set member = frappe.db.get_value("User", reply.owner, ["id", "full_name", "username"], as_dict=True) %}
 
 	<div class="reply-header">
 		{{ avatar(reply.owner) }}
