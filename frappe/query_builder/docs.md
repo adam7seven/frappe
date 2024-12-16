@@ -29,7 +29,7 @@ Check out some examples [here](https://frappeframework.com/docs/v14/user/en/api/
 ## Goal
 
 ```sql
-select `name` from `tabUser`
+select `id` from `tabUser`
 ```
 
 ## There are 3 major ways to reach this goal
@@ -37,7 +37,7 @@ select `name` from `tabUser`
 ### 1. Direct SQL (Boring / Unsafe / inconsistent)
 
 ```python
-frappe.db.sql("select `name` from `tabUser`")
+frappe.db.sql("select `id` from `tabUser`")
 ```
 
 ### 2. SQL through direct Query Builder objects
@@ -45,14 +45,14 @@ frappe.db.sql("select `name` from `tabUser`")
 ```python
 from frappe.query_builder import Field
 
-frappe.qb.from_("User").select(Field("name"))
+frappe.qb.from_("User").select(Field("id"))
 
 ```
 
 ### 3. Through the database API (Which performs the second method under the hood)
 
 ```python
-frappe.db.get_values("User", fieldname="name", filters={})
+frappe.db.get_values("User", fieldname="id", filters={})
 ```
 
 This module is used to support the 3rd way of query generation in frappe.
@@ -71,16 +71,16 @@ Supporting all the features with the previous filter notations and the field not
    - To support this
 
    ```python
-       frappe.db.get_values("ToDo", fieldname="name", filters={"description": "Something Random"})
+       frappe.db.get_values("ToDo", fieldname="id", filters={"description": "Something Random"})
    ```
 
    and many other possible caveats to the dict representation such as
 
    ```python
-      frappe.db.get_values("User", fieldname="name",
-      filters={"name": ("like", "admin%")})
+      frappe.db.get_values("User", fieldname="id",
+      filters={"id": ("like", "admin%")})
 
-      frappe.db.get_values("ToDo", fieldname="name", filters={"description": ("in", ["somso%", "someome"])})
+      frappe.db.get_values("ToDo", fieldname="id", filters={"description": ("in", ["somso%", "someome"])})
    ```
 
 2. Misc Query
@@ -88,7 +88,7 @@ Supporting all the features with the previous filter notations and the field not
    - To support this
 
      ```python
-     frappe.db.get_values("ToDo", fieldname="name", filters=["description", "=", "someone"])
+     frappe.db.get_values("ToDo", fieldname="id", filters=["description", "=", "someone"])
      ```
 
    Along with other possible list filter use cases including implicit joins
@@ -100,7 +100,7 @@ Supporting all the features with the previous filter notations and the field not
    ```python
    from frappe.query_builder import Field
 
-   frappe.db.get_values("User", fieldname="name", filters=Field("name") == "Administrator")
+   frappe.db.get_values("User", fieldname="id", filters=Field("id") == "Administrator")
 
    ```
 
