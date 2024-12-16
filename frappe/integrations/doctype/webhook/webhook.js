@@ -25,8 +25,8 @@ frappe.webhook = {
 
 				// add meta fields
 				for (let field of frappe.model.std_fields) {
-					if (field.fieldname == "name") {
-						fields.unshift({ label: __("Name (Doc Name)"), value: "name" });
+					if (field.fieldname == "id") {
+						fields.unshift({ label: __("ID (Doc ID)"), value: "id" });
 					} else {
 						fields.push({
 							label: `${__(field.label, null, field.parent)} (${__(
@@ -62,7 +62,7 @@ frappe.webhook = {
 				if (header_row) {
 					frappe.model.set_value(
 						header_row.doctype,
-						header_row.name,
+						header_row.id,
 						"value",
 						header_value
 					);
@@ -123,7 +123,7 @@ frappe.ui.form.on("Webhook Data", {
 			df = frappe.model.std_fields.filter((field) => field.fieldname == row.fieldname);
 		}
 
-		row.key = df.length ? df[0].fieldname : "name";
+		row.key = df.length ? df[0].fieldname : "id";
 		frm.refresh_field("webhook_data");
 	},
 });

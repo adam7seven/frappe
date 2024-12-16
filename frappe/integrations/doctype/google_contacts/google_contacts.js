@@ -34,7 +34,7 @@ frappe.ui.form.on("Google Contacts", {
 					.call({
 						method: "frappe.integrations.doctype.google_contacts.google_contacts.sync",
 						args: {
-							g_contact: frm.doc.name,
+							g_contact: frm.doc.id,
 						},
 						btn: sync_button,
 					})
@@ -49,7 +49,7 @@ frappe.ui.form.on("Google Contacts", {
 		frappe.call({
 			method: "frappe.integrations.doctype.google_contacts.google_contacts.authorize_access",
 			args: {
-				g_contact: frm.doc.name,
+				g_contact: frm.doc.id,
 				reauthorize: frm.doc.authorization_code ? 1 : 0,
 			},
 			callback: function (r) {

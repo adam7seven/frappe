@@ -22,7 +22,7 @@ class IntegrationRequest(Document):
         integration_request_service: DF.Data | None
         is_remote_request: DF.Check
         output: DF.Code | None
-        reference_docname: DF.DynamicLink | None
+        reference_docid: DF.DynamicLink | None
         reference_doctype: DF.Link | None
         request_description: DF.Data | None
         request_headers: DF.Code | None
@@ -34,8 +34,8 @@ class IntegrationRequest(Document):
 
     # end: auto-generated types
     def autoid(self):
-        if self.flags._name:
-            self.name = self.flags._name
+        if self.flags._id:
+            self.id = self.flags._id
 
     def clear_old_logs(days=30):
         from frappe.query_builder import Interval

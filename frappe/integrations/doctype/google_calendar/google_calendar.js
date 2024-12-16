@@ -34,7 +34,7 @@ frappe.ui.form.on("Google Calendar", {
 					.call({
 						method: "frappe.integrations.doctype.google_calendar.google_calendar.sync",
 						args: {
-							g_calendar: frm.doc.name,
+							g_calendar: frm.doc.id,
 						},
 					})
 					.then((r) => {
@@ -53,7 +53,7 @@ frappe.ui.form.on("Google Calendar", {
 		frappe.call({
 			method: "frappe.integrations.doctype.google_calendar.google_calendar.authorize_access",
 			args: {
-				g_calendar: frm.doc.name,
+				g_calendar: frm.doc.id,
 				reauthorize: reauthorize,
 			},
 			callback: function (r) {
