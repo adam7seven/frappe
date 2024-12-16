@@ -89,7 +89,7 @@ frappe.notification = {
 
 <pre>&lt;h3&gt;Order Overdue&lt;/h3&gt;
 
-&lt;p&gt;Transaction {{ doc.name }} has exceeded Due Date. Please take necessary action.&lt;/p&gt;
+&lt;p&gt;Transaction {{ doc.id }} has exceeded Due Date. Please take necessary action.&lt;/p&gt;
 
 &lt;!-- show last comment --&gt;
 {% if comments %}
@@ -109,7 +109,7 @@ Last comment: {{ comments[-1].comment }} by {{ comments[-1].by }}
 
 <pre>*Order Overdue*
 
-Transaction {{ doc.name }} has exceeded Due Date. Please take necessary action.
+Transaction {{ doc.id }} has exceeded Due Date. Please take necessary action.
 
 <!-- show last comment -->
 {% if comments %}
@@ -176,7 +176,7 @@ frappe.ui.form.on("Notification", {
 			frappe.call({
 				method: "frappe.email.doctype.notification.notification.get_documents_for_today",
 				args: {
-					notification: frm.doc.name,
+					notification: frm.doc.id,
 				},
 				callback: function (r) {
 					if (r.message && r.message.length > 0) {

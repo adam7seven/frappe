@@ -8,7 +8,7 @@ frappe.ui.form.on("Email Queue", {
 				frappe.call({
 					method: "frappe.email.doctype.email_queue.email_queue.send_now",
 					args: {
-						name: frm.doc.name,
+						id: frm.doc.id,
 					},
 					btn: button,
 					callback: function () {
@@ -29,7 +29,7 @@ frappe.ui.form.on("Email Queue", {
 					method: "retry_sending",
 					doc: frm.doc,
 					args: {
-						name: frm.doc.name,
+						id: frm.doc.id,
 					},
 					callback: function () {
 						frm.reload_doc();

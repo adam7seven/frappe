@@ -19,7 +19,7 @@ frappe.ui.form.on("Email Group", {
 							frappe.call({
 								method: "frappe.email.doctype.email_group.email_group.import_from",
 								args: {
-									name: frm.doc.name,
+									id: frm.doc.id,
 									doctype: data.doctype,
 								},
 								callback: function (r) {
@@ -48,7 +48,7 @@ frappe.ui.form.on("Email Group", {
 							frappe.call({
 								method: "frappe.email.doctype.email_group.email_group.add_subscribers",
 								args: {
-									name: frm.doc.name,
+									id: frm.doc.id,
 									email_list: data.email_list,
 								},
 								callback: function (r) {
@@ -66,7 +66,7 @@ frappe.ui.form.on("Email Group", {
 			frm.add_custom_button(
 				__("New Newsletter"),
 				function () {
-					frappe.route_options = { email_group: frm.doc.name };
+					frappe.route_options = { email_group: frm.doc.id };
 					frappe.new_doc("Newsletter");
 				},
 				__("Action")

@@ -81,8 +81,8 @@ class Notification(Document):
             self.message = self.get_template()
 
     def autoid(self):
-        if not self.name:
-            self.name = self.subject
+        if not self.id:
+            self.id = self.subject
 
     def validate(self):
         if self.channel in ("Email", "Slack", "System Notification"):
@@ -164,7 +164,7 @@ def get_context(context):
 
         doc_list = frappe.get_all(
             self.document_type,
-            fields="name",
+            fields="id",
             filters=[
                 {self.date_changed: (">=", reference_date_start)},
                 {self.date_changed: ("<=", reference_date_end)},
@@ -172,7 +172,7 @@ def get_context(context):
         )
 
         for d in doc_list:
-            doc = frappe.get_doc(self.document_type, d.name)
+            doc = frappe.get_doc(self.document_type, d.id)
 
             if self.condition and not frappe.safe_eval(
                 self.condition, None, get_context(doc)
@@ -232,7 +232,7 @@ def get_context(context):
                     doc.set(fieldname, value)
                     doc.flags.updater_reference = {
                         "doctype": self.doctype,
-                        "docname": self.name,
+                        "docid": self.id,
                         "label": _("via Notification"),
                     }
                     doc.flags.in_notification_update = True
@@ -258,7 +258,7 @@ def get_context(context):
         notification_doc = {
             "type": "Alert",
             "document_type": get_reference_doctype(doc),
-            "document_name": get_reference_name(doc),
+            "document_id": get_reference_id(doc),
             "subject": subject,
             "from_user": doc.modified_by or doc.owner,
             "email_content": frappe.render_template(self.message, context),
@@ -291,7 +291,7 @@ def get_context(context):
         if doc.doctype != "Communication":
             communication = make_communication(
                 doctype=get_reference_doctype(doc),
-                name=get_reference_name(doc),
+                id=get_reference_id(doc),
                 content=message,
                 subject=subject,
                 sender=sender,
@@ -302,7 +302,7 @@ def get_context(context):
                 cc=cc,
                 bcc=bcc,
                 communication_type="Automated Message",
-            ).get("name")
+            ).get("id")
 
         frappe.sendmail(
             recipients=recipients,
@@ -312,7 +312,7 @@ def get_context(context):
             bcc=bcc,
             message=message,
             reference_doctype=get_reference_doctype(doc),
-            reference_name=get_reference_name(doc),
+            reference_id=get_reference_id(doc),
             attachments=attachments,
             expose_recipients="header",
             print_letterhead=(
@@ -326,7 +326,7 @@ def get_context(context):
             webhook_url=self.slack_webhook_url,
             message=frappe.render_template(self.message, context),
             reference_doctype=get_reference_doctype(doc),
-            reference_name=get_reference_name(doc),
+            reference_id=get_reference_id(doc),
         )
 
     def send_sms(self, doc, context):
@@ -386,7 +386,7 @@ def get_context(context):
             # For sending messages to the owner's mobile phone number
             if recipient.receiver_by_document_field == "owner":
                 receiver_list += get_user_info(
-                    [dict(user_name=doc.get("owner"))], "mobile_no"
+                    [dict(user_id=doc.get("owner"))], "mobile_no"
                 )
             # For sending messages to the number specified in the receiver field
             elif recipient.receiver_by_document_field:
@@ -422,7 +422,7 @@ def get_context(context):
                 {
                     "print_format_attachment": 1,
                     "doctype": doc.doctype,
-                    "name": doc.name,
+                    "id": doc.id,
                     "print_format": self.print_format,
                     "print_letterhead": print_settings.with_letterhead,
                     "lang": (
@@ -436,9 +436,9 @@ def get_context(context):
             ]
 
     def get_template(self, md_as_html=False):
-        module = get_doc_module(self.module, self.doctype, self.name)
+        module = get_doc_module(self.module, self.doctype, self.id)
 
-        path = os.path.join(os.path.dirname(module.__file__), frappe.scrub(self.name))
+        path = os.path.join(os.path.dirname(module.__file__), frappe.scrub(self.id))
         extension = FORMATS.get(self.message_type, ".md")
         file_path = path + extension
 
@@ -458,7 +458,7 @@ def get_context(context):
 
     def load_standard_properties(self, context):
         """load templates and run get_context"""
-        module = get_doc_module(self.module, self.doctype, self.name)
+        module = get_doc_module(self.module, self.doctype, self.id)
         if module:
             if hasattr(module, "get_context"):
                 out = module.get_context(context)
@@ -475,7 +475,7 @@ def get_context(context):
 def get_documents_for_today(notification):
     notification = frappe.get_doc("Notification", notification)
     notification.check_permission("read")
-    return [d.name for d in notification.get_documents_for_today()]
+    return [d.id for d in notification.get_documents_for_today()]
 
 
 def trigger_daily_alerts():
@@ -493,7 +493,7 @@ def trigger_notifications(doc, method=None):
             filters={"event": ("in", ("Days Before", "Days After")), "enabled": 1},
         )
         for d in doc_list:
-            alert = frappe.get_doc("Notification", d.name)
+            alert = frappe.get_doc("Notification", d.id)
 
             for doc in alert.get_documents_for_today():
                 evaluate_alert(doc, alert, alert.event)
@@ -517,7 +517,7 @@ def evaluate_alert(doc: Document, alert, event):
             if not frappe.db.has_column(doc.doctype, alert.value_changed):
                 alert.db_set("enabled", 0)
                 alert.log_error(
-                    f"Notification {alert.name} has been disabled due to missing field"
+                    f"Notification {alert.id} has been disabled due to missing field"
                 )
                 return
 
@@ -541,7 +541,7 @@ def evaluate_alert(doc: Document, alert, event):
     except TemplateError:
         message = _(
             "Error while evaluating Notification {0}. Please fix your template."
-        ).format(frappe.utils.get_link_to_form("Notification", alert.name))
+        ).format(frappe.utils.get_link_to_form("Notification", alert.id))
         frappe.throw(message, title=_("Error in Notification"))
     except Exception as e:
         title = str(e)
@@ -566,7 +566,7 @@ def get_assignees(doc):
         "ToDo",
         filters={
             "status": "Open",
-            "reference_name": doc.name,
+            "reference_id": doc.id,
             "reference_type": doc.doctype,
         },
         fields=["allocated_to"],
@@ -587,5 +587,5 @@ def get_reference_doctype(doc):
     return doc.parenttype if doc.meta.istable else doc.doctype
 
 
-def get_reference_name(doc):
-    return doc.parent if doc.meta.istable else doc.name
+def get_reference_id(doc):
+    return doc.parent if doc.meta.istable else doc.id

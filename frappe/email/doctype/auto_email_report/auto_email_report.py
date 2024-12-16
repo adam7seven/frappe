@@ -10,7 +10,7 @@ import frappe
 from frappe import _
 from frappe.desk.query_report import build_xlsx_data
 from frappe.model.document import Document
-from frappe.model.naming import append_number_if_name_exists
+from frappe.model.iding import append_number_if_id_exists
 from frappe.utils import (
     add_to_date,
     cint,
@@ -68,9 +68,9 @@ class AutoEmailReport(Document):
     # end: auto-generated types
 
     def autoid(self):
-        self.name = _(self.report)
-        if frappe.db.exists("Auto Email Report", self.name):
-            self.name = append_number_if_name_exists("Auto Email Report", self.name)
+        self.id = _(self.report)
+        if frappe.db.exists("Auto Email Report", self.id):
+            self.id = append_number_if_id_exists("Auto Email Report", self.id)
 
     def validate(self):
         self.validate_report_count()
@@ -218,7 +218,7 @@ class AutoEmailReport(Document):
         return frappe.render_template(
             "frappe/templates/emails/auto_email_report.html",
             {
-                "title": self.name,
+                "title": self.id,
                 "description": self.description,
                 "date_time": date_time,
                 "columns": columns,
@@ -226,10 +226,8 @@ class AutoEmailReport(Document):
                 "report_url": get_url_to_report(
                     self.report, self.report_type, report_doctype
                 ),
-                "report_name": self.report,
-                "edit_report_settings": get_link_to_form(
-                    "Auto Email Report", self.name
-                ),
+                "report_id": self.report,
+                "edit_report_settings": get_link_to_form("Auto Email Report", self.id),
             },
         )
 
@@ -296,11 +294,11 @@ class AutoEmailReport(Document):
         frappe.sendmail(
             recipients=self.email_to.split(),
             sender=formataddr((self.sender, self.sender_email)) if self.sender else "",
-            subject=self.name,
+            subject=self.id,
             message=message,
             attachments=attachments,
             reference_doctype=self.doctype,
-            reference_name=self.name,
+            reference_id=self.id,
         )
 
     def dynamic_date_filters_set(self):
@@ -308,9 +306,9 @@ class AutoEmailReport(Document):
 
 
 @frappe.whitelist()
-def download(name):
+def download(id):
     """Download report locally"""
-    auto_email_report = frappe.get_doc("Auto Email Report", name)
+    auto_email_report = frappe.get_doc("Auto Email Report", id)
     auto_email_report.check_permission()
     data = auto_email_report.get_report_content()
 
@@ -324,9 +322,9 @@ def download(name):
 
 
 @frappe.whitelist()
-def send_now(name):
+def send_now(id):
     """Send Auto Email report now"""
-    auto_email_report = frappe.get_doc("Auto Email Report", name)
+    auto_email_report = frappe.get_doc("Auto Email Report", id)
     auto_email_report.check_permission()
     auto_email_report.send()
 
@@ -341,7 +339,7 @@ def send_daily():
     )
 
     for report in enabled_reports:
-        auto_email_report = frappe.get_doc("Auto Email Report", report.name)
+        auto_email_report = frappe.get_doc("Auto Email Report", report.id)
 
         # if not correct weekday, skip
         if auto_email_report.frequency == "Weekdays":
@@ -354,7 +352,7 @@ def send_daily():
             auto_email_report.send()
         except Exception:
             auto_email_report.log_error(
-                f"Failed to send {auto_email_report.name} Auto Email Report"
+                f"Failed to send {auto_email_report.id} Auto Email Report"
             )
 
 
@@ -363,12 +361,12 @@ def send_monthly():
     for report in frappe.get_all(
         "Auto Email Report", {"enabled": 1, "frequency": "Monthly"}
     ):
-        frappe.get_doc("Auto Email Report", report.name).send()
+        frappe.get_doc("Auto Email Report", report.id).send()
 
 
 def make_links(columns, data):
     for row in data:
-        doc_name = row.get("name")
+        doc_id = row.get("id")
         for col in columns:
             if not row.get(col.fieldname):
                 continue
@@ -386,12 +384,12 @@ def make_links(columns, data):
             elif col.fieldtype == "Currency":
                 doc = None
                 if (
-                    doc_name
+                    doc_id
                     and col.get("parent")
                     and not frappe.get_meta(col.parent).istable
                 ):
-                    if frappe.db.exists(col.parent, doc_name):
-                        doc = frappe.get_doc(col.parent, doc_name)
+                    if frappe.db.exists(col.parent, doc_id):
+                        doc = frappe.get_doc(col.parent, doc_id)
 
                 # Pass the Document to get the currency based on docfield option
                 row[col.fieldname] = frappe.format_value(

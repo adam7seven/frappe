@@ -15,7 +15,7 @@
         "error",
         "message_id",
         "reference_doctype",
-        "reference_name",
+        "reference_id",
         "communication",
         "send_after",
         "priority",
@@ -81,9 +81,9 @@
             "read_only": 1
         },
         {
-            "fieldname": "reference_name",
+            "fieldname": "reference_id",
             "fieldtype": "Data",
-            "label": "Reference DocName",
+            "label": "Reference ID",
             "read_only": 1,
             "search_index": 1
         },

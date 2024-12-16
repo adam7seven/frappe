@@ -100,7 +100,7 @@
         }
     ],
     "quick_entry": 1,
-    "show_name_in_global_search": 1,
+    "show_id_in_global_search": 1,
     "sort_field": "modified",
     "sort_order": "DESC",
     "states": [],

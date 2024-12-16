@@ -9,8 +9,8 @@ frappe.ui.form.on("Auto Email Report", {
 				var w = window.open(
 					frappe.urllib.get_full_url(
 						"/api/method/frappe.email.doctype.auto_email_report.auto_email_report.download?" +
-							"name=" +
-							encodeURIComponent(frm.doc.name)
+						"id=" +
+						encodeURIComponent(frm.doc.id)
 					)
 				);
 				if (!w) {
@@ -21,7 +21,7 @@ frappe.ui.form.on("Auto Email Report", {
 			frm.add_custom_button(__("Send Now"), function () {
 				frappe.call({
 					method: "frappe.email.doctype.auto_email_report.auto_email_report.send_now",
-					args: { name: frm.doc.name },
+					args: { id: frm.doc.id },
 					callback: function () {
 						frappe.msgprint(__("Scheduled to send"));
 					},
@@ -58,7 +58,7 @@ frappe.ui.form.on("Auto Email Report", {
 			frappe.call({
 				method: "frappe.desk.query_report.get_script",
 				args: {
-					report_name: frm.doc.report,
+					report_id: frm.doc.report,
 				},
 				callback: function (r) {
 					frappe.dom.eval(r.message.script || "");
@@ -90,10 +90,10 @@ frappe.ui.form.on("Auto Email Report", {
 			var table = $(
 				'<table class="table table-bordered" style="cursor:pointer; margin:0px;"><thead>\
 				<tr><th style="width: 50%">' +
-					__("Filter") +
-					"</th><th>" +
-					__("Value") +
-					"</th></tr>\
+				__("Filter") +
+				"</th><th>" +
+				__("Value") +
+				"</th></tr>\
 				</thead><tbody></tbody></table>"
 			).appendTo(wrapper);
 			$('<p class="text-muted small">' + __("Click table to edit") + "</p>").appendTo(
