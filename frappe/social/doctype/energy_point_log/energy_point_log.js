@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Energy Point Log", {
 	refresh: function (frm) {
-		frm.events.make_reference_name_link(frm);
+		frm.events.make_reference_id_link(frm);
 		if (frm.doc.reverted) {
 			frm.set_intro(__("This document has been reverted"));
 		} else if (frm.doc.type === "Auto" && frappe.user_roles.includes("System Manager")) {
@@ -31,7 +31,7 @@ frappe.ui.form.on("Energy Point Log", {
 						revert_dialog.hide();
 						revert_dialog.clear();
 						frappe.model.docinfo[frm.doc.reference_doctype][
-							frm.doc.reference_name
+							frm.doc.reference_id
 						].energy_point_logs.unshift(revert_log);
 						frm.refresh();
 					});
@@ -40,10 +40,10 @@ frappe.ui.form.on("Energy Point Log", {
 		});
 		revert_dialog.show();
 	},
-	make_reference_name_link(frm) {
+	make_reference_id_link(frm) {
 		let dt = frm.doc.reference_doctype;
-		let dn = frm.doc.reference_name;
-		frm.fields_dict.reference_name.$input_wrapper
+		let dn = frm.doc.reference_id;
+		frm.fields_dict.reference_id.$input_wrapper
 			.find(".control-value")
 			.wrapInner(`<a href='/app/${frappe.router.slug(dt)}/${dn}'></a>`);
 	},
