@@ -8,11 +8,11 @@ frappe.pages["print"].on_page_load = function (wrapper) {
 	$(wrapper).bind("show", () => {
 		const route = frappe.get_route();
 		const doctype = route[1];
-		const docname = route.slice(2).join("/");
+		const docid = route.slice(2).join("/");
 		if (!frappe.route_options || !frappe.route_options.frm) {
-			frappe.model.with_doc(doctype, docname, () => {
-				let frm = { doctype: doctype, docname: docname };
-				frm.doc = frappe.get_doc(doctype, docname);
+			frappe.model.with_doc(doctype, docid, () => {
+				let frm = { doctype: doctype, docid: docid };
+				frm.doc = frappe.get_doc(doctype, docid);
 				frappe.model.with_doctype(doctype, () => {
 					frm.meta = frappe.get_meta(route[1]);
 					print_view.show(frm);
@@ -58,7 +58,7 @@ frappe.ui.form.PrintView = class {
 	}
 
 	set_title() {
-		this.page.set_title(this.frm.docname);
+		this.page.set_title(this.frm.docid);
 	}
 
 	setup_toolbar() {
@@ -219,7 +219,7 @@ frappe.ui.form.PrintView = class {
 		frappe
 			.xcall("frappe.printing.page.print.print.get_print_settings_to_show", {
 				doctype: this.frm.doc.doctype,
-				docname: this.frm.doc.name,
+				docid: this.frm.doc.id,
 			})
 			.then((settings) => this.add_settings_to_sidebar(settings));
 	}
@@ -243,20 +243,20 @@ frappe.ui.form.PrintView = class {
 	edit_print_format() {
 		let print_format = this.get_print_format();
 		let is_custom_format =
-			print_format.name &&
+			print_format.id &&
 			(print_format.print_format_builder || print_format.print_format_builder_beta) &&
 			print_format.standard === "No";
-		let is_standard_but_editable = print_format.name && print_format.custom_format;
+		let is_standard_but_editable = print_format.id && print_format.custom_format;
 
 		if (is_standard_but_editable) {
-			frappe.set_route("Form", "Print Format", print_format.name);
+			frappe.set_route("Form", "Print Format", print_format.id);
 			return;
 		}
 		if (is_custom_format) {
 			if (print_format.print_format_builder_beta) {
-				frappe.set_route("print-format-builder-beta", print_format.name);
+				frappe.set_route("print-format-builder-beta", print_format.id);
 			} else {
-				frappe.set_route("print-format-builder", print_format.name);
+				frappe.set_route("print-format-builder", print_format.id);
 			}
 			return;
 		}
@@ -273,7 +273,7 @@ frappe.ui.form.PrintView = class {
 					label: __("Based On"),
 					fieldname: "based_on",
 					fieldtype: "Read Only",
-					default: print_format.name || "Standard",
+					default: print_format.id || "Standard",
 				},
 				{
 					label: __("Use the new Print Format Builder"),
@@ -285,7 +285,7 @@ frappe.ui.form.PrintView = class {
 				frappe.route_options = {
 					make_new: true,
 					doctype: this.frm.doctype,
-					name: data.print_format_name,
+					id: data.print_format_name,
 					based_on: data.based_on,
 					beta: data.beta,
 				};
@@ -572,7 +572,7 @@ frappe.ui.form.PrintView = class {
 					no_letterhead: me.with_letterhead(),
 					letterhead: me.get_letterhead(),
 				},
-				callback: function () {},
+				callback: function () { },
 			});
 		}
 	}
@@ -648,20 +648,20 @@ frappe.ui.form.PrintView = class {
 		let w = window.open(
 			frappe.urllib.get_full_url(
 				method +
-					"doctype=" +
-					encodeURIComponent(this.frm.doc.doctype) +
-					"&name=" +
-					encodeURIComponent(this.frm.doc.name) +
-					(printit ? "&trigger_print=1" : "") +
-					"&format=" +
-					encodeURIComponent(this.selected_format()) +
-					"&no_letterhead=" +
-					(this.with_letterhead() ? "0" : "1") +
-					"&letterhead=" +
-					encodeURIComponent(this.get_letterhead()) +
-					"&settings=" +
-					encodeURIComponent(JSON.stringify(this.additional_settings)) +
-					(this.lang_code ? "&_lang=" + this.lang_code : "")
+				"doctype=" +
+				encodeURIComponent(this.frm.doc.doctype) +
+				"&name=" +
+				encodeURIComponent(this.frm.doc.name) +
+				(printit ? "&trigger_print=1" : "") +
+				"&format=" +
+				encodeURIComponent(this.selected_format()) +
+				"&no_letterhead=" +
+				(this.with_letterhead() ? "0" : "1") +
+				"&letterhead=" +
+				encodeURIComponent(this.get_letterhead()) +
+				"&settings=" +
+				encodeURIComponent(JSON.stringify(this.additional_settings)) +
+				(this.lang_code ? "&_lang=" + this.lang_code : "")
 			)
 		);
 		if (!w) {
