@@ -24,7 +24,7 @@ frappe.ui.form.on("Website Theme", {
 
 	set_default_theme_button_and_indicator(frm) {
 		frappe.db.get_single_value("Website Settings", "website_theme").then((value) => {
-			if (value === frm.doc.name) {
+			if (value === frm.doc.id) {
 				frm.page.set_indicator(__("Default Theme"), "green");
 			} else {
 				frm.page.clear_indicator();
@@ -45,7 +45,7 @@ frappe.ui.form.on("Website Theme", {
 				frm.app_theme_selector
 					.get_field("apps")
 					.select_options(
-						apps.map((d) => d.name).filter((app) => !ignored_apps.includes(app))
+						apps.map((d) => d.id).filter((app) => !ignored_apps.includes(app))
 					);
 			});
 			return;
@@ -71,8 +71,8 @@ frappe.ui.form.on("Website Theme", {
 						},
 						options: apps.map((app) => ({
 							label: app.title,
-							value: app.name,
-							checked: !ignored_apps.includes(app.name),
+							value: app.id,
+							checked: !ignored_apps.includes(app.id),
 						})),
 					},
 				],

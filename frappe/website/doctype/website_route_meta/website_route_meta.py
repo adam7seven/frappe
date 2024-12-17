@@ -20,5 +20,5 @@ class WebsiteRouteMeta(Document):
 
     # end: auto-generated types
     def autoid(self):
-        if self.name and self.name.startswith("/"):
-            self.name = self.name[1:]
+        if self.id and self.id.startswith("/"):
+            self.id = self.id[1:]

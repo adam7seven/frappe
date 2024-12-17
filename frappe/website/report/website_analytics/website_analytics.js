@@ -50,8 +50,8 @@ frappe.query_reports["Website Analytics"] = {
 			if (value) {
 				try {
 					let doctype = value.split(">")[0].trim();
-					let name = value.split(">")[1].trim();
-					return frappe.utils.get_form_link(doctype, name, true, value);
+					let id = value.split(">")[1].trim();
+					return frappe.utils.get_form_link(doctype, id, true, value);
 				} catch (e) {
 					// skip and return with default formatter
 				}

@@ -29,15 +29,15 @@ class HelpCategory(WebsiteGenerator):
         self.published = 1
 
     def autoid(self):
-        self.name = self.category_name
+        self.id = self.category_name
 
     def validate(self):
         self.set_route()
 
         # disable help articles of this category
         if not self.published:
-            for d in frappe.get_all("Help Article", dict(category=self.name)):
-                frappe.db.set_value("Help Article", d.name, "published", 0)
+            for d in frappe.get_all("Help Article", dict(category=self.id)):
+                frappe.db.set_value("Help Article", d.id, "published", 0)
 
     def set_route(self):
         if not self.route:

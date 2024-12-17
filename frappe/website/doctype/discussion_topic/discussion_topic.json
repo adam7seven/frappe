@@ -8,7 +8,7 @@
     "field_order": [
         "title",
         "reference_doctype",
-        "reference_docname"
+        "reference_docid"
     ],
     "fields": [
         {
@@ -25,11 +25,11 @@
             "options": "DocType"
         },
         {
-            "fieldname": "reference_docname",
+            "fieldname": "reference_docid",
             "fieldtype": "Dynamic Link",
             "in_list_view": 1,
             "in_standard_filter": 1,
-            "label": "Reference Docname",
+            "label": "Reference DocID",
             "options": "reference_doctype"
         }
     ],

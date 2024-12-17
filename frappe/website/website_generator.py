@@ -8,7 +8,7 @@ from frappe.search.website_search import (
     remove_document_from_index,
     update_index_for_path,
 )
-from frappe.website.utils import cleanup_page_name, clear_cache
+from frappe.website.utils import cleanup_page_id, clear_cache
 
 
 class WebsiteGenerator(Document):
@@ -29,8 +29,8 @@ class WebsiteGenerator(Document):
             return out
 
     def autoid(self):
-        if not self.name and self.meta.autoid != "hash":
-            self.name = self.scrubbed_title()
+        if not self.id and self.meta.autoid != "hash":
+            self.id = self.scrubbed_title()
 
     def onload(self):
         self.get("__onload").update(
@@ -68,7 +68,7 @@ class WebsiteGenerator(Document):
             elif self.meta.has_field("title"):
                 title_field = "title"
             else:
-                title_field = "name"
+                title_field = "id"
 
         return title_field
 
@@ -77,7 +77,7 @@ class WebsiteGenerator(Document):
         clear_cache(self.route)
 
     def scrub(self, text):
-        return cleanup_page_name(text).replace("_", "-")
+        return cleanup_page_id(text).replace("_", "-")
 
     def get_parents(self, context):
         """Return breadcrumbs"""
@@ -124,7 +124,7 @@ class WebsiteGenerator(Document):
                 "page_or_generator": "Generator",
                 "ref_doctype": self.doctype,
                 "idx": self.idx,
-                "docname": self.name,
+                "docid": self.name,
                 "controller": get_module_name(self.doctype, self.meta.module),
             }
         )

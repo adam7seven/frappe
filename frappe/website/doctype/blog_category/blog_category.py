@@ -23,11 +23,11 @@ class BlogCategory(WebsiteGenerator):
     # end: auto-generated types
     def autoid(self):
         # to override autoid of WebsiteGenerator
-        self.name = self.scrub(self.title)
+        self.id = self.scrub(self.title)
 
     def on_update(self):
         clear_cache()
 
     def set_route(self):
         # Override blog route since it has to been templated
-        self.route = "blog/" + self.name
+        self.route = "blog/" + self.id

@@ -64,8 +64,8 @@ frappe.ui.form.on("Website Settings", {
 		frappe.boot.website_tracking_enabled = frm.doc.enable_view_tracking;
 	},
 
-	set_parent_options: function (frm, doctype, name) {
-		var item = frappe.get_doc(doctype, name);
+	set_parent_options: function (frm, doctype, id) {
+		var item = frappe.get_doc(doctype, id);
 		if (item.parentfield === "top_bar_items") {
 			frm.trigger("set_parent_label_options");
 		} else if (item.parentfield === "footer_items") {
@@ -120,16 +120,16 @@ frappe.ui.form.on("Top Bar Item", {
 		frm.events.set_parent_label_options_footer(frm);
 	},
 
-	parent_label: function (frm, doctype, name) {
-		frm.events.set_parent_options(frm, doctype, name);
+	parent_label: function (frm, doctype, id) {
+		frm.events.set_parent_options(frm, doctype, id);
 	},
 
-	url: function (frm, doctype, name) {
-		frm.events.set_parent_options(frm, doctype, name);
+	url: function (frm, doctype, id) {
+		frm.events.set_parent_options(frm, doctype, id);
 	},
 
-	label: function (frm, doctype, name) {
-		frm.events.set_parent_options(frm, doctype, name);
+	label: function (frm, doctype, id) {
+		frm.events.set_parent_options(frm, doctype, id);
 	},
 });
 

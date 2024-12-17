@@ -17,11 +17,11 @@
 	{% block header_buttons %}
 	{% if allow_edit and in_view_mode %}
 		<!-- edit button -->
-		<a href="/{{ route }}/{{ doc_name }}/edit" class="edit-button btn btn-default btn-sm">{{ _("Edit", context="Button in web form") }}</a>
+		<a href="/{{ route }}/{{ doc_id }}/edit" class="edit-button btn btn-default btn-sm">{{ _("Edit", context="Button in web form") }}</a>
 	{% endif %}
 
 	{% if allow_print and in_view_mode %}
-		{% set print_format_url = "/printview?doctype=" + doc_type + "&name=" + doc_name + "&format=" + (print_format or "standard") %}
+		{% set print_format_url = "/printview?doctype=" + doc_type + "&id=" + doc_id + "&format=" + (print_format or "standard") %}
 		<!-- print button -->
 		<a href="{{ print_format_url }}" target="_blank" class="print-btn btn btn-default btn-sm ml-2">
 			<svg class="icon icon-sm"><use href="#icon-printer"></use></svg>
