@@ -13,7 +13,7 @@ from io import StringIO
 
 import frappe
 import frappe.utils.scheduler
-from frappe.model.naming import revert_series_if_last
+from frappe.model.iding import revert_series_if_last
 from frappe.modules import get_module_name, load_doctype_module
 from frappe.utils import cint
 
@@ -102,7 +102,7 @@ def main(
             )
         elif module_def:
             doctypes = frappe.db.get_list(
-                "DocType", filters={"module": module_def, "istable": 0}, pluck="name"
+                "DocType", filters={"module": module_def, "istable": 0}, pluck="id"
             )
             ret = run_tests_for_doctype(
                 doctypes,
@@ -155,9 +155,9 @@ class TimeLoggingTestResult(unittest.TextTestResult):
 
     def addSuccess(self, test):
         elapsed = time.monotonic() - self._started_at
-        name = self.getDescription(test)
+        id = self.getDescription(test)
         if elapsed >= SLOW_TEST_THRESHOLD:
-            self.stream.write(f"\n{name} ({elapsed:.03}s)\n")
+            self.stream.write(f"\n{id} ({elapsed:.03}s)\n")
         super().addSuccess(test)
 
 
@@ -236,8 +236,8 @@ def run_tests_for_doctype(
 
         test_module = get_module_name(doctype, module, "test_")
         if force:
-            for name in frappe.db.sql_list("select name from `tab%s`" % doctype):
-                frappe.delete_doc(doctype, name, force=True)
+            for id in frappe.db.sql_list("select id from `tab%s`" % doctype):
+                frappe.delete_doc(doctype, id, force=True)
         make_test_records(doctype, verbose=verbose, force=force, commit=True)
         modules.append(importlib.import_module(test_module))
 
@@ -368,7 +368,7 @@ def _add_test(app, path, filename, verbose, test_suite=None):
         if os.path.exists(txt_file):
             with open(txt_file) as f:
                 doc = json.loads(f.read())
-            doctype = doc["name"]
+            doctype = doc["id"]
             make_test_records(doctype, verbose, commit=True)
 
     test_suite.addTest(unittest.TestLoader().loadTestsFromModule(module))
@@ -416,9 +416,9 @@ def get_dependencies(doctype):
     options_list = list(set(options_list))
 
     if hasattr(test_module, "test_ignore"):
-        for doctype_name in test_module.test_ignore:
-            if doctype_name in options_list:
-                options_list.remove(doctype_name)
+        for doctype_id in test_module.test_ignore:
+            if doctype_id in options_list:
+                options_list.remove(doctype_id)
 
     options_list.sort()
 
@@ -468,7 +468,7 @@ def make_test_objects(
 
     def revert_naming(d):
         if getattr(d, "naming_series", None):
-            revert_series_if_last(d.naming_series, d.name)
+            revert_series_if_last(d.naming_series, d.id)
 
     if test_records is None:
         test_records = frappe.get_test_records(doctype)
@@ -483,12 +483,12 @@ def make_test_objects(
             if not d.naming_series:
                 d.naming_series = "_T-" + d.doctype + "-"
 
-        if doc.get("name"):
-            d.name = doc.get("name")
+        if doc.get("id"):
+            d.id = doc.get("id")
         else:
-            d.set_new_name()
+            d.set_new_id()
 
-        if frappe.db.exists(d.doctype, d.name) and not reset:
+        if frappe.db.exists(d.doctype, d.id) and not reset:
             frappe.db.rollback()
             # do not create test records, if already exists
             continue
@@ -517,7 +517,7 @@ def make_test_objects(
             else:
                 raise
 
-        records.append(d.name)
+        records.append(d.id)
 
         if commit:
             frappe.db.commit()
