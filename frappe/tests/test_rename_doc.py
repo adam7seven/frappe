@@ -11,7 +11,7 @@ import frappe
 from frappe.core.doctype.doctype.test_doctype import new_doctype
 from frappe.exceptions import DoesNotExistError
 from frappe.model.base_document import get_controller
-from frappe.model.rename_doc import bulk_rename, update_document_title
+from frappe.model.reid_doc import bulk_reid, update_document_title
 from frappe.modules.utils import get_doc_path
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_to_date, now
@@ -25,7 +25,7 @@ def patch_db(endpoints: list[str] | None = None):
         x = patch(f"frappe.db.{point}", new=lambda: True)
         patched_endpoints.append(x)
 
-    savepoint = "SAVEPOINT_for_test_bulk_rename"
+    savepoint = "SAVEPOINT_for_test_bulk_reid"
     frappe.db.savepoint(save_point=savepoint)
     try:
         for x in patched_endpoints:
@@ -37,11 +37,11 @@ def patch_db(endpoints: list[str] | None = None):
         frappe.db.rollback(save_point=savepoint)
 
 
-class TestRenameDoc(FrappeTestCase):
+class TestReidDoc(FrappeTestCase):
     @classmethod
     def setUpClass(self):
-        """Setting Up data for the tests defined under TestRenameDoc"""
-        # set developer_mode to rename doc controllers
+        """Setting Up data for the tests defined under TestReidDoc"""
+        # set developer_mode to reid doc controllers
         super().setUpClass()
         self._original_developer_flag = frappe.conf.developer_mode
         frappe.conf.developer_mode = 1
@@ -58,13 +58,13 @@ class TestRenameDoc(FrappeTestCase):
                     "description": f"this is todo #{num}",
                 }
             ).insert()
-            self.available_documents.append(doc.name)
+            self.available_documents.append(doc.id)
 
         #  data generation: for controllers tests
         self.doctype = frappe._dict(
             {
-                "old": "Test Rename Document Old",
-                "new": "Test Rename Document New",
+                "old": "Test Reid Document Old",
+                "new": "Test Reid Document New",
             }
         )
 
@@ -72,7 +72,7 @@ class TestRenameDoc(FrappeTestCase):
             {
                 "doctype": "DocType",
                 "module": "Custom",
-                "name": self.doctype.old,
+                "id": self.doctype.old,
                 "custom": 0,
                 "fields": [
                     {
@@ -87,15 +87,15 @@ class TestRenameDoc(FrappeTestCase):
 
     @classmethod
     def tearDownClass(self):
-        """Deleting data generated for the tests defined under TestRenameDoc"""
+        """Deleting data generated for the tests defined under TestReidDoc"""
         # delete_doc doesnt drop tables
         # this is done to bypass inconsistencies in the db
-        frappe.delete_doc_if_exists("DocType", "Renamed Doc")
-        frappe.db.sql_ddl("drop table if exists `tabRenamed Doc`")
+        frappe.delete_doc_if_exists("DocType", "Reidd Doc")
+        frappe.db.sql_ddl("drop table if exists `tabReidd Doc`")
 
         # delete the documents created
-        for docname in self.available_documents:
-            frappe.delete_doc(self.test_doctype, docname)
+        for docid in self.available_documents:
+            frappe.delete_doc(self.test_doctype, docid)
 
         for dt in self.doctype.values():
             if frappe.db.exists("DocType", dt):
@@ -107,7 +107,7 @@ class TestRenameDoc(FrappeTestCase):
 
     def setUp(self):
         frappe.flags.link_fields = {}
-        if self._testMethodName == "test_doc_rename_method":
+        if self._testMethodName == "test_doc_reid_method":
             self.property_setter = frappe.get_doc(
                 {
                     "doctype": "Property Setter",
@@ -122,30 +122,30 @@ class TestRenameDoc(FrappeTestCase):
         super().setUp()
 
     def tearDown(self) -> None:
-        if self._testMethodName == "test_doc_rename_method":
+        if self._testMethodName == "test_doc_reid_method":
             self.property_setter.delete()
         return super().tearDown()
 
-    def test_rename_doc(self):
-        """Rename an existing document via frappe.rename_doc"""
-        old_name = choice(self.available_documents)
-        new_name = old_name + ".new"
+    def test_reid_doc(self):
+        """Reid an existing document via frappe.reid_doc"""
+        old_id = choice(self.available_documents)
+        new_id = old_id + ".new"
         self.assertEqual(
-            new_name,
-            frappe.rename_doc(self.test_doctype, old_name, new_name, force=True),
+            new_id,
+            frappe.reid_doc(self.test_doctype, old_id, new_id, force=True),
         )
-        self.available_documents.remove(old_name)
-        self.available_documents.append(new_name)
+        self.available_documents.remove(old_id)
+        self.available_documents.append(new_id)
 
     def test_merging_docs(self):
-        """Merge two documents via frappe.rename_doc"""
+        """Merge two documents via frappe.reid_doc"""
         first_todo, second_todo = sample(self.available_documents, 2)
 
         second_todo_doc = frappe.get_doc(self.test_doctype, second_todo)
         second_todo_doc.priority = "High"
         second_todo_doc.save()
 
-        merged_todo = frappe.rename_doc(
+        merged_todo = frappe.reid_doc(
             self.test_doctype, first_todo, second_todo, merge=True, force=True
         )
         merged_todo_doc = frappe.get_doc(self.test_doctype, merged_todo)
@@ -156,8 +156,8 @@ class TestRenameDoc(FrappeTestCase):
 
         self.assertEqual(merged_todo_doc.priority, second_todo_doc.priority)
 
-    def test_rename_controllers(self):
-        """Rename doctypes with controller code paths"""
+    def test_reid_controllers(self):
+        """Reid doctypes with controller code paths"""
         # check if module exists exists;
         # if custom, get_controller will return Document class
         # if not custom, a different class will be returned
@@ -167,21 +167,21 @@ class TestRenameDoc(FrappeTestCase):
 
         old_doctype_path = get_doc_path("Custom", "DocType", self.doctype.old)
 
-        # rename doc via wrapper API accessible via /desk
-        frappe.rename_doc("DocType", self.doctype.old, self.doctype.new)
+        # reid doc via wrapper API accessible via /desk
+        frappe.reid_doc("DocType", self.doctype.old, self.doctype.new)
 
         # check if database and controllers are updated
         self.assertTrue(frappe.db.exists("DocType", self.doctype.new))
         self.assertFalse(frappe.db.exists("DocType", self.doctype.old))
         self.assertFalse(os.path.exists(old_doctype_path))
 
-    def test_rename_doctype(self):
-        """Rename DocType via frappe.rename_doc"""
+    def test_reid_doctype(self):
+        """Reid DocType via frappe.reid_doc"""
         from frappe.core.doctype.doctype.test_doctype import new_doctype
 
-        if not frappe.db.exists("DocType", "Rename This"):
+        if not frappe.db.exists("DocType", "Reid This"):
             new_doctype(
-                "Rename This",
+                "Reid This",
                 fields=[
                     {
                         "label": "Linked To",
@@ -193,28 +193,28 @@ class TestRenameDoc(FrappeTestCase):
                 ],
             ).insert()
 
-        to_rename_record = frappe.get_doc(
-            {"doctype": "Rename This", "linked_to_doctype": "Rename This"}
+        to_reid_record = frappe.get_doc(
+            {"doctype": "Reid This", "linked_to_doctype": "Reid This"}
         ).insert()
 
-        # Rename doctype
+        # Reid doctype
         self.assertEqual(
-            "Renamed Doc",
-            frappe.rename_doc("DocType", "Rename This", "Renamed Doc", force=True),
+            "Reidd Doc",
+            frappe.reid_doc("DocType", "Reid This", "Reidd Doc", force=True),
         )
 
         # Test if Doctype value has changed in Link field
         linked_to_doctype = frappe.db.get_value(
-            "Renamed Doc", to_rename_record.name, "linked_to_doctype"
+            "Reidd Doc", to_reid_record.id, "linked_to_doctype"
         )
-        self.assertEqual(linked_to_doctype, "Renamed Doc")
+        self.assertEqual(linked_to_doctype, "Reidd Doc")
 
         # Test if there are conflicts between a record and a DocType
-        # having the same name
-        old_name = to_rename_record.name
-        new_name = "ToDo"
+        # having the same id
+        old_id = to_reid_record.id
+        new_id = "ToDo"
         self.assertEqual(
-            new_name, frappe.rename_doc("Renamed Doc", old_name, new_name, force=True)
+            new_id, frappe.reid_doc("Reidd Doc", old_id, new_id, force=True)
         )
 
     def test_update_document_title_api(self):
@@ -229,17 +229,15 @@ class TestRenameDoc(FrappeTestCase):
         test_doc.insert(ignore_mandatory=True)
 
         dt = test_doc.doctype
-        dn = test_doc.name
-        new_name = f"{dn}-new"
+        dn = test_doc.id
+        new_id = f"{dn}-new"
 
         # pass invalid types to API
         with self.assertRaises(TypeError):
-            update_document_title(
-                doctype=dt, docname=dn, title={}, name={"hack": "this"}
-            )
+            update_document_title(doctype=dt, docid=dn, title={}, id={"hack": "this"})
 
         doc_before = frappe.get_doc(test_doctype, dn)
-        return_value = update_document_title(doctype=dt, docname=dn, new_name=new_name)
+        return_value = update_document_title(doctype=dt, docid=dn, new_id=new_id)
         doc_after = frappe.get_doc(test_doctype, return_value)
 
         doc_before_dict = doc_before.as_dict(no_nulls=True, no_default_fields=True)
@@ -247,17 +245,17 @@ class TestRenameDoc(FrappeTestCase):
         doc_before_dict.pop("module_name")
         doc_after_dict.pop("module_name")
 
-        self.assertEqual(new_name, return_value)
+        self.assertEqual(new_id, return_value)
         self.assertDictEqual(doc_before_dict, doc_after_dict)
         self.assertEqual(doc_after.module_name, return_value)
 
         test_doc.delete()
 
-    def test_bulk_rename(self):
+    def test_bulk_reid(self):
         input_data = [[x, f"{x}-new"] for x in self.available_documents]
 
         with patch_db(["commit", "rollback"]), patch("frappe.enqueue") as enqueue:
-            message_log = bulk_rename(self.test_doctype, input_data, via_console=False)
+            message_log = bulk_reid(self.test_doctype, input_data, via_console=False)
             self.assertEqual(len(message_log), len(self.available_documents))
             self.assertIsInstance(message_log, list)
             enqueue.assert_called_with(
@@ -265,14 +263,14 @@ class TestRenameDoc(FrappeTestCase):
                 doctype=self.test_doctype,
             )
 
-    def test_doc_rename_method(self):
-        name = choice(self.available_documents)
-        new_name = f"{name}-{frappe.generate_hash(length=4)}"
-        doc = frappe.get_doc(self.test_doctype, name)
-        doc.rename(new_name, merge=frappe.db.exists(self.test_doctype, new_name))
-        self.assertEqual(doc.name, new_name)
-        self.available_documents.append(new_name)
-        self.available_documents.remove(name)
+    def test_doc_reid_method(self):
+        id = choice(self.available_documents)
+        new_id = f"{id}-{frappe.generate_hash(length=4)}"
+        doc = frappe.get_doc(self.test_doctype, id)
+        doc.reid(new_id, merge=frappe.db.exists(self.test_doctype, new_id))
+        self.assertEqual(doc.id, new_id)
+        self.available_documents.append(new_id)
+        self.available_documents.remove(id)
 
     def test_parenttype(self):
         child = new_doctype(istable=1).insert()
@@ -280,7 +278,7 @@ class TestRenameDoc(FrappeTestCase):
             "label": "Test Table",
             "fieldname": "test_table",
             "fieldtype": "Table",
-            "options": child.name,
+            "options": child.id,
         }
 
         parent_a = new_doctype(
@@ -291,14 +289,14 @@ class TestRenameDoc(FrappeTestCase):
         ).insert()
 
         parent_a_instance = frappe.get_doc(
-            doctype=parent_a.name, test_table=[{"some_fieldname": "x"}], name="XYZ"
+            doctype=parent_a.id, test_table=[{"some_fieldname": "x"}], id="XYZ"
         ).insert()
 
         parent_b_instance = frappe.get_doc(
-            doctype=parent_b.name, test_table=[{"some_fieldname": "x"}], name="XYZ"
+            doctype=parent_b.id, test_table=[{"some_fieldname": "x"}], id="XYZ"
         ).insert()
 
-        parent_b_instance.rename("ABC")
+        parent_b_instance.reid("ABC")
         parent_a_instance.reload()
 
         self.assertEqual(len(parent_a_instance.test_table), 1)

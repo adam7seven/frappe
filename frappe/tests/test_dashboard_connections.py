@@ -58,7 +58,7 @@ class TestDashboardConnections(FrappeTestCase):
                     {
                         "count": 1,
                         "doctype": "Test Doctype B With Child Table With Link To Doctype A",
-                        "names": ["Earth"],
+                        "ids": ["Earth"],
                         "open_count": 0,
                     }
                 ],
@@ -148,13 +148,13 @@ class TestDashboardConnections(FrappeTestCase):
         # create a test doc
         todo_doc = frappe.get_doc(dict(doctype="ToDo", description="test")).insert()
         frappe.get_doc(
-            dict(doctype="Test Doctype D", title="d-001", doclink=todo_doc.name)
+            dict(doctype="Test Doctype D", title="d-001", doclink=todo_doc.id)
         ).insert()
         frappe.get_doc(
-            dict(doctype="Test Doctype E", title="e-001", todo=todo_doc.name)
+            dict(doctype="Test Doctype E", title="e-001", todo=todo_doc.id)
         ).insert()
 
-        connections = get_open_count("ToDo", todo_doc.name)["count"]
+        connections = get_open_count("ToDo", todo_doc.id)["count"]
         self.assertEqual(len(connections["external_links_found"]), 2)
 
         # Change standard fieldname, see if all custom links still work
@@ -167,7 +167,7 @@ class TestDashboardConnections(FrappeTestCase):
                 }
             }
         ):
-            connections = get_open_count("ToDo", todo_doc.name)["count"]
+            connections = get_open_count("ToDo", todo_doc.id)["count"]
             self.assertEqual(len(connections["external_links_found"]), 2)
 
         # remove the custom links

@@ -118,7 +118,7 @@ class TestQueryReport(FrappeTestCase):
 
         REPORT_NAME = "Test CSV Report"
         REF_DOCTYPE = "DocType"
-        REPORT_COLUMNS = ["name", "module", "issingle"]
+        REPORT_COLUMNS = ["id", "module", "issingle"]
 
         if not frappe.db.exists("Report", REPORT_NAME):
             report = frappe.new_doc("Report")
@@ -166,7 +166,7 @@ class TestQueryReport(FrappeTestCase):
             frappe.get_doc(
                 {
                     "doctype": "DocType",
-                    "name": "Doc A",
+                    "id": "Doc A",
                     "module": "Core",
                     "custom": 1,
                     "autoid": "field:first_name",
@@ -178,7 +178,7 @@ class TestQueryReport(FrappeTestCase):
             frappe.get_doc(
                 {
                     "doctype": "DocType",
-                    "name": "Doc B",
+                    "id": "Doc B",
                     "module": "Core",
                     "custom": 1,
                     "autoid": "field:last_name",

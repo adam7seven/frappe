@@ -30,19 +30,19 @@ def create_if_not_exists(doc):
     else:
         docs = doc
 
-    names = []
+    ids = []
     for doc in docs:
         doc = frappe._dict(doc)
         filters = doc.copy()
         filters.pop("doctype")
-        name = frappe.db.exists(doc.doctype, filters)
-        if not name:
+        id = frappe.db.exists(doc.doctype, filters)
+        if not id:
             d = frappe.get_doc(doc)
             d.insert(ignore_permissions=True)
-            name = d.name
-        names.append(name)
+            id = d.id
+        ids.append(id)
 
-    return names
+    return ids
 
 
 @whitelist_for_tests
@@ -81,7 +81,7 @@ def create_todo_records():
 
 @whitelist_for_tests
 def prepare_webform_test():
-    for note in frappe.get_all("Note", pluck="name"):
+    for note in frappe.get_all("Note", pluck="id"):
         frappe.delete_doc("Note", note, force=True)
 
     frappe.delete_doc_if_exists("Web Form", "note")
@@ -123,9 +123,9 @@ def create_contact_phone_nos_records():
 
 
 @whitelist_for_tests
-def create_doctype(name, fields):
+def create_doctype(id, fields):
     fields = frappe.parse_json(fields)
-    if frappe.db.exists("DocType", name):
+    if frappe.db.exists("DocType", id):
         return
     frappe.get_doc(
         {
@@ -134,15 +134,15 @@ def create_doctype(name, fields):
             "custom": 1,
             "fields": fields,
             "permissions": [{"role": "System Manager", "read": 1}],
-            "name": name,
+            "id": id,
         }
     ).insert()
 
 
 @whitelist_for_tests
-def create_child_doctype(name, fields):
+def create_child_doctype(id, fields):
     fields = frappe.parse_json(fields)
-    if frappe.db.exists("DocType", name):
+    if frappe.db.exists("DocType", id):
         return
     frappe.get_doc(
         {
@@ -152,7 +152,7 @@ def create_child_doctype(name, fields):
             "custom": 1,
             "fields": fields,
             "permissions": [{"role": "System Manager", "read": 1}],
-            "name": name,
+            "id": id,
         }
     ).insert()
 
@@ -174,7 +174,7 @@ def create_multiple_todo_records():
 
     values = [(f"100{i}", f"Multiple ToDo {i}") for i in range(1, 1002)]
 
-    frappe.db.bulk_insert("ToDo", fields=["name", "description"], values=set(values))
+    frappe.db.bulk_insert("ToDo", fields=["id", "description"], values=set(values))
 
 
 def insert_contact(first_name, phone_number):
@@ -185,7 +185,7 @@ def insert_contact(first_name, phone_number):
 
 @whitelist_for_tests
 def create_form_tour():
-    if frappe.db.exists("Form Tour", {"name": "Test Form Tour"}):
+    if frappe.db.exists("Form Tour", {"id": "Test Form Tour"}):
         return
 
     tour = frappe.get_doc(

@@ -232,13 +232,11 @@ class TestNestedSet(FrappeTestCase):
         remove_subtree(TEST_DOCTYPE, "Parent 2")
         self.test_basic_tree()
 
-    def test_rename_nestedset(self):
+    def test_reid_nestedset(self):
         doctype = new_doctype(is_tree=True).insert()
 
-        # Rename doctype
-        frappe.rename_doc(
-            "DocType", doctype.name, "Test " + random_string(10), force=True
-        )
+        # Reid doctype
+        frappe.reid_doc("DocType", doctype.id, "Test " + random_string(10), force=True)
 
     def test_merge_groups(self):
         global records
@@ -247,7 +245,7 @@ class TestNestedSet(FrappeTestCase):
             "parent_test_tree_doctype": "Root Node",
             "is_group": 1,
         }
-        frappe.rename_doc(TEST_DOCTYPE, "Parent 2", "Parent 1", merge=True)
+        frappe.reid_doc(TEST_DOCTYPE, "Parent 2", "Parent 1", merge=True)
         records.remove(el)
         self.test_basic_tree()
 
@@ -259,7 +257,7 @@ class TestNestedSet(FrappeTestCase):
             "is_group": 0,
         }
 
-        frappe.rename_doc(
+        frappe.reid_doc(
             TEST_DOCTYPE,
             "Child 3",
             "Child 2",
@@ -270,11 +268,11 @@ class TestNestedSet(FrappeTestCase):
 
     def test_merge_leaf_into_group(self):
         with self.assertRaises(NestedSetInvalidMergeError):
-            frappe.rename_doc(TEST_DOCTYPE, "Child 1", "Parent 1", merge=True)
+            frappe.reid_doc(TEST_DOCTYPE, "Child 1", "Parent 1", merge=True)
 
     def test_merge_group_into_leaf(self):
         with self.assertRaises(NestedSetInvalidMergeError):
-            frappe.rename_doc(TEST_DOCTYPE, "Parent 1", "Child 1", merge=True)
+            frappe.reid_doc(TEST_DOCTYPE, "Parent 1", "Child 1", merge=True)
 
     def test_root_deletion(self):
         for doc in ["Child 3", "Child 2", "Child 1", "Parent 2", "Parent 1"]:
@@ -305,13 +303,13 @@ class TestNestedSet(FrappeTestCase):
                 ]
             )
             .insert()
-            .name
+            .id
         )
 
         record = "Child 1"
 
-        exclusive_filter = {"name": ("descendants of", record)}
-        inclusive_filter = {"name": ("descendants of (inclusive)", record)}
+        exclusive_filter = {"id": ("descendants of", record)}
+        inclusive_filter = {"id": ("descendants of (inclusive)", record)}
         exclusive_link = {"link_field": ("descendants of", record)}
         inclusive_link = {"link_field": ("descendants of (inclusive)", record)}
 

@@ -62,115 +62,115 @@ class TestQuery(FrappeTestCase):
                 "DocType",
                 ["*"],
                 [
-                    ["DocField", "name", "like", "f%"],
+                    ["DocField", "id", "like", "f%"],
                     ["DocType", "parent", "=", "something"],
                 ],
             ).get_sql(),
-            "SELECT `tabDocType`.* FROM `tabDocType` LEFT JOIN `tabDocField` ON `tabDocField`.`parent`=`tabDocType`.`name` AND `tabDocField`.`parenttype`='DocType' WHERE `tabDocField`.`name` LIKE 'f%' AND `tabDocType`.`parent`='something'",
+            "SELECT `tabDocType`.* FROM `tabDocType` LEFT JOIN `tabDocField` ON `tabDocField`.`parent`=`tabDocType`.`id` AND `tabDocField`.`parenttype`='DocType' WHERE `tabDocField`.`id` LIKE 'f%' AND `tabDocType`.`parent`='something'",
         )
 
     @run_only_if(db_type_is.MARIADB)
     def test_string_fields(self):
         self.assertEqual(
             frappe.qb.get_query(
-                "User", fields="name, email", filters={"name": "Administrator"}
+                "User", fields="id, email", filters={"id": "Administrator"}
             ).get_sql(),
             frappe.qb.from_("User")
-            .select(Field("name"), Field("email"))
-            .where(Field("name") == "Administrator")
+            .select(Field("id"), Field("email"))
+            .where(Field("id") == "Administrator")
             .get_sql(),
         )
         self.assertEqual(
             frappe.qb.get_query(
-                "User", fields=["`name`, `email`"], filters={"name": "Administrator"}
+                "User", fields=["`id`, `email`"], filters={"id": "Administrator"}
             ).get_sql(),
             frappe.qb.from_("User")
-            .select(Field("name"), Field("email"))
-            .where(Field("name") == "Administrator")
+            .select(Field("id"), Field("email"))
+            .where(Field("id") == "Administrator")
             .get_sql(),
         )
 
         self.assertEqual(
             frappe.qb.get_query(
                 "User",
-                fields=["`tabUser`.`name`", "`tabUser`.`email`"],
-                filters={"name": "Administrator"},
+                fields=["`tabUser`.`id`", "`tabUser`.`email`"],
+                filters={"id": "Administrator"},
             ).run(),
             frappe.qb.from_("User")
-            .select(Field("name"), Field("email"))
-            .where(Field("name") == "Administrator")
+            .select(Field("id"), Field("email"))
+            .where(Field("id") == "Administrator")
             .run(),
         )
 
         self.assertEqual(
             frappe.qb.get_query(
                 "User",
-                fields=["`tabUser`.`name` as owner", "`tabUser`.`email`"],
-                filters={"name": "Administrator"},
+                fields=["`tabUser`.`id` as owner", "`tabUser`.`email`"],
+                filters={"id": "Administrator"},
             ).run(as_dict=1),
             frappe.qb.from_("User")
-            .select(Field("name").as_("owner"), Field("email"))
-            .where(Field("name") == "Administrator")
+            .select(Field("id").as_("owner"), Field("email"))
+            .where(Field("id") == "Administrator")
             .run(as_dict=1),
         )
 
         self.assertEqual(
             frappe.qb.get_query(
                 "User",
-                fields=["`tabUser`.`name`, Count(`name`) as count"],
-                filters={"name": "Administrator"},
+                fields=["`tabUser`.`id`, Count(`id`) as count"],
+                filters={"id": "Administrator"},
             ).run(),
             frappe.qb.from_("User")
-            .select(Field("name"), Count("name").as_("count"))
-            .where(Field("name") == "Administrator")
+            .select(Field("id"), Count("id").as_("count"))
+            .where(Field("id") == "Administrator")
             .run(),
         )
 
         self.assertEqual(
             frappe.qb.get_query(
                 "User",
-                fields=["`tabUser`.`name`, Count(`name`) as `count`"],
-                filters={"name": "Administrator"},
+                fields=["`tabUser`.`id`, Count(`id`) as `count`"],
+                filters={"id": "Administrator"},
             ).run(),
             frappe.qb.from_("User")
-            .select(Field("name"), Count("name").as_("count"))
-            .where(Field("name") == "Administrator")
+            .select(Field("id"), Count("id").as_("count"))
+            .where(Field("id") == "Administrator")
             .run(),
         )
 
         self.assertEqual(
             frappe.qb.get_query(
                 "User",
-                fields="`tabUser`.`name`, Count(`name`) as `count`",
-                filters={"name": "Administrator"},
+                fields="`tabUser`.`id`, Count(`id`) as `count`",
+                filters={"id": "Administrator"},
             ).run(),
             frappe.qb.from_("User")
-            .select(Field("name"), Count("name").as_("count"))
-            .where(Field("name") == "Administrator")
+            .select(Field("id"), Count("id").as_("count"))
+            .where(Field("id") == "Administrator")
             .run(),
         )
 
     def test_functions_fields(self):
         self.assertEqual(
-            frappe.qb.get_query("User", fields="Count(name)", filters={}).get_sql(),
-            frappe.qb.from_("User").select(Count(Field("name"))).get_sql(),
+            frappe.qb.get_query("User", fields="Count(id)", filters={}).get_sql(),
+            frappe.qb.from_("User").select(Count(Field("id"))).get_sql(),
         )
 
         self.assertEqual(
             frappe.qb.get_query(
-                "User", fields=["Count(name)", "Max(name)"], filters={}
+                "User", fields=["Count(id)", "Max(id)"], filters={}
             ).get_sql(),
             frappe.qb.from_("User")
-            .select(Count(Field("name")), Max(Field("name")))
+            .select(Count(Field("id")), Max(Field("id")))
             .get_sql(),
         )
 
         self.assertEqual(
             frappe.qb.get_query(
-                "User", fields=["abs(name-email)", "Count(name)"], filters={}
+                "User", fields=["abs(id-email)", "Count(id)"], filters={}
             ).get_sql(),
             frappe.qb.from_("User")
-            .select(Abs(Field("name") - Field("email")), Count(Field("name")))
+            .select(Abs(Field("id") - Field("email")), Count(Field("id")))
             .get_sql(),
         )
 
@@ -191,12 +191,12 @@ class TestQuery(FrappeTestCase):
         self.assertEqual(
             frappe.qb.get_query(
                 "User",
-                fields="Count(name) as count, Max(email) as max_email",
+                fields="Count(id) as count, Max(email) as max_email",
                 filters={},
             ).get_sql(),
             frappe.qb.from_("User")
             .select(
-                Count(Field("name")).as_("count"), Max(Field("email")).as_("max_email")
+                Count(Field("id")).as_("count"), Max(Field("email")).as_("max_email")
             )
             .get_sql(),
         )
@@ -205,10 +205,10 @@ class TestQuery(FrappeTestCase):
         user_doctype = frappe.qb.DocType("User")
         self.assertEqual(
             frappe.qb.get_query(
-                user_doctype, fields=[user_doctype.name, user_doctype.email], filters={}
+                user_doctype, fields=[user_doctype.id, user_doctype.email], filters={}
             ).get_sql(),
             frappe.qb.from_(user_doctype)
-            .select(user_doctype.name, user_doctype.email)
+            .select(user_doctype.id, user_doctype.email)
             .get_sql(),
         )
 
@@ -223,28 +223,28 @@ class TestQuery(FrappeTestCase):
         user_doctype = frappe.qb.DocType("User")
         self.assertEqual(
             frappe.qb.get_query(
-                "User", fields=["name as owner", "email as id"], filters={}
+                "User", fields=["id as owner", "email as id"], filters={}
             ).get_sql(),
             frappe.qb.from_(user_doctype)
-            .select(user_doctype.name.as_("owner"), user_doctype.email.as_("id"))
+            .select(user_doctype.id.as_("owner"), user_doctype.email.as_("id"))
             .get_sql(),
         )
 
         self.assertEqual(
             frappe.qb.get_query(
-                user_doctype, fields="name as owner, email as id", filters={}
+                user_doctype, fields="id as owner, email as id", filters={}
             ).get_sql(),
             frappe.qb.from_(user_doctype)
-            .select(user_doctype.name.as_("owner"), user_doctype.email.as_("id"))
+            .select(user_doctype.id.as_("owner"), user_doctype.email.as_("id"))
             .get_sql(),
         )
 
         self.assertEqual(
             frappe.qb.get_query(
-                user_doctype, fields=["Count(name) as count", "email as id"], filters={}
+                user_doctype, fields=["Count(id) as count", "email as id"], filters={}
             ).get_sql(),
             frappe.qb.from_(user_doctype)
-            .select(Count(Field("name")).as_("count"), user_doctype.email.as_("id"))
+            .select(Count(Field("id")).as_("count"), user_doctype.email.as_("id"))
             .get_sql(),
         )
 
@@ -253,10 +253,10 @@ class TestQuery(FrappeTestCase):
         self.assertEqual(
             frappe.qb.get_query(
                 "DocType",
-                fields=["name"],
+                fields=["id"],
                 filters={"module.app_name": "frappe"},
             ).get_sql(),
-            "SELECT `tabDocType`.`name` FROM `tabDocType` LEFT JOIN `tabModule Def` ON `tabModule Def`.`name`=`tabDocType`.`module` WHERE `tabModule Def`.`app_name`='frappe'".replace(
+            "SELECT `tabDocType`.`id` FROM `tabDocType` LEFT JOIN `tabModule Def` ON `tabModule Def`.`id`=`tabDocType`.`module` WHERE `tabModule Def`.`app_name`='frappe'".replace(
                 "`", '"' if frappe.db.db_type == "postgres" else "`"
             ),
         )
@@ -264,10 +264,10 @@ class TestQuery(FrappeTestCase):
         self.assertEqual(
             frappe.qb.get_query(
                 "DocType",
-                fields=["name"],
+                fields=["id"],
                 filters={"module.app_name": ("like", "frap%")},
             ).get_sql(),
-            "SELECT `tabDocType`.`name` FROM `tabDocType` LEFT JOIN `tabModule Def` ON `tabModule Def`.`name`=`tabDocType`.`module` WHERE `tabModule Def`.`app_name` LIKE 'frap%'".replace(
+            "SELECT `tabDocType`.`id` FROM `tabDocType` LEFT JOIN `tabModule Def` ON `tabModule Def`.`id`=`tabDocType`.`module` WHERE `tabModule Def`.`app_name` LIKE 'frap%'".replace(
                 "`", '"' if frappe.db.db_type == "postgres" else "`"
             ),
         )
@@ -275,10 +275,10 @@ class TestQuery(FrappeTestCase):
         self.assertEqual(
             frappe.qb.get_query(
                 "DocType",
-                fields=["name"],
+                fields=["id"],
                 filters={"permissions.role": "System Manager"},
             ).get_sql(),
-            "SELECT `tabDocType`.`name` FROM `tabDocType` LEFT JOIN `tabDocPerm` ON `tabDocPerm`.`parent`=`tabDocType`.`name` AND `tabDocPerm`.`parenttype`='DocType' WHERE `tabDocPerm`.`role`='System Manager'".replace(
+            "SELECT `tabDocType`.`id` FROM `tabDocType` LEFT JOIN `tabDocPerm` ON `tabDocPerm`.`parent`=`tabDocType`.`id` AND `tabDocPerm`.`parenttype`='DocType' WHERE `tabDocPerm`.`role`='System Manager'".replace(
                 "`", '"' if frappe.db.db_type == "postgres" else "`"
             ),
         )
@@ -288,7 +288,7 @@ class TestQuery(FrappeTestCase):
             "Invalid filter",
             lambda: frappe.qb.get_query(
                 "DocType",
-                fields=["name"],
+                fields=["id"],
                 filters={"permissions.role": "System Manager"},
                 validate_filters=True,
             ),
@@ -300,7 +300,7 @@ class TestQuery(FrappeTestCase):
                 fields=["module"],
                 filters="",
             ).get_sql(),
-            "SELECT `module` FROM `tabDocType` WHERE `name`=''".replace(
+            "SELECT `module` FROM `tabDocType` WHERE `id`=''".replace(
                 "`", '"' if frappe.db.db_type == "postgres" else "`"
             ),
         )
@@ -310,7 +310,7 @@ class TestQuery(FrappeTestCase):
                 "DocType",
                 filters=["ToDo", "Note"],
             ).get_sql(),
-            "SELECT `name` FROM `tabDocType` WHERE `name` IN ('ToDo','Note')".replace(
+            "SELECT `id` FROM `tabDocType` WHERE `id` IN ('ToDo','Note')".replace(
                 "`", '"' if frappe.db.db_type == "postgres" else "`"
             ),
         )
@@ -318,9 +318,9 @@ class TestQuery(FrappeTestCase):
         self.assertEqual(
             frappe.qb.get_query(
                 "DocType",
-                filters={"name": ("in", [])},
+                filters={"id": ("in", [])},
             ).get_sql(),
-            "SELECT `name` FROM `tabDocType` WHERE `name` IN ('')".replace(
+            "SELECT `id` FROM `tabDocType` WHERE `id` IN ('')".replace(
                 "`", '"' if frappe.db.db_type == "postgres" else "`"
             ),
         )
@@ -330,7 +330,7 @@ class TestQuery(FrappeTestCase):
                 "DocType",
                 filters=[1, 2, 3],
             ).get_sql(),
-            "SELECT `name` FROM `tabDocType` WHERE `name` IN (1,2,3)".replace(
+            "SELECT `id` FROM `tabDocType` WHERE `id` IN (1,2,3)".replace(
                 "`", '"' if frappe.db.db_type == "postgres" else "`"
             ),
         )
@@ -340,7 +340,7 @@ class TestQuery(FrappeTestCase):
                 "DocType",
                 filters=[],
             ).get_sql(),
-            "SELECT `name` FROM `tabDocType`".replace(
+            "SELECT `id` FROM `tabDocType`".replace(
                 "`", '"' if frappe.db.db_type == "postgres" else "`"
             ),
         )
@@ -351,10 +351,10 @@ class TestQuery(FrappeTestCase):
         self.assertEqual(
             frappe.qb.get_query(
                 "Note",
-                filters={"name": "Test Note Title"},
-                fields=["name", "`tabNote Seen By`.`user` as seen_by"],
+                filters={"id": "Test Note Title"},
+                fields=["id", "`tabNote Seen By`.`user` as seen_by"],
             ).get_sql(),
-            "SELECT `tabNote`.`name`,`tabNote Seen By`.`user` `seen_by` FROM `tabNote` LEFT JOIN `tabNote Seen By` ON `tabNote Seen By`.`parent`=`tabNote`.`name` AND `tabNote Seen By`.`parenttype`='Note' WHERE `tabNote`.`name`='Test Note Title'".replace(
+            "SELECT `tabNote`.`id`,`tabNote Seen By`.`user` `seen_by` FROM `tabNote` LEFT JOIN `tabNote Seen By` ON `tabNote Seen By`.`parent`=`tabNote`.`id` AND `tabNote Seen By`.`parenttype`='Note' WHERE `tabNote`.`id`='Test Note Title'".replace(
                 "`", '"' if frappe.db.db_type == "postgres" else "`"
             ),
         )
@@ -362,14 +362,14 @@ class TestQuery(FrappeTestCase):
         self.assertEqual(
             frappe.qb.get_query(
                 "Note",
-                filters={"name": "Test Note Title"},
+                filters={"id": "Test Note Title"},
                 fields=[
-                    "name",
+                    "id",
                     "`tabNote Seen By`.`user` as seen_by",
                     "`tabNote Seen By`.`idx` as idx",
                 ],
             ).get_sql(),
-            "SELECT `tabNote`.`name`,`tabNote Seen By`.`user` `seen_by`,`tabNote Seen By`.`idx` `idx` FROM `tabNote` LEFT JOIN `tabNote Seen By` ON `tabNote Seen By`.`parent`=`tabNote`.`name` AND `tabNote Seen By`.`parenttype`='Note' WHERE `tabNote`.`name`='Test Note Title'".replace(
+            "SELECT `tabNote`.`id`,`tabNote Seen By`.`user` `seen_by`,`tabNote Seen By`.`idx` `idx` FROM `tabNote` LEFT JOIN `tabNote Seen By` ON `tabNote Seen By`.`parent`=`tabNote`.`id` AND `tabNote Seen By`.`parenttype`='Note' WHERE `tabNote`.`id`='Test Note Title'".replace(
                 "`", '"' if frappe.db.db_type == "postgres" else "`"
             ),
         )
@@ -377,14 +377,14 @@ class TestQuery(FrappeTestCase):
         self.assertEqual(
             frappe.qb.get_query(
                 "Note",
-                filters={"name": "Test Note Title"},
+                filters={"id": "Test Note Title"},
                 fields=[
-                    "name",
+                    "id",
                     "seen_by.user as seen_by",
                     "`tabNote Seen By`.`idx` as idx",
                 ],
             ).get_sql(),
-            "SELECT `tabNote`.`name`,`tabNote Seen By`.`user` `seen_by`,`tabNote Seen By`.`idx` `idx` FROM `tabNote` LEFT JOIN `tabNote Seen By` ON `tabNote Seen By`.`parent`=`tabNote`.`name` AND `tabNote Seen By`.`parenttype`='Note' WHERE `tabNote`.`name`='Test Note Title'".replace(
+            "SELECT `tabNote`.`id`,`tabNote Seen By`.`user` `seen_by`,`tabNote Seen By`.`idx` `idx` FROM `tabNote` LEFT JOIN `tabNote Seen By` ON `tabNote Seen By`.`parent`=`tabNote`.`id` AND `tabNote Seen By`.`parenttype`='Note' WHERE `tabNote`.`id`='Test Note Title'".replace(
                 "`", '"' if frappe.db.db_type == "postgres" else "`"
             ),
         )
@@ -392,9 +392,9 @@ class TestQuery(FrappeTestCase):
         self.assertEqual(
             frappe.qb.get_query(
                 "DocType",
-                fields=["name", "module.app_name as app_name"],
+                fields=["id", "module.app_name as app_name"],
             ).get_sql(),
-            "SELECT `tabDocType`.`name`,`tabModule Def`.`app_name` `app_name` FROM `tabDocType` LEFT JOIN `tabModule Def` ON `tabModule Def`.`name`=`tabDocType`.`module`".replace(
+            "SELECT `tabDocType`.`id`,`tabModule Def`.`app_name` `app_name` FROM `tabDocType` LEFT JOIN `tabModule Def` ON `tabModule Def`.`id`=`tabDocType`.`module`".replace(
                 "`", '"' if frappe.db.db_type == "postgres" else "`"
             ),
         )
@@ -403,19 +403,17 @@ class TestQuery(FrappeTestCase):
     def test_comment_stripping(self):
         self.assertNotIn(
             "email",
-            frappe.qb.get_query(
-                "User", fields=["name", "#email"], filters={}
-            ).get_sql(),
+            frappe.qb.get_query("User", fields=["id", "#email"], filters={}).get_sql(),
         )
 
     def test_nestedset(self):
-        frappe.db.sql("delete from `tabDocType` where `name` = 'Test Tree DocType'")
+        frappe.db.sql("delete from `tabDocType` where `id` = 'Test Tree DocType'")
         frappe.db.sql_ddl("drop table if exists `tabTest Tree DocType`")
         create_tree_docs()
         descendants_result = frappe.qb.get_query(
             "Test Tree DocType",
-            fields=["name"],
-            filters={"name": ("descendants of", "Parent 1")},
+            fields=["id"],
+            filters={"id": ("descendants of", "Parent 1")},
             order_by="modified desc",
         ).run(as_list=1)
 
@@ -427,8 +425,8 @@ class TestQuery(FrappeTestCase):
 
         ancestors_result = frappe.qb.get_query(
             "Test Tree DocType",
-            fields=["name"],
-            filters={"name": ("ancestors of", "Child 2")},
+            fields=["id"],
+            filters={"id": ("ancestors of", "Child 2")},
             order_by="modified desc",
         ).run(as_list=1)
 
@@ -440,8 +438,8 @@ class TestQuery(FrappeTestCase):
 
         not_descendants_result = frappe.qb.get_query(
             "Test Tree DocType",
-            fields=["name"],
-            filters={"name": ("not descendants of", "Parent 1")},
+            fields=["id"],
+            filters={"id": ("not descendants of", "Parent 1")},
             order_by="modified desc",
         ).run(as_dict=1)
 
@@ -449,15 +447,15 @@ class TestQuery(FrappeTestCase):
             not_descendants_result,
             frappe.db.get_all(
                 "Test Tree DocType",
-                fields=["name"],
-                filters={"name": ("not descendants of", "Parent 1")},
+                fields=["id"],
+                filters={"id": ("not descendants of", "Parent 1")},
             ),
         )
 
         not_ancestors_result = frappe.qb.get_query(
             "Test Tree DocType",
-            fields=["name"],
-            filters={"name": ("not ancestors of", "Child 2")},
+            fields=["id"],
+            filters={"id": ("not ancestors of", "Child 2")},
             order_by="modified desc",
         ).run(as_dict=1)
 
@@ -465,12 +463,12 @@ class TestQuery(FrappeTestCase):
             not_ancestors_result,
             frappe.db.get_all(
                 "Test Tree DocType",
-                fields=["name"],
-                filters={"name": ("not ancestors of", "Child 2")},
+                fields=["id"],
+                filters={"id": ("not ancestors of", "Child 2")},
             ),
         )
 
-        frappe.db.sql("delete from `tabDocType` where `name` = 'Test Tree DocType'")
+        frappe.db.sql("delete from `tabDocType` where `id` = 'Test Tree DocType'")
         frappe.db.sql_ddl("drop table if exists `tabTest Tree DocType`")
 
     def test_child_field_syntax(self):
@@ -485,8 +483,8 @@ class TestQuery(FrappeTestCase):
 
         result = frappe.qb.get_query(
             "Note",
-            filters={"name": ["in", [note1.name, note2.name]]},
-            fields=["name", {"seen_by": ["*"]}],
+            filters={"id": ["in", [note1.id, note2.id]]},
+            fields=["id", {"seen_by": ["*"]}],
             order_by="title asc",
         ).run(as_dict=1)
 
@@ -498,8 +496,8 @@ class TestQuery(FrappeTestCase):
 
         result = frappe.qb.get_query(
             "Note",
-            filters={"name": ["in", [note1.name, note2.name]]},
-            fields=["name", {"seen_by": ["user"]}],
+            filters={"id": ["in", [note1.id, note2.id]]},
+            fields=["id", {"seen_by": ["user"]}],
             order_by="title asc",
         ).run(as_dict=1)
 

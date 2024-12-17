@@ -6,7 +6,7 @@ from functools import partial
 
 import frappe
 from frappe.app import make_form_dict
-from frappe.desk.search import get_names_for_mentions, search_link, search_widget
+from frappe.desk.search import get_ids_for_mentions, search_link, search_widget
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import set_request
 from frappe.website.serve import get_response
@@ -25,7 +25,7 @@ class TestSearch(FrappeTestCase):
             query=None,
             filters=None,
             page_length=20,
-            searchfield="name",
+            searchfield="id",
         )
         self.assertTrue("User" in results[0]["value"])
 
@@ -33,7 +33,7 @@ class TestSearch(FrappeTestCase):
         for searchfield in (
             "1=1",
             "select * from tabSessions) --",
-            "name or (select * from tabSessions)",
+            "id or (select * from tabSessions)",
             "*",
             ";",
             "select`sid`from`tabSessions`",
@@ -67,13 +67,13 @@ class TestSearch(FrappeTestCase):
                 "System Manager",
             )
 
-        names_for_mention = [user.get("id") for user in get_names_for_mentions("")]
-        self.assertNotIn(email, names_for_mention)
+        ids_for_mention = [user.get("id") for user in get_ids_for_mentions("")]
+        self.assertNotIn(email, ids_for_mention)
 
     def test_link_field_order(self):
         # Making a request to the search_link with the tree doctype
         results = search_link(
-            doctype=self.tree_doctype_name,
+            doctype=self.tree_doctype_id,
             txt="all",
             query=None,
             filters=None,
@@ -82,10 +82,10 @@ class TestSearch(FrappeTestCase):
         )
 
         # Check whether the result is sorted or not
-        self.assertEqual(self.parent_doctype_name, results[0]["value"])
+        self.assertEqual(self.parent_doctype_id, results[0]["value"])
 
         # Check whether searching for parent also list out children
-        self.assertEqual(len(results), len(self.child_doctypes_names) + 1)
+        self.assertEqual(len(results), len(self.child_doctypes_ids) + 1)
 
     # Search for the word "pay", part of the word "pays" (country) in french.
     def test_link_search_in_foreign_language(self):
@@ -138,7 +138,7 @@ class TestSearch(FrappeTestCase):
                 "User",
                 "Random",
                 "email",
-                "name or (select * from tabSessions)",
+                "id or (select * from tabSessions)",
                 "10",
                 dict(),
             ),
@@ -170,7 +170,7 @@ class TestSearch(FrappeTestCase):
         )
 
         # should not fail if query has @ symbol in it
-        results = search_link("User", "user@random", searchfield="name")
+        results = search_link("User", "user@random", searchfield="id")
         self.assertListEqual(results, [])
 
     def test_reference_doctype(self):
@@ -217,17 +217,17 @@ def query_with_reference_doctype(
 
 
 def setup_test_link_field_order(TestCase):
-    TestCase.tree_doctype_name = "Test Tree Order"
+    TestCase.tree_doctype_id = "Test Tree Order"
     TestCase.child_doctype_list = []
-    TestCase.child_doctypes_names = ["USA", "India", "Russia", "China"]
-    TestCase.parent_doctype_name = "All Territories"
+    TestCase.child_doctypes_ids = ["USA", "India", "Russia", "China"]
+    TestCase.parent_doctype_id = "All Territories"
 
     # Create Tree doctype
-    if not frappe.db.exists("DocType", TestCase.tree_doctype_name):
+    if not frappe.db.exists("DocType", TestCase.tree_doctype_id):
         TestCase.tree_doc = frappe.get_doc(
             {
                 "doctype": "DocType",
-                "name": TestCase.tree_doctype_name,
+                "id": TestCase.tree_doctype_id,
                 "module": "Custom",
                 "custom": 1,
                 "is_tree": 1,
@@ -240,27 +240,27 @@ def setup_test_link_field_order(TestCase):
         TestCase.tree_doc.search_fields = "parent_test_tree_order"
         TestCase.tree_doc.save()
     else:
-        TestCase.tree_doc = frappe.get_doc("DocType", TestCase.tree_doctype_name)
+        TestCase.tree_doc = frappe.get_doc("DocType", TestCase.tree_doctype_id)
 
     # Create root for the tree doctype
     if not frappe.db.exists(
-        TestCase.tree_doctype_name, {"random": TestCase.parent_doctype_name}
+        TestCase.tree_doctype_id, {"random": TestCase.parent_doctype_id}
     ):
         frappe.get_doc(
             {
-                "doctype": TestCase.tree_doctype_name,
-                "random": TestCase.parent_doctype_name,
+                "doctype": TestCase.tree_doctype_id,
+                "random": TestCase.parent_doctype_id,
                 "is_group": 1,
             }
         ).insert(ignore_if_duplicate=True)
 
     # Create children for the root
-    for child_name in TestCase.child_doctypes_names:
+    for child_id in TestCase.child_doctypes_ids:
         temp = frappe.get_doc(
             {
-                "doctype": TestCase.tree_doctype_name,
-                "random": child_name,
-                "parent_test_tree_order": TestCase.parent_doctype_name,
+                "doctype": TestCase.tree_doctype_id,
+                "random": child_id,
+                "parent_test_tree_order": TestCase.parent_doctype_id,
             }
         ).insert(ignore_if_duplicate=True)
         TestCase.child_doctype_list.append(temp)
@@ -272,8 +272,8 @@ def teardown_test_link_field_order(TestCase):
         child_doctype.delete()
 
     frappe.delete_doc(
-        TestCase.tree_doctype_name,
-        TestCase.parent_doctype_name,
+        TestCase.tree_doctype_id,
+        TestCase.parent_doctype_id,
         ignore_permissions=True,
         force=True,
         for_reload=True,

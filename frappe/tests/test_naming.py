@@ -13,10 +13,10 @@ from tenacity import (
 
 import frappe
 from frappe.core.doctype.doctype.test_doctype import new_doctype
-from frappe.model.naming import (
+from frappe.model.iding import (
     InvalidNamingSeriesError,
     NamingSeries,
-    append_number_if_name_exists,
+    append_number_if_id_exists,
     determine_consecutive_week_number,
     getseries,
     make_autoid,
@@ -36,9 +36,9 @@ class TestNaming(FrappeTestCase):
     def tearDown(self):
         frappe.db.rollback()
 
-    def test_append_number_if_name_exists(self):
+    def test_append_number_if_id_exists(self):
         """
-        Append number to name based on existing values
+        Append number to id based on existing values
         if Bottle exists
                 Bottle -> Bottle-1
         if Bottle-1 exists
@@ -49,22 +49,20 @@ class TestNaming(FrappeTestCase):
 
         note = frappe.get_doc({"doctype": DOCTYPE, "title": TITLE}).insert()
 
+        self.assertEqual(append_number_if_id_exists(DOCTYPE, note.id), f"{note.id}-1")
         self.assertEqual(
-            append_number_if_name_exists(DOCTYPE, note.name), f"{note.name}-1"
-        )
-        self.assertEqual(
-            append_number_if_name_exists(DOCTYPE, TITLE, "title", "_"), f"{TITLE}_1"
+            append_number_if_id_exists(DOCTYPE, TITLE, "title", "_"), f"{TITLE}_1"
         )
 
-    def test_field_autoid_name_sync(self):
+    def test_field_autoid_id_sync(self):
         country = frappe.get_last_doc("Country")
-        original_name = country.name
-        country.country_name = "Not a country"
+        original_id = country.id
+        country.country_id = "Not a country"
         country.save()
         country.reload()
 
-        self.assertEqual(country.name, original_name)
-        self.assertEqual(country.name, country.country_name)
+        self.assertEqual(country.id, original_id)
+        self.assertEqual(country.id, country.country_id)
 
     def test_child_table_naming(self):
         child_dt_with_naming = new_doctype(
@@ -75,25 +73,25 @@ class TestNaming(FrappeTestCase):
                 {
                     "label": "table with naming",
                     "fieldname": "table_with_naming",
-                    "options": child_dt_with_naming.name,
+                    "options": child_dt_with_naming.id,
                     "fieldtype": "Table",
                 }
             ],
         ).insert()
 
-        name = frappe.generate_hash(length=10)
+        id = frappe.generate_hash(length=10)
 
-        doc = frappe.new_doc(dt_with_child_autoid.name)
-        doc.append("table_with_naming", {"some_fieldname": name})
+        doc = frappe.new_doc(dt_with_child_autoid.id)
+        doc.append("table_with_naming", {"some_fieldname": id})
         doc.save()
-        self.assertEqual(doc.table_with_naming[0].name, name)
+        self.assertEqual(doc.table_with_naming[0].id, id)
 
         # change autoid field
         doc.table_with_naming[0].some_fieldname = "Something else"
         doc.save()
 
-        self.assertEqual(doc.table_with_naming[0].name, name)
-        self.assertEqual(doc.table_with_naming[0].some_fieldname, name)
+        self.assertEqual(doc.table_with_naming[0].id, id)
+        self.assertEqual(doc.table_with_naming[0].some_fieldname, id)
 
         doc.delete()
         dt_with_child_autoid.delete()
@@ -107,7 +105,7 @@ class TestNaming(FrappeTestCase):
 
         description = "Format"
 
-        doc = frappe.new_doc(doctype.name)
+        doc = frappe.new_doc(doctype.id)
         doc.some_fieldname = description
         doc.insert()
 
@@ -115,7 +113,7 @@ class TestNaming(FrappeTestCase):
         series = int(series) - 1
 
         self.assertEqual(
-            doc.name, f"TODO-{now_datetime().strftime('%m')}-{description}-{series:02}"
+            doc.id, f"TODO-{now_datetime().strftime('%m')}-{description}-{series:02}"
         )
 
     def test_format_autoid_for_datetime_field(self):
@@ -123,14 +121,14 @@ class TestNaming(FrappeTestCase):
         doctype = new_doctype(autoid="format:TODO-{field}-{##}").insert()
 
         for field in [now_datetime(), nowdate(), nowtime()]:
-            doc = frappe.new_doc(doctype.name)
+            doc = frappe.new_doc(doctype.id)
             doc.field = field
             doc.insert()
 
             series = getseries("", 2)
             series = int(series) - 1
 
-            self.assertEqual(doc.name, f"TODO-{field}-{series:02}")
+            self.assertEqual(doc.id, f"TODO-{field}-{series:02}")
 
     def test_format_autoid_for_consecutive_week_number(self):
         """
@@ -157,7 +155,7 @@ class TestNaming(FrappeTestCase):
 
         week = determine_consecutive_week_number(now_datetime())
 
-        self.assertEqual(todo.name, f"TODO-{week}-{series}")
+        self.assertEqual(todo.id, f"TODO-{week}-{series}")
 
     def test_revert_series(self):
         from datetime import datetime
@@ -166,77 +164,77 @@ class TestNaming(FrappeTestCase):
 
         series = f"TEST-{year}-"
         key = "TEST-.YYYY.-"
-        name = f"TEST-{year}-00001"
+        id = f"TEST-{year}-00001"
         frappe.db.sql(
-            """INSERT INTO `tabSeries` (name, current) values (%s, 1)""", (series,)
+            """INSERT INTO `tabSeries` (id, current) values (%s, 1)""", (series,)
         )
-        revert_series_if_last(key, name)
+        revert_series_if_last(key, id)
         current_index = frappe.db.sql(
-            """SELECT current from `tabSeries` where name = %s""", series, as_dict=True
+            """SELECT current from `tabSeries` where id = %s""", series, as_dict=True
         )[0]
 
         self.assertEqual(current_index.get("current"), 0)
-        frappe.db.delete("Series", {"name": series})
+        frappe.db.delete("Series", {"id": series})
 
         series = f"TEST-{year}-"
         key = "TEST-.YYYY.-.#####"
-        name = f"TEST-{year}-00002"
+        id = f"TEST-{year}-00002"
         frappe.db.sql(
-            """INSERT INTO `tabSeries` (name, current) values (%s, 2)""", (series,)
+            """INSERT INTO `tabSeries` (id, current) values (%s, 2)""", (series,)
         )
-        revert_series_if_last(key, name)
+        revert_series_if_last(key, id)
         current_index = frappe.db.sql(
-            """SELECT current from `tabSeries` where name = %s""", series, as_dict=True
+            """SELECT current from `tabSeries` where id = %s""", series, as_dict=True
         )[0]
 
         self.assertEqual(current_index.get("current"), 1)
-        frappe.db.delete("Series", {"name": series})
+        frappe.db.delete("Series", {"id": series})
 
         series = "TEST-"
         key = "TEST-"
-        name = "TEST-00003"
-        frappe.db.delete("Series", {"name": series})
+        id = "TEST-00003"
+        frappe.db.delete("Series", {"id": series})
         frappe.db.sql(
-            """INSERT INTO `tabSeries` (name, current) values (%s, 3)""", (series,)
+            """INSERT INTO `tabSeries` (id, current) values (%s, 3)""", (series,)
         )
-        revert_series_if_last(key, name)
+        revert_series_if_last(key, id)
         current_index = frappe.db.sql(
-            """SELECT current from `tabSeries` where name = %s""", series, as_dict=True
+            """SELECT current from `tabSeries` where id = %s""", series, as_dict=True
         )[0]
 
         self.assertEqual(current_index.get("current"), 2)
-        frappe.db.delete("Series", {"name": series})
+        frappe.db.delete("Series", {"id": series})
 
         series = "TEST1-"
         key = "TEST1-.#####.-2021-22"
-        name = "TEST1-00003-2021-22"
-        frappe.db.delete("Series", {"name": series})
+        id = "TEST1-00003-2021-22"
+        frappe.db.delete("Series", {"id": series})
         frappe.db.sql(
-            """INSERT INTO `tabSeries` (name, current) values (%s, 3)""", (series,)
+            """INSERT INTO `tabSeries` (id, current) values (%s, 3)""", (series,)
         )
-        revert_series_if_last(key, name)
+        revert_series_if_last(key, id)
         current_index = frappe.db.sql(
-            """SELECT current from `tabSeries` where name = %s""", series, as_dict=True
+            """SELECT current from `tabSeries` where id = %s""", series, as_dict=True
         )[0]
 
         self.assertEqual(current_index.get("current"), 2)
-        frappe.db.delete("Series", {"name": series})
+        frappe.db.delete("Series", {"id": series})
 
         series = ""
         key = ".#####.-2021-22"
-        name = "00003-2021-22"
-        frappe.db.delete("Series", {"name": series})
+        id = "00003-2021-22"
+        frappe.db.delete("Series", {"id": series})
         frappe.db.sql(
-            """INSERT INTO `tabSeries` (name, current) values (%s, 3)""", (series,)
+            """INSERT INTO `tabSeries` (id, current) values (%s, 3)""", (series,)
         )
-        revert_series_if_last(key, name)
+        revert_series_if_last(key, id)
         current_index = frappe.db.sql(
-            """SELECT current from `tabSeries` where name = %s""", series, as_dict=True
+            """SELECT current from `tabSeries` where id = %s""", series, as_dict=True
         )[0]
 
         self.assertEqual(current_index.get("current"), 2)
 
-        frappe.db.delete("Series", {"name": series})
+        frappe.db.delete("Series", {"id": series})
 
     def test_naming_for_cancelled_and_amended_doc(self):
         submittable_doctype = frappe.get_doc(
@@ -246,28 +244,28 @@ class TestNaming(FrappeTestCase):
                 "custom": 1,
                 "is_submittable": 1,
                 "permissions": [{"role": "System Manager", "read": 1}],
-                "name": "Submittable Doctype",
+                "id": "Submittable Doctype",
             }
         ).insert(ignore_if_duplicate=True)
 
         doc = frappe.new_doc("Submittable Doctype")
         doc.save()
-        original_name = doc.name
+        original_id = doc.id
 
         doc.submit()
         doc.cancel()
-        cancelled_name = doc.name
-        self.assertEqual(cancelled_name, original_name)
+        cancelled_id = doc.id
+        self.assertEqual(cancelled_id, original_id)
 
         amended_doc = frappe.copy_doc(doc)
         amended_doc.docstatus = 0
-        amended_doc.amended_from = doc.name
+        amended_doc.amended_from = doc.id
         amended_doc.save()
-        self.assertEqual(amended_doc.name, f"{original_name}-1")
+        self.assertEqual(amended_doc.id, f"{original_id}-1")
 
         amended_doc.submit()
         amended_doc.cancel()
-        self.assertEqual(amended_doc.name, f"{original_name}-1")
+        self.assertEqual(amended_doc.id, f"{original_id}-1")
 
         submittable_doctype.delete()
 
@@ -295,28 +293,28 @@ class TestNaming(FrappeTestCase):
         self.assertEqual(w, "52")
 
     def test_naming_validations(self):
-        # case 1: check same name as doctype
-        # set name via prompt
-        tag = frappe.get_doc({"doctype": "Tag", "__newname": "Tag"})
+        # case 1: check same id as doctype
+        # set id via prompt
+        tag = frappe.get_doc({"doctype": "Tag", "__newid": "Tag"})
         self.assertRaises(frappe.NameError, tag.insert)
 
-        # set by passing set_name as ToDo
+        # set by passing set_id as ToDo
         self.assertRaises(frappe.NameError, make_invalid_todo)
 
-        # name (via title field) cannot be the same as the doctype
+        # id (via title field) cannot be the same as the doctype
         note = frappe.get_doc({"doctype": "Currency", "currency_name": "Currency"})
         self.assertRaises(frappe.NameError, note.insert)
 
-        # case 2: set name with "New ---"
-        tag = frappe.get_doc({"doctype": "Tag", "__newname": "New Tag"})
+        # case 2: set id with "New ---"
+        tag = frappe.get_doc({"doctype": "Tag", "__newid": "New Tag"})
         self.assertRaises(frappe.NameError, tag.insert)
 
-        # case 3: set name with special characters
-        tag = frappe.get_doc({"doctype": "Tag", "__newname": "Tag<>"})
+        # case 3: set id with special characters
+        tag = frappe.get_doc({"doctype": "Tag", "__newid": "Tag<>"})
         self.assertRaises(frappe.NameError, tag.insert)
 
-        # case 4: no name specified
-        tag = frappe.get_doc({"doctype": "Tag", "__newname": ""})
+        # case 4: no id specified
+        tag = frappe.get_doc({"doctype": "Tag", "__newid": ""})
         self.assertRaises(frappe.ValidationError, tag.insert)
 
     def test_autoincremented_naming(self):
@@ -329,7 +327,7 @@ class TestNaming(FrappeTestCase):
 
         for i in range(1, 20):
             self.assertEqual(
-                frappe.new_doc(doctype).save(ignore_permissions=True).name, i
+                frappe.new_doc(doctype).save(ignore_permissions=True).id, i
             )
 
         dt.delete(ignore_permissions=True)
@@ -368,10 +366,10 @@ class TestNaming(FrappeTestCase):
     def test_naming_using_fields(self):
         webhook = frappe.new_doc("Webhook")
         webhook.webhook_docevent = "on_update"
-        name = NamingSeries("KOOH-.{webhook_docevent}.").generate_next_name(webhook)
+        id = NamingSeries("KOOH-.{webhook_docevent}.").generate_next_id(webhook)
         self.assertTrue(
-            name.startswith("KOOH-on_update"),
-            f"incorrect name generated {name}, missing field value",
+            id.startswith("KOOH-on_update"),
+            f"incorrect id generated {id}, missing field value",
         )
 
     def test_naming_with_empty_part(self):
@@ -382,10 +380,10 @@ class TestNaming(FrappeTestCase):
 
         series = "KOOH-..{webhook_docevent}.-.####"
 
-        name = parse_naming_series(series, doc=webhook)
+        id = parse_naming_series(series, doc=webhook)
         self.assertTrue(
-            name.startswith("KOOH-on_update"),
-            f"incorrect name generated {name}, missing field value",
+            id.startswith("KOOH-on_update"),
+            f"incorrect id generated {id}, missing field value",
         )
 
     def test_naming_with_unsupported_part(self):
@@ -396,10 +394,10 @@ class TestNaming(FrappeTestCase):
 
         series = "KOOH-..{webhook_docevent}.-.####"
 
-        name = parse_naming_series(series, doc=webhook)
+        id = parse_naming_series(series, doc=webhook)
         self.assertTrue(
-            name.startswith("KOOH-"),
-            f"incorrect name generated {name}, missing field value",
+            id.startswith("KOOH-"),
+            f"incorrect id generated {id}, missing field value",
         )
 
     def test_naming_with_empty_field(self):
@@ -408,16 +406,16 @@ class TestNaming(FrappeTestCase):
         webhook = frappe.new_doc("Webhook")
         series = "KOOH-.{request_structure}.-.request_structure.-.####"
 
-        name = parse_naming_series(series, doc=webhook)
-        self.assertTrue(name.startswith("KOOH---"), f"incorrect name generated {name}")
+        id = parse_naming_series(series, doc=webhook)
+        self.assertTrue(id.startswith("KOOH---"), f"incorrect id generated {id}")
 
     @run_only_if(db_type_is.MARIADB)
     def test_hash_collision(self):
-        doctype = new_doctype(autoid="hash").insert().name
-        name = frappe.generate_hash()
+        doctype = new_doctype(autoid="hash").insert().id
+        id = frappe.generate_hash()
         for _ in range(10):
             frappe.flags.in_import = True
-            frappe.new_doc(doctype).update({"name": name}).insert()
+            frappe.new_doc(doctype).update({"id": id}).insert()
         frappe.flags.pop("in_import", None)
 
     def test_custom_parser(self):
@@ -433,9 +431,9 @@ class TestNaming(FrappeTestCase):
                 },
             },
         ):
-            name = parse_naming_series(series, doc=todo)
-            expected_name = "TODO-" + nowdate().split("-")[1] + "-" + "0001"
-            self.assertEqual(name, expected_name)
+            id = parse_naming_series(series, doc=todo)
+            expected_id = "TODO-" + nowdate().split("-")[1] + "-" + "0001"
+            self.assertEqual(id, expected_id)
 
     @unittest.skip("This is not supported anymore, see #28349.")
     @retry(
@@ -446,11 +444,11 @@ class TestNaming(FrappeTestCase):
     )
     def test_hash_naming_is_roughly_sequential(self):
         """hash naming is supposed to be sequential *most of the time*"""
-        names = []
+        ids = []
         for _ in range(10):
             time.sleep(0.1)
-            names.append(make_autoid("hash"))
-        self.assertEqual(names, sorted(names))
+            ids.append(make_autoid("hash"))
+        self.assertEqual(ids, sorted(ids))
 
 
 def parse_naming_series_variable(doc, variable):
@@ -459,4 +457,4 @@ def parse_naming_series_variable(doc, variable):
 
 
 def make_invalid_todo():
-    frappe.get_doc({"doctype": "ToDo", "description": "Test"}).insert(set_name="ToDo")
+    frappe.get_doc({"doctype": "ToDo", "description": "Test"}).insert(set_id="ToDo")
