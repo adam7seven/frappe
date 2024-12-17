@@ -94,7 +94,7 @@ function load_workflow_builder(wrapper) {
 							document_type: doctype,
 						})
 						.then((doc) => {
-							frappe.set_route("workflow-builder", doc.name);
+							frappe.set_route("workflow-builder", doc.id);
 						})
 						.finally(() => {
 							d.get_primary_btn().prop("disabled", false);

@@ -1,16 +1,16 @@
 frappe.listview_settings["Workflow Action"] = {
 	get_form_link: (doc) => {
 		let doctype = "";
-		let docname = "";
+		let docid = "";
 		if (doc.status === "Open") {
 			doctype = doc.reference_doctype;
-			docname = doc.reference_name;
+			docid = doc.reference_id;
 		} else {
 			doctype = "Workflow Action";
-			docname = doc.name;
+			docid = doc.id;
 		}
-		docname = docname.match(/[%'"]/) ? encodeURIComponent(docname) : docname;
+		docid = docid.match(/[%'"]/) ? encodeURIComponent(docid) : docid;
 
-		return "/app/" + frappe.router.slug(doctype) + "/" + docname;
+		return "/app/" + frappe.router.slug(doctype) + "/" + docid;
 	},
 };
