@@ -233,7 +233,7 @@ Footer Items,Elementos del Pie de Página,
 Your login id is,Su nombre de usuario es,
 Currency,Divisa,
 Session Expiry Mobile,Vencimiento de sesión en dispositivo mobil,
-Text to be displayed for Link to Web Page if this form has a web page. Link route will be automatically generated based on `page_name` and `parent_website_route`,El texto que se muestra para enlazar a la página Web si esta forma dispone de una página web. Ruta Enlace automáticamente se genera en base a `page_name` y` parent_website_route`
+Text to be displayed for Link to Web Page if this form has a web page. Link route will be automatically generated based on `page_id` and `parent_website_route`,El texto que se muestra para enlazar a la página Web si esta forma dispone de una página web. Ruta Enlace automáticamente se genera en base a `page_id` y` parent_website_route`
 Setup Wizard,Asistente de configuración,
 Send Email Print Attachments as PDF (Recommended),Enviar Emails con adjuntos en formato PDF (recomendado)
 Field {0} is not selectable.,El campo {0} no se puede seleccionar .

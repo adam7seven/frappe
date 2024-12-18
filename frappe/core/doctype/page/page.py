@@ -25,7 +25,6 @@ class Page(Document):
 
         icon: DF.Data | None
         module: DF.Link
-        page_name: DF.Data
         restrict_to_domain: DF.Link | None
         roles: DF.Table[HasRole]
         standard: DF.Literal["Yes", "No"]
@@ -43,10 +42,7 @@ class Page(Document):
 
         if (self.id and self.id.startswith("New Page")) or not self.id:
             self.id = (
-                self.page_name.lower()
-                .replace('"', "")
-                .replace("'", "")
-                .replace(" ", "-")[:20]
+                self.id.lower().replace('"', "").replace("'", "").replace(" ", "-")[:20]
             )
             if frappe.db.exists("Page", self.id):
                 cnt = frappe.db.sql(
@@ -139,19 +135,19 @@ class Page(Document):
 
         self.script = ""
 
-        page_name = scrub(self.id)
+        page_id = scrub(self.id)
 
-        path = os.path.join(get_module_path(self.module), "page", page_name)
+        path = os.path.join(get_module_path(self.module), "page", page_id)
 
         # script
-        fpath = os.path.join(path, page_name + ".js")
+        fpath = os.path.join(path, page_id + ".js")
         if os.path.exists(fpath):
             with open(fpath) as f:
                 self.script = render_include(f.read())
-                self.script += f"\n\n//# sourceURL={page_name}.js"
+                self.script += f"\n\n//# sourceURL={page_id}.js"
 
         # css
-        fpath = os.path.join(path, page_name + ".css")
+        fpath = os.path.join(path, page_id + ".css")
         if os.path.exists(fpath):
             with open(fpath) as f:
                 self.style = safe_decode(f.read())
@@ -168,7 +164,7 @@ class Page(Document):
                                 "{app}.{module}.page.{page}.{page}.get_context".format(
                                     app=frappe.local.module_app[scrub(self.module)],
                                     module=scrub(self.module),
-                                    page=page_name,
+                                    page=page_id,
                                 )
                             )(context)
 

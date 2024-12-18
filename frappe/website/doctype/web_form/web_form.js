@@ -173,8 +173,8 @@ frappe.ui.form.on("Web Form", {
 
 	title: function (frm) {
 		if (frm.doc.__islocal) {
-			var page_name = frm.doc.title.toLowerCase().replace(/ /g, "-");
-			frm.set_value("route", page_name);
+			var page_id = frm.doc.title.toLowerCase().replace(/ /g, "-");
+			frm.set_value("route", page_id);
 		}
 	},
 

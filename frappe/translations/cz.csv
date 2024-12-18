@@ -1459,7 +1459,7 @@ Both login and password required,"Obojí, přihlašovací jméno a heslo je vyž
 Please refresh to get the latest document.,Prosím klikněte na obnovit pro získání nejnovějšího dokumentu.
 Security Settings,Nastavení zabezpečena,
 Desktop,Pracovní plocha,
-Text to be displayed for Link to Web Page if this form has a web page. Link route will be automatically generated based on `page_name` and `parent_website_route`,Text k zobrazení k prolinkování www stránky pokud má tento formulář www stránku. Cesta odkazu bude automaticky generována na základě `page_name` a `parent_website_route`
+Text to be displayed for Link to Web Page if this form has a web page. Link route will be automatically generated based on `page_id` and `parent_website_route`,Text k zobrazení k prolinkování www stránky pokud má tento formulář www stránku. Cesta odkazu bude automaticky generována na základě `page_id` a `parent_website_route`
 Please set {0} first,Prosím nejprve nastavte {0}
 Patch,Záplata,
 No data found,Nenalezena žádná data,

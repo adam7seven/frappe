@@ -1,7 +1,7 @@
 {
     "actions": [],
     "allow_reid": 1,
-    "autoid": "field:page_name",
+    "autoid": "Prompt",
     "creation": "2012-12-20 17:16:49",
     "doctype": "DocType",
     "document_type": "System",
@@ -9,7 +9,6 @@
     "field_order": [
         "system_page",
         "page_html",
-        "page_name",
         "title",
         "icon",
         "column_break0",
@@ -31,16 +30,6 @@
             "fieldtype": "Section Break",
             "label": "Page HTML",
             "oldfieldtype": "Section Break"
-        },
-        {
-            "fieldname": "page_name",
-            "fieldtype": "Data",
-            "in_list_view": 1,
-            "label": "Page Name",
-            "oldfieldname": "page_name",
-            "oldfieldtype": "Data",
-            "reqd": 1,
-            "unique": 1
         },
         {
             "fieldname": "title",

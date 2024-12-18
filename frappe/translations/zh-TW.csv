@@ -3000,7 +3000,7 @@ Operators,運營商
 Add Column,添加欄
 Export Report: {0},出口報告：{0}
 Filter Meta,過濾元
-Text to be displayed for Link to Web Page if this form has a web page. Link route will be automatically generated based on `page_name` and `parent_website_route`,要顯示的文本鏈接網頁，如果這種形式有一個網頁。線路路由會自動生成基於`page_name`和`parent_website_route`
+Text to be displayed for Link to Web Page if this form has a web page. Link route will be automatically generated based on `page_id` and `parent_website_route`,要顯示的文本鏈接網頁，如果這種形式有一個網頁。線路路由會自動生成基於`page_id`和`parent_website_route`
 Feedback Trigger,反饋觸發
 Not allowed for {0} = {1} in Row {2},對於{2}行中的{0} = {1}不允許
 Backup Limit,備份限制
