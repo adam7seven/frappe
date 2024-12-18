@@ -14,7 +14,7 @@
     "id": "Document Share Report",
     "owner": "Administrator",
     "ref_doctype": "DocShare",
-    "report_name": "Document Share Report",
+    "report_id": "Document Share Report",
     "report_type": "Report Builder",
     "roles": [
         {

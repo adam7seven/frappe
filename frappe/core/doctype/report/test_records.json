@@ -2,7 +2,7 @@
 	{
 		"doctype": "Report",
 		"id": "_Test Report 1",
-		"report_name": "_Test Report 1",
+		"report_id": "_Test Report 1",
 		"report_type": "Query Report",
 		"is_standard": "No",
 		"ref_doctype": "Event"

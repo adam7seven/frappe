@@ -346,7 +346,7 @@ $.extend(frappe.model, {
 		return frappe.model.get_docinfo(doctype, id).shared;
 	},
 
-	get_server_module_name: function (doctype) {
+	get_server_module_id: function (doctype) {
 		var dt = frappe.model.scrub(doctype);
 		var module = frappe.model.scrub(locals.DocType[doctype].module);
 		var app = frappe.boot.module_app[module];

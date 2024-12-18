@@ -33,7 +33,7 @@ class TestPreparedReport(FrappeTestCase):
         doc = frappe.get_doc(
             {
                 "doctype": "Prepared Report",
-                "report_name": report or "Database Storage Usage By Tables",
+                "report_id": report or "Database Storage Usage By Tables",
             }
         ).insert()
 
@@ -85,8 +85,8 @@ def test_report(**args):
     try:
         report = frappe.new_doc("Report")
         report.update(args)
-        if not report.report_name:
-            report.report_name = frappe.generate_hash()
+        if not report.report_id:
+            report.report_id = frappe.generate_hash()
         if not report.ref_doctype:
             report.ref_doctype = "ToDo"
         report.insert()

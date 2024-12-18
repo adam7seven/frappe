@@ -122,7 +122,7 @@ class TestQueryReport(FrappeTestCase):
 
         if not frappe.db.exists("Report", REPORT_NAME):
             report = frappe.new_doc("Report")
-            report.report_name = REPORT_NAME
+            report.report_id = REPORT_NAME
             report.ref_doctype = "User"
             report.report_type = "Query Report"
             report.query = (
@@ -135,7 +135,7 @@ class TestQueryReport(FrappeTestCase):
             for quoting in (QUOTE_ALL, QUOTE_MINIMAL, QUOTE_NONE, QUOTE_NONNUMERIC):
                 frappe.local.form_dict = frappe._dict(
                     {
-                        "report_name": REPORT_NAME,
+                        "report_id": REPORT_NAME,
                         "file_format_type": "CSV",
                         "csv_quoting": quoting,
                         "csv_delimiter": delimiter,
@@ -200,7 +200,7 @@ class TestQueryReport(FrappeTestCase):
                     {
                         "doctype": "Report",
                         "ref_doctype": "Doc A",
-                        "report_name": "Doc A Report",
+                        "report_id": "Doc A Report",
                         "report_type": "Script Report",
                         "is_standard": "No",
                     }

@@ -75,7 +75,7 @@ def make_test_module():
         frappe.get_doc(
             dict(
                 doctype="Module Def",
-                module_name="Test Module for Package",
+                id="Test Module for Package",
                 custom=1,
                 app_name="frappe",
                 package="Test Package",

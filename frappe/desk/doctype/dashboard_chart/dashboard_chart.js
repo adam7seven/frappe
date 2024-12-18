@@ -60,7 +60,7 @@ frappe.ui.form.on("Dashboard Chart", {
 		});
 		frm.trigger("update_options");
 		frm.trigger("set_heatmap_year_options");
-		if (frm.doc.report_name) {
+		if (frm.doc.report_id) {
 			frm.trigger("set_chart_report_filters");
 		}
 	},
@@ -93,7 +93,7 @@ frappe.ui.form.on("Dashboard Chart", {
 	chart_type: function (frm) {
 		frm.trigger("set_time_series");
 		if (frm.doc.chart_type == "Report") {
-			frm.set_query("report_name", () => {
+			frm.set_query("report_id", () => {
 				return {
 					filters: {
 						report_type: ["!=", "Report Builder"],
@@ -128,7 +128,7 @@ frappe.ui.form.on("Dashboard Chart", {
 		frm.trigger("set_parent_document_type");
 	},
 
-	report_name: function (frm) {
+	report_id: function (frm) {
 		frm.set_value("x_field", "");
 		frm.set_value("y_axis", []);
 		frm.set_df_property("x_field", "options", []);
@@ -139,14 +139,14 @@ frappe.ui.form.on("Dashboard Chart", {
 	},
 
 	set_chart_report_filters: function (frm) {
-		let report_name = frm.doc.report_name;
+		let report_id = frm.doc.report_id;
 
-		if (report_name) {
+		if (report_id) {
 			if (frm.doc.filters_json.length > 2) {
 				frm.trigger("show_filters");
 				frm.trigger("set_chart_field_options");
 			} else {
-				frappe.report_utils.get_report_filters(report_name).then((filters) => {
+				frappe.report_utils.get_report_filters(report_id).then((filters) => {
 					if (filters) {
 						frm.chart_filters = filters;
 						let filter_values = frappe.report_utils.get_filter_values(filters);
@@ -170,7 +170,7 @@ frappe.ui.form.on("Dashboard Chart", {
 		}
 		frappe
 			.xcall("frappe.desk.query_report.run", {
-				report_name: frm.doc.report_name,
+				report_id: frm.doc.report_id,
 				filters: filters,
 				ignore_prepared_report: 1,
 			})
@@ -419,9 +419,9 @@ frappe.ui.form.on("Dashboard Chart", {
 				frappe.query_report = new frappe.views.QueryReport({
 					filters: dialog.fields_list,
 				});
-				frappe.query_reports[frm.doc.report_name] &&
-					frappe.query_reports[frm.doc.report_name].onload &&
-					frappe.query_reports[frm.doc.report_name].onload(frappe.query_report);
+				frappe.query_reports[frm.doc.report_id] &&
+					frappe.query_reports[frm.doc.report_id].onload &&
+					frappe.query_reports[frm.doc.report_id].onload(frappe.query_report);
 			}
 
 			dialog.set_values(filters);

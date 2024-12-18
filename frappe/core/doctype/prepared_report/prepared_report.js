@@ -35,14 +35,14 @@ frappe.ui.form.on("Prepared Report", {
 			frm.events.render_filter_values(frm, filters);
 		}
 
-		// always keep report_name hidden - we do this as we can't set mandatory and hidden
+		// always keep report_id hidden - we do this as we can't set mandatory and hidden
 		// property on a docfield at the same time
-		frm.toggle_display(["report_name"], 0);
+		frm.toggle_display(["report_id"], 0);
 
 		if (frm.doc.status == "Completed") {
 			frm.page.set_primary_action(__("Show Report"), () => {
-				frappe.route_options = { prepared_report_name: frm.doc.id };
-				frappe.set_route("query-report", frm.doc.report_name);
+				frappe.route_options = { prepared_report_id: frm.doc.id };
+				frappe.set_route("query-report", frm.doc.report_id);
 			});
 		}
 	},

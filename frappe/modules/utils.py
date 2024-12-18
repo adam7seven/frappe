@@ -49,13 +49,13 @@ def export_module_json(doc: "Document", is_standard: bool, module: str) -> str |
 
 def get_doc_module(module: str, doctype: str, id: str) -> "ModuleType":
     """Get custom module for given document"""
-    module_name = "{app}.{module}.{doctype}.{id}.{id}".format(
+    module_id = "{app}.{module}.{doctype}.{id}.{id}".format(
         app=frappe.local.module_app[scrub(module)],
         doctype=scrub(doctype),
         module=scrub(module),
         id=scrub(id),
     )
-    return frappe.get_module(module_name)
+    return frappe.get_module(module_id)
 
 
 @frappe.whitelist()
@@ -122,8 +122,8 @@ def sync_customizations(app=None):
         apps = frappe.get_installed_apps()
 
     for app_name in apps:
-        for module_name in frappe.local.app_modules.get(app_name) or []:
-            folder = frappe.get_app_path(app_name, module_name, "custom")
+        for module_id in frappe.local.app_modules.get(app_name) or []:
+            folder = frappe.get_app_path(app_name, module_id, "custom")
             if os.path.exists(folder):
                 for fname in os.listdir(folder):
                     if fname.endswith(".json"):
@@ -257,8 +257,8 @@ def get_doctype_module(doctype: str) -> str:
         generator=lambda: dict(frappe.qb.from_("DocType").select("id", "module").run()),
     )
 
-    if module_name := doctype_module_map.get(doctype):
-        return module_name
+    if module_id := doctype_module_map.get(doctype):
+        return module_id
     else:
         frappe.throw(
             _("DocType {} not found").format(doctype), exc=frappe.DoesNotExistError
@@ -274,11 +274,11 @@ def load_doctype_module(doctype, module=None, prefix="", suffix=""):
     module = module or get_doctype_module(doctype)
     app = get_module_app(module)
     key = (app, doctype, prefix, suffix)
-    module_name = get_module_name(doctype, module, prefix, suffix)
+    module_id = get_module_id(doctype, module, prefix, suffix)
 
     if key not in doctype_python_modules:
         try:
-            doctype_python_modules[key] = frappe.get_module(module_name)
+            doctype_python_modules[key] = frappe.get_module(module_id)
         except ImportError as e:
             msg = f"Module import failed for {doctype}, the DocType you're trying to open might be deleted."
             msg += f"\nError: {e}"
@@ -287,7 +287,7 @@ def load_doctype_module(doctype, module=None, prefix="", suffix=""):
     return doctype_python_modules[key]
 
 
-def get_module_name(
+def get_module_id(
     doctype: str,
     module: str,
     prefix: str = "",

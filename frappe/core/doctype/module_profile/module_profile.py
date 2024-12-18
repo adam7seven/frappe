@@ -23,5 +23,5 @@ class ModuleProfile(Document):
 
         self.set_onload(
             "all_modules",
-            sorted(m.get("module_name") for m in get_modules_from_all_apps()),
+            sorted(m.get("module_id") for m in get_modules_from_all_apps()),
         )

@@ -36,7 +36,7 @@ class PreparedReport(Document):
         queued_at: DF.Datetime | None
         queued_by: DF.Data | None
         report_end_time: DF.Datetime | None
-        report_name: DF.Data
+        report_id: DF.Data
         status: DF.Literal["Error", "Queued", "Completed", "Started"]
 
     # end: auto-generated types
@@ -73,7 +73,7 @@ class PreparedReport(Document):
             job.stop_job() if self.status == "Started" else job.delete()
 
     def after_insert(self):
-        timeout = frappe.get_value("Report", self.report_name, "timeout")
+        timeout = frappe.get_value("Report", self.report_id, "timeout")
         enqueue(
             generate_report,
             queue="long",
@@ -99,9 +99,9 @@ def generate_report(prepared_report):
     update_job_id(prepared_report)
 
     instance: PreparedReport = frappe.get_doc("Prepared Report", prepared_report)
-    report = frappe.get_doc("Report", instance.report_name)
+    report = frappe.get_doc("Report", instance.report_id)
 
-    add_data_to_monitor(report=instance.report_name)
+    add_data_to_monitor(report=instance.report_id)
 
     try:
         report.custom_columns = []
@@ -118,9 +118,7 @@ def generate_report(prepared_report):
         result = generate_report_result(
             report=report, filters=instance.filters, user=instance.owner
         )
-        create_json_gz_file(
-            result, instance.doctype, instance.name, instance.report_name
-        )
+        create_json_gz_file(result, instance.doctype, instance.name, instance.report_id)
 
         instance.status = "Completed"
     except Exception:
@@ -132,7 +130,7 @@ def generate_report(prepared_report):
 
     frappe.publish_realtime(
         "report_generated",
-        {"report_name": instance.report_name, "id": instance.id},
+        {"report_id": instance.report_id, "id": instance.id},
         user=frappe.session.user,
     )
 
@@ -161,12 +159,12 @@ def update_job_id(prepared_report):
 
 
 @frappe.whitelist()
-def make_prepared_report(report_name, filters=None):
+def make_prepared_report(report_id, filters=None):
     """run reports in background"""
     prepared_report = frappe.get_doc(
         {
             "doctype": "Prepared Report",
-            "report_name": report_name,
+            "report_id": report_id,
             "filters": process_filters_for_prepared_report(filters),
         }
     ).insert(ignore_permissions=True)
@@ -186,11 +184,11 @@ def process_filters_for_prepared_report(filters: dict[str, Any] | str) -> str:
 
 
 @frappe.whitelist()
-def get_reports_in_queued_state(report_name, filters):
+def get_reports_in_queued_state(report_id, filters):
     return frappe.get_all(
         "Prepared Report",
         filters={
-            "report_name": report_name,
+            "report_id": report_id,
             "filters": process_filters_for_prepared_report(filters),
             "status": ("in", ("Queued", "Started")),
             "owner": frappe.session.user,
@@ -198,14 +196,14 @@ def get_reports_in_queued_state(report_name, filters):
     )
 
 
-def get_completed_prepared_report(filters, user, report_name):
+def get_completed_prepared_report(filters, user, report_id):
     return frappe.db.get_value(
         "Prepared Report",
         filters={
             "status": "Completed",
             "filters": process_filters_for_prepared_report(filters),
             "owner": user,
-            "report_name": report_name,
+            "report_id": report_id,
         },
     )
 
@@ -237,11 +235,11 @@ def delete_prepared_reports(reports):
             prepared_report.delete(ignore_permissions=True, delete_permanently=True)
 
 
-def create_json_gz_file(data, dt, dn, report_name):
+def create_json_gz_file(data, dt, dn, report_id):
     # Storing data in CSV file causes information loss
     # Reports like P&L Statement were completely unsuable because of this
     json_filename = "{}_{}.json.gz".format(
-        frappe.scrub(report_name),
+        frappe.scrub(report_id),
         frappe.utils.data.format_datetime(frappe.utils.now(), "Y-m-d-H-M"),
     )
     encoded_content = frappe.safe_encode(
@@ -290,7 +288,7 @@ def get_permission_query_condition(user):
 
     reports = [frappe.db.escape(report) for report in user.get_all_reports().keys()]
 
-    return """`tabPrepared Report`.report_name in ({reports})""".format(
+    return """`tabPrepared Report`.report_id in ({reports})""".format(
         reports=",".join(reports)
     )
 
@@ -308,4 +306,4 @@ def has_permission(doc, user):
     if "System Manager" in user.roles:
         return True
 
-    return doc.report_name in user.get_all_reports().keys()
+    return doc.report_id in user.get_all_reports().keys()

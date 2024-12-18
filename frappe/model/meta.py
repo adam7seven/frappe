@@ -753,13 +753,13 @@ class Meta(Document):
 
     def get_web_template(self, suffix=""):
         """Returns the relative path of the row template for this doctype"""
-        module_name = frappe.scrub(self.module)
+        module_id = frappe.scrub(self.module)
         doctype = frappe.scrub(self.id)
         template_path = frappe.get_module_path(
-            module_name, "doctype", doctype, "templates", doctype + suffix + ".html"
+            module_id, "doctype", doctype, "templates", doctype + suffix + ".html"
         )
         if os.path.exists(template_path):
-            return f"{module_name}/doctype/{doctype}/templates/{doctype}{suffix}.html"
+            return f"{module_id}/doctype/{doctype}/templates/{doctype}{suffix}.html"
         return None
 
     def is_nested_set(self):

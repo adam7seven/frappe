@@ -86,7 +86,7 @@ def get_permission_query_conditions(user):
 
     module_not_set = " ifnull(`tabDashboard`.`module`, '') = '' "
     allowed_modules = [
-        frappe.db.escape(module.get("module_name"))
+        frappe.db.escape(module.get("id"))
         for module in get_modules_from_all_apps_for_user()
     ]
     if not allowed_modules:

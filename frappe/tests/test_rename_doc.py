@@ -222,7 +222,7 @@ class TestReidDoc(FrappeTestCase):
         test_doc = frappe.get_doc(
             {
                 "doctype": test_doctype,
-                "module_name": f"Test-test_update_document_title_api-{frappe.generate_hash()}",
+                "id": f"Test-test_update_document_title_api-{frappe.generate_hash()}",
                 "custom": True,
             }
         )
@@ -242,12 +242,12 @@ class TestReidDoc(FrappeTestCase):
 
         doc_before_dict = doc_before.as_dict(no_nulls=True, no_default_fields=True)
         doc_after_dict = doc_after.as_dict(no_nulls=True, no_default_fields=True)
-        doc_before_dict.pop("module_name")
-        doc_after_dict.pop("module_name")
+        doc_before_dict.pop("module_id")
+        doc_after_dict.pop("module_id")
 
         self.assertEqual(new_id, return_value)
         self.assertDictEqual(doc_before_dict, doc_after_dict)
-        self.assertEqual(doc_after.module_name, return_value)
+        self.assertEqual(doc_after.module_id, return_value)
 
         test_doc.delete()
 

@@ -21,7 +21,7 @@ class ModuleDef(Document):
 
         app_name: DF.Literal[None]
         custom: DF.Check
-        module_name: DF.Data
+        module_id: DF.Data
         package: DF.Link | None
         restrict_to_domain: DF.Link | None
 
@@ -73,7 +73,7 @@ class ModuleDef(Document):
             frappe.db.after_commit.add(self.delete_module_from_file)
 
     def delete_module_from_file(self):
-        delete_folder(self.module_name, "Module Def", self.id)
+        delete_folder(self.module_id, "Module Def", self.id)
         modules = []
 
         modules_txt = Path(frappe.get_app_path(self.app_name, "modules.txt"))

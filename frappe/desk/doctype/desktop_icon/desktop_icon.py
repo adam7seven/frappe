@@ -33,7 +33,7 @@ class DesktopIcon(Document):
         idx: DF.Int
         label: DF.Data | None
         link: DF.SmallText | None
-        module_name: DF.Data | None
+        module_id: DF.Data | None
         reverse: DF.Check
         standard: DF.Check
         type: DF.Literal["module", "list", "link", "page", "query-report"]
@@ -41,14 +41,14 @@ class DesktopIcon(Document):
     # end: auto-generated types
     def validate(self):
         if not self.label:
-            self.label = self.module_name
+            self.label = self.module_id
 
     def on_trash(self):
         clear_desktop_icons_cache()
 
 
 def after_doctype_insert():
-    frappe.db.add_unique("Desktop Icon", ("module_name", "owner", "standard"))
+    frappe.db.add_unique("Desktop Icon", ("module_id", "owner", "standard"))
 
 
 def get_desktop_icons(user=None):
@@ -60,7 +60,7 @@ def get_desktop_icons(user=None):
 
     if not user_icons:
         fields = [
-            "module_name",
+            "module_id",
             "hidden",
             "label",
             "link",
@@ -99,7 +99,7 @@ def get_desktop_icons(user=None):
         for icon in standard_icons:
             if icon._doctype in blocked_doctypes:
                 icon.blocked = 1
-            standard_map[icon.module_name] = icon
+            standard_map[icon.module_id] = icon
 
         user_icons = frappe.get_all(
             "Desktop Icon", fields=fields, filters={"standard": 0, "owner": user}
@@ -107,7 +107,7 @@ def get_desktop_icons(user=None):
 
         # update hidden property
         for icon in user_icons:
-            standard_icon = standard_map.get(icon.module_name, None)
+            standard_icon = standard_map.get(icon.module_id, None)
 
             if icon._doctype in blocked_doctypes:
                 icon.blocked = 1
@@ -128,9 +128,9 @@ def get_desktop_icons(user=None):
                     icon.hidden = 0
 
         # add missing standard icons (added via new install apps?)
-        user_icon_ids = [icon.module_name for icon in user_icons]
+        user_icon_ids = [icon.module_id for icon in user_icons]
         for standard_icon in standard_icons:
-            if standard_icon.module_name not in user_icon_ids:
+            if standard_icon.module_id not in user_icon_ids:
                 # if blocked, hidden too!
                 if standard_icon.blocked:
                     standard_icon.hidden = 1
@@ -140,7 +140,7 @@ def get_desktop_icons(user=None):
 
         user_blocked_modules = frappe.get_doc("User", user).get_blocked_modules()
         for icon in user_icons:
-            if icon.module_name in user_blocked_modules:
+            if icon.module_id in user_blocked_modules:
                 icon.hidden = 1
 
         # sort by idx
@@ -202,7 +202,7 @@ def add_user_icon(
 
         module_icon = frappe.get_value(
             "Desktop Icon",
-            {"standard": 1, "module_name": userdefined_icon.module},
+            {"standard": 1, "module_id": userdefined_icon.module},
             ["id", "icon", "color", "reverse"],
             as_dict=True,
         )
@@ -218,7 +218,7 @@ def add_user_icon(
                 {
                     "doctype": "Desktop Icon",
                     "label": label,
-                    "module_name": label,
+                    "module_id": label,
                     "link": link,
                     "type": type,
                     "_doctype": _doctype,
@@ -248,19 +248,19 @@ def set_order(new_order, user=None):
     """set new order by duplicating user icons (if user is set) or set global order"""
     if isinstance(new_order, str):
         new_order = json.loads(new_order)
-    for i, module_name in enumerate(new_order):
-        if module_name not in ("Explore",):
+    for i, module_id in enumerate(new_order):
+        if module_id not in ("Explore",):
             if user:
-                icon = get_user_copy(module_name, user)
+                icon = get_user_copy(module_id, user)
             else:
                 id = frappe.db.get_value(
-                    "Desktop Icon", {"standard": 1, "module_name": module_name}
+                    "Desktop Icon", {"standard": 1, "module_id": module_id}
                 )
                 if id:
                     icon = frappe.get_doc("Desktop Icon", id)
                 else:
                     # standard icon missing, create one for DocType
-                    id = add_user_icon(module_name, standard=1)
+                    id = add_user_icon(module_id, standard=1)
                     icon = frappe.get_doc("Desktop Icon", id)
 
             icon.db_set("idx", i)
@@ -284,19 +284,19 @@ def set_desktop_icons(visible_list, ignore_duplicate=True):
         )
 
     # set as visible if present, or add icon
-    for module_name in list(visible_list):
-        id = frappe.db.get_value("Desktop Icon", {"module_name": module_name})
+    for module_id in list(visible_list):
+        id = frappe.db.get_value("Desktop Icon", {"module_id": module_id})
         if id:
             frappe.db.set_value("Desktop Icon", id, "hidden", 0)
         else:
-            if frappe.db.exists("DocType", module_name):
+            if frappe.db.exists("DocType", module_id):
                 try:
-                    add_user_icon(module_name, standard=1)
+                    add_user_icon(module_id, standard=1)
                 except frappe.UniqueValidationError as e:
                     if not ignore_duplicate:
                         raise e
                     else:
-                        visible_list.remove(module_name)
+                        visible_list.remove(module_id)
                         frappe.clear_last_message()
 
     # set the order
@@ -313,12 +313,12 @@ def set_hidden_list(hidden_list, user=None):
         hidden_list = json.loads(hidden_list)
 
     # set as hidden
-    for module_name in hidden_list:
-        set_hidden(module_name, user, 1)
+    for module_id in hidden_list:
+        set_hidden(module_id, user, 1)
 
     # set as seen
-    for module_name in list(set(get_all_icons()) - set(hidden_list)):
-        set_hidden(module_name, user, 0)
+    for module_id in list(set(get_all_icons()) - set(hidden_list)):
+        set_hidden(module_id, user, 0)
 
     if user:
         clear_desktop_icons_cache()
@@ -326,11 +326,11 @@ def set_hidden_list(hidden_list, user=None):
         frappe.clear_cache()
 
 
-def set_hidden(module_name, user=None, hidden=1):
+def set_hidden(module_id, user=None, hidden=1):
     """Set module hidden property for given user. If user is not specified,
     hide/unhide it globally"""
     if user:
-        icon = get_user_copy(module_name, user)
+        icon = get_user_copy(module_id, user)
 
         if hidden and icon.custom:
             frappe.delete_doc(icon.doctype, icon.id, ignore_permissions=True)
@@ -339,9 +339,7 @@ def set_hidden(module_name, user=None, hidden=1):
         # hidden by user
         icon.db_set("hidden", hidden)
     else:
-        icon = frappe.get_doc(
-            "Desktop Icon", {"standard": 1, "module_name": module_name}
-        )
+        icon = frappe.get_doc("Desktop Icon", {"standard": 1, "module_id": module_id})
 
         # blocked is globally hidden
         icon.db_set("blocked", hidden)
@@ -349,9 +347,9 @@ def set_hidden(module_name, user=None, hidden=1):
 
 def get_all_icons():
     return [
-        d.module_name
+        d.module_id
         for d in frappe.get_all(
-            "Desktop Icon", filters={"standard": 1}, fields=["module_name"]
+            "Desktop Icon", filters={"standard": 1}, fields=["module_id"]
         )
     ]
 
@@ -361,33 +359,33 @@ def clear_desktop_icons_cache(user=None):
     frappe.cache.hdel("bootinfo", user or frappe.session.user)
 
 
-def get_user_copy(module_name, user=None):
-    """Return user copy (Desktop Icon) of the given module_name. If user copy does not exist, create one.
+def get_user_copy(module_id, user=None):
+    """Return user copy (Desktop Icon) of the given module_id. If user copy does not exist, create one.
 
-    :param module_name: ID of the module
+    :param module_id: ID of the module
     :param user: User for which the copy is required (optional)
     """
     if not user:
         user = frappe.session.user
 
     desktop_icon_id = frappe.db.get_value(
-        "Desktop Icon", {"module_name": module_name, "owner": user, "standard": 0}
+        "Desktop Icon", {"module_id": module_id, "owner": user, "standard": 0}
     )
 
     if desktop_icon_id:
         return frappe.get_doc("Desktop Icon", desktop_icon_id)
     else:
-        return make_user_copy(module_name, user)
+        return make_user_copy(module_id, user)
 
 
-def make_user_copy(module_name, user):
+def make_user_copy(module_id, user):
     """Insert and return the user copy of a standard Desktop Icon"""
     standard_name = frappe.db.get_value(
-        "Desktop Icon", {"module_name": module_name, "standard": 1}
+        "Desktop Icon", {"module_id": module_id, "standard": 1}
     )
 
     if not standard_name:
-        frappe.throw(_("{0} not found").format(module_name), frappe.DoesNotExistError)
+        frappe.throw(_("{0} not found").format(module_id), frappe.DoesNotExistError)
 
     original = frappe.get_doc("Desktop Icon", standard_name)
 
@@ -396,7 +394,7 @@ def make_user_copy(module_name, user):
             "doctype": "Desktop Icon",
             "standard": 0,
             "owner": user,
-            "module_name": module_name,
+            "module_id": module_id,
         }
     )
 
@@ -437,14 +435,14 @@ def sync_from_app(app):
     if isinstance(modules, dict):
         modules_list = []
         for m, desktop_icon in modules.items():
-            desktop_icon["module_name"] = m
+            desktop_icon["module_id"] = m
             modules_list.append(desktop_icon)
     else:
         modules_list = modules
 
     for i, m in enumerate(modules_list):
         desktop_icon_id = frappe.db.get_value(
-            "Desktop Icon", {"module_name": m["module_name"], "app": app, "standard": 1}
+            "Desktop Icon", {"module_id": m["module_id"], "app": app, "standard": 1}
         )
         if desktop_icon_id:
             desktop_icon = frappe.get_doc("Desktop Icon", desktop_icon_id)
@@ -510,7 +508,7 @@ def get_module_icons(user=None):
         icons = get_user_icons(user)
 
     for icon in icons:
-        icon.value = frappe.db.escape(_(icon.label or icon.module_name))
+        icon.value = frappe.db.escape(_(icon.label or icon.module_id))
 
     return {"icons": icons, "user": user}
 
@@ -531,15 +529,14 @@ def get_user_icons(user):
             add = False
 
         if not icon.custom:
-            if icon.module_name == ["Help", "Settings"]:
+            if icon.module_id == ["Help", "Settings"]:
                 pass
 
             elif icon.type == "page" and icon.link not in allowed_pages:
                 add = False
 
             elif (
-                icon.type == "module"
-                and icon.module_name not in user_perms.allow_modules
+                icon.type == "module" and icon.module_id not in user_perms.allow_modules
             ):
                 add = False
 

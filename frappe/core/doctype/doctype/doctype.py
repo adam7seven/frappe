@@ -2065,7 +2065,7 @@ def make_module_and_roles(doc, perm_fieldname="permissions"):
         if "tabModule Def" in frappe.db.get_tables() and not frappe.db.exists(
             "Module Def", doc.module
         ):
-            m = frappe.get_doc({"doctype": "Module Def", "module_name": doc.module})
+            m = frappe.get_doc({"doctype": "Module Def", "module_id": doc.module})
             if frappe.scrub(doc.module) in frappe.local.module_app:
                 m.app_name = frappe.local.module_app[frappe.scrub(doc.module)]
             else:

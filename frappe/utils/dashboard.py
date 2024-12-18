@@ -96,9 +96,9 @@ def sync_dashboards(app=None):
 
     for app_name in apps:
         print(f"Updating Dashboard for {app_name}")
-        for module_name in frappe.local.app_modules.get(app_name) or []:
+        for module_id in frappe.local.app_modules.get(app_name) or []:
             frappe.flags.in_import = True
-            make_records_in_module(app_name, module_name)
+            make_records_in_module(app_name, module_id)
             frappe.flags.in_import = False
 
 

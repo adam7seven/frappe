@@ -120,10 +120,10 @@ def sync_for(app_name, force=0, reset_permissions=False):
                 )
             )
 
-        for module_name, document_type in IMPORTABLE_DOCTYPES:
+        for module_id, document_type in IMPORTABLE_DOCTYPES:
             file = os.path.join(
                 FRAPPE_PATH,
-                module_name,
+                module_id,
                 "doctype",
                 document_type,
                 f"{document_type}.json",
@@ -131,10 +131,8 @@ def sync_for(app_name, force=0, reset_permissions=False):
             if file not in files:
                 files.append(file)
 
-    for module_name in frappe.local.app_modules.get(app_name) or []:
-        folder = os.path.dirname(
-            frappe.get_module(app_name + "." + module_name).__file__
-        )
+    for module_id in frappe.local.app_modules.get(app_name) or []:
+        folder = os.path.dirname(frappe.get_module(app_name + "." + module_id).__file__)
         files = get_doc_files(files=files, start_path=folder)
 
     l = len(files)

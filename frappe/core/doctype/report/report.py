@@ -41,7 +41,7 @@ class Report(Document):
         query: DF.Code | None
         ref_doctype: DF.Link
         reference_report: DF.Data | None
-        report_name: DF.Data
+        report_id: DF.Data
         report_script: DF.Code | None
         report_type: DF.Literal[
             "Report Builder", "Query Report", "Script Report", "Custom Report"
@@ -434,15 +434,15 @@ def is_prepared_report_enabled(report):
     return cint(frappe.db.get_value("Report", report, "prepared_report")) or 0
 
 
-def get_report_module_dotted_path(module, report_name):
+def get_report_module_dotted_path(module, report_id):
     return (
         frappe.local.module_app[scrub(module)]
         + "."
         + scrub(module)
         + ".report."
-        + scrub(report_name)
+        + scrub(report_id)
         + "."
-        + scrub(report_name)
+        + scrub(report_id)
     )
 
 

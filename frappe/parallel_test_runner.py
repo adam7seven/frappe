@@ -105,13 +105,13 @@ class ParallelTestRunner:
         app_path = frappe.get_app_path(self.app)
         relative_path = os.path.relpath(path, app_path)
         if relative_path == ".":
-            module_name = self.app
+            module_id = self.app
         else:
             relative_path = relative_path.replace("/", ".")
-            module_name = os.path.splitext(filename)[0]
-            module_name = f"{self.app}.{relative_path}.{module_name}"
+            module_id = os.path.splitext(filename)[0]
+            module_id = f"{self.app}.{relative_path}.{module_id}"
 
-        return frappe.get_module(module_name)
+        return frappe.get_module(module_id)
 
     def print_result(self):
         # XXX: Added to debug tests getting stuck AFTER completion

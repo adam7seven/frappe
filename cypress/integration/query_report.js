@@ -5,7 +5,7 @@ context("Query Report", () => {
 		cy.insert_doc(
 			"Report",
 			{
-				report_name: "Test ToDo Report",
+				id: "Test ToDo Report",
 				ref_doctype: "ToDo",
 				report_type: "Query Report",
 				query: "select * from tabToDo",
@@ -52,7 +52,7 @@ context("Query Report", () => {
 					.click({ timeout: 100, force: true });
 				cy.get_open_dialog().get(".modal-title").should("contain", "Save Report");
 
-				cy.get('input[data-fieldname="report_name"]').type("Test Report", {
+				cy.get('input[data-fieldname="report_id"]').type("Test Report", {
 					delay: 100,
 					force: true,
 				});
@@ -69,7 +69,7 @@ context("Query Report", () => {
 			.click({ timeout: 100, force: true });
 		cy.get_open_dialog().get(".modal-title").should("contain", "Save Report");
 
-		cy.get('input[data-fieldname="report_name"]').type(update_name, {
+		cy.get('input[data-fieldname="report_id"]').type(update_name, {
 			delay: 100,
 			force: true,
 		});

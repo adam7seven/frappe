@@ -55,7 +55,7 @@ class TestReport(FrappeTestCase):
                 {
                     "doctype": "Report",
                     "ref_doctype": "User",
-                    "report_name": "Test Delete Report",
+                    "report_id": "Test Delete Report",
                     "report_type": "Report Builder",
                     "is_standard": "No",
                 }
@@ -78,7 +78,7 @@ class TestReport(FrappeTestCase):
 
             # Check if creating and deleting works with proper validations
             frappe.set_user("test@example.com")
-            report_name = _save_report(
+            report_id = _save_report(
                 "Dummy Report",
                 "User",
                 json.dumps(
@@ -99,7 +99,7 @@ class TestReport(FrappeTestCase):
                 ),
             )
 
-            doc = frappe.get_doc("Report", report_name)
+            doc = frappe.get_doc("Report", report_id)
             delete_report(doc.id)
 
         finally:
@@ -108,7 +108,7 @@ class TestReport(FrappeTestCase):
 
     def test_custom_report(self):
         reset_customization("User")
-        custom_report_name = save_report(
+        custom_report_id = save_report(
             "Permitted Documents For User",
             "Permitted Documents For User Custom",
             json.dumps(
@@ -129,7 +129,7 @@ class TestReport(FrappeTestCase):
             ),
             json.dumps({"user": "Administrator", "doctype": "User"}),
         )
-        custom_report = frappe.get_doc("Report", custom_report_name)
+        custom_report = frappe.get_doc("Report", custom_report_id)
         columns, result = custom_report.run_query_report(user=frappe.session.user)
 
         self.assertListEqual(["email"], [column.get("fieldname") for column in columns])
@@ -199,7 +199,7 @@ class TestReport(FrappeTestCase):
                 {
                     "doctype": "Report",
                     "ref_doctype": "User",
-                    "report_name": "Test Report",
+                    "report_id": "Test Report",
                     "report_type": "Query Report",
                     "is_standard": "No",
                     "roles": [{"role": "Test Has Role"}],
@@ -220,7 +220,7 @@ class TestReport(FrappeTestCase):
                 {
                     "doctype": "Report",
                     "ref_doctype": "User",
-                    "report_name": "Test Custom Role Report",
+                    "report_id": "Test Custom Role Report",
                     "report_type": "Query Report",
                     "is_standard": "No",
                     "roles": [{"role": "_Test Role"}, {"role": "System Manager"}],
@@ -263,19 +263,19 @@ class TestReport(FrappeTestCase):
         frappe.delete_doc("Report", "User Activity Report Without Sort")
 
     def test_non_standard_script_report(self):
-        report_name = "Test Non Standard Script Report"
-        if not frappe.db.exists("Report", report_name):
+        report_id = "Test Non Standard Script Report"
+        if not frappe.db.exists("Report", report_id):
             report = frappe.get_doc(
                 {
                     "doctype": "Report",
                     "ref_doctype": "User",
-                    "report_name": report_name,
+                    "report_id": report_id,
                     "report_type": "Script Report",
                     "is_standard": "No",
                 }
             ).insert(ignore_permissions=True)
         else:
-            report = frappe.get_doc("Report", report_name)
+            report = frappe.get_doc("Report", report_id)
 
         report.report_script = """
 totals = {}
@@ -304,16 +304,16 @@ data = [
         self.assertTrue("System User" in [d.get("type") for d in data[1]])
 
     def test_script_report_with_columns(self):
-        report_name = "Test Script Report With Columns"
+        report_id = "Test Script Report With Columns"
 
-        if frappe.db.exists("Report", report_name):
-            frappe.delete_doc("Report", report_name)
+        if frappe.db.exists("Report", report_id):
+            frappe.delete_doc("Report", report_id)
 
         report = frappe.get_doc(
             {
                 "doctype": "Report",
                 "ref_doctype": "User",
-                "report_name": report_name,
+                "report_id": report_id,
                 "report_type": "Script Report",
                 "is_standard": "No",
                 "columns": [
@@ -348,8 +348,8 @@ result = [
         """Make sure that authorization is respected."""
         # Assuming that there will be reports in the system.
         reports = frappe.get_all(doctype="Report", limit=1)
-        report_name = reports[0]["id"]
-        doc = frappe.get_doc("Report", report_name)
+        report_id = reports[0]["id"]
+        doc = frappe.get_doc("Report", report_id)
         status = doc.disabled
 
         # User has write permission on reports and should pass through
@@ -360,7 +360,7 @@ result = [
 
         # User has no write permission on reports, permission error is expected.
         frappe.set_user("test1@example.com")
-        doc = frappe.get_doc("Report", report_name)
+        doc = frappe.get_doc("Report", report_id)
         with self.assertRaises(frappe.exceptions.ValidationError):
             doc.toggle_disable(1)
 
@@ -434,7 +434,7 @@ result = [
             {
                 "doctype": "Report",
                 "ref_doctype": "User",
-                "report_name": "Enabled Users List",
+                "report_id": "Enabled Users List",
                 "report_type": "Query Report",
                 "is_standard": "No",
                 "query": cte_query,

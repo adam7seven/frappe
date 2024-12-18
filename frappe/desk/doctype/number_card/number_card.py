@@ -106,7 +106,7 @@ def get_permission_query_conditions(user=None):
         for doctype in frappe.permissions.get_doctypes_with_read()
     ]
     allowed_modules = [
-        frappe.db.escape(module.get("module_name"))
+        frappe.db.escape(module.get("id"))
         for module in get_modules_from_all_apps_for_user()
     ]
 

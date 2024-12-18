@@ -453,11 +453,11 @@ def _delete_modules(modules: list[str], dry_run: bool) -> list[str]:
     drop_doctypes = []
 
     doctype_link_field_map = _get_module_linked_doctype_field_map()
-    for module_name in modules:
-        print(f"Deleting Module '{module_name}'")
+    for module_id in modules:
+        print(f"Deleting Module '{module_id}'")
 
         for doctype in frappe.get_all(
-            "DocType", filters={"module": module_name}, fields=["id", "issingle"]
+            "DocType", filters={"module": module_id}, fields=["id", "issingle"]
         ):
             print(f"* removing DocType '{doctype.id}'...")
 
@@ -469,24 +469,22 @@ def _delete_modules(modules: list[str], dry_run: bool) -> list[str]:
                 else:
                     drop_doctypes.append(doctype.id)
 
-        _delete_linked_documents(module_name, doctype_link_field_map, dry_run=dry_run)
+        _delete_linked_documents(module_id, doctype_link_field_map, dry_run=dry_run)
 
-        print(f"* removing Module Def '{module_name}'...")
+        print(f"* removing Module Def '{module_id}'...")
         if not dry_run:
-            frappe.delete_doc(
-                "Module Def", module_name, ignore_on_trash=True, force=True
-            )
+            frappe.delete_doc("Module Def", module_id, ignore_on_trash=True, force=True)
 
     return drop_doctypes
 
 
 def _delete_linked_documents(
-    module_name: str, doctype_linkfield_map: dict[str, str], dry_run: bool
+    module_id: str, doctype_linkfield_map: dict[str, str], dry_run: bool
 ) -> None:
     """Deleted all records linked with module def"""
     for doctype, fieldname in doctype_linkfield_map.items():
         for record in frappe.get_all(
-            doctype, filters={fieldname: module_name}, pluck="id"
+            doctype, filters={fieldname: module_id}, pluck="id"
         ):
             print(f"* removing {doctype} '{record}'...")
             if not dry_run:
@@ -705,7 +703,7 @@ def add_module_defs(app, ignore_if_duplicate=False):
     for module in modules:
         d = frappe.new_doc("Module Def")
         d.app_name = app
-        d.module_name = module
+        d.module_id = module
         d.insert(ignore_permissions=True, ignore_if_duplicate=ignore_if_duplicate)
 
 

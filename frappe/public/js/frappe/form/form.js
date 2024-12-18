@@ -1707,7 +1707,7 @@ frappe.ui.form.Form = class FrappeForm {
 		}
 		if (!opts.doc) {
 			if (opts.method.indexOf(".") === -1)
-				opts.method = frappe.model.get_server_module_name(me.doctype) + "." + opts.method;
+				opts.method = frappe.model.get_server_module_id(me.doctype) + "." + opts.method;
 			opts.original_callback = opts.callback;
 			opts.callback = function (r) {
 				if ($.isPlainObject(r.message)) {

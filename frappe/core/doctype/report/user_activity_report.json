@@ -12,6 +12,6 @@
   "id": "User Activity Report",
   "query": null,
   "ref_doctype": "User",
-  "report_name": "User Activity Report",
+  "report_id": "User Activity Report",
   "report_type": "Report Builder"
 }

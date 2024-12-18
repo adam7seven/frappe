@@ -14,7 +14,7 @@ from io import StringIO
 import frappe
 import frappe.utils.scheduler
 from frappe.model.iding import revert_series_if_last
-from frappe.modules import get_module_name, load_doctype_module
+from frappe.modules import get_module_id, load_doctype_module
 from frappe.utils import cint
 
 unittest_runner = unittest.TextTestRunner
@@ -234,7 +234,7 @@ def run_tests_for_doctype(
             print(f"Invalid doctype {doctype}")
             sys.exit(1)
 
-        test_module = get_module_name(doctype, module, "test_")
+        test_module = get_module_id(doctype, module, "test_")
         if force:
             for id in frappe.db.sql_list("select id from `tab%s`" % doctype):
                 frappe.delete_doc(doctype, id, force=True)
@@ -346,15 +346,15 @@ def _add_test(app, path, filename, verbose, test_suite=None):
     app_path = frappe.get_app_path(app)
     relative_path = os.path.relpath(path, app_path)
     if relative_path == ".":
-        module_name = app
+        module_id = app
     else:
-        module_name = "{app}.{relative_path}.{module_name}".format(
+        module_id = "{app}.{relative_path}.{module_id}".format(
             app=app,
             relative_path=relative_path.replace("/", "."),
-            module_name=filename[:-3],
+            module_id=filename[:-3],
         )
 
-    module = importlib.import_module(module_name)
+    module = importlib.import_module(module_id)
 
     if hasattr(module, "test_dependencies"):
         for doctype in module.test_dependencies:

@@ -254,7 +254,7 @@ def get_non_standard_user_types():
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def get_user_linked_doctypes(doctype, txt, searchfield, start, page_len, filters):
-    modules = [d.get("module_name") for d in get_modules_from_app("frappe")]
+    modules = [d.get("id") for d in get_modules_from_app("frappe")]
 
     filters = [
         ["DocField", "options", "=", "User"],

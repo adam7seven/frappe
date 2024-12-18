@@ -12,6 +12,6 @@
 	"id": "User Activity Report Without Sort",
 	"query": null,
 	"ref_doctype": "User",
-	"report_name": "User Activity Report Without Sort",
+	"report_id": "User Activity Report Without Sort",
 	"report_type": "Report Builder"
 }

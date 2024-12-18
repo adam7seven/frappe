@@ -11,6 +11,6 @@ class TestConfig(FrappeTestCase):
             "Module Def", filters={"app_name": "frappe"}, pluck="id"
         )
         all_modules_data = get_modules_from_all_apps_for_user()
-        all_modules = [x["module_name"] for x in all_modules_data]
+        all_modules = [x["id"] for x in all_modules_data]
         self.assertIsInstance(all_modules_data, list)
         self.assertFalse([x for x in frappe_modules if x not in all_modules])

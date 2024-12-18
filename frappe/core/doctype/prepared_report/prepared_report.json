@@ -7,7 +7,7 @@
     "engine": "InnoDB",
     "field_order": [
         "status",
-        "report_name",
+        "report_id",
         "queued_by",
         "job_id",
         "column_break_4",
@@ -21,9 +21,9 @@
     ],
     "fields": [
         {
-            "fieldname": "report_name",
+            "fieldname": "report_id",
             "fieldtype": "Data",
-            "label": "Report Name",
+            "label": "Report ID",
             "read_only": 1,
             "reqd": 1,
             "search_index": 1
@@ -150,5 +150,5 @@
             "title": "Completed"
         }
     ],
-    "title_field": "report_name"
+    "title_field": "report_id"
 }
