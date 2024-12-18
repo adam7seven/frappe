@@ -42,7 +42,7 @@ frappe.ui.form.Share = class Share {
 	show() {
 		var me = this;
 		var d = new frappe.ui.Dialog({
-			title: __("Share {0} with", [this.frm.doc.name]),
+			title: __("Share {0} with", [this.frm.doc.id]),
 		});
 
 		this.dialog = d;
@@ -54,7 +54,7 @@ frappe.ui.form.Share = class Share {
 			method: "frappe.share.get_users",
 			args: {
 				doctype: this.frm.doctype,
-				name: this.frm.doc.name,
+				id: this.frm.doc.id,
 			},
 			callback: function (r) {
 				me.render_shared(r.message || []);
@@ -109,7 +109,7 @@ frappe.ui.form.Share = class Share {
 				options: "User",
 				filters: {
 					user_type: "System User",
-					name: ["!=", frappe.session.user],
+					id: ["!=", frappe.session.user],
 				},
 			},
 			only_input: true,
@@ -130,7 +130,7 @@ frappe.ui.form.Share = class Share {
 					method: "frappe.share.add",
 					args: {
 						doctype: me.frm.doctype,
-						name: me.frm.doc.name,
+						id: me.frm.doc.id,
 						user: user,
 						read: $(d.body).find(".add-share-read").prop("checked") ? 1 : 0,
 						write: $(d.body).find(".add-share-write").prop("checked") ? 1 : 0,
@@ -169,7 +169,7 @@ frappe.ui.form.Share = class Share {
 					method: "frappe.share.set_permission",
 					args: {
 						doctype: me.frm.doctype,
-						name: me.frm.doc.name,
+						id: me.frm.doc.id,
 						user: user,
 						permission_to: property,
 						value: value,

@@ -53,7 +53,7 @@ frappe.ui.form.Layout = class Layout {
 	}
 
 	get_doctype_fields() {
-		let fields = [this.get_new_name_field()];
+		let fields = [this.get_new_id_field()];
 		if (this.doctype_layout) {
 			fields = fields.concat(this.get_fields_from_layout());
 		} else {
@@ -65,11 +65,11 @@ frappe.ui.form.Layout = class Layout {
 		return fields;
 	}
 
-	get_new_name_field() {
+	get_new_id_field() {
 		return {
 			parent: this.frm.doctype,
 			fieldtype: "Data",
-			fieldname: "__newname",
+			fieldname: "__newid",
 			reqd: 1,
 			hidden: 1,
 			label: __("Name"),
@@ -78,7 +78,7 @@ frappe.ui.form.Layout = class Layout {
 					field.frm &&
 					field.frm.is_new() &&
 					field.frm.meta.autoid &&
-					["prompt", "name"].includes(field.frm.meta.autoid.toLowerCase())
+					["prompt", "id"].includes(field.frm.meta.autoid.toLowerCase())
 				) {
 					return "Write";
 				}
@@ -144,11 +144,11 @@ frappe.ui.form.Layout = class Layout {
 			if (!first_tab) {
 				this.fields.splice(0, 0, default_tab);
 			} else {
-				// reshuffle __newname field to accomodate under 1st Tab Break
-				let newname_field = this.fields.find((df) => df.fieldname === "__newname");
-				if (newname_field && newname_field.get_status(this) === "Write") {
+				// reshuffle __newid field to accomodate under 1st Tab Break
+				let newid_field = this.fields.find((df) => df.fieldname === "__newid");
+				if (newid_field && newid_field.get_status(this) === "Write") {
 					this.fields.splice(0, 1);
-					this.fields.splice(1, 0, newname_field);
+					this.fields.splice(1, 0, newid_field);
 				}
 			}
 		}
@@ -472,9 +472,9 @@ frappe.ui.form.Layout = class Layout {
 			if (me.doc) {
 				fieldobj.doc = me.doc;
 				fieldobj.doctype = me.doc.doctype;
-				fieldobj.docname = me.doc.name;
+				fieldobj.docid = me.doc.id;
 				fieldobj.df =
-					frappe.meta.get_docfield(me.doc.doctype, fieldobj.df.fieldname, me.doc.name) ||
+					frappe.meta.get_docfield(me.doc.doctype, fieldobj.df.fieldname, me.doc.id) ||
 					fieldobj.df;
 			}
 			refresh && fieldobj.df && fieldobj.refresh && fieldobj.refresh();
@@ -746,7 +746,7 @@ frappe.ui.form.Layout = class Layout {
 					value,
 					this.doc.parent,
 					fieldname,
-					this.doc.name
+					this.doc.id
 				);
 				form_obj.setting_dependency = false;
 				// refresh child fields
@@ -788,7 +788,7 @@ frappe.ui.form.Layout = class Layout {
 			out = this.frm.script_manager.trigger(
 				expression.substr(3),
 				this.doctype,
-				this.docname
+				this.docid
 			);
 		} else {
 			var value = doc[expression];

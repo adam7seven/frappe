@@ -126,8 +126,8 @@ function get_field_template(print_format, fieldname) {
 
 function get_default_header(meta) {
 	return `<div class="document-header">
-	<h3>${meta.name}</h3>
-	<p>{{ doc.name }}</p>
+	<h3>${meta.id}</h3>
+	<p>{{ doc.id }}</p>
 </div>`;
 }
 

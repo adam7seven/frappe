@@ -25,9 +25,8 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
 		}
 	}
 	set_placeholder(is_xs_input) {
-		const placeholder_html = `<div class="placeholder ellipsis text-extra-muted ${
-			is_xs_input ? "xs" : ""
-		}">
+		const placeholder_html = `<div class="placeholder ellipsis text-extra-muted ${is_xs_input ? "xs" : ""
+			}">
 				<span>${this.df.placeholder}</span>
 			</div>`;
 		if (this.only_input) {
@@ -89,7 +88,7 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
 	}
 	get_file_attachment_list() {
 		if (!this.frm) return;
-		var fl = frappe.model.docinfo[this.frm.doctype][this.frm.docname];
+		var fl = frappe.model.docinfo[this.frm.doctype][this.frm.docid];
 		if (fl && fl.attachments) {
 			this.set_description("");
 			var options = [""];

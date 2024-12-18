@@ -13,8 +13,8 @@ export default class ChartWidget extends Widget {
 
 	get_config() {
 		return {
-			name: this.name,
-			chart_name: this.chart_name,
+			id: this.id,
+			chart_id: this.chart_id,
 			label: this.label,
 			hidden: this.hidden,
 			width: this.width,
@@ -298,7 +298,7 @@ export default class ChartWidget extends Widget {
 				label: __("Edit"),
 				action: "action-edit",
 				handler: () => {
-					frappe.set_route("Form", "Dashboard Chart", this.chart_doc.name);
+					frappe.set_route("Form", "Dashboard Chart", this.chart_doc.id);
 				},
 			},
 			{
@@ -322,10 +322,10 @@ export default class ChartWidget extends Widget {
 			});
 		} else if (this.chart_doc.chart_type === "Report") {
 			actions.push({
-				label: __("{0} Report", [this.chart_doc.report_name]),
+				label: __("{0} Report", [this.chart_doc.report_id]),
 				action: "action-list",
 				handler: () => {
-					frappe.set_route("query-report", this.chart_doc.report_name, this.filters);
+					frappe.set_route("query-report", this.chart_doc.report_id, this.filters);
 				},
 			});
 		}
@@ -392,7 +392,7 @@ export default class ChartWidget extends Widget {
 	setup_filter_dialog(fields) {
 		let me = this;
 		let dialog = new frappe.ui.Dialog({
-			title: __("Set Filters for {0}", [this.chart_doc.chart_name]),
+			title: __("Set Filters for {0}", [this.chart_doc.chart_id]),
 			fields: fields,
 			primary_action: function () {
 				let values = this.get_values();
@@ -411,8 +411,8 @@ export default class ChartWidget extends Widget {
 		if (this.chart_doc.chart_type == "Report") {
 			//Set query report object so that it can be used while fetching filter values in the report
 			frappe.query_report = new frappe.views.QueryReport({ filters: dialog.fields_list });
-			frappe.query_reports[this.chart_doc.report_name].onload &&
-				frappe.query_reports[this.chart_doc.report_name].onload(frappe.query_report);
+			frappe.query_reports[this.chart_doc.report_id].onload &&
+				frappe.query_reports[this.chart_doc.report_id].onload(frappe.query_report);
 		}
 		dialog.set_values(this.filters);
 	}
@@ -433,7 +433,7 @@ export default class ChartWidget extends Widget {
 			{
 				reset: reset,
 				config: this.chart_settings,
-				chart_name: this.chart_doc.chart_name,
+				chart_id: this.chart_doc.chart_id,
 			}
 		);
 	}
@@ -471,11 +471,11 @@ export default class ChartWidget extends Widget {
 			</button>
 			<ul class="dropdown-menu dropdown-menu-right">
 				${actions
-					.map(
-						(action) =>
-							`<li><a class="dropdown-item" data-action="${action.action}">${action.label}</a></li>`
-					)
-					.join("")}
+				.map(
+					(action) =>
+						`<li><a class="dropdown-item" data-action="${action.action}">${action.label}</a></li>`
+				)
+				.join("")}
 			</ul>
 		</div>
 		`);
@@ -493,13 +493,13 @@ export default class ChartWidget extends Widget {
 
 		if (this.chart_doc.chart_type == "Report") {
 			args = {
-				report_name: this.chart_doc.report_name,
+				report_id: this.chart_doc.report_id,
 				filters: filters,
 				ignore_prepared_report: 1,
 			};
 		} else {
 			args = {
-				chart_name: this.chart_doc.name,
+				chart_id: this.chart_doc.id,
 				filters: filters,
 				refresh: refresh ? 1 : 0,
 				time_interval: args && args.time_interval ? args.time_interval : null,
@@ -516,9 +516,9 @@ export default class ChartWidget extends Widget {
 		if (this.chart_doc.document_type) {
 			return this.chart_doc.document_type;
 		}
-		if (this.chart_doc.chart_type == "Report" && this.chart_doc.report_name) {
+		if (this.chart_doc.chart_type == "Report" && this.chart_doc.report_id) {
 			return await frappe.db
-				.get_value("Report", this.chart_doc.report_name, "ref_doctype")
+				.get_value("Report", this.chart_doc.report_id, "ref_doctype")
 				.then((r) => r.message.ref_doctype);
 		}
 	}
@@ -614,8 +614,8 @@ export default class ChartWidget extends Widget {
 		if (this.chart_doc.type == "Heatmap") {
 			const heatmap_year = parseInt(
 				this.selected_heatmap_year ||
-					this.chart_settings.heatmap_year ||
-					this.chart_doc.heatmap_year
+				this.chart_settings.heatmap_year ||
+				this.chart_doc.heatmap_year
 			);
 			chart_args.data.start = new Date(`${heatmap_year}-01-01`);
 			chart_args.data.end = new Date(`${heatmap_year + 1}-01-01`);
@@ -707,7 +707,7 @@ export default class ChartWidget extends Widget {
 	}
 
 	update_chart_object() {
-		frappe.db.get_doc("Dashboard Chart", this.chart_doc.name).then((doc) => {
+		frappe.db.get_doc("Dashboard Chart", this.chart_doc.id).then((doc) => {
 			this.chart_doc = doc;
 			this.update_last_synced();
 		});
@@ -763,7 +763,7 @@ export default class ChartWidget extends Widget {
 	}
 
 	get_settings() {
-		return frappe.model.with_doc("Dashboard Chart", this.chart_name).then((chart_doc) => {
+		return frappe.model.with_doc("Dashboard Chart", this.chart_id).then((chart_doc) => {
 			if (chart_doc) {
 				this.chart_doc = chart_doc;
 				if (this.chart_doc.chart_type == "Custom") {

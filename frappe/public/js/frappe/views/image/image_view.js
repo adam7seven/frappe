@@ -22,7 +22,7 @@ frappe.views.ImageView = class ImageView extends frappe.views.ListView {
 
 	set_fields() {
 		this.fields = [
-			"name",
+			"id",
 			...this.get_fields_in_list_view().map((el) => el.fieldname),
 			this.meta.title_field,
 			this.meta.image_field,
@@ -68,7 +68,7 @@ frappe.views.ImageView = class ImageView extends frappe.views.ListView {
 	item_details_html(item) {
 		// TODO: Image view field in DocType
 		let info_fields = this.get_fields_in_list_view().map((el) => el.fieldname) || [];
-		const title_field = this.meta.title_field || "name";
+		const title_field = this.meta.title_field || "id";
 		info_fields = info_fields.filter((field) => field !== title_field);
 		let info_html = `<div><ul class="list-unstyled image-view-info">`;
 		let set = false;
@@ -84,13 +84,13 @@ frappe.views.ImageView = class ImageView extends frappe.views.ListView {
 	}
 
 	item_html(item) {
-		item._name = encodeURI(item.name);
-		const encoded_name = item._name;
-		const title = strip_html(item[this.meta.title_field || "name"]);
+		item._id = encodeURI(item.id);
+		const encoded_id = item._id;
+		const title = strip_html(item[this.meta.title_field || "id"]);
 		const escaped_title = frappe.utils.escape_html(title);
 		const _class = !item._image_url ? "no-image" : "";
 		const _html = item._image_url
-			? `<img data-name="${encoded_name}" src="${item._image_url}" alt="${title}">`
+			? `<img data-name="${encoded_id}" src="${item._image_url}" alt="${title}">`
 			: `<span class="placeholder-text">
 				${frappe.get_abbr(title)}
 			</span>`;
@@ -98,7 +98,7 @@ frappe.views.ImageView = class ImageView extends frappe.views.ListView {
 		let details = this.item_details_html(item);
 
 		const expand_button_html = item._image_url
-			? `<div class="zoom-view" data-name="${encoded_name}">
+			? `<div class="zoom-view" data-name="${encoded_id}">
 				${frappe.utils.icon("expand", "xs")}
 			</div>`
 			: "";
@@ -108,18 +108,18 @@ frappe.views.ImageView = class ImageView extends frappe.views.ListView {
 				<div class="image-view-header">
 					<div>
 						<input class="level-item list-row-checkbox hidden-xs"
-							type="checkbox" data-name="${escape(item.name)}">
+							type="checkbox" data-name="${escape(item.id)}">
 						${this.get_like_html(item)}
 					</div>
 				</span>
 				</div>
 				<div class="image-view-body ${_class}">
-					<a data-name="${encoded_name}"
-						title="${encoded_name}"
+					<a data-name="${encoded_id}"
+						title="${encoded_id}"
 						href="${this.get_form_link(item)}"
 					>
 						<div class="image-field"
-							data-name="${encoded_name}"
+							data-name="${encoded_id}"
 						>
 							${_html}
 						</div>
@@ -130,7 +130,7 @@ frappe.views.ImageView = class ImageView extends frappe.views.ListView {
 					<div class="image-title">
 						<span class="ellipsis" title="${escaped_title}">
 							<a class="ellipsis" href="${this.get_form_link(item)}"
-								title="${escaped_title}" data-doctype="${this.doctype}" data-name="${item.name}">
+								title="${escaped_title}" data-doctype="${this.doctype}" data-name="${item.id}">
 								${title}
 							</a>
 						</span>
@@ -147,7 +147,7 @@ frappe.views.ImageView = class ImageView extends frappe.views.ListView {
 				method: "frappe.core.api.file.get_attached_images",
 				args: {
 					doctype: this.doctype,
-					names: this.items.map((i) => i.name),
+					ids: this.items.map((i) => i.id),
 				},
 			})
 			.then((r) => {
@@ -184,9 +184,9 @@ frappe.views.ImageView = class ImageView extends frappe.views.ListView {
 		this.$result.on("click", ".zoom-view", function (e) {
 			e.preventDefault();
 			e.stopPropagation();
-			var name = $(this).data().name;
-			name = decodeURIComponent(name);
-			me.gallery.show(name);
+			var id = $(this).data().id;
+			id = decodeURIComponent(id);
+			me.gallery.show(id);
 			return false;
 		});
 	}
@@ -221,7 +221,7 @@ frappe.views.GalleryView = class GalleryView {
 
 		return new Promise((resolve) => {
 			const items = this.items.map(function (i) {
-				const query = 'img[data-name="' + i._name + '"]';
+				const query = 'img[data-name="' + i._id + '"]';
 				let el = me.wrapper.find(query).get(0);
 
 				let width, height;
@@ -231,7 +231,7 @@ frappe.views.GalleryView = class GalleryView {
 				}
 
 				if (!el) {
-					el = me.wrapper.find('.image-field[data-name="' + i._name + '"]').get(0);
+					el = me.wrapper.find('.image-field[data-name="' + i._id + '"]').get(0);
 					width = el.getBoundingClientRect().width;
 					height = el.getBoundingClientRect().height;
 				}
@@ -239,7 +239,7 @@ frappe.views.GalleryView = class GalleryView {
 				return {
 					src: i._image_url,
 					msrc: i._image_url,
-					name: i.name,
+					id: i.id,
 					w: width,
 					h: height,
 					el: el,
@@ -249,18 +249,18 @@ frappe.views.GalleryView = class GalleryView {
 			resolve();
 		});
 	}
-	show(docname) {
-		this.lib_ready.then(() => this.prepare_pswp_items()).then(() => this._show(docname));
+	show(docid) {
+		this.lib_ready.then(() => this.prepare_pswp_items()).then(() => this._show(docid));
 	}
-	_show(docname) {
+	_show(docid) {
 		const me = this;
 		const items = this.pswp_items;
-		const item_index = items.findIndex((item) => item.name === docname);
+		const item_index = items.findIndex((item) => item.id === docid);
 
 		var options = {
 			index: item_index,
 			getThumbBoundsFn: function (index) {
-				const query = 'img[data-name="' + items[index]._name + '"]';
+				const query = 'img[data-name="' + items[index]._id + '"]';
 				let thumbnail = me.wrapper.find(query).get(0);
 
 				if (!thumbnail) {
@@ -292,7 +292,7 @@ frappe.views.GalleryView = class GalleryView {
 		let last_hide_timeout = null;
 
 		this.pswp.listen("afterChange", function () {
-			const images = images_map[this.currItem.name];
+			const images = images_map[this.currItem.id];
 			if (!images || images.length === 1) {
 				$more_items.html("");
 				return;
@@ -312,7 +312,7 @@ frappe.views.GalleryView = class GalleryView {
 		// Replace current image on click
 		$more_items.on("click", ".pswp__more-item", (e) => {
 			const img_el = e.target;
-			const index = this.pswp.items.findIndex((i) => i.name === this.pswp.currItem.name);
+			const index = this.pswp.items.findIndex((i) => i.id === this.pswp.currItem.id);
 
 			this.pswp.goTo(index);
 			this.pswp.items.splice(index, 1, {

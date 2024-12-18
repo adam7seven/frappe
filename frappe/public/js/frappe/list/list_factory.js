@@ -27,9 +27,9 @@ frappe.views.ListFactory = class ListFactory extends frappe.views.Factory {
 
 		frappe.provide("frappe.views.list_view." + doctype);
 
-		frappe.views.list_view[me.page_name] = new view_class({
+		frappe.views.list_view[me.page_id] = new view_class({
 			doctype: doctype,
-			parent: me.make_page(true, me.page_name),
+			parent: me.make_page(true, me.page_id),
 		});
 
 		me.set_cur_list();
@@ -88,7 +88,7 @@ frappe.views.ListFactory = class ListFactory extends frappe.views.Factory {
 	}
 
 	set_cur_list() {
-		cur_list = frappe.views.list_view[this.page_name];
+		cur_list = frappe.views.list_view[this.page_id];
 		if (cur_list && cur_list.doctype !== this.route[1]) {
 			// changing...
 			window.cur_list = null;

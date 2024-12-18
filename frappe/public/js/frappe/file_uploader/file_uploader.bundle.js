@@ -8,7 +8,7 @@ class FileUploader {
 		method,
 		on_success,
 		doctype,
-		docname,
+		docid,
 		fieldname,
 		files,
 		folder,
@@ -43,7 +43,7 @@ class FileUploader {
 		let app = createApp(FileUploaderComponent, {
 			show_upload_button: !Boolean(this.dialog),
 			doctype,
-			docname,
+			docid,
 			fieldname,
 			method,
 			folder,

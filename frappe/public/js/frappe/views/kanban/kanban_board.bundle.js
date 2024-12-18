@@ -53,7 +53,7 @@ frappe.provide("frappe.views");
 				var state = context.state;
 				var _cards = cards
 					.map((card) => prepare_card(card, state))
-					.uniqBy((card) => card.name);
+					.uniqBy((card) => card.id);
 
 				context.commit("update_state", {
 					cards: _cards,
@@ -85,7 +85,7 @@ frappe.provide("frappe.views");
 					})
 					.then(save_customization)
 					.then(function () {
-						return update_kanban_board(board.name, col.title, action);
+						return update_kanban_board(board.id, col.title, action);
 					})
 					.then(
 						function (r) {
@@ -120,22 +120,22 @@ frappe.provide("frappe.views");
 				const card = prepare_card(doc, state);
 				card._disable_click = true;
 				const cards = [...state.cards, card];
-				// remember the name which we will override later
-				const old_name = doc.name;
+				// remember the id which we will override later
+				const old_id = doc.id;
 				context.commit("update_state", { cards });
 
 				if (field && !quick_entry) {
 					return insert_doc(doc).then(function (r) {
 						// update the card in place with the updated doc
 						const updated_doc = r.message;
-						const index = state.cards.findIndex((card) => card.name === old_name);
+						const index = state.cards.findIndex((card) => card.id === old_id);
 						const card = prepare_card(updated_doc, state);
 						const new_cards = state.cards.slice();
 						new_cards[index] = card;
 						context.commit("update_state", { cards: new_cards });
 						const args = {
 							new: 1,
-							name: card.name,
+							id: card.id,
 							colname: updated_doc[state.board.field_name],
 						};
 						store.dispatch("update_order_for_single_card", args);
@@ -147,7 +147,7 @@ frappe.provide("frappe.views");
 			update_card: function (context, card) {
 				var index = -1;
 				context.state.cards.forEach(function (c, i) {
-					if (c.name === card.name) {
+					if (c.id === card.id) {
 						index = i;
 					}
 				});
@@ -167,15 +167,15 @@ frappe.provide("frappe.views");
 				if (card.new) {
 					method_name = "add_card";
 					args = {
-						board_name: context.state.board.name,
-						docname: card.name,
+						board_id: context.state.board.id,
+						docid: card.id,
 						colname: card.colname,
 					};
 				} else {
 					method_name = "update_order_for_single_card";
 					args = {
-						board_name: context.state.board.name,
-						docname: card.name,
+						board_id: context.state.board.id,
+						docid: card.id,
 						from_colname: card.from_colname,
 						to_colname: card.to_colname,
 						old_index: card.old_index,
@@ -190,7 +190,7 @@ frappe.provide("frappe.views");
 						callback: (r) => {
 							let board = r.message;
 							let updated_cards = [
-								{ name: card.name, column: card.to_colname || card.colname },
+								{ id: card.id, column: card.to_colname || card.colname },
 							];
 							let cards = update_cards_column(updated_cards);
 							let columns = prepare_columns(board.columns);
@@ -222,8 +222,8 @@ frappe.provide("frappe.views");
 					$(this)
 						.find(".kanban-card-wrapper")
 						.each(function () {
-							var card_name = decodeURIComponent($(this).data().name);
-							order[col_name].push(card_name);
+							var card_id = decodeURIComponent($(this).data().id);
+							order[col_name].push(card_id);
 						});
 				});
 
@@ -231,7 +231,7 @@ frappe.provide("frappe.views");
 					.call({
 						method: method_prefix + "update_order",
 						args: {
-							board_name: context.state.board.name,
+							board_id: context.state.board.id,
 							order: order,
 						},
 						callback: (r) => {
@@ -258,7 +258,7 @@ frappe.provide("frappe.views");
 					.call({
 						method: method_prefix + "update_column_order",
 						args: {
-							board_name: context.state.board.name,
+							board_id: context.state.board.id,
 							order: order,
 						},
 					})
@@ -275,7 +275,7 @@ frappe.provide("frappe.views");
 					.call({
 						method: method_prefix + "set_indicator",
 						args: {
-							board_name: context.state.board.name,
+							board_id: context.state.board.id,
 							column_name: column.title,
 							indicator: color,
 						},
@@ -295,7 +295,7 @@ frappe.provide("frappe.views");
 		var self = {};
 		self.wrapper = opts.wrapper;
 		self.cur_list = opts.cur_list;
-		self.board_name = opts.board_name;
+		self.board_id = opts.board_id;
 		self.board_perms = self.cur_list.board_perms;
 
 		self.update = function (cards) {
@@ -484,14 +484,14 @@ frappe.provide("frappe.views");
 			}, "");
 			var $dropdown = $(
 				"<div class='dropdown pull-right'>" +
-					"<a class='text-muted dropdown-toggle' data-toggle='dropdown'>" +
-					"<span class='dropdown-text'>" +
-					__("Archived Columns") +
-					"</span><i class='caret'></i></a>" +
-					"<ul class='dropdown-menu'>" +
-					options +
-					"</ul>" +
-					"</div>"
+				"<a class='text-muted dropdown-toggle' data-toggle='dropdown'>" +
+				"<span class='dropdown-text'>" +
+				__("Archived Columns") +
+				"</span><i class='caret'></i></a>" +
+				"<ul class='dropdown-menu'>" +
+				options +
+				"</ul>" +
+				"</div>"
 			);
 
 			list_row_right.html($dropdown);
@@ -554,20 +554,20 @@ frappe.provide("frappe.views");
 			self.$kanban_cards.empty();
 			var cards = store.state.cards;
 			filtered_cards = get_cards_for_column(cards, column);
-			var filtered_cards_names = filtered_cards.map((card) => card.name);
+			var filtered_cards_ids = filtered_cards.map((card) => card.id);
 
 			var order = column.order;
 			if (order) {
 				order = JSON.parse(order);
 				// new cards
 				filtered_cards.forEach(function (card) {
-					if (order.indexOf(card.name) === -1) {
+					if (order.indexOf(card.id) === -1) {
 						frappe.views.KanbanBoardCard(card, self.$kanban_cards);
 					}
 				});
-				order.forEach(function (name) {
-					if (!filtered_cards_names.includes(name)) return;
-					frappe.views.KanbanBoardCard(get_card(name), self.$kanban_cards);
+				order.forEach(function (id) {
+					if (!filtered_cards_ids.includes(id)) return;
+					frappe.views.KanbanBoardCard(get_card(id), self.$kanban_cards);
 				});
 			} else {
 				filtered_cards.map(function (card) {
@@ -595,7 +595,7 @@ frappe.provide("frappe.views");
 					wrapper.find(".kanban-cards").height("auto");
 					// update order
 					const args = {
-						name: decodeURIComponent($(e.item).attr("data-name")),
+						id: decodeURIComponent($(e.item).attr("data-name")),
 						from_colname: $(e.from)
 							.parents(".kanban-column")
 							.attr("data-column-value"),
@@ -605,7 +605,7 @@ frappe.provide("frappe.views");
 					};
 					store.dispatch("update_order_for_single_card", args);
 				},
-				onAdd: function () {},
+				onAdd: function () { },
 			});
 		}
 
@@ -707,13 +707,13 @@ frappe.provide("frappe.views");
 
 		function make_dom() {
 			var opts = {
-				name: card.name,
+				id: card.id,
 				title: frappe.utils.html2text(card.title),
 				disable_click: card._disable_click ? "disable-click" : "",
 				creation: card.creation,
 				doc_content: get_doc_content(card),
 				image_url: cur_list.get_image_url(card),
-				form_link: frappe.utils.get_form_link(card.doctype, card.name),
+				form_link: frappe.utils.get_form_link(card.doctype, card.id),
 			};
 
 			self.$card = $(frappe.render_template("kanban_card", opts)).appendTo(wrapper);
@@ -807,7 +807,7 @@ frappe.provide("frappe.views");
 				obj: self,
 				method: "frappe.desk.form.assign_to.add",
 				doctype: card.doctype,
-				docname: card.name,
+				docid: card.id,
 				callback: function () {
 					const users = self.assign_to_dialog.get_values().assign_to;
 					card.assigned_list = [...new Set(card.assigned_list.concat(users))];
@@ -831,7 +831,7 @@ frappe.provide("frappe.views");
 
 		return {
 			doctype: state.doctype,
-			name: card.name,
+			id: card.id,
 			title: card[state.card_meta.title_field.fieldname],
 			creation: moment(card.creation).format("MMM DD, YYYY"),
 			_liked_by: card._liked_by,
@@ -907,16 +907,16 @@ frappe.provide("frappe.views");
 				doc: doc,
 			},
 			callback: function () {
-				frappe.model.clear_doc(doc.doctype, doc.name);
+				frappe.model.clear_doc(doc.doctype, doc.id);
 				frappe.show_alert({ message: __("Saved"), indicator: "green" }, 1);
 			},
 		});
 	}
 
-	function update_kanban_board(board_name, column_title, action) {
+	function update_kanban_board(board_id, column_title, action) {
 		var method;
 		var args = {
-			board_name: board_name,
+			board_id: board_id,
 			column_title: column_title,
 		};
 		if (action === "add") {
@@ -941,9 +941,9 @@ frappe.provide("frappe.views");
 		});
 	}
 
-	function get_card(name) {
+	function get_card(id) {
 		return store.state.cards.find(function (c) {
-			return c.name === name;
+			return c.id === id;
 		});
 	}
 
@@ -951,7 +951,7 @@ frappe.provide("frappe.views");
 		var cards = store.state.cards;
 		cards.forEach(function (c) {
 			updated_cards.forEach(function (uc) {
-				if (uc.name === c.name) {
+				if (uc.id === c.id) {
 					c.column = uc.column;
 				}
 			});

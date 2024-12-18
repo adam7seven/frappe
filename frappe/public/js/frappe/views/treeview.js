@@ -53,7 +53,7 @@ frappe.views.TreeView = class TreeView {
 		$.extend(this.opts, opts);
 		this.doctype = opts.doctype;
 		this.args = { doctype: me.doctype };
-		this.page_name = frappe.get_route_str();
+		this.page_id = frappe.get_route_str();
 		this.get_tree_nodes = me.opts.get_tree_nodes || "frappe.desk.treeview.get_children";
 
 		this.get_permissions();
@@ -85,10 +85,10 @@ frappe.views.TreeView = class TreeView {
 	make_page() {
 		var me = this;
 		if (!this.opts || !this.opts.do_not_make_page) {
-			this.parent = frappe.container.add_page(this.page_name);
+			this.parent = frappe.container.add_page(this.page_id);
 			frappe.ui.make_app_page({ parent: this.parent, single_column: true });
 			this.page = this.parent.page;
-			frappe.container.change_to(this.page_name);
+			frappe.container.change_to(this.page_id);
 			frappe.breadcrumbs.add(
 				me.opts.breadcrumb || locals.DocType[me.doctype].module,
 				me.doctype
@@ -274,7 +274,7 @@ frappe.views.TreeView = class TreeView {
 				btnClass: "hidden-xs",
 			},
 			{
-				label: __("Rename"),
+				label: __("Reid"),
 				condition: function (node) {
 					let allow_reid = true;
 					if (me.doctype && frappe.get_meta(me.doctype)) {
@@ -283,9 +283,9 @@ frappe.views.TreeView = class TreeView {
 					return !node.is_root && me.can_write && allow_reid;
 				},
 				click: function (node) {
-					frappe.model.rename_doc(me.doctype, node.label, function (new_name) {
-						node.$tree_link.find("a").text(new_name);
-						node.label = new_name;
+					frappe.model.reid_doc(me.doctype, node.label, function (new_id) {
+						node.$tree_link.find("a").text(new_id);
+						node.label = new_id;
 						me.tree.refresh();
 					});
 				},
@@ -417,13 +417,13 @@ frappe.views.TreeView = class TreeView {
 		var tree = $(".tree:visible").html();
 		var me = this;
 		frappe.ui.get_print_settings(false, function (print_settings) {
-			var title = __(me.docname || me.doctype);
+			var title = __(me.docid || me.doctype);
 			frappe.render_tree({ title: title, tree: tree, print_settings: print_settings });
 			frappe.call({
 				method: "frappe.core.doctype.access_log.access_log.make_access_log",
 				args: {
 					doctype: me.doctype,
-					report_name: me.page_name,
+					report_id: me.page_id,
 					page: tree,
 					method: "Print",
 				},

@@ -186,15 +186,15 @@ frappe.breadcrumbs = {
 
 	set_form_breadcrumb(breadcrumbs, view) {
 		const doctype = breadcrumbs.doctype;
-		let docname = frappe.get_route().slice(2).join("/");
-		let docname_title;
-		if (docname.startsWith("new-" + doctype.toLowerCase().replace(/ /g, "-"))) {
-			docname_title = __("New {0}", [__(doctype)]);
+		let docid = frappe.get_route().slice(2).join("/");
+		let docid_title;
+		if (docid.startsWith("new-" + doctype.toLowerCase().replace(/ /g, "-"))) {
+			docid_title = __("New {0}", [__(doctype)]);
 		} else {
-			docname_title = __(docname);
+			docid_title = __(docid);
 		}
-		let form_route = `/app/${frappe.router.slug(doctype)}/${encodeURIComponent(docname)}`;
-		this.append_breadcrumb_element(form_route, docname_title);
+		let form_route = `/app/${frappe.router.slug(doctype)}/${encodeURIComponent(docid)}`;
+		this.append_breadcrumb_element(form_route, docid_title);
 
 		if (view === "form") {
 			let last_crumb = this.$breadcrumbs.find("li").last();
@@ -209,9 +209,9 @@ frappe.breadcrumbs = {
 
 	set_dashboard_breadcrumb(breadcrumbs) {
 		const doctype = breadcrumbs.doctype;
-		const docname = frappe.get_route()[1];
-		let dashboard_route = `/app/${frappe.router.slug(doctype)}/${docname}`;
-		$(`<li><a href="${dashboard_route}">${__(docname)}</a></li>`).appendTo(this.$breadcrumbs);
+		const docid = frappe.get_route()[1];
+		let dashboard_route = `/app/${frappe.router.slug(doctype)}/${docid}`;
+		$(`<li><a href="${dashboard_route}">${__(docid)}</a></li>`).appendTo(this.$breadcrumbs);
 	},
 
 	setup_modules() {
@@ -222,9 +222,9 @@ frappe.breadcrumbs = {
 		}
 	},
 
-	rename(doctype, old_name, new_name) {
-		var old_route_str = ["Form", doctype, old_name].join("/");
-		var new_route_str = ["Form", doctype, new_name].join("/");
+	reid(doctype, old_id, new_id) {
+		var old_route_str = ["Form", doctype, old_id].join("/");
+		var new_route_str = ["Form", doctype, new_id].join("/");
 		this.all[new_route_str] = this.all[old_route_str];
 		delete frappe.breadcrumbs.all[old_route_str];
 		this.update();

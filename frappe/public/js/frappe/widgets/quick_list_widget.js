@@ -40,7 +40,7 @@ export default class QuickListWidget extends Widget {
 			frappe.set_route(
 				frappe.utils.generate_route({
 					type: "doctype",
-					name: this.document_type,
+					id: this.document_type,
 					doc_view: "New",
 				})
 			);
@@ -83,7 +83,7 @@ export default class QuickListWidget extends Widget {
 		this.filter_group = new frappe.ui.FilterGroup({
 			parent: this.dialog.get_field("filter_area").$wrapper,
 			doctype: doctype,
-			on_change: () => {},
+			on_change: () => { },
 		});
 
 		frappe.model.with_doctype(doctype, () => {
@@ -167,7 +167,7 @@ export default class QuickListWidget extends Widget {
 			if (e.ctrlKey || e.metaKey) {
 				frappe.open_in_new_tab = true;
 			}
-			frappe.set_route(`${frappe.utils.get_form_link(this.document_type, doc.name)}`);
+			frappe.set_route(`${frappe.utils.get_form_link(this.document_type, doc.id)}`);
 		});
 
 		return $quick_list_item;
@@ -179,15 +179,15 @@ export default class QuickListWidget extends Widget {
 		this.render_loading_state();
 
 		frappe.model.with_doctype(this.document_type, () => {
-			let fields = ["name"];
+			let fields = ["id"];
 
-			// get name of title field
+			// get id of title field
 			if (!this.title_field_name) {
 				let meta = frappe.get_meta(this.document_type);
-				this.title_field_name = (meta && meta.title_field) || "name";
+				this.title_field_name = (meta && meta.title_field) || "id";
 			}
 
-			if (this.title_field_name && this.title_field_name != "name") {
+			if (this.title_field_name && this.title_field_name != "id") {
 				fields.push(this.title_field_name);
 			}
 
@@ -247,7 +247,7 @@ export default class QuickListWidget extends Widget {
 		this.footer.empty();
 
 		let filters = frappe.utils.get_filter_from_json(this.quick_list_filter);
-		let route = frappe.utils.generate_route({ type: "doctype", name: this.document_type });
+		let route = frappe.utils.generate_route({ type: "doctype", id: this.document_type });
 		this.see_all_button = $(`
 			<div class="see-all btn btn-xs">${__("View List")}</div>
 		`).appendTo(this.footer);

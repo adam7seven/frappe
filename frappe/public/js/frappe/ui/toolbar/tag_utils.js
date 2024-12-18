@@ -75,10 +75,10 @@ frappe.tags.utils = {
 					description = make_description(d.content);
 				}
 				result = {
-					label: d.name,
-					value: d.name,
+					label: d.id,
+					value: d.id,
 					description: description,
-					route: ["Form", d.doctype, d.name],
+					route: ["Form", d.doctype, d.id],
 				};
 				set = get_existing_set(d.doctype);
 				if (set) {

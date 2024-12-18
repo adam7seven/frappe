@@ -64,7 +64,7 @@ frappe.call = function (opts) {
 	} else if (opts.doc) {
 		$.extend(args, {
 			cmd: "run_doc_method",
-			docs: frappe.get_doc(opts.doc.doctype, opts.doc.name),
+			docs: frappe.get_doc(opts.doc.doctype, opts.doc.id),
 			method: opts.method,
 			args: opts.args,
 		});
@@ -585,7 +585,7 @@ frappe.request.report_error = function (xhr, request_opts) {
 			message: error_report_message,
 			doc: {
 				doctype: "User",
-				name: frappe.session.user,
+				id: frappe.session.user,
 			},
 		});
 		communication_composer.dialog.$wrapper.css(

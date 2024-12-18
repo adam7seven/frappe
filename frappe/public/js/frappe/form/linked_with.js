@@ -27,7 +27,7 @@ frappe.ui.form.LinkedWith = class LinkedWith {
 			frappe
 				.xcall("frappe.desk.form.linked_with.get", {
 					doctype: this.frm.doctype,
-					docname: this.frm.docname,
+					docid: this.frm.docid,
 				})
 				.then((r) => {
 					this.frm.__linked_docs = r;
@@ -72,7 +72,7 @@ frappe.ui.form.LinkedWith = class LinkedWith {
 		return `<div class="list-row-container">
 			<div class="level list-row small">
 				<div class="level-left bold">
-					<a href="/app/${frappe.router.slug(doctype)}/${doc.name}">${doc.name}</a>
+					<a href="/app/${frappe.router.slug(doctype)}/${doc.id}">${doc.id}</a>
 				</div>
 			</div>
 		</div>`;

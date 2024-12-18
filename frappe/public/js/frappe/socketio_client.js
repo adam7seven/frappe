@@ -90,14 +90,14 @@ class RealTimeClient {
 			if (!frm.doc || frm.is_new()) {
 				return;
 			}
-			me.doc_subscribe(frm.doctype, frm.docname);
+			me.doc_subscribe(frm.doctype, frm.docid);
 		});
 
 		$(document).on("form-refresh", function (e, frm) {
 			if (!frm.doc || frm.is_new()) {
 				return;
 			}
-			me.doc_open(frm.doctype, frm.docname);
+			me.doc_open(frm.doctype, frm.docid);
 		});
 
 		$(document).on("form-unload", function (e, frm) {
@@ -105,7 +105,7 @@ class RealTimeClient {
 				return;
 			}
 
-			me.doc_close(frm.doctype, frm.docname);
+			me.doc_close(frm.doctype, frm.docid);
 		});
 	}
 
@@ -140,12 +140,12 @@ class RealTimeClient {
 	doctype_unsubscribe(doctype) {
 		this.emit("doctype_unsubscribe", doctype);
 	}
-	doc_subscribe(doctype, docname) {
+	doc_subscribe(doctype, docid) {
 		if (frappe.flags.doc_subscribe) {
 			console.log("throttled");
 			return;
 		}
-		if (this.open_docs.has(`${doctype}:${docname}`)) {
+		if (this.open_docs.has(`${doctype}:${docid}`)) {
 			return;
 		}
 
@@ -156,18 +156,18 @@ class RealTimeClient {
 			frappe.flags.doc_subscribe = false;
 		}, 1000);
 
-		this.emit("doc_subscribe", doctype, docname);
-		this.open_docs.add(`${doctype}:${docname}`);
+		this.emit("doc_subscribe", doctype, docid);
+		this.open_docs.add(`${doctype}:${docid}`);
 	}
-	doc_unsubscribe(doctype, docname) {
-		this.emit("doc_unsubscribe", doctype, docname);
-		return this.open_docs.delete(`${doctype}:${docname}`);
+	doc_unsubscribe(doctype, docid) {
+		this.emit("doc_unsubscribe", doctype, docid);
+		return this.open_docs.delete(`${doctype}:${docid}`);
 	}
-	doc_open(doctype, docname) {
-		this.emit("doc_open", doctype, docname);
+	doc_open(doctype, docid) {
+		this.emit("doc_open", doctype, docid);
 	}
-	doc_close(doctype, docname) {
-		this.emit("doc_close", doctype, docname);
+	doc_close(doctype, docid) {
+		this.emit("doc_close", doctype, docid);
 	}
 	setup_listeners() {
 		this.socket.on("task_status_change", function (data) {

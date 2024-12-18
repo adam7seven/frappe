@@ -37,7 +37,7 @@ frappe.views.BaseList = class BaseList {
 	}
 
 	setup_defaults() {
-		this.page_name = frappe.get_route_str();
+		this.page_id = frappe.get_route_str();
 		this.page_title = this.page_title || frappe.router.doctype_layout || __(this.doctype);
 		this.meta = frappe.get_meta(this.doctype);
 		this.settings = frappe.listview_settings[this.doctype] || {};
@@ -157,9 +157,9 @@ frappe.views.BaseList = class BaseList {
 		return frappe.model.with_doctype(this.doctype);
 	}
 
-	show_skeleton() {}
+	show_skeleton() { }
 
-	hide_skeleton() {}
+	hide_skeleton() { }
 
 	check_permissions() {
 		return true;
@@ -376,15 +376,15 @@ frappe.views.BaseList = class BaseList {
 				<div class="level-left">
 					<div class="btn-group">
 						${paging_values
-							.map(
-								(value) => `
+				.map(
+					(value) => `
 							<button type="button" class="btn btn-default btn-sm btn-paging"
 								data-value="${value}">
 								${value}
 							</button>
 						`
-							)
-							.join("")}
+				)
+				.join("")}
 					</div>
 				</div>
 				<div class="level-right">
@@ -427,9 +427,9 @@ frappe.views.BaseList = class BaseList {
 	}
 
 	get_group_by() {
-		let name_field = this.fields && this.fields.find((f) => f[0] == "name");
-		if (name_field) {
-			return frappe.model.get_full_column_name(name_field[0], name_field[1]);
+		let id_field = this.fields && this.fields.find((f) => f[0] == "id");
+		if (id_field) {
+			return frappe.model.get_full_column_name(id_field[0], id_field[1]);
 		}
 		return null;
 	}
@@ -541,7 +541,7 @@ frappe.views.BaseList = class BaseList {
 			this.data = this.data.concat(data);
 		}
 
-		this.data = this.data.uniqBy((d) => d.name);
+		this.data = this.data.uniqBy((d) => d.id);
 	}
 
 	reset_defaults() {
@@ -553,9 +553,9 @@ frappe.views.BaseList = class BaseList {
 		// show a freeze message while data is loading
 	}
 
-	before_render() {}
+	before_render() { }
 
-	after_render() {}
+	after_render() { }
 
 	render() {
 		// for child classes
@@ -575,7 +575,7 @@ frappe.views.BaseList = class BaseList {
 	}
 
 	call_for_selected_items(method, args = {}) {
-		args.names = this.get_checked_items(true);
+		args.ids = this.get_checked_items(true);
 
 		frappe.call({
 			method: method,
@@ -769,12 +769,12 @@ class FilterArea {
 		);
 		let fields = [];
 
-		if (!this.list_view.settings.hide_name_filter) {
+		if (!this.list_view.settings.hide_id_filter) {
 			fields.push({
 				fieldtype: "Data",
 				label: "ID",
 				condition: "like",
-				fieldname: "name",
+				fieldname: "id",
 				onchange: () => this.debounced_refresh_list_view(),
 			});
 		}

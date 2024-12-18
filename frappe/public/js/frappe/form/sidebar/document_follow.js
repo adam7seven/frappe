@@ -56,7 +56,7 @@ frappe.ui.form.DocumentFollow = class DocumentFollow {
 				method: "frappe.desk.form.document_follow.follow_document",
 				args: {
 					doctype: this.frm.doctype,
-					doc_name: this.frm.doc.name,
+					doc_id: this.frm.doc.id,
 					user: frappe.session.user,
 					force: true,
 				},
@@ -74,7 +74,7 @@ frappe.ui.form.DocumentFollow = class DocumentFollow {
 				method: "frappe.desk.form.document_follow.unfollow_document",
 				args: {
 					doctype: this.frm.doctype,
-					doc_name: this.frm.doc.name,
+					doc_id: this.frm.doc.id,
 					user: frappe.session.user,
 				},
 				callback: (r) => {
@@ -107,7 +107,7 @@ frappe.ui.form.DocumentFollow = class DocumentFollow {
 					method: "frappe.desk.form.document_follow.get_follow_users",
 					args: {
 						doctype: this.frm.doctype,
-						doc_name: this.frm.doc.name,
+						doc_id: this.frm.doc.id,
 					},
 				})
 				.then((r) => {

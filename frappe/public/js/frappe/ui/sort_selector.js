@@ -120,7 +120,7 @@ frappe.ui.SortSelector = class SortSelector {
 			// default options
 			var _options = [
 				{ fieldname: "modified" },
-				{ fieldname: "name" },
+				{ fieldname: "id" },
 				{ fieldname: "creation" },
 				{ fieldname: "idx" },
 			];

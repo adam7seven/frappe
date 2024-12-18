@@ -51,7 +51,7 @@ frappe.ui.form.Control = class BaseControl {
 		}
 
 		if (
-			(!this.doctype && !this.docname) ||
+			(!this.doctype && !this.docid) ||
 			this.df.parenttype === "Web Form" ||
 			this.df.is_web_form
 		) {
@@ -93,7 +93,7 @@ frappe.ui.form.Control = class BaseControl {
 
 		var status = frappe.perm.get_field_display_status(
 			this.df,
-			frappe.model.get_doc(this.doctype, this.docname),
+			frappe.model.get_doc(this.doctype, this.docid),
 			this.perm || (this.frm && this.frm.perm),
 			explain
 		);
@@ -110,7 +110,7 @@ frappe.ui.form.Control = class BaseControl {
 			}
 		}
 
-		let value = frappe.model.get_value(this.doctype, this.docname, this.df.fieldname);
+		let value = frappe.model.get_value(this.doctype, this.docid, this.df.fieldname);
 
 		if (["Date", "Datetime"].includes(this.df.fieldtype) && value) {
 			value = frappe.datetime.str_to_user(value);
@@ -183,9 +183,9 @@ frappe.ui.form.Control = class BaseControl {
 	get_doc() {
 		return (
 			(this.doctype &&
-				this.docname &&
+				this.docid &&
 				locals[this.doctype] &&
-				locals[this.doctype][this.docname]) ||
+				locals[this.doctype][this.docid]) ||
 			{}
 		);
 	}
@@ -222,7 +222,7 @@ frappe.ui.form.Control = class BaseControl {
 			old_value,
 			new_value: value,
 			doctype: this.doctype,
-			docname: this.docname,
+			docid: this.docid,
 			is_child: Boolean(this.doc?.parenttype),
 		});
 		this.inside_change_event = true;
@@ -270,7 +270,7 @@ frappe.ui.form.Control = class BaseControl {
 			this.last_value = value;
 			return frappe.model.set_value(
 				this.doctype,
-				this.docname,
+				this.docid,
 				this.df.fieldname,
 				value,
 				this.df.fieldtype

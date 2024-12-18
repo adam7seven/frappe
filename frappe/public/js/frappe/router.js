@@ -127,9 +127,9 @@ frappe.router = {
 		}
 		if (frappe.boot.doctype_layouts) {
 			for (let doctype_layout of frappe.boot.doctype_layouts) {
-				this.routes[this.slug(doctype_layout.name)] = {
+				this.routes[this.slug(doctype_layout.id)] = {
 					doctype: doctype_layout.document_type,
-					doctype_layout: doctype_layout.name,
+					doctype_layout: doctype_layout.id,
 				};
 			}
 		}
@@ -182,7 +182,7 @@ frappe.router = {
 			route = ["Workspaces", frappe.workspaces[route[0]].title];
 		} else if (route[0] == "private") {
 			// private workspace
-			let private_workspace = route[1] && `${route[1]}-${frappe.user.name.toLowerCase()}`;
+			let private_workspace = route[1] && `${route[1]}-${frappe.user.id.toLowerCase()}`;
 			if (!frappe.workspaces[private_workspace] && localStorage.new_workspace) {
 				let new_workspace = JSON.parse(localStorage.new_workspace);
 				if (frappe.router.slug(new_workspace.title) === route[1]) {
@@ -223,11 +223,11 @@ frappe.router = {
 						: null
 				);
 			} else if (route[1] && route[1] !== "view") {
-				let docname = route[1];
+				let docid = route[1];
 				if (route.length > 2) {
-					docname = route.slice(1).join("/");
+					docid = route.slice(1).join("/");
 				}
-				route = ["Form", doctype_route.doctype, docname];
+				route = ["Form", doctype_route.doctype, docid];
 			} else if (frappe.model.is_single(doctype_route.doctype)) {
 				route = ["Form", doctype_route.doctype, doctype_route.doctype];
 			} else if (meta.default_view) {
@@ -326,9 +326,9 @@ frappe.router = {
 			frappe.view_factory[factory].show();
 		} else {
 			// show page
-			const route_name = frappe.utils.xss_sanitise(route[0]);
+			const route_id = frappe.utils.xss_sanitise(route[0]);
 			if (frappe.views.pageview) {
-				frappe.views.pageview.show(route_name);
+				frappe.views.pageview.show(route_id);
 			}
 		}
 	},
@@ -472,8 +472,8 @@ frappe.router = {
 		// 2. Private home
 		// 3. Public home
 		// 4. First workspace in list
-		let private_home = `home-${frappe.user.name.toLowerCase()}`;
-		let default_workspace = frappe.router.slug(frappe.boot.user.default_workspace?.name || "");
+		let private_home = `home-${frappe.user.id.toLowerCase()}`;
+		let default_workspace = frappe.router.slug(frappe.boot.user.default_workspace?.id || "");
 
 		let workspace =
 			frappe.workspaces[default_workspace] ||
@@ -567,8 +567,8 @@ frappe.router = {
 		}
 	},
 
-	slug(name) {
-		return name.toLowerCase().replace(/ /g, "-");
+	slug(id) {
+		return id.toLowerCase().replace(/ /g, "-");
 	},
 };
 

@@ -50,10 +50,10 @@ export default class GridRow {
 		if (this.doc && this.parent_df.options) {
 			frappe.meta.make_docfield_copy_for(
 				this.parent_df.options,
-				this.doc.name,
+				this.doc.id,
 				this.docfields
 			);
-			const docfields = frappe.meta.get_docfields(this.parent_df.options, this.doc.name);
+			const docfields = frappe.meta.get_docfields(this.parent_df.options, this.doc.id);
 			if (update) {
 				// to maintain references
 				this.docfields.forEach((df) => {
@@ -77,7 +77,7 @@ export default class GridRow {
 	set_row_index() {
 		if (this.doc) {
 			this.wrapper
-				.attr("data-name", this.doc.name)
+				.attr("data-name", this.doc.id)
 				.attr("data-idx", this.doc.idx)
 				.find(".row-index span, .grid-form-row-index")
 				.html(this.doc.idx);
@@ -105,16 +105,16 @@ export default class GridRow {
 							return this.frm.script_manager.trigger(
 								"before_" + this.grid.df.fieldname + "_remove",
 								this.doc.doctype,
-								this.doc.name
+								this.doc.id
 							);
 						},
 						() => {
-							frappe.model.clear_doc(this.doc.doctype, this.doc.name);
+							frappe.model.clear_doc(this.doc.doctype, this.doc.id);
 
 							this.frm.script_manager.trigger(
 								this.grid.df.fieldname + "_remove",
 								this.doc.doctype,
-								this.doc.name
+								this.doc.id
 							);
 							this.frm.dirty();
 							this.grid.refresh();
@@ -132,7 +132,7 @@ export default class GridRow {
 					data = this.grid.df.data;
 				}
 
-				const index = data.findIndex((d) => d.name === me.doc.name);
+				const index = data.findIndex((d) => d.id === me.doc.id);
 
 				if (index > -1) {
 					// mutate array directly,
@@ -197,7 +197,7 @@ export default class GridRow {
 		}
 
 		if (this.frm && this.doc) {
-			this.doc = locals[this.doc.doctype][this.doc.name];
+			this.doc = locals[this.doc.doctype][this.doc.id];
 		}
 
 		if (this.grid.template && !this.grid.meta.editable_grid) {
@@ -550,9 +550,8 @@ export default class GridRow {
 
 				fields += `
 					<div class='control-input flex align-center form-control fields_order sortable-handle sortable'
-						style='display: block; margin-bottom: 5px; padding: 0 8px; cursor: pointer; height: 32px;' data-fieldname='${
-							docfield.fieldname
-						}'
+						style='display: block; margin-bottom: 5px; padding: 0 8px; cursor: pointer; height: 32px;' data-fieldname='${docfield.fieldname
+					}'
 						data-label='${docfield.label}' data-type='${docfield.fieldtype}'>
 
 						<div class='row'>
@@ -563,8 +562,8 @@ export default class GridRow {
 								${__(docfield.label, null, docfield.parent)}
 							</div>
 							<div class='col-3 col-md-2' style='padding-left:0px; padding-top: 2px; margin-top:-2px;' title='${__(
-								"Columns"
-							)}'>
+						"Columns"
+					)}'>
 								<input class='form-control column-width my-1 input-xs text-right'
 								style='height: 24px; max-width: 80px; background: var(--bg-color);'
 									value='${docfield.columns || cint(d.columns)}'
@@ -785,7 +784,7 @@ export default class GridRow {
 			out = this.frm.script_manager.trigger(
 				expression.substr(3),
 				this.doctype,
-				this.docname
+				this.docid
 			);
 		} else {
 			var value = doc[expression];
@@ -1122,7 +1121,7 @@ export default class GridRow {
 			with_link_btn: true,
 			doc: this.doc,
 			doctype: this.doc.doctype,
-			docname: this.doc.name,
+			docid: this.doc.id,
 			frm: this.grid.frm,
 			grid: this.grid,
 			grid_row: this,
@@ -1292,7 +1291,7 @@ export default class GridRow {
 
 		if (this.frm) {
 			// reload doc
-			this.doc = locals[this.doc.doctype][this.doc.name];
+			this.doc = locals[this.doc.doctype][this.doc.id];
 		}
 
 		// hide other
@@ -1362,7 +1361,7 @@ export default class GridRow {
 
 		if (this.frm) {
 			this.frm.script_manager.trigger(this.doc.parentfield + "_on_form_rendered");
-			this.frm.script_manager.trigger("form_render", this.doc.doctype, this.doc.name);
+			this.frm.script_manager.trigger("form_render", this.doc.doctype, this.doc.id);
 		}
 	}
 	hide_form() {
@@ -1446,7 +1445,7 @@ export default class GridRow {
 		if (field) {
 			// the below if statement is added to factor in the exception when this.doc is undefined -
 			// - after row removals via customize_form.js on links, actions and states child-tables
-			if (this.doc) field.docname = this.doc.name;
+			if (this.doc) field.docid = this.doc.id;
 			field.refresh();
 		}
 

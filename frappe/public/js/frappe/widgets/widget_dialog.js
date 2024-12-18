@@ -20,8 +20,8 @@ class WidgetDialog {
 			primary_action: (data) => {
 				data = this.process_data(data);
 
-				if (!this.editing && !data.name) {
-					data.name = `${this.type}-${this.label}-${frappe.utils.get_random(20)}`;
+				if (!this.editing && !data.id) {
+					data.id = `${this.type}-${this.label}-${frappe.utils.get_random(20)}`;
 				}
 
 				this.dialog.hide();
@@ -80,7 +80,7 @@ class WidgetDialog {
 		this.filter_group = new frappe.ui.FilterGroup({
 			parent: this.dialog.get_field("filter_area").$wrapper,
 			doctype: doctype,
-			on_change: () => {},
+			on_change: () => { },
 		});
 
 		frappe.model.with_doctype(doctype, () => {
@@ -100,7 +100,7 @@ class ChartDialog extends WidgetDialog {
 		return [
 			{
 				fieldtype: "Link",
-				fieldname: "chart_name",
+				fieldname: "chart_id",
 				label: __("Chart Name"),
 				options: "Dashboard Chart",
 				reqd: 1,
@@ -114,7 +114,7 @@ class ChartDialog extends WidgetDialog {
 	}
 
 	process_data(data) {
-		data.label = data.label ? data.label : data.chart_name;
+		data.label = data.label ? data.label : data.chart_id;
 		return data;
 	}
 }
@@ -199,7 +199,7 @@ class OnboardingDialog extends WidgetDialog {
 		return [
 			{
 				fieldtype: "Link",
-				fieldname: "onboarding_name",
+				fieldname: "onboarding_id",
 				label: __("Onboarding Name"),
 				options: "Module Onboarding",
 				reqd: 1,
@@ -338,7 +338,7 @@ class CardDialog extends WidgetDialog {
 			});
 		}
 
-		data.label = data.label ? data.label : data.chart_name;
+		data.label = data.label ? data.label : data.chart_id;
 		return data;
 	}
 }
@@ -416,9 +416,9 @@ class ShortcutDialog extends WidgetDialog {
 							const response = await frappe.db.get_value(
 								"Kanban Board",
 								{ reference_doctype: doctype },
-								"name"
+								"id"
 							);
-							if (response?.message?.name) views.push("Kanban");
+							if (response?.message?.id) views.push("Kanban");
 
 							this.dialog.set_df_property("doc_view", "options", views.join("\n"));
 						});
@@ -592,7 +592,7 @@ class NumberCardDialog extends WidgetDialog {
 			return [
 				{
 					fieldtype: "Link",
-					fieldname: "number_card_name",
+					fieldname: "number_card_id",
 					label: __("Number Card"),
 					options: "Number Card",
 					reqd: 1,
@@ -741,12 +741,12 @@ class NumberCardDialog extends WidgetDialog {
 
 	process_data(data) {
 		if (this.for_workspace) {
-			data.label = data.label ? data.label : data.number_card_name;
+			data.label = data.label ? data.label : data.number_card_id;
 			return data;
 		}
 
 		if (data.new_or_existing == "Existing Card") {
-			data.name = data.card;
+			data.id = data.card;
 		}
 		data.stats_filter = this.filter_group && JSON.stringify(this.filter_group.get_filters());
 		data.document_type = this.document_type;
@@ -763,7 +763,7 @@ class CustomBlockDialog extends WidgetDialog {
 		return [
 			{
 				fieldtype: "Link",
-				fieldname: "custom_block_name",
+				fieldname: "custom_block_id",
 				label: "Custom Block Name",
 				options: "Custom HTML Block",
 				reqd: 1,

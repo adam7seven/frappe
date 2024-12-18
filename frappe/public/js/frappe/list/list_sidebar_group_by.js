@@ -177,9 +177,9 @@ frappe.views.ListGroupBy = class ListGroupBy {
 		return frappe.call("frappe.desk.listview.get_group_by_count", args).then((r) => {
 			let field_counts = r.message || [];
 			field_counts = field_counts.filter((f) => f.count !== 0);
-			let current_user = field_counts.find((f) => f.name === frappe.session.user);
+			let current_user = field_counts.find((f) => f.id === frappe.session.user);
 			field_counts = field_counts.filter(
-				(f) => !["Guest", "Administrator", frappe.session.user].includes(f.name)
+				(f) => !["Guest", "Administrator", frappe.session.user].includes(f.id)
 			);
 			// Set frappe.session.user on top of the list
 			if (current_user) field_counts.unshift(current_user);
@@ -201,7 +201,7 @@ frappe.views.ListGroupBy = class ListGroupBy {
 		let dropdown_items_html = "";
 
 		fields.map((field) => {
-			if (field.name === applied_filter) {
+			if (field.id === applied_filter) {
 				applied_filter_html = this.get_dropdown_html(field, fieldtype, true);
 			} else {
 				dropdown_items_html += this.get_dropdown_html(field, fieldtype);
@@ -215,23 +215,23 @@ frappe.views.ListGroupBy = class ListGroupBy {
 
 	get_dropdown_html(field, fieldtype, applied = false) {
 		let label;
-		if (field.name == null) {
+		if (field.id == null) {
 			label = __("Not Set");
-		} else if (field.name === frappe.session.user) {
+		} else if (field.id === frappe.session.user) {
 			label = __("Me");
 		} else if (fieldtype && fieldtype == "Check") {
-			label = field.name == "0" ? __("No") : __("Yes");
+			label = field.id == "0" ? __("No") : __("Yes");
 		} else {
-			label = __(field.name);
+			label = __(field.id);
 		}
-		let value = field.name == null ? "" : encodeURIComponent(field.name);
+		let value = field.id == null ? "" : encodeURIComponent(field.id);
 		let applied_html = applied
 			? `<span class="applied"> ${frappe.utils.icon("tick", "xs")} </span>`
 			: "";
 		return `<li class="group-by-item ${applied ? "selected" : ""}" data-value="${value}">
 			<a class="dropdown-item" href="#" onclick="return false;">
 				${applied_html}
-				<span class="group-by-value ellipsis" data-name="${field.name}">${label}</span>
+				<span class="group-by-value ellipsis" data-name="${field.id}">${label}</span>
 				<span class="group-by-count">${field.count}</span>
 			</a>
 		</li>`;

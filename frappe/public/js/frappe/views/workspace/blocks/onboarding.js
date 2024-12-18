@@ -37,7 +37,7 @@ export default class Onboarding extends Block {
 	new(block, widget_type = block) {
 		let me = this;
 		const dialog_class = get_dialog_constructor(widget_type);
-		let block_name = block + "_name";
+		let block_id = block + "_id";
 		this.dialog = new dialog_class({
 			label: this.label,
 			type: widget_type,
@@ -56,8 +56,8 @@ export default class Onboarding extends Block {
 				});
 				this.block_widget.customize(this.options);
 				this.wrapper.setAttribute(
-					block_name,
-					this.block_widget.label || this.block_widget.onboarding_name
+					block_id,
+					this.block_widget.label || this.block_widget.onboarding_id
 				);
 				$(this.wrapper).find(".widget").addClass(`${widget_type} edit-mode`);
 				this.new_block_widget = this.block_widget.get_config();
@@ -65,7 +65,7 @@ export default class Onboarding extends Block {
 			},
 		});
 
-		if (!this.readOnly && this.data && !this.data[block_name]) {
+		if (!this.readOnly && this.data && !this.data[block_id]) {
 			this.dialog.make();
 
 			this.dialog.dialog.get_close_btn().click(() => {
@@ -74,9 +74,9 @@ export default class Onboarding extends Block {
 		}
 	}
 
-	make(block, block_name) {
+	make(block, block_id) {
 		let block_data = this.config.page_data["onboardings"].items.find((obj) => {
-			return obj.label == __(block_name);
+			return obj.label == __(block_id);
 		});
 		if (!block_data) return false;
 		this.wrapper.innerHTML = "";
@@ -98,7 +98,7 @@ export default class Onboarding extends Block {
 			docs_url: block_data.docs_url,
 			user_can_dismiss: block_data.user_can_dismiss,
 		});
-		this.wrapper.setAttribute(block + "_name", block_name);
+		this.wrapper.setAttribute(block + "_id", block_id);
 		if (!this.readOnly) {
 			this.block_widget.customize(this.options);
 		}
@@ -111,8 +111,8 @@ export default class Onboarding extends Block {
 		this.wrapper = document.createElement("div");
 		this.new("onboarding");
 
-		if (this.data && this.data.onboarding_name) {
-			let has_data = this.make("onboarding", this.data.onboarding_name);
+		if (this.data && this.data.onboarding_id) {
+			let has_data = this.make("onboarding", this.data.onboarding_id);
 			if (!has_data) return;
 		}
 
@@ -126,7 +126,7 @@ export default class Onboarding extends Block {
 	}
 
 	validate(savedData) {
-		if (!savedData.onboarding_name) {
+		if (!savedData.onboarding_id) {
 			return false;
 		}
 
@@ -135,7 +135,7 @@ export default class Onboarding extends Block {
 
 	save() {
 		return {
-			onboarding_name: this.wrapper.getAttribute("onboarding_name"),
+			onboarding_id: this.wrapper.getAttribute("onboarding_id"),
 			col: this.get_col(),
 			new: this.new_block_widget,
 		};

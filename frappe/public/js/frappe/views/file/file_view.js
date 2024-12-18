@@ -125,7 +125,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 							frappe.show_alert(__("Unzipping files..."));
 							frappe
 								.call("frappe.core.api.file.unzip_file", {
-									name: file.name,
+									id: file.id,
 								})
 								.then((r) => {
 									if (r.message) {
@@ -152,10 +152,10 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 			.hide();
 
 		this.page.add_actions_menu_item(__("Export as zip"), () => {
-			let docnames = this.get_checked_items(true);
-			if (docnames.length) {
+			let docids = this.get_checked_items(true);
+			if (docids.length) {
 				open_url_post("/api/method/frappe.core.api.file.zip_files", {
-					files: JSON.stringify(docnames),
+					files: JSON.stringify(docids),
 				});
 			}
 		});
@@ -165,7 +165,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 		this.fields = this.meta.fields
 			.filter((df) => frappe.model.is_value_type(df.fieldtype) && !df.hidden)
 			.map((df) => df.fieldname)
-			.concat(["name", "modified", "creation"]);
+			.concat(["id", "modified", "creation"]);
 	}
 
 	prepare_data(data) {
@@ -235,7 +235,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 		}
 	}
 
-	after_render() {}
+	after_render() { }
 
 	render_list() {
 		if (frappe.views.FileView.grid_view) {
@@ -253,16 +253,16 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 					d._type == "image"
 						? `<div class="file-image"><img src="${d.file_url}" alt="${d.file_name}"></div>`
 						: frappe.utils.icon(icon_class, {
-								width: "40px",
-								height: "45px",
-						  });
-				const name = escape(d.name);
+							width: "40px",
+							height: "45px",
+						});
+				const id = escape(d.id);
 				const draggable = d.type == "Folder" ? false : true;
 				return `
 				<a href="${this.get_route_url(d)}"
-					draggable="${draggable}" class="file-wrapper ellipsis" data-name="${name}">
+					draggable="${draggable}" class="file-wrapper ellipsis" data-name="${id}">
 					<div class="file-header">
-						<input class="level-item list-row-checkbox hidden-xs" type="checkbox" data-name="${name}">
+						<input class="level-item list-row-checkbox hidden-xs" type="checkbox" data-name="${id}">
 					</div>
 					<div class="file-body">
 						${file_body_html}
@@ -310,8 +310,8 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 
 		let header_selector_html = !frappe.views.FileView.grid_view
 			? `<input class="level-item list-check-all hidden-xs" type="checkbox" title="${__(
-					"Select All"
-			  )}">`
+				"Select All"
+			)}">`
 			: "";
 
 		let header_columns_html = !frappe.views.FileView.grid_view
@@ -338,7 +338,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 	}
 
 	get_route_url(file) {
-		return file.is_folder ? "/app/List/File/" + file.name : this.get_form_link(file);
+		return file.is_folder ? "/app/List/File/" + file.id : this.get_form_link(file);
 	}
 
 	get_creation_date(file) {
@@ -361,7 +361,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 			<div class="list-row-col ellipsis list-subject level">
 				<span class="level-item file-select">
 					<input class="list-row-checkbox"
-						type="checkbox" data-name="${file.name}">
+						type="checkbox" data-name="${file.id}">
 				</span>
 				<span class="level-item  ellipsis" title="${frappe.utils.escape_html(file.file_name)}">
 					<a class="ellipsis" href="${route_url}" title="${frappe.utils.escape_html(file.file_name)}">
@@ -400,7 +400,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 			e.originalEvent.dataTransfer.setData("Text", $(e.currentTarget).attr("data-name"));
 			e.target.style.opacity = "0.4";
 			frappe.file_manager.cut(
-				[{ name: $(e.currentTarget).attr("data-name") }],
+				[{ id: $(e.currentTarget).attr("data-name") }],
 				this.current_folder
 			);
 		});

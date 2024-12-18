@@ -25,7 +25,7 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
 		});
 	}
 
-	setup_view() {}
+	setup_view() { }
 
 	prepare_data(data) {
 		super.prepare_data(data);
@@ -50,8 +50,8 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
 			var label;
 			if (meta.title_field) {
 				label = item.progress
-					? __("{0} ({1}) - {2}%", [item[meta.title_field], item.name, item.progress])
-					: __("{0} ({1})", [item[meta.title_field], item.name]);
+					? __("{0} ({1}) - {2}%", [item[meta.title_field], item.id, item.progress])
+					: __("{0} ({1})", [item[meta.title_field], item.id]);
 			} else {
 				label = item[field_map.title];
 			}
@@ -60,7 +60,7 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
 				start: item[field_map.start],
 				end: item[field_map.end],
 				name: label,
-				id: item[field_map.id || "name"],
+				id: item[field_map.id || "id"],
 				doctype: me.doctype,
 				progress: progress,
 				dependencies: item.depends_on_tasks || "",
@@ -84,7 +84,7 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
 		});
 	}
 
-	render_header() {}
+	render_header() { }
 
 	render_gantt() {
 		const me = this;
@@ -139,7 +139,7 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
 			custom_popup_html: (task) => {
 				var item = me.get_item(task.id);
 
-				var html = `<div class="title">${task.name}</div>
+				var html = `<div class="title">${task.id}</div>
 					<div class="subtitle">${moment(task._start).format("MMM D")} - ${moment(task._end).format(
 					"MMM D"
 				)}</div>`;
@@ -168,14 +168,14 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
 		const active_class = (view_mode) => (this.gantt.view_is(view_mode) ? "btn-info" : "");
 		const html = `<div class="btn-group gantt-view-mode">
 				${view_modes
-					.map(
-						(value) => `<button type="button"
+				.map(
+					(value) => `<button type="button"
 						class="btn btn-default btn-sm btn-view-mode ${active_class(value)}"
 						data-value="${value}">
 						${__(value)}
 					</button>`
-					)
-					.join("")}
+				)
+				.join("")}
 			</div>`;
 
 		this.$paging_area.find(".level-left").append(html);
@@ -219,8 +219,8 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
 		this.$result.prepend(style);
 	}
 
-	get_item(name) {
-		return this.data.find((item) => item.name === name);
+	get_item(id) {
+		return this.data.find((item) => item.id === id);
 	}
 
 	get required_libs() {

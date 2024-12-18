@@ -15,7 +15,7 @@ frappe.ui.LinkPreview = class {
 			if (!this.element.parents().find(".popover").length) {
 				this.identify_doc();
 				this.popover = this.element.data("bs.popover");
-				if (this.name && this.doctype) {
+				if (this.id && this.doctype) {
 					this.setup_popover_control(e);
 				}
 			}
@@ -26,7 +26,7 @@ frappe.ui.LinkPreview = class {
 	identify_doc() {
 		if (this.is_link) {
 			this.doctype = this.element.attr("data-doctype");
-			this.name = frappe.utils.unescape_html(this.element.attr("data-name"));
+			this.id = frappe.utils.unescape_html(this.element.attr("data-name"));
 			this.href = this.element.attr("href");
 		} else {
 			this.href = this.element
@@ -35,7 +35,7 @@ frappe.ui.LinkPreview = class {
 				.attr("href");
 			// input
 			this.doctype = this.element.attr("data-target");
-			this.name = this.element.val();
+			this.id = this.element.val();
 		}
 	}
 
@@ -133,7 +133,7 @@ frappe.ui.LinkPreview = class {
 	get_preview_data() {
 		return frappe.xcall("frappe.desk.link_preview.get_preview_data", {
 			doctype: this.doctype,
-			docname: this.name,
+			docid: this.id,
 		});
 	}
 
@@ -194,11 +194,11 @@ frappe.ui.LinkPreview = class {
 	}
 
 	get_id_html(preview_data) {
-		if (preview_data.preview_title !== preview_data.name) {
+		if (preview_data.preview_title !== preview_data.id) {
 			const a = document.createElement("a");
 			a.href = this.href;
 			a.className = "text-muted";
-			a.innerText = preview_data.name;
+			a.innerText = preview_data.id;
 			return a.outerHTML;
 		}
 		return "";
@@ -220,7 +220,7 @@ frappe.ui.LinkPreview = class {
 		let content_html = "";
 
 		Object.keys(preview_data).forEach((key) => {
-			if (!["preview_image", "preview_title", "name"].includes(key)) {
+			if (!["preview_image", "preview_title", "id"].includes(key)) {
 				let value = frappe.ellipsis(preview_data[key], 280);
 				let label = key;
 				content_html += `

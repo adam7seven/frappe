@@ -54,7 +54,7 @@ class WorkflowBuilder {
 
 		// create a store
 		this.store = useStore();
-		this.store.workflow_name = this.workflow;
+		this.store.workflow_id = this.workflow;
 
 		// register global components
 		registerGlobalComponents(app);

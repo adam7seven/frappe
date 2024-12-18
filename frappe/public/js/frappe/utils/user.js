@@ -27,14 +27,14 @@ frappe.update_user_info = function (user_info) {
 frappe.provide("frappe.user");
 
 $.extend(frappe.user, {
-	name: "Guest",
+	id: "Guest",
 	full_name: function (uid) {
 		return uid === frappe.session.user
 			? __(
-					"You",
-					null,
-					"Name of the current user. For example: You edited this 5 hours ago."
-			  )
+				"You",
+				null,
+				"Name of the current user. For example: You edited this 5 hours ago."
+			)
 			: frappe.user_info(uid).fullname;
 	},
 	image: function (uid) {
@@ -125,7 +125,7 @@ $.extend(frappe.user, {
 	 * returning frappe.user.name
 	 */
 	toString: function () {
-		return this.name;
+		return this.id;
 	},
 });
 

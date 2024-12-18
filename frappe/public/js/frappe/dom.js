@@ -220,9 +220,9 @@ frappe.dom = {
 			reader.readAsDataURL(file_obj);
 		});
 	},
-	scroll_to_section(section_name) {
+	scroll_to_section(section_id) {
 		setTimeout(() => {
-			const section = $(`a:contains("${section_name}")`);
+			const section = $(`a:contains("${section_id}")`);
 			if (section.length) {
 				if (section.parent().hasClass("collapsed")) {
 					// opens the section
@@ -265,7 +265,7 @@ frappe.run_serially = function (tasks) {
 	return result;
 };
 
-frappe.load_image = (src, onload, onerror, preprocess = () => {}) => {
+frappe.load_image = (src, onload, onerror, preprocess = () => { }) => {
 	var tester = new Image();
 	tester.onload = function () {
 		onload(this);
@@ -396,8 +396,8 @@ frappe.create_shadow_element = function (wrapper, html, css, js) {
 			let script = document.createElement("script");
 			script.textContent = `
 				(function() {
-					let cname = ${JSON.stringify(random_id)};
-					let root_element = document.querySelector(cname).shadowRoot;
+					let cid = ${JSON.stringify(random_id)};
+					let root_element = document.querySelector(cid).shadowRoot;
 					${js}
 				})();
 			`;

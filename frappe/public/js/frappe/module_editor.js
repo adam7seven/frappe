@@ -41,7 +41,7 @@ frappe.ModuleEditor = class ModuleEditor {
 
 		block_modules.map((module_doc) => {
 			if (!unchecked_options.includes(module_doc.module)) {
-				frappe.model.clear_doc(module_doc.doctype, module_doc.name);
+				frappe.model.clear_doc(module_doc.doctype, module_doc.id);
 			}
 		});
 

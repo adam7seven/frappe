@@ -37,9 +37,9 @@ frappe.views.ListViewSelect = class ListViewSelect {
 		}
 	}
 
-	set_route(view, calendar_name) {
+	set_route(view, calendar_id) {
 		const route = [this.slug(), "view", view];
-		if (calendar_name) route.push(calendar_name);
+		if (calendar_id) route.push(calendar_id);
 
 		let search_params = cur_list?.get_search_params();
 		if (search_params) {
@@ -158,12 +158,12 @@ frappe.views.ListViewSelect = class ListViewSelect {
 						${__("No {0} Found", [__(view)])}
 				</div>`;
 		} else {
-			const page_name = this.get_page_name();
+			const page_id = this.get_page_id();
 			items.map((item) => {
-				if (item.name.toLowerCase() == page_name.toLowerCase()) {
-					placeholder = item.name;
+				if (item.id.toLowerCase() == page_id.toLowerCase()) {
+					placeholder = item.id;
 				} else {
-					html += `<li><a class="dropdown-item" href="${item.route}">${item.name}</a></li>`;
+					html += `<li><a class="dropdown-item" href="${item.route}">${item.id}</a></li>`;
 				}
 			});
 		}
@@ -190,8 +190,8 @@ frappe.views.ListViewSelect = class ListViewSelect {
 		kanbans.map((k) => {
 			this.page.add_custom_menu_item(
 				kanban_switcher,
-				k.name,
-				() => this.set_route("kanban", k.name),
+				k.id,
+				() => this.set_route("kanban", k.id),
 				false
 			);
 		});
@@ -208,7 +208,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 		}
 	}
 
-	get_page_name() {
+	get_page_id() {
 		return frappe.utils.to_title_case(frappe.get_route().slice(-1)[0] || "");
 	}
 
@@ -225,13 +225,13 @@ frappe.views.ListViewSelect = class ListViewSelect {
 							? `/app/list/${r.ref_doctype}/report`
 							: "/app/query-report";
 
-					const route = r.route || report_type + "/" + (r.title || r.name);
+					const route = r.route || report_type + "/" + (r.title || r.id);
 
 					if (added.indexOf(route) === -1) {
 						// don't repeat
 						added.push(route);
 						reports_to_add.push({
-							name: __(r.title || r.name),
+							id: __(r.title || r.id),
 							route: route,
 						});
 					}
@@ -261,10 +261,10 @@ frappe.views.ListViewSelect = class ListViewSelect {
 			frappe.db.get_value(
 				"Kanban Board",
 				{ reference_doctype: doctype },
-				"name",
+				"id",
 				(board) => {
 					if (!$.isEmptyObject(board)) {
-						frappe.set_route("list", doctype, "kanban", board.name);
+						frappe.set_route("list", doctype, "kanban", board.id);
 					} else {
 						frappe.views.KanbanView.show_kanban_dialog(doctype);
 					}
@@ -303,14 +303,14 @@ frappe.views.ListViewSelect = class ListViewSelect {
 				if (frappe.views.calendar[this.doctype]) {
 					// has standard calendar view
 					calendars.push({
-						name: "Default",
+						id: "Default",
 						route: `/app/${this.slug()}/view/calendar/default`,
 					});
 				}
 				result.map((calendar) => {
 					calendars.push({
-						name: calendar.name,
-						route: `/app/${this.slug()}/view/calendar/${calendar.name}`,
+						id: calendar.id,
+						route: `/app/${this.slug()}/view/calendar/${calendar.id}`,
 					});
 				});
 
@@ -325,14 +325,14 @@ frappe.views.ListViewSelect = class ListViewSelect {
 			let email_account =
 				account.email_id == "All Accounts" ? "All Accounts" : account.email_account;
 			let route = `/app/communication/view/inbox/${email_account}`;
-			let display_name = ["All Accounts", "Sent Mail", "Spam", "Trash"].includes(
+			let display_id = ["All Accounts", "Sent Mail", "Spam", "Trash"].includes(
 				account.email_id
 			)
 				? __(account.email_id)
 				: account.email_account;
 
 			accounts_to_add.push({
-				name: display_name,
+				id: display_id,
 				route: route,
 			});
 		});

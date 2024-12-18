@@ -32,9 +32,9 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 			setTimeout(function () {
 				if (me.$input.val() && me.get_options()) {
 					let doctype = me.get_options();
-					let name = me.get_input_value();
+					let id = me.get_input_value();
 					me.$link.toggle(true);
-					me.$link_open.attr("href", frappe.utils.get_form_link(doctype, name));
+					me.$link_open.attr("href", frappe.utils.get_form_link(doctype, id));
 					me.$link_clear.on("click", function () {
 						me.$link.toggle(false);
 						me.set_value("");
@@ -173,15 +173,15 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 			frappe.route_options = {};
 		}
 
-		// partially entered name field
-		frappe.route_options.name_field = this.get_label_value();
+		// partially entered id field
+		frappe.route_options.id_field = this.get_label_value();
 
 		// reference to calling link
 		frappe._from_link = frappe.utils.deep_clone(this);
 		frappe._from_link_scrollY = $(document).scrollTop();
 
 		frappe.ui.form.make_quick_entry(doctype, (doc) => {
-			return me.set_value(doc.name);
+			return me.set_value(doc.id);
 		});
 
 		return false;
@@ -283,13 +283,13 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 						let filter_string = me.df.filter_description
 							? me.df.filter_description
 							: args.filters
-							? me.get_filter_description(args.filters)
-							: null;
+								? me.get_filter_description(args.filters)
+								: null;
 						if (filter_string) {
 							r.message.push({
 								html: `<span class="text-muted" style="line-height: 1.5">${filter_string}</span>`,
 								value: "",
-								action: () => {},
+								action: () => { },
 							});
 						}
 
@@ -424,7 +424,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 		// in case of result like this
 		// [{value: 'Manufacturer 1', 'description': 'mobile part 1'},
 		// 	{value: 'Manufacturer 1', 'description': 'mobile part 2'}]
-		// suggestion list has two items with same value (docname) & description
+		// suggestion list has two items with same value (docid) & description
 		return results.reduce((newArr, currElem) => {
 			if (newArr.length === 0) return [currElem];
 			let element_with_same_value = newArr.find((e) => e.value === currElem.value);
@@ -560,7 +560,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 				var q = get_query(
 					(this.frm && this.frm.doc) || this.doc,
 					this.doctype,
-					this.docname
+					this.docid
 				);
 
 				if (typeof q === "string") {
@@ -654,7 +654,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 				} else if (this.frm) {
 					frappe.model.set_value(
 						this.df.parent,
-						this.docname,
+						this.docid,
 						target_field,
 						field_value,
 						this.df.fieldtype
@@ -668,15 +668,15 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 			return frappe
 				.xcall("frappe.client.validate_link", {
 					doctype: options,
-					docname: value,
+					docid: value,
 					fields: columns_to_fetch,
 				})
 				.then((response) => {
-					if (!this.docname || !columns_to_fetch.length) {
-						return response.name;
+					if (!this.docid || !columns_to_fetch.length) {
+						return response.id;
 					}
 					update_dependant_fields(response);
-					return response.name;
+					return response.id;
 				});
 		} else {
 			update_dependant_fields({});

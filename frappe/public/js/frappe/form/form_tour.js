@@ -31,9 +31,9 @@ frappe.ui.form.FormTour = class FormTour {
 		this.frm.layout.sections.forEach((section) => section.collapse(false));
 	}
 
-	async init({ tour_name, on_finish }) {
-		if (tour_name) {
-			this.tour = await frappe.db.get_doc("Form Tour", tour_name);
+	async init({ tour_id, on_finish }) {
+		if (tour_id) {
+			this.tour = await frappe.db.get_doc("Form Tour", tour_id);
 		} else {
 			const doctype_tour_exists = await frappe.db.exists("Form Tour", this.frm.doctype);
 			if (doctype_tour_exists) {
@@ -48,20 +48,20 @@ frappe.ui.form.FormTour = class FormTour {
 		if (on_finish) this.on_finish = on_finish;
 
 		this.init_driver();
-		if (this.tour.include_name_field) this.include_name_field();
+		if (this.tour.include_id_field) this.include_id_field();
 		this.build_steps();
 		this.update_driver_steps();
 	}
 
-	include_name_field() {
-		const name_step = {
-			description: __("Enter a name for this {0}", [this.frm.doctype]),
-			fieldname: "__newname",
+	include_id_field() {
+		const id_step = {
+			description: __("Enter a id for this {0}", [this.frm.doctype]),
+			fieldname: "__newid",
 			title: __("Document Name"),
 			position: "right",
 			is_table_field: 0,
 		};
-		this.tour.steps.unshift(name_step);
+		this.tour.steps.unshift(id_step);
 	}
 
 	build_steps() {
@@ -118,7 +118,7 @@ frappe.ui.form.FormTour = class FormTour {
 	}
 
 	get_step(step_info, on_next, on_prev) {
-		const { name, fieldname, title, description, position, is_table_field } = step_info;
+		const { id, fieldname, title, description, position, is_table_field } = step_info;
 		let element = `.frappe-control[data-fieldname='${fieldname}']`;
 
 		const field = this.frm.get_field(fieldname);
@@ -134,7 +134,7 @@ frappe.ui.form.FormTour = class FormTour {
 
 		return {
 			element,
-			name,
+			id,
 			popover: { title, description, position: frappe.router.slug(position || "Bottom") },
 			onNext: on_next,
 			onPrevious: on_prev,
@@ -183,7 +183,7 @@ frappe.ui.form.FormTour = class FormTour {
 			if (table_has_rows) {
 				// table already has rows
 				// then just edit the first one on next step
-				const curr_driver_step = this.driver_steps.find((s) => s.name == curr_step.name);
+				const curr_driver_step = this.driver_steps.find((s) => s.id == curr_step.id);
 				curr_driver_step.onNext = () => {
 					if (this.is_next_condition_satisfied(curr_step)) {
 						this.expand_row_and_proceed(curr_step, curr_step.idx);

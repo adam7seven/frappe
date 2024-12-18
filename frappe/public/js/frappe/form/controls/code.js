@@ -30,7 +30,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
 			);
 			this.button.on("click", () => {
 				frappe.utils.copy_to_clipboard(
-					frappe.model.get_value(this.doctype, this.docname, this.df.fieldname)
+					frappe.model.get_value(this.doctype, this.docid, this.df.fieldname)
 				);
 			});
 			this.button.appendTo(this.$wrapper);
@@ -141,7 +141,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
 							a = { value: a };
 						}
 						return {
-							name: "frappe",
+							id: "frappe",
 							value: a.value,
 							score: a.score,
 							meta: a.meta,
@@ -201,8 +201,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
 		const valid_languages = Object.keys(language_map);
 		if (language && !valid_languages.includes(language)) {
 			console.warn(
-				`Invalid language option provided for field "${
-					this.df.label
+				`Invalid language option provided for field "${this.df.label
 				}". Valid options are ${valid_languages.join(", ")}.`
 			);
 		}

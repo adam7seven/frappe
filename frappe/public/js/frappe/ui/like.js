@@ -9,7 +9,7 @@ frappe.ui.get_liked_by = function (doc) {
 	return doc._liked_by ? JSON.parse(doc._liked_by) : [];
 };
 
-frappe.ui.toggle_like = function ($btn, doctype, name, callback) {
+frappe.ui.toggle_like = function ($btn, doctype, id, callback) {
 	const add = $btn.hasClass("not-liked") ? "Yes" : "No";
 	// disable click
 	$btn.css("pointer-events", "none");
@@ -19,7 +19,7 @@ frappe.ui.toggle_like = function ($btn, doctype, name, callback) {
 		quiet: true,
 		args: {
 			doctype: doctype,
-			name: name,
+			id: id,
 			add: add,
 		},
 		callback: function (r) {
@@ -34,7 +34,7 @@ frappe.ui.toggle_like = function ($btn, doctype, name, callback) {
 			$btn.toggleClass("liked", add === "Yes");
 
 			// update in locals (form)
-			const doc = locals[doctype] && locals[doctype][name];
+			const doc = locals[doctype] && locals[doctype][id];
 			if (doc) {
 				let liked_by = frappe.ui.get_liked_by(doc);
 

@@ -65,9 +65,9 @@ frappe.search.utils = {
 			if (route[0] === "Form") {
 				const doctype = route[1];
 				if (route.length > 2 && doctype !== route[2]) {
-					const docname = route[2];
-					out.label = __(doctype) + " " + docname.bold();
-					out.value = __(doctype) + " " + docname;
+					const docid = route[2];
+					out.label = __(doctype) + " " + docid.bold();
+					out.value = __(doctype) + " " + docid;
 				} else {
 					out.label = __(doctype).bold();
 					out.value = __(doctype);
@@ -142,7 +142,7 @@ frappe.search.utils = {
 								search_result.marked_string,
 							]),
 							value: __("Find {0} in {1}", [__(parts[0]), __(item)]),
-							route_options: { name: ["like", "%" + parts[0] + "%"] },
+							route_options: { id: ["like", "%" + parts[0] + "%"] },
 							index: 1 + search_result.score,
 							route: ["List", item],
 						});
@@ -262,9 +262,9 @@ frappe.search.utils = {
 		var me = this;
 		var out = [];
 		this.pages = {};
-		$.each(frappe.boot.page_info, function (name, p) {
+		$.each(frappe.boot.page_info, function (id, p) {
 			me.pages[p.title] = p;
-			p.name = name;
+			p.id = id;
 		});
 		Object.keys(this.pages).forEach(function (item) {
 			if (item == "Hub" || item == "hub") return;
@@ -318,15 +318,15 @@ frappe.search.utils = {
 		var me = this;
 		var out = [];
 		frappe.boot.allowed_workspaces.forEach(function (item) {
-			const search_result = me.fuzzy_search(keywords, item.name, true);
+			const search_result = me.fuzzy_search(keywords, item.id, true);
 			var level = search_result.score;
 			if (level > 0) {
 				var ret = {
 					type: "Workspace",
-					label: __("Open {0}", [search_result.marked_string || __(item.name)]),
-					value: __("Open {0}", [__(item.name)]),
+					label: __("Open {0}", [search_result.marked_string || __(item.id)]),
+					value: __("Open {0}", [__(item.id)]),
 					index: level,
-					route: [frappe.router.slug(item.name)],
+					route: [frappe.router.slug(item.id)],
 				};
 
 				out.push(ret);
@@ -339,15 +339,15 @@ frappe.search.utils = {
 		var me = this;
 		var out = [];
 		frappe.boot.dashboards.forEach(function (item) {
-			const search_result = me.fuzzy_search(keywords, item.name, true);
+			const search_result = me.fuzzy_search(keywords, item.id, true);
 			var level = search_result.score;
 			if (level > 0) {
 				var ret = {
 					type: "Dashboard",
-					label: __("{0} Dashboard", [search_result.marked_string || __(item.name)]),
-					value: __("{0} Dashboard", [__(item.name)]),
+					label: __("{0} Dashboard", [search_result.marked_string || __(item.id)]),
+					value: __("{0} Dashboard", [__(item.id)]),
 					index: level,
-					route: ["dashboard-view", item.name],
+					route: ["dashboard-view", item.id],
 				};
 
 				out.push(ret);
@@ -368,7 +368,7 @@ frappe.search.utils = {
 				});
 			}
 
-			function make_description(content, doc_name) {
+			function make_description(content, doc_id) {
 				var parts = content.split(" ||| ");
 				var result_max_length = 300;
 				var field_length = 120;
@@ -416,7 +416,7 @@ frappe.search.utils = {
 								search_result_name.marked_string +
 								": </span> " +
 								search_result_value.marked_string;
-							if (fields.indexOf(field_text) === -1 && doc_name !== field_value) {
+							if (fields.indexOf(field_text) === -1 && doc_id !== field_value) {
 								fields.push(field_text);
 							}
 						} else {
@@ -447,10 +447,10 @@ frappe.search.utils = {
 			data.forEach(function (d) {
 				// more properties
 				result = {
-					label: d.name,
-					value: d.name,
-					description: make_description(d.content, d.name),
-					route: ["Form", d.doctype, d.name],
+					label: d.id,
+					value: d.id,
+					description: make_description(d.content, d.id),
+					route: ["Form", d.doctype, d.id],
 				};
 				if (d.image || d.image === null) {
 					result.image = d.image;
@@ -693,7 +693,7 @@ frappe.search.utils = {
 					index: search_result.score * 0.8,
 					route: [
 						`https://frappecloud.com/${item.route}?utm_source=awesomebar`,
-						item.name,
+						item.id,
 					],
 				};
 

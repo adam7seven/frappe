@@ -86,27 +86,27 @@ frappe.ui.form.ScriptManager = class ScriptManager {
 			new ControllerClass({ frm: this.frm })
 		);
 	}
-	trigger(event_name, doctype, name) {
+	trigger(event_id, doctype, id) {
 		// trigger all the form level events that
-		// are bound to this event_name
+		// are bound to this event_id
 		let me = this;
 		doctype = doctype || this.frm.doctype;
-		name = name || this.frm.docname;
+		id = id || this.frm.docid;
 
 		let tasks = [];
-		let handlers = this.get_handlers(event_name, doctype);
+		let handlers = this.get_handlers(event_id, doctype);
 
 		// helper for child table
-		this.frm.selected_doc = frappe.get_doc(doctype, name);
+		this.frm.selected_doc = frappe.get_doc(doctype, id);
 
 		let runner = (_function, is_old_style) => {
 			let _promise = null;
 			if (is_old_style) {
 				// old style arguments (doc, cdt, cdn)
-				_promise = me.frm.cscript[_function](me.frm.doc, doctype, name);
+				_promise = me.frm.cscript[_function](me.frm.doc, doctype, id);
 			} else {
-				// new style (frm, doctype, name)
-				_promise = _function(me.frm, doctype, name);
+				// new style (frm, doctype, id)
+				_promise = _function(me.frm, doctype, id);
 			}
 
 			// if the trigger returns a promise, return it,
@@ -120,7 +120,7 @@ frappe.ui.form.ScriptManager = class ScriptManager {
 
 		// make list of functions to be run serially
 		handlers.new_style.forEach((_function) => {
-			if (event_name === "setup") {
+			if (event_id === "setup") {
 				// setup must be called immediately
 				runner(_function, false);
 			} else {
@@ -129,7 +129,7 @@ frappe.ui.form.ScriptManager = class ScriptManager {
 		});
 
 		handlers.old_style.forEach((_function) => {
-			if (event_name === "setup") {
+			if (event_id === "setup") {
 				// setup must be called immediately
 				runner(_function, true);
 			} else {
@@ -140,27 +140,27 @@ frappe.ui.form.ScriptManager = class ScriptManager {
 		// run them serially
 		return frappe.run_serially(tasks);
 	}
-	has_handlers(event_name, doctype) {
-		let handlers = this.get_handlers(event_name, doctype);
+	has_handlers(event_id, doctype) {
+		let handlers = this.get_handlers(event_id, doctype);
 		return handlers && (handlers.old_style.length || handlers.new_style.length);
 	}
-	get_handlers(event_name, doctype) {
+	get_handlers(event_id, doctype) {
 		// returns list of all functions to be called (old style and new style)
 		let me = this;
 		let handlers = {
 			old_style: [],
 			new_style: [],
 		};
-		if (frappe.ui.form.handlers[doctype] && frappe.ui.form.handlers[doctype][event_name]) {
-			$.each(frappe.ui.form.handlers[doctype][event_name], function (i, fn) {
+		if (frappe.ui.form.handlers[doctype] && frappe.ui.form.handlers[doctype][event_id]) {
+			$.each(frappe.ui.form.handlers[doctype][event_id], function (i, fn) {
 				handlers.new_style.push(fn);
 			});
 		}
-		if (this.frm.cscript[event_name]) {
-			handlers.old_style.push(event_name);
+		if (this.frm.cscript[event_id]) {
+			handlers.old_style.push(event_id);
 		}
-		if (this.frm.cscript["custom_" + event_name]) {
-			handlers.old_style.push("custom_" + event_name);
+		if (this.frm.cscript["custom_" + event_id]) {
+			handlers.old_style.push("custom_" + event_id);
 		}
 		return handlers;
 	}
@@ -226,7 +226,7 @@ frappe.ui.form.ScriptManager = class ScriptManager {
 			setup_add_fetch(field.df);
 			if (frappe.model.table_fields.includes(field.df.fieldtype)) {
 				$.each(
-					frappe.meta.get_docfields(field.df.options, me.frm.docname),
+					frappe.meta.get_docfields(field.df.options, me.frm.docid),
 					function (i, df) {
 						setup_add_fetch(df);
 					}
@@ -261,7 +261,7 @@ frappe.ui.form.ScriptManager = class ScriptManager {
 		$.each(fieldnames, function (i, fieldname) {
 			frappe.model.set_value(
 				current_row.doctype,
-				current_row.name,
+				current_row.id,
 				fieldname,
 				data[0][fieldname]
 			);

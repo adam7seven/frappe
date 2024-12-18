@@ -19,7 +19,7 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 		}
 	}
 
-	toggle_result_area() {}
+	toggle_result_area() { }
 
 	get view_name() {
 		return "Calendar";
@@ -29,7 +29,7 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 		return super.setup_defaults().then(() => {
 			this.page_title = __("{0} Calendar", [this.page_title]);
 			this.calendar_settings = frappe.views.calendar[this.doctype] || {};
-			this.calendar_name = frappe.get_route()[3];
+			this.calendar_id = frappe.get_route()[3];
 		});
 	}
 
@@ -38,12 +38,12 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 		super.setup_page();
 	}
 
-	setup_view() {}
+	setup_view() { }
 
 	before_render() {
 		super.before_render();
 		this.save_view_user_settings({
-			last_calendar: this.calendar_name,
+			last_calendar: this.calendar_id,
 		});
 	}
 
@@ -67,19 +67,19 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 			page: this.page,
 			list_view: this,
 		};
-		const calendar_name = this.calendar_name;
+		const calendar_id = this.calendar_id;
 
 		return new Promise((resolve) => {
-			if (calendar_name === "default") {
+			if (calendar_id === "default") {
 				Object.assign(options, frappe.views.calendar[this.doctype]);
 				resolve(options);
 			} else {
-				frappe.model.with_doc("Calendar View", calendar_name, () => {
-					const doc = frappe.get_doc("Calendar View", calendar_name);
+				frappe.model.with_doc("Calendar View", calendar_id, () => {
+					const doc = frappe.get_doc("Calendar View", calendar_id);
 					if (!doc) {
 						frappe.show_alert(
 							__("{0} is not a valid Calendar. Redirecting to default Calendar.", [
-								calendar_name.bold(),
+								calendar_id.bold(),
 							])
 						);
 						frappe.set_route("List", this.doctype, "Calendar", "default");
@@ -87,7 +87,7 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 					}
 					Object.assign(options, {
 						field_map: {
-							id: "name",
+							id: "id",
 							start: doc.start_date_field,
 							end: doc.end_date_field,
 							title: doc.subject_field,
@@ -117,7 +117,7 @@ frappe.views.Calendar = class Calendar {
 	constructor(options) {
 		$.extend(this, options);
 		this.field_map = this.field_map || {
-			id: "name",
+			id: "id",
 			start: "start",
 			end: "end",
 			allDay: "all_day",
@@ -197,8 +197,8 @@ frappe.views.Calendar = class Calendar {
 			let value = $(this).hasClass("fc-agendaWeek-button")
 				? "agendaWeek"
 				: $(this).hasClass("fc-agendaDay-button")
-				? "agendaDay"
-				: "month";
+					? "agendaDay"
+					: "month";
 			me.set_localStorage_option("cal_defaultView", value);
 		});
 
@@ -290,7 +290,7 @@ frappe.views.Calendar = class Calendar {
 				// edit event description or delete
 				var doctype = event.doctype || me.doctype;
 				if (frappe.model.can_read(doctype)) {
-					frappe.set_route("Form", doctype, event.name);
+					frappe.set_route("Form", doctype, event.id);
 				}
 			},
 			eventDrop: function (event, delta, revertFunc) {
@@ -322,7 +322,7 @@ frappe.views.Calendar = class Calendar {
 						);
 				}
 
-				frappe.set_route("Form", me.doctype, event.name);
+				frappe.set_route("Form", me.doctype, event.id);
 			},
 			dayClick: function (date, jsEvent, view) {
 				if (view.name === "month") {
@@ -367,7 +367,7 @@ frappe.views.Calendar = class Calendar {
 		var me = this;
 
 		return (events || []).map((d) => {
-			d.id = d.name;
+			d.id = d.id;
 			d.editable = frappe.model.can_write(d.doctype || me.doctype);
 
 			// do not allow submitted/cancelled events to be moved / extended
@@ -409,16 +409,16 @@ frappe.views.Calendar = class Calendar {
 		});
 	}
 	prepare_colors(d) {
-		let color, color_name;
+		let color, color_id;
 		if (this.get_css_class) {
-			color_name = this.color_map[this.get_css_class(d)] || "blue";
+			color_id = this.color_map[this.get_css_class(d)] || "blue";
 
-			if (color_name.startsWith("#")) {
-				color_name = frappe.ui.color.validate_hex(color_name) ? color_name : "blue";
+			if (color_id.startsWith("#")) {
+				color_id = frappe.ui.color.validate_hex(color_id) ? color_id : "blue";
 			}
 
-			d.backgroundColor = frappe.ui.color.get(color_name, "extra-light");
-			d.textColor = frappe.ui.color.get(color_name, "dark");
+			d.backgroundColor = frappe.ui.color.get(color_id, "extra-light");
+			d.textColor = frappe.ui.color.get(color_id, "dark");
 		} else {
 			color = d.color;
 			if (!frappe.ui.color.validate_hex(color) || !color) {
@@ -431,7 +431,7 @@ frappe.views.Calendar = class Calendar {
 	}
 	update_event(event, revertFunc) {
 		var me = this;
-		frappe.model.remove_from_locals(me.doctype, event.name);
+		frappe.model.remove_from_locals(me.doctype, event.id);
 		return frappe.call({
 			method: me.update_event_method || "frappe.desk.calendar.update_event",
 			args: me.get_update_args(event),
@@ -449,7 +449,7 @@ frappe.views.Calendar = class Calendar {
 	get_update_args(event) {
 		var me = this;
 		var args = {
-			name: event[this.field_map.id],
+			id: event[this.field_map.id],
 		};
 
 		args[this.field_map.start] = me.get_system_datetime(event.start);

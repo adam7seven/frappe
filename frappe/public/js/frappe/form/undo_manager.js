@@ -4,7 +4,7 @@ export class UndoManager {
 		this.undo_stack = [];
 		this.redo_stack = [];
 	}
-	record_change({ fieldname, old_value, new_value, doctype, docname, is_child }) {
+	record_change({ fieldname, old_value, new_value, doctype, docid, is_child }) {
 		if (old_value == new_value) {
 			return;
 		}
@@ -14,7 +14,7 @@ export class UndoManager {
 			old_value,
 			new_value,
 			doctype,
-			docname,
+			docid,
 			is_child,
 		});
 	}
@@ -56,7 +56,7 @@ export class UndoManager {
 		if (change.is_child) {
 			frappe.model.set_value(
 				change.doctype,
-				change.docname,
+				change.docid,
 				change.fieldname,
 				change.old_value
 			);

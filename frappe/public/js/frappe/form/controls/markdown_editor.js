@@ -72,7 +72,7 @@ frappe.ui.form.ControlMarkdownEditor = class ControlMarkdownEditor extends (
 			let files = dataTransfer.files;
 			if (!files[0].type.includes("image")) {
 				frappe.show_alert({
-					message: __("You can only insert images in Markdown fields", [files[0].name]),
+					message: __("You can only insert images in Markdown fields", [files[0].id]),
 					indicator: "orange",
 				});
 				return;
@@ -81,7 +81,7 @@ frappe.ui.form.ControlMarkdownEditor = class ControlMarkdownEditor extends (
 			new frappe.ui.FileUploader({
 				dialog_title: __("Insert Image in Markdown"),
 				doctype: this.doctype,
-				docname: this.docname,
+				docid: this.docid,
 				frm: this.frm,
 				files,
 				folder: "Home/Attachments",

@@ -22,31 +22,28 @@ frappe.ui.OnboardingTour = class OnboardingTour {
 				const wait_for_node = setInterval(() => {
 					if (!step.popover.node) return;
 					if (step.options.step_info?.offset_x) {
-						step.popover.node.style.left = `${
-							step.popover.node.offsetLeft + step.options.step_info.offset_x
-						}px`;
+						step.popover.node.style.left = `${step.popover.node.offsetLeft + step.options.step_info.offset_x
+							}px`;
 					}
 					if (step.options.step_info?.offset_y) {
-						step.popover.node.style.top = `${
-							step.popover.node.offsetTop + step.options.step_info.offset_y
-						}px`;
+						step.popover.node.style.top = `${step.popover.node.offsetTop + step.options.step_info.offset_y
+							}px`;
 					}
 					if (step.popover.node.offsetLeft < 0) {
 						step.popover.node.style.minWidth = "200px";
-						step.popover.node.style.maxWidth = `${
-							350 + step.popover.node.offsetLeft
-						}px`;
+						step.popover.node.style.maxWidth = `${350 + step.popover.node.offsetLeft
+							}px`;
 						step.popover.node.style.left = "0px";
 					}
 					if (step.popover.closeBtnNode) {
 						step.popover.closeBtnNode.onclick = () => {
 							this.on_finish && this.on_finish();
-							!frappe.boot.user.onboarding_status[this.tour.name] &&
-								(frappe.boot.user.onboarding_status[this.tour.name] = {});
-							frappe.boot.user.onboarding_status[this.tour.name].is_complete = true;
+							!frappe.boot.user.onboarding_status[this.tour.id] &&
+								(frappe.boot.user.onboarding_status[this.tour.id] = {});
+							frappe.boot.user.onboarding_status[this.tour.id].is_complete = true;
 							if (!this.driver.hasNextStep()) {
 								frappe.boot.user.onboarding_status[
-									this.tour.name
+									this.tour.id
 								].all_steps_completed = true;
 							}
 
@@ -70,8 +67,8 @@ frappe.ui.OnboardingTour = class OnboardingTour {
 		});
 	}
 
-	async init({ tour_name, start_step }) {
-		this.tour = await frappe.db.get_doc("Form Tour", tour_name);
+	async init({ tour_id, start_step }) {
+		this.tour = await frappe.db.get_doc("Form Tour", tour_id);
 		this.init_driver();
 		this.build_steps();
 		this.update_driver_steps();
@@ -86,13 +83,13 @@ frappe.ui.OnboardingTour = class OnboardingTour {
 		this.tour.steps.forEach((step) => {
 			const on_next = async (el) => {
 				const step_index = this.driver.steps.indexOf(el);
-				if (step_index == -1 || this.last_step_saved?.name == step.name) return;
-				frappe.boot.user.onboarding_status[this.tour.name] = {
+				if (step_index == -1 || this.last_step_saved?.id == step.id) return;
+				frappe.boot.user.onboarding_status[this.tour.id] = {
 					steps_complete: step_index,
 				};
 				if (!this.driver.hasNextStep()) {
 					this.on_finish && this.on_finish();
-					frappe.boot.user.onboarding_status[this.tour.name].is_complete = true;
+					frappe.boot.user.onboarding_status[this.tour.id].is_complete = true;
 				}
 				this.last_step_saved = step;
 				frappe.call({
@@ -139,7 +136,7 @@ frappe.ui.OnboardingTour = class OnboardingTour {
 					modal_trigger &&
 					(!this.last_element_clicked ||
 						new Date().getTime() - new Date(this.last_element_clicked).getTime() >
-							1000)
+						1000)
 				) {
 					this.last_element_clicked = new Date().getTime();
 					this.handle_modal_steps(this.driver.currentStep, title, ondemand_description);
@@ -159,8 +156,8 @@ frappe.ui.OnboardingTour = class OnboardingTour {
 					.node.getAttribute("aria-describedby")
 					? this.driver.getHighlightedElement().node
 					: this.driver
-							.getHighlightedElement()
-							.node.querySelector('[aria-describedby^="popover"]');
+						.getHighlightedElement()
+						.node.querySelector('[aria-describedby^="popover"]');
 
 				if (!popover) return;
 
@@ -267,7 +264,7 @@ frappe.ui.init_onboarding_tour = () => {
 	let route = frappe.router.current_route;
 	if (route?.[0] === "") return;
 
-	let tour_name;
+	let tour_id;
 	let matching_tours = [];
 	let start_step;
 	if (route[0] == "query-report") {
@@ -301,17 +298,17 @@ frappe.ui.init_onboarding_tour = () => {
 	});
 	if (matching_tours.length == 0) return;
 	let current_tour = matching_tours.find(
-		(tour) => tour[0] == frappe.ui.currentTourInstance?.tour?.name
+		(tour) => tour[0] == frappe.ui.currentTourInstance?.tour?.id
 	);
 	let next_tour = matching_tours.find((tour) => tour[0] == frappe.ui.next_form_tour);
 	if (current_tour) {
-		tour_name = current_tour[0];
+		tour_id = current_tour[0];
 		start_step = current_tour.at(-1);
 		if (typeof start_step != "number") {
 			start_step = 0;
 		}
 	} else if (next_tour) {
-		tour_name = next_tour[0];
+		tour_id = next_tour[0];
 		start_step = next_tour.at(-1);
 		if (typeof start_step != "number") {
 			start_step = 0;
@@ -320,7 +317,7 @@ frappe.ui.init_onboarding_tour = () => {
 		}
 		frappe.ui.next_form_tour = undefined;
 	} else {
-		tour_name = matching_tours[0][0];
+		tour_id = matching_tours[0][0];
 		start_step = matching_tours[0].at(-1);
 		if (typeof start_step != "number") {
 			start_step = 0;
@@ -328,7 +325,7 @@ frappe.ui.init_onboarding_tour = () => {
 			start_step += 1;
 		}
 	}
-	if (!tour_name) return;
+	if (!tour_id) return;
 	if (frappe.ui.currentTourInstance?.driver) {
 		frappe.ui.currentTourInstance.driver_steps = [];
 		frappe.ui.currentTourInstance.driver.reset(true);
@@ -342,7 +339,7 @@ frappe.ui.init_onboarding_tour = () => {
 		if (document.body.getAttribute("data-ajax-state") === "complete") {
 			frappe.utils.sleep(500).then(() => {
 				tour.init({
-					tour_name,
+					tour_id,
 					start_step,
 				});
 				clearInterval(wait_for_data);

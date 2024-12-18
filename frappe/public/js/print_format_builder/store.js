@@ -1,9 +1,9 @@
 import { create_default_layout, pluck } from "./utils";
 import { watch, ref, inject, computed, nextTick } from "vue";
 
-export function getStore(print_format_name) {
+export function getStore(print_format_id) {
 	// variables
-	let letterhead_name = ref(null);
+	let letterhead_id = ref(null);
 	let print_format = ref(null);
 	let letterhead = ref(null);
 	let doctype = ref(null);
@@ -15,9 +15,9 @@ export function getStore(print_format_name) {
 	// methods
 	function fetch() {
 		return new Promise((resolve) => {
-			frappe.model.clear_doc("Print Format", print_format_name);
-			frappe.model.with_doc("Print Format", print_format_name, () => {
-				let _print_format = frappe.get_doc("Print Format", print_format_name);
+			frappe.model.clear_doc("Print Format", print_format_id);
+			frappe.model.with_doc("Print Format", print_format_id, () => {
+				let _print_format = frappe.get_doc("Print Format", print_format_id);
 				frappe.model.with_doctype(_print_format.doc_type, () => {
 					meta.value = frappe.get_meta(_print_format.doc_type);
 					print_format.value = _print_format;
@@ -119,7 +119,7 @@ export function getStore(print_format_name) {
 	});
 
 	return {
-		letterhead_name,
+		letterhead_id,
 		print_format,
 		letterhead,
 		doctype,

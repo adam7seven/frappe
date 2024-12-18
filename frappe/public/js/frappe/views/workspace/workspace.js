@@ -6,7 +6,7 @@ frappe.standard_pages["Workspaces"] = function () {
 
 	frappe.ui.make_app_page({
 		parent: wrapper,
-		name: "Workspaces",
+		id: "Workspaces",
 		title: __("Workspace"),
 	});
 
@@ -247,11 +247,11 @@ frappe.views.Workspace = class Workspace {
 
 	append_item(item, container) {
 		let is_current_page =
-			frappe.router.slug(item.title) == frappe.router.slug(this.get_page_to_show().name) &&
+			frappe.router.slug(item.title) == frappe.router.slug(this.get_page_to_show().id) &&
 			item.public == this.get_page_to_show().public;
 		item.selected = is_current_page;
 		if (is_current_page) {
-			this.current_page = { name: item.title, public: item.public };
+			this.current_page = { id: item.title, public: item.public };
 		}
 
 		let $item_container = this.sidebar_item_container(item);
@@ -350,7 +350,7 @@ frappe.views.Workspace = class Workspace {
 					$sidebar.parent().hasClass("hidden") &&
 					$sidebar.parent().removeClass("hidden");
 
-				this.current_page = { name: page.id, public: page.public };
+				this.current_page = { id: page.id, public: page.public };
 				localStorage.current_page = page.id;
 				localStorage.is_current_page_public = page.public;
 			} else {
@@ -381,7 +381,7 @@ frappe.views.Workspace = class Workspace {
 							? JSON.parse(settings.chart_config)
 							: {};
 						this.page_data.charts.items.map((chart) => {
-							chart.chart_settings = chart_config[chart.chart_name] || {};
+							chart.chart_settings = chart_config[chart.chart_id] || {};
 						});
 						this.pages[page.id] = this.page_data;
 					}
@@ -394,7 +394,7 @@ frappe.views.Workspace = class Workspace {
 
 		if (frappe.boot.user.default_workspace) {
 			default_page = {
-				name: frappe.boot.user.default_workspace.title,
+				id: frappe.boot.user.default_workspace.title,
 				public: frappe.boot.user.default_workspace.public,
 			};
 		} else if (
@@ -402,19 +402,19 @@ frappe.views.Workspace = class Workspace {
 			this.all_pages.filter((page) => page.title == localStorage.current_page).length != 0
 		) {
 			default_page = {
-				name: localStorage.current_page,
+				id: localStorage.current_page,
 				public: localStorage.is_current_page_public != "false",
 			};
 		} else if (Object.keys(this.all_pages).length !== 0) {
-			default_page = { name: this.all_pages[0].title, public: this.all_pages[0].public };
+			default_page = { id: this.all_pages[0].title, public: this.all_pages[0].public };
 		} else {
-			default_page = { name: "Build", public: true };
+			default_page = { id: "Build", public: true };
 		}
 
 		const route = frappe.get_route();
 		const page = (route[1] == "private" ? route[2] : route[1]) || default_page.id;
 		const is_public = route[1] ? route[1] != "private" : default_page.public;
-		return { name: page, public: is_public };
+		return { id: page, public: is_public };
 	}
 
 	async show_page(page) {
@@ -460,11 +460,11 @@ frappe.views.Workspace = class Workspace {
 		if (index !== -1) {
 			this.content.splice(index + 1, 0, {
 				type: "card",
-				data: { card_name: "Custom Documents", col: 4 },
+				data: { card_id: "Custom Documents", col: 4 },
 			});
 			this.content.splice(index + 2, 0, {
 				type: "card",
-				data: { card_name: "Custom Reports", col: 4 },
+				data: { card_id: "Custom Reports", col: 4 },
 			});
 		}
 	}
@@ -702,7 +702,7 @@ frappe.views.Workspace = class Workspace {
 				frappe.call({
 					method: "frappe.desk.doctype.workspace.workspace.update_page",
 					args: {
-						name: old_item.name,
+						id: old_item.id,
 						title: values.title,
 						icon: values.icon || "",
 						indicator_color: values.indicator_color || "",
@@ -803,19 +803,19 @@ frappe.views.Workspace = class Workspace {
 		duplicate && old_item_index++;
 
 		// update frappe.workspaces
-		if (frappe.workspaces[frappe.router.slug(old_item.name)] || new_page) {
-			!duplicate && delete frappe.workspaces[frappe.router.slug(old_item.name)];
+		if (frappe.workspaces[frappe.router.slug(old_item.id)] || new_page) {
+			!duplicate && delete frappe.workspaces[frappe.router.slug(old_item.id)];
 			if (new_item) {
-				frappe.workspaces[frappe.router.slug(new_item.name)] = { title: new_item.title };
+				frappe.workspaces[frappe.router.slug(new_item.id)] = { title: new_item.title };
 			}
 		}
 
 		// update page block data
-		if ((this.pages && this.pages[old_item.name]) || new_page) {
+		if ((this.pages && this.pages[old_item.id]) || new_page) {
 			if (new_item) {
-				this.pages[new_item.name] = this.pages[old_item.name] || {};
+				this.pages[new_item.id] = this.pages[old_item.id] || {};
 			}
-			!duplicate && delete this.pages[old_item.name];
+			!duplicate && delete this.pages[old_item.id];
 		}
 
 		// update public and private pages
@@ -1022,14 +1022,14 @@ frappe.views.Workspace = class Workspace {
 				frappe.call({
 					method: "frappe.desk.doctype.workspace.workspace.duplicate_page",
 					args: {
-						page_name: page.id,
+						page_id: page.id,
 						new_page: values,
 					},
 					callback: function (res) {
 						if (res.message) {
 							let new_page = res.message;
 							let message = __(
-								"Duplicate of {0} named as {1} is created successfully",
+								"Duplicate of {0} idd as {1} is created successfully",
 								[page.title.bold(), new_page.title.bold()]
 							);
 							frappe.show_alert({ message: message, indicator: "green" });
@@ -1073,7 +1073,7 @@ frappe.views.Workspace = class Workspace {
 
 		this.add_drop_icon(page, $(sidebar_control), $(sidebar_item_container));
 
-		let cached_page = this.cached_pages.pages.findIndex((p) => p.name === page.id);
+		let cached_page = this.cached_pages.pages.findIndex((p) => p.id === page.id);
 		if (cached_page !== -1) {
 			this.cached_pages.pages[cached_page].is_hidden = hide;
 		}
@@ -1082,7 +1082,7 @@ frappe.views.Workspace = class Workspace {
 		frappe.call({
 			method: "frappe.desk.doctype.workspace.workspace." + method,
 			args: {
-				page_name: page.id,
+				page_id: page.id,
 			},
 			callback: (r) => {
 				if (!r.message) return;
@@ -1351,7 +1351,7 @@ frappe.views.Workspace = class Workspace {
 			child_pages.every((child_page) => {
 				if (to_pages && to_pages.find((p) => p.title == child_page.title)) {
 					message = __(
-						"One of the child page with name {0} already exist in {1} Section. Please update the name of the child page first before moving",
+						"One of the child page with id {0} already exist in {1} Section. Please update the id of the child page first before moving",
 						[child_page.title.bold(), section.bold()]
 					);
 					cur_dialog.hide();
@@ -1487,7 +1487,7 @@ frappe.views.Workspace = class Workspace {
 
 	save_page(page) {
 		let me = this;
-		this.current_page = { name: page.title, public: page.public };
+		this.current_page = { id: page.title, public: page.public };
 
 		return this.editor
 			.save()
@@ -1507,8 +1507,8 @@ frappe.views.Workspace = class Workspace {
 				let blocks = outputData.blocks.filter(
 					(item) =>
 						item.type != "card" ||
-						(item.data.card_name !== "Custom Documents" &&
-							item.data.card_name !== "Custom Reports")
+						(item.data.card_id !== "Custom Documents" &&
+							item.data.card_id !== "Custom Reports")
 				);
 
 				if (

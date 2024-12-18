@@ -113,29 +113,29 @@ frappe.report_utils = {
 		return column;
 	},
 
-	get_report_filters: function (report_name) {
-		if (frappe.query_reports[report_name]) {
-			let filters = frappe.query_reports[report_name].filters;
+	get_report_filters: function (report_id) {
+		if (frappe.query_reports[report_id]) {
+			let filters = frappe.query_reports[report_id].filters;
 			return Promise.resolve(filters);
 		}
 
 		return frappe
 			.xcall("frappe.desk.query_report.get_script", {
-				report_name: report_name,
+				report_id: report_id,
 			})
 			.then((r) => {
 				frappe.dom.eval(r.script || "");
 				return frappe.after_ajax(() => {
 					if (
-						frappe.query_reports[report_name] &&
-						!frappe.query_reports[report_name].filters &&
+						frappe.query_reports[report_id] &&
+						!frappe.query_reports[report_id].filters &&
 						r.filters
 					) {
-						return (frappe.query_reports[report_name].filters = r.filters);
+						return (frappe.query_reports[report_id].filters = r.filters);
 					}
 					return (
-						frappe.query_reports[report_name] &&
-						frappe.query_reports[report_name].filters
+						frappe.query_reports[report_id] &&
+						frappe.query_reports[report_id].filters
 					);
 				});
 			});
@@ -165,7 +165,7 @@ frappe.report_utils = {
 		return get_result[fn](values);
 	},
 
-	get_export_dialog(report_name, extra_fields, callback) {
+	get_export_dialog(report_id, extra_fields, callback) {
 		const fields = [
 			{
 				label: "File Format",
@@ -224,7 +224,7 @@ frappe.report_utils = {
 		}
 
 		const dialog = new frappe.ui.Dialog({
-			title: __("Export Report: {0}", [report_name], "Export report"),
+			title: __("Export Report: {0}", [report_id], "Export report"),
 			fields: fields,
 			primary_action_label: __("Download", null, "Export report"),
 			primary_action: callback,

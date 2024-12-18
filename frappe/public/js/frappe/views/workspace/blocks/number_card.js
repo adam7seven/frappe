@@ -31,8 +31,8 @@ export default class NumberCard extends Block {
 		this.wrapper = document.createElement("div");
 		this.new("number_card");
 
-		if (this.data && this.data.number_card_name) {
-			let has_data = this.make("number_card", this.data.number_card_name);
+		if (this.data && this.data.number_card_id) {
+			let has_data = this.make("number_card", this.data.number_card_id);
 			if (!has_data) return;
 		}
 
@@ -46,7 +46,7 @@ export default class NumberCard extends Block {
 	}
 
 	validate(savedData) {
-		if (!savedData.number_card_name) {
+		if (!savedData.number_card_id) {
 			return false;
 		}
 
@@ -55,7 +55,7 @@ export default class NumberCard extends Block {
 
 	save() {
 		return {
-			number_card_name: this.wrapper.getAttribute("number_card_name"),
+			number_card_id: this.wrapper.getAttribute("number_card_id"),
 			col: this.get_col(),
 			new: this.new_block_widget,
 		};

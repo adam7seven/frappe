@@ -1,12 +1,12 @@
 frappe.provide("frappe.ui");
 
 frappe.ui.DiffView = class DiffView {
-	constructor(doctype, fieldname, docname) {
+	constructor(doctype, fieldname, docid) {
 		this.dialog = null;
 		this.handler = null;
 		this.doctype = doctype;
 		this.fieldname = fieldname;
-		this.docname = docname;
+		this.docid = docid;
 
 		this.dialog = this.make_dialog();
 		this.set_empty_state();
@@ -17,7 +17,7 @@ frappe.ui.DiffView = class DiffView {
 		const get_query = () => ({
 			query: "frappe.utils.diff.version_query",
 			filters: {
-				docname: this.docname,
+				docid: this.docid,
 				ref_doctype: this.doctype,
 				fieldname: this.fieldname,
 				page_len: 100,

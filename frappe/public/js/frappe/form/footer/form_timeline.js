@@ -240,8 +240,8 @@ class FormTimeline extends BaseTimeline {
 				is_card: true,
 				content: this.get_communication_timeline_content(communication),
 				doctype: "Communication",
-				id: `communication-${communication.name}`,
-				name: communication.name,
+				id: `communication-${communication.id}`,
+				name: communication.id,
 			});
 		});
 
@@ -256,7 +256,7 @@ class FormTimeline extends BaseTimeline {
 			method: "frappe.desk.form.load.get_communications",
 			args: {
 				doctype: this.doc_info.doctype,
-				name: this.doc_info.name,
+				id: this.doc_info.id,
 				start: start,
 				limit: 21,
 			},
@@ -280,7 +280,7 @@ class FormTimeline extends BaseTimeline {
 	}
 
 	get_communication_timeline_content(doc, allow_reply = true) {
-		doc._url = frappe.utils.get_form_link("Communication", doc.name);
+		doc._url = frappe.utils.get_form_link("Communication", doc.id);
 		this.set_communication_doc_status(doc);
 		if (doc.attachments && typeof doc.attachments === "string") {
 			doc.attachments = JSON.parse(doc.attachments);
@@ -321,7 +321,7 @@ class FormTimeline extends BaseTimeline {
 				is_card: true,
 				content: this.get_communication_timeline_content(message, false),
 				doctype: "Communication",
-				name: message.name,
+				id: message.id,
 			});
 		});
 		return auto_messages_timeline_contents;
@@ -342,8 +342,8 @@ class FormTimeline extends BaseTimeline {
 			creation: comment.creation,
 			is_card: true,
 			doctype: "Comment",
-			id: `comment-${comment.name}`,
-			name: comment.name,
+			id: `comment-${comment.id}`,
+			name: comment.id,
 			content: this.get_comment_timeline_content(comment),
 		};
 	}
@@ -411,15 +411,15 @@ class FormTimeline extends BaseTimeline {
 			const filename = attachment_log.content;
 			const timeline_content = is_file_upload
 				? get_user_message(
-						attachment_log.owner,
-						__("You attached {0}", [filename], "Form timeline"),
-						__("{0} attached {1}", [user_link, filename], "Form timeline")
-				  )
+					attachment_log.owner,
+					__("You attached {0}", [filename], "Form timeline"),
+					__("{0} attached {1}", [user_link, filename], "Form timeline")
+				)
 				: get_user_message(
-						attachment_log.owner,
-						__("You removed attachment {0}", [filename], "Form timeline"),
-						__("{0} removed attachment {1}", [user_link, filename], "Form timeline")
-				  );
+					attachment_log.owner,
+					__("You removed attachment {0}", [filename], "Form timeline"),
+					__("{0} removed attachment {1}", [user_link, filename], "Form timeline")
+				);
 
 			attachment_timeline_contents.push({
 				icon: is_file_upload ? "es-line-attachment" : "es-line-delete",
@@ -618,7 +618,7 @@ class FormTimeline extends BaseTimeline {
 						${__("Delete")}
 					</a>
 				</li>
-			`).click(() => this.delete_comment(doc.name));
+			`).click(() => this.delete_comment(doc.id));
 			more_actions_wrapper.find(".dropdown-menu").append(delete_option);
 		}
 
@@ -638,7 +638,7 @@ class FormTimeline extends BaseTimeline {
 			edit_box.quill.enable(false);
 
 			doc.content = value;
-			this.update_comment(doc.name, value)
+			this.update_comment(doc.id, value)
 				.then(edit_button.toggle_edit_mode)
 				.finally(() => {
 					edit_button.prop("disabled", false);
@@ -686,9 +686,9 @@ class FormTimeline extends BaseTimeline {
 		});
 	}
 
-	update_comment(name, content) {
+	update_comment(id, content) {
 		return frappe
-			.xcall("frappe.desk.form.utils.update_comment", { name, content })
+			.xcall("frappe.desk.form.utils.update_comment", { id, content })
 			.then(() => {
 				frappe.utils.play_sound("click");
 			});
@@ -717,12 +717,12 @@ class FormTimeline extends BaseTimeline {
 		return filtered_records[0] || null;
 	}
 
-	delete_comment(comment_name) {
+	delete_comment(comment_id) {
 		frappe.confirm(__("Delete comment?"), () => {
 			return frappe
 				.xcall("frappe.client.delete", {
 					doctype: "Comment",
-					name: comment_name,
+					id: comment_id,
 				})
 				.then(() => {
 					frappe.utils.play_sound("delete");
@@ -732,7 +732,7 @@ class FormTimeline extends BaseTimeline {
 
 	copy_link(ev) {
 		let doc_link = frappe.urllib.get_full_url(
-			frappe.utils.get_form_link(this.frm.doctype, this.frm.docname)
+			frappe.utils.get_form_link(this.frm.doctype, this.frm.docid)
 		);
 		let element_id = $(ev.currentTarget).closest(".timeline-content").attr("id");
 		frappe.utils.copy_to_clipboard(`${doc_link}#${element_id}`);

@@ -68,10 +68,9 @@ export default class ListFilter {
 	}
 
 	filter_template(filter) {
-		return `<div class="list-link filter-pill list-sidebar-button btn btn-default" data-name="${
-			filter.name
-		}">
-			<a class="ellipsis filter-name">${filter.filter_name}</a>
+		return `<div class="list-link filter-pill list-sidebar-button btn btn-default" data-name="${filter.id
+			}">
+			<a class="ellipsis filter-name">${filter.filter_id}</a>
 			<a class="remove">${frappe.utils.icon("close")}</a>
 		</div>`;
 	}
@@ -93,9 +92,9 @@ export default class ListFilter {
 		this.wrapper.on("click", ".filter-pill .filter-name", (e) => {
 			let $filter = $(e.currentTarget).parent(".filter-pill");
 			this.set_applied_filter($filter);
-			const name = $filter.attr("data-name");
+			const id = $filter.attr("data-name");
 			this.list_view.filter_area.clear().then(() => {
-				this.list_view.filter_area.add(this.get_filters_values(name));
+				this.list_view.filter_area.add(this.get_filters_values(id));
 			});
 		});
 	}
@@ -108,10 +107,10 @@ export default class ListFilter {
 			frappe.confirm(
 				__("Are you sure you want to remove the {0} filter?", [filter_label.bold()]),
 				() => {
-					const name = $li.attr("data-name");
-					const applied_filters = this.get_filters_values(name);
+					const id = $li.attr("data-name");
+					const applied_filters = this.get_filters_values(id);
 					$li.remove();
-					this.remove_filter(name).then(() => this.refresh());
+					this.remove_filter(id).then(() => this.refresh());
 					this.list_view.filter_area.remove_filters(applied_filters);
 				}
 			);
@@ -125,7 +124,7 @@ export default class ListFilter {
 				const has_value = Boolean(value);
 
 				if (e.which === frappe.ui.keyCode["ENTER"]) {
-					if (!has_value || this.filter_name_exists(value)) return;
+					if (!has_value || this.filter_id_exists(value)) return;
 
 					this.filter_input.set_value("");
 					this.save_filter(value).then(() => this.refresh());
@@ -133,7 +132,7 @@ export default class ListFilter {
 				} else {
 					let help_text = __("Press Enter to save");
 
-					if (this.filter_name_exists(value)) {
+					if (this.filter_id_exists(value)) {
 						help_text = __("Duplicate Filter Name");
 					}
 
@@ -147,23 +146,23 @@ export default class ListFilter {
 		);
 	}
 
-	save_filter(filter_name) {
+	save_filter(filter_id) {
 		return frappe.db.insert({
 			doctype: "List Filter",
 			reference_doctype: this.list_view.doctype,
-			filter_name,
+			filter_id,
 			for_user: this.is_global_input.get_value() ? "" : frappe.session.user,
 			filters: JSON.stringify(this.get_current_filters()),
 		});
 	}
 
-	remove_filter(name) {
-		if (!name) return;
-		return frappe.db.delete_doc("List Filter", name);
+	remove_filter(id) {
+		if (!id) return;
+		return frappe.db.delete_doc("List Filter", id);
 	}
 
-	get_filters_values(name) {
-		const filter = this.filters.find((filter) => filter.name === name);
+	get_filters_values(id) {
+		const filter = this.filters.find((filter) => filter.id === id);
 		return JSON.parse(filter.filters || "[]");
 	}
 
@@ -171,21 +170,21 @@ export default class ListFilter {
 		return this.list_view.filter_area.get();
 	}
 
-	filter_name_exists(filter_name) {
-		return (this.filters || []).find((f) => f.filter_name === filter_name);
+	filter_id_exists(filter_id) {
+		return (this.filters || []).find((f) => f.filter_id === filter_id);
 	}
 
 	get_list_filters() {
 		if (frappe.session.user === "Guest") return Promise.resolve();
 		return frappe.db
 			.get_list("List Filter", {
-				fields: ["name", "filter_name", "for_user", "filters"],
+				fields: ["id", "filter_id", "for_user", "filters"],
 				filters: { reference_doctype: this.list_view.doctype },
 				or_filters: [
 					["for_user", "=", frappe.session.user],
 					["for_user", "=", ""],
 				],
-				order_by: "filter_name asc",
+				order_by: "filter_id asc",
 			})
 			.then((filters) => {
 				this.filters = filters || [];

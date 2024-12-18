@@ -36,7 +36,7 @@ export default class WebFormList {
 
 		frappe
 			.call("frappe.website.doctype.web_form.web_form.get_web_form_filters", {
-				web_form_name: this.web_form_name,
+				web_form_id: this.web_form_id,
 			})
 			.then((response) => {
 				let fields = response.message;
@@ -121,7 +121,7 @@ export default class WebFormList {
 				doctype: this.doctype,
 				limit_start: this.web_list_start,
 				limit: this.page_length,
-				web_form_name: this.web_form_name,
+				web_form_id: this.web_form_id,
 				...this.filters,
 			},
 		};
@@ -257,7 +257,7 @@ export default class WebFormList {
 		}
 
 		row_data.forEach((data_item) => {
-			let $row_element = $(`<tr id="${data_item.name}"></tr>`);
+			let $row_element = $(`<tr id="${data_item.id}"></tr>`);
 
 			let row = new frappe.ui.WebFormListRow({
 				row: $row_element,
@@ -265,7 +265,7 @@ export default class WebFormList {
 				columns: this.columns,
 				serial_number: this.rows.length + 1,
 				events: {
-					on_edit: () => this.open_form(data_item.name),
+					on_edit: () => this.open_form(data_item.id),
 					on_select: () => {
 						this.toggle_new();
 						this.toggle_delete();
@@ -288,14 +288,14 @@ export default class WebFormList {
 		});
 	}
 
-	add_button(wrapper, name, type, hidden, text, action) {
-		if ($(`.${name}`).length) return;
+	add_button(wrapper, id, type, hidden, text, action) {
+		if ($(`.${id}`).length) return;
 
 		hidden = hidden ? "hide" : "";
 		type = type == "danger" ? "danger button-delete" : type;
 
 		let button = $(`
-			<button class="${name} btn btn-${type} btn-sm ml-2 ${hidden}">${text}</button>
+			<button class="${id} btn btn-${type} btn-sm ml-2 ${hidden}">${text}</button>
 		`);
 
 		button.on("click", () => action());
@@ -313,13 +313,13 @@ export default class WebFormList {
 		this.rows.forEach((row) => row.toggle_select(checked));
 	}
 
-	open_form(name) {
+	open_form(id) {
 		let path = window.location.pathname;
 		if (path.includes("/list")) {
 			path = path.replace("/list", "");
 		}
 
-		window.location.href = path + "/" + name;
+		window.location.href = path + "/" + id;
 	}
 
 	get_selected() {
@@ -345,8 +345,8 @@ export default class WebFormList {
 				type: "POST",
 				method: "frappe.website.doctype.web_form.web_form.delete_multiple",
 				args: {
-					web_form_name: this.web_form_name,
-					docnames: this.get_selected().map((row) => row.doc.name),
+					web_form_id: this.web_form_id,
+					docids: this.get_selected().map((row) => row.doc.id),
 				},
 			})
 			.then(() => {

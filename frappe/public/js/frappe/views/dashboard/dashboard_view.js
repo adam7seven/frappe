@@ -13,7 +13,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 		});
 	}
 
-	render() {}
+	render() { }
 
 	setup_page() {
 		this.hide_sidebar = true;
@@ -123,8 +123,8 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 				? JSON.parse(settings.chart_config)
 				: {};
 			this.charts.map((chart) => {
-				chart.label = chart.chart_name;
-				chart.chart_settings = this.dashboard_chart_settings[chart.chart_name] || {};
+				chart.label = chart.chart_id;
+				chart.chart_settings = this.dashboard_chart_settings[chart.chart_id] || {};
 			});
 			this.render_dashboard_charts();
 		});
@@ -135,14 +135,14 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 		}
 	}
 
-	fetch_dashboard_items(doctype, filters, obj_name) {
+	fetch_dashboard_items(doctype, filters, obj_id) {
 		return frappe.db
 			.get_list(doctype, {
 				filters: filters,
 				fields: ["*"],
 			})
 			.then((items) => {
-				this[obj_name] = items;
+				this[obj_id] = items;
 			});
 	}
 
@@ -231,8 +231,8 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 	get_widgets_to_save(widget_group) {
 		const config = widget_group.get_widget_config();
 		let widgets = [];
-		config.order.map((widget_name) => {
-			widgets.push(config.widgets[widget_name]);
+		config.order.map((widget_id) => {
+			widgets.push(config.widgets[widget_id]);
 		});
 		return this.remove_duplicates(widgets);
 	}
@@ -441,7 +441,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 			primary_action: (values) => {
 				let chart = values;
 				if (chart.new_or_existing == "New Chart") {
-					chart.chart_name = chart.label;
+					chart.chart_id = chart.label;
 					chart.chart_type =
 						chart.chart_type == "Time Series"
 							? chart.chart_function
@@ -455,16 +455,16 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 						)
 						.then((doc) => {
 							this.chart_group.new_widget.on_create({
-								chart_name: doc.chart_name,
-								name: doc.chart_name,
+								chart_id: doc.chart_id,
+								id: doc.chart_id,
 								label: chart.label,
 							});
 						});
 				} else {
 					this.chart_group.new_widget.on_create({
-						chart_name: chart.chart,
+						chart_id: chart.chart,
 						label: chart.chart,
-						name: chart.chart,
+						id: chart.chart,
 					});
 				}
 				dialog.hide();

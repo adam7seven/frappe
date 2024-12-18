@@ -18,7 +18,7 @@
 					{% } %}
 					{% if (frappe.boot.user.impersonated_by) { %}
 						<span class="indicator-pill red no-indicator-dot" title="{%= __("You are impersonating as another user.") %}">
-							{%= __("Impersonating {0}", [frappe.boot.user.name]) %}
+							{%= __("Impersonating {0}", [frappe.boot.user.id]) %}
 						</span>
 					{% } %}
 					<div class="input-group search-bar text-muted hidden">

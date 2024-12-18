@@ -28,7 +28,7 @@
 	{% for (var i=0, l=shared.length; i < l; i++) {
 		var s = shared[i]; %}
 		{% if(s && !s.everyone) { %}
-		<div class="row shared-user" data-user="{%= s.user %}" data-name="{%= s.name %}">
+		<div class="row shared-user" data-user="{%= s.user %}" data-name="{%= s.id %}">
 			<div class="col-xs-4">{%= s.user %}</div>
 			<div class="col-xs-2 flex justify-center align-center"><input type="checkbox" name="read"
 				{% if(cint(s.read)) { %}checked{% } %} class="edit-share"></div>

@@ -181,7 +181,7 @@ export default class Grid {
 			const $check = $(e.currentTarget);
 			const checked = $check.prop("checked");
 			const is_select_all = $check.parents(".grid-heading-row:first").length !== 0;
-			const docname = $check.parents(".grid-row:first")?.attr("data-name");
+			const docid = $check.parents(".grid-row:first")?.attr("data-name");
 
 			if (is_select_all) {
 				// (un)check all visible checkboxes
@@ -194,26 +194,26 @@ export default class Grid {
 				for (let ri = (page_index - 1) * page_length; ri < result_length; ri++) {
 					this.grid_rows[ri].select(checked);
 				}
-			} else if (docname) {
-				if (e.shiftKey && this.last_checked_docname) {
-					this.check_range(docname, this.last_checked_docname, checked);
+			} else if (docid) {
+				if (e.shiftKey && this.last_checked_docid) {
+					this.check_range(docid, this.last_checked_docid, checked);
 				}
-				this.grid_rows_by_docname[docname].select(checked);
-				this.last_checked_docname = docname;
+				this.grid_rows_by_docid[docid].select(checked);
+				this.last_checked_docid = docid;
 			}
 			this.refresh_remove_rows_button();
 		});
 	}
 
 	/**
-	 * Checks or unchecks all checkboxes between two rows (included), given their docnames.
-	 * Rows are only checked only if both parameters are valid docnames.
-	 * @param {string} docname1
-	 * @param {string} docname2
+	 * Checks or unchecks all checkboxes between two rows (included), given their docids.
+	 * Rows are only checked only if both parameters are valid docids.
+	 * @param {string} docid1
+	 * @param {string} docid2
 	 */
-	check_range(docname1, docname2, checked = true) {
-		const row_1 = this.grid_rows_by_docname[docname1];
-		const row_2 = this.grid_rows_by_docname[docname2];
+	check_range(docid1, docid2, checked = true) {
+		const row_1 = this.grid_rows_by_docid[docid1];
+		const row_2 = this.grid_rows_by_docid[docid2];
 		const index_1 = this.grid_rows.indexOf(row_1);
 		const index_2 = this.grid_rows.indexOf(row_2);
 		if (index_1 === -1 || index_2 === -1) return;
@@ -236,7 +236,7 @@ export default class Grid {
 					this.df.data = this.get_data();
 					this.df.data = this.df.data.filter((row) => row.idx != doc.idx);
 				}
-				this.grid_rows_by_docname[doc.name]?.remove();
+				this.grid_rows_by_docid[doc.id]?.remove();
 				dirty = true;
 			});
 			tasks.push(() => frappe.timeout(0.1));
@@ -282,8 +282,8 @@ export default class Grid {
 		frappe.utils.scroll_to(this.wrapper);
 	}
 
-	select_row(name) {
-		this.grid_rows_by_docname[name].select();
+	select_row(id) {
+		this.grid_rows_by_docid[id].select();
 	}
 
 	remove_all() {
@@ -313,7 +313,7 @@ export default class Grid {
 	get_selected() {
 		return (this.grid_rows || [])
 			.map((row) => {
-				return row.doc.__checked ? row.doc.name : null;
+				return row.doc.__checked ? row.doc.id : null;
 			})
 			.filter((d) => {
 				return d;
@@ -426,7 +426,7 @@ export default class Grid {
 
 		this.truncate_rows();
 		/** @type {Record<string, GridRow>} */
-		this.grid_rows_by_docname = {};
+		this.grid_rows_by_docid = {};
 
 		this.grid_pagination.update_page_numbers();
 		this.render_result_rows($rows, false);
@@ -444,7 +444,7 @@ export default class Grid {
 		}
 
 		this.last_display_status = this.display_status;
-		this.last_docname = this.frm && this.frm.docname;
+		this.last_docid = this.frm && this.frm.docid;
 
 		// red if mandatory
 		this.form_grid.toggleClass("error", !!(this.df.reqd && !(this.data && this.data.length)));
@@ -489,7 +489,7 @@ export default class Grid {
 				this.grid_rows[ri] = grid_row;
 			}
 
-			this.grid_rows_by_docname[d.name] = grid_row;
+			this.grid_rows_by_docid[d.id] = grid_row;
 		}
 	}
 
@@ -534,12 +534,12 @@ export default class Grid {
 
 	setup_fields() {
 		// reset docfield
-		if (this.frm && this.frm.docname) {
+		if (this.frm && this.frm.docid) {
 			// use doc specific docfield object
 			this.df = frappe.meta.get_docfield(
 				this.frm.doctype,
 				this.df.fieldname,
-				this.frm.docname
+				this.frm.docid
 			);
 		} else {
 			// use non-doc specific docfield
@@ -552,7 +552,7 @@ export default class Grid {
 		}
 
 		if (this.doctype && this.frm) {
-			this.docfields = frappe.meta.get_docfields(this.doctype, this.frm.docname);
+			this.docfields = frappe.meta.get_docfields(this.doctype, this.frm.docid);
 		} else {
 			// fields given in docfield
 			this.docfields = this.df.fields;
@@ -563,13 +563,13 @@ export default class Grid {
 		});
 	}
 
-	refresh_row(docname) {
-		this.grid_rows_by_docname[docname] && this.grid_rows_by_docname[docname].refresh();
+	refresh_row(docid) {
+		this.grid_rows_by_docid[docid] && this.grid_rows_by_docid[docid].refresh();
 	}
 
 	make_sortable($rows) {
 		this.grid_sortable = new Sortable($rows.get(0), {
-			group: { name: this.df.fieldname },
+			group: { id: this.df.fieldname },
 			handle: ".sortable-handle",
 			draggable: ".grid-row",
 			animation: 100,
@@ -594,7 +594,7 @@ export default class Grid {
 					this.frm.script_manager.trigger(
 						this.df.fieldname + "_move",
 						this.df.options,
-						doc.name
+						doc.id
 					);
 				this.refresh();
 				this.frm && this.frm.dirty();
@@ -680,10 +680,10 @@ export default class Grid {
 	get_modal_data() {
 		return this.df.get_data
 			? this.df.get_data().filter((data) => {
-					if (!this.deleted_docs || !this.deleted_docs.includes(data.name)) {
-						return data;
-					}
-			  })
+				if (!this.deleted_docs || !this.deleted_docs.includes(data.id)) {
+					return data;
+				}
+			})
 			: [];
 	}
 
@@ -763,7 +763,7 @@ export default class Grid {
 		return frappe.meta.get_docfield(
 			this.doctype,
 			fieldname,
-			this.frm ? this.frm.docname : null
+			this.frm ? this.frm.docid : null
 		);
 	}
 
@@ -775,7 +775,7 @@ export default class Grid {
 				return this.grid_rows[key];
 			}
 		} else {
-			return this.grid_rows_by_docname[key];
+			return this.grid_rows_by_docid[key];
 		}
 	}
 
@@ -790,8 +790,8 @@ export default class Grid {
 	}
 
 	set_value(fieldname, value, doc) {
-		if (this.display_status !== "None" && doc?.name && this.grid_rows_by_docname?.[doc.name]) {
-			this.grid_rows_by_docname[doc.name].refresh_field(fieldname, value);
+		if (this.display_status !== "None" && doc?.id && this.grid_rows_by_docid?.[doc.id]) {
+			this.grid_rows_by_docid[doc.id].refresh_field(fieldname, value);
 		}
 	}
 
@@ -823,7 +823,7 @@ export default class Grid {
 					d = this.duplicate_row(d, copy_doc);
 				}
 				d.__unedited = true;
-				this.frm.script_manager.trigger(this.df.fieldname + "_add", d.doctype, d.name);
+				this.frm.script_manager.trigger(this.df.fieldname + "_add", d.doctype, d.id);
 				this.refresh();
 			} else {
 				if (!this.df.data) {
@@ -870,13 +870,13 @@ export default class Grid {
 			let $item = $(item);
 			let index =
 				(this.grid_pagination.page_index - 1) * this.grid_pagination.page_length + i;
-			let d = this.grid_rows_by_docname[$item.attr("data-name")].doc;
+			let d = this.grid_rows_by_docid[$item.attr("data-name")].doc;
 			d.idx = index + 1;
 			$item.attr("data-idx", d.idx);
 
 			if (this.frm) this.frm.doc[this.df.fieldname][index] = d;
 			this.data[index] = d;
-			this.grid_rows[index] = this.grid_rows_by_docname[d.name];
+			this.grid_rows[index] = this.grid_rows_by_docid[d.id];
 		});
 	}
 
@@ -891,7 +891,7 @@ export default class Grid {
 					"owner",
 					"parent",
 					"doctype",
-					"name",
+					"id",
 					"parentfield",
 				].includes(key)
 			) {
@@ -979,7 +979,7 @@ export default class Grid {
 					if (
 						passes < 3 &&
 						["Int", "Currency", "Float", "Check", "Percent"].indexOf(df.fieldtype) !==
-							-1
+						-1
 					) {
 						// don't increase col size of these fields in first 3 passes
 						continue;

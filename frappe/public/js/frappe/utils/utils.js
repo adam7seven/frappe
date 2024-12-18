@@ -459,7 +459,7 @@ Object.assign(frappe.utils, {
 			case "phone":
 				regExp = /^([0-9 +_\-,.*#()]){1,20}$/;
 				break;
-			case "name":
+			case "id":
 				regExp = /^[\w][\w'-]*([ \w][\w'-]+)*$/;
 				break;
 			case "number":
@@ -538,11 +538,11 @@ Object.assign(frappe.utils, {
 
 	get_indicator_color: function (state) {
 		return frappe.db
-			.get_list("Workflow State", { filters: { name: state }, fields: ["name", "style"] })
+			.get_list("Workflow State", { filters: { id: state }, fields: ["id", "style"] })
 			.then((res) => {
 				const state = res[0];
 				if (!state.style) {
-					return frappe.utils.guess_colour(state.name);
+					return frappe.utils.guess_colour(state.id);
 				}
 				const style = state.style;
 				const colour_map = {
@@ -728,14 +728,14 @@ Object.assign(frappe.utils, {
 		var objPattern = new RegExp(
 			// Delimiters.
 			"(\\" +
-				strDelimiter +
-				"|\\r?\\n|\\r|^)" +
-				// Quoted fields.
-				'(?:"([^"]*(?:""[^"]*)*)"|' +
-				// Standard fields.
-				'([^"\\' +
-				strDelimiter +
-				"\\r\\n]*))",
+			strDelimiter +
+			"|\\r?\\n|\\r|^)" +
+			// Quoted fields.
+			'(?:"([^"]*(?:""[^"]*)*)"|' +
+			// Standard fields.
+			'([^"\\' +
+			strDelimiter +
+			"\\r\\n]*))",
 			"gi"
 		);
 
@@ -786,7 +786,7 @@ Object.assign(frappe.utils, {
 		return arrData;
 	},
 
-	warn_page_name_change: function () {
+	warn_page_id_change: function () {
 		frappe.msgprint(__("Note: Changing the Page Name will break previous URL to this page."));
 	},
 
@@ -912,14 +912,14 @@ Object.assign(frappe.utils, {
 	},
 	get_form_link: function (
 		doctype,
-		name,
+		id,
 		html = false,
 		display_text = null,
 		query_params_obj = null
 	) {
-		display_text = display_text || name;
-		name = encodeURIComponent(name);
-		let route = `/app/${encodeURIComponent(doctype.toLowerCase().replace(/ /g, "-"))}/${name}`;
+		display_text = display_text || id;
+		id = encodeURIComponent(id);
+		let route = `/app/${encodeURIComponent(doctype.toLowerCase().replace(/ /g, "-"))}/${id}`;
 		if (query_params_obj) {
 			route += frappe.utils.make_query_string(query_params_obj);
 		}
@@ -975,12 +975,12 @@ Object.assign(frappe.utils, {
 				const text_element = $elements.eq(i).find(text_class);
 				const text = text_element.text().toLowerCase();
 
-				let name = "";
+				let id = "";
 				if (data_attr && text_element.attr(data_attr)) {
-					name = text_element.attr(data_attr).toLowerCase();
+					id = text_element.attr(data_attr).toLowerCase();
 				}
 
-				if (text.includes(text_filter) || name.includes(text_filter)) {
+				if (text.includes(text_filter) || id.includes(text_filter)) {
 					$elements.eq(i).css("display", "");
 				} else {
 					$elements.eq(i).css("display", "none");
@@ -1095,12 +1095,12 @@ Object.assign(frappe.utils, {
 
 		if (/trident/i.test(M[1])) {
 			tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
-			return { name: "IE", version: tem[1] || "" };
+			return { id: "IE", version: tem[1] || "" };
 		}
 		if (M[1] === "Chrome") {
 			tem = ua.match(/\bOPR|Edge\/(\d+)/);
 			if (tem != null) {
-				return { name: "Opera", version: tem[1] };
+				return { id: "Opera", version: tem[1] };
 			}
 		}
 		M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, "-?"];
@@ -1108,7 +1108,7 @@ Object.assign(frappe.utils, {
 			M.splice(1, 1, tem[1]);
 		}
 		return {
-			name: M[0],
+			id: M[0],
 			version: M[1],
 		};
 	},
@@ -1215,13 +1215,12 @@ Object.assign(frappe.utils, {
 		} else {
 			size_class = `icon-${size}`;
 		}
-		return `<svg class="${
-			is_espresso
+		return `<svg class="${is_espresso
 				? icon_name.startsWith("es-solid")
 					? "es-icon es-solid"
 					: "es-icon es-line"
 				: "icon"
-		} ${svg_class} ${size_class}" style="${icon_style}" aria-hidden="true">
+			} ${svg_class} ${size_class}" style="${icon_style}" aria-hidden="true">
 			<use class="${icon_class}" href="${icon_name}"></use>
 		</svg>`;
 	},
@@ -1263,7 +1262,7 @@ Object.assign(frappe.utils, {
 	generate_route(item) {
 		const type = item.type.toLowerCase();
 		if (type === "doctype") {
-			item.doctype = item.name;
+			item.doctype = item.id;
 		}
 		let route = "";
 		if (!item.route) {
@@ -1309,17 +1308,17 @@ Object.assign(frappe.utils, {
 				}
 			} else if (type === "report") {
 				if (item.is_query_report) {
-					route = "query-report/" + item.name;
+					route = "query-report/" + item.id;
 				} else if (!item.is_query_report && item.report_ref_doctype) {
 					route =
-						frappe.router.slug(item.report_ref_doctype) + "/view/report/" + item.name;
+						frappe.router.slug(item.report_ref_doctype) + "/view/report/" + item.id;
 				} else {
-					route = "/report/" + item.name;
+					route = "/report/" + item.id;
 				}
 			} else if (type === "page") {
-				route = item.name;
+				route = item.id;
 			} else if (type === "dashboard") {
-				route = `dashboard-view/${item.name}`;
+				route = `dashboard-view/${item.id}`;
 			}
 		} else {
 			route = item.route;
@@ -1391,9 +1390,8 @@ Object.assign(frappe.utils, {
 	build_summary_item(summary) {
 		if (summary.type == "separator") {
 			return $(`<div class="summary-separator">
-				<div class="summary-value ${summary.color ? summary.color.toLowerCase() : "text-muted"}">${
-				summary.value
-			}</div>
+				<div class="summary-value ${summary.color ? summary.color.toLowerCase() : "text-muted"}">${summary.value
+				}</div>
 			</div>`);
 		}
 		let df = { fieldtype: summary.datatype };
@@ -1407,8 +1405,8 @@ Object.assign(frappe.utils, {
 		let color = summary.indicator
 			? summary.indicator.toLowerCase()
 			: summary.color
-			? summary.color.toLowerCase()
-			: "";
+				? summary.color.toLowerCase()
+				: "";
 
 		return $(`<div class="summary-item">
 			<span class="summary-label">${__(summary.label)}</span>
@@ -1416,21 +1414,21 @@ Object.assign(frappe.utils, {
 		</div>`);
 	},
 
-	print(doctype, docname, print_format, letterhead, lang_code) {
+	print(doctype, docid, print_format, letterhead, lang_code) {
 		let w = window.open(
 			frappe.urllib.get_full_url(
 				"/printview?doctype=" +
-					encodeURIComponent(doctype) +
-					"&name=" +
-					encodeURIComponent(docname) +
-					"&trigger_print=1" +
-					"&format=" +
-					encodeURIComponent(print_format) +
-					"&no_letterhead=" +
-					(letterhead ? "0" : "1") +
-					"&letterhead=" +
-					encodeURIComponent(letterhead) +
-					(lang_code ? "&_lang=" + lang_code : "")
+				encodeURIComponent(doctype) +
+				"&id=" +
+				encodeURIComponent(docid) +
+				"&trigger_print=1" +
+				"&format=" +
+				encodeURIComponent(print_format) +
+				"&no_letterhead=" +
+				(letterhead ? "0" : "1") +
+				"&letterhead=" +
+				encodeURIComponent(letterhead) +
+				(lang_code ? "&_lang=" + lang_code : "")
 			)
 		);
 
@@ -1545,16 +1543,16 @@ Object.assign(frappe.utils, {
 		return arr;
 	},
 
-	get_link_title(doctype, name) {
-		if (!doctype || !name || !frappe._link_titles) {
+	get_link_title(doctype, id) {
+		if (!doctype || !id || !frappe._link_titles) {
 			return;
 		}
 
-		return frappe._link_titles[doctype + "::" + name];
+		return frappe._link_titles[doctype + "::" + id];
 	},
 
-	add_link_title(doctype, name, value) {
-		if (!doctype || !name) {
+	add_link_title(doctype, id, value) {
+		if (!doctype || !id) {
 			return;
 		}
 
@@ -1563,27 +1561,27 @@ Object.assign(frappe.utils, {
 			frappe._link_titles = {};
 		}
 
-		frappe._link_titles[doctype + "::" + name] = value;
+		frappe._link_titles[doctype + "::" + id] = value;
 	},
 
-	fetch_link_title(doctype, name) {
-		if (!doctype || !name) {
+	fetch_link_title(doctype, id) {
+		if (!doctype || !id) {
 			return;
 		}
 		try {
 			return frappe
 				.xcall("frappe.desk.search.get_link_title", {
 					doctype: doctype,
-					docname: name,
+					docid: id,
 				})
 				.then((title) => {
-					frappe.utils.add_link_title(doctype, name, title);
+					frappe.utils.add_link_title(doctype, id, title);
 					return title;
 				});
 		} catch (error) {
 			console.log("Error while fetching link title.");
 			console.log(error);
-			return Promise.resolve(name);
+			return Promise.resolve(id);
 		}
 	},
 
@@ -1764,8 +1762,8 @@ Object.assign(frappe.utils, {
 
 				frappe.msgprint(
 					__("Tracking URL generated and copied to clipboard") +
-						": <br>" +
-						`<a href="${url}">${url.bold()}</a>`,
+					": <br>" +
+					`<a href="${url}">${url.bold()}</a>`,
 					__("Here's your tracking URL")
 				);
 			},

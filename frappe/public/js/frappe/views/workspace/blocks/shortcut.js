@@ -50,8 +50,8 @@ export default class Shortcut extends Block {
 		this.wrapper = document.createElement("div");
 		this.new("shortcut");
 
-		if (this.data && this.data.shortcut_name) {
-			let has_data = this.make("shortcut", this.data.shortcut_name);
+		if (this.data && this.data.shortcut_id) {
+			let has_data = this.make("shortcut", this.data.shortcut_id);
 			if (!has_data) return;
 		}
 
@@ -64,7 +64,7 @@ export default class Shortcut extends Block {
 	}
 
 	validate(savedData) {
-		if (!savedData.shortcut_name) {
+		if (!savedData.shortcut_id) {
 			return false;
 		}
 
@@ -73,7 +73,7 @@ export default class Shortcut extends Block {
 
 	save() {
 		return {
-			shortcut_name: this.wrapper.getAttribute("shortcut_name"),
+			shortcut_id: this.wrapper.getAttribute("shortcut_id"),
 			col: this.get_col(),
 			new: this.new_block_widget,
 		};

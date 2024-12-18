@@ -298,7 +298,7 @@ frappe.ui.GroupBy = class {
 
 			Object.assign(args, {
 				with_comment_count: false,
-				aggregate_on_field: this.aggregate_on_field || "name",
+				aggregate_on_field: this.aggregate_on_field || "id",
 				aggregate_on_doctype: this.aggregate_on_doctype || this.doctype,
 				aggregate_function: this.aggregate_function || "count",
 				group_by: this.report_view.group_by || null,
@@ -367,7 +367,7 @@ frappe.ui.GroupBy = class {
 		this.group_by_fields = {};
 		this.all_fields = {};
 
-		let excluded_fields = ["_liked_by", "idx", "name"];
+		let excluded_fields = ["_liked_by", "idx", "id"];
 		const standard_fields = frappe.model.std_fields.filter(
 			(df) => !excluded_fields.includes(df.fieldname)
 		);
@@ -413,8 +413,8 @@ frappe.ui.GroupBy = class {
 		const group_by_applied = Boolean(this.group_by_field);
 		const button_label = group_by_applied
 			? __("Grouped by <span style='font-weight:600;'>{0}</b>", [
-					this.get_group_by_field_label(),
-			  ])
+				this.get_group_by_field_label(),
+			])
 			: __("Add Group");
 
 		this.group_by_button

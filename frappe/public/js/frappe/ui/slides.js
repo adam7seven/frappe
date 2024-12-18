@@ -11,7 +11,7 @@ frappe.ui.Slide = class Slide {
 
 	setup() {
 		this.$wrapper = $('<div class="slide-wrapper hidden"></div>')
-			.attr({ "data-slide-id": this.id, "data-slide-name": this.name })
+			.attr({ "data-slide-id": this.id, "data-slide-name": this.id })
 			.appendTo(this.parent);
 	}
 
@@ -72,7 +72,7 @@ frappe.ui.Slide = class Slide {
 		this.set_reqd_fields();
 	}
 
-	setup_done_state() {}
+	setup_done_state() { }
 
 	// Form methods
 	get_atomic_fields() {
@@ -189,7 +189,7 @@ frappe.ui.Slide = class Slide {
 		return false;
 	}
 
-	before_show() {}
+	before_show() { }
 
 	show_slide() {
 		this.$wrapper.removeClass("hidden");
@@ -223,7 +223,7 @@ frappe.ui.Slide = class Slide {
 		this.$body.remove();
 	}
 
-	primary_action() {}
+	primary_action() { }
 };
 
 frappe.ui.Slides = class Slides {
@@ -243,7 +243,7 @@ frappe.ui.Slides = class Slides {
 		this.done_state = done_state;
 		this.before_load = before_load;
 		this.on_update = on_update;
-		this.page_name = "setup-wizard";
+		this.page_id = "setup-wizard";
 
 		this.slide_dict = {};
 
@@ -351,22 +351,22 @@ frappe.ui.Slides = class Slides {
 		$(`<div class="row">
 			<div class="col-sm-4 text-left prev-div">
 				<button class="prev-btn btn btn-secondary btn-sm" tabindex="0">${__(
-					"Previous",
-					null,
-					"Go to previous slide"
-				)}</button>
+			"Previous",
+			null,
+			"Go to previous slide"
+		)}</button>
 			</div>
 			<div class="col-sm-8 text-right next-div">
 				<button class="complete-btn btn btn-sm primary">${__(
-					"Complete Setup",
-					null,
-					"Finish the setup wizard"
-				)}</button>
+			"Complete Setup",
+			null,
+			"Finish the setup wizard"
+		)}</button>
 				<button class="next-btn btn btn-default btn-sm" tabindex="0">${__(
-					"Next",
-					null,
-					"Go to next slide"
-				)}</button>
+			"Next",
+			null,
+			"Go to next slide"
+		)}</button>
 			</div>
 		</div>`).appendTo(this.$footer);
 
@@ -432,7 +432,7 @@ frappe.ui.Slides = class Slides {
 		this.slide_dict[id] = null;
 	}
 
-	on_update(completed, total) {}
+	on_update(completed, total) { }
 
 	show_hide_prev_next(id) {
 		id === 0 ? this.$prev_btn.hide() : this.$prev_btn.show();

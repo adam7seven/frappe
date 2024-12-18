@@ -16,7 +16,7 @@ frappe.ui.form.Sidebar = class {
 		var sidebar_content = frappe.render_template("form_sidebar", {
 			doctype: this.frm.doctype,
 			frm: this.frm,
-			can_write: frappe.model.can_write(this.frm.doctype, this.frm.docname),
+			can_write: frappe.model.can_write(this.frm.doctype, this.frm.docid),
 		});
 
 		this.sidebar = $('<div class="form-sidebar overlay-sidebar hidden-xs hidden-sm"></div>')
@@ -53,7 +53,7 @@ frappe.ui.form.Sidebar = class {
 		});
 
 		this.like_icon.on("click", function () {
-			frappe.ui.toggle_like(me.like_wrapper, me.frm.doctype, me.frm.doc.name, function () {
+			frappe.ui.toggle_like(me.like_wrapper, me.frm.doctype, me.frm.doc.id, function () {
 				me.refresh_like();
 			});
 		});
@@ -95,8 +95,8 @@ frappe.ui.form.Sidebar = class {
 						__("You last edited this", null),
 						__("{0} last edited this", [get_user_link(this.frm.doc.modified_by)])
 					) +
-						" · " +
-						comment_when(this.frm.doc.modified)
+					" · " +
+					comment_when(this.frm.doc.modified)
 				);
 			this.sidebar
 				.find(".created-by")
@@ -106,8 +106,8 @@ frappe.ui.form.Sidebar = class {
 						__("You created this", null),
 						__("{0} created this", [get_user_link(this.frm.doc.owner)])
 					) +
-						" · " +
-						comment_when(this.frm.doc.creation)
+					" · " +
+					comment_when(this.frm.doc.creation)
 				);
 
 			this.refresh_like();
@@ -125,7 +125,7 @@ frappe.ui.form.Sidebar = class {
 				args: {
 					doctype: "Auto Repeat",
 					filters: {
-						name: this.frm.doc.auto_repeat,
+						id: this.frm.doc.auto_repeat,
 					},
 					fieldname: ["frequency"],
 				},
@@ -210,13 +210,13 @@ frappe.ui.form.Sidebar = class {
 			frappe
 				.call("frappe.desk.form.document_follow.update_follow", {
 					doctype: this.frm.doctype,
-					doc_name: this.frm.doc.name,
+					doc_id: this.frm.doc.id,
 					following: !is_followed,
 				})
 				.then(() => {
 					frappe.model.set_docinfo(
 						this.frm.doctype,
-						this.frm.doc.name,
+						this.frm.doc.id,
 						"is_document_followed",
 						!is_followed
 					);
@@ -243,7 +243,7 @@ frappe.ui.form.Sidebar = class {
 			.toggleClass("not-liked", !liked)
 			.toggleClass("liked", liked)
 			.attr("data-doctype", this.frm.doctype)
-			.attr("data-name", this.frm.doc.name);
+			.attr("data-name", this.frm.doc.id);
 
 		this.like_count && this.like_count.text(JSON.parse(this.frm.doc._liked_by || "[]").length);
 	}
@@ -253,7 +253,7 @@ frappe.ui.form.Sidebar = class {
 		this.comments.find(".comments-count").html(count);
 	}
 
-	refresh_image() {}
+	refresh_image() { }
 
 	make_review() {
 		const review_wrapper = this.sidebar.find(".form-reviews");
@@ -272,7 +272,7 @@ frappe.ui.form.Sidebar = class {
 			method: "frappe.desk.form.load.get_docinfo",
 			args: {
 				doctype: this.frm.doctype,
-				name: this.frm.docname,
+				id: this.frm.docid,
 			},
 			callback: (r) => {
 				// docinfo will be synced

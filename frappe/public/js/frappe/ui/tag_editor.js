@@ -6,7 +6,7 @@ frappe.ui.TagEditor = class TagEditor {
 		- parent
 		- user_tags
 		- doctype
-		- docname
+		- docid
 		*/
 		$.extend(this, opts);
 
@@ -104,7 +104,7 @@ frappe.ui.TagEditor = class TagEditor {
 		return {
 			tag: tag,
 			dt: this.frm.doctype,
-			dn: this.frm.docname,
+			dn: this.frm.docid,
 		};
 	}
 	refresh(user_tags) {

@@ -25,7 +25,7 @@ frappe.ready(function () {
 	function show_list() {
 		new WebFormList({
 			doctype: web_form_doc.doc_type,
-			web_form_name: web_form_doc.name,
+			web_form_id: web_form_doc.id,
 			list_columns: web_form_doc.list_columns,
 			condition_json: web_form_doc.condition_json,
 			settings: {

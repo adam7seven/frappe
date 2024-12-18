@@ -5,10 +5,10 @@ export default class Block {
 		Object.assign(this, opts);
 	}
 
-	make(block, block_name, widget_type = block) {
+	make(block, block_id, widget_type = block) {
 		let block_data = this.config.page_data[block + "s"].items.find((obj) => {
 			return (
-				frappe.utils.unescape_html(obj.label) == frappe.utils.unescape_html(__(block_name))
+				frappe.utils.unescape_html(obj.label) == frappe.utils.unescape_html(__(block_id))
 			);
 		});
 		if (!block_data) return false;
@@ -23,7 +23,7 @@ export default class Block {
 			api: this.api,
 			block: this.block,
 		});
-		this.wrapper.setAttribute(block + "_name", block_name);
+		this.wrapper.setAttribute(block + "_id", block_id);
 		if (!this.readOnly) {
 			this.block_widget.customize();
 		}
@@ -93,7 +93,7 @@ export default class Block {
 	new(block, widget_type = block) {
 		let me = this;
 		const dialog_class = get_dialog_constructor(widget_type);
-		let block_name = block + "_name";
+		let block_id = block + "_id";
 		this.dialog = new dialog_class({
 			for_workspace: true,
 			label: this.label,
@@ -111,14 +111,14 @@ export default class Block {
 					},
 				});
 				this.block_widget.customize(this.options);
-				this.wrapper.setAttribute(block_name, this.block_widget.label);
+				this.wrapper.setAttribute(block_id, this.block_widget.label);
 				$(this.wrapper).find(".widget").addClass(`${widget_type}`);
 				this.new_block_widget = this.block_widget.get_config();
 				this.add_settings_button();
 			},
 		});
 
-		if (!this.readOnly && this.data && !this.data[block_name]) {
+		if (!this.readOnly && this.data && !this.data[block_id]) {
 			this.dialog.make();
 
 			this.dialog.dialog.get_close_btn().click(() => {
@@ -128,13 +128,13 @@ export default class Block {
 	}
 
 	on_edit(block_obj) {
-		let block_name = block_obj.edit_dialog.type + "_name";
+		let block_id = block_obj.edit_dialog.type + "_id";
 		if (block_obj.edit_dialog.type == "links") {
-			block_name = "card_name";
+			block_id = "card_id";
 		}
 		let block = block_obj.get_config();
 		this.block_widget.widgets = block;
-		this.wrapper.setAttribute(block_name, block.label);
+		this.wrapper.setAttribute(block_id, block.label);
 		this.new_block_widget = block_obj.get_config();
 	}
 

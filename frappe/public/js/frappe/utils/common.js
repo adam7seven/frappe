@@ -122,9 +122,8 @@ frappe.avatar_group = function (users, limit = 4, options = {}) {
 		`;
 	}
 
-	const $avatar_group = $(`<div class="avatar-group ${options.align || "right"} ${
-		options.overlap != false ? "overlap" : ""
-	}">
+	const $avatar_group = $(`<div class="avatar-group ${options.align || "right"} ${options.overlap != false ? "overlap" : ""
+		}">
 			${html}
 			${avatar_action_html}
 		</div>`);
@@ -423,7 +422,7 @@ frappe.utils.new_auto_repeat_prompt = function (frm) {
 				method: "frappe.automation.doctype.auto_repeat.auto_repeat.make_auto_repeat",
 				args: {
 					doctype: frm.doc.doctype,
-					docname: frm.doc.name,
+					docid: frm.doc.id,
 					frequency: values["frequency"],
 					start_date: values["start_date"],
 					end_date: values["end_date"],

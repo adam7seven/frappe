@@ -18,7 +18,7 @@ Object.assign(frappe.model, {
 			for (var i = 0, l = r.docs.length; i < l; i++) {
 				var d = r.docs[i];
 
-				if (locals[d.doctype] && locals[d.doctype][d.name]) {
+				if (locals[d.doctype] && locals[d.doctype][d.id]) {
 					// update values
 					frappe.model.update_in_locals(d);
 				} else {
@@ -31,8 +31,8 @@ Object.assign(frappe.model, {
 					frappe.meta.sync(d);
 				}
 
-				if (d.localname) {
-					frappe.model.rename_after_save(d, i);
+				if (d.localid) {
+					frappe.model.reid_after_save(d, i);
 				}
 			}
 		}
@@ -41,26 +41,26 @@ Object.assign(frappe.model, {
 		return r.docs;
 	},
 
-	rename_after_save: (d, i) => {
-		frappe.model.new_names[d.localname] = d.name;
-		$(document).trigger("rename", [d.doctype, d.localname, d.name]);
-		delete locals[d.doctype][d.localname];
+	reid_after_save: (d, i) => {
+		frappe.model.new_ids[d.localid] = d.id;
+		$(document).trigger("reid", [d.doctype, d.localid, d.id]);
+		delete locals[d.doctype][d.localid];
 
 		// update docinfo to new dict keys
 		if (i === 0) {
-			frappe.model.docinfo[d.doctype][d.name] = frappe.model.docinfo[d.doctype][d.localname];
-			frappe.model.docinfo[d.doctype][d.localname] = undefined;
+			frappe.model.docinfo[d.doctype][d.id] = frappe.model.docinfo[d.doctype][d.localid];
+			frappe.model.docinfo[d.doctype][d.localid] = undefined;
 		}
 	},
 
 	sync_docinfo: (r) => {
 		// set docinfo (comments, assign, attachments)
 		if (r.docinfo) {
-			const { doctype, name } = r.docinfo;
+			const { doctype, id } = r.docinfo;
 			if (!frappe.model.docinfo[doctype]) {
 				frappe.model.docinfo[doctype] = {};
 			}
-			frappe.model.docinfo[doctype][name] = r.docinfo;
+			frappe.model.docinfo[doctype][id] = r.docinfo;
 
 			// copy values to frappe.boot.user_info
 			Object.assign(frappe.boot.user_info, r.docinfo.user_info);
@@ -72,17 +72,17 @@ Object.assign(frappe.model, {
 	add_to_locals: function (doc) {
 		if (!locals[doc.doctype]) locals[doc.doctype] = {};
 
-		if (!doc.name && doc.__islocal) {
-			// get name (local if required)
+		if (!doc.id && doc.__islocal) {
+			// get id (local if required)
 			if (!doc.parentfield) frappe.model.clear_doc(doc);
 
-			doc.name = frappe.model.get_new_name(doc.doctype);
+			doc.id = frappe.model.get_new_id(doc.doctype);
 
 			if (!doc.parentfield)
-				frappe.provide("frappe.model.docinfo." + doc.doctype + "." + doc.name);
+				frappe.provide("frappe.model.docinfo." + doc.doctype + "." + doc.id);
 		}
 
-		locals[doc.doctype][doc.name] = doc;
+		locals[doc.doctype][doc.id] = doc;
 
 		let meta = frappe.get_meta(doc.doctype);
 		let is_table = meta ? meta.istable : doc.parentfield;
@@ -95,7 +95,7 @@ Object.assign(frappe.model, {
 					for (var x = 0, y = value.length; x < y; x++) {
 						var d = value[x];
 
-						if (typeof d == "object" && !d.parent) d.parent = doc.name;
+						if (typeof d == "object" && !d.parent) d.parent = doc.id;
 
 						frappe.model.add_to_locals(d);
 					}
@@ -106,7 +106,7 @@ Object.assign(frappe.model, {
 
 	update_in_locals: function (doc) {
 		// update values in the existing local doc instead of replacing
-		let local_doc = locals[doc.doctype][doc.name];
+		let local_doc = locals[doc.doctype][doc.id];
 		let clear_keys = function (source, target) {
 			Object.keys(target).map((key) => {
 				if (source[key] == undefined) delete target[key];
@@ -133,18 +133,18 @@ Object.assign(frappe.model, {
 						// deleted and added again
 						if (!locals[d.doctype]) locals[d.doctype] = {};
 
-						if (!d.name) {
-							// incoming row is new, find a new name
-							d.name = frappe.model.get_new_name(doc.doctype);
+						if (!d.id) {
+							// incoming row is new, find a new id
+							d.id = frappe.model.get_new_id(doc.doctype);
 						}
 
 						// if incoming row is not registered, register it
-						if (!locals[d.doctype][d.name]) {
+						if (!locals[d.doctype][d.id]) {
 							// detach old key
-							delete locals[d.doctype][local_d.name];
+							delete locals[d.doctype][local_d.id];
 
-							// re-attach with new name
-							locals[d.doctype][d.name] = local_d;
+							// re-attach with new id
+							locals[d.doctype][d.id] = local_d;
 						}
 
 						// row exists, just copy the values
@@ -152,7 +152,7 @@ Object.assign(frappe.model, {
 						clear_keys(d, local_d);
 					} else {
 						local_doc[fieldname].push(d);
-						if (!d.parent) d.parent = doc.name;
+						if (!d.parent) d.parent = doc.id;
 						frappe.model.add_to_locals(d);
 					}
 				}
@@ -162,8 +162,8 @@ Object.assign(frappe.model, {
 					for (let i = doc[fieldname].length; i < local_doc[fieldname].length; i++) {
 						// clear from local
 						let d = local_doc[fieldname][i];
-						if (locals[d.doctype] && locals[d.doctype][d.name]) {
-							delete locals[d.doctype][d.name];
+						if (locals[d.doctype] && locals[d.doctype][d.id]) {
+							delete locals[d.doctype][d.id];
 						}
 					}
 					local_doc[fieldname].length = doc[fieldname].length;

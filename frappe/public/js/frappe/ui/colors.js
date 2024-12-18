@@ -4,17 +4,17 @@
 frappe.provide("frappe.ui");
 
 frappe.ui.color = {
-	get: function (color_name, shade) {
-		if (color_name && shade) return this.get_color_shade(color_name, shade);
-		if (color_name) return this.get_color_shade(color_name, "default");
+	get: function (color_id, shade) {
+		if (color_id && shade) return this.get_color_shade(color_id, shade);
+		if (color_id) return this.get_color_shade(color_id, "default");
 		return frappe.ui.color_map;
 	},
-	get_color: function (color_name) {
-		const color_names = Object.keys(frappe.ui.color_map);
-		if (color_names.includes(color_name)) {
-			return frappe.ui.color_map[color_name];
+	get_color: function (color_id) {
+		const color_ids = Object.keys(frappe.ui.color_map);
+		if (color_ids.includes(color_id)) {
+			return frappe.ui.color_map[color_id];
 		} else {
-			console.warn(`'color_name' can be one of ${color_names} and not ${color_name}`);
+			console.warn(`'color_id' can be one of ${color_ids} and not ${color_id}`);
 		}
 	},
 	get_color_map() {
@@ -39,7 +39,7 @@ frappe.ui.color = {
 		});
 		return color_map;
 	},
-	get_color_shade: function (color_name, shade) {
+	get_color_shade: function (color_id, shade) {
 		const shades = {
 			default: 2,
 			light: 1,
@@ -48,8 +48,8 @@ frappe.ui.color = {
 		};
 
 		if (Object.keys(shades).includes(shade)) {
-			const color = this.get_color(color_name);
-			return color ? color[shades[shade]] : color_name;
+			const color = this.get_color(color_id);
+			return color ? color[shades[shade]] : color_id;
 		} else {
 			console.warn(`'shade' can be one of ${Object.keys(shades)} and not ${shade}`);
 		}
@@ -57,17 +57,17 @@ frappe.ui.color = {
 	all: function () {
 		return Object.values(frappe.ui.color_map).reduce((acc, curr) => acc.concat(curr), []);
 	},
-	names: function () {
+	ids: function () {
 		return Object.keys(frappe.ui.color_map);
 	},
-	is_standard: function (color_name) {
-		if (!color_name) return false;
-		if (color_name.startsWith("#")) {
-			return this.all().includes(color_name);
+	is_standard: function (color_id) {
+		if (!color_id) return false;
+		if (color_id.startsWith("#")) {
+			return this.all().includes(color_id);
 		}
-		return this.names().includes(color_name);
+		return this.ids().includes(color_id);
 	},
-	get_color_name: function (hex) {
+	get_color_id: function (hex) {
 		for (const key in frappe.ui.color_map) {
 			const colors = frappe.ui.color_map[key];
 			if (colors.includes(hex)) return key;
@@ -85,13 +85,13 @@ frappe.ui.color = {
 			return this.lighten(hex, -0.5);
 		}
 
-		const color_name = this.get_color_name(hex);
-		const colors = this.get_color(color_name);
+		const color_id = this.get_color_id(hex);
+		const colors = this.get_color(color_id);
 		const shade_value = colors.indexOf(hex);
 		if (shade_value <= 1) {
-			return this.get(color_name, "dark");
+			return this.get(color_id, "dark");
 		}
-		return this.get(color_name, "extra-light");
+		return this.get(color_id, "extra-light");
 	},
 
 	validate_hex: function (hex) {

@@ -94,7 +94,7 @@ frappe.ui.form.Review = class Review {
 					.xcall("frappe.social.doctype.energy_point_log.energy_point_log.review", {
 						doc: {
 							doctype: this.frm.doc.doctype,
-							name: this.frm.doc.name,
+							id: this.frm.doc.id,
 						},
 						to_user: values.to_user,
 						points: values.points,

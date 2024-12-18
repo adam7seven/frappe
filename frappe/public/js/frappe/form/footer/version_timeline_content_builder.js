@@ -15,9 +15,9 @@ function get_version_timeline_content(version_doc, frm) {
 	let updater_reference = data.updater_reference;
 	if (!$.isEmptyObject(updater_reference)) {
 		let label = updater_reference.label || __("via {0}", [updater_reference.doctype]);
-		let { doctype, docname } = updater_reference;
-		if (doctype && docname) {
-			updater_reference_link = frappe.utils.get_form_link(doctype, docname, true, label);
+		let { doctype, docid } = updater_reference;
+		if (doctype && docid) {
+			updater_reference_link = frappe.utils.get_form_link(doctype, docid, true, label);
 		} else {
 			updater_reference_link = label;
 		}
@@ -31,58 +31,58 @@ function get_version_timeline_content(version_doc, frm) {
 				if (p[2] === 1) {
 					let message = updater_reference_link
 						? get_user_message(
-								version_doc.owner,
-								__(
-									"You submitted this document {0}",
-									[updater_reference_link],
-									"Form timeline"
-								),
-								__(
-									"{0} submitted this document {1}",
-									[get_user_link(version_doc.owner), updater_reference_link],
-									"Form timeline"
-								)
-						  )
+							version_doc.owner,
+							__(
+								"You submitted this document {0}",
+								[updater_reference_link],
+								"Form timeline"
+							),
+							__(
+								"{0} submitted this document {1}",
+								[get_user_link(version_doc.owner), updater_reference_link],
+								"Form timeline"
+							)
+						)
 						: get_user_message(
-								version_doc.owner,
-								__("You submitted this document", null, "Form timeline"),
-								__(
-									"{0} submitted this document",
-									[get_user_link(version_doc.owner)],
-									"Form timeline"
-								)
-						  );
+							version_doc.owner,
+							__("You submitted this document", null, "Form timeline"),
+							__(
+								"{0} submitted this document",
+								[get_user_link(version_doc.owner)],
+								"Form timeline"
+							)
+						);
 
 					out.push(get_version_comment(version_doc, message));
 				} else if (p[2] === 2) {
 					let message = updater_reference_link
 						? get_user_message(
-								version_doc.owner,
-								__(
-									"You cancelled this document {1}",
-									[updater_reference_link],
-									"Form timeline"
-								),
-								__(
-									"{0} cancelled this document {1}",
-									[get_user_link(version_doc.owner), updater_reference_link],
-									"Form timeline"
-								)
-						  )
+							version_doc.owner,
+							__(
+								"You cancelled this document {1}",
+								[updater_reference_link],
+								"Form timeline"
+							),
+							__(
+								"{0} cancelled this document {1}",
+								[get_user_link(version_doc.owner), updater_reference_link],
+								"Form timeline"
+							)
+						)
 						: get_user_message(
-								version_doc.owner,
-								__("You cancelled this document", null, "Form timeline"),
-								__(
-									"{0} cancelled this document",
-									[get_user_link(version_doc.owner)],
-									"Form timeline"
-								)
-						  );
+							version_doc.owner,
+							__("You cancelled this document", null, "Form timeline"),
+							__(
+								"{0} cancelled this document",
+								[get_user_link(version_doc.owner)],
+								"Form timeline"
+							)
+						);
 
 					out.push(get_version_comment(version_doc, message));
 				}
 			} else {
-				const df = frappe.meta.get_docfield(frm.doctype, p[0], frm.docname);
+				const df = frappe.meta.get_docfield(frm.doctype, p[0], frm.docid);
 				if (df && (!df.hidden || df.show_on_timeline)) {
 					const field_display_status = frappe.perm.get_field_display_status(
 						df,
@@ -109,25 +109,25 @@ function get_version_timeline_content(version_doc, frm) {
 		if (parts.length) {
 			let message = updater_reference_link
 				? get_user_message(
-						version_doc.owner,
-						__("You changed the value of {0} {1}", [
-							parts.join(", "),
-							updater_reference_link,
-						]),
-						__("{0} changed the value of {1} {2}", [
-							get_user_link(version_doc.owner),
-							parts.join(", "),
-							updater_reference_link,
-						])
-				  )
+					version_doc.owner,
+					__("You changed the value of {0} {1}", [
+						parts.join(", "),
+						updater_reference_link,
+					]),
+					__("{0} changed the value of {1} {2}", [
+						get_user_link(version_doc.owner),
+						parts.join(", "),
+						updater_reference_link,
+					])
+				)
 				: get_user_message(
-						version_doc.owner,
-						__("You changed the value of {0}", [parts.join(", ")]),
-						__("{0} changed the value of {1}", [
-							get_user_link(version_doc.owner),
-							parts.join(", "),
-						])
-				  );
+					version_doc.owner,
+					__("You changed the value of {0}", [parts.join(", ")]),
+					__("{0} changed the value of {1}", [
+						get_user_link(version_doc.owner),
+						parts.join(", "),
+					])
+				);
 
 			out.push(get_version_comment(version_doc, message));
 		}
@@ -143,7 +143,7 @@ function get_version_timeline_content(version_doc, frm) {
 					frappe.meta.get_docfield(
 						frm.fields_dict[row[0]].grid.doctype,
 						p[0],
-						frm.docname
+						frm.docid
 					);
 
 				if (df && (!df.hidden || df.show_on_timeline)) {
@@ -175,25 +175,25 @@ function get_version_timeline_content(version_doc, frm) {
 		if (parts.length) {
 			let message = updater_reference_link
 				? get_user_message(
-						version_doc.owner,
-						__("You changed the values for {0} {1}", [
-							parts.join(", "),
-							updater_reference_link,
-						]),
-						__("{0} changed the values for {1} {2}", [
-							get_user_link(version_doc.owner),
-							parts.join(", "),
-							updater_reference_link,
-						])
-				  )
+					version_doc.owner,
+					__("You changed the values for {0} {1}", [
+						parts.join(", "),
+						updater_reference_link,
+					]),
+					__("{0} changed the values for {1} {2}", [
+						get_user_link(version_doc.owner),
+						parts.join(", "),
+						updater_reference_link,
+					])
+				)
 				: get_user_message(
-						version_doc.owner,
-						__("You changed the values for {0}", [parts.join(", ")]),
-						__("{0} changed the values for {1}", [
-							get_user_link(version_doc.owner),
-							parts.join(", "),
-						])
-				  );
+					version_doc.owner,
+					__("You changed the values for {0}", [parts.join(", ")]),
+					__("{0} changed the values for {1}", [
+						get_user_link(version_doc.owner),
+						parts.join(", "),
+					])
+				);
 
 			out.push(get_version_comment(version_doc, message));
 		}
@@ -204,7 +204,7 @@ function get_version_timeline_content(version_doc, frm) {
 	["added", "removed"].forEach(function (key) {
 		if (data[key] && data[key].length) {
 			let parts = (data[key] || []).map(function (p) {
-				var df = frappe.meta.get_docfield(frm.doctype, p[0], frm.docname);
+				var df = frappe.meta.get_docfield(frm.doctype, p[0], frm.docid);
 
 				if (df && (!df.hidden || df.show_on_timeline)) {
 					var field_display_status = frappe.perm.get_field_display_status(
@@ -263,11 +263,11 @@ function get_version_comment(version_doc, text) {
 				if ($(element).is("a")) {
 					version_comment += unlinked_content
 						? frappe.utils.get_form_link(
-								"Version",
-								version_doc.name,
-								true,
-								unlinked_content
-						  )
+							"Version",
+							version_doc.id,
+							true,
+							unlinked_content
+						)
 						: "";
 					unlinked_content = "";
 					version_comment += element.outerHTML;
@@ -278,7 +278,7 @@ function get_version_comment(version_doc, text) {
 			if (unlinked_content) {
 				version_comment += frappe.utils.get_form_link(
 					"Version",
-					version_doc.name,
+					version_doc.id,
 					true,
 					unlinked_content
 				);
@@ -288,7 +288,7 @@ function get_version_comment(version_doc, text) {
 			// pass
 		}
 	}
-	return frappe.utils.get_form_link("Version", version_doc.name, true, text);
+	return frappe.utils.get_form_link("Version", version_doc.id, true, text);
 }
 
 function format_content_for_timeline(content) {

@@ -20,7 +20,7 @@ frappe.ui.form.ControlButton = class ControlButton extends frappe.ui.form.Contro
 	onclick() {
 		if (this.frm && this.frm.doc) {
 			if (this.frm.script_manager.has_handlers(this.df.fieldname, this.doctype)) {
-				this.frm.script_manager.trigger(this.df.fieldname, this.doctype, this.docname);
+				this.frm.script_manager.trigger(this.df.fieldname, this.doctype, this.docid);
 			} else {
 				if (this.df.options) {
 					this.run_server_script();
@@ -33,7 +33,7 @@ frappe.ui.form.ControlButton = class ControlButton extends frappe.ui.form.Contro
 	run_server_script() {
 		// DEPRECATE
 		var me = this;
-		if (this.frm && this.frm.docname) {
+		if (this.frm && this.frm.docid) {
 			frappe.call({
 				method: "run_doc_method",
 				args: { docs: this.frm.doc, method: this.df.options },

@@ -67,7 +67,7 @@ $.extend(frappe.perm, {
 
 		if (doc) {
 			// apply user permissions via docinfo (which is processed server-side)
-			let docinfo = frappe.model.get_docinfo(doctype, doc.name);
+			let docinfo = frappe.model.get_docinfo(doctype, doc.id);
 			if (docinfo && docinfo.permissions) {
 				Object.keys(docinfo.permissions).forEach((ptype) => {
 					base_perm[ptype] = docinfo.permissions[ptype];
@@ -265,7 +265,7 @@ $.extend(frappe.perm, {
 	is_visible: (df, doc, perm) => {
 		if (typeof df === "string") {
 			// df is fieldname
-			df = frappe.meta.get_docfield(doc.doctype, df, doc.parent || doc.name);
+			df = frappe.meta.get_docfield(doc.doctype, df, doc.parent || doc.id);
 		}
 
 		let status = frappe.perm.get_field_display_status(df, doc, perm);

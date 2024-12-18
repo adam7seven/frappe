@@ -65,8 +65,8 @@ frappe.ui.form.save = function (frm, action, callback, btn) {
 			const is_empty_row = function (cells) {
 				for (let i = 0; i < cells.length; i++) {
 					if (
-						locals[doc.doctype][doc.name] &&
-						locals[doc.doctype][doc.name][cells[i].fieldname]
+						locals[doc.doctype][doc.id] &&
+						locals[doc.doctype][doc.id][cells[i].fieldname]
 					) {
 						return false;
 					}
@@ -75,7 +75,7 @@ frappe.ui.form.save = function (frm, action, callback, btn) {
 			};
 
 			if (is_empty_row(in_list_view_cells)) {
-				frappe.model.clear_doc(doc.doctype, doc.name);
+				frappe.model.clear_doc(doc.doctype, doc.id);
 				modified_table_fields.push(doc.parentfield);
 			}
 		});
@@ -88,7 +88,7 @@ frappe.ui.form.save = function (frm, action, callback, btn) {
 	var cancel = function () {
 		var args = {
 			doctype: frm.doc.doctype,
-			name: frm.doc.name,
+			id: frm.doc.id,
 		};
 
 		// update workflow state value if workflow exists
@@ -124,7 +124,7 @@ frappe.ui.form.save = function (frm, action, callback, btn) {
 
 			$.each(frappe.meta.docfield_list[doc.doctype] || [], function (i, docfield) {
 				if (docfield.fieldname) {
-					const df = frappe.meta.get_docfield(doc.doctype, docfield.fieldname, doc.name);
+					const df = frappe.meta.get_docfield(doc.doctype, docfield.fieldname, doc.id);
 
 					if (df.fieldtype === "Fold") {
 						folded = frm.layout.folded;
@@ -132,7 +132,7 @@ frappe.ui.form.save = function (frm, action, callback, btn) {
 
 					if (
 						is_docfield_mandatory(doc, df) &&
-						!frappe.model.has_value(doc.doctype, doc.name, df.fieldname)
+						!frappe.model.has_value(doc.doctype, doc.id, df.fieldname)
 					) {
 						has_errors = true;
 						error_fields[error_fields.length] = __(df.label, null, df.parent);
@@ -149,7 +149,7 @@ frappe.ui.form.save = function (frm, action, callback, btn) {
 				}
 			});
 
-			if (frm.is_new() && frm.meta.autoid === "Prompt" && !frm.doc.__newname) {
+			if (frm.is_new() && frm.meta.autoid === "Prompt" && !frm.doc.__newid) {
 				has_errors = true;
 				error_fields = [__("Name"), ...error_fields];
 			}
@@ -283,7 +283,7 @@ frappe.ui.form.remove_old_form_route = () => {
 
 frappe.ui.form.update_calling_link = (newdoc) => {
 	if (!frappe._from_link) return;
-	var doc = frappe.get_doc(frappe._from_link.doctype, frappe._from_link.docname);
+	var doc = frappe.get_doc(frappe._from_link.doctype, frappe._from_link.docid);
 
 	let is_valid_doctype = () => {
 		if (frappe._from_link.df.fieldtype === "Link") {
@@ -303,15 +303,15 @@ frappe.ui.form.update_calling_link = (newdoc) => {
 				$.each(
 					frappe._from_link.frm.fields_dict[doc.parentfield].grid.grid_rows,
 					function (index, field) {
-						if (field.doc && field.doc.name === frappe._from_link.docname) {
+						if (field.doc && field.doc.id === frappe._from_link.docid) {
 							if (meta.title_field && meta.show_title_field_in_link) {
 								frappe.utils.add_link_title(
 									newdoc.doctype,
-									newdoc.name,
+									newdoc.id,
 									newdoc[meta.title_field]
 								);
 							}
-							frappe._from_link.set_value(newdoc.name);
+							frappe._from_link.set_value(newdoc.id);
 						}
 					}
 				);
@@ -319,11 +319,11 @@ frappe.ui.form.update_calling_link = (newdoc) => {
 				if (meta.title_field && meta.show_title_field_in_link) {
 					frappe.utils.add_link_title(
 						newdoc.doctype,
-						newdoc.name,
+						newdoc.id,
 						newdoc[meta.title_field]
 					);
 				}
-				frappe._from_link.set_value(newdoc.name);
+				frappe._from_link.set_value(newdoc.id);
 			}
 
 			// refresh field
@@ -335,7 +335,7 @@ frappe.ui.form.update_calling_link = (newdoc) => {
 					.set_route(
 						"Form",
 						frappe._from_link.frm.doctype,
-						frappe._from_link.frm.docname
+						frappe._from_link.frm.docid
 					)
 					.then(() => {
 						frappe.utils.scroll_to(frappe._from_link_scrollY);

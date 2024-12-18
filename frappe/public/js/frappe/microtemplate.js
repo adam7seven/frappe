@@ -4,8 +4,8 @@
 frappe.template = { compiled: {}, debug: {} };
 
 /* eslint-disable */
-frappe.template.compile = function (str, name) {
-	var key = name || str;
+frappe.template.compile = function (str, id) {
+	var key = id || str;
 
 	if (!frappe.template.compiled[key]) {
 		if (str.indexOf("'") !== -1) {
@@ -83,7 +83,7 @@ frappe.template.compile = function (str, name) {
 				.join("\\'") +
 			"');}return _p.join('');";
 
-		frappe.template.debug[name] = fn_str;
+		frappe.template.debug[id] = fn_str;
 		try {
 			frappe.template.compiled[key] = new Function("obj", fn_str);
 		} catch (e) {
@@ -100,23 +100,23 @@ frappe.template.compile = function (str, name) {
 };
 /* eslint-enable */
 
-frappe.render = function (str, data, name) {
-	return frappe.template.compile(str, name)(data);
+frappe.render = function (str, data, id) {
+	return frappe.template.compile(str, id)(data);
 };
-frappe.render_template = function (name, data) {
+frappe.render_template = function (id, data) {
 	let template;
-	if (name.indexOf(" ") !== -1) {
-		template = name;
+	if (id.indexOf(" ") !== -1) {
+		template = id;
 	} else {
-		template = frappe.templates[name];
+		template = frappe.templates[id];
 	}
 	if (data === undefined) {
 		data = {};
 	}
 	if (!template) {
-		frappe.throw(`Template <b>${name}</b> not found.`);
+		frappe.throw(`Template <b>${id}</b> not found.`);
 	}
-	return frappe.render(template, data, name);
+	return frappe.render(template, data, id);
 };
 (frappe.render_grid = function (opts) {
 	// build context
@@ -203,13 +203,13 @@ frappe.render_pdf = function (html, opts = {}) {
 			var blob = new Blob([success.currentTarget.response], { type: "application/pdf" });
 			var objectUrl = URL.createObjectURL(blob);
 
-			// Create a hidden a tag to force set report name
+			// Create a hidden a tag to force set report id
 			// https://stackoverflow.com/questions/19327749/javascript-blob-filename-without-link
 			let hidden_a_tag = document.createElement("a");
 			document.body.appendChild(hidden_a_tag);
 			hidden_a_tag.style = "display: none";
 			hidden_a_tag.href = objectUrl;
-			hidden_a_tag.download = opts.report_name || "report.pdf";
+			hidden_a_tag.download = opts.report_id || "report.pdf";
 
 			// Open report in a new window
 			hidden_a_tag.click();

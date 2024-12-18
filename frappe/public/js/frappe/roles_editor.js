@@ -82,13 +82,12 @@ frappe.RoleEditor = class {
 								<td>${perm.permlevel}</td>
 								<td>${perm.if_owner ? frappe.utils.icon("check", "xs") : "-"}</td>
 								${frappe.perm.rights
-									.map(
-										(p) =>
-											`<td class="text-muted bold">${
-												perm[p] ? frappe.utils.icon("check", "xs") : "-"
-											}</td>`
-									)
-									.join("")}
+								.map(
+									(p) =>
+										`<td class="text-muted bold">${perm[p] ? frappe.utils.icon("check", "xs") : "-"
+										}</td>`
+								)
+								.join("")}
 							</tr>
 						`);
 					});
@@ -124,7 +123,7 @@ frappe.RoleEditor = class {
 		let checked_options = this.multicheck.get_checked_options();
 		roles.map((role_doc) => {
 			if (!checked_options.includes(role_doc.role)) {
-				frappe.model.clear_doc(role_doc.doctype, role_doc.name);
+				frappe.model.clear_doc(role_doc.doctype, role_doc.id);
 			}
 		});
 		checked_options.map((role) => {

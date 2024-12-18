@@ -27,9 +27,8 @@ frappe.dashboard_utils = {
 					.map(
 						(option, i) =>
 							`<li>
-						<a class="dropdown-item" data-fieldname="${
-							filter.fieldnames[i]
-						}" data-option="${encodeURIComponent(option)}">${__(option)}</a>
+						<a class="dropdown-item" data-fieldname="${filter.fieldnames[i]
+							}" data-option="${encodeURIComponent(option)}">${__(option)}</a>
 					</li>`
 					)
 					.join("");
@@ -70,12 +69,12 @@ frappe.dashboard_utils = {
 		if (chart.chart_type === "Custom" && chart.source) {
 			const method =
 				"frappe.desk.doctype.dashboard_chart_source.dashboard_chart_source.get_config";
-			return frappe.xcall(method, { name: chart.source }).then((config) => {
+			return frappe.xcall(method, { id: chart.source }).then((config) => {
 				frappe.dom.eval(config);
 				return frappe.dashboards.chart_sources[chart.source].filters;
 			});
-		} else if (chart.chart_type === "Report" && chart.report_name) {
-			return frappe.report_utils.get_report_filters(chart.report_name).then((filters) => {
+		} else if (chart.chart_type === "Report" && chart.report_id) {
+			return frappe.report_utils.get_report_filters(chart.report_id).then((filters) => {
 				return filters;
 			});
 		} else {
@@ -87,7 +86,7 @@ frappe.dashboard_utils = {
 		return frappe.db
 			.get_list("Dashboard Settings", {
 				filters: {
-					name: frappe.session.user,
+					id: frappe.session.user,
 				},
 				fields: ["*"],
 			})
@@ -256,20 +255,20 @@ frappe.dashboard_utils = {
 		return field;
 	},
 
-	get_add_to_dashboard_dialog(docname, doctype, method) {
+	get_add_to_dashboard_dialog(docid, doctype, method) {
 		const field = this.get_dashboard_link_field();
 
 		const dialog = new frappe.ui.Dialog({
 			title: __("Add to Dashboard"),
 			fields: [field],
 			primary_action: (values) => {
-				values.name = docname;
+				values.id = docid;
 				values.set_standard = frappe.boot.developer_mode;
 				frappe.xcall(method, { args: values }).then(() => {
 					let dashboard_route_html = `<a href = "/app/dashboard/${values.dashboard}">${values.dashboard}</a>`;
 					let message = __("{0} {1} added to Dashboard {2}", [
 						doctype,
-						values.name,
+						values.id,
 						dashboard_route_html,
 					]);
 

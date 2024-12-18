@@ -10,25 +10,25 @@ frappe.ui.form.FormViewers = class FormViewers {
 	}
 
 	get past_users() {
-		return this._past_users[this.frm?.doc?.name] || [];
+		return this._past_users[this.frm?.doc?.id] || [];
 	}
 
 	set past_users(users) {
-		const docname = this.frm?.doc?.name;
-		if (!docname) return;
+		const docid = this.frm?.doc?.id;
+		if (!docid) return;
 
-		this._past_users[docname] = users;
+		this._past_users[docid] = users;
 	}
 
 	get active_users() {
-		return this._active_users[this.frm?.doc?.name] || [];
+		return this._active_users[this.frm?.doc?.id] || [];
 	}
 
 	set active_users(users) {
-		const docname = this.frm?.doc?.name;
-		if (!docname) return;
+		const docid = this.frm?.doc?.id;
+		if (!docid) return;
 
-		this._active_users[docname] = users;
+		this._active_users[docid] = users;
 	}
 
 	refresh() {
@@ -51,7 +51,7 @@ frappe.ui.form.FormViewers = class FormViewers {
 		});
 	}
 
-	async update_users({ doctype, docname, users = [] }) {
+	async update_users({ doctype, docid, users = [] }) {
 		users = users.filter((u) => u != frappe.session.user);
 
 		const added_users = users.filter((user) => !this.past_users.includes(user));
@@ -65,7 +65,7 @@ frappe.ui.form.FormViewers = class FormViewers {
 		this.active_users = users;
 		this.past_users = users;
 
-		if (this.frm?.doc?.doctype === doctype && this.frm?.doc?.name == docname) {
+		if (this.frm?.doc?.doctype === doctype && this.frm?.doc?.id == docid) {
 			this.refresh();
 		}
 	}

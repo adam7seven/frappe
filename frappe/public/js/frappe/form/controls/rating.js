@@ -83,7 +83,7 @@ frappe.ui.form.ControlRating = class ControlRating extends frappe.ui.form.Contro
 			star_value = star_value / out_of_ratings;
 
 			this.validate_and_set_in_model(star_value, ev);
-			if (this.doctype && this.docname) {
+			if (this.doctype && this.docid) {
 				this.set_input(star_value);
 			}
 		}
