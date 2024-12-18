@@ -51,7 +51,7 @@ context("Sidebar", () => {
 		cy.call("frappe.tests.ui_test_helpers.create_todo", {
 			description: "Sidebar Attachment ToDo",
 		}).then((todo) => {
-			verify_attachment_visibility(`todo/${todo.message.name}`, true);
+			verify_attachment_visibility(`todo/${todo.message.id}`, true);
 		});
 		verify_attachment_visibility("blog-post/test-blog-attachment-post", false);
 	});
@@ -60,7 +60,7 @@ context("Sidebar", () => {
 		cy.call("frappe.tests.ui_test_helpers.create_todo_with_attachment_limit", {
 			description: "Sidebar Attachment Access Test ToDo",
 		}).then((todo) => {
-			cy.visit(`/app/todo/${todo.message.name}`);
+			cy.visit(`/app/todo/${todo.message.id}`);
 
 			attach_file("cypress/fixtures/sample_image.jpg");
 			cy.get(".explore-link").should("be.visible");
@@ -86,7 +86,7 @@ context("Sidebar", () => {
 		cy.call("frappe.tests.ui_test_helpers.create_todo", {
 			description: "Sidebar Attachment ToDo",
 		}).then((todo) => {
-			let todo_name = todo.message.name;
+			let todo_id = todo.message.id;
 			cy.visit("/app/todo");
 			cy.click_sidebar_button("Assigned To");
 
@@ -94,7 +94,7 @@ context("Sidebar", () => {
 			cy.get(".empty-state").should("contain", "No filters found");
 
 			//Assigning a doctype to a user
-			cy.visit(`/app/todo/${todo_name}`);
+			cy.visit(`/app/todo/${todo_id}`);
 			cy.get(".add-assignment-btn").click();
 			cy.get_field("assign_to_me", "Check").click();
 			cy.wait(1000);
@@ -132,7 +132,7 @@ context("Sidebar", () => {
 			cy.clear_filters();
 
 			//To remove the assignment
-			cy.visit(`/app/todo/${todo_name}`);
+			cy.visit(`/app/todo/${todo_id}`);
 			cy.get(".assignments > .avatar-group > .avatar > .avatar-frame").click();
 			cy.get(".remove-btn").click({ force: true });
 			cy.hide_dialog();

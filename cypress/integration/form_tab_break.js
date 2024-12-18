@@ -1,5 +1,5 @@
 import doctype_with_tab_break from "../fixtures/doctype_with_tab_break";
-const doctype_name = doctype_with_tab_break.name;
+const doctype_id = doctype_with_tab_break.id;
 context("Form Tab Break", () => {
 	before(() => {
 		cy.login();
@@ -7,7 +7,7 @@ context("Form Tab Break", () => {
 		return cy.insert_doc("DocType", doctype_with_tab_break, true);
 	});
 	it("Should switch tab and open correct tabs on validation error", () => {
-		cy.new_form(doctype_name);
+		cy.new_form(doctype_id);
 		// test tab switch
 		cy.findByRole("tab", { name: "Tab 2" }).click();
 		cy.findByText("Phone");

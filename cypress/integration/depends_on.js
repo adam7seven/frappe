@@ -7,7 +7,7 @@ context("Depends On", () => {
 			.its("frappe")
 			.then((frappe) => {
 				return frappe.xcall("frappe.tests.ui_test_helpers.create_child_doctype", {
-					name: "Child Test Depends On",
+					id: "Child Test Depends On",
 					fields: [
 						{
 							label: "Child Test Field",
@@ -32,7 +32,7 @@ context("Depends On", () => {
 			})
 			.then((frappe) => {
 				return frappe.xcall("frappe.tests.ui_test_helpers.create_doctype", {
-					name: "Test Depends On",
+					id: "Test Depends On",
 					fields: [
 						{
 							label: "Test Field",

@@ -4,11 +4,11 @@ context("Navigation", () => {
 		cy.login();
 		cy.visit("/app/website");
 	});
-	it("Navigate to route with hash in document name", () => {
+	it("Navigate to route with hash in document id", () => {
 		cy.insert_doc(
 			"Client Script",
 			{
-				__newname: "ABC#123",
+				__newid: "ABC#123",
 				dt: "User",
 				script: "console.log('ran')",
 				enabled: 0,

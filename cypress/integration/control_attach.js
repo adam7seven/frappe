@@ -7,7 +7,7 @@ context("Attach Control", () => {
 			.its("frappe")
 			.then((frappe) => {
 				return frappe.xcall("frappe.tests.ui_test_helpers.create_doctype", {
-					name: "Test Attach Control",
+					id: "Test Attach Control",
 					fields: [
 						{
 							label: "Attach File or Image",
@@ -172,7 +172,7 @@ context("Attach Control with Failed Document Save", () => {
 			.its("frappe")
 			.then((frappe) => {
 				return frappe.xcall("frappe.tests.ui_test_helpers.create_doctype", {
-					name: "Test Mandatory Attach Control",
+					id: "Test Mandatory Attach Control",
 					fields: [
 						{
 							label: "Attach File or Image",
@@ -191,13 +191,13 @@ context("Attach Control with Failed Document Save", () => {
 				});
 			});
 	});
-	let temp_name = "";
-	let docname = "";
+	let temp_id = "";
+	let docid = "";
 	it("Attaching a file on an unsaved document", () => {
 		//Navigating to the new form for the newly created doctype
 		cy.new_form("Test Mandatory Attach Control");
 		cy.get("body").should(($body) => {
-			temp_name = $body.attr("data-route").split("/")[2];
+			temp_id = $body.attr("data-route").split("/")[2];
 		});
 
 		//Clicking on the attach button which is displayed as part of creating a doctype with "Attach" fieldtype
@@ -225,7 +225,7 @@ context("Attach Control with Failed Document Save", () => {
 			.and("equal", "https://wallpaperplay.com/walls/full/8/2/b/72402.jpg");
 
 		cy.get(".title-text").then(($value) => {
-			docname = $value.text();
+			docid = $value.text();
 		});
 	});
 
@@ -234,17 +234,17 @@ context("Attach Control with Failed Document Save", () => {
 		cy.open_list_filter();
 		cy.get(".fieldname-select-area .form-control")
 			.click()
-			.type("Attached To Name{enter}")
+			.type("Attached To ID{enter}")
 			.blur()
 			.wait(500);
-		cy.get('input[data-fieldname="attached_to_name"]').click().type(docname).blur();
+		cy.get('input[data-fieldname="attached_to_id"]').click().type(docid).blur();
 		cy.get(".filter-popover .apply-filters").click({ force: true });
 		cy.get("header .level-right .list-count").should("contain.text", "1 of 1");
 	});
 
-	it("Check if file exists with temporary name", () => {
+	it("Check if file exists with temporary id", () => {
 		cy.open_list_filter();
-		cy.get('input[data-fieldname="attached_to_name"]').click().clear().type(temp_name).blur();
+		cy.get('input[data-fieldname="attached_to_id"]').click().clear().type(temp_id).blur();
 		cy.get(".filter-popover .apply-filters").click({ force: true });
 		cy.get(".frappe-list > .no-result").should("be.visible");
 	});

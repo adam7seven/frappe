@@ -30,7 +30,7 @@ describe("Dashboard view", { scrollBehavior: false }, () => {
 		cy.insert_doc(
 			"Dashboard",
 			{
-				name: dashboard,
+				id: dashboard,
 				dashboard_name: dashboard,
 				is_standard: 0,
 				charts: [

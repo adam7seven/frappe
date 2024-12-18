@@ -220,7 +220,7 @@ context("View", () => {
 		cy.window()
 			.its("cur_frm")
 			.then((frm) => {
-				expect(frm.doc.name).to.equal(test_user);
+				expect(frm.doc.id).to.equal(test_user);
 			});
 	});
 

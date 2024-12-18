@@ -7,7 +7,7 @@ context("Data Control", () => {
 			.its("frappe")
 			.then((frappe) => {
 				return frappe.xcall("frappe.tests.ui_test_helpers.create_doctype", {
-					name: "Test Data Control",
+					id: "Test Data Control",
 					fields: [
 						{
 							label: "Name",

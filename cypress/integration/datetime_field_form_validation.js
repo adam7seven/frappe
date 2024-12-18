@@ -12,7 +12,7 @@
 // 		cy.window().its('frappe').then(frappe => {
 // 			return frappe.xcall("frappe.tests.ui_test_helpers.create_communication_record");
 // 		}).then(doc => {
-// 			cy.visit(`/app/communication/${doc.name}`);
+// 			cy.visit(`/app/communication/${doc.id}`);
 // 			cy.get('.indicator-pill').should('contain', 'Open').should('have.class', 'red');
 // 		});
 // 	});

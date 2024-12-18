@@ -11,7 +11,7 @@ context("Kanban Board", () => {
 		cy.get(".page-actions .custom-btn-group ul.dropdown-menu li").contains("Kanban").click();
 
 		cy.focused().blur();
-		cy.fill_field("board_name", "ToDo Kanban", "Data");
+		cy.fill_field("board_id", "ToDo Kanban", "Data");
 		cy.fill_field("field_name", "Status", "Select");
 		cy.click_modal_primary_button("Save");
 
@@ -125,7 +125,7 @@ context("Kanban Board", () => {
 		cy.get(".kanban .column-options").should("have.length", 0);
 
 		cy.switch_to_user("Administrator");
-		cy.call("frappe.client.delete", { doctype: "User", name: not_system_manager });
+		cy.call("frappe.client.delete", { doctype: "User", id: not_system_manager });
 	});
 
 	after(() => {
