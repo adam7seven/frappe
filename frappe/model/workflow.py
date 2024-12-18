@@ -289,7 +289,7 @@ def _bulk_workflow_action(docids, doctype, action):
         except Exception as e:
             if not frappe.message_log:
                 # Exception is	raised manually and not from msgprint or throw
-                message = f"{e.__class__.__id__}"
+                message = f"{e.__class__.__name__}"
                 if e.args:
                     message += f" : {e.args[0]}"
                 message_dict = {"docid": docid, "message": message}

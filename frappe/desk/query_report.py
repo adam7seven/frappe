@@ -439,7 +439,7 @@ def build_xlsx_data(
     if cint(include_filters):
         filter_data = []
         filters = data.filters
-        for filter_id, filter_value in filters.items():
+        for filter_name, filter_value in filters.items():
             if not filter_value:
                 continue
             filter_value = (
@@ -447,7 +447,7 @@ def build_xlsx_data(
                 if isinstance(filter_value, list)
                 else cstr(filter_value)
             )
-            filter_data.append([cstr(filter_id), filter_value])
+            filter_data.append([cstr(filter_name), filter_value])
         filter_data.append([])
         result += filter_data
 

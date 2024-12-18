@@ -538,7 +538,6 @@ class Document(BaseDocument):
         if set_id:
             self.id = validate_id(self.doctype, set_id)
         else:
-            print("adam,document, doctype", self.doctype)
             set_new_id(self)
 
         if set_child_ids:
@@ -1031,7 +1030,7 @@ class Document(BaseDocument):
             if method in self.__dict__ or callable(method_object):
                 return method_object(*args, **kwargs)
 
-        fn.__id__ = str(method)
+        fn.__name__ = str(method)
         out = Document.hook(fn)(self, *args, **kwargs)
 
         self.run_notifications(method)
@@ -1420,7 +1419,7 @@ class Document(BaseDocument):
 
         def composer(self, *args, **kwargs):
             hooks = []
-            method = f.__id__
+            method = f.__name__
             doc_events = frappe.get_doc_hooks()
             for handler in doc_events.get(self.doctype, {}).get(
                 method, []
@@ -1787,7 +1786,7 @@ class Document(BaseDocument):
 
     def __repr__(self):
         id = self.id or "unsaved"
-        doctype = self.__class__.__id__
+        doctype = self.__class__.__name__
 
         docstatus = f" docstatus={self.docstatus}" if self.docstatus else ""
         parent = f" parent={self.parent}" if getattr(self, "parent", None) else ""
@@ -1796,7 +1795,7 @@ class Document(BaseDocument):
 
     def __str__(self):
         id = self.id or "unsaved"
-        doctype = self.__class__.__id__
+        doctype = self.__class__.__name__
 
         return f"{doctype}({id})"
 
