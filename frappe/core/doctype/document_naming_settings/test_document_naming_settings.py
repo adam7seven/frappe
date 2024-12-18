@@ -6,7 +6,7 @@ from frappe.core.doctype.doctype.test_doctype import new_doctype
 from frappe.core.doctype.document_naming_settings.document_naming_settings import (
     DocumentNamingSettings,
 )
-from frappe.model.naming import NamingSeries, get_default_naming_series
+from frappe.model.iding import NamingSeries, get_default_naming_series
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import cint
 

@@ -37,7 +37,7 @@ class TestUser(FrappeTestCase):
             )
         ).insert()
         role = frappe.get_doc(
-            dict(doctype="Role", role_name="desk-access-test", desk_access=0)
+            dict(doctype="Role", id="desk-access-test", desk_access=0)
         ).insert()
         user.add_roles(role.name)
         user.save()

@@ -38,7 +38,7 @@ class TestWebsite(FrappeTestCase):
         role = frappe.get_doc(
             dict(
                 doctype="Role",
-                role_id="home-page-test",
+                id="home-page-test",
                 desk_access=0,
             )
         ).insert(ignore_if_duplicate=True)

@@ -111,7 +111,7 @@ def update_add_node(doc, parent, parent_field):
 
     # update index of new node
     frappe.qb.update(Table).set(Table.lft, right).set(Table.rgt, right + 1).where(
-        Table.name == id
+        Table.id == id
     ).run()
     return right
 
@@ -124,7 +124,7 @@ def update_move_node(doc: Document, parent_field: str):
         new_parent = (
             frappe.qb.from_(Table)
             .select(Table.lft, Table.rgt)
-            .where(Table.name == parent)
+            .where(Table.id == parent)
             .for_update()
             .run(as_dict=True)[0]
         )
@@ -152,14 +152,14 @@ def update_move_node(doc: Document, parent_field: str):
         new_parent = (
             frappe.qb.from_(Table)
             .select(Table.lft, Table.rgt)
-            .where(Table.name == parent)
+            .where(Table.id == parent)
             .for_update()
             .run(as_dict=True)[0]
         )
 
         # set parent lft, rgt
         frappe.qb.update(Table).set(Table.rgt, Table.rgt + diff).where(
-            Table.name == parent
+            Table.id == parent
         ).run()
 
         # shift right at new parent
@@ -213,8 +213,8 @@ def rebuild_tree(doctype, parent_field=None):
     result = (
         frappe.qb.from_(table)
         .where((column == "") | (column.isnull()))
-        .orderby(table.name, order=Order.asc)
-        .select(table.name)
+        .orderby(table.id, order=Order.asc)
+        .select(table.id)
     ).run()
 
     frappe.db.auto_commit_on_many_writes = 1
@@ -236,7 +236,7 @@ def rebuild_node(doctype, parent, left, parent_field):
     table = DocType(doctype)
     column = getattr(table, parent_field)
 
-    result = (frappe.qb.from_(table).where(column == parent).select(table.name)).run()
+    result = (frappe.qb.from_(table).where(column == parent).select(table.id)).run()
 
     for r in result:
         right = rebuild_node(doctype, r[0], right, parent_field)

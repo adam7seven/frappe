@@ -162,7 +162,7 @@ def delete_all_passwords_for(doctype, id):
             raise
 
 
-def rename_password(doctype, old_id, new_id):
+def reid_password(doctype, old_id, new_id):
     # NOTE: fieldname is not considered, since the document is renamed
     frappe.qb.update(Auth).set(Auth.id, new_id).where(
         (Auth.doctype == doctype) & (Auth.id == old_id)

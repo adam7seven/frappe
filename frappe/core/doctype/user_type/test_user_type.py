@@ -76,7 +76,7 @@ def create_role():
         frappe.get_doc(
             {
                 "doctype": "Role",
-                "role_name": "_Test User Type",
+                "id": "_Test User Type",
                 "desk_access": 1,
                 "is_custom": 1,
             }

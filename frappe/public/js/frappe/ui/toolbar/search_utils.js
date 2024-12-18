@@ -278,7 +278,7 @@ frappe.search.utils = {
 					value: __("Open {0}", [__(item)]),
 					match: item,
 					index: level,
-					route: [page.route || page.name],
+					route: [page.route || page.id],
 				});
 			}
 		});

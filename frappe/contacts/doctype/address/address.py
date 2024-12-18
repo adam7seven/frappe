@@ -8,7 +8,7 @@ from frappe import _, throw
 from frappe.contacts.address_and_contact import set_link_title
 from frappe.core.doctype.dynamic_link.dynamic_link import deduplicate_dynamic_links
 from frappe.model.document import Document
-from frappe.model.naming import make_autoid
+from frappe.model.iding import make_autoid
 from frappe.utils import cstr
 
 

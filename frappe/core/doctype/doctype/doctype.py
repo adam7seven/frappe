@@ -2083,7 +2083,7 @@ def make_module_and_roles(doc, perm_fieldname="permissions"):
                 "Role", role
             ):
                 r = frappe.new_doc("Role")
-                r.role_id = role
+                r.id = role
                 r.desk_access = 1
                 r.flags.ignore_mandatory = r.flags.ignore_permissions = True
                 r.insert()

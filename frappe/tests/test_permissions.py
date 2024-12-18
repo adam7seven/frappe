@@ -818,7 +818,7 @@ class TestPermissions(FrappeTestCase):
     def test_overrides_work_as_expected(self):
         """custom docperms should completely override standard ones"""
         standard_role = "Desk User"
-        custom_role = frappe.new_doc("Role", role_id=frappe.generate_hash()).insert().id
+        custom_role = frappe.new_doc("Role", id=frappe.generate_hash()).insert().id
         with self.set_user("Administrator"):
             doctype = (
                 new_doctype(permissions=[{"role": standard_role, "read": 1}])

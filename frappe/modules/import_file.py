@@ -169,7 +169,7 @@ def import_file_by_path(
                 doctype_table = DocType("DocType")
                 frappe.qb.update(doctype_table).set(
                     doctype_table.migration_hash, calculated_hash
-                ).where(doctype_table.name == doc["id"]).run()
+                ).where(doctype_table.id == doc["id"]).run()
 
             new_modified_timestamp = doc.get("modified")
 
@@ -216,7 +216,7 @@ def update_modified(original_modified, doc):
 
         frappe.qb.update(doctype_table).set(
             doctype_table.modified, original_modified
-        ).where(doctype_table.name == doc["id"]).run()
+        ).where(doctype_table.id == doc["id"]).run()
 
 
 def import_doc(

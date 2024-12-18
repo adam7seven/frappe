@@ -488,7 +488,7 @@ class Document(BaseDocument):
             )
 
             if existing_row_ids:
-                qry = qry.where(tbl.name.notin(existing_row_ids))
+                qry = qry.where(tbl.id.notin(existing_row_ids))
 
             qry.run()
 
@@ -538,6 +538,7 @@ class Document(BaseDocument):
         if set_id:
             self.id = validate_id(self.doctype, set_id)
         else:
+            print("adam,document, doctype", self.doctype)
             set_new_id(self)
 
         if set_child_ids:

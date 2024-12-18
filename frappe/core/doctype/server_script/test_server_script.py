@@ -142,7 +142,7 @@ class TestServerScript(FrappeTestCase):
             frappe.get_doc(dict(doctype="ToDo", description="validate me")).insert,
         )
 
-        role = frappe.get_doc(doctype="Role", role_id="_Test Role 9").insert(
+        role = frappe.get_doc(doctype="Role", id="_Test Role 9").insert(
             ignore_if_duplicate=True
         )
         role.reid("_Test Role 10")

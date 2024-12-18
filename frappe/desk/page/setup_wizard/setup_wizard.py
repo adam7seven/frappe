@@ -421,7 +421,7 @@ def get_language_code(lang):
 
 
 def enable_twofactor_all_roles():
-    all_role = frappe.get_doc("Role", {"role_id": "All"})
+    all_role = frappe.get_doc("Role", {"id": "All"})
     all_role.two_factor_auth = True
     all_role.save(ignore_permissions=True)
 

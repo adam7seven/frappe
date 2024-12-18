@@ -102,7 +102,7 @@ class Engine:
         # add fields
         self.fields = self.parse_fields(fields)
         if not self.fields:
-            self.fields = [self.table.name]
+            self.fields = [self.table.id]
 
         self.query._child_queries = []
         for field in self.fields:
@@ -192,8 +192,7 @@ class Engine:
             table = frappe.qb.DocType(doctype)
             if meta.istable and not self.query.is_joined(table):
                 self.query = self.query.left_join(table).on(
-                    (table.parent == self.table.name)
-                    & (table.parenttype == self.doctype)
+                    (table.parent == self.table.id) & (table.parenttype == self.doctype)
                 )
 
         if isinstance(_value, bool):
@@ -487,7 +486,7 @@ class ChildTableField(DynamicTableField):
         main_table = frappe.qb.DocType(self.parent_doctype)
         if not query.is_joined(table):
             query = query.left_join(table).on(
-                (table.parent == main_table.name)
+                (table.parent == main_table.id)
                 & (table.parenttype == self.parent_doctype)
             )
         return query
@@ -517,7 +516,7 @@ class LinkTableField(DynamicTableField):
         main_table = frappe.qb.DocType(self.parent_doctype)
         if not query.is_joined(table):
             query = query.left_join(table).on(
-                table.name == getattr(main_table, self.link_fieldname)
+                table.id == getattr(main_table, self.link_fieldname)
             )
         return query
 
@@ -572,7 +571,7 @@ def get_nested_set_hierarchy_result(doctype: str, id: str, hierarchy: str) -> li
     table = frappe.qb.DocType(doctype)
     try:
         lft, rgt = (
-            frappe.qb.from_(table).select("lft", "rgt").where(table.name == id).run()[0]
+            frappe.qb.from_(table).select("lft", "rgt").where(table.id == id).run()[0]
         )
     except IndexError:
         lft, rgt = None, None
@@ -584,7 +583,7 @@ def get_nested_set_hierarchy_result(doctype: str, id: str, hierarchy: str) -> li
     ):
         result = (
             frappe.qb.from_(table)
-            .select(table.name)
+            .select(table.id)
             .where(table.lft > lft)
             .where(table.rgt < rgt)
             .orderby(table.lft, order=Order.asc)
@@ -596,7 +595,7 @@ def get_nested_set_hierarchy_result(doctype: str, id: str, hierarchy: str) -> li
         # Get ancestor elements of a DocType with a tree structure
         result = (
             frappe.qb.from_(table)
-            .select(table.name)
+            .select(table.id)
             .where(table.lft < lft)
             .where(table.rgt > rgt)
             .orderby(table.lft, order=Order.desc)

@@ -1,13 +1,12 @@
 {
     "actions": [],
     "allow_reid": 1,
-    "autoid": "field:role_name",
+    "autoid": "Prompt",
     "creation": "2013-01-08 15:50:01",
     "doctype": "DocType",
     "document_type": "Document",
     "engine": "InnoDB",
     "field_order": [
-        "role_name",
         "home_page",
         "restrict_to_domain",
         "column_break_4",
@@ -17,15 +16,6 @@
         "two_factor_auth"
     ],
     "fields": [
-        {
-            "fieldname": "role_name",
-            "fieldtype": "Data",
-            "label": "Role Name",
-            "oldfieldname": "role_name",
-            "oldfieldtype": "Data",
-            "reqd": 1,
-            "unique": 1
-        },
         {
             "default": "0",
             "description": "If disabled, this role will be removed from all users.",

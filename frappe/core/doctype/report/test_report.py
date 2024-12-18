@@ -190,7 +190,7 @@ class TestReport(FrappeTestCase):
         )
         frappe.db.commit()
         if not frappe.db.exists("Role", "Test Has Role"):
-            frappe.get_doc({"doctype": "Role", "role_name": "Test Has Role"}).insert(
+            frappe.get_doc({"doctype": "Role", "id": "Test Has Role"}).insert(
                 ignore_permissions=True
             )
 

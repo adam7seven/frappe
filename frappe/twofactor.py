@@ -36,7 +36,7 @@ class ExpiredLoginException(Exception):
 def toggle_two_factor_auth(state, roles=None):
     """Enable or disable 2FA in site_config and roles"""
     for role in roles or []:
-        role = frappe.get_doc("Role", {"role_id": role})
+        role = frappe.get_doc("Role", {"id": role})
         role.two_factor_auth = cint(state)
         role.save(ignore_permissions=True)
 

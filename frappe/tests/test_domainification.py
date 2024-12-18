@@ -100,9 +100,7 @@ class TestDomainification(FrappeTestCase):
         test_doctype = self.new_doctype("Test Domainification")
         test_doctype.insert()
 
-        test_role = frappe.get_doc(
-            {"doctype": "Role", "role_id": "_Test Role"}
-        ).insert()
+        test_role = frappe.get_doc({"doctype": "Role", "id": "_Test Role"}).insert()
 
         # doctype should be hidden in desktop icon, role permissions
         results = get_roles_and_doctypes()

@@ -259,7 +259,7 @@ def create_web_page(title, route, single_thread):
                 {
                     "title": "Discussions",
                     "cta_title": "New Discussion",
-                    "docname": web_page.name,
+                    "docname": web_page.id,
                     "single_thread": single_thread,
                 }
             ),
@@ -267,7 +267,7 @@ def create_web_page(title, route, single_thread):
     )
     web_page.save()
 
-    return web_page.name
+    return web_page.id
 
 
 def create_topic_and_reply(web_page):

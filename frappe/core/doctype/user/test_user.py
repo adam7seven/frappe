@@ -50,8 +50,8 @@ class TestUser(FrappeTestCase):
         ).insert()
         self.assertEqual(new_user.user_type, "Website User")
 
-        # social login userid for frappe
-        self.assertTrue(new_user.social_logins[0].userid)
+        # social login username for frappe
+        self.assertTrue(new_user.social_logins[0].username)
         self.assertEqual(new_user.social_logins[0].provider, "frappe")
 
         # role with desk access

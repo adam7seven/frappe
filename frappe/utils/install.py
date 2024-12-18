@@ -90,8 +90,8 @@ def install_basic_docs():
             "thread_notify": 0,
             "send_me_a_copy": 0,
         },
-        {"doctype": "Role", "role_id": "Report Manager"},
-        {"doctype": "Role", "role_id": "Translator"},
+        {"doctype": "Role", "id": "Report Manager"},
+        {"doctype": "Role", "id": "Translator"},
         {
             "doctype": "Workflow State",
             "workflow_state_name": "Pending",

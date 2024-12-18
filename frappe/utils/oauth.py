@@ -283,7 +283,7 @@ def get_user_record(user: str, data: dict, provider: str) -> "User":
 
 def update_oauth_user(user: str, data: dict, provider: str):
     if isinstance(data.get("location"), dict):
-        data["location"] = data["location"].get("id")
+        data["location"] = data["location"].get("name")
 
     user: "User" = get_user_record(user, data, provider)
     update_user_record = user.is_new()

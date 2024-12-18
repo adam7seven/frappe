@@ -201,9 +201,9 @@ class User(Document):
             self.language = None
 
         if (self.id not in ["Administrator", "Guest"]) and (
-            not self.get_social_login_userid("frappe")
+            not self.get_social_login_username("frappe")
         ):
-            self.set_social_login_userid("frappe", frappe.generate_hash(length=39))
+            self.set_social_login_username("frappe", frappe.generate_hash(length=39))
 
     def populate_role_profile_roles(self):
         if self.role_profile_id:
@@ -331,7 +331,7 @@ class User(Document):
             role_table,
             (
                 (role_table.desk_access == 1)
-                & (role_table.name.isin([d.role for d in self.roles]))
+                & (role_table.id.isin([d.role for d in self.roles]))
             ),
         )
 
@@ -750,15 +750,15 @@ class User(Document):
         if len(email_accounts) != len(set(email_accounts)):
             frappe.throw(_("Email Account added multiple times"))
 
-    def get_social_login_userid(self, provider: str):
+    def get_social_login_username(self, provider: str):
         try:
             for p in self.social_logins:
                 if p.provider == provider:
-                    return p.userid
+                    return p.username
         except Exception:
             return None
 
-    def set_social_login_userid(self, provider, userid, username=None):
+    def set_social_login_username(self, provider, userid, username=None):
         social_logins = {"provider": provider, "userid": userid}
 
         if username:

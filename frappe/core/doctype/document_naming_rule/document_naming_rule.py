@@ -4,7 +4,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.model.naming import parse_naming_series
+from frappe.model.iding import parse_naming_series
 from frappe.utils.data import evaluate_filters
 
 

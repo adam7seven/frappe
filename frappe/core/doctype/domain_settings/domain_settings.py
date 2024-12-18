@@ -62,7 +62,7 @@ class DomainSettings(Document):
             if "restricted_roles" in data:
                 for role in data["restricted_roles"]:
                     if not frappe.db.get_value("Role", role):
-                        frappe.get_doc(dict(doctype="Role", role_id=role)).insert()
+                        frappe.get_doc(dict(doctype="Role", id=role)).insert()
                     frappe.db.set_value("Role", role, "restrict_to_domain", domain)
 
                     if domain not in active_domains:

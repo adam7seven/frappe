@@ -23,7 +23,7 @@ class Role(Document):
         home_page: DF.Data | None
         is_custom: DF.Check
         restrict_to_domain: DF.Link | None
-        role_name: DF.Data
+        id: DF.Data
         two_factor_auth: DF.Check
 
     # end: auto-generated types

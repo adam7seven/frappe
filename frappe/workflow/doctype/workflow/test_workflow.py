@@ -164,7 +164,7 @@ def create_todo_workflow():
     TEST_ROLE = "Test Approver"
 
     if not frappe.db.exists("Role", TEST_ROLE):
-        frappe.get_doc(dict(doctype="Role", role_id=TEST_ROLE)).insert(
+        frappe.get_doc(dict(doctype="Role", id=TEST_ROLE)).insert(
             ignore_if_duplicate=True
         )
         if frappe.db.exists("User", UI_TEST_USER):

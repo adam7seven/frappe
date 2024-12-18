@@ -70,7 +70,7 @@ def update_link_count():
             try:
                 table = frappe.qb.DocType(doctype)
                 frappe.qb.update(table).set(table.idx, table.idx + count).where(
-                    table.name == id
+                    table.id == id
                 ).run()
                 frappe.db.commit()
             except Exception as e:

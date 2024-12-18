@@ -214,7 +214,7 @@ def get_user_pages_or_reports(parent, cache=False):
         )
         .where(
             (hasRole.parent == customRole.id)
-            & (parentTable.name == customRole[parent.lower()])
+            & (parentTable.id == customRole[parent.lower()])
             & (customRole[parent.lower()].isnotnull())
             & (hasRole.role.isin(roles))
         )
@@ -236,11 +236,11 @@ def get_user_pages_or_reports(parent, cache=False):
     pages_with_standard_roles = (
         frappe.qb.from_(hasRole)
         .from_(parentTable)
-        .select(parentTable.name.as_("id"), parentTable.modified, *columns)
+        .select(parentTable.id.as_("id"), parentTable.modified, *columns)
         .where(
             (hasRole.role.isin(roles))
-            & (hasRole.parent == parentTable.name)
-            & (parentTable.name.notin(subq))
+            & (hasRole.parent == parentTable.id)
+            & (parentTable.id.notin(subq))
         )
         .distinct()
     )
@@ -267,7 +267,7 @@ def get_user_pages_or_reports(parent, cache=False):
     # pages and reports with no role are allowed
     rows_with_no_roles = (
         frappe.qb.from_(parentTable)
-        .select(parentTable.name, parentTable.modified, *columns)
+        .select(parentTable.id, parentTable.modified, *columns)
         .where(no_of_roles == 0)
     ).run(as_dict=True)
 

@@ -1399,7 +1399,7 @@ class Database:
 
         return (
             frappe.qb.from_(Table)
-            .select(Count(Table.name))
+            .select(Count(Table.id))
             .where(Table.creation >= now_datetime() - relativedelta(minutes=minutes))
             .run()[0][0]
         )
