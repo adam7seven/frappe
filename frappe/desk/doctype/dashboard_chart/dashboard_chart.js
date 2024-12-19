@@ -38,7 +38,7 @@ frappe.ui.form.on("Dashboard Chart", {
 					"frappe.desk.doctype.dashboard_chart.dashboard_chart.add_chart_to_dashboard"
 				);
 
-				if (!frm.doc.chart_name) {
+				if (!frm.doc.id) {
 					frappe.msgprint(__("Please create chart first"));
 				} else {
 					dialog.show();

@@ -1310,9 +1310,7 @@ def get_role_profile(role_profile: str):
 
 @frappe.whitelist()
 def get_module_profile(module_profile: str):
-    module_profile = frappe.get_doc(
-        "Module Profile", {"module_profile_id": module_profile}
-    )
+    module_profile = frappe.get_doc("Module Profile", {"id": module_profile})
     return module_profile.get("block_modules")
 
 

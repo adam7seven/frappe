@@ -26,7 +26,6 @@ class Currency(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        currency_name: DF.Data
         enabled: DF.Check
         fraction: DF.Data | None
         fraction_units: DF.Int

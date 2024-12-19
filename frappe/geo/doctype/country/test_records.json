@@ -1,6 +1,6 @@
 [
- {
-  "country_name": "_Test Country", 
-  "doctype": "Country"
- }
+    {
+        "id": "_Test Country",
+        "doctype": "Country"
+    }
 ]

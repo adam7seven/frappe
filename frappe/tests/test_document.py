@@ -293,7 +293,7 @@ class TestDocument(FrappeTestCase):
         d = frappe.get_doc(
             {
                 "doctype": "Currency",
-                "currency_name": "Frappe Coin",
+                "id": "Frappe Coin",
                 "smallest_currency_fraction_value": -1,
             }
         )
@@ -329,7 +329,7 @@ class TestDocument(FrappeTestCase):
         d = frappe.get_doc(
             {
                 "doctype": "Currency",
-                "currency_name": "INR",
+                "id": "INR",
                 "symbol": "₹",
             }
         ).insert()

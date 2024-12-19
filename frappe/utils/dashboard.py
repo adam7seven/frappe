@@ -13,15 +13,15 @@ from frappe.utils import cint, get_link_to_form
 def cache_source(function):
     @wraps(function)
     def wrapper(*args, **kwargs):
-        if kwargs.get("chart_name"):
-            chart = frappe.get_doc("Dashboard Chart", kwargs.get("chart_name"))
+        if kwargs.get("chart_id"):
+            chart = frappe.get_doc("Dashboard Chart", kwargs.get("chart_id"))
         else:
             chart = kwargs.get("chart")
         no_cache = kwargs.get("no_cache")
         if no_cache:
             return function(chart=chart, no_cache=no_cache)
-        chart_name = frappe.parse_json(chart).id
-        cache_key = f"chart-data:{chart_name}"
+        chart_id = frappe.parse_json(chart).id
+        cache_key = f"chart-data:{chart_id}"
         if int(kwargs.get("refresh") or 0):
             results = generate_and_cache_results(kwargs, function, cache_key, chart)
         else:
@@ -39,7 +39,7 @@ def generate_and_cache_results(args, function, cache_key, chart):
     try:
         args = frappe._dict(args)
         results = function(
-            chart_name=args.chart_name,
+            chart_id=args.chart_id,
             filters=args.filters or None,
             from_date=args.from_date or None,
             to_date=args.to_date or None,
@@ -67,7 +67,7 @@ def generate_and_cache_results(args, function, cache_key, chart):
     if not frappe.flags.read_only:
         frappe.db.set_value(
             "Dashboard Chart",
-            args.chart_name,
+            args.chart_id,
             "last_synced_on",
             frappe.utils.now(),
             update_modified=False,

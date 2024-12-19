@@ -1,29 +1,18 @@
 {
     "actions": [],
     "allow_import": 1,
-    "autoid": "field:country_name",
+    "autoid": "Prompt",
     "creation": "2013-01-19 10:23:30",
     "doctype": "DocType",
     "document_type": "Setup",
     "engine": "InnoDB",
     "field_order": [
-        "country_name",
         "date_format",
         "time_format",
         "time_zones",
         "code"
     ],
     "fields": [
-        {
-            "fieldname": "country_name",
-            "fieldtype": "Data",
-            "in_list_view": 1,
-            "label": "Country Name",
-            "oldfieldname": "country_name",
-            "oldfieldtype": "Data",
-            "reqd": 1,
-            "unique": 1
-        },
         {
             "fieldname": "date_format",
             "fieldtype": "Data",
@@ -80,7 +69,7 @@
         }
     ],
     "quick_entry": 1,
-    "sort_field": "country_name",
+    "sort_field": "id",
     "sort_order": "ASC",
     "states": [],
     "track_changes": 1,

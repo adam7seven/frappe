@@ -1,7 +1,7 @@
 {
     "actions": [],
     "allow_reid": 1,
-    "autoid": "field:chart_name",
+    "autoid": "Prompt",
     "creation": "2019-01-10 12:28:06.282875",
     "doctype": "DocType",
     "editable_grid": 1,
@@ -9,7 +9,6 @@
     "field_order": [
         "is_standard",
         "module",
-        "chart_name",
         "chart_type",
         "report_id",
         "use_report_chart",
@@ -46,14 +45,6 @@
         "roles"
     ],
     "fields": [
-        {
-            "fieldname": "chart_name",
-            "fieldtype": "Data",
-            "in_list_view": 1,
-            "label": "Chart Name",
-            "reqd": 1,
-            "unique": 1
-        },
         {
             "fieldname": "chart_type",
             "fieldtype": "Select",

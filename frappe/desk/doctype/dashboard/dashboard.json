@@ -1,13 +1,12 @@
 {
     "actions": [],
     "allow_reid": 1,
-    "autoid": "field:dashboard_name",
+    "autoid": "Prompt",
     "creation": "2019-01-10 12:54:40.938705",
     "doctype": "DocType",
     "editable_grid": 1,
     "engine": "InnoDB",
     "field_order": [
-        "dashboard_name",
         "is_default",
         "is_standard",
         "module",
@@ -16,14 +15,6 @@
         "cards"
     ],
     "fields": [
-        {
-            "fieldname": "dashboard_name",
-            "fieldtype": "Data",
-            "in_list_view": 1,
-            "label": "Dashboard Name",
-            "reqd": 1,
-            "unique": 1
-        },
         {
             "default": "0",
             "fieldname": "is_default",
@@ -111,6 +102,6 @@
     "sort_field": "modified",
     "sort_order": "DESC",
     "states": [],
-    "title_field": "dashboard_name",
+    "title_field": "id",
     "track_changes": 1
 }

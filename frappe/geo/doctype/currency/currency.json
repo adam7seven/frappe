@@ -2,14 +2,13 @@
     "actions": [],
     "allow_import": 1,
     "allow_reid": 1,
-    "autoid": "field:currency_name",
+    "autoid": "Prompt",
     "creation": "2013-01-28 10:06:02",
     "description": "Currency list stores the currency value, its symbol and fraction unit",
     "doctype": "DocType",
     "document_type": "Setup",
     "engine": "InnoDB",
     "field_order": [
-        "currency_name",
         "enabled",
         "fraction",
         "fraction_units",
@@ -19,15 +18,6 @@
         "number_format"
     ],
     "fields": [
-        {
-            "fieldname": "currency_name",
-            "fieldtype": "Data",
-            "label": "Currency Name",
-            "oldfieldname": "currency_name",
-            "oldfieldtype": "Data",
-            "reqd": 1,
-            "unique": 1
-        },
         {
             "default": "0",
             "fieldname": "enabled",

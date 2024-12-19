@@ -115,7 +115,7 @@ def install_basic_docs():
         {"doctype": "Workflow Action Master", "workflow_action_name": "Review"},
         {
             "doctype": "Email Domain",
-            "domain_name": "example.com",
+            "id": "example.com",
             "email_id": "account@example.com",
             "password": "pass",
             "email_server": "imap.example.com",

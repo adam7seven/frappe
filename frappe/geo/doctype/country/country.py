@@ -15,7 +15,6 @@ class Country(Document):
         from frappe.types import DF
 
         code: DF.Data | None
-        country_name: DF.Data
         date_format: DF.Data | None
         time_format: DF.Data | None
         time_zones: DF.Text | None
@@ -51,7 +50,6 @@ def get_countries_and_currencies():
             frappe.get_doc(
                 doctype="Country",
                 id=id,
-                country_name=id,
                 code=country.code,
                 date_format=country.date_format or "dd-mm-yyyy",
                 time_format=country.time_format or "HH:mm:ss",
@@ -65,7 +63,6 @@ def get_countries_and_currencies():
                 frappe.get_doc(
                     doctype="Currency",
                     id=country.currency,
-                    currency_name=country.currency,
                     fraction=country.currency_fraction,
                     symbol=country.currency_symbol,
                     fraction_units=country.currency_fraction_units,

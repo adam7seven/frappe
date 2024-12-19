@@ -15,7 +15,6 @@ class ModuleProfile(Document):
         from frappe.types import DF
 
         block_modules: DF.Table[BlockModule]
-        module_profile_id: DF.Data
 
     # end: auto-generated types
     def onload(self):

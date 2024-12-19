@@ -10,7 +10,7 @@ class TestModuleProfile(FrappeTestCase):
             frappe.get_doc(
                 {
                     "doctype": "Module Profile",
-                    "module_profile_id": "_Test Module Profile",
+                    "id": "_Test Module Profile",
                     "block_modules": [{"module": "Accounts"}],
                 }
             ).insert()

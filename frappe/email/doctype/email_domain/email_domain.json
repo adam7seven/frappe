@@ -1,13 +1,12 @@
 {
     "actions": [],
-    "autoid": "field:domain_name",
+    "autoid": "Prompt",
     "creation": "2016-03-29 10:50:48.848239",
     "doctype": "DocType",
     "document_type": "Setup",
     "engine": "InnoDB",
     "field_order": [
         "email_settings",
-        "domain_name",
         "mailbox_settings",
         "email_server",
         "use_imap",
@@ -29,13 +28,6 @@
         {
             "fieldname": "email_settings",
             "fieldtype": "Section Break"
-        },
-        {
-            "fieldname": "domain_name",
-            "fieldtype": "Data",
-            "label": "Domain Name",
-            "reqd": 1,
-            "unique": 1
         },
         {
             "fieldname": "mailbox_settings",

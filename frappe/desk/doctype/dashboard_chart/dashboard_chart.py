@@ -99,7 +99,7 @@ def has_permission(doc, ptype, user):
 @frappe.whitelist()
 @cache_source
 def get(
-    chart_name=None,
+    chart_id=None,
     chart=None,
     no_cache=None,
     filters=None,
@@ -110,8 +110,8 @@ def get(
     heatmap_year=None,
     refresh=None,
 ):
-    if chart_name:
-        chart: DashboardChart = frappe.get_doc("Dashboard Chart", chart_name)
+    if chart_id:
+        chart: DashboardChart = frappe.get_doc("Dashboard Chart", chart_id)
     else:
         chart = frappe._dict(frappe.parse_json(chart))
 
@@ -160,9 +160,9 @@ def create_dashboard_chart(args):
     if args.get("custom_options"):
         doc.custom_options = json.dumps(args.get("custom_options"))
 
-    if frappe.db.exists("Dashboard Chart", args.chart_name):
-        args.chart_name = append_number_if_id_exists("Dashboard Chart", args.chart_name)
-        doc.chart_name = args.chart_name
+    if frappe.db.exists("Dashboard Chart", args.id):
+        args.id = append_number_if_id_exists("Dashboard Chart", args.id)
+        doc.id = args.id
     doc.insert(ignore_permissions=True)
     return doc
 
@@ -171,7 +171,7 @@ def create_dashboard_chart(args):
 def create_report_chart(args):
     doc = create_dashboard_chart(args)
     args = frappe.parse_json(args)
-    args.chart_name = doc.chart_name
+    args.id = doc.id
     if args.dashboard:
         add_chart_to_dashboard(json.dumps(args))
 
@@ -182,7 +182,7 @@ def add_chart_to_dashboard(args):
 
     dashboard = frappe.get_doc("Dashboard", args.dashboard)
     dashboard_link = frappe.new_doc("Dashboard Chart Link")
-    dashboard_link.chart = args.chart_name or args.id
+    dashboard_link.chart = args.id or args.id
 
     if args.set_standard and dashboard.is_standard:
         chart = frappe.get_doc("Dashboard Chart", dashboard_link.chart)
@@ -356,7 +356,7 @@ class DashboardChart(Document):
 
         aggregate_function_based_on: DF.Literal[None]
         based_on: DF.Literal[None]
-        chart_name: DF.Data
+        id: DF.Data
         chart_type: DF.Literal[
             "Count", "Sum", "Average", "Group By", "Custom", "Report"
         ]

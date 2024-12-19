@@ -69,7 +69,6 @@ class EmailDomain(Document):
 
         append_emails_to_sent_folder: DF.Check
         attachment_limit: DF.Int
-        domain_name: DF.Data
         email_server: DF.Data
         incoming_port: DF.Data | None
         sent_folder_name: DF.Data | None

@@ -302,7 +302,7 @@ class TestNaming(FrappeTestCase):
         self.assertRaises(frappe.NameError, make_invalid_todo)
 
         # id (via title field) cannot be the same as the doctype
-        note = frappe.get_doc({"doctype": "Currency", "currency_name": "Currency"})
+        note = frappe.get_doc({"doctype": "Currency", "id": "Currency"})
         self.assertRaises(frappe.NameError, note.insert)
 
         # case 2: set id with "New ---"

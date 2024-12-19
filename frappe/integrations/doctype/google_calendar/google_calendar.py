@@ -74,7 +74,6 @@ class GoogleCalendar(Document):
         from frappe.types import DF
 
         authorization_code: DF.Password | None
-        calendar_name: DF.Data
         enable: DF.Check
         google_calendar_id: DF.Data | None
         next_sync_token: DF.Password | None
@@ -263,7 +262,7 @@ def check_google_calendar(account, google_calendar):
         else:
             # If no Calendar ID create a new Calendar
             calendar = {
-                "summary": account.calendar_name,
+                "summary": account.id,
                 "timeZone": frappe.db.get_single_value("System Settings", "time_zone"),
             }
             created_calendar = (

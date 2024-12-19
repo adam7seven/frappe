@@ -33,7 +33,6 @@ class DashboardChartSource(Document):
         from frappe.types import DF
 
         module: DF.Link
-        source_name: DF.Data
         timeseries: DF.Check
 
     # end: auto-generated types

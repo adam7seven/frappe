@@ -12,7 +12,7 @@ describe("Dashboard view", { scrollBehavior: false }, () => {
 			"Dashboard Chart",
 			{
 				is_standard: 0,
-				chart_name: chart,
+				id: chart,
 				chart_type: "Count",
 				document_type: "ToDo",
 				parent_document_type: "",
@@ -31,7 +31,6 @@ describe("Dashboard view", { scrollBehavior: false }, () => {
 			"Dashboard",
 			{
 				id: dashboard,
-				dashboard_name: dashboard,
 				is_standard: 0,
 				charts: [
 					{
