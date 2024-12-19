@@ -39,7 +39,7 @@ class TestUser(FrappeTestCase):
         role = frappe.get_doc(
             dict(doctype="Role", id="desk-access-test", desk_access=0)
         ).insert()
-        user.add_roles(role.name)
+        user.add_roles(role.id)
         user.save()
         self.assertTrue(user.user_type == "Website User")
         role.desk_access = 1

@@ -50,8 +50,8 @@ class TestUser(FrappeTestCase):
         ).insert()
         self.assertEqual(new_user.user_type, "Website User")
 
-        # social login username for frappe
-        self.assertTrue(new_user.social_logins[0].username)
+        # social login userid for frappe
+        self.assertTrue(new_user.social_logins[0].userid)
         self.assertEqual(new_user.social_logins[0].provider, "frappe")
 
         # role with desk access
@@ -366,7 +366,7 @@ class TestUser(FrappeTestCase):
         import frappe.website.utils
 
         random_user = frappe.mock("email")
-        random_user_name = frappe.mock("id")
+        random_user_name = frappe.mock("name")
         # disabled signup
         with patch.object(user_module, "is_signup_disabled", return_value=True):
             self.assertRaisesRegex(
@@ -378,6 +378,7 @@ class TestUser(FrappeTestCase):
                 "/signup",
             )
 
+        # print("adam, signup", random_user, random_user_name)
         self.assertTupleEqual(
             sign_up(random_user, random_user_name, "/welcome"),
             (1, "Please check your email for verification"),
