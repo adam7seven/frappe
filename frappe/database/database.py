@@ -1214,7 +1214,7 @@ class Database:
                     conditions[field] = Case()
 
                 # WHEN
-                conditions[field].when(dt.name == docid, value)
+                conditions[field].when(dt.id == docid, value)
 
         for field in conditions:
             # ELSE
@@ -1226,7 +1226,7 @@ class Database:
             for column, value in modified_dict.items():
                 update_query = update_query.set(dt[column], value)
 
-        update_query.where(dt.name.isin(docids)).run(debug=debug)
+        update_query.where(dt.id.isin(docids)).run(debug=debug)
 
     def set_global(self, key, val, user="__global"):
         """Save a global key value. Global values will be automatically set if they match fieldname."""

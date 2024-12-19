@@ -523,7 +523,7 @@ def get_link_fields(doctype: str) -> list[dict]:
         standard_fields_query = (
             frappe.qb.from_(df)
             .inner_join(dt)
-            .on(df.parent == dt.name)
+            .on(df.parent == dt.id)
             .select(df.parent, df.fieldname, dt.issingle.as_("issingle"))
             .where((df.options == doctype) & (df.fieldtype == "Link"))
         )
@@ -541,7 +541,7 @@ def get_link_fields(doctype: str) -> list[dict]:
         cf_issingle = (
             frappe.qb.from_(dt)
             .select(dt.issingle)
-            .where(dt.name == cf.dt)
+            .where(dt.id == cf.dt)
             .as_("issingle")
         )
         custom_fields = (
@@ -556,7 +556,7 @@ def get_link_fields(doctype: str) -> list[dict]:
         ps_issingle = (
             frappe.qb.from_(dt)
             .select(dt.issingle)
-            .where(dt.name == ps.doc_type)
+            .where(dt.id == ps.doc_type)
             .as_("issingle")
         )
         property_setter_fields = (
@@ -629,7 +629,7 @@ def get_select_fields(old: str, new: str) -> list[dict]:
     st_issingle = (
         frappe.qb.from_(dt)
         .select(dt.issingle)
-        .where(dt.name == df.parent)
+        .where(dt.id == df.parent)
         .as_("issingle")
     )
     standard_fields = (
@@ -646,7 +646,7 @@ def get_select_fields(old: str, new: str) -> list[dict]:
 
     # get link fields from tabCustom Field
     cf_issingle = (
-        frappe.qb.from_(dt).select(dt.issingle).where(dt.name == cf.dt).as_("issingle")
+        frappe.qb.from_(dt).select(dt.issingle).where(dt.id == cf.dt).as_("issingle")
     )
     custom_select_fields = (
         frappe.qb.from_(cf)
@@ -661,7 +661,7 @@ def get_select_fields(old: str, new: str) -> list[dict]:
     ps_issingle = (
         frappe.qb.from_(dt)
         .select(dt.issingle)
-        .where(dt.name == ps.doc_type)
+        .where(dt.id == ps.doc_type)
         .as_("issingle")
     )
     property_setter_select_fields = (
