@@ -44,9 +44,7 @@ def get_language(lang_list: list | None = None) -> str:
 
     # fetch language from form_dict
     if frappe.form_dict._lang:
-        language = get_lang_code(
-            frappe.form_dict._lang or get_parent_language(frappe.form_dict._lang)
-        )
+        language = get_lang_code(frappe.form_dict._lang or get_parent_language(frappe.form_dict._lang))
         if language:
             return language
 
@@ -101,17 +99,12 @@ def get_user_lang(user: str | None = None) -> str:
 
     # User.language => Session Defaults => frappe.local.lang => 'en'
     return (
-        frappe.get_cached_value("User", user, "language")
-        or frappe.db.get_default("lang")
-        or frappe.local.lang
-        or "en"
+        frappe.get_cached_value("User", user, "language") or frappe.db.get_default("lang") or frappe.local.lang or "en"
     )
 
 
 def get_lang_code(lang: str) -> str | None:
-    return frappe.db.get_value("Language", {"id": lang}) or frappe.db.get_value(
-        "Language", {"language_name": lang}
-    )
+    return frappe.db.get_value("Language", {"id": lang}) or frappe.db.get_value("Language", {"language_name": lang})
 
 
 def set_default_language(lang):
@@ -163,18 +156,14 @@ def get_all_translations(lang: str) -> dict[str, str]:
         parent_lang = get_parent_language(lang)
 
         # Get translations for parent language
-        all_translations = (
-            get_translations_from_apps(parent_lang).copy() if parent_lang else {}
-        )
+        all_translations = get_translations_from_apps(parent_lang).copy() if parent_lang else {}
 
         # Update with child language translations (overriding parent translations)
         all_translations.update(get_translations_from_apps(lang))
 
         with suppress(Exception):
             # Get translations for parent language
-            all_translations.update(
-                get_user_translations(parent_lang) if parent_lang else {}
-            )
+            all_translations.update(get_user_translations(parent_lang) if parent_lang else {})
             # Update with child language translations (overriding parent translations)
             all_translations.update(get_user_translations(lang))
             all_translations.update(get_translated_countries())
@@ -182,9 +171,7 @@ def get_all_translations(lang: str) -> dict[str, str]:
         return all_translations
 
     try:
-        return frappe.cache.hget(
-            MERGED_TRANSLATION_KEY, lang, generator=_merge_translations
-        )
+        return frappe.cache.hget(MERGED_TRANSLATION_KEY, lang, generator=_merge_translations)
     except Exception:
         if frappe.flags and frappe.flags.in_test:
             raise
@@ -275,22 +262,12 @@ def get_messages_for_app(app, deduplicate=True):
     if modules:
         if isinstance(modules, str):
             modules = [modules]
-        filtered_doctypes = (
-            frappe.qb.from_("DocType")
-            .where(Field("module").isin(modules))
-            .select("id")
-            .run(pluck=True)
-        )
+        filtered_doctypes = frappe.qb.from_("DocType").where(Field("module").isin(modules)).select("id").run(pluck=True)
         for id in filtered_doctypes:
             messages.extend(get_messages_from_doctype(id))
 
         # pages
-        filtered_pages = (
-            frappe.qb.from_("Page")
-            .where(Field("module").isin(modules))
-            .select("id", "title")
-            .run()
-        )
+        filtered_pages = frappe.qb.from_("Page").where(Field("module").isin(modules)).select("id", "title").run()
         for id, title in filtered_pages:
             messages.append((None, title or id))
             messages.extend(get_messages_from_page(id))
@@ -335,9 +312,7 @@ def get_messages_for_app(app, deduplicate=True):
 
 def get_messages_from_navbar():
     """Return all labels from Navbar Items, as specified in Navbar Settings."""
-    labels = frappe.get_all(
-        "Navbar Item", filters={"item_label": ("is", "set")}, pluck="item_label"
-    )
+    labels = frappe.get_all("Navbar Item", filters={"item_label": ("is", "set")}, pluck="item_label")
     return [("Navbar:", label, "Label of a Navbar Item") for label in labels]
 
 
@@ -368,15 +343,11 @@ def get_messages_from_doctype(id):
     # translations of roles
     messages.extend(d.role for d in meta.get("permissions") if d.role)
     messages = [message for message in messages if message]
-    messages = [
-        ("DocType: " + id, message) for message in messages if is_translatable(message)
-    ]
+    messages = [("DocType: " + id, message) for message in messages if is_translatable(message)]
 
     # extract from js, py files
     if not meta.custom:
-        doctype_file_path = frappe.get_module_path(
-            meta.module, "doctype", meta.id, meta.id
-        )
+        doctype_file_path = frappe.get_module_path(meta.module, "doctype", meta.id, meta.id)
         messages.extend(get_messages_from_file(doctype_file_path + ".js"))
         messages.extend(get_messages_from_file(doctype_file_path + "_list.js"))
         messages.extend(get_messages_from_file(doctype_file_path + "_list.html"))
@@ -402,13 +373,8 @@ def get_messages_from_workflow(doctype=None, app_name=None):
             if isinstance(fixture, str) and fixture == "Worflow":
                 workflows = frappe.get_all("Workflow")
                 break
-            elif (
-                isinstance(fixture, dict)
-                and fixture.get("dt", fixture.get("doctype")) == "Workflow"
-            ):
-                workflows.extend(
-                    frappe.get_all("Workflow", filters=fixture.get("filters"))
-                )
+            elif isinstance(fixture, dict) and fixture.get("dt", fixture.get("doctype")) == "Workflow":
+                workflows.extend(frappe.get_all("Workflow", filters=fixture.get("filters")))
 
     messages = []
     document_state = DocType("Workflow Document State")
@@ -422,27 +388,18 @@ def get_messages_from_workflow(doctype=None, app_name=None):
             order_by=None,
         )
         messages.extend(
-            [
-                ("Workflow: " + w["id"], state["state"])
-                for state in states
-                if is_translatable(state["state"])
-            ]
+            [("Workflow: " + w["id"], state["state"]) for state in states if is_translatable(state["state"])]
         )
         states = frappe.db.get_values(
             document_state,
-            filters=(document_state.parent == w["id"])
-            & (document_state.message.isnotnull()),
+            filters=(document_state.parent == w["id"]) & (document_state.message.isnotnull()),
             fieldname="message",
             distinct=True,
             order_by=None,
             as_dict=True,
         )
         messages.extend(
-            [
-                ("Workflow: " + w["id"], state["message"])
-                for state in states
-                if is_translatable(state["message"])
-            ]
+            [("Workflow: " + w["id"], state["message"]) for state in states if is_translatable(state["message"])]
         )
 
         actions = frappe.db.get_values(
@@ -455,11 +412,7 @@ def get_messages_from_workflow(doctype=None, app_name=None):
         )
 
         messages.extend(
-            [
-                ("Workflow: " + w["id"], action["action"])
-                for action in actions
-                if is_translatable(action["action"])
-            ]
+            [("Workflow: " + w["id"], action["action"]) for action in actions if is_translatable(action["action"])]
         )
 
     return messages
@@ -478,10 +431,7 @@ def get_messages_from_custom_fields(app_name):
                 fields=["id", "label", "description", "fieldtype", "options"],
             )
             break
-        elif (
-            isinstance(fixture, dict)
-            and fixture.get("dt", fixture.get("doctype")) == "Custom Field"
-        ):
+        elif isinstance(fixture, dict) and fixture.get("dt", fixture.get("doctype")) == "Custom Field":
             custom_fields.extend(
                 frappe.get_all(
                     "Custom Field",
@@ -523,25 +473,17 @@ def get_messages_from_report(id):
         context = (
             "Column of report '%s'" % report.id
         )  # context has to match context in `prepare_columns` in query_report.js
-        messages.extend(
-            [(None, report_column.label, context) for report_column in report.columns]
-        )
+        messages.extend([(None, report_column.label, context) for report_column in report.columns])
 
     if report.filters:
-        messages.extend(
-            [(None, report_filter.label) for report_filter in report.filters]
-        )
+        messages.extend([(None, report_filter.label) for report_filter in report.filters])
 
     if report.query:
         messages.extend(
-            [
-                (None, message)
-                for message in REPORT_TRANSLATE_PATTERN.findall(report.query)
-                if is_translatable(message)
-            ]
+            [(None, message) for message in REPORT_TRANSLATE_PATTERN.findall(report.query) if is_translatable(message)]
         )
 
-    messages.append((None, report.report_id))
+    messages.append((None, report.id))
     return messages
 
 
@@ -569,9 +511,7 @@ def get_server_messages(app):
     app_walk = os.walk(frappe.get_app_path(app))
 
     for basepath, folders, files in app_walk:
-        folders[:] = [
-            folder for folder in folders if folder not in {".git", "__pycache__"}
-        ]
+        folders[:] = [folder for folder in folders if folder not in {".git", "__pycache__"}]
 
         if "public/dist" in basepath:
             continue
@@ -605,25 +545,15 @@ def get_messages_from_include_files(app_name=None):
 def get_all_messages_from_js_files(app_name=None):
     """Extracts all translatable strings from app `.js` files"""
     messages = []
-    for app in (
-        [app_name] if app_name else frappe.get_installed_apps(_ensure_on_bench=True)
-    ):
+    for app in [app_name] if app_name else frappe.get_installed_apps(_ensure_on_bench=True):
         if os.path.exists(frappe.get_app_path(app, "public")):
-            for basepath, folders, files in os.walk(
-                frappe.get_app_path(app, "public")
-            ):  # noqa: B007
+            for basepath, folders, files in os.walk(frappe.get_app_path(app, "public")):  # noqa: B007
                 if "frappe/public/js/lib" in basepath:
                     continue
 
                 for fname in files:
-                    if (
-                        fname.endswith(".js")
-                        or fname.endswith(".html")
-                        or fname.endswith(".vue")
-                    ):
-                        messages.extend(
-                            get_messages_from_file(os.path.join(basepath, fname))
-                        )
+                    if fname.endswith(".js") or fname.endswith(".html") or fname.endswith(".vue"):
+                        messages.extend(get_messages_from_file(os.path.join(basepath, fname)))
 
     return messages
 
@@ -667,10 +597,7 @@ def get_messages_from_file(path: str) -> list[tuple[str, str, str | None, int]]:
             # by regex based extractor.
             messages += extract_messages_from_javascript_code(file_contents)
 
-        return [
-            (os.path.relpath(path, bench_path), message, context, line)
-            for (line, message, context) in messages
-        ]
+        return [(os.path.relpath(path, bench_path), message, context, line) for (line, message, context) in messages]
 
 
 def extract_messages_from_python_code(code: str) -> list[tuple[int, str, str | None]]:
@@ -803,11 +730,7 @@ def get_untranslated(lang, untranslated_file, get_all=False, app="_ALL_APPS"):
                 untranslated.append(m[1])
 
         if untranslated:
-            print(
-                str(len(untranslated))
-                + " missing translations of "
-                + str(len(messages))
-            )
+            print(str(len(untranslated)) + " missing translations of " + str(len(messages)))
             with open(untranslated_file, "wb") as f:
                 for m in untranslated:
                     # replace \n with ||| so that internal linebreaks don't get split
@@ -869,16 +792,10 @@ def import_translations(lang, path):
 
 def migrate_translations(source_app, target_app):
     """Migrate target-app-specific translations from source-app to target-app"""
-    strings_in_source_app = [
-        m[1] for m in frappe.translate.get_messages_for_app(source_app)
-    ]
-    strings_in_target_app = [
-        m[1] for m in frappe.translate.get_messages_for_app(target_app)
-    ]
+    strings_in_source_app = [m[1] for m in frappe.translate.get_messages_for_app(source_app)]
+    strings_in_target_app = [m[1] for m in frappe.translate.get_messages_for_app(target_app)]
 
-    strings_in_target_app_but_not_in_source_app = list(
-        set(strings_in_target_app) - set(strings_in_source_app)
-    )
+    strings_in_target_app_but_not_in_source_app = list(set(strings_in_target_app) - set(strings_in_source_app))
 
     languages = frappe.translate.get_all_languages()
 
@@ -973,9 +890,7 @@ def update_translations_for_source(source=None, translation_dict=None):
         source = strip_html_tags(source)
 
     # for existing records
-    translation_records = frappe.db.get_values(
-        "Translation", {"source_text": source}, ["id", "language"], as_dict=1
-    )
+    translation_records = frappe.db.get_values("Translation", {"source_text": source}, ["id", "language"], as_dict=1)
     for d in translation_records:
         if translation_dict.get(d.language, None):
             doc = frappe.get_doc("Translation", d.id)
@@ -1017,9 +932,7 @@ def get_all_languages(with_language_name: bool = False) -> list:
         return frappe.get_all("Language", filters={"enabled": 1}, pluck="id")
 
     def get_all_language_with_name():
-        return frappe.get_all(
-            "Language", ["language_code", "language_name"], {"enabled": 1}
-        )
+        return frappe.get_all("Language", ["language_code", "language_name"], {"enabled": 1})
 
     if with_language_name:
         return frappe.cache.get_value("languages_with_name", get_all_language_with_name)

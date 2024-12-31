@@ -151,7 +151,7 @@ frappe.ui.form.save = function (frm, action, callback, btn) {
 
 			if (frm.is_new() && frm.meta.autoid === "Prompt" && !frm.doc.__newid) {
 				has_errors = true;
-				error_fields = [__("Name"), ...error_fields];
+				error_fields = [__("ID"), ...error_fields];
 			}
 
 			if (error_fields.length) {

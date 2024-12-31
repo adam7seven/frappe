@@ -367,7 +367,7 @@ frappe.views.Workspace = class Workspace {
 			})
 			.then((data) => {
 				this.page_data = data.message;
-console.log(data)
+
 				// caching page data
 				this.pages[page.id] && delete this.pages[page.id];
 				this.pages[page.id] = data.message;

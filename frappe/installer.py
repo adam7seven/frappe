@@ -703,7 +703,7 @@ def add_module_defs(app, ignore_if_duplicate=False):
     for module in modules:
         d = frappe.new_doc("Module Def")
         d.app_name = app
-        d.module_id = module
+        d.id = module
         d.insert(ignore_permissions=True, ignore_if_duplicate=ignore_if_duplicate)
 
 

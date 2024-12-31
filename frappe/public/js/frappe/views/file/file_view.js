@@ -94,7 +94,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 				label: __("New Folder"),
 				action: () => {
 					frappe.prompt(
-						__("Name"),
+						__("ID"),
 						(values) => {
 							if (values.value.indexOf("/") > -1) {
 								frappe.throw(__("Folder name should not include '/' (slash)"));

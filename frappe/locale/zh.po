@@ -15395,7 +15395,7 @@ msgstr ""
 #: frappe/website/doctype/web_template/web_template.json
 #: frappe/website/doctype/website_theme/website_theme.json
 msgid "Module"
-msgstr "模"
+msgstr "模块"
 
 #. Label of a Link field in DocType 'Server Script'
 #. Label of a Link field in DocType 'Client Script'
@@ -15468,7 +15468,7 @@ msgstr ""
 #: frappe/core/doctype/package/package.json
 #: frappe/core/workspace/build/build.json
 msgid "Modules"
-msgstr "模组"
+msgstr "模块"
 
 #. Label of a HTML field in DocType 'User'
 #: frappe/core/doctype/user/user.json

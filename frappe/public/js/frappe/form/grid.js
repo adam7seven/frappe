@@ -469,8 +469,8 @@ export default class Grid {
 			if (d.idx === undefined) {
 				d.idx = ri + 1;
 			}
-			if (d.name === undefined) {
-				d.name = "row " + d.idx;
+			if (d.id === undefined) {
+				d.id = "row " + d.idx;
 			}
 			let grid_row;
 			if (this.grid_rows[ri] && !append_row) {

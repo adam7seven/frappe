@@ -238,7 +238,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 		columns[0] = [
 			{
 				fieldtype: "Data",
-				label: __("Name"),
+				label: __("ID"),
 				fieldname: "search_term",
 			},
 		];

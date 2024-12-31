@@ -37,7 +37,7 @@ def get_modules_from_app(app):
     return frappe.get_all(
         "Module Def",
         filters={"app_name": app},
-        fields=["module_id", "app_name as app"],
+        fields=["id", "app_name as app"],
     )
 
 
