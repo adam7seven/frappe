@@ -315,8 +315,7 @@ class Document(BaseDocument):
             self.db_insert(ignore_if_duplicate=ignore_if_duplicate)
 
         # children
-        for d in self.get_all_children():
-            d.db_insert()
+        self.insert_children()
 
         self.run_method("after_insert")
         self.flags.in_insert = True
@@ -341,6 +340,12 @@ class Document(BaseDocument):
             if frappe.get_cached_value("User", frappe.session.user, "follow_created_documents"):
                 follow_document(self.doctype, self.id, frappe.session.user)
         return self
+
+    def insert_children(self):
+        for d in self.get_all_children():
+            d.db_insert()
+
+            d.insert_children()
 
     def check_if_locked(self):
         if self.creation and self.is_locked:
@@ -515,10 +520,14 @@ class Document(BaseDocument):
 
         if set_child_ids:
             # set id for children
-            for d in self.get_all_children():
-                set_new_id(d)
+            self.set_new_id_for_children()
 
         self.flags.id_set = True
+
+    def set_new_id_for_children(self):
+        for d in self.get_all_children():
+            set_new_id(d)
+            d.set_new_id_for_children()
 
     def get_title(self):
         """Get the document title based on title_field or `title` or `id`"""
@@ -569,6 +578,11 @@ class Document(BaseDocument):
             self.creation = self.modified
             self.owner = self.modified_by
 
+        self.set_user_and_timestamp_for_children()
+
+        frappe.flags.currently_saving.append((self.doctype, self.id))
+
+    def set_user_and_timestamp_for_children(self):
         for d in self.get_all_children():
             d.modified = self.modified
             d.modified_by = self.modified_by
@@ -577,14 +591,19 @@ class Document(BaseDocument):
             if not d.creation:
                 d.creation = self.creation
 
-        frappe.flags.currently_saving.append((self.doctype, self.id))
+            d.set_user_and_timestamp_for_children()
 
     def set_docstatus(self):
         if self.docstatus is None:
             self.docstatus = DocStatus.draft()
 
+        self.set_docstatus_for_children()
+
+    def set_docstatus_for_children(self):
         for d in self.get_all_children():
             d.docstatus = self.docstatus
+
+            d.set_docstatus_for_children()
 
     def _validate(self):
         self._validate_mandatory()
@@ -886,33 +905,40 @@ class Document(BaseDocument):
             d.parent = self.id
             d.parenttype = self.doctype
 
+            d.set_parent_in_children()
+
     def set_id_in_children(self):
         # Set id for any new children
         for d in self.get_all_children():
             if not d.id:
                 set_new_id(d)
 
+            d.set_id_in_children()
+
     def validate_update_after_submit(self):
         if self.flags.ignore_validate_update_after_submit:
             return
 
         self._validate_update_after_submit()
+        self.validate_update_after_submit_for_children()
+
+        # TODO check only allowed values are updated
+
+    def validate_update_after_submit_for_children(self):
         for d in self.get_all_children():
             if d.is_new() and self.meta.get_field(d.parentfield).allow_on_submit:
                 # in case of a new row, don't validate allow on submit, if table is allow on submit
                 continue
 
             d._validate_update_after_submit()
-
-        # TODO check only allowed values are updated
+            d.validate_update_after_submit_for_children()
 
     def _validate_mandatory(self):
         if self.flags.ignore_mandatory:
             return
 
         missing = self._get_missing_mandatory_fields()
-        for d in self.get_all_children():
-            missing.extend(d._get_missing_mandatory_fields())
+        missing.extend(self._get_missing_mandatory_fields_for_children())
 
         if not missing:
             return
@@ -931,16 +957,19 @@ class Document(BaseDocument):
             )
         )
 
+    def _get_missing_mandatory_fields_for_children(self):
+        missing = []
+        for d in self.get_all_children():
+            missing.extend(d._get_missing_mandatory_fields())
+            missing.extend(d._get_missing_mandatory_fields_for_children())
+        return missing
+
     def _validate_links(self):
         if self.flags.ignore_links or self._action == "cancel":
             return
 
         invalid_links, cancelled_links = self.get_invalid_links()
-
-        for d in self.get_all_children():
-            result = d.get_invalid_links(is_submittable=self.meta.is_submittable)
-            invalid_links.extend(result[0])
-            cancelled_links.extend(result[1])
+        self._validate_links_for_children(invalid_links, cancelled_links)
 
         if invalid_links:
             msg = ", ".join(each[2] for each in invalid_links)
@@ -952,6 +981,14 @@ class Document(BaseDocument):
                 _("Cannot link cancelled document: {0}").format(msg),
                 frappe.CancelledLinkError,
             )
+
+    def _validate_links_for_children(self, invalid_links, cancelled_links):
+        for d in self.get_all_children():
+            result = d.get_invalid_links(is_submittable=self.meta.is_submittable)
+            invalid_links.extend(result[0])
+            cancelled_links.extend(result[1])
+
+            d._validate_links_for_children(invalid_links, cancelled_links)
 
     def get_all_children(self, parenttype=None) -> list["Document"]:
         """Returns all children documents from **Table** type fields in a list."""
