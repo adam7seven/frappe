@@ -486,7 +486,7 @@ class ImportFile:
 			if col.df:
 				col.df = {
 					"fieldtype": col.df.fieldtype,
-					"fieldname": col.df.fieldid,
+					"fieldname": col.df.fieldname,
 					"label": col.df.label,
 					"options": col.df.options,
 					"parent": col.df.parent,
@@ -714,7 +714,7 @@ class Row:
 				)
 				return
 
-		elif df.fieldtype == "Link":
+		elif df.fieldtype == "Link1":
 			exists = self.link_exists(value, df)
 			if not exists:
 				msg = _("Value {0} missing for {1}").format(frappe.bold(value), frappe.bold(df.options))
@@ -995,7 +995,7 @@ class Column:
 		if not any(self.column_values):
 			return
 
-		if self.df.fieldtype == "Link":
+		if self.df.fieldtype == "Link1":
 			# find all values that dont exist
 			values = list({cstr(v) for v in self.column_values if v})
 			exists = [cstr(d.id) for d in frappe.get_all(self.df.options, filters={"id": ("in", values)})]
