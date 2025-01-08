@@ -446,6 +446,9 @@ class Document(BaseDocument):
         for df in self.meta.get_table_fields():
             self.update_child_table(df.fieldname, df)
 
+        for d in self.get_all_children():
+            d.update_children()
+
     def update_child_table(self, fieldname: str, df: Optional["DocField"] = None):
         """sync child table for given fieldname"""
         df: "DocField" = df or self.meta.get_field(fieldname)
@@ -739,8 +742,7 @@ class Document(BaseDocument):
             return
 
         all_fields = self.meta.fields.copy()
-        for table_field in self.meta.get_table_fields():
-            all_fields += frappe.get_meta(table_field.options).fields or []
+        all_fields += self.get_table_fields_for_children()
 
         if all(df.permlevel == 0 for df in all_fields):
             return
@@ -755,12 +757,28 @@ class Document(BaseDocument):
                     # hasattr might return True for class attribute which can't be delattr-ed.
                     continue
 
+        self.del_attrs_for_children(has_access_to)
+
+    def get_table_fields_for_children(self):
+        all_fields = []
+        for table_field in self.meta.get_table_fields():
+            all_fields += frappe.get_meta(table_field.options).fields or []
+
+        for d in self.get_all_children():
+            all_fields += d.get_table_fields_for_children()
+
+        return all_fields
+
+    def del_attrs_for_children(self, has_access_to):
         for table_field in self.meta.get_table_fields():
             for df in frappe.get_meta(table_field.options).fields or []:
                 if df.permlevel and df.permlevel not in has_access_to:
                     for child in self.get(table_field.fieldname) or []:
                         if hasattr(child, df.fieldname):
                             delattr(child, df.fieldname)
+
+        for d in self.get_all_children():
+            d.del_attrs_for_children(has_access_to)
 
     def validate_higher_perm_levels(self):
         """If the user does not have permissions at permlevel > 0, then reset the values to original / default"""
@@ -781,11 +799,15 @@ class Document(BaseDocument):
             return
 
         # check for child tables
+        self.validate_higher_perm_levels_for_children(has_access_to)
+
+    def validate_higher_perm_levels_for_children(self, has_access_to):
         for df in self.meta.get_table_fields():
             high_permlevel_fields = frappe.get_meta(df.options).get_high_permlevel_fields()
             if high_permlevel_fields:
                 for d in self.get(df.fieldname):
                     d.reset_values_if_no_permlevel_access(has_access_to, high_permlevel_fields)
+                    d.validate_higher_perm_levels_for_children()
 
     def get_permlevel_access(self, permission_type="write"):
         allowed_permlevels = []
@@ -822,6 +844,9 @@ class Document(BaseDocument):
             self.update_if_missing(new_doc)
 
         # children
+        self._set_defaults_for_children()
+
+    def _set_defaults_for_children(self):
         for df in self.meta.get_table_fields():
             new_doc = frappe.new_doc(df.options, parent_doc=self, parentfield=df.fieldname, as_dict=True)
             value = self.get(df.fieldname)
@@ -829,6 +854,8 @@ class Document(BaseDocument):
                 for d in value:
                     if d.is_new():
                         d.update_if_missing(new_doc)
+
+                    d._set_defaults_for_children()
 
     def check_if_latest(self):
         """Checks if `modified` timestamp provided by document being updated is same as the
