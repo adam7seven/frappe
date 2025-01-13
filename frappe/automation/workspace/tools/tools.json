@@ -321,7 +321,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-01-02 20:44:26.847046",
+ "modified": "2025-01-11 16:15:19.977988",
  "modified_by": "Administrator",
  "module": "Automation",
  "number_cards": [],
@@ -331,7 +331,7 @@
  "quick_lists": [],
  "restrict_to_domain": "",
  "roles": [],
- "sequence_id": 5.0,
+ "sequence_id": 6.0,
  "shortcuts": [
   {
    "color": "Grey",
