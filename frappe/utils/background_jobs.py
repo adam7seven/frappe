@@ -232,16 +232,17 @@ def execute_job(site, method, event, job_id, kwargs, user=None, is_async=True, r
     except (frappe.db.InternalError, frappe.RetryBackgroundJobError) as e:
         frappe.db.rollback()
 
-        if retry < 5 and (
-            isinstance(e, frappe.RetryBackgroundJobError)
-            or (frappe.db.is_deadlocked(e) or frappe.db.is_timedout(e))
-        ):
-            # retry the job if
-            # 1213 = deadlock
-            # 1205 = lock wait timeout
-            # or RetryBackgroundJobError is explicitly raised
-            frappe.destroy()
-            time.sleep(retry + 1)
+		if retry < 5 and (
+			isinstance(e, frappe.RetryBackgroundJobError)
+			or (frappe.db.is_deadlocked(e) or frappe.db.is_timedout(e))
+		):
+			# retry the job if
+			# 1213 = deadlock
+			# 1205 = lock wait timeout
+			# or RetryBackgroundJobError is explicitly raised
+			frappe.job.after_job.reset()
+			frappe.destroy()
+			time.sleep(retry + 1)
 
             return execute_job(
                 site, method, event, job_id, kwargs, is_async=is_async, retry=retry + 1
@@ -262,12 +263,13 @@ def execute_job(site, method, event, job_id, kwargs, user=None, is_async=True, r
         frappe.db.commit()
         return retval
 
-    finally:
-        for after_job_task in frappe.get_hooks("after_job"):
-            frappe.call(
-                after_job_task, method=method_name, kwargs=kwargs, result=retval
-            )
-        frappe.local.job.after_job.run()
+	finally:
+		if not hasattr(frappe.local, "site"):
+			frappe.init(site)
+			frappe.connect()
+		for after_job_task in frappe.get_hooks("after_job"):
+			frappe.call(after_job_task, method=method_name, kwargs=kwargs, result=retval)
+		frappe.local.job.after_job.run()
 
         if is_async:
             frappe.destroy()

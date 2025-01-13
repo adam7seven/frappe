@@ -586,15 +586,16 @@
             "fieldtype": "Section Break",
             "label": "API Access"
         },
-        {
-            "description": "API Key cannot be regenerated",
-            "fieldname": "api_key",
-            "fieldtype": "Data",
-            "label": "API Key",
-            "permlevel": 1,
-            "read_only": 1,
-            "unique": 1
-        },
+      {
+        "description": "API Key cannot be regenerated",
+        "fieldname": "api_key",
+        "fieldtype": "Data",
+        "label": "API Key",
+        "no_copy": 1,
+        "permlevel": 1,
+        "read_only": 1,
+        "unique": 1
+      },
         {
             "fieldname": "generate_keys",
             "fieldtype": "Button",

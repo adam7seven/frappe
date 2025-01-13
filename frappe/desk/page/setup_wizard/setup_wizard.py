@@ -33,20 +33,14 @@ def get_setup_stages(args):  # nosemgrep
 
     stages += get_stages_hooks(args) + get_setup_complete_hooks(args)
 
-    stages.append(
-        {
-            # post executing hooks
-            "status": "Wrapping up",
-            "fail_msg": "Failed to complete setup",
-            "tasks": [
-                {
-                    "fn": run_post_setup_complete,
-                    "args": args,
-                    "fail_msg": "Failed to complete setup",
-                }
-            ],
-        }
-    )
+	stages.append(
+		{
+			# post executing hooks
+			"status": _("Wrapping up"),
+			"fail_msg": _("Failed to complete setup"),
+			"tasks": [{"fn": run_post_setup_complete, "args": args, "fail_msg": "Failed to complete setup"}],
+		}
+	)
 
     return stages
 
@@ -60,9 +54,9 @@ def setup_complete(args):
     if cint(frappe.db.get_single_value("System Settings", "setup_complete")):
         return {"status": "ok"}
 
-    args = parse_args(args)
-    stages = get_setup_stages(args)
-    is_background_task = frappe.conf.get("trigger_site_setup_in_background")
+	args = parse_args(sanitize_input(args))
+	stages = get_setup_stages(args)
+	is_background_task = frappe.conf.get("trigger_site_setup_in_background")
 
     if is_background_task:
         process_setup_stages.enqueue(
@@ -277,10 +271,23 @@ def parse_args(args):  # nosemgrep
     return args
 
 
+def sanitize_input(args):
+	from frappe.utils import is_html, strip_html_tags
+
+	if isinstance(args, str):
+		args = json.loads(args)
+
+	for key, value in args.items():
+		if is_html(value):
+			args[key] = strip_html_tags(value)
+
+	return args
+
+
 def add_all_roles_to(id):
-    user = frappe.get_doc("User", id)
-    user.append_roles(*_get_default_roles())
-    user.save()
+	user = frappe.get_doc("User", id)
+	user.append_roles(*_get_default_roles())
+	user.save()
 
 
 def _get_default_roles() -> set[str]:

@@ -381,19 +381,18 @@ def get_rendered_raw_commands(
 
 
 def validate_print_permission(doc):
-    for ptype in ("read", "print"):
-        if frappe.has_permission(
-            doc.doctype, ptype, doc
-        ) or frappe.has_website_permission(doc):
-            return
+	if frappe.has_website_permission(doc):
+		return
 
-    key = frappe.form_dict.key
-    if key and isinstance(key, str):
-        validate_key(key, doc)
-    else:
-        raise frappe.PermissionError(
-            _("You do not have permission to view this document")
-        )
+	for ptype in ("read", "print"):
+		if frappe.has_permission(doc.doctype, ptype, doc):
+			return
+
+	if (key := frappe.form_dict.key) and isinstance(key, str):
+		validate_key(key, doc)
+		return
+
+	frappe.throw(_("{0} {1} not found").format(_(doc.doctype), doc.name), frappe.DoesNotExistError)
 
 
 def validate_key(key, doc):

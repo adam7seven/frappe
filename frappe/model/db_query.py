@@ -21,13 +21,14 @@ from frappe.model.utils import is_virtual_doctype
 from frappe.model.utils.user_settings import get_user_settings, update_user_settings
 from frappe.query_builder.utils import Column
 from frappe.utils import (
-    cint,
-    cstr,
-    flt,
-    get_filter,
-    get_time,
-    get_timespan_date_range,
-    make_filter_tuple,
+	cint,
+	cstr,
+	flt,
+	get_filter,
+	get_time,
+	get_timespan_date_range,
+	make_filter_tuple,
+	sanitize_column,
 )
 from frappe.utils.data import DateTimeLikeObject, get_datetime, getdate, sbool
 
@@ -585,11 +586,11 @@ class DatabaseQuery:
         if isinstance(filters, dict):
             filters = [filters]
 
-        for f in filters:
-            if isinstance(f, str):
-                conditions.append(f)
-            else:
-                conditions.append(self.prepare_filter_condition(f))
+		for f in filters:
+			if isinstance(f, str):
+				conditions.append(sanitize_column(f))
+			else:
+				conditions.append(self.prepare_filter_condition(f))
 
     def remove_field(self, idx: int):
         if self.as_list:

@@ -225,7 +225,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 				'<div class="print-heading">\
 				<h2><div>' +
 				__(this.print_format.doc_type) +
-				'</div><br><small class="sub-heading">{{ doc.id }}</small>\
+				'</div><br><small class="sub-heading">{{ _(doc.id) }}</small>\
 				</h2></div>';
 		}
 

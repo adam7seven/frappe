@@ -14,6 +14,7 @@ from frappe.desk.form.document_follow import is_document_followed
 from frappe.model.utils.user_settings import get_user_settings
 from frappe.permissions import get_doc_permissions
 from frappe.utils.data import cstr
+from frappe.utils.html_utils import clean_email_html
 
 if typing.TYPE_CHECKING:
     from frappe.model.document import Document
@@ -36,11 +37,11 @@ def getdoc(doctype, id, user=None):
         frappe.clear_last_message()
         return []
 
-    if not doc.has_permission("read"):
-        frappe.flags.error_message = _("Insufficient Permission for {0}").format(
-            frappe.bold(doctype + " " + id)
-        )
-        raise frappe.PermissionError(("read", doctype, id))
+	if not doc.has_permission("read"):
+		frappe.flags.error_message = _("Insufficient Permission for {0}").format(
+			frappe.bold(_(doctype) + " " + name)
+		)
+		raise frappe.PermissionError(("read", doctype, name))
 
     run_onload(doc)
     doc.apply_fieldlevel_read_permissions()
@@ -268,22 +269,20 @@ def get_point_logs(doctype, docid):
     )
 
 
-def _get_communications(doctype, id, start=0, limit=20):
-    communications = get_communication_data(doctype, id, start, limit)
-    for c in communications:
-        if c.communication_type in ("Communication", "Automated Message"):
-            c.attachments = json.dumps(
-                frappe.get_all(
-                    "File",
-                    fields=["file_url", "is_private"],
-                    filters={
-                        "attached_to_doctype": "Communication",
-                        "attached_to_id": c.id,
-                    },
-                )
-            )
+def _get_communications(doctype, name, start=0, limit=20):
+	communications = get_communication_data(doctype, name, start, limit)
+	for c in communications:
+		if c.communication_type in ("Communication", "Automated Message"):
+			clean_email_html(c.content)
+			c.attachments = json.dumps(
+				frappe.get_all(
+					"File",
+					fields=["file_url", "is_private"],
+					filters={"attached_to_doctype": "Communication", "attached_to_id": c.id},
+				)
+			)
 
-    return communications
+	return communications
 
 
 def get_communication_data(

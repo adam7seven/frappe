@@ -880,24 +880,29 @@ export default class Grid {
         });
     }
 
-    duplicate_row(d, copy_doc) {
-        $.each(copy_doc, function (key, value) {
-            if (
-                ![
-                    "creation",
-                    "modified",
-                    "modified_by",
-                    "idx",
-                    "owner",
-                    "parent",
-                    "doctype",
-                    "id",
-                    "parentfield",
-                ].includes(key)
-            ) {
-                d[key] = value;
-            }
-        });
+	duplicate_row(d, copy_doc) {
+		const noCopyFields = new Set([
+			"creation",
+			"modified",
+			"modified_by",
+			"idx",
+			"owner",
+			"parent",
+			"doctype",
+			"id",
+			"parentfield",
+		]);
+
+		const docfields = frappe.get_meta(this.doctype).fields || [];
+		$.each(docfields, function (_index, df) {
+			if (cint(df.no_copy)) noCopyFields.add(df.fieldname);
+		});
+
+		$.each(copy_doc, function (key, value) {
+			if (!noCopyFields.has(key)) {
+				d[key] = value;
+			}
+		});
 
         return d;
     }

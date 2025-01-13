@@ -146,9 +146,10 @@ def filter_dynamic_link_doctypes(
 
 
 def set_link_title(doc):
-    if not doc.links:
-        return
-    for link in doc.links:
-        if not link.link_title:
-            linked_doc = frappe.get_doc(link.link_doctype, link.link_id)
-            link.link_title = linked_doc.get_title() or link.link_id
+	if not doc.links:
+		return
+	for link in doc.links:
+		linked_doc = frappe.get_doc(link.link_doctype, link.link_id)
+		doc_title = linked_doc.get_title()
+		if link.link_title != doc_title:
+			link.link_title = doc_title or link.link_id

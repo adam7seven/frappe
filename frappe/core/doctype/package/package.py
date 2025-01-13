@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import os
+from string import ascii_letters, digits
 
 import frappe
 from frappe.model.document import Document
@@ -36,6 +37,10 @@ class Package(Document):
     def validate(self):
         if not self.package_name:
             self.package_name = self.id.lower().replace(" ", "-")
+
+		allowed_characters = ascii_letters + digits + "-"
+		if not all(c in allowed_characters for c in self.package_name):
+			frappe.throw("Package name can only contain letters, digits and hyphens")
 
 
 @frappe.whitelist()

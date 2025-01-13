@@ -115,7 +115,7 @@ $.extend(frappe.model, {
                 !["[Select]", "Loading..."].includes(f.options)
             ) {
                 var options = f.options;
-                //如果选项中包含逗号，则按逗号隔开
+                //���ѡ���а������ţ��򰴶��Ÿ��
                 for (var i = 0; i < options.length; i++) {
                     var opt = options[i];
                     var comma_index = opt.indexOf(",")
@@ -294,33 +294,33 @@ $.extend(frappe.model, {
         return child;
     },
 
-    copy_doc: function (doc, from_amend, parent_doc, parentfield) {
-        var no_copy_list = ["id", "amended_from", "amendment_date", "cancel_reason"];
-        var newdoc = frappe.model.get_new_doc(doc.doctype, parent_doc, parentfield);
+	copy_doc: function (doc, from_amend, parent_doc, parentfield) {
+		let no_copy_list = ["id", "amended_from", "amendment_date", "cancel_reason"];
+		let newdoc = frappe.model.get_new_doc(doc.doctype, parent_doc, parentfield);
 
-        for (var key in doc) {
-            // dont copy id and blank fields
-            var df = frappe.meta.get_docfield(doc.doctype, key);
+		for (let key in doc) {
+			// don't copy id and blank fields
+			let df = frappe.meta.get_docfield(doc.doctype, key);
 
-            if (
-                df &&
-                key.substr(0, 2) != "__" &&
-                !no_copy_list.includes(key) &&
-                !(df && !from_amend && cint(df.no_copy) == 1)
-            ) {
-                var value = doc[key] || [];
-                if (frappe.model.table_fields.includes(df.fieldtype)) {
-                    for (var i = 0, j = value.length; i < j; i++) {
-                        var d = value[i];
-                        frappe.model.copy_doc(d, from_amend, newdoc, df.fieldname);
-                    }
-                } else {
-                    newdoc[key] = doc[key];
-                }
-            }
-        }
+			const is_internal_field = key.substring(0, 2) === "__";
+			const is_blocked_field = no_copy_list.includes(key);
+			const is_no_copy = !from_amend && df && cint(df.no_copy) == 1;
+			const is_password = df && df.fieldtype === "Password";
 
-        var user = frappe.session.user;
+			if (df && !is_internal_field && !is_blocked_field && !is_no_copy && !is_password) {
+				let value = doc[key] || [];
+				if (frappe.model.table_fields.includes(df.fieldtype)) {
+					for (let i = 0, j = value.length; i < j; i++) {
+						let d = value[i];
+						frappe.model.copy_doc(d, from_amend, newdoc, df.fieldname);
+					}
+				} else {
+					newdoc[key] = doc[key];
+				}
+			}
+		}
+
+		let user = frappe.session.user;
 
         newdoc.__islocal = 1;
         newdoc.docstatus = 0;

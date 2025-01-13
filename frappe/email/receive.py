@@ -306,10 +306,10 @@ class EmailServer:
 
         self._post_retrieve_cleanup(uid, msg_num)
 
-    def get_email_seen_status(self, uid, flag_string):
-        """parse the email FLAGS response"""
-        if not flag_string:
-            return None
+	def get_email_seen_status(self, uid, flag_string):
+		"""parse the email FLAGS response"""
+		if not flag_string or not isinstance(flag_string, str | bytes):
+			return None
 
         flags = []
         for flag in imaplib.ParseFlags(flag_string) or []:

@@ -231,10 +231,10 @@ def read_multi_pdf(output: PdfWriter) -> bytes:
 
 @frappe.whitelist(allow_guest=True)
 def download_pdf(
-    doctype, id, format=None, doc=None, no_letterhead=0, language=None, letterhead=None
+	doctype: str, id: str, format=None, doc=None, no_letterhead=0, language=None, letterhead=None
 ):
-    doc = doc or frappe.get_doc(doctype, id)
-    validate_print_permission(doc)
+	doc = doc or frappe.get_doc(doctype, id)
+	validate_print_permission(doc)
 
     with print_language(language):
         pdf_file = frappe.get_print(

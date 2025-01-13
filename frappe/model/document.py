@@ -617,7 +617,7 @@ class Document(BaseDocument):
         self._fix_rating_value()
         self._validate_code_fields()
         self._sync_autoid_field()
-        self._extract_images_from_text_editor()
+        self._extract_images_from_editor()
         self._sanitize_content()
         self._save_passwords()
         self.validate_workflow()
@@ -630,7 +630,7 @@ class Document(BaseDocument):
             d._fix_rating_value()
             d._validate_code_fields()
             d._sync_autoid_field()
-            d._extract_images_from_text_editor()
+            d._extract_images_from_editor()
             d._sanitize_content()
             d._save_passwords()
         if self.is_new():
@@ -835,7 +835,7 @@ class Document(BaseDocument):
         return permissions
 
     def _set_defaults(self):
-        # Adam: 不清楚导入模式为什么不设置默认值，先去掉
+        # Adam: ���������ģʽΪʲô������Ĭ��ֵ����ȥ��
         # if frappe.flags.in_import:
         #     return
 
@@ -1697,14 +1697,22 @@ class Document(BaseDocument):
         if not (from_date and to_date):
             return
 
-        if date_diff(to_date, from_date) < 0:
-            frappe.throw(
-                _("{0} must be after {1}").format(
-                    frappe.bold(_(self.meta.get_label(to_date_field))),
-                    frappe.bold(_(self.meta.get_label(from_date_field))),
-                ),
-                frappe.exceptions.InvalidDates,
-            )
+		if date_diff(to_date, from_date) < 0:
+			table_row = ""
+			if self.meta.istable:
+				table_row = _("{0} row #{1}: ").format(
+					_(frappe.unscrub(self.parentfield)),
+					self.idx,
+				)
+
+			frappe.throw(
+				table_row
+				+ _("{0} must be after {1}").format(
+					frappe.bold(_(self.meta.get_label(to_date_field))),
+					frappe.bold(_(self.meta.get_label(from_date_field))),
+				),
+				frappe.exceptions.InvalidDates,
+			)
 
     def get_assigned_users(self):
         assigned_users = frappe.get_all(

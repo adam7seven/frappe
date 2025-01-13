@@ -42,17 +42,20 @@ def get_report_doc(report_id):
             _("You don't have access to Report: {0}").format(report_id),
             frappe.PermissionError,
         )
+	if not doc.is_permitted():
+		frappe.throw(
+			_("You don't have access to Report: {0}").format(_(report_id)),
+			frappe.PermissionError,
+		)
 
-    if not frappe.has_permission(doc.ref_doctype, "report"):
-        frappe.throw(
-            _("You don't have permission to get a report on: {0}").format(
-                doc.ref_doctype
-            ),
-            frappe.PermissionError,
-        )
+	if not frappe.has_permission(doc.ref_doctype, "report"):
+		frappe.throw(
+			_("You don't have permission to get a report on: {0}").format(_(doc.ref_doctype)),
+			frappe.PermissionError,
+		)
 
-    if doc.disabled:
-        frappe.throw(_("Report {0} is disabled").format(report_id))
+	if doc.disabled:
+		frappe.throw(_("Report {0} is disabled").format(_(report_id)))
 
     return doc
 
@@ -565,10 +568,8 @@ def add_total_row(result, columns, meta=None, is_tree=False, parent_field=None):
 
 @frappe.whitelist()
 def get_data_for_custom_field(doctype, field, ids=None):
-    if not frappe.has_permission(doctype, "read"):
-        frappe.throw(
-            _("Not Permitted to read {0}").format(doctype), frappe.PermissionError
-        )
+	if not frappe.has_permission(doctype, "read"):
+		frappe.throw(_("Not Permitted to read {0}").format(_(doctype)), frappe.PermissionError)
 
     filters = {}
     if ids:
@@ -642,7 +643,7 @@ def save_report(reference_report, report_id, columns, filters):
                 "reference_report": reference_report,
             }
         ).insert(ignore_permissions=True)
-        frappe.msgprint(_("{0} saved successfully").format(new_report.id))
+        frappe.msgprint(_("{0} saved successfully").format(_(new_report.id)))
         return new_report.id
 
 
