@@ -21,6 +21,7 @@
         "search_index",
         "column_break_18",
         "options",
+        "options_has_label",
         "sort_options",
         "show_dashboard",
         "link_filters",
@@ -233,6 +234,12 @@
             "label": "Options",
             "oldfieldname": "options",
             "oldfieldtype": "Text"
+        },
+        {
+            "description": "If checked, select options will split by first comma, the first part is value, and the second part is label.",
+            "fieldname": "options_has_label",
+            "fieldtype": "Check",
+            "label": "Options Has Label"
         },
         {
             "fieldname": "default",

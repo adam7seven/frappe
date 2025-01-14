@@ -15,6 +15,7 @@ from frappe.utils import dict_with_keys, strip_html
 from frappe.utils.caching import redis_cache
 from frappe.website.utils import get_boot_data, get_comment_list, get_sidebar_items
 from frappe.website.website_generator import WebsiteGenerator
+from frappe.utils.data import get_select_options
 
 
 class WebForm(WebsiteGenerator):
@@ -78,10 +79,7 @@ class WebForm(WebsiteGenerator):
             self.module = frappe.db.get_value("DocType", self.doc_type, "module")
 
         in_user_env = not (
-            frappe.flags.in_install
-            or frappe.flags.in_patch
-            or frappe.flags.in_test
-            or frappe.flags.in_fixtures
+            frappe.flags.in_install or frappe.flags.in_patch or frappe.flags.in_test or frappe.flags.in_fixtures
         )
         if in_user_env and self.is_standard and not frappe.conf.developer_mode:
             # only published can be changed for standard web forms
@@ -90,9 +88,7 @@ class WebForm(WebsiteGenerator):
                 self.reload()
                 self.published = published_value
             else:
-                frappe.throw(
-                    _("You need to be in developer mode to edit a Standard Web Form")
-                )
+                frappe.throw(_("You need to be in developer mode to edit a Standard Web Form"))
 
         if not frappe.flags.in_import:
             self.validate_fields()
@@ -105,16 +101,11 @@ class WebForm(WebsiteGenerator):
         missing = [
             df.fieldname
             for df in self.web_form_fields
-            if df.fieldname
-            and (
-                df.fieldtype not in no_value_fields and not meta.has_field(df.fieldname)
-            )
+            if df.fieldname and (df.fieldtype not in no_value_fields and not meta.has_field(df.fieldname))
         ]
 
         if missing:
-            frappe.throw(
-                _("Following fields are missing:") + "<br>" + "<br>".join(missing)
-            )
+            frappe.throw(_("Following fields are missing:") + "<br>" + "<br>".join(missing))
 
     def reset_field_parent(self):
         """Convert link fields to select with names as options"""
@@ -165,9 +156,7 @@ def get_context(context):
         if frappe.form_dict.id:
             if frappe.session.user == "Guest":
                 frappe.throw(
-                    _("You need to be logged in to access this {0}.").format(
-                        self.doc_type
-                    ),
+                    _("You need to be logged in to access this {0}.").format(self.doc_type),
                     frappe.PermissionError,
                 )
 
@@ -197,12 +186,7 @@ def get_context(context):
         if frappe.form_dict.is_read:
             context.in_view_mode = True
 
-        if (
-            not frappe.form_dict.is_edit
-            and not frappe.form_dict.is_read
-            and self.allow_edit
-            and frappe.form_dict.id
-        ):
+        if not frappe.form_dict.is_edit and not frappe.form_dict.is_read and self.allow_edit and frappe.form_dict.id:
             context.in_edit_mode = True
             frappe.redirect(f"/{frappe.local.path}/edit")
 
@@ -213,9 +197,7 @@ def get_context(context):
             and not frappe.form_dict.id
             and not frappe.form_dict.is_list
         ):
-            condition_json = (
-                json.loads(self.condition_json) if self.condition_json else []
-            )
+            condition_json = json.loads(self.condition_json) if self.condition_json else []
             condition_json.append(["owner", "=", frappe.session.user])
             ids = frappe.get_all(self.doc_type, filters=condition_json, pluck="id")
             if ids:
@@ -232,11 +214,7 @@ def get_context(context):
         self.reset_field_parent()
 
         # add keys from form_dict to context
-        context.update(
-            dict_with_keys(
-                frappe.form_dict, ["is_list", "is_new", "is_edit", "is_read"]
-            )
-        )
+        context.update(dict_with_keys(frappe.form_dict, ["is_list", "is_new", "is_edit", "is_read"]))
 
         for df in self.web_form_fields:
             if df.fieldtype == "Column Break":
@@ -245,11 +223,7 @@ def get_context(context):
 
         # load web form doc
         context.web_form_doc = self.as_dict(no_nulls=True)
-        context.web_form_doc.update(
-            dict_with_keys(
-                context, ["is_list", "is_new", "in_edit_mode", "in_view_mode"]
-            )
-        )
+        context.web_form_doc.update(dict_with_keys(context, ["is_list", "is_new", "in_edit_mode", "in_view_mode"]))
 
         if self.show_sidebar and self.website_sidebar:
             context.sidebar_items = get_sidebar_items(self.website_sidebar)
@@ -298,13 +272,12 @@ def get_context(context):
         for field in self.web_form_fields:
             messages.extend([field.label, field.description])
             if field.fieldtype == "Select" and field.options:
-                messages.extend(field.options.split("\n"))
+                options = get_select_options(field.options, field.options_has_label)
+                messages.extend(options)
 
         messages.extend(col.get("label") if col else "" for col in self.list_columns)
 
-        context.translated_messages = frappe.as_json(
-            {message: _(message) for message in messages if message}
-        )
+        context.translated_messages = frappe.as_json({message: _(message) for message in messages if message})
 
     def load_list_data(self, context):
         if not self.list_columns:
@@ -335,9 +308,7 @@ def get_context(context):
         )
 
         if context.success_message:
-            context.success_message = frappe.db.escape(
-                context.success_message.replace("\n", "<br>")
-            ).strip("'")
+            context.success_message = frappe.db.escape(context.success_message.replace("\n", "<br>")).strip("'")
 
         if not context.max_attachment_size:
             context.max_attachment_size = get_max_file_size() / 1024 / 1024
@@ -349,9 +320,7 @@ def get_context(context):
 
             if field.fieldtype == "Link":
                 field.fieldtype = "Autocomplete"
-                field.options = get_link_options(
-                    self.id, field.options, field.allow_read_on_all_link_options
-                )
+                field.options = get_link_options(self.id, field.options, field.allow_read_on_all_link_options)
 
         context.reference_doc = {}
 
@@ -361,12 +330,7 @@ def get_context(context):
             context.reference_doc = frappe.get_doc(self.doc_type, context.doc_id)
             context.web_form_title = context.title
             context.title = (
-                strip_html(
-                    context.reference_doc.get(
-                        context.reference_doc.meta.get_title_field()
-                    )
-                )
-                or context.doc_id
+                strip_html(context.reference_doc.get(context.reference_doc.meta.get_title_field())) or context.doc_id
             )
             context.reference_doc.add_seen()
             context.reference_doctype = context.reference_doc.doctype
@@ -384,9 +348,7 @@ def get_context(context):
                 )
 
             if self.allow_comments:
-                context.comment_list = get_comment_list(
-                    context.reference_doc.doctype, context.reference_doc.id
-                )
+                context.comment_list = get_comment_list(context.reference_doc.doctype, context.reference_doc.id)
 
             context.reference_doc = context.reference_doc.as_dict(no_nulls=True)
 
@@ -399,29 +361,21 @@ def get_context(context):
             if new_context:
                 context.update(new_context)
 
-            js_path = os.path.join(
-                os.path.dirname(web_form_module.__file__), scrub(self.id) + ".js"
-            )
+            js_path = os.path.join(os.path.dirname(web_form_module.__file__), scrub(self.id) + ".js")
             if os.path.exists(js_path):
                 script = frappe.render_template(open(js_path).read(), context)
 
-                for path in get_code_files_via_hooks(
-                    "webform_include_js", context.doc_type
-                ):
+                for path in get_code_files_via_hooks("webform_include_js", context.doc_type):
                     custom_js = frappe.render_template(open(path).read(), context)
                     script = "\n\n".join([script, custom_js])
 
                 context.script = script
 
-            css_path = os.path.join(
-                os.path.dirname(web_form_module.__file__), scrub(self.id) + ".css"
-            )
+            css_path = os.path.join(os.path.dirname(web_form_module.__file__), scrub(self.id) + ".css")
             if os.path.exists(css_path):
                 style = open(css_path).read()
 
-                for path in get_code_files_via_hooks(
-                    "webform_include_css", context.doc_type
-                ):
+                for path in get_code_files_via_hooks("webform_include_css", context.doc_type):
                     custom_css = open(path).read()
                     style = "\n\n".join([style, custom_css])
 
@@ -439,11 +393,7 @@ def get_context(context):
 
     def validate_mandatory(self, doc):
         """Validate mandatory web form fields"""
-        missing = [
-            f
-            for f in self.web_form_fields
-            if f.reqd and doc.get(f.fieldname) in (None, [], "")
-        ]
+        missing = [f for f in self.web_form_fields if f.reqd and doc.get(f.fieldname) in (None, [], "")]
         if missing:
             frappe.throw(
                 _("Mandatory Information missing:")
@@ -614,9 +564,7 @@ def delete_multiple(web_form_id, docids):
         frappe.delete_doc(web_form.doc_type, docid, ignore_permissions=True)
 
     if restricted_docids:
-        raise frappe.PermissionError(
-            "You do not have permisssion to delete " + ", ".join(restricted_docids)
-        )
+        raise frappe.PermissionError("You do not have permisssion to delete " + ", ".join(restricted_docids))
 
 
 def check_webform_perm(doctype, id):
@@ -660,9 +608,7 @@ def get_form_data(doctype, docid=None, web_form_id=None):
 
         if field.fieldtype == "Link":
             field.fieldtype = "Autocomplete"
-            field.options = get_link_options(
-                web_form_id, field.options, field.allow_read_on_all_link_options
-            )
+            field.options = get_link_options(web_form_id, field.options, field.allow_read_on_all_link_options)
 
     return out
 
@@ -680,11 +626,7 @@ def get_in_list_view_fields(doctype):
     if meta.has_field("status"):
         fields.append("status")
 
-    fields += [
-        df.fieldname
-        for df in meta.fields
-        if df.in_list_view and df.fieldname not in fields
-    ]
+    fields += [df.fieldname for df in meta.fields if df.in_list_view and df.fieldname not in fields]
 
     def get_field_df(fieldname):
         if fieldname == "id":
@@ -698,13 +640,9 @@ def get_link_options(web_form_id, doctype, allow_read_on_all_link_options=False)
     web_form: WebForm = frappe.get_doc("Web Form", web_form_id)
 
     if web_form.login_required and frappe.session.user == "Guest":
-        frappe.throw(
-            _("You must be logged in to use this form."), frappe.PermissionError
-        )
+        frappe.throw(_("You must be logged in to use this form."), frappe.PermissionError)
 
-    if not web_form.published or not any(
-        f for f in web_form.web_form_fields if f.options == doctype
-    ):
+    if not web_form.published or not any(f for f in web_form.web_form_fields if f.options == doctype):
         frappe.throw(
             _("You don't have permission to access the {0} DocType.").format(doctype),
             frappe.PermissionError,

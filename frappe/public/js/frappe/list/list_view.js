@@ -826,25 +826,31 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 						${frappe.utils.icon("restriction")}
 					</div>`;
             } else if (df.fieldtype === "Select") {
-                var options = df.options.split("\n")
-                var label = ""
+                let label = ""
                 //如果选项中包含逗号，则按逗号隔开
-                for (var i = 0; i < options.length; i++) {
-                    var opt = options[i];
-                    var comma_index = opt.indexOf(",")
-                    if (comma_index === 0) {
-                        if (!_value) {
-                            label = __(opt.substring(1));
-                            break;
+                if (df.options_has_label) {
+                    let options = df.options.split("\n")
+                    for (let i = 0; i < options.length; i++) {
+                        let opt = options[i];
+                        let comma_index = opt.indexOf(",")
+                        if (comma_index === 0) {
+                            if (!_value) {
+                                label = __(opt.substring(1));
+                                break;
+                            }
                         }
-                    }
-                    else if (comma_index > 0) {
-                        if (opt.substring(0, comma_index) == _value) {
-                            label = __(opt.substring(comma_index + 1));
-                            break;
+                        else if (comma_index > 0) {
+                            if (opt.substring(0, comma_index) == _value) {
+                                label = __(opt.substring(comma_index + 1));
+                                break;
+                            }
                         }
                     }
                 }
+                else {
+                    label = __(_value);
+                }
+
 
                 html = `<span class="filterable indicator-pill ${frappe.utils.guess_colour(
                     _value

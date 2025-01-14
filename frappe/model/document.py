@@ -835,9 +835,8 @@ class Document(BaseDocument):
         return permissions
 
     def _set_defaults(self):
-        # Adam: ���������ģʽΪʲô������Ĭ��ֵ����ȥ��
-        # if frappe.flags.in_import:
-        #     return
+        if frappe.flags.in_import:
+            return
 
         if self.is_new():
             new_doc = frappe.new_doc(self.doctype, as_dict=True)

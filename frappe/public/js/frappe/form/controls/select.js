@@ -1,3 +1,5 @@
+import get_select_options_value_label from "../../utils/doctype.js";
+
 frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.ControlData {
     static html_element = "select";
     static trigger_change_on_input_event = false;
@@ -62,19 +64,7 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
         var options = this.df.options || [];
 
         if (typeof this.df.options === "string") {
-            options = this.df.options.split("\n");
-
-            //如果选项中包含逗号，则按逗号隔开
-            for (var i = 0; i < options.length; i++) {
-                var opt = options[i];
-                var comma_index = opt.indexOf(",")
-                if (comma_index === 0) {
-                    options[i] = { label: __(opt.substring(1)), value: "" };
-                }
-                else if (comma_index > 0) {
-                    options[i] = { label: __(opt.substring(comma_index + 1)), value: opt.substring(0, comma_index) };
-                }
-            }
+            options = get_select_options_value_label(this.df.options, this.df.options_has_label)
         }
 
         // nothing changed

@@ -18,6 +18,7 @@ from pathlib import Path
 
 import frappe
 from frappe.types import DF
+from frappe.utils.data import get_select_options
 
 field_template = "{field}: {type}"
 
@@ -82,12 +83,7 @@ class TypeExporter:
             # Regex by default will only match till line ends, span end is when we need to stop
             if class_def := re.search(rf"class {despaced_id}\(.*", code):  # )
                 class_definition_end = class_def.span()[1] + 1
-                code = (
-                    code[:class_definition_end]
-                    + new_code
-                    + "\n"
-                    + code[class_definition_end:]
-                )
+                code = code[:class_definition_end] + new_code + "\n" + code[class_definition_end:]
 
         if self._validate_code(code):
             self.controller_path.write_text(code)
@@ -121,12 +117,7 @@ class TypeExporter:
 
     def _create_fields_code_block(self):
         return "\n".join(
-            sorted(
-                [
-                    field_template.format(field=field, type=typehint)
-                    for field, typehint in self.field_types.items()
-                ]
-            )
+            sorted([field_template.format(field=field, type=typehint) for field, typehint in self.field_types.items()])
         )
 
     def _create_imports_block(self) -> str:
@@ -184,7 +175,7 @@ class TypeExporter:
             if not field.options:
                 # Could be dynamic
                 return "[None]"
-            options = [o.strip() for o in field.options.split("\n")]
+            options = get_select_options(field.options, field.options_has_label)
             return json.dumps(options)
 
     @staticmethod

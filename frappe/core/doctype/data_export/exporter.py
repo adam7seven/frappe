@@ -19,6 +19,7 @@ from frappe.utils import (
     parse_json,
 )
 from frappe.utils.csvutils import UnicodeWriter
+from frappe.utils.data import get_select_options
 
 reflags = {
     "I": re.I,
@@ -164,9 +165,7 @@ class DataExporter:
         if self.all_doctypes:
             for d in self.child_doctypes:
                 self.append_empty_field_column()
-                if (
-                    self.select_columns and self.select_columns.get(d["doctype"], None)
-                ) or not self.select_columns:
+                if (self.select_columns and self.select_columns.get(d["doctype"], None)) or not self.select_columns:
                     # if atleast one column is selected for this doctype
                     self.build_field_columns(d["doctype"], d["parentfield"])
 
@@ -200,16 +199,8 @@ class DataExporter:
         self.writer.writerow([_("Notes:")])
         self.writer.writerow([_("Please do not change the template headings.")])
         self.writer.writerow([_("First data column must be blank.")])
-        self.writer.writerow(
-            [_('If you are uploading new records, leave the "id" (ID) column blank.')]
-        )
-        self.writer.writerow(
-            [
-                _(
-                    'If you are uploading new records, "Naming Series" becomes mandatory, if present.'
-                )
-            ]
-        )
+        self.writer.writerow([_('If you are uploading new records, leave the "id" (ID) column blank.')])
+        self.writer.writerow([_('If you are uploading new records, "Naming Series" becomes mandatory, if present.')])
         self.writer.writerow(
             [
                 _(
@@ -217,30 +208,12 @@ class DataExporter:
                 )
             ]
         )
-        self.writer.writerow(
-            [_("For updating, you can update only selective columns.")]
-        )
-        self.writer.writerow(
-            [
-                _(
-                    "You can only upload upto 5000 records in one go. (may be less in some cases)"
-                )
-            ]
-        )
+        self.writer.writerow([_("For updating, you can update only selective columns.")])
+        self.writer.writerow([_("You can only upload upto 5000 records in one go. (may be less in some cases)")])
         if self.id_field == "parent":
+            self.writer.writerow([_('"Parent" signifies the parent table in which this row must be added')])
             self.writer.writerow(
-                [
-                    _(
-                        '"Parent" signifies the parent table in which this row must be added'
-                    )
-                ]
-            )
-            self.writer.writerow(
-                [
-                    _(
-                        'If you are updating, please select "Overwrite" else existing rows will not be deleted.'
-                    )
-                ]
+                [_('If you are updating, please select "Overwrite" else existing rows will not be deleted.')]
             )
 
     def build_field_columns(self, dt, parentfield=None):
@@ -269,10 +242,7 @@ class DataExporter:
                         }
                     )
 
-            if field and (
-                (self.select_columns and f.name in self.select_columns[dt])
-                or not self.select_columns
-            ):
+            if field and ((self.select_columns and f.name in self.select_columns[dt]) or not self.select_columns):
                 tablecolumns.append(field)
 
         tablecolumns.sort(key=lambda a: int(a.idx))
@@ -280,9 +250,7 @@ class DataExporter:
         _column_start_end = frappe._dict(start=0)
 
         if dt == self.doctype:
-            if (meta.get("autoid") and meta.get("autoid").lower() == "prompt") or (
-                self.with_data
-            ):
+            if (meta.get("autoid") and meta.get("autoid").lower() == "prompt") or (self.with_data):
                 self._append_id_column()
 
             # if importing only child table for new record, add parent field
@@ -295,9 +263,7 @@ class DataExporter:
                             "label": "Parent",
                             "fieldtype": "Data",
                             "reqd": 1,
-                            "info": _(
-                                "Parent is the id of the document to which the data will get added to."
-                            ),
+                            "info": _("Parent is the id of the document to which the data will get added to."),
                         }
                     ),
                     True,
@@ -373,9 +339,8 @@ class DataExporter:
             if not docfield.options:
                 return ""
             else:
-                return _("One of") + ": %s" % ", ".join(
-                    filter(None, docfield.options.split("\n"))
-                )
+                options = get_select_options(docfield.options, docfield.options_has_label)
+                return _("One of") + ": %s" % ", ".join(filter(None, options))
         elif docfield.fieldtype == "Link":
             return "Valid %s" % docfield.options
         elif docfield.fieldtype == "Int":
@@ -469,9 +434,7 @@ class DataExporter:
                         .orderby(child_doctype_table.idx)
                     )
                     for ci, child in enumerate(data_row.run(as_dict=True)):
-                        self.add_data_row(
-                            rows, c["doctype"], c["parentfield"], child, ci
-                        )
+                        self.add_data_row(rows, c["doctype"], c["parentfield"], child, ci)
             for row in rows:
                 self.writer.writerow(row)
 
@@ -488,9 +451,7 @@ class DataExporter:
         _column_start_end = self.column_start_end.get((dt, parentfield))
 
         if _column_start_end:
-            for i, c in enumerate(
-                self.columns[_column_start_end.start : _column_start_end.end]
-            ):
+            for i, c in enumerate(self.columns[_column_start_end.start : _column_start_end.end]):
                 df = meta.get_field(c)
                 fieldtype = df.fieldtype if df else "Data"
                 value = d.get(c, "")
@@ -513,9 +474,7 @@ class DataExporter:
             f.write(cstr(self.writer.getvalue()).encode("utf-8"))
         f = open(filename)
         reader = csv.reader(f)
-        xlsx_file = make_xlsx(
-            reader, "Data Import Template" if self.template else "Data Export"
-        )
+        xlsx_file = make_xlsx(reader, "Data Import Template" if self.template else "Data Export")
 
         f.close()
         os.remove(filename)

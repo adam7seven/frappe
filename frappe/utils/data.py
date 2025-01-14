@@ -1655,6 +1655,21 @@ def get_absolute_url(doctype: str, id: str) -> str:
     return f"/app/{quoted(slug(doctype))}/{quoted(id)}"
 
 
+def get_select_options(options: str, options_has_label: bool = False, remove_empty: bool = False) -> list:
+    options = options or ""
+    options = [d.strip() for d in options.split("\n") if d or not remove_empty]
+
+    if not options_has_label:
+        return options
+
+    for i in range(0, len(options)):
+        opts = options[i].split(",")
+        if len(opts) > 0:
+            options[i] = opts[0]
+
+    return options
+
+
 def get_url_to_form(doctype: str, id: str) -> str:
     return get_url(uri=f"/app/{quoted(slug(doctype))}/{quoted(id)}")
 

@@ -47,12 +47,8 @@ class DocumentNamingSettings(Document):
     def _get_transactions(self) -> list[str]:
         readable_doctypes = set(get_doctypes_with_read())
 
-        standard = frappe.get_all(
-            "DocField", {"fieldname": "naming_series"}, "parent", pluck="parent"
-        )
-        custom = frappe.get_all(
-            "Custom Field", {"fieldname": "naming_series"}, "dt", pluck="dt"
-        )
+        standard = frappe.get_all("DocField", {"fieldname": "naming_series"}, "parent", pluck="parent")
+        custom = frappe.get_all("Custom Field", {"fieldname": "naming_series"}, "dt", pluck="dt")
 
         return sorted(readable_doctypes.intersection(standard + custom))
 
@@ -81,9 +77,7 @@ class DocumentNamingSettings(Document):
             },
         )
         if custom_templates:
-            series_templates.update(
-                [d.autoid.rsplit(".", 1)[0] for d in custom_templates]
-            )
+            series_templates.update([d.autoid.rsplit(".", 1)[0] for d in custom_templates])
 
         return self._evaluate_and_clean_templates(series_templates)
 
@@ -115,9 +109,7 @@ class DocumentNamingSettings(Document):
         """update series list"""
         self.validate_set_series()
         self.check_duplicate()
-        self.set_series_options_in_meta(
-            self.transaction_type, self.naming_series_options
-        )
+        self.set_series_options_in_meta(self.transaction_type, self.naming_series_options)
 
         frappe.msgprint(
             _("Series Updated for {}").format(self.transaction_type),
@@ -163,12 +155,8 @@ class DocumentNamingSettings(Document):
         def stripped_series(s: str) -> str:
             return s.strip().rstrip("#")
 
-        standard = frappe.get_all(
-            "DocField", {"fieldname": "naming_series"}, "parent", pluck="parent"
-        )
-        custom = frappe.get_all(
-            "Custom Field", {"fieldname": "naming_series"}, "dt", pluck="dt"
-        )
+        standard = frappe.get_all("DocField", {"fieldname": "naming_series"}, "parent", pluck="parent")
+        custom = frappe.get_all("Custom Field", {"fieldname": "naming_series"}, "dt", pluck="dt")
 
         all_doctypes_with_naming_series = set(standard + custom)
         all_doctypes_with_naming_series.remove(self.transaction_type)
@@ -183,11 +171,7 @@ class DocumentNamingSettings(Document):
         options = self.get_options_list(self.naming_series_options)
         for series in options:
             if stripped_series(series) in existing_series:
-                frappe.throw(
-                    _("Series {0} already used in {1}").format(
-                        series, existing_series[series]
-                    )
-                )
+                frappe.throw(_("Series {0} already used in {1}").format(series, existing_series[series]))
             validate_series(dt, series)
 
     def validate_series_id(self, series):
@@ -200,11 +184,7 @@ class DocumentNamingSettings(Document):
             return
 
         if frappe.get_meta(doctype or self.transaction_type).get_field("naming_series"):
-            return (
-                frappe.get_meta(doctype or self.transaction_type)
-                .get_field("naming_series")
-                .options
-            )
+            return frappe.get_meta(doctype or self.transaction_type).get_field("naming_series").options
 
     @frappe.whitelist()
     def get_current(self):
@@ -228,9 +208,7 @@ class DocumentNamingSettings(Document):
         for row in self.amend_naming_override:
             row.save()
 
-        frappe.msgprint(
-            _("Amendment naming rules updated."), indicator="green", alert=True
-        )
+        frappe.msgprint(_("Amendment naming rules updated."), indicator="green", alert=True)
 
     @frappe.whitelist()
     def update_series_start(self):
@@ -243,14 +221,10 @@ class DocumentNamingSettings(Document):
         previous_value = naming_series.get_current_value()
         naming_series.update_counter(self.current_value)
 
-        self.create_version_log_for_change(
-            naming_series.get_prefix(), previous_value, self.current_value
-        )
+        self.create_version_log_for_change(naming_series.get_prefix(), previous_value, self.current_value)
 
         frappe.msgprint(
-            _("Series counter for {} updated to {} successfully").format(
-                self.prefix, self.current_value
-            ),
+            _("Series counter for {} updated to {} successfully").format(self.prefix, self.current_value),
             alert=True,
             indicator="green",
         )

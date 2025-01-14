@@ -20,6 +20,7 @@ from csv import reader, writer
 import frappe
 from frappe.query_builder import DocType, Field
 from frappe.utils import cstr, get_bench_path, is_html, strip, strip_html_tags, unique
+from frappe.utils.data import get_select_options
 
 REPORT_TRANSLATE_PATTERN = re.compile('"([^:,^"]*):')
 CSV_STRIP_WHITESPACE_PATTERN = re.compile(r"{\s?([0-9]+)\s?}")
@@ -334,7 +335,7 @@ def get_messages_from_doctype(id):
         messages.extend([d.label, d.description])
 
         if d.fieldtype == "Select" and d.options:
-            options = d.options.split("\n")
+            options = get_select_options(d.options, d.options_has_label)
             if "icon" not in options[0]:
                 messages.extend(options)
         if d.fieldtype == "HTML" and d.options:

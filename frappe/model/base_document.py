@@ -34,6 +34,7 @@ from frappe.utils import (
     strip_html,
 )
 from frappe.utils.html_utils import unescape_html
+from frappe.utils.data import get_select_options
 
 if TYPE_CHECKING:
     from frappe.model.document import Document
@@ -889,11 +890,7 @@ class BaseDocument:
             if df.fieldname == "naming_series" or not (self.get(df.fieldname) and df.options):
                 continue
 
-            options = (df.options or "").split("\n")
-            for i in range(0, len(options)):
-                opts = options[i].split(",")
-                if len(opts) > 0:
-                    options[i] = opts[0]
+            options = get_select_options(df.options, df.options_has_label, False)
 
             # if only empty options
             if not filter(None, options):
