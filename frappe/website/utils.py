@@ -22,9 +22,7 @@ from frappe.utils import (
     md_to_html,
 )
 
-FRONTMATTER_PATTERN = re.compile(
-    r"^\s*(?:---|\+\+\+)(.*?)(?:---|\+\+\+)\s*(.+)$", re.S | re.M
-)
+FRONTMATTER_PATTERN = re.compile(r"^\s*(?:---|\+\+\+)(.*?)(?:---|\+\+\+)\s*(.+)$", re.S | re.M)
 H1_TAG_PATTERN = re.compile("<h1>([^<]*)")
 IMAGE_TAG_PATTERN = re.compile(r"""<img[^>]*src\s?=\s?['"]([^'"]*)['"]""")
 CLEANUP_PATTERN_1 = re.compile(r'[~!@#$%^&*+()<>,."\'\?]')
@@ -119,9 +117,7 @@ def get_home_page():
 
             # portal default
             if not home_page:
-                home_page = frappe.db.get_single_value(
-                    "Portal Settings", "default_portal_home"
-                )
+                home_page = frappe.db.get_single_value("Portal Settings", "default_portal_home")
 
         # by hooks
         if not home_page:
@@ -174,29 +170,29 @@ def get_home_page_via_hooks():
 
 
 def get_boot_data():
-	apps = get_apps() or []
-	return {
-		"lang": frappe.local.lang or "en",
-		"apps_data": {
-			"apps": apps,
-			"is_desk_apps": 1 if bool(is_desk_apps(apps)) else 0,
-			"default_path": get_default_path(apps) or "",
-		},
-		"sysdefaults": {
-			"float_precision": cint(frappe.get_system_settings("float_precision")) or 3,
-			"date_format": frappe.get_system_settings("date_format") or "yyyy-mm-dd",
-			"time_format": frappe.get_system_settings("time_format") or "HH:mm:ss",
-			"first_day_of_the_week": frappe.get_system_settings("first_day_of_the_week") or "Sunday",
-			"number_format": frappe.get_system_settings("number_format") or "#,###.##",
-			"currency": frappe.get_system_settings("currency"),
-		},
-		"time_zone": {
-			"system": get_system_timezone(),
-			"user": frappe.db.get_value("User", frappe.session.user, "time_zone") or get_system_timezone(),
-		},
-		"assets_json": get_assets_json(),
-		"sitename": frappe.local.site,
-	}
+    apps = get_apps() or []
+    return {
+        "lang": frappe.local.lang or "en",
+        "apps_data": {
+            "apps": apps,
+            "is_desk_apps": 1 if bool(is_desk_apps(apps)) else 0,
+            "default_path": get_default_path(apps) or "",
+        },
+        "sysdefaults": {
+            "float_precision": cint(frappe.get_system_settings("float_precision")) or 3,
+            "date_format": frappe.get_system_settings("date_format") or "yyyy-mm-dd",
+            "time_format": frappe.get_system_settings("time_format") or "HH:mm:ss",
+            "first_day_of_the_week": frappe.get_system_settings("first_day_of_the_week") or "Sunday",
+            "number_format": frappe.get_system_settings("number_format") or "#,###.##",
+            "currency": frappe.get_system_settings("currency"),
+        },
+        "time_zone": {
+            "system": get_system_timezone(),
+            "user": frappe.db.get_value("User", frappe.session.user, "time_zone") or get_system_timezone(),
+        },
+        "assets_json": get_assets_json(),
+        "sitename": frappe.local.site,
+    }
 
 
 def is_signup_disabled():
@@ -305,9 +301,7 @@ def get_full_index(route=None, app=None):
                                 added.append(child_route)
 
                     # add remaining pages not in index.txt
-                    _children = sorted(
-                        children, key=lambda x: os.path.basename(x.route)
-                    )
+                    _children = sorted(children, key=lambda x: os.path.basename(x.route))
 
                     for child_route in _children:
                         if child_route not in new_children:
@@ -453,9 +447,7 @@ def get_sidebar_items(parent_sidebar, basepath=None):
     look_for_sidebar_json = hooks[0] if hooks else frappe.flags.look_for_sidebar
 
     if basepath and look_for_sidebar_json:
-        sidebar_items = get_sidebar_items_from_sidebar_file(
-            basepath, look_for_sidebar_json
-        )
+        sidebar_items = get_sidebar_items_from_sidebar_file(basepath, look_for_sidebar_json)
 
     if not sidebar_items and parent_sidebar:
         sidebar_items = frappe.get_all(
@@ -559,18 +551,18 @@ def cache_html(func):
 
 
 def build_response(path, data, http_status_code, headers: dict | None = None):
-	# build response
-	response = Response()
-	response.data = set_content_type(response, data, path)
-	response.status_code = http_status_code
-	response.headers["X-Page-Name"] = cstr(cstr(path).encode("ascii", errors="xmlcharrefreplace"))
-	response.headers["X-From-Cache"] = frappe.local.response.from_cache or False
+    # build response
+    response = Response()
+    response.data = set_content_type(response, data, path)
+    response.status_code = http_status_code
+    response.headers["X-Page-Name"] = cstr(cstr(path).encode("ascii", errors="xmlcharrefreplace"))
+    response.headers["X-From-Cache"] = frappe.local.response.from_cache or False
 
     add_preload_for_bundled_assets(response)
 
-	if headers:
-		for key, val in headers.items():
-			response.headers[key] = cstr(cstr(val).encode("ascii", errors="xmlcharrefreplace"))
+    if headers:
+        for key, val in headers.items():
+            response.headers[key] = cstr(cstr(val).encode("ascii", errors="xmlcharrefreplace"))
 
     return response
 
@@ -596,14 +588,8 @@ def set_content_type(response, data, path):
 
 
 def add_preload_for_bundled_assets(response):
-    links = [
-        f"<{css}>; rel=preload; as=style"
-        for css in frappe.local.preload_assets["style"]
-    ]
-    links.extend(
-        f"<{js}>; rel=preload; as=script"
-        for js in frappe.local.preload_assets["script"]
-    )
+    links = [f"<{css}>; rel=preload; as=style" for css in frappe.local.preload_assets["style"]]
+    links.extend(f"<{js}>; rel=preload; as=script" for js in frappe.local.preload_assets["script"])
 
     version = get_build_version()
     # include_icons = frappe.get_hooks().get("app_include_icons", [])

@@ -24,19 +24,19 @@ if TYPE_CHECKING:
     from frappe.core.doctype.user.user import User
 
 ALLOWED_MIMETYPES = (
-	"image/png",
-	"image/jpeg",
-	"application/pdf",
-	"application/msword",
-	"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-	"application/vnd.ms-excel",
-	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-	"application/vnd.oasis.opendocument.text",
-	"application/vnd.oasis.opendocument.spreadsheet",
-	"text/plain",
-	"video/quicktime",
-	"video/mp4",
-	"text/csv",
+    "image/png",
+    "image/jpeg",
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.ms-excel",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "application/vnd.oasis.opendocument.text",
+    "application/vnd.oasis.opendocument.spreadsheet",
+    "text/plain",
+    "video/quicktime",
+    "video/mp4",
+    "text/csv",
 )
 
 
@@ -61,9 +61,7 @@ def handle():
 
 def execute_cmd(cmd, from_async=False):
     """execute a request as python module"""
-    for hook in reversed(
-        frappe.get_hooks("override_whitelisted_methods", {}).get(cmd, [])
-    ):
+    for hook in reversed(frappe.get_hooks("override_whitelisted_methods", {}).get(cmd, [])):
         # override using the last hook
         cmd = hook
         break
@@ -228,10 +226,10 @@ def upload_file():
     frappe.local.uploaded_file = content
     frappe.local.uploaded_filename = filename
 
-	if content is not None and (frappe.session.user == "Guest" or (user and not user.has_desk_access())):
-		filetype = guess_type(filename)[0]
-		if filetype not in ALLOWED_MIMETYPES:
-			frappe.throw(_("You can only upload JPG, PNG, PDF, TXT, CSV or Microsoft documents."))
+    if content is not None and (frappe.session.user == "Guest" or (user and not user.has_desk_access())):
+        filetype = guess_type(filename)[0]
+        if filetype not in ALLOWED_MIMETYPES:
+            frappe.throw(_("You can only upload JPG, PNG, PDF, TXT, CSV or Microsoft documents."))
 
     if method:
         method = frappe.get_attr(method)
@@ -292,9 +290,7 @@ def get_attr(cmd):
     if "." in cmd:
         method = frappe.get_attr(cmd)
     else:
-        deprecation_warning(
-            f"Calling shorthand for {cmd} is deprecated, please specify full path in RPC call."
-        )
+        deprecation_warning(f"Calling shorthand for {cmd} is deprecated, please specify full path in RPC call.")
         method = globals()[cmd]
     return method
 

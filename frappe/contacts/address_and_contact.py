@@ -52,18 +52,12 @@ def get_permission_query_conditions(doctype):
 
     elif not links.get("permitted_links"):
         # when everything is not permitted
-        conditions = [
-            f"ifnull(`tab{doctype}`.`{df.fieldname}`, '')=''"
-            for df in links.get("not_permitted_links")
-        ]
+        conditions = [f"ifnull(`tab{doctype}`.`{df.fieldname}`, '')=''" for df in links.get("not_permitted_links")]
 
         return "( " + " and ".join(conditions) + " )"
 
     else:
-        conditions = [
-            f"ifnull(`tab{doctype}`.`{df.fieldname}`, '')!=''"
-            for df in links.get("permitted_links")
-        ]
+        conditions = [f"ifnull(`tab{doctype}`.`{df.fieldname}`, '')!=''" for df in links.get("permitted_links")]
 
         return "( " + " or ".join(conditions) + " )"
 
@@ -114,9 +108,7 @@ def delete_contact_and_address(doctype: str, docid: str) -> None:
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
-def filter_dynamic_link_doctypes(
-    doctype, txt: str, searchfield, start, page_len, filters: dict
-) -> list[list[str]]:
+def filter_dynamic_link_doctypes(doctype, txt: str, searchfield, start, page_len, filters: dict) -> list[list[str]]:
     from frappe.permissions import get_doctypes_with_read
 
     txt = txt or ""
@@ -132,9 +124,7 @@ def filter_dynamic_link_doctypes(
     doctypes_from_df = {d for d in _doctypes_from_df if txt.lower() in _(d).lower()}
 
     filters.update({"dt": ("not in", doctypes_from_df)})
-    _doctypes_from_cdf = frappe.get_all(
-        "Custom Field", filters=filters, pluck="dt", distinct=True, order_by=None
-    )
+    _doctypes_from_cdf = frappe.get_all("Custom Field", filters=filters, pluck="dt", distinct=True, order_by=None)
     doctypes_from_cdf = {d for d in _doctypes_from_cdf if txt.lower() in _(d).lower()}
 
     all_doctypes = doctypes_from_df.union(doctypes_from_cdf)
@@ -146,10 +136,10 @@ def filter_dynamic_link_doctypes(
 
 
 def set_link_title(doc):
-	if not doc.links:
-		return
-	for link in doc.links:
-		linked_doc = frappe.get_doc(link.link_doctype, link.link_id)
-		doc_title = linked_doc.get_title()
-		if link.link_title != doc_title:
-			link.link_title = doc_title or link.link_id
+    if not doc.links:
+        return
+    for link in doc.links:
+        linked_doc = frappe.get_doc(link.link_doctype, link.link_id)
+        doc_title = linked_doc.get_title()
+        if link.link_title != doc_title:
+            link.link_title = doc_title or link.link_id

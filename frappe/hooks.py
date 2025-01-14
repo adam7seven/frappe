@@ -5,9 +5,7 @@ from . import __version__ as app_version
 app_name = "frappe"
 app_title = "Frappe Framework"
 app_publisher = "Frappe Technologies"
-app_description = (
-    "Full stack web framework with Python, Javascript, MariaDB, Redis, Node"
-)
+app_description = "Full stack web framework with Python, Javascript, MariaDB, Redis, Node"
 app_license = "MIT"
 app_logo_url = "/assets/frappe/images/frappe-framework-logo.svg"
 develop_version = "15.x.x-develop"
@@ -135,9 +133,7 @@ has_permission = {
     "Notification Settings": "frappe.desk.doctype.notification_settings.notification_settings.has_permission",
 }
 
-has_website_permission = {
-    "Address": "frappe.contacts.doctype.address.address.has_website_permission"
-}
+has_website_permission = {"Address": "frappe.contacts.doctype.address.address.has_website_permission"}
 
 jinja = {
     "methods": "frappe.utils.jinja_globals",
@@ -199,77 +195,75 @@ doc_events = {
 }
 
 scheduler_events = {
-	"cron": {
-		# 15 minutes
-		"0/15 * * * *": [
-			"frappe.oauth.delete_oauth2_data",
-			"frappe.website.doctype.web_page.web_page.check_publish_status",
-			"frappe.twofactor.delete_all_barcodes_for_users",
-			"frappe.email.doctype.email_account.email_account.notify_unreplied",
-			"frappe.utils.global_search.sync_global_search",
-			"frappe.deferred_insert.save_to_db",
-			"frappe.automation.doctype.reminder.reminder.send_reminders",
-		],
-		# 10 minutes
-		"0/10 * * * *": [
-			"frappe.email.doctype.email_account.email_account.pull",
-		],
-		# Hourly but offset by 30 minutes
-		"30 * * * *": [
-			"frappe.core.doctype.prepared_report.prepared_report.expire_stalled_report",
-		],
-		# Daily but offset by 45 minutes
-		"45 0 * * *": [
-			"frappe.core.doctype.log_settings.log_settings.run_log_clean_up",
-		],
-	},
-	"all": [
-		"frappe.email.queue.flush",
-		"frappe.monitor.flush",
-	],
-	"hourly": [
-		"frappe.model.utils.link_count.update_link_count",
-		"frappe.model.utils.user_settings.sync_user_settings",
-		"frappe.desk.page.backups.backups.delete_downloadable_backups",
-		"frappe.desk.form.document_follow.send_hourly_updates",
-		"frappe.integrations.doctype.google_calendar.google_calendar.sync",
-		"frappe.email.doctype.newsletter.newsletter.send_scheduled_email",
-		"frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.process_data_deletion_request",
-	],
-	"daily": [
-		"frappe.desk.notifications.clear_notifications",
-		"frappe.desk.doctype.event.event.send_event_digest",
-		"frappe.sessions.clear_expired_sessions",
-		"frappe.email.doctype.notification.notification.trigger_daily_alerts",
-		"frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.remove_unverified_record",
-		"frappe.desk.form.document_follow.send_daily_updates",
-		"frappe.social.doctype.energy_point_settings.energy_point_settings.allocate_review_points",
-		"frappe.integrations.doctype.google_contacts.google_contacts.sync",
-		"frappe.automation.doctype.auto_repeat.auto_repeat.make_auto_repeat_entry",
-		"frappe.automation.doctype.auto_repeat.auto_repeat.set_auto_repeat_as_completed",
-	],
-	"daily_long": [
-		"frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backups_daily",
-		"frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_daily",
-		"frappe.email.doctype.auto_email_report.auto_email_report.send_daily",
-		"frappe.integrations.doctype.google_drive.google_drive.daily_backup",
-	],
-	"weekly_long": [
-		"frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backups_weekly",
-		"frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_weekly",
-		"frappe.desk.form.document_follow.send_weekly_updates",
-		"frappe.utils.change_log.check_for_update",
-		"frappe.social.doctype.energy_point_log.energy_point_log.send_weekly_summary",
-		"frappe.integrations.doctype.google_drive.google_drive.weekly_backup",
-		"frappe.desk.doctype.changelog_feed.changelog_feed.fetch_changelog_feed",
-	],
-	"monthly": [
-		"frappe.email.doctype.auto_email_report.auto_email_report.send_monthly",
-		"frappe.social.doctype.energy_point_log.energy_point_log.send_monthly_summary",
-	],
-	"monthly_long": [
-		"frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_monthly"
-	],
+    "cron": {
+        # 15 minutes
+        "0/15 * * * *": [
+            "frappe.oauth.delete_oauth2_data",
+            "frappe.website.doctype.web_page.web_page.check_publish_status",
+            "frappe.twofactor.delete_all_barcodes_for_users",
+            "frappe.email.doctype.email_account.email_account.notify_unreplied",
+            "frappe.utils.global_search.sync_global_search",
+            "frappe.deferred_insert.save_to_db",
+            "frappe.automation.doctype.reminder.reminder.send_reminders",
+        ],
+        # 10 minutes
+        "0/10 * * * *": [
+            "frappe.email.doctype.email_account.email_account.pull",
+        ],
+        # Hourly but offset by 30 minutes
+        "30 * * * *": [
+            "frappe.core.doctype.prepared_report.prepared_report.expire_stalled_report",
+        ],
+        # Daily but offset by 45 minutes
+        "45 0 * * *": [
+            "frappe.core.doctype.log_settings.log_settings.run_log_clean_up",
+        ],
+    },
+    "all": [
+        "frappe.email.queue.flush",
+        "frappe.monitor.flush",
+    ],
+    "hourly": [
+        "frappe.model.utils.link_count.update_link_count",
+        "frappe.model.utils.user_settings.sync_user_settings",
+        "frappe.desk.page.backups.backups.delete_downloadable_backups",
+        "frappe.desk.form.document_follow.send_hourly_updates",
+        "frappe.integrations.doctype.google_calendar.google_calendar.sync",
+        "frappe.email.doctype.newsletter.newsletter.send_scheduled_email",
+        "frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.process_data_deletion_request",
+    ],
+    "daily": [
+        "frappe.desk.notifications.clear_notifications",
+        "frappe.desk.doctype.event.event.send_event_digest",
+        "frappe.sessions.clear_expired_sessions",
+        "frappe.email.doctype.notification.notification.trigger_daily_alerts",
+        "frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.remove_unverified_record",
+        "frappe.desk.form.document_follow.send_daily_updates",
+        "frappe.social.doctype.energy_point_settings.energy_point_settings.allocate_review_points",
+        "frappe.integrations.doctype.google_contacts.google_contacts.sync",
+        "frappe.automation.doctype.auto_repeat.auto_repeat.make_auto_repeat_entry",
+        "frappe.automation.doctype.auto_repeat.auto_repeat.set_auto_repeat_as_completed",
+    ],
+    "daily_long": [
+        "frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backups_daily",
+        "frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_daily",
+        "frappe.email.doctype.auto_email_report.auto_email_report.send_daily",
+        "frappe.integrations.doctype.google_drive.google_drive.daily_backup",
+    ],
+    "weekly_long": [
+        "frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backups_weekly",
+        "frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_weekly",
+        "frappe.desk.form.document_follow.send_weekly_updates",
+        "frappe.utils.change_log.check_for_update",
+        "frappe.social.doctype.energy_point_log.energy_point_log.send_weekly_summary",
+        "frappe.integrations.doctype.google_drive.google_drive.weekly_backup",
+        "frappe.desk.doctype.changelog_feed.changelog_feed.fetch_changelog_feed",
+    ],
+    "monthly": [
+        "frappe.email.doctype.auto_email_report.auto_email_report.send_monthly",
+        "frappe.social.doctype.energy_point_log.energy_point_log.send_monthly_summary",
+    ],
+    "monthly_long": ["frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_monthly"],
 }
 
 sounds = [
@@ -570,11 +564,11 @@ default_log_clearing_doctypes = {
 
 # These keys will not be erased when doing frappe.clear_cache()
 persistent_cache_keys = [
-	"changelog-*",  # version update notifications
-	"insert_queue_for_*",  # Deferred Insert
-	"recorder-*",  # Recorder
-	"global_search_queue",
-	"monitor-transactions",
-	"rate-limit-counter-*",
-	"rl:*",
+    "changelog-*",  # version update notifications
+    "insert_queue_for_*",  # Deferred Insert
+    "recorder-*",  # Recorder
+    "global_search_queue",
+    "monitor-transactions",
+    "rate-limit-counter-*",
+    "rl:*",
 ]

@@ -37,11 +37,9 @@ def getdoc(doctype, id, user=None):
         frappe.clear_last_message()
         return []
 
-	if not doc.has_permission("read"):
-		frappe.flags.error_message = _("Insufficient Permission for {0}").format(
-			frappe.bold(_(doctype) + " " + name)
-		)
-		raise frappe.PermissionError(("read", doctype, name))
+    if not doc.has_permission("read"):
+        frappe.flags.error_message = _("Insufficient Permission for {0}").format(frappe.bold(_(doctype) + " " + name))
+        raise frappe.PermissionError(("read", doctype, name))
 
     run_onload(doc)
     doc.apply_fieldlevel_read_permissions()
@@ -100,15 +98,9 @@ def get_docinfo(doc=None, doctype=None, id=None):
             raise frappe.PermissionError
 
     all_communications = _get_communications(doc.doctype, doc.id, limit=21)
-    automated_messages = [
-        msg
-        for msg in all_communications
-        if msg["communication_type"] == "Automated Message"
-    ]
+    automated_messages = [msg for msg in all_communications if msg["communication_type"] == "Automated Message"]
     communications_except_auto_messages = [
-        msg
-        for msg in all_communications
-        if msg["communication_type"] != "Automated Message"
+        msg for msg in all_communications if msg["communication_type"] != "Automated Message"
     ]
 
     docinfo = frappe._dict(user_info={})
@@ -128,13 +120,9 @@ def get_docinfo(doc=None, doctype=None, id=None):
             "shared": get_docshares(doc),
             "views": get_view_logs(doc),
             "energy_point_logs": get_point_logs(doc.doctype, doc.id),
-            "additional_timeline_content": get_additional_timeline_content(
-                doc.doctype, doc.id
-            ),
+            "additional_timeline_content": get_additional_timeline_content(doc.doctype, doc.id),
             "milestones": get_milestones(doc.doctype, doc.id),
-            "is_document_followed": is_document_followed(
-                doc.doctype, doc.id, frappe.session.user
-            ),
+            "is_document_followed": is_document_followed(doc.doctype, doc.id, frappe.session.user),
             "tags": get_tags(doc.doctype, doc.id),
             "document_email": get_document_email(doc.doctype, doc.id),
         }
@@ -221,9 +209,7 @@ def get_communications(doctype, id, start=0, limit=20):
     return _get_communications(doctype, id, cint(start), cint(limit))
 
 
-def get_comments(
-    doctype: str, id: str, comment_type: str | list[str] = "Comment"
-) -> list[frappe._dict]:
+def get_comments(doctype: str, id: str, comment_type: str | list[str] = "Comment") -> list[frappe._dict]:
     if isinstance(comment_type, list):
         comment_types = comment_type
 
@@ -270,75 +256,73 @@ def get_point_logs(doctype, docid):
 
 
 def _get_communications(doctype, name, start=0, limit=20):
-	communications = get_communication_data(doctype, name, start, limit)
-	for c in communications:
-		if c.communication_type in ("Communication", "Automated Message"):
-			clean_email_html(c.content)
-			c.attachments = json.dumps(
-				frappe.get_all(
-					"File",
-					fields=["file_url", "is_private"],
-					filters={"attached_to_doctype": "Communication", "attached_to_id": c.id},
-				)
-			)
+    communications = get_communication_data(doctype, name, start, limit)
+    for c in communications:
+        if c.communication_type in ("Communication", "Automated Message"):
+            clean_email_html(c.content)
+            c.attachments = json.dumps(
+                frappe.get_all(
+                    "File",
+                    fields=["file_url", "is_private"],
+                    filters={"attached_to_doctype": "Communication", "attached_to_id": c.id},
+                )
+            )
 
-	return communications
+    return communications
 
 
-def get_communication_data(
-    doctype, id, start=0, limit=20, after=None, fields=None, group_by=None, as_dict=True
-):
+def get_communication_data(doctype, id, start=0, limit=20, after=None, fields=None, group_by=None, as_dict=True):
     """Returns list of communications for a given document"""
     if not fields:
         fields = """
-			C.id, C.communication_type, C.communication_medium,
-			C.comment_type, C.communication_date, C.content,
-			C.sender, C.sender_full_name, C.cc, C.bcc,
-			C.creation AS creation, C.subject, C.delivery_status,
-			C._liked_by, C.reference_doctype, C.reference_id,
-			C.read_by_recipient, C.rating, C.recipients
-		"""
+            C.id, C.communication_type, C.communication_medium,
+            C.comment_type, C.communication_date, C.content,
+            C.sender, C.sender_full_name, C.cc, C.bcc,
+            C.creation AS creation, C.subject, C.delivery_status,
+            C._liked_by, C.reference_doctype, C.reference_id,
+            C.read_by_recipient, C.rating, C.recipients
+        """
 
     conditions = ""
     if after:
         # find after a particular date
         conditions += f"""
-			AND C.communication_date > {after}
-		"""
+            AND C.communication_date > {after}
+        """
 
     if doctype == "User":
         conditions += """
-			AND NOT (C.reference_doctype='User' AND C.communication_type='Communication')
-		"""
+            AND NOT (C.reference_doctype='User' AND C.communication_type='Communication')
+        """
 
     # communications linked to reference_doctype
     part1 = f"""
-		SELECT {fields}
-		FROM `tabCommunication` as C
-		WHERE C.communication_type IN ('Communication', 'Feedback', 'Automated Message')
-		AND (C.reference_doctype = %(doctype)s AND C.reference_id = %(id)s)
-		{conditions}
-	"""
+        SELECT {fields}
+        FROM `tabCommunication` as C
+        WHERE C.communication_type IN ('Communication', 'Feedback', 'Automated Message')
+        AND (C.reference_doctype = %(doctype)s AND C.reference_id = %(id)s)
+        {conditions}
+    """
 
     # communications linked in Timeline Links
     part2 = f"""
-		SELECT {fields}
-		FROM `tabCommunication` as C
-		INNER JOIN `tabCommunication Link` ON C.id=`tabCommunication Link`.parent
-		WHERE C.communication_type IN ('Communication', 'Feedback', 'Automated Message')
-		AND `tabCommunication Link`.link_doctype = %(doctype)s AND `tabCommunication Link`.link_id = %(id)s
-		{conditions}
-	"""
+        SELECT {fields}
+        FROM `tabCommunication` as C
+        INNER JOIN `tabCommunication Link` ON C.id=`tabCommunication Link`.parent
+        WHERE C.communication_type IN ('Communication', 'Feedback', 'Automated Message')
+        AND `tabCommunication Link`.link_doctype = %(doctype)s AND `tabCommunication Link`.link_id = %(id)s
+        {conditions}
+    """
 
     return frappe.db.sql(
         """
-		SELECT *
-		FROM (({part1}) UNION ({part2})) AS combined
-		{group_by}
-		ORDER BY communication_date DESC
-		LIMIT %(limit)s
-		OFFSET %(start)s
-	""".format(
+        SELECT *
+        FROM (({part1}) UNION ({part2})) AS combined
+        {group_by}
+        ORDER BY communication_date DESC
+        LIMIT %(limit)s
+        OFFSET %(start)s
+    """.format(
             part1=part1, part2=part2, group_by=(group_by or "")
         ),
         dict(
@@ -452,9 +436,7 @@ def get_title_values_for_link_and_dynamic_link_fields(doc, link_fields=None):
         if not meta or not (meta.title_field and meta.show_title_field_in_link):
             continue
 
-        link_title = frappe.db.get_value(
-            doctype, link_docid, meta.title_field, cache=True, order_by=None
-        )
+        link_title = frappe.db.get_value(doctype, link_docid, meta.title_field, cache=True, order_by=None)
         link_titles.update({doctype + "::" + link_docid: link_title})
 
     return link_titles

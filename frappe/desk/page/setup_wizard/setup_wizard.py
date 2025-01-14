@@ -33,14 +33,14 @@ def get_setup_stages(args):  # nosemgrep
 
     stages += get_stages_hooks(args) + get_setup_complete_hooks(args)
 
-	stages.append(
-		{
-			# post executing hooks
-			"status": _("Wrapping up"),
-			"fail_msg": _("Failed to complete setup"),
-			"tasks": [{"fn": run_post_setup_complete, "args": args, "fail_msg": "Failed to complete setup"}],
-		}
-	)
+    stages.append(
+        {
+            # post executing hooks
+            "status": _("Wrapping up"),
+            "fail_msg": _("Failed to complete setup"),
+            "tasks": [{"fn": run_post_setup_complete, "args": args, "fail_msg": "Failed to complete setup"}],
+        }
+    )
 
     return stages
 
@@ -54,14 +54,12 @@ def setup_complete(args):
     if cint(frappe.db.get_single_value("System Settings", "setup_complete")):
         return {"status": "ok"}
 
-	args = parse_args(sanitize_input(args))
-	stages = get_setup_stages(args)
-	is_background_task = frappe.conf.get("trigger_site_setup_in_background")
+    args = parse_args(sanitize_input(args))
+    stages = get_setup_stages(args)
+    is_background_task = frappe.conf.get("trigger_site_setup_in_background")
 
     if is_background_task:
-        process_setup_stages.enqueue(
-            stages=stages, user_input=args, is_background_task=True
-        )
+        process_setup_stages.enqueue(stages=stages, user_input=args, is_background_task=True)
         return {"status": "registered"}
     else:
         return process_setup_stages(stages, args)
@@ -87,9 +85,7 @@ def process_setup_stages(stages, user_input, is_background_task=False):
                 task.get("fn")(task.get("args"))
     except Exception:
         handle_setup_exception(user_input)
-        message = (
-            current_task.get("fail_msg") if current_task else "Failed to complete setup"
-        )
+        message = current_task.get("fail_msg") if current_task else "Failed to complete setup"
         frappe.log_error(title=f"Setup failed: {message}")
         if not is_background_task:
             frappe.response["setup_wizard_failure_message"] = message
@@ -104,9 +100,7 @@ def process_setup_stages(stages, user_input, is_background_task=False):
         capture("completed_server_side", "setup")
         if not is_background_task:
             return {"status": "ok"}
-        frappe.publish_realtime(
-            "setup_task", {"status": "ok"}, user=frappe.session.user
-        )
+        frappe.publish_realtime("setup_task", {"status": "ok"}, user=frappe.session.user)
     finally:
         frappe.flags.in_setup_wizard = False
 
@@ -171,9 +165,7 @@ def handle_setup_exception(args):  # nosemgrep
 
 
 def update_system_settings(args):  # nosemgrep
-    number_format = get_country_info(args.get("country")).get(
-        "number_format", "#,###.##"
-    )
+    number_format = get_country_info(args.get("country")).get("number_format", "#,###.##")
 
     # replace these as float number formats, as they have 0 precision
     # and are currency number formats and not for floats
@@ -191,12 +183,8 @@ def update_system_settings(args):  # nosemgrep
             "currency": args.get("currency"),
             "float_precision": 3,
             "rounding_method": "Banker's Rounding",
-            "date_format": frappe.db.get_value(
-                "Country", args.get("country"), "date_format"
-            ),
-            "time_format": frappe.db.get_value(
-                "Country", args.get("country"), "time_format"
-            ),
+            "date_format": frappe.db.get_value("Country", args.get("country"), "date_format"),
+            "time_format": frappe.db.get_value("Country", args.get("country"), "time_format"),
             "number_format": number_format,
             "enable_scheduler": 1 if not frappe.flags.in_test else 0,
             "backup_limit": 3,  # Default for downloadable backups
@@ -217,9 +205,7 @@ def create_or_update_user(args):  # nosemgrep
     if " " in first_name:
         first_name, last_name = first_name.split(" ", 1)
 
-    if user := frappe.db.get_value(
-        "User", email, ["first_name", "last_name"], as_dict=True
-    ):
+    if user := frappe.db.get_value("User", email, ["first_name", "last_name"], as_dict=True):
         if user.first_name != first_name or user.last_name != last_name:
             (
                 frappe.qb.update("User")
@@ -272,22 +258,22 @@ def parse_args(args):  # nosemgrep
 
 
 def sanitize_input(args):
-	from frappe.utils import is_html, strip_html_tags
+    from frappe.utils import is_html, strip_html_tags
 
-	if isinstance(args, str):
-		args = json.loads(args)
+    if isinstance(args, str):
+        args = json.loads(args)
 
-	for key, value in args.items():
-		if is_html(value):
-			args[key] = strip_html_tags(value)
+    for key, value in args.items():
+        if is_html(value):
+            args[key] = strip_html_tags(value)
 
-	return args
+    return args
 
 
 def add_all_roles_to(id):
-	user = frappe.get_doc("User", id)
-	user.append_roles(*_get_default_roles())
-	user.save()
+    user = frappe.get_doc("User", id)
+    user.append_roles(*_get_default_roles())
+    user.save()
 
 
 def _get_default_roles() -> set[str]:
@@ -324,20 +310,13 @@ def load_messages(language):
 
 @frappe.whitelist()
 def load_languages():
-    language_codes = frappe.db.sql(
-        "select language_code, language_name from tabLanguage order by id", as_dict=True
-    )
+    language_codes = frappe.db.sql("select language_code, language_name from tabLanguage order by id", as_dict=True)
     codes_to_names = {}
     for d in language_codes:
         codes_to_names[d.language_code] = d.language_name
     return {
-        "default_language": frappe.db.get_value(
-            "Language", frappe.local.lang, "language_name"
-        )
-        or frappe.local.lang,
-        "languages": sorted(
-            frappe.db.sql_list("select language_name from tabLanguage order by id")
-        ),
+        "default_language": frappe.db.get_value("Language", frappe.local.lang, "language_name") or frappe.local.lang,
+        "languages": sorted(frappe.db.sql_list("select language_name from tabLanguage order by id")),
         "codes_to_names": codes_to_names,
     }
 
@@ -346,9 +325,7 @@ def load_languages():
 def load_country():
     from frappe.sessions import get_geo_ip_country
 
-    return (
-        get_geo_ip_country(frappe.local.request_ip) if frappe.local.request_ip else None
-    )
+    return get_geo_ip_country(frappe.local.request_ip) if frappe.local.request_ip else None
 
 
 @frappe.whitelist()

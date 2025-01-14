@@ -563,7 +563,7 @@ class Document(BaseDocument):
             if field != "doctype":
                 frappe.db.sql(
                     """insert into `tabSingles` (doctype, field, value)
-					values (%s, %s, %s)""",
+                    values (%s, %s, %s)""",
                     (self.doctype, field, value),
                 )
 
@@ -1155,7 +1155,7 @@ class Document(BaseDocument):
         )
 
     def run_before_save_methods(self):
-        """Run standard methods before	`INSERT` or `UPDATE`. Standard Methods are:
+        """Run standard methods before    `INSERT` or `UPDATE`. Standard Methods are:
 
         - `validate`, `before_save` for **Save**.
         - `validate`, `before_submit` for **Submit**.
@@ -1697,22 +1697,22 @@ class Document(BaseDocument):
         if not (from_date and to_date):
             return
 
-		if date_diff(to_date, from_date) < 0:
-			table_row = ""
-			if self.meta.istable:
-				table_row = _("{0} row #{1}: ").format(
-					_(frappe.unscrub(self.parentfield)),
-					self.idx,
-				)
+        if date_diff(to_date, from_date) < 0:
+            table_row = ""
+            if self.meta.istable:
+                table_row = _("{0} row #{1}: ").format(
+                    _(frappe.unscrub(self.parentfield)),
+                    self.idx,
+                )
 
-			frappe.throw(
-				table_row
-				+ _("{0} must be after {1}").format(
-					frappe.bold(_(self.meta.get_label(to_date_field))),
-					frappe.bold(_(self.meta.get_label(from_date_field))),
-				),
-				frappe.exceptions.InvalidDates,
-			)
+            frappe.throw(
+                table_row
+                + _("{0} must be after {1}").format(
+                    frappe.bold(_(self.meta.get_label(to_date_field))),
+                    frappe.bold(_(self.meta.get_label(from_date_field))),
+                ),
+                frappe.exceptions.InvalidDates,
+            )
 
     def get_assigned_users(self):
         assigned_users = frappe.get_all(

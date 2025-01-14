@@ -36,40 +36,29 @@ class Workspace:
         self.workspace_manager = "Workspace Manager" in frappe.get_roles()
 
         self.user = frappe.get_user()
-        self.allowed_modules = self.get_cached(
-            "user_allowed_modules", self.get_allowed_modules
-        )
+        self.allowed_modules = self.get_cached("user_allowed_modules", self.get_allowed_modules)
 
         self.doc = frappe.get_cached_doc("Workspace", self.page_id)
-        if (
-            self.doc
-            and self.doc.module
-            and self.doc.module not in self.allowed_modules
-            and not self.workspace_manager
-        ):
+        if self.doc and self.doc.module and self.doc.module not in self.allowed_modules and not self.workspace_manager:
             raise frappe.PermissionError
 
         self.can_read = self.get_cached("user_perm_can_read", self.get_can_read_items)
 
-		if not minimal:
-			self.allowed_pages = get_allowed_pages(cache=True)
-			self.allowed_reports = get_allowed_reports(cache=True)
+        if not minimal:
+            self.allowed_pages = get_allowed_pages(cache=True)
+            self.allowed_reports = get_allowed_reports(cache=True)
 
-			if self.doc.content:
-				self.onboarding_list = [
-					x["data"]["onboarding_id"] for x in loads(self.doc.content) if x["type"] == "onboarding"
-				]
-			self.onboardings = []
+            if self.doc.content:
+                self.onboarding_list = [
+                    x["data"]["onboarding_id"] for x in loads(self.doc.content) if x["type"] == "onboarding"
+                ]
+            self.onboardings = []
 
             self.table_counts = get_table_with_counts()
         self.restricted_doctypes = (
-            frappe.cache.get_value("domain_restricted_doctypes")
-            or build_domain_restriced_doctype_cache()
+            frappe.cache.get_value("domain_restricted_doctypes") or build_domain_restriced_doctype_cache()
         )
-        self.restricted_pages = (
-            frappe.cache.get_value("domain_restricted_pages")
-            or build_domain_restriced_page_cache()
-        )
+        self.restricted_pages = frappe.cache.get_value("domain_restricted_pages") or build_domain_restriced_page_cache()
 
     def is_permitted(self):
         """Returns true if Has Role is not set or the user is allowed."""
@@ -142,22 +131,22 @@ class Workspace:
 
         item_type = item_type.lower()
 
-		if item_type == "doctype":
-			return id in self.can_read or [] and id in self.restricted_doctypes or []
-		if item_type == "page":
-			if not self.allowed_pages:
-				self.allowed_pages = get_allowed_pages(cache=True)
-			return id in self.allowed_pages and id in self.restricted_pages
-		if item_type == "report":
-			if not self.allowed_reports:
-				self.allowed_reports = get_allowed_reports(cache=True)
-			return id in self.allowed_reports
-		if item_type == "help":
-			return True
-		if item_type == "dashboard":
-			return True
-		if item_type == "url":
-			return True
+        if item_type == "doctype":
+            return id in self.can_read or [] and id in self.restricted_doctypes or []
+        if item_type == "page":
+            if not self.allowed_pages:
+                self.allowed_pages = get_allowed_pages(cache=True)
+            return id in self.allowed_pages and id in self.restricted_pages
+        if item_type == "report":
+            if not self.allowed_reports:
+                self.allowed_reports = get_allowed_reports(cache=True)
+            return id in self.allowed_reports
+        if item_type == "help":
+            return True
+        if item_type == "dashboard":
+            return True
+        if item_type == "url":
+            return True
 
         return False
 
@@ -186,9 +175,7 @@ class Workspace:
         if item.dependencies:
             dependencies = [dep.strip() for dep in item.dependencies.split(",")]
 
-            incomplete_dependencies = [
-                d for d in dependencies if not self._doctype_contains_a_record(d)
-            ]
+            incomplete_dependencies = [d for d in dependencies if not self._doctype_contains_a_record(d)]
 
             if len(incomplete_dependencies):
                 item.incomplete_dependencies = incomplete_dependencies
@@ -214,12 +201,7 @@ class Workspace:
     def is_custom_block_permitted(self, custom_block_id):
         from frappe.utils import has_common
 
-        allowed = [
-            d.role
-            for d in frappe.get_all(
-                "Has Role", fields=["role"], filters={"parent": custom_block_id}
-            )
-        ]
+        allowed = [d.role for d in frappe.get_all("Has Role", fields=["role"], filters={"parent": custom_block_id})]
 
         if not allowed:
             return True
@@ -297,9 +279,7 @@ class Workspace:
 
         for item in shortcuts:
             new_item = item.as_dict().copy()
-            if self.is_item_allowed(item.link_to, item.type) and _in_active_domains(
-                item
-            ):
+            if self.is_item_allowed(item.link_to, item.type) and _in_active_domains(item):
                 if item.type == "Report":
                     report = self.allowed_reports.get(item.link_to, {})
                     if report.get("report_type") in [
@@ -328,9 +308,7 @@ class Workspace:
                 new_item = item.as_dict().copy()
 
                 # Translate label
-                new_item["label"] = (
-                    _(item.label) if item.label else _(item.document_type)
-                )
+                new_item["label"] = _(item.label) if item.label else _(item.document_type)
 
                 items.append(new_item)
 
@@ -375,11 +353,7 @@ class Workspace:
             for number_card in number_cards:
                 if frappe.has_permission("Number Card", doc=number_card.number_card_id):
                     # Translate label
-                    number_card.label = (
-                        _(number_card.label)
-                        if number_card.label
-                        else _(number_card.number_card_id)
-                    )
+                    number_card.label = _(number_card.label) if number_card.label else _(number_card.number_card_id)
                     all_number_cards.append(number_card)
 
         return all_number_cards
@@ -391,17 +365,13 @@ class Workspace:
             custom_blocks = self.doc.custom_blocks
 
             for custom_block in custom_blocks:
-                if frappe.has_permission(
-                    "Custom HTML Block", doc=custom_block.custom_block_id
-                ):
+                if frappe.has_permission("Custom HTML Block", doc=custom_block.custom_block_id):
                     if not self.is_custom_block_permitted(custom_block.custom_block_id):
                         continue
 
                     # Translate label
                     custom_block.label = (
-                        _(custom_block.label)
-                        if custom_block.label
-                        else _(custom_block.custom_block_id)
+                        _(custom_block.label) if custom_block.label else _(custom_block.custom_block_id)
                     )
                     all_custom_blocks.append(custom_block)
 
@@ -443,9 +413,7 @@ def get_workspace_sidebar_items():
     has_access = "Workspace Manager" in frappe.get_roles()
 
     # don't get domain restricted pages
-    blocked_modules = frappe.get_cached_doc(
-        "User", frappe.session.user
-    ).get_blocked_modules()
+    blocked_modules = frappe.get_cached_doc("User", frappe.session.user).get_blocked_modules()
     blocked_modules.append("Dummy Module")
 
     # adding None to allowed_domains to include pages without domain restriction
@@ -488,11 +456,7 @@ def get_workspace_sidebar_items():
         try:
             workspace = Workspace(page, True)
             if has_access or workspace.is_permitted():
-                if (
-                    page.public
-                    and (has_access or not page.is_hidden)
-                    and page.title != "Welcome Workspace"
-                ):
+                if page.public and (has_access or not page.is_hidden) and page.title != "Welcome Workspace":
                     pages.append(page)
                 elif page.for_user == frappe.session.user:
                     private_pages.append(page)
@@ -523,9 +487,7 @@ def get_table_with_counts():
 
 def get_custom_reports_and_doctypes(module):
     return [
-        _dict(
-            {"label": _("Custom Documents"), "links": get_custom_doctype_list(module)}
-        ),
+        _dict({"label": _("Custom Documents"), "links": get_custom_doctype_list(module)}),
         _dict({"label": _("Custom Reports"), "links": get_custom_report_list(module)}),
     ]
 
@@ -564,11 +526,7 @@ def get_custom_report_list(module):
             "link_type": "report",
             "doctype": r.ref_doctype,
             "dependencies": r.ref_doctype,
-            "is_query_report": (
-                1
-                if r.report_type in ("Query Report", "Script Report", "Custom Report")
-                else 0
-            ),
+            "is_query_report": (1 if r.report_type in ("Query Report", "Script Report", "Custom Report") else 0),
             "label": _(r.id),
             "link_to": r.id,
         }
@@ -583,23 +541,13 @@ def save_new_widget(doc, page, blocks, new_widgets):
         if widgets.chart:
             doc.charts.extend(new_widget(widgets.chart, "Workspace Chart", "charts"))
         if widgets.shortcut:
-            doc.shortcuts.extend(
-                new_widget(widgets.shortcut, "Workspace Shortcut", "shortcuts")
-            )
+            doc.shortcuts.extend(new_widget(widgets.shortcut, "Workspace Shortcut", "shortcuts"))
         if widgets.quick_list:
-            doc.quick_lists.extend(
-                new_widget(widgets.quick_list, "Workspace Quick List", "quick_lists")
-            )
+            doc.quick_lists.extend(new_widget(widgets.quick_list, "Workspace Quick List", "quick_lists"))
         if widgets.custom_block:
-            doc.custom_blocks.extend(
-                new_widget(
-                    widgets.custom_block, "Workspace Custom Block", "custom_blocks"
-                )
-            )
+            doc.custom_blocks.extend(new_widget(widgets.custom_block, "Workspace Custom Block", "custom_blocks"))
         if widgets.number_card:
-            doc.number_cards.extend(
-                new_widget(widgets.number_card, "Workspace Number Card", "number_cards")
-            )
+            doc.number_cards.extend(new_widget(widgets.number_card, "Workspace Number Card", "number_cards"))
         if widgets.card:
             doc.build_links_table_from_card(widgets.card)
 
@@ -614,10 +562,10 @@ def save_new_widget(doc, page, blocks, new_widgets):
 
         # Error log body
         log = f"""
-		page: {page}
-		config: {json_config}
-		exception: {e}
-		"""
+        page: {page}
+        config: {json_config}
+        exception: {e}
+        """
         doc.log_error("Could not save customization", log)
         return False
 
@@ -636,9 +584,7 @@ def clean_up(original_page, blocks):
         "custom_block",
     ]:
         # get list of widget's id from blocks
-        page_widgets[wid] = [
-            x["data"][wid + "_id"] for x in loads(blocks) if x["type"] == wid
-        ]
+        page_widgets[wid] = [x["data"][wid + "_id"] for x in loads(blocks) if x["type"] == wid]
 
     # shortcut, chart, quick_list, number_card & custom_block cleanup
     for wid in ["shortcut", "chart", "quick_list", "number_card", "custom_block"]:
@@ -646,9 +592,7 @@ def clean_up(original_page, blocks):
         original_page.get(wid + "s").reverse()
 
         for w in original_page.get(wid + "s"):
-            if w.label in page_widgets[wid] and w.label not in [
-                x.label for x in updated_widgets
-            ]:
+            if w.label in page_widgets[wid] and w.label not in [x.label for x in updated_widgets]:
                 updated_widgets.append(w)
         original_page.set(wid + "s", updated_widgets)
 

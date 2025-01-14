@@ -31,15 +31,15 @@ class PreparedReport(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-		error_message: DF.Text | None
-		filters: DF.SmallText | None
-		job_id: DF.Data | None
-		peak_memory_usage: DF.Int
-		queued_at: DF.Datetime | None
-		queued_by: DF.Data | None
-		report_end_time: DF.Datetime | None
-		report_id: DF.Data
-		status: DF.Literal["Error", "Queued", "Completed", "Started"]
+        error_message: DF.Text | None
+        filters: DF.SmallText | None
+        job_id: DF.Data | None
+        peak_memory_usage: DF.Int
+        queued_at: DF.Datetime | None
+        queued_by: DF.Data | None
+        report_end_time: DF.Datetime | None
+        report_id: DF.Data
+        status: DF.Literal["Error", "Queued", "Completed", "Started"]
 
     # end: auto-generated types
     @property
@@ -54,9 +54,7 @@ class PreparedReport(Document):
     def clear_old_logs(days=30):
         prepared_reports_to_delete = frappe.get_all(
             "Prepared Report",
-            filters={
-                "modified": ["<", frappe.utils.add_days(frappe.utils.now(), -days)]
-            },
+            filters={"modified": ["<", frappe.utils.add_days(frappe.utils.now(), -days)]},
         )
 
         for batch in frappe.utils.create_batch(prepared_reports_to_delete, 100):
@@ -117,9 +115,7 @@ def generate_report(prepared_report):
                 if data:
                     report.custom_columns = data["columns"]
 
-        result = generate_report_result(
-            report=report, filters=instance.filters, user=instance.owner
-        )
+        result = generate_report_result(report=report, filters=instance.filters, user=instance.owner)
         create_json_gz_file(result, instance.doctype, instance.name, instance.report_id)
 
         instance.status = "Completed"
@@ -127,10 +123,10 @@ def generate_report(prepared_report):
         # we need to ensure that error gets stored
         _save_error(instance, error=frappe.get_traceback(with_context=True))
 
-	instance.report_end_time = frappe.utils.now()
-	instance.peak_memory_usage = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-	add_data_to_monitor(peak_memory_usage=instance.peak_memory_usage)
-	instance.save(ignore_permissions=True)
+    instance.report_end_time = frappe.utils.now()
+    instance.peak_memory_usage = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    add_data_to_monitor(peak_memory_usage=instance.peak_memory_usage)
+    instance.save(ignore_permissions=True)
 
     frappe.publish_realtime(
         "report_generated",
@@ -246,9 +242,7 @@ def create_json_gz_file(data, dt, dn, report_id):
         frappe.scrub(report_id),
         frappe.utils.data.format_datetime(frappe.utils.now(), "Y-m-d-H-M"),
     )
-    encoded_content = frappe.safe_encode(
-        frappe.as_json(data, indent=None, separators=(",", ":"))
-    )
+    encoded_content = frappe.safe_encode(frappe.as_json(data, indent=None, separators=(",", ":")))
     compressed_content = gzip.compress(encoded_content)
 
     # Call save() file function to upload and attach the file
@@ -292,9 +286,7 @@ def get_permission_query_condition(user):
 
     reports = [frappe.db.escape(report) for report in user.get_all_reports().keys()]
 
-    return """`tabPrepared Report`.report_id in ({reports})""".format(
-        reports=",".join(reports)
-    )
+    return """`tabPrepared Report`.report_id in ({reports})""".format(reports=",".join(reports))
 
 
 def has_permission(doc, user):

@@ -21,14 +21,14 @@ from frappe.model.utils import is_virtual_doctype
 from frappe.model.utils.user_settings import get_user_settings, update_user_settings
 from frappe.query_builder.utils import Column
 from frappe.utils import (
-	cint,
-	cstr,
-	flt,
-	get_filter,
-	get_time,
-	get_timespan_date_range,
-	make_filter_tuple,
-	sanitize_column,
+    cint,
+    cstr,
+    flt,
+    get_filter,
+    get_time,
+    get_timespan_date_range,
+    make_filter_tuple,
+    sanitize_column,
 )
 from frappe.utils.data import DateTimeLikeObject, get_datetime, getdate, sbool
 
@@ -224,11 +224,11 @@ class DatabaseQuery:
             args = self.prepare_select_args(args)
 
         query = """select {fields}
-			from {tables}
-			{conditions}
-			{group_by}
-			{order_by}
-			{limit}""".format(
+            from {tables}
+            {conditions}
+            {group_by}
+            {order_by}
+            {limit}""".format(
             **args
         )
 
@@ -586,11 +586,11 @@ class DatabaseQuery:
         if isinstance(filters, dict):
             filters = [filters]
 
-		for f in filters:
-			if isinstance(f, str):
-				conditions.append(sanitize_column(f))
-			else:
-				conditions.append(self.prepare_filter_condition(f))
+        for f in filters:
+            if isinstance(f, str):
+                conditions.append(sanitize_column(f))
+            else:
+                conditions.append(self.prepare_filter_condition(f))
 
     def remove_field(self, idx: int):
         if self.as_list:
@@ -723,7 +723,7 @@ class DatabaseQuery:
 
             # TODO: handle list and tuple
             # if not isinstance(values, (list, tuple)):
-            # 	values = values.split(",")
+            #     values = values.split(",")
             field = meta.get_field(f.fieldname)
             ref_doctype = field.options if field else f.doctype
             lft, rgt = "", ""

@@ -34,28 +34,17 @@ class PackageRelease(Document):
         doctype = frappe.qb.DocType("Package Release")
         if not self.major:
             self.major = (
-                frappe.qb.from_(doctype)
-                .where(doctype.package == self.package)
-                .select(Max(doctype.minor))
-                .run()[0][0]
+                frappe.qb.from_(doctype).where(doctype.package == self.package).select(Max(doctype.minor)).run()[0][0]
                 or 0
             )
 
         if not self.minor:
             self.minor = (
-                frappe.qb.from_(doctype)
-                .where(doctype.package == self.package)
-                .select(Max("minor"))
-                .run()[0][0]
-                or 0
+                frappe.qb.from_(doctype).where(doctype.package == self.package).select(Max("minor")).run()[0][0] or 0
             )
         if not self.patch:
             value = (
-                frappe.qb.from_(doctype)
-                .where(doctype.package == self.package)
-                .select(Max("patch"))
-                .run()[0][0]
-                or 0
+                frappe.qb.from_(doctype).where(doctype.package == self.package).select(Max("patch")).run()[0][0] or 0
             )
             self.patch = value + 1
 
@@ -68,17 +57,17 @@ class PackageRelease(Document):
             self.patch,
         )
 
-	def validate(self):
-		package = frappe.get_doc("Package", self.package)
-		package_path = Path(frappe.get_site_path("packages", package.package_name))
-		if not package_path.resolve().is_relative_to(Path(frappe.get_site_path()).resolve()):
-			frappe.throw("Invalid package path: " + package_path.as_posix())
+    def validate(self):
+        package = frappe.get_doc("Package", self.package)
+        package_path = Path(frappe.get_site_path("packages", package.package_name))
+        if not package_path.resolve().is_relative_to(Path(frappe.get_site_path()).resolve()):
+            frappe.throw("Invalid package path: " + package_path.as_posix())
 
-		if self.publish:
-			self.export_files(package)
+        if self.publish:
+            self.export_files(package)
 
-	def export_files(self, package):
-		"""Export all the documents in this package to site/packages folder"""
+    def export_files(self, package):
+        """Export all the documents in this package to site/packages folder"""
 
         self.export_modules()
         self.export_package_files(package)
@@ -96,9 +85,7 @@ class PackageRelease(Document):
 
     def export_package_files(self, package):
         # write readme
-        with open(
-            frappe.get_site_path("packages", package.package_name, "README.md"), "w"
-        ) as readme:
+        with open(frappe.get_site_path("packages", package.package_name, "README.md"), "w") as readme:
             readme.write(package.readme)
 
         # write license
@@ -111,9 +98,7 @@ class PackageRelease(Document):
 
         # write package.json as `frappe_package.json`
         with open(
-            frappe.get_site_path(
-                "packages", package.package_name, package.package_name + ".json"
-            ),
+            frappe.get_site_path("packages", package.package_name, package.package_name + ".json"),
             "w",
         ) as packagefile:
             packagefile.write(frappe.as_json(package.as_dict(no_nulls=True)))

@@ -242,8 +242,8 @@ class BaseDocument:
         if key in self.__dict__:
             del self.__dict__[key]
 
-	def append(self, key: str, value: D | dict | None = None, position: int = -1) -> D:
-		"""Append an item to a child table.
+    def append(self, key: str, value: D | dict | None = None, position: int = -1) -> D:
+        """Append an item to a child table.
 
         Example:
                 doc.append("childtable", {
@@ -258,22 +258,22 @@ class BaseDocument:
         if (table := self.__dict__.get(key)) is None:
             self.__dict__[key] = table = []
 
-		d = self._init_child(value, key)
+        d = self._init_child(value, key)
 
-		if position == -1:
-			table.append(d)
-		else:
-			# insert at specific position
-			table.insert(position, d)
+        if position == -1:
+            table.append(d)
+        else:
+            # insert at specific position
+            table.insert(position, d)
 
-			# re number idx
-			for i, _d in enumerate(table):
-				_d.idx = i + 1
+            # re number idx
+            for i, _d in enumerate(table):
+                _d.idx = i + 1
 
-		# reference parent document but with weak reference, parent_doc will be deleted if self is garbage collected.
-		d.parent_doc = weakref.ref(self)
+        # reference parent document but with weak reference, parent_doc will be deleted if self is garbage collected.
+        d.parent_doc = weakref.ref(self)
 
-		return d
+        return d
 
     @property
     def parent_doc(self):
@@ -566,7 +566,7 @@ class BaseDocument:
         try:
             frappe.db.sql(
                 """INSERT INTO `tab{doctype}` ({columns})
-					VALUES ({values}) {conflict_handler}""".format(
+                    VALUES ({values}) {conflict_handler}""".format(
                     doctype=self.doctype,
                     columns=", ".join("`" + c + "`" for c in columns),
                     values=", ".join(["%s"] * len(columns)),
@@ -622,7 +622,7 @@ class BaseDocument:
         try:
             frappe.db.sql(
                 """UPDATE `tab{doctype}`
-				SET {values} WHERE `id`=%s""".format(
+                SET {values} WHERE `id`=%s""".format(
                     doctype=self.doctype,
                     values=", ".join("`" + c + "`=%s" for c in columns),
                 ),
@@ -675,15 +675,15 @@ class BaseDocument:
         """
         return frappe.db.sql(
             f"""
-			SHOW
-				INDEX
-			FROM
-				`tab{self.doctype}`
-			WHERE
-				key_name=%s
-			AND
-				Non_unique=0
-			""",
+            SHOW
+                INDEX
+            FROM
+                `tab{self.doctype}`
+            WHERE
+                key_name=%s
+            AND
+                Non_unique=0
+            """,
             key_name,
             as_dict=True,
         )[0].get("Column_name")
@@ -797,16 +797,16 @@ class BaseDocument:
         for df in self.meta.get_link_fields() + self.meta.get("fields", {"fieldtype": ("=", "Dynamic Link")}):
             docid = self.get(df.fieldname)
 
-			if docid:
-				if df.fieldtype == "Link":
-					doctype = df.options
-					if not doctype:
-						frappe.throw(_("Options not set for link field {0}").format(df.fieldname))
-				else:
-					doctype = self.get(df.options)
-					if not doctype:
-						frappe.throw(_("{0} must be set first").format(self.meta.get_label(df.options)))
-					invalidate_distinct_link_doctypes(df.parent, df.options, doctype)
+            if docid:
+                if df.fieldtype == "Link":
+                    doctype = df.options
+                    if not doctype:
+                        frappe.throw(_("Options not set for link field {0}").format(df.fieldname))
+                else:
+                    doctype = self.get(df.options)
+                    if not doctype:
+                        frappe.throw(_("{0} must be set first").format(self.meta.get_label(df.options)))
+                    invalidate_distinct_link_doctypes(df.parent, df.options, doctype)
 
                 # MySQL is case insensitive. Preserve case of the original docid in the Link Field.
 
@@ -1302,12 +1302,12 @@ class BaseDocument:
     def cast(self, value, df):
         return cast_fieldtype(df.fieldtype, value, show_warning=False)
 
-	def _extract_images_from_editor(self):
-		from frappe.core.doctype.file.utils import extract_images_from_doc
+    def _extract_images_from_editor(self):
+        from frappe.core.doctype.file.utils import extract_images_from_doc
 
-		if self.doctype != "DocType":
-			for df in self.meta.get("fields", {"fieldtype": ("in", ("Text Editor", "HTML Editor"))}):
-				extract_images_from_doc(self, df.fieldname)
+        if self.doctype != "DocType":
+            for df in self.meta.get("fields", {"fieldtype": ("in", ("Text Editor", "HTML Editor"))}):
+                extract_images_from_doc(self, df.fieldname)
 
 
 def _filter(data, filters, limit=None):
