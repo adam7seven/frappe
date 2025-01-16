@@ -116,7 +116,7 @@
             "fieldname": "fieldname",
             "fieldtype": "Data",
             "in_list_view": 1,
-            "label": "id",
+            "label": "FieldName",
             "oldfieldname": "fieldname",
             "oldfieldtype": "Data",
             "search_index": 1
@@ -236,6 +236,8 @@
             "oldfieldtype": "Text"
         },
         {
+            "default": "0",
+            "depends_on": "eval: doc.fieldtype === 'Select'",
             "description": "If checked, select options will split by first comma, the first part is value, and the second part is label.",
             "fieldname": "options_has_label",
             "fieldtype": "Check",

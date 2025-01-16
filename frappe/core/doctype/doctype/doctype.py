@@ -1371,7 +1371,7 @@ def validate_fields(meta: Meta):
                     _("Options for {0} must be set before setting the default value.").format(frappe.bold(d.fieldname))
                 )
             else:
-                options = get_select_options(d.options)
+                options = get_select_options(d.options, d.options_has_label)
                 if d.default not in options:
                     frappe.throw(
                         _("Default value for {0} must be in the list of options.").format(frappe.bold(d.fieldname))
