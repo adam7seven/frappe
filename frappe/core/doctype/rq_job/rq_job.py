@@ -101,11 +101,7 @@ class RQJob(Document):
         matched_job_ids = RQJob.get_matching_job_ids(args)[start : start + page_length]
 
         conn = get_redis_conn()
-        jobs = [
-            serialize_job(job)
-            for job in Job.fetch_many(job_ids=matched_job_ids, connection=conn)
-            if job
-        ]
+        jobs = [serialize_job(job) for job in Job.fetch_many(job_ids=matched_job_ids, connection=conn) if job]
 
         return sorted(jobs, key=lambda j: j.modified, reverse=order_desc)
 
@@ -118,7 +114,7 @@ class RQJob(Document):
 
         matched_job_ids = []
         for queue in get_queues():
-            if not queue.id.endswith(tuple(queues)):
+            if not queue.name.endswith(tuple(queues)):
                 continue
             for status in statuses:
                 matched_job_ids.extend(fetch_job_ids(queue, status))
@@ -173,13 +169,9 @@ def serialize_job(job: Job) -> frappe._dict:
         queue=job.origin.rsplit(":", 1)[1],
         job_name=job_name,
         status=job.get_status(),
-        started_at=(
-            convert_utc_to_system_timezone(job.started_at) if job.started_at else ""
-        ),
+        started_at=(convert_utc_to_system_timezone(job.started_at) if job.started_at else ""),
         ended_at=convert_utc_to_system_timezone(job.ended_at) if job.ended_at else "",
-        time_taken=(
-            (job.ended_at - job.started_at).total_seconds() if job.ended_at else ""
-        ),
+        time_taken=((job.ended_at - job.started_at).total_seconds() if job.ended_at else ""),
         exc_info=job.exc_info,
         arguments=frappe.as_json(job.kwargs),
         timeout=job.timeout,

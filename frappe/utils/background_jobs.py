@@ -406,7 +406,7 @@ def get_queue_list(queue_list=None, build_queue_id=False):
             validate_queue(queue, default_queue_list)
     else:
         queue_list = default_queue_list
-    return [generate_qid(qtype) for qtype in queue_list] if build_queue_id else queue_list
+    return [generate_qname(qtype) for qtype in queue_list] if build_queue_id else queue_list
 
 
 def get_workers(queue=None):
@@ -431,7 +431,7 @@ def get_running_jobs_in_queue(queue):
 def get_queue(qtype, is_async=True):
     """Returns a Queue object tied to a redis connection"""
     validate_queue(qtype)
-    return Queue(generate_qid(qtype), connection=get_redis_conn(), is_async=is_async)
+    return Queue(generate_qname(qtype), connection=get_redis_conn(), is_async=is_async)
 
 
 def validate_queue(queue, default_queue_list=None):
@@ -504,10 +504,10 @@ def get_queues(connection=None) -> list[Queue]:
     return [q for q in queues if is_queue_accessible(q)]
 
 
-def generate_qid(qtype: str) -> str:
-    """Generate qid by combining bench ID and queue type.
+def generate_qname(qtype: str) -> str:
+    """Generate qname by combining bench ID and queue type.
 
-    qids are useful to define namespaces of customers.
+    qnames are useful to define namespaces of customers.
     """
     if isinstance(qtype, list):
         qtype = ",".join(qtype)
@@ -516,8 +516,8 @@ def generate_qid(qtype: str) -> str:
 
 def is_queue_accessible(qobj: Queue) -> bool:
     """Checks whether queue is relate to current bench or not."""
-    accessible_queues = [generate_qid(q) for q in list(get_queues_timeout())]
-    return qobj.id in accessible_queues
+    accessible_queues = [generate_qname(q) for q in list(get_queues_timeout())]
+    return qobj.name in accessible_queues
 
 
 def enqueue_test_job():
