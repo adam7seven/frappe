@@ -391,7 +391,7 @@ class BaseDocument:
                             eval_locals={"doc": self},
                         )
 
-                if isinstance(value, list) and df.fieldtype not in table_fields:
+                if isinstance(value, list) and df.fieldtype != "JSON" and df.fieldtype not in table_fields:
                     frappe.throw(_("Value for {0} cannot be a list").format(_(df.label, context=df.parent)))
 
                 if df.fieldtype == "Check":
@@ -400,7 +400,7 @@ class BaseDocument:
                 elif df.fieldtype == "Int" and not isinstance(value, int):
                     value = cint(value)
 
-                elif df.fieldtype == "JSON" and isinstance(value, dict):
+                elif df.fieldtype == "JSON" and (isinstance(value, dict) or isinstance(value, list)):
                     value = json.dumps(value, separators=(",", ":"))
 
                 elif df.fieldtype in float_like_fields and not isinstance(value, float):
