@@ -37,9 +37,7 @@ class TestDocType(FrappeTestCase):
         self.assertRaises(frappe.NameError, new_doctype("Some (DocType)").insert)
         self.assertRaises(
             frappe.NameError,
-            new_doctype(
-                "Some Doctype with a id whose length is more than 61 characters"
-            ).insert,
+            new_doctype("Some Doctype with a id whose length is more than 61 characters").insert,
         )
         for id in ("Some DocType", "Some_DocType", "Some-DocType"):
             if frappe.db.exists("DocType", id):
@@ -220,9 +218,7 @@ class TestDocType(FrappeTestCase):
             # assert that field_order list is being created with the default order
             test_doctype_json = frappe.get_file_json(path)
             self.assertTrue(test_doctype_json.get("field_order"))
-            self.assertEqual(
-                len(test_doctype_json["fields"]), len(test_doctype_json["field_order"])
-            )
+            self.assertEqual(len(test_doctype_json["fields"]), len(test_doctype_json["field_order"]))
             self.assertListEqual(
                 [f["fieldname"] for f in test_doctype_json["fields"]],
                 test_doctype_json["field_order"],
@@ -250,9 +246,7 @@ class TestDocType(FrappeTestCase):
             test_doctype.save()
             test_doctype_json = frappe.get_file_json(path)
             self.assertTrue(test_doctype_json.get("field_order"))
-            self.assertEqual(
-                len(test_doctype_json["fields"]), len(test_doctype_json["field_order"])
-            )
+            self.assertEqual(len(test_doctype_json["fields"]), len(test_doctype_json["field_order"]))
             self.assertListEqual(
                 [f["fieldname"] for f in test_doctype_json["fields"]],
                 test_doctype_json["field_order"],
@@ -522,9 +516,7 @@ class TestDocType(FrappeTestCase):
         docs = get_submitted_linked_docs(link_doc.id, data_link_doc_1.id)
         dump_docs = json.dumps(docs.get("docs"))
 
-        cancel_all_linked_docs(
-            dump_docs, ignore_doctypes_on_cancel_all=["Test Doctype 2"]
-        )
+        cancel_all_linked_docs(dump_docs, ignore_doctypes_on_cancel_all=["Test Doctype 2"])
 
         # checking that doc for Test Doctype 2 is not canceled
         self.assertRaises(frappe.LinkExistsError, data_link_doc_1.cancel)
@@ -587,9 +579,7 @@ class TestDocType(FrappeTestCase):
     def test_create_virtual_doctype_as_child_table(self):
         """Test virtual DocType as Child Table below a normal DocType."""
         frappe.delete_doc_if_exists("DocType", "Test Parent Virtual DocType", force=1)
-        frappe.delete_doc_if_exists(
-            "DocType", "Test Virtual DocType as Child Table", force=1
-        )
+        frappe.delete_doc_if_exists("DocType", "Test Virtual DocType as Child Table", force=1)
 
         virtual_doc = new_doctype("Test Virtual DocType as Child Table")
         virtual_doc.is_virtual = 1
@@ -632,16 +622,12 @@ class TestDocType(FrappeTestCase):
 
     def test_autoincremented_doctype_transition(self):
         frappe.delete_doc_if_exists("DocType", "testy_autoinc_dt")
-        dt = new_doctype("testy_autoinc_dt", autoid="autoincrement").insert(
-            ignore_permissions=True
-        )
+        dt = new_doctype("testy_autoinc_dt", autoid="autoincrement").insert(ignore_permissions=True)
         dt.autoid = "hash"
 
         dt.save(ignore_permissions=True)
 
-        dt_data = frappe.get_doc(
-            {"doctype": dt.id, "some_fieldname": "test data"}
-        ).insert(ignore_permissions=True)
+        dt_data = frappe.get_doc({"doctype": dt.id, "some_fieldname": "test data"}).insert(ignore_permissions=True)
 
         dt.autoid = "autoincrement"
 
@@ -701,9 +687,7 @@ class TestDocType(FrappeTestCase):
         self.assertEqual(test_json.test_json_field["hello"], "world")
 
     def test_no_delete_doc(self):
-        self.assertRaises(
-            frappe.ValidationError, frappe.delete_doc, "DocType", "Address"
-        )
+        self.assertRaises(frappe.ValidationError, frappe.delete_doc, "DocType", "Address")
 
     @unittest.skipUnless(
         os.access(frappe.get_app_path("frappe"), os.W_OK),
@@ -758,9 +742,7 @@ class TestDocType(FrappeTestCase):
         child = new_doctype(custom=0, istable=1).insert().id
 
         field = "abc"
-        create_custom_fields(
-            {doctype: [{"fieldname": field, "fieldtype": "Table", "options": child}]}
-        )
+        create_custom_fields({doctype: [{"fieldname": field, "fieldtype": "Table", "options": child}]})
 
         frappe.delete_doc("DocType", child)
         self.assertFalse(frappe.get_meta(doctype).get_field(field))
@@ -782,9 +764,7 @@ class TestDocType(FrappeTestCase):
         # Create property setter and custom field
         field = "some_fieldname"
         make_property_setter(doctype, field, "default", "DELETETHIS", "Data")
-        create_custom_fields(
-            {doctype: [{"fieldname": custom_field, "fieldtype": "Data"}]}
-        )
+        create_custom_fields({doctype: [{"fieldname": custom_field, "fieldtype": "Data"}]})
 
         # Create 1 record
         original_doc = frappe.get_doc(doctype=doctype, custom_field_name="wat").insert()
@@ -807,9 +787,7 @@ class TestDocType(FrappeTestCase):
         getdoc(doctype, restored_doc.id)
 
         # ensure meta - property setter
-        self.assertEqual(
-            frappe.get_meta(doctype).get_field(field).default, "DELETETHIS"
-        )
+        self.assertEqual(frappe.get_meta(doctype).get_field(field).default, "DELETETHIS")
         frappe.delete_doc("DocType", doctype)
 
     @unittest.skipUnless(

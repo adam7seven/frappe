@@ -88,7 +88,7 @@ class DocField(Document):
         is_virtual: DF.Check
         label: DF.Data | None
         length: DF.Int
-        link_filters: DF.JSON | None
+        link_filters: DF.LongText | None
         make_attachment_public: DF.Check
         mandatory_depends_on: DF.Code | None
         max_height: DF.Data | None

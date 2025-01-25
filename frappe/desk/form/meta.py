@@ -97,9 +97,7 @@ class FormMeta(Meta):
 
         self._add_code(_get_path(self.id + ".js"), "__js")
         if system_country:
-            self._add_code(
-                _get_path(os.path.join("regional", system_country + ".js")), "__js"
-            )
+            self._add_code(_get_path(os.path.join("regional", system_country + ".js")), "__js")
 
         self._add_code(_get_path(self.id + ".css"), "__css")
         self._add_code(_get_path(self.id + "_list.js"), "__list_js")
@@ -188,9 +186,7 @@ class FormMeta(Meta):
 
     def add_search_fields(self):
         """add search fields found in the doctypes indicated by link fields' options"""
-        for df in self.get(
-            "fields", {"fieldtype": "Link", "options": ["!=", "[Select]"]}
-        ):
+        for df in self.get("fields", {"fieldtype": "Link", "options": ["!=", "[Select]"]}):
             if df.options:
                 try:
                     search_fields = frappe.get_meta(df.options).search_fields
@@ -213,9 +209,7 @@ class FormMeta(Meta):
 
         if df.get("is_custom_field"):
             custom_field_link = get_link_to_form("Custom Field", df.id)
-            msg += " " + _(
-                "Please delete the field from {0} or add the required doctype."
-            ).format(custom_field_link)
+            msg += " " + _("Please delete the field from {0} or add the required doctype.").format(custom_field_link)
 
         frappe.throw(msg, title=_("Missing DocType"))
 
@@ -247,10 +241,7 @@ class FormMeta(Meta):
             workflow = frappe.get_doc("Workflow", workflow_id)
             workflow_docs.append(workflow)
 
-            workflow_docs.extend(
-                frappe.get_doc("Workflow State", d.state)
-                for d in workflow.get("states")
-            )
+            workflow_docs.extend(frappe.get_doc("Workflow State", d.state) for d in workflow.get("states"))
         self.set("__workflow_docs", workflow_docs)
 
     def load_templates(self):
