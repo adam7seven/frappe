@@ -112,18 +112,18 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
         if (typeof options !== "string") {
             return [];
         }
-    
+
         let option_list = options.split("\n");
         if (remove_empty) {
             option_list = option_list.filter(x => x);
         }
-    
+
         let result = []
         if (!options_has_label) {
             result = option_list.map(item => ({ label: __(item), value: item }));
             return result;
         }
-    
+
         //如果选项中包含逗号，则按逗号隔开
         for (var i = 0; i < option_list.length; i++) {
             var opt = option_list[i];
