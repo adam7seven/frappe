@@ -1446,6 +1446,25 @@ export default class GridRow {
         // format values if no frm
         if (df && this.doc) {
             txt = frappe.format(this.doc[fieldname], df, null, this.doc);
+            if (df.fieldtype === "Select" && df.options_has_label) {
+                let options = df.options.split("\n");
+                for (var i = 0; i < options.length; i++) {
+                    var opt = options[i];
+                    var comma_index = opt.indexOf(",")
+                    if (comma_index === 0) {
+                        if (!txt) {
+                            txt = __(opt.substring(1));
+                            break;
+                        }
+                    }
+                    else if (comma_index > 0) {
+                        if (txt === opt.substring(0, comma_index)) {
+                            txt = __(opt.substring(comma_index + 1));
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         if (!txt && this.frm) {
