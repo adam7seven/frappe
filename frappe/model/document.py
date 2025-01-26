@@ -166,9 +166,19 @@ class Document(BaseDocument):
             if not isinstance(self.id, dict | list):
                 get_value_kwargs["order_by"] = None
 
+            # If autoid is autoincrement, the column type of id is bigint, cannot use default id with "new-doctype-xxx"
+            doc_id = self.id
+            if (
+                self.meta.autoid
+                and self.meta.autoid == "autoincrement"
+                and isinstance(self.id, str)
+                and self.id.startswith("new-")
+            ):
+                doc_id = -1
+
             d = frappe.db.get_value(
                 doctype=self.doctype,
-                filters=self.id,
+                filters=doc_id,
                 fieldname="*",
                 **get_value_kwargs,
             )
