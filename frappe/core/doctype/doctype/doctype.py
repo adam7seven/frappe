@@ -368,21 +368,39 @@ class DocType(Document):
                     link_df = new_meta.get_field(link_fieldname)
 
                     if frappe.db.db_type == "postgres":
-                        update_query = """
-							UPDATE `tab{doctype}` as target
-							SET `{fieldname}` = source.`{source_fieldname}`
-							FROM `tab{link_doctype}` as source
-							WHERE `target`.`{link_fieldname}` = source.id
-							AND ifnull(`target`.`{fieldname}`, '')=''
-						"""
+                        if df.fieldtype in ["Check", "Currency", "Duration", "Float", "Int", "Percent", "Rating"]:
+                            update_query = """
+                                UPDATE `tab{doctype}` as target
+                                SET `{fieldname}` = source.`{source_fieldname}`
+                                FROM `tab{link_doctype}` as source
+                                WHERE `target`.`{link_fieldname}` = source.id
+                                AND ifnull(`target`.`{fieldname}`, 0)=0
+                            """
+                        else:
+                            update_query = """
+                                UPDATE `tab{doctype}` as target
+                                SET `{fieldname}` = source.`{source_fieldname}`
+                                FROM `tab{link_doctype}` as source
+                                WHERE `target`.`{link_fieldname}` = source.id
+                                AND ifnull(`target`.`{fieldname}`, '')=''
+                            """
                     else:
-                        update_query = """
-							UPDATE `tab{doctype}` as target
-							INNER JOIN `tab{link_doctype}` as source
-							ON `target`.`{link_fieldname}` = `source`.`id`
-							SET `target`.`{fieldname}` = `source`.`{source_fieldname}`
-							WHERE ifnull(`target`.`{fieldname}`, '')=""
-						"""
+                        if df.fieldtype in ["Check", "Currency", "Duration", "Float", "Int", "Percent", "Rating"]:
+                            update_query = """
+                                UPDATE `tab{doctype}` as target
+                                INNER JOIN `tab{link_doctype}` as source
+                                ON `target`.`{link_fieldname}` = `source`.`id`
+                                SET `target`.`{fieldname}` = `source`.`{source_fieldname}`
+                                WHERE ifnull(`target`.`{fieldname}`, 0)=0
+                            """
+                        else:
+                            update_query = """
+                                UPDATE `tab{doctype}` as target
+                                INNER JOIN `tab{link_doctype}` as source
+                                ON `target`.`{link_fieldname}` = `source`.`id`
+                                SET `target`.`{fieldname}` = `source`.`{source_fieldname}`
+                                WHERE ifnull(`target`.`{fieldname}`, '')=""
+                            """
 
                     self.flags.update_fields_to_fetch_queries.append(
                         update_query.format(
