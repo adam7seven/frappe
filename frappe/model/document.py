@@ -169,8 +169,10 @@ class Document(BaseDocument):
             # If autoid is autoincrement, the column type of id is bigint, cannot use default id with "new-doctype-xxx"
             doc_id = self.id
             if (
-                self.meta.autoid
+                "meta" in self.__dict__
+                and hasattr(self.meta, "autoid")
                 and self.meta.autoid == "autoincrement"
+                and hasattr(self, "id")
                 and isinstance(self.id, str)
                 and self.id.startswith("new-")
             ):
