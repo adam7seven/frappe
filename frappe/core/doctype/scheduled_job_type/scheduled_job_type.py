@@ -43,6 +43,7 @@ class ScheduledJobType(Document):
         last_execution: DF.Datetime | None
         method: DF.Data
         next_execution: DF.Datetime | None
+        scheduler_event: DF.Link | None
         server_script: DF.Link | None
         stopped: DF.Check
 
@@ -57,16 +58,12 @@ class ScheduledJobType(Document):
 
         if self.frequency == "Cron":
             if not self.cron_format:
-                frappe.throw(
-                    _("Cron format is required for job types with Cron frequency.")
-                )
+                frappe.throw(_("Cron format is required for job types with Cron frequency."))
             try:
                 croniter(self.cron_format)
             except CroniterBadCronError:
                 frappe.throw(
-                    _("{0} is not a valid Cron expression.").format(
-                        f"<code>{self.cron_format}</code>"
-                    ),
+                    _("{0} is not a valid Cron expression.").format(f"<code>{self.cron_format}</code>"),
                     title=_("Bad Cron Expression"),
                 )
 
@@ -142,9 +139,7 @@ class ScheduledJobType(Document):
             if self.server_script:
                 script_id = frappe.db.get_value("Server Script", self.server_script)
                 if script_id:
-                    frappe.get_doc(
-                        "Server Script", script_id
-                    ).execute_scheduled_method()
+                    frappe.get_doc("Server Script", script_id).execute_scheduled_method()
             else:
                 frappe.get_attr(self.method)()
             frappe.db.commit()
@@ -155,9 +150,7 @@ class ScheduledJobType(Document):
 
     def log_status(self, status):
         # log file
-        frappe.logger("scheduler").info(
-            f"Scheduled Job {status}: {self.method} for {frappe.local.site}"
-        )
+        frappe.logger("scheduler").info(f"Scheduled Job {status}: {self.method} for {frappe.local.site}")
         self.update_scheduler_log(status)
 
     def update_scheduler_log(self, status):
@@ -167,16 +160,14 @@ class ScheduledJobType(Document):
             frappe.db.commit()
             return
         if not self.scheduler_log:
-            self.scheduler_log = frappe.get_doc(
-                dict(doctype="Scheduled Job Log", scheduled_job_type=self.id)
-            ).insert(ignore_permissions=True)
+            self.scheduler_log = frappe.get_doc(dict(doctype="Scheduled Job Log", scheduled_job_type=self.id)).insert(
+                ignore_permissions=True
+            )
         self.scheduler_log.db_set("status", status)
         if frappe.debug_log:
             self.scheduler_log.db_set("debug_log", "\n".join(frappe.debug_log))
         if status == "Failed":
-            self.scheduler_log.db_set(
-                "details", frappe.get_traceback(with_context=True)
-            )
+            self.scheduler_log.db_set("details", frappe.get_traceback(with_context=True))
         if status == "Start":
             self.db_set("last_execution", now_datetime(), update_modified=False)
         frappe.db.commit()
@@ -258,9 +249,7 @@ def insert_single_event(frequency: str, event: str, cron_format: str | None = No
         }
     )
 
-    if not frappe.db.exists(
-        "Scheduled Job Type", {"method": event, "frequency": frequency, **cron_expr}
-    ):
+    if not frappe.db.exists("Scheduled Job Type", {"method": event, "frequency": frequency, **cron_expr}):
         savepoint = "scheduled_job_type_creation"
         try:
             frappe.db.savepoint(savepoint)
@@ -272,11 +261,12 @@ def insert_single_event(frequency: str, event: str, cron_format: str | None = No
 
 
 def clear_events(all_events: list):
-    for event in frappe.get_all(
-        "Scheduled Job Type", fields=["id", "method", "server_script"]
-    ):
+    for event in frappe.get_all("Scheduled Job Type", fields=["name", "method", "server_script", "scheduler_event"]):
         is_server_script = event.server_script
         is_defined_in_hooks = event.method in all_events
 
+        if event.scheduler_event:
+            continue
+
         if not (is_defined_in_hooks or is_server_script):
-            frappe.delete_doc("Scheduled Job Type", event.id)
+            frappe.delete_doc("Scheduled Job Type", event.name)

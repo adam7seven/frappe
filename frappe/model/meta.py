@@ -8,9 +8,9 @@ Load metadata (DocType) class
 
 Example:
 
-	meta = frappe.get_meta('User')
-	if meta.has_field('first_name'):
-		print("DocType" table has field "first_name")
+    meta = frappe.get_meta('User')
+    if meta.has_field('first_name'):
+        print("DocType" table has field "first_name")
 
 
 """
@@ -53,6 +53,11 @@ DEFAULT_FIELD_LABELS = {
     "_comments": _lt("Comments"),
     "_assign": _lt("Assigned To"),
 }
+
+# When number of rows in a table exceeds this number, we disable certain features automatically.
+# This is done to avoid hammering the site with unnecessary requests that are just meant for
+# improving UX.
+LARGE_TABLE_THRESHOLD = 100_000
 
 
 def get_meta(doctype, cached=True) -> "Meta":
@@ -141,6 +146,7 @@ class Meta(Document):
         self.get_valid_columns()
         self.set_custom_permissions()
         self.add_custom_links_and_actions()
+        self.is_large_table = frappe.db.estimate_count(self.id) > LARGE_TABLE_THRESHOLD
 
     def as_dict(self, no_nulls=False):
         def serialize(doc):

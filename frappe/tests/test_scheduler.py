@@ -41,9 +41,7 @@ class TestScheduler(TestCase):
         purge_pending_jobs()
 
     def test_enqueue_jobs(self):
-        frappe.db.sql(
-            "update `tabScheduled Job Type` set last_execution = '2010-01-01 00:00:00'"
-        )
+        frappe.db.sql("update `tabScheduled Job Type` set last_execution = '2010-01-01 00:00:00'")
 
         enqueued_jobs = enqueue_events(site=frappe.local.site)
 
@@ -63,58 +61,35 @@ class TestScheduler(TestCase):
 
     def test_is_dormant(self):
         self.assertTrue(is_dormant(check_time=get_datetime("2100-01-01 00:00:00")))
-        self.assertTrue(
-            is_dormant(
-                check_time=add_days(frappe.db.get_last_created("Activity Log"), 5)
-            )
-        )
-        self.assertFalse(
-            is_dormant(check_time=frappe.db.get_last_created("Activity Log"))
-        )
+        self.assertTrue(is_dormant(check_time=add_days(frappe.db.get_last_created("Activity Log"), 5)))
+        self.assertFalse(is_dormant(check_time=frappe.db.get_last_created("Activity Log")))
 
     def test_once_a_day_for_dormant(self):
         frappe.db.truncate("Scheduled Job Log")
+        self.assertTrue(schedule_jobs_based_on_activity(check_time=get_datetime("2100-01-01 00:00:00")))
         self.assertTrue(
-            schedule_jobs_based_on_activity(
-                check_time=get_datetime("2100-01-01 00:00:00")
-            )
-        )
-        self.assertTrue(
-            schedule_jobs_based_on_activity(
-                check_time=add_days(frappe.db.get_last_created("Activity Log"), 5)
-            )
+            schedule_jobs_based_on_activity(check_time=add_days(frappe.db.get_last_created("Activity Log"), 5))
         )
 
         # create a fake job executed 5 days from now
-        job = get_test_job(
-            method="frappe.tests.test_scheduler.test_method", frequency="Daily"
-        )
+        job = get_test_job(method="frappe.tests.test_scheduler.test_method", frequency="Daily")
         job.execute()
         job_log = frappe.get_doc("Scheduled Job Log", dict(scheduled_job_type=job.id))
-        job_log.db_set(
-            "modified",
-            add_days(_get_last_modified_timestamp("Activity Log"), 5),
-            update_modified=False,
-        )
+        job_log.db_set("modified", add_days(_get_last_modified_timestamp("Activity Log"), 5), update_modified=False)
+        schedule_jobs_based_on_activity.clear_cache()
 
         # inactive site with recent job, don't run
         self.assertFalse(
-            schedule_jobs_based_on_activity(
-                check_time=add_days(_get_last_modified_timestamp("Activity Log"), 5)
-            )
+            schedule_jobs_based_on_activity(check_time=add_days(_get_last_modified_timestamp("Activity Log"), 5))
         )
 
         # one more day has passed
         self.assertTrue(
-            schedule_jobs_based_on_activity(
-                check_time=add_days(_get_last_modified_timestamp("Activity Log"), 6)
-            )
+            schedule_jobs_based_on_activity(check_time=add_days(_get_last_modified_timestamp("Activity Log"), 6))
         )
 
 
-def get_test_job(
-    method="frappe.tests.test_scheduler.test_timeout_10", frequency="All"
-) -> ScheduledJobType:
+def get_test_job(method="frappe.tests.test_scheduler.test_timeout_10", frequency="All") -> ScheduledJobType:
     if not frappe.db.exists("Scheduled Job Type", dict(method=method)):
         job = frappe.get_doc(
             dict(

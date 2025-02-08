@@ -55,9 +55,7 @@ from frappe.utils import CallbackManager
         "See the mariadb docs on account names for more info."
     ),
 )
-@click.option(
-    "--admin-password", help="Administrator password for new site", default=None
-)
+@click.option("--admin-password", help="Administrator password for new site", default=None)
 @click.option("--verbose", is_flag=True, default=False, help="Verbose")
 @click.option(
     "--force",
@@ -102,6 +100,10 @@ def new_site(
     from frappe.installer import _new_site
 
     frappe.init(site=site, new_site=True)
+
+    if site in frappe.get_all_apps():
+        click.secho(f"Your bench has an app called {site}, please choose another name for the site.", fg="red")
+        sys.exit(1)
 
     if no_mariadb_socket:
         click.secho(
@@ -223,9 +225,7 @@ def _restore(
         get_or_generate_backup_encryption_key,
     )
 
-    err, out = frappe.utils.execute_in_shell(
-        f"file {sql_file_path}", check_exit_code=True
-    )
+    err, out = frappe.utils.execute_in_shell(f"file {sql_file_path}", check_exit_code=True)
     if err:
         click.secho("Failed to detect type of backup file", fg="red")
         sys.exit(1)
@@ -356,8 +356,7 @@ def restore_backup(
     # Check if the backup is of an older version of frappe and the user hasn't specified force
     if is_downgrade(sql_file_path, verbose=True) and not force:
         warn_message = (
-            "This is not recommended and may lead to unexpected behaviour. "
-            "Do you want to continue anyway?"
+            "This is not recommended and may lead to unexpected behaviour. " "Do you want to continue anyway?"
         )
         click.confirm(warn_message, abort=True)
 
@@ -403,9 +402,7 @@ def partial_restore(context, sql_file_path, verbose, encryption_key=None):
     verbose = context.verbose or verbose
     frappe.init(site=site)
     frappe.connect()
-    err, out = frappe.utils.execute_in_shell(
-        f"file {sql_file_path}", check_exit_code=True
-    )
+    err, out = frappe.utils.execute_in_shell(f"file {sql_file_path}", check_exit_code=True)
     if err:
         click.secho("Failed to detect type of backup file", fg="red")
         sys.exit(1)
@@ -437,9 +434,7 @@ def partial_restore(context, sql_file_path, verbose, encryption_key=None):
 
         # Rollback on unsuccessful decryption
         if not os.path.exists(sql_file_path):
-            click.secho(
-                "Decryption failed. Please provide a valid key and try again.", fg="red"
-            )
+            click.secho("Decryption failed. Please provide a valid key and try again.", fg="red")
             sys.exit(1)
 
     else:
@@ -466,9 +461,7 @@ def partial_restore(context, sql_file_path, verbose, encryption_key=None):
     "--mariadb-root-password",
     help="Root password for MariaDB or PostgreSQL",
 )
-@click.option(
-    "--yes", is_flag=True, default=False, help="Pass --yes to skip confirmation"
-)
+@click.option("--yes", is_flag=True, default=False, help="Pass --yes to skip confirmation")
 @pass_context
 def reinstall(
     context,
@@ -591,9 +584,7 @@ def list_apps(context, format):
     for site in context.sites:
         frappe.init(site=site)
         frappe.connect()
-        site_title = (
-            click.style(f"{site}", fg="green") if len(context.sites) > 1 else ""
-        )
+        site_title = click.style(f"{site}", fg="green") if len(context.sites) > 1 else ""
         installed_apps_info = []
 
         apps = frappe.get_single("Installed Applications").installed_applications
@@ -697,9 +688,7 @@ def describe_database_table(context, doctype, column):
 @click.option("--password")
 @click.option("--send-welcome-email", default=False, is_flag=True)
 @pass_context
-def add_system_manager(
-    context, email, first_name, last_name, send_welcome_email, password
-):
+def add_system_manager(context, email, first_name, last_name, send_welcome_email, password):
     "Add a new system manager to a site"
     import frappe.utils.user
 
@@ -707,9 +696,7 @@ def add_system_manager(
         frappe.init(site=site)
         frappe.connect()
         try:
-            frappe.utils.user.add_system_manager(
-                email, first_name, last_name, send_welcome_email, password
-            )
+            frappe.utils.user.add_system_manager(email, first_name, last_name, send_welcome_email, password)
             frappe.db.commit()
         finally:
             frappe.destroy()
@@ -775,9 +762,7 @@ def disable_user(context, email):
 
 @click.command("migrate")
 @click.option("--skip-failing", is_flag=True, help="Skip patches that fail to run")
-@click.option(
-    "--skip-search-index", is_flag=True, help="Skip search indexing for web documents"
-)
+@click.option("--skip-search-index", is_flag=True, help="Skip search indexing for web documents")
 @pass_context
 def migrate(context, skip_failing=False, skip_search_index=False):
     "Run patches, sync schema and rebuild files/translations"
@@ -817,9 +802,7 @@ def run_patch(context, module, force):
         frappe.init(site=site)
         try:
             frappe.connect()
-            frappe.modules.patch_handler.run_single(
-                module, force=force or context.force
-            )
+            frappe.modules.patch_handler.run_single(module, force=force or context.force)
         finally:
             frappe.destroy()
     if not context.sites:
@@ -885,18 +868,14 @@ def use(site, sites_path="."):
     if os.path.exists(os.path.join(sites_path, site)):
         sites_path = os.getcwd()
         conifg = os.path.join(sites_path, "common_site_config.json")
-        update_site_config(
-            "default_site", site, validate=False, site_config_path=conifg
-        )
+        update_site_config("default_site", site, validate=False, site_config_path=conifg)
         print(f"Current Site set to {site}")
     else:
         print(f"Site {site} does not exist")
 
 
 @click.command("backup")
-@click.option(
-    "--with-files", default=False, is_flag=True, help="Take backup with files"
-)
+@click.option("--with-files", default=False, is_flag=True, help="Take backup with files")
 @click.option(
     "--include",
     "--only",
@@ -917,18 +896,10 @@ def use(site, sites_path="."):
     default=None,
     help="Set path for saving all the files in this operation",
 )
-@click.option(
-    "--backup-path-db", default=None, help="Set path for saving database file"
-)
-@click.option(
-    "--backup-path-files", default=None, help="Set path for saving public file"
-)
-@click.option(
-    "--backup-path-private-files", default=None, help="Set path for saving private file"
-)
-@click.option(
-    "--backup-path-conf", default=None, help="Set path for saving config file"
-)
+@click.option("--backup-path-db", default=None, help="Set path for saving database file")
+@click.option("--backup-path-files", default=None, help="Set path for saving public file")
+@click.option("--backup-path-private-files", default=None, help="Set path for saving private file")
+@click.option("--backup-path-conf", default=None, help="Set path for saving config file")
 @click.option(
     "--ignore-backup-conf",
     default=False,
@@ -936,9 +907,7 @@ def use(site, sites_path="."):
     help="Ignore excludes/includes set in config",
 )
 @click.option("--verbose", default=False, is_flag=True, help="Add verbosity")
-@click.option(
-    "--compress", default=False, is_flag=True, help="Compress private and public files"
-)
+@click.option("--compress", default=False, is_flag=True, help="Compress private and public files")
 @click.option(
     "--old-backup-metadata",
     default=False,
@@ -1002,10 +971,7 @@ def backup(
                 print(frappe.get_traceback(with_context=True))
             exit_code = 1
             continue
-        if (
-            frappe.get_system_settings("encrypt_backup")
-            and frappe.get_site_config().encryption_key
-        ):
+        if frappe.get_system_settings("encrypt_backup") and frappe.get_site_config().encryption_key:
             click.secho(
                 "Backup encryption is turned on. Please note the backup encryption key.",
                 fg="yellow",
@@ -1013,9 +979,7 @@ def backup(
 
         odb.print_summary()
         click.secho(
-            "Backup for Site {} has been successfully completed{}".format(
-                site, " with files" if with_files else ""
-            ),
+            "Backup for Site {} has been successfully completed{}".format(site, " with files" if with_files else ""),
             fg="green",
         )
         frappe.destroy()
@@ -1118,9 +1082,7 @@ def drop_site(
     no_backup=False,
 ):
     """Remove a site from database and filesystem."""
-    _drop_site(
-        site, db_root_username, db_root_password, archived_sites_path, force, no_backup
-    )
+    _drop_site(site, db_root_username, db_root_password, archived_sites_path, force, no_backup)
 
 
 def _drop_site(
@@ -1140,9 +1102,7 @@ def _drop_site(
     try:
         if not no_backup:
             click.secho(f"Taking backup of {site}", fg="green")
-            odb = scheduled_backup(
-                ignore_files=False, ignore_conf=True, force=True, verbose=True
-            )
+            odb = scheduled_backup(ignore_files=False, ignore_conf=True, force=True, verbose=True)
             odb.print_summary()
     except Exception as err:
         if force:
@@ -1161,9 +1121,7 @@ def _drop_site(
     click.secho("Dropping site database and user", fg="green")
     drop_user_and_database(frappe.conf.db_name, db_root_username, db_root_password)
 
-    archived_sites_path = archived_sites_path or os.path.join(
-        frappe.utils.get_bench_path(), "archived", "sites"
-    )
+    archived_sites_path = archived_sites_path or os.path.join(frappe.utils.get_bench_path(), "archived", "sites")
     archived_sites_path = os.path.realpath(archived_sites_path)
 
     click.secho(f"Moving site to archive under {archived_sites_path}", fg="green")
@@ -1245,9 +1203,7 @@ def set_user_password(site, user, password, logout_all_sessions=False):
             print(f"User {user} does not exist")
             sys.exit(1)
 
-        update_password(
-            user=user, pwd=password, logout_all_sessions=logout_all_sessions
-        )
+        update_password(user=user, pwd=password, logout_all_sessions=logout_all_sessions)
         frappe.db.commit()
     finally:
         frappe.destroy()
@@ -1323,9 +1279,7 @@ def browse(context, site, user=None):
         raise SiteNotSpecifiedError
 
     if site not in frappe.utils.get_sites():
-        click.echo(
-            f"\nSite named {click.style(site, bold=True)} doesn't exist\n", err=True
-        )
+        click.echo(f"\nSite named {click.style(site, bold=True)} doesn't exist\n", err=True)
         sys.exit(1)
 
     frappe.init(site=site)
@@ -1451,9 +1405,7 @@ def build_search_index(context):
 @click.command("clear-log-table")
 @click.option("--doctype", required=True, type=str, help="Log DocType")
 @click.option("--days", type=int, help="Keep records for days")
-@click.option(
-    "--no-backup", is_flag=True, default=False, help="Do not backup the table"
-)
+@click.option("--no-backup", is_flag=True, default=False, help="Do not backup the table")
 @pass_context
 def clear_log_table(context, doctype, days, no_backup):
     """If any logtype table grows too large then clearing it with DELETE query
@@ -1489,9 +1441,7 @@ def clear_log_table(context, doctype, days, no_backup):
             click.echo(f"Backed up {doctype}")
 
         try:
-            click.echo(
-                f"Copying {doctype} records from last {days} days to temporary table."
-            )
+            click.echo(f"Copying {doctype} records from last {days} days to temporary table.")
             clear_logs(doctype, days=days)
         except Exception as e:
             click.echo(f"Log cleanup for {doctype} failed:\n{e}")
@@ -1501,9 +1451,7 @@ def clear_log_table(context, doctype, days, no_backup):
 
 
 @click.command("trim-database")
-@click.option(
-    "--dry-run", is_flag=True, default=False, help="Show what would be deleted"
-)
+@click.option("--dry-run", is_flag=True, default=False, help="Show what would be deleted")
 @click.option(
     "--format",
     "-f",
@@ -1550,10 +1498,7 @@ def trim_database(context, dry_run, format, no_backup, yes=False):
         for table_name in database_tables:
             if not table_name.startswith("tab"):
                 continue
-            if not (
-                table_name.replace("tab", "", 1) in doctype_tables
-                or table_name in STANDARD_TABLES
-            ):
+            if not (table_name.replace("tab", "", 1) in doctype_tables or table_name in STANDARD_TABLES):
                 TABLES_TO_DROP.append(table_name)
 
         if not TABLES_TO_DROP:
@@ -1576,9 +1521,7 @@ def trim_database(context, dry_run, format, no_backup, yes=False):
 
                 odb = scheduled_backup(
                     ignore_conf=False,
-                    include_doctypes=",".join(
-                        x.replace("tab", "", 1) for x in TABLES_TO_DROP
-                    ),
+                    include_doctypes=",".join(x.replace("tab", "", 1) for x in TABLES_TO_DROP),
                     ignore_files=True,
                     force=True,
                 )
@@ -1624,9 +1567,7 @@ def get_standard_tables():
 
 
 @click.command("trim-tables")
-@click.option(
-    "--dry-run", is_flag=True, default=False, help="Show what would be deleted"
-)
+@click.option("--dry-run", is_flag=True, default=False, help="Show what would be deleted")
 @click.option(
     "--format",
     "-f",
@@ -1675,9 +1616,7 @@ def handle_data(data: dict, format="json"):
     else:
         from frappe.utils.commands import render_table
 
-        data = [["DocType", "Fields"]] + [
-            [table, ", ".join(columns)] for table, columns in data.items()
-        ]
+        data = [["DocType", "Fields"]] + [[table, ", ".join(columns)] for table, columns in data.items()]
         render_table(data)
 
 

@@ -24,9 +24,10 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
     constructor(opts) {
         super(opts);
         this.show();
+        const meta = frappe.get_meta(this.doctype);
         this.debounced_refresh = frappe.utils.debounce(
             this.process_document_refreshes.bind(this),
-            2000
+            meta?.is_large_table ? 15000 : 2000
         );
         this.count_upper_bound = 1001;
         this._element_factory = new ElementFactory(this.doctype);
@@ -52,15 +53,15 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
         this.$list_skeleton = this.parent.page.container.find(".list-skeleton");
         if (!this.$list_skeleton.length) {
             this.$list_skeleton = $(`
-				<div class="row list-skeleton">
-					<div class="col-lg-2">
-						<div class="list-skeleton-box"></div>
-					</div>
-					<div class="col">
-						<div class="list-skeleton-box"></div>
-					</div>
-				</div>
-			`);
+                <div class="row list-skeleton">
+                    <div class="col-lg-2">
+                        <div class="list-skeleton-box"></div>
+                    </div>
+                    <div class="col">
+                        <div class="list-skeleton-box"></div>
+                    </div>
+                </div>
+            `);
             this.parent.page.container.find(".page-content").append(this.$list_skeleton);
         }
         this.parent.page.container.find(".layout-main").hide();
@@ -158,8 +159,8 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
         if (match_rules_list.length) {
             this.restricted_list = $(
                 `<button class="btn btn-xs restricted-button flex align-center">
-					${frappe.utils.icon("restriction", "xs")}
-				</button>`
+                    ${frappe.utils.icon("restriction", "xs")}
+                </button>`
             )
                 .click(() => this.show_restrictions(match_rules_list))
                 .appendTo(this.page.page_form);
@@ -332,8 +333,8 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
     setup_freeze_area() {
         this.$freeze = $(
             `<div class="freeze flex justify-center align-center text-muted">
-				${__("Loading")}...
-			</div>`
+                ${__("Loading")}...
+            </div>`
         ).hide();
         this.$result.append(this.$freeze);
     }
@@ -484,20 +485,20 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
         const new_button = this.can_create
             ? `<p><button class="btn btn-default btn-sm btn-new-doc hidden-xs">
-				${new_button_label}
-			</button> <button class="btn btn-primary btn-new-doc visible-xs">
-				${__("Create New", null, "Create a new document from list view")}
-			</button></p>`
+                ${new_button_label}
+            </button> <button class="btn btn-primary btn-new-doc visible-xs">
+                ${__("Create New", null, "Create a new document from list view")}
+            </button></p>`
             : "";
 
         return `<div class="msg-box no-border">
-			<div>
-				<img src="${empty_state_image}" alt="Generic Empty State" class="null-state">
-			</div>
-			<p>${no_result_message}</p>
-			${new_button}
-			${help_link}
-		</div>`;
+            <div>
+                <img src="${empty_state_image}" alt="Generic Empty State" class="null-state">
+            </div>
+            <p>${no_result_message}</p>
+            ${new_button}
+            ${help_link}
+        </div>`;
     }
 
     freeze() {
@@ -591,10 +592,10 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
     after_render() {
         this.$no_result.html(`
-			<div class="no-result text-muted flex justify-center align-center">
-				${this.get_no_result_message()}
-			</div>
-		`);
+            <div class="no-result text-muted flex justify-center align-center">
+                ${this.get_no_result_message()}
+            </div>
+        `);
         this.setup_new_doc_event();
         this.toggle_paging && this.$paging_area.toggle(true);
     }
@@ -656,13 +657,13 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
         const subject_field = this.columns[0].df;
         let subject_html = `
-			<input class="level-item list-check-all" type="checkbox"
-				title="${__("Select All")}">
-			<span class="level-item" data-sort-by="${subject_field.fieldname}"
-				title="${__("Click to sort by {0}", [subject_field.label])}">
-				${__(subject_field.label)}
-			</span>
-		`;
+            <input class="level-item list-check-all" type="checkbox"
+                title="${__("Select All")}">
+            <span class="level-item" data-sort-by="${subject_field.fieldname}"
+                title="${__("Click to sort by {0}", [subject_field.label])}">
+                ${__(subject_field.label)}
+            </span>
+        `;
         const $columns = this.columns
             .map((col) => {
                 let classes = [
@@ -684,40 +685,40 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
                 }
 
                 return `<div class="${classes}">${html}</div>
-			`;
+            `;
             })
             .join("");
 
         const right_html = `
-			<span class="list-count"></span>
-			<span class="level-item list-liked-by-me hidden-xs">
-				<span title="${__("Liked by me")}">
-					${frappe.utils.icon("es-solid-heart", "sm", "like-icon")}
-				</span>
-			</span>
-		`;
+            <span class="list-count"></span>
+            <span class="level-item list-liked-by-me hidden-xs">
+                <span title="${__("Liked by me")}">
+                    ${frappe.utils.icon("es-solid-heart", "sm", "like-icon")}
+                </span>
+            </span>
+        `;
 
         return this.get_header_html_skeleton($columns, right_html);
     }
 
     get_header_html_skeleton(left = "", right = "") {
         return `
-			<header class="level list-row-head text-muted">
-				<div class="level-left list-header-subject">
-					${left}
-				</div>
-				<div class="level-left checkbox-actions">
-					<div class="level list-subject">
-						<input class="level-item list-check-all" type="checkbox"
-							title="${__("Select All")}">
-						<span class="level-item list-header-meta"></span>
-					</div>
-				</div>
-				<div class="level-right">
-					${right}
-				</div>
-			</header>
-		`;
+            <header class="level list-row-head text-muted">
+                <div class="level-left list-header-subject">
+                    ${left}
+                </div>
+                <div class="level-left checkbox-actions">
+                    <div class="level list-subject">
+                        <input class="level-item list-check-all" type="checkbox"
+                            title="${__("Select All")}">
+                        <span class="level-item list-header-meta"></span>
+                    </div>
+                </div>
+                <div class="level-right">
+                    ${right}
+                </div>
+            </header>
+        `;
     }
 
     get_left_html(doc) {
@@ -734,28 +735,28 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
     get_list_row_html_skeleton(left = "", right = "") {
         return `
-			<div class="list-row-container" tabindex="1">
-				<div class="level list-row">
-					<div class="level-left ellipsis">
-						${left}
-					</div>
-					<div class="level-right text-muted ellipsis">
-						${right}
-					</div>
-				</div>
-				<div class="list-row-border"></div>
-			</div>
-		`;
+            <div class="list-row-container" tabindex="1">
+                <div class="level list-row">
+                    <div class="level-left ellipsis">
+                        ${left}
+                    </div>
+                    <div class="level-right text-muted ellipsis">
+                        ${right}
+                    </div>
+                </div>
+                <div class="list-row-border"></div>
+            </div>
+        `;
     }
 
     get_column_html(col, doc) {
         if (col.type === "Status" || col.df?.options == "Workflow State") {
             let show_workflow_state = col.df?.options == "Workflow State";
             return `
-				<div class="list-row-col hidden-xs ellipsis">
-					${this.get_indicator_html(doc, show_workflow_state)}
-				</div>
-			`;
+                <div class="list-row-col hidden-xs ellipsis">
+                    ${this.get_indicator_html(doc, show_workflow_state)}
+                </div>
+            `;
         }
 
         if (col.type === "Tag") {
@@ -764,10 +765,10 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
                 ? this.get_tags_html(doc._user_tags, 2, true)
                 : '<div class="tags-empty">-</div>';
             return `
-				<div class="list-row-col tag-col ${tags_display_class} hidden-xs ellipsis">
-					${tags_html}
-				</div>
-			`;
+                <div class="list-row-col tag-col ${tags_display_class} hidden-xs ellipsis">
+                    ${tags_html}
+                </div>
+            `;
         }
 
         const df = col.df || {};
@@ -787,11 +788,11 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
         const format = () => {
             if (df.fieldtype === "Percent") {
                 return `<div class="progress" style="margin: 0px;">
-						<div class="progress-bar progress-bar-success" role="progressbar"
-							aria-valuenow="${value}"
-							aria-valuemin="0" aria-valuemax="100" style="width: ${Math.round(value)}%;">
-						</div>
-					</div>`;
+                        <div class="progress-bar progress-bar-success" role="progressbar"
+                            aria-valuenow="${value}"
+                            aria-valuemin="0" aria-valuemax="100" style="width: ${Math.round(value)}%;">
+                        </div>
+                    </div>`;
             } else {
                 return frappe.format(value, df, null, doc);
             }
@@ -821,10 +822,10 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
             if (df.fieldtype === "Image") {
                 html = df.options
                     ? `<img src="${doc[df.options]}"
-					style="max-height: 30px; max-width: 100%;">`
+                    style="max-height: 30px; max-width: 100%;">`
                     : `<div class="missing-image small">
-						${frappe.utils.icon("restriction")}
-					</div>`;
+                        ${frappe.utils.icon("restriction")}
+                    </div>`;
             } else if (df.fieldtype === "Select") {
                 let label = ""
                 //如果选项中包含逗号，则按逗号隔开
@@ -855,29 +856,29 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
                 html = `<span class="filterable indicator-pill ${frappe.utils.guess_colour(
                     _value
                 )} ellipsis"
-					data-filter="${fieldname},=,${label}">
-					<span class="ellipsis"> ${label} </span>
-				</span>`;
+                    data-filter="${fieldname},=,${label}">
+                    <span class="ellipsis"> ${label} </span>
+                </span>`;
             } else if (df.fieldtype === "Link") {
                 html = `<a class="filterable ellipsis"
-					data-filter="${fieldname},=,${value}">
-					${_value}
-				</a>`;
+                    data-filter="${fieldname},=,${value}">
+                    ${_value}
+                </a>`;
             } else if (frappe.model.html_fieldtypes.includes(df.fieldtype)) {
                 html = `<span class="ellipsis">
-					${_value}
-				</span>`;
+                    ${_value}
+                </span>`;
             } else {
                 html = `<a class="filterable ellipsis"
-					data-filter="${fieldname},=,${frappe.utils.escape_html(value)}">
-					${format()}
-				</a>`;
+                    data-filter="${fieldname},=,${frappe.utils.escape_html(value)}">
+                    ${format()}
+                </a>`;
             }
 
             return `<span class="ellipsis"
-				title="${__(label)}: ${frappe.utils.escape_html(_value)}">
-				${html}
-			</span>`;
+                title="${__(label)}: ${frappe.utils.escape_html(_value)}">
+                ${html}
+            </span>`;
         };
 
         const class_map = {
@@ -905,10 +906,10 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
         }
 
         return `
-			<div class="${css_class}">
-				${column_html}
-			</div>
-		`;
+            <div class="${css_class}">
+                ${column_html}
+            </div>
+        `;
     }
 
     get_tags_html(user_tags, limit, colored = false) {
@@ -937,14 +938,14 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
         let settings_button = null;
         if (this.settings.button && this.settings.button.show(doc)) {
             settings_button = `
-				<span class="list-actions">
-					<button class="btn btn-action btn-default btn-xs"
-						data-name="${doc.id}" data-idx="${doc._idx}"
-						title="${this.settings.button.get_description(doc)}">
-						${this.settings.button.get_label(doc)}
-					</button>
-				</span>
-			`;
+                <span class="list-actions">
+                    <button class="btn btn-action btn-default btn-xs"
+                        data-name="${doc.id}" data-idx="${doc._idx}"
+                        title="${this.settings.button.get_description(doc)}">
+                        ${this.settings.button.get_label(doc)}
+                    </button>
+                </span>
+            `;
         }
 
         const modified = comment_when(doc.modified, true);
@@ -954,34 +955,34 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
         let assigned_users = doc._assign ? JSON.parse(doc._assign) : [];
         if (assigned_users.length) {
             assigned_to = `<div class="list-assignments d-flex align-items-center">
-					${frappe.avatar_group(assigned_users, 3, { filterable: true })[0].outerHTML}
-				</div>`;
+                    ${frappe.avatar_group(assigned_users, 3, { filterable: true })[0].outerHTML}
+                </div>`;
         }
 
         let comment_count = null;
         if (this.list_view_settings && !this.list_view_settings.disable_comment_count) {
             comment_count = `<span class="comment-count d-flex align-items-center">
-				${frappe.utils.icon("es-line-chat-alt")}
-				${doc._comment_count > 99 ? "99+" : doc._comment_count || 0}
-			</span>`;
+                ${frappe.utils.icon("es-line-chat-alt")}
+                ${doc._comment_count > 99 ? "99+" : doc._comment_count || 0}
+            </span>`;
         }
 
         html += `
-			<div class="level-item list-row-activity hidden-xs">
-				<div class="hidden-md hidden-xs">
-					${settings_button || assigned_to}
-				</div>
-				<span class="modified">${modified}</span>
-				${comment_count || ""}
-				${comment_count ? '<span class="mx-2">·</span>' : ""}
-				<span class="list-row-like hidden-xs" style="margin-bottom: 1px;">
-					${this.get_like_html(doc)}
-				</span>
-			</div>
-			<div class="level-item visible-xs text-right">
-				${this.get_indicator_html(doc)}
-			</div>
-		`;
+            <div class="level-item list-row-activity hidden-xs">
+                <div class="hidden-md hidden-xs">
+                    ${settings_button || assigned_to}
+                </div>
+                <span class="modified">${modified}</span>
+                ${comment_count || ""}
+                ${comment_count ? '<span class="mx-2">·</span>' : ""}
+                <span class="list-row-like hidden-xs" style="margin-bottom: 1px;">
+                    ${this.get_like_html(doc)}
+                </span>
+            </div>
+            <div class="level-item visible-xs text-right">
+                ${this.get_indicator_html(doc)}
+            </div>
+        `;
 
         return html;
     }
@@ -1102,9 +1103,9 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
         if (indicator) {
             return `<span class="indicator-pill ${indicator[1]
                 } filterable no-indicator-dot ellipsis"
-				data-filter='${indicator[2]}' title='${title}'>
-				<span class="ellipsis"> ${__(indicator[0])}</span>
-			</span>`;
+                data-filter='${indicator[2]}' title='${title}'>
+                <span class="ellipsis"> ${__(indicator[0])}</span>
+            </span>`;
         }
         return "";
     }

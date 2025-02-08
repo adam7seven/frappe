@@ -61,60 +61,60 @@ export default class Grid {
 
     make() {
         let template = `
-			<div class="grid-field">
-				<label class="control-label">${__(this.df.label || "")}</label>
-				<span class="help"></span>
-				<p class="text-muted small grid-description"></p>
-				<div class="grid-custom-buttons"></div>
-				<div class="form-grid-container">
-					<div class="form-grid">
-						<div class="grid-heading-row"></div>
-						<div class="grid-body">
-							<div class="rows"></div>
-							<div class="grid-empty text-center">
-								<img
-									src="/assets/frappe/images/ui-states/grid-empty-state.svg"
-									alt="Grid Empty State"
-									class="grid-empty-illustration"
-								>
-								${__("No Data")}
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="small form-clickable-section grid-footer">
-					<div class="flex justify-between">
-						<div class="grid-buttons">
-							<button type="button" class="btn btn-xs btn-danger grid-remove-rows hidden"
-								data-action="delete_rows">
-								${__("Delete")}
-							</button>
-							<button type="button" class="btn btn-xs btn-danger grid-remove-all-rows hidden"
-								data-action="delete_all_rows">
-								${__("Delete All")}
-							</button>
-							<!-- hack to allow firefox include this in tabs -->
-							<button type="button" class="btn btn-xs btn-secondary grid-add-row">
-								${__("Add Row")}
-							</button>
-							<button type="button" class="grid-add-multiple-rows btn btn-xs btn-secondary hidden">
-								${__("Add Multiple")}</a>
-							</button>
-						</div>
-						<div class="grid-pagination">
-						</div>
-						<div class="grid-bulk-actions text-right">
-							<button type="button" class="grid-download btn btn-xs btn-secondary hidden">
-								${__("Download")}
-							</button>
-							<button type="button" class="grid-upload btn btn-xs btn-secondary hidden">
-								${__("Upload")}
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		`;
+            <div class="grid-field">
+                <label class="control-label">${__(this.df.label || "")}</label>
+                <span class="help"></span>
+                <p class="text-muted small grid-description"></p>
+                <div class="grid-custom-buttons"></div>
+                <div class="form-grid-container">
+                    <div class="form-grid">
+                        <div class="grid-heading-row"></div>
+                        <div class="grid-body">
+                            <div class="rows"></div>
+                            <div class="grid-empty text-center">
+                                <img
+                                    src="/assets/frappe/images/ui-states/grid-empty-state.svg"
+                                    alt="Grid Empty State"
+                                    class="grid-empty-illustration"
+                                >
+                                ${__("No Data")}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="small form-clickable-section grid-footer">
+                    <div class="flex justify-between">
+                        <div class="grid-buttons">
+                            <button type="button" class="btn btn-xs btn-danger grid-remove-rows hidden"
+                                data-action="delete_rows">
+                                ${__("Delete")}
+                            </button>
+                            <button type="button" class="btn btn-xs btn-danger grid-remove-all-rows hidden"
+                                data-action="delete_all_rows">
+                                ${__("Delete All")}
+                            </button>
+                            <!-- hack to allow firefox include this in tabs -->
+                            <button type="button" class="btn btn-xs btn-secondary grid-add-row">
+                                ${__("Add Row")}
+                            </button>
+                            <button type="button" class="grid-add-multiple-rows btn btn-xs btn-secondary hidden">
+                                ${__("Add Multiple")}</a>
+                            </button>
+                        </div>
+                        <div class="grid-pagination">
+                        </div>
+                        <div class="grid-bulk-actions text-right">
+                            <button type="button" class="grid-download btn btn-xs btn-secondary hidden">
+                                ${__("Download")}
+                            </button>
+                            <button type="button" class="grid-upload btn btn-xs btn-secondary hidden">
+                                ${__("Upload")}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
 
         this.wrapper = $(template).appendTo(this.parent);
         $(this.parent).addClass("form-group");
@@ -128,6 +128,7 @@ export default class Grid {
         this.setup_add_row();
 
         this.setup_grid_pagination();
+        this.update_idx_and_id();
 
         this.custom_buttons = {};
         this.grid_buttons = this.wrapper.find(".grid-buttons");
@@ -150,6 +151,17 @@ export default class Grid {
         }
     }
 
+    update_idx_and_id() {
+        this.data.forEach((d, ri) => {
+            if (d.idx === undefined) {
+                d.idx = ri + 1;
+            }
+            if (d.id === undefined) {
+                d.id = "row " + d.idx;
+            }
+        });
+    }
+
     set_doc_url() {
         let unsupported_fieldtypes = frappe.model.no_value_type.filter(
             (x) => frappe.model.table_fields.indexOf(x) === -1
@@ -165,8 +177,8 @@ export default class Grid {
         let $help = $(this.parent).find("span.help");
         $help.empty();
         $(`<a href="${this.df.documentation_url}" target="_blank">
-			${frappe.utils.icon("help", "sm")}
-		</a>`).appendTo($help);
+            ${frappe.utils.icon("help", "sm")}
+        </a>`).appendTo($help);
     }
 
     setup_grid_pagination() {
@@ -880,29 +892,29 @@ export default class Grid {
         });
     }
 
-	duplicate_row(d, copy_doc) {
-		const noCopyFields = new Set([
-			"creation",
-			"modified",
-			"modified_by",
-			"idx",
-			"owner",
-			"parent",
-			"doctype",
-			"id",
-			"parentfield",
-		]);
+    duplicate_row(d, copy_doc) {
+        const noCopyFields = new Set([
+            "creation",
+            "modified",
+            "modified_by",
+            "idx",
+            "owner",
+            "parent",
+            "doctype",
+            "id",
+            "parentfield",
+        ]);
 
-		const docfields = frappe.get_meta(this.doctype).fields || [];
-		$.each(docfields, function (_index, df) {
-			if (cint(df.no_copy)) noCopyFields.add(df.fieldname);
-		});
+        const docfields = frappe.get_meta(this.doctype).fields || [];
+        $.each(docfields, function (_index, df) {
+            if (cint(df.no_copy)) noCopyFields.add(df.fieldname);
+        });
 
-		$.each(copy_doc, function (key, value) {
-			if (!noCopyFields.has(key)) {
-				d[key] = value;
-			}
-		});
+        $.each(copy_doc, function (key, value) {
+            if (!noCopyFields.has(key)) {
+                d[key] = value;
+            }
+        });
 
         return d;
     }

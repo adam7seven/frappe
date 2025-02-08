@@ -543,9 +543,27 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
             if not self._conn:
                 self.connect()
 
+<<<<<<< HEAD
             original_cursor = self._cursor
             new_cursor = self._cursor = self._conn.cursor(SSCursor)
             yield
         finally:
             self._cursor = original_cursor
             new_cursor.close()
+=======
+			original_cursor = self._cursor
+			new_cursor = self._cursor = self._conn.cursor(SSCursor)
+			yield
+		finally:
+			self._cursor = original_cursor
+			new_cursor.close()
+
+	def estimate_count(self, doctype: str):
+		"""Get estimated count of total rows in a table."""
+		from frappe.utils.data import cint
+
+		table = get_table_name(doctype)
+
+		count = self.sql("select table_rows from information_schema.tables where table_name = %s", table)
+		return cint(count[0][0]) if count else 0
+>>>>>>> version-15

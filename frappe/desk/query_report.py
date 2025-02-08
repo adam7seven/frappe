@@ -39,12 +39,7 @@ def get_report_doc(report_id):
 
     if not doc.is_permitted():
         frappe.throw(
-            _("You don't have access to Report: {0}").format(report_id),
-            frappe.PermissionError,
-        )
-    if not doc.is_permitted():
-        frappe.throw(
-            _("You don't have access to Report: {0}").format(_(report_id)),
+            _("You don't have access to Report: {0}").format(_(doc.id)),
             frappe.PermissionError,
         )
 

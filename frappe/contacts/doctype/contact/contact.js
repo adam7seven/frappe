@@ -85,12 +85,23 @@ frappe.ui.form.on("Contact", {
 
             for (const link of filtered_links) {
                 frm.add_custom_button(
-                    __("{0}: {1}", [__(link.link_doctype), __(link.link_id)]),
+                    __("{0}: {1}", [__(link.link_doctype), __(link.link_name)]),
                     function () {
-                        frappe.set_route("Form", link.link_doctype, link.link_id);
+                        frappe.set_route("Form", link.link_doctype, link.link_name);
                     },
                     __("Links")
                 );
+            }
+
+            if (!frm.is_dirty()) {
+                frm.page.add_menu_item(__("Download vCard"), function () {
+                    window.open(
+                        `/api/method/frappe.contacts.doctype.contact.contact.download_vcard?contact=${encodeURIComponent(
+                            frm.doc.name
+                        )}`,
+                        "_blank"
+                    );
+                });
             }
         }
     },
@@ -98,7 +109,7 @@ frappe.ui.form.on("Contact", {
         // clear linked customer / supplier / sales partner on saving...
         if (frm.doc.links) {
             frm.doc.links.forEach(function (d) {
-                frappe.model.remove_from_locals(d.link_doctype, d.link_id);
+                frappe.model.remove_from_locals(d.link_doctype, d.link_name);
             });
         }
     },
@@ -110,15 +121,15 @@ frappe.ui.form.on("Contact", {
                 if (
                     frappe.dynamic_link &&
                     frappe.dynamic_link.doc &&
-                    frappe.dynamic_link.doc.id == last_doc.docid
+                    frappe.dynamic_link.doc.name == last_doc.docname
                 ) {
                     for (let i in frm.doc.links) {
                         let link = frm.doc.links[i];
                         if (
                             last_doc.doctype == link.link_doctype &&
-                            last_doc.docid == link.link_id
+                            last_doc.docname == link.link_name
                         ) {
-                            frappe.set_route("Form", last_doc.doctype, last_doc.docid);
+                            frappe.set_route("Form", last_doc.doctype, last_doc.docname);
                         }
                     }
                 }
@@ -130,10 +141,10 @@ frappe.ui.form.on("Contact", {
             frappe.db.get_value(
                 "Google Contacts",
                 { email_id: frappe.session.user },
-                "id",
+                "name",
                 (r) => {
-                    if (r && r.id) {
-                        frm.set_value("google_contacts", r.id);
+                    if (r && r.name) {
+                        frm.set_value("google_contacts", r.name);
                     }
                 }
             );

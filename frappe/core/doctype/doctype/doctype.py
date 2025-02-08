@@ -678,7 +678,7 @@ class DocType(Document):
             frappe.db.sql("""update tabSingles set doctype=%s where doctype=%s""", (new, old))
             frappe.db.sql(
                 """update tabSingles set value=%s
-				where doctype=%s and field='id' and value = %s""",
+                where doctype=%s and field='id' and value = %s""",
                 (new, new, old),
             )
         else:
@@ -1120,6 +1120,12 @@ def validate_series(dt, autoid=None, id=None):
                     df.unique = 1
                     break
 
+    if autoid and autoid.startswith("format:"):
+        from frappe.model.naming import BRACED_PARAMS_HASH_PATTERN
+
+        if len(BRACED_PARAMS_HASH_PATTERN.findall(autoid)) > 1:
+            frappe.throw(_("Only one set of {#} pattern is allowed in the format string"))
+
     if (
         autoid
         and (not autoid.startswith("field:"))
@@ -1421,8 +1427,8 @@ def validate_fields(meta: Meta):
             if not d.get("__islocal") and frappe.db.has_column(d.parent, d.fieldname):
                 has_non_unique_values = frappe.db.sql(
                     f"""select `{d.fieldname}`, count(*)
-					from `tab{d.parent}` where ifnull(`{d.fieldname}`, '') != ''
-					group by `{d.fieldname}` having count(*) > 1 limit 1"""
+                    from `tab{d.parent}` where ifnull(`{d.fieldname}`, '') != ''
+                    group by `{d.fieldname}` having count(*) > 1 limit 1"""
                 )
 
                 if has_non_unique_values and has_non_unique_values[0][0]:
