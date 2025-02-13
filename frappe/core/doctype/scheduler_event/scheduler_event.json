@@ -1,6 +1,6 @@
 {
  "actions": [],
- "allow_rename": 1,
+ "allow_reid": 1,
  "creation": "2025-01-13 10:20:09.095079",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -29,7 +29,7 @@
  "modified": "2025-01-14 10:49:21.304114",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Scheduler Event",
+ "id": "Scheduler Event",
  "owner": "Administrator",
  "permissions": [
   {

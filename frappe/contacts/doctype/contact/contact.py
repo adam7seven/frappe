@@ -102,17 +102,13 @@ class Contact(Document):
                 return True
 
     def add_email(self, email_id, is_primary=0, autosave=False):
-        if not frappe.db.exists(
-            "Contact Email", {"email_id": email_id, "parent": self.id}
-        ):
+        if not frappe.db.exists("Contact Email", {"email_id": email_id, "parent": self.id}):
             self.append("email_ids", {"email_id": email_id, "is_primary": is_primary})
 
             if autosave:
                 self.save(ignore_permissions=True)
 
-    def add_phone(
-        self, phone, is_primary_phone=0, is_primary_mobile_no=0, autosave=False
-    ):
+    def add_phone(self, phone, is_primary_phone=0, is_primary_mobile_no=0, autosave=False):
         if not frappe.db.exists("Contact Phone", {"phone": phone, "parent": self.id}):
             self.append(
                 "phone_nos",
@@ -132,11 +128,7 @@ class Contact(Document):
             return
 
         if len([email.email_id for email in self.email_ids if email.is_primary]) > 1:
-            frappe.throw(
-                _("Only one {0} can be set as primary.").format(
-                    frappe.bold(_("Email ID"))
-                )
-            )
+            frappe.throw(_("Only one {0} can be set as primary.").format(frappe.bold(_("Email ID"))))
 
         if len(self.email_ids) == 1:
             self.email_ids[0].is_primary = 1
@@ -162,11 +154,7 @@ class Contact(Document):
         is_primary = [phone.phone for phone in self.phone_nos if phone.get(field_name)]
 
         if len(is_primary) > 1:
-            frappe.throw(
-                _("Only one {0} can be set as primary.").format(
-                    frappe.bold(frappe.unscrub(fieldname))
-                )
-            )
+            frappe.throw(_("Only one {0} can be set as primary.").format(frappe.bold(frappe.unscrub(fieldname))))
 
         primary_number_exists = False
         for d in self.phone_nos:
@@ -179,115 +167,113 @@ class Contact(Document):
             setattr(self, fieldname, "")
 
     def _get_full_name(self) -> str:
-        return get_full_name(
-            self.first_name, self.middle_name, self.last_name, self.company_id
-        )
+        return get_full_name(self.first_name, self.middle_name, self.last_name, self.company_id)
 
-	def get_vcard(self):
-		from vobject import vCard
-		from vobject.vcard import Name
+    def get_vcard(self):
+        from vobject import vCard
+        from vobject.vcard import Name
 
-		vcard = vCard()
-		vcard.add("fn").value = self.full_name
+        vcard = vCard()
+        vcard.add("fn").value = self.full_name
 
-		name = Name()
-		if self.first_name:
-			name.given = self.first_name
+        name = Name()
+        if self.first_name:
+            name.given = self.first_name
 
-		if self.last_name:
-			name.family = self.last_name
+        if self.last_name:
+            name.family = self.last_name
 
-		if self.middle_name:
-			name.additional = self.middle_name
+        if self.middle_name:
+            name.additional = self.middle_name
 
-		vcard.add("n").value = name
+        vcard.add("n").value = name
 
-		if self.designation:
-			vcard.add("title").value = self.designation
+        if self.designation:
+            vcard.add("title").value = self.designation
 
-		org_list = []
-		if self.company_name:
-			org_list.append(self.company_name)
+        org_list = []
+        if self.company_name:
+            org_list.append(self.company_name)
 
-		if self.department:
-			org_list.append(self.department)
+        if self.department:
+            org_list.append(self.department)
 
-		if org_list:
-			vcard.add("org").value = org_list
+        if org_list:
+            vcard.add("org").value = org_list
 
-		for row in self.email_ids:
-			email = vcard.add("email")
-			email.value = row.email_id
-			if row.is_primary:
-				email.type_param = "pref"
+        for row in self.email_ids:
+            email = vcard.add("email")
+            email.value = row.email_id
+            if row.is_primary:
+                email.type_param = "pref"
 
-		for row in self.phone_nos:
-			tel = vcard.add("tel")
-			tel.value = row.phone
-			if row.is_primary_phone:
-				tel.type_param = "home"
+        for row in self.phone_nos:
+            tel = vcard.add("tel")
+            tel.value = row.phone
+            if row.is_primary_phone:
+                tel.type_param = "home"
 
-			if row.is_primary_mobile_no:
-				tel.type_param = "cell"
+            if row.is_primary_mobile_no:
+                tel.type_param = "cell"
 
-		return vcard
+        return vcard
 
 
 @frappe.whitelist()
 def download_vcard(contact: str):
-	"""Download vCard for the contact"""
-	contact = frappe.get_doc("Contact", contact)
-	contact.check_permission()
+    """Download vCard for the contact"""
+    contact = frappe.get_doc("Contact", contact)
+    contact.check_permission()
 
-	vcard = contact.get_vcard()
-	make_access_log(doctype="Contact", document=contact.name, file_type="vcf")
+    vcard = contact.get_vcard()
+    make_access_log(doctype="Contact", document=contact.name, file_type="vcf")
 
-	frappe.response["filename"] = f"{contact.name}.vcf"
-	frappe.response["filecontent"] = vcard.serialize().encode("utf-8")
-	frappe.response["type"] = "binary"
+    frappe.response["filename"] = f"{contact.name}.vcf"
+    frappe.response["filecontent"] = vcard.serialize().encode("utf-8")
+    frappe.response["type"] = "binary"
 
 
 @frappe.whitelist()
 def download_vcards(contacts: str):
-	"""Download vCard for the contact"""
-	import json
+    """Download vCard for the contact"""
+    import json
 
-	from frappe.utils.data import now
+    from frappe.utils.data import now
 
-	contact_ids = frappe.parse_json(contacts)
+    contact_ids = frappe.parse_json(contacts)
 
-	vcards = []
-	for contact_id in contact_ids:
-		contact = frappe.get_doc("Contact", contact_id)
-		contact.check_permission()
-		vcard = contact.get_vcard()
-		vcards.append(vcard.serialize())
+    vcards = []
+    for contact_id in contact_ids:
+        contact = frappe.get_doc("Contact", contact_id)
+        contact.check_permission()
+        vcard = contact.get_vcard()
+        vcards.append(vcard.serialize())
 
-	make_access_log(
-		doctype="Contact",
-		filters=json.dumps([["name", "in", contact_ids]], ensure_ascii=False, indent="\t"),
-		file_type="vcf",
-	)
+    make_access_log(
+        doctype="Contact",
+        filters=json.dumps([["name", "in", contact_ids]], ensure_ascii=False, indent="\t"),
+        file_type="vcf",
+    )
 
-	timestamp = now()[:19]  # remove milliseconds
+    timestamp = now()[:19]  # remove milliseconds
 
-	frappe.response["filename"] = f"{timestamp} Contacts.vcf"
-	frappe.response["filecontent"] = "\n".join(vcards).encode("utf-8")
-	frappe.response["type"] = "binary"
+    frappe.response["filename"] = f"{timestamp} Contacts.vcf"
+    frappe.response["filecontent"] = "\n".join(vcards).encode("utf-8")
+    frappe.response["type"] = "binary"
 
 
 def get_default_contact(doctype, id):
     """Returns default contact for the given doctype, id"""
     out = frappe.db.sql(
         """select parent,
-			IFNULL((select is_primary_contact from tabContact c where c.id = dl.parent), 0)
-				as is_primary_contact
-		from
-			`tabDynamic Link` dl
-		where
-			dl.link_doctype=%s and
-			dl.link_id=%s and
-			dl.parenttype = 'Contact' """,
+            IFNULL((select is_primary_contact from tabContact c where c.id = dl.parent), 0)
+                as is_primary_contact
+        from
+            `tabDynamic Link` dl
+        where
+            dl.link_doctype=%s and
+            dl.link_id=%s and
+            dl.parenttype = 'Contact' """,
         (doctype, id),
         as_dict=True,
     )
@@ -357,10 +343,7 @@ def contact_query(doctype, txt, searchfield, start, page_len, filters):
     from frappe.desk.reportview import get_match_cond
 
     doctype = "Contact"
-    if (
-        not frappe.get_meta(doctype).get_field(searchfield)
-        and searchfield not in frappe.db.DEFAULT_COLUMNS
-    ):
+    if not frappe.get_meta(doctype).get_field(searchfield) and searchfield not in frappe.db.DEFAULT_COLUMNS:
         return []
 
     link_doctype = filters.pop("link_doctype")
@@ -368,20 +351,20 @@ def contact_query(doctype, txt, searchfield, start, page_len, filters):
 
     return frappe.db.sql(
         f"""select
-			`tabContact`.id, `tabContact`.full_name, `tabContact`.company_id
-		from
-			`tabContact`, `tabDynamic Link`
-		where
-			`tabDynamic Link`.parent = `tabContact`.id and
-			`tabDynamic Link`.parenttype = 'Contact' and
-			`tabDynamic Link`.link_doctype = %(link_doctype)s and
-			`tabDynamic Link`.link_id = %(link_id)s and
-			`tabContact`.`{searchfield}` like %(txt)s
-			{get_match_cond(doctype)}
-		order by
-			if(locate(%(_txt)s, `tabContact`.full_name), locate(%(_txt)s, `tabContact`.company_id), 99999),
-			`tabContact`.idx desc, `tabContact`.full_name
-		limit %(start)s, %(page_len)s """,
+            `tabContact`.id, `tabContact`.full_name, `tabContact`.company_id
+        from
+            `tabContact`, `tabDynamic Link`
+        where
+            `tabDynamic Link`.parent = `tabContact`.id and
+            `tabDynamic Link`.parenttype = 'Contact' and
+            `tabDynamic Link`.link_doctype = %(link_doctype)s and
+            `tabDynamic Link`.link_id = %(link_id)s and
+            `tabContact`.`{searchfield}` like %(txt)s
+            {get_match_cond(doctype)}
+        order by
+            if(locate(%(_txt)s, `tabContact`.full_name), locate(%(_txt)s, `tabContact`.company_id), 99999),
+            `tabContact`.idx desc, `tabContact`.full_name
+        limit %(start)s, %(page_len)s """,
         {
             "txt": "%" + txt + "%",
             "_txt": txt.replace("%", ""),
@@ -397,27 +380,22 @@ def contact_query(doctype, txt, searchfield, start, page_len, filters):
 def address_query(links):
     import json
 
-    links = [
-        {"link_doctype": d.get("link_doctype"), "link_id": d.get("link_id")}
-        for d in json.loads(links)
-    ]
+    links = [{"link_doctype": d.get("link_doctype"), "link_id": d.get("link_id")} for d in json.loads(links)]
     result = []
 
     for link in links:
-        if not frappe.has_permission(
-            doctype=link.get("link_doctype"), ptype="read", doc=link.get("link_id")
-        ):
+        if not frappe.has_permission(doctype=link.get("link_doctype"), ptype="read", doc=link.get("link_id")):
             continue
 
         res = frappe.db.sql(
             """
-			SELECT `tabAddress`.id
-			FROM `tabAddress`, `tabDynamic Link`
-			WHERE `tabDynamic Link`.parenttype='Address'
-				AND `tabDynamic Link`.parent=`tabAddress`.id
-				AND `tabDynamic Link`.link_doctype = %(link_doctype)s
-				AND `tabDynamic Link`.link_id = %(link_id)s
-		""",
+            SELECT `tabAddress`.id
+            FROM `tabAddress`, `tabDynamic Link`
+            WHERE `tabDynamic Link`.parenttype='Address'
+                AND `tabDynamic Link`.parent=`tabAddress`.id
+                AND `tabDynamic Link`.link_doctype = %(link_doctype)s
+                AND `tabDynamic Link`.link_id = %(link_id)s
+        """,
             {
                 "link_doctype": link.get("link_doctype"),
                 "link_id": link.get("link_id"),
@@ -469,21 +447,15 @@ def get_contacts_linking_to(doctype, docid, fields=None):
 
 def get_contacts_linked_from(doctype, docid, fields=None):
     """Return a list of contacts that are contained in (linked from) the given document."""
-    link_fields = frappe.get_meta(doctype).get(
-        "fields", {"fieldtype": "Link", "options": "Contact"}
-    )
+    link_fields = frappe.get_meta(doctype).get("fields", {"fieldtype": "Link", "options": "Contact"})
     if not link_fields:
         return []
 
-    contact_ids = frappe.get_value(
-        doctype, docid, fieldname=[f.fieldname for f in link_fields]
-    )
+    contact_ids = frappe.get_value(doctype, docid, fieldname=[f.fieldname for f in link_fields])
     if not contact_ids:
         return []
 
-    return frappe.get_list(
-        "Contact", fields=fields, filters={"id": ("in", contact_ids)}
-    )
+    return frappe.get_list("Contact", fields=fields, filters={"id": ("in", contact_ids)})
 
 
 def get_full_name(

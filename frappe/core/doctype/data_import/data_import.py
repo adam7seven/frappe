@@ -34,9 +34,7 @@ class DataImport(Document):
         payload_count: DF.Int
         reference_doctype: DF.Link
         show_failed_logs: DF.Check
-        status: DF.Literal[
-            "Pending", "Success", "Partial Success", "Error", "Timed Out"
-        ]
+        status: DF.Literal["Pending", "Success", "Partial Success", "Error", "Timed Out"]
         submit_after_import: DF.Check
         template_options: DF.Code | None
         template_warnings: DF.Code | None
@@ -47,10 +45,7 @@ class DataImport(Document):
         if (
             not (self.import_file or self.google_sheets_url)
             or (doc_before_save and doc_before_save.import_file != self.import_file)
-            or (
-                doc_before_save
-                and doc_before_save.google_sheets_url != self.google_sheets_url
-            )
+            or (doc_before_save and doc_before_save.google_sheets_url != self.google_sheets_url)
         ):
             self.template_options = ""
             self.template_warnings = ""
@@ -62,9 +57,7 @@ class DataImport(Document):
 
     def validate_doctype(self):
         if self.reference_doctype in BLOCKED_DOCTYPES:
-            frappe.throw(
-                _("Importing {0} is not allowed.").format(self.reference_doctype)
-            )
+            frappe.throw(_("Importing {0} is not allowed.").format(self.reference_doctype))
 
     def validate_import_file(self):
         if self.import_file:
@@ -131,15 +124,13 @@ class DataImport(Document):
     def get_importer(self):
         return Importer(self.reference_doctype, data_import=self)
 
-	def on_trash(self):
-		frappe.db.delete("Data Import Log", {"data_import": self.name})
+    def on_trash(self):
+        frappe.db.delete("Data Import Log", {"data_import": self.name})
 
 
 @frappe.whitelist()
 def get_preview_from_template(data_import, import_file=None, google_sheets_url=None):
-    return frappe.get_doc("Data Import", data_import).get_preview_from_template(
-        import_file, google_sheets_url
-    )
+    return frappe.get_doc("Data Import", data_import).get_preview_from_template(import_file, google_sheets_url)
 
 
 @frappe.whitelist()
@@ -224,9 +215,7 @@ def get_import_status(data_import_id):
         group_by="success",
     )
 
-    total_payload_count = frappe.db.get_value(
-        "Data Import", data_import_id, "payload_count"
-    )
+    total_payload_count = frappe.db.get_value("Data Import", data_import_id, "payload_count")
 
     for log in logs:
         if log.get("success"):
@@ -253,9 +242,7 @@ def get_import_logs(data_import: str):
     )
 
 
-def import_file(
-    doctype, file_path, import_type, submit_after_import=False, console=False
-):
+def import_file(doctype, file_path, import_type, submit_after_import=False, console=False):
     """
     Import documents in from CSV or XLSX using data import.
 
@@ -268,15 +255,9 @@ def import_file(
 
     data_import = frappe.new_doc("Data Import")
     data_import.submit_after_import = submit_after_import
-    data_import.import_type = (
-        "Insert New Records"
-        if import_type.lower() == "insert"
-        else "Update Existing Records"
-    )
+    data_import.import_type = "Insert New Records" if import_type.lower() == "insert" else "Update Existing Records"
 
-    i = Importer(
-        doctype=doctype, file_path=file_path, data_import=data_import, console=console
-    )
+    i = Importer(doctype=doctype, file_path=file_path, data_import=data_import, console=console)
     i.import_data()
 
 
@@ -302,9 +283,7 @@ def import_doc(path, pre_process=None):
             raise NotImplementedError("Only .json files can be imported")
 
 
-def export_json(
-    doctype, path, filters=None, or_filters=None, id=None, order_by="creation asc"
-):
+def export_json(doctype, path, filters=None, or_filters=None, id=None, order_by="creation asc"):
     def post_process(out):
         # Note on Tree DocTypes:
         # The tree structure is maintained in the database via the fields "lft"

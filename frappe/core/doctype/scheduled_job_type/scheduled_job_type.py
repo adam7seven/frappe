@@ -261,7 +261,7 @@ def insert_single_event(frequency: str, event: str, cron_format: str | None = No
 
 
 def clear_events(all_events: list):
-    for event in frappe.get_all("Scheduled Job Type", fields=["name", "method", "server_script", "scheduler_event"]):
+    for event in frappe.get_all("Scheduled Job Type", fields=["id", "method", "server_script", "scheduler_event"]):
         is_server_script = event.server_script
         is_defined_in_hooks = event.method in all_events
 
@@ -269,4 +269,4 @@ def clear_events(all_events: list):
             continue
 
         if not (is_defined_in_hooks or is_server_script):
-            frappe.delete_doc("Scheduled Job Type", event.name)
+            frappe.delete_doc("Scheduled Job Type", event.id)

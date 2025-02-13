@@ -42,9 +42,9 @@ def write_document_file(doc, record_module=None, create_init=True, folder_name=N
 
     # create folder
     if folder_name:
-        folder = create_folder(module, folder_name, doc.id, create_init)
+        folder = create_folder(module, folder_name, doc.name, create_init, is_custom_module)
     else:
-        folder = create_folder(module, doc.doctype, doc.id, create_init)
+        folder = create_folder(module, doc.doctype, doc.name, create_init, is_custom_module)
 
     fname = scrub(doc.id)
     write_code_files(folder, fname, doc, doc_export)

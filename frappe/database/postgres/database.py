@@ -231,10 +231,10 @@ class PostgresDatabase(PostgresExceptionUtil, Database):
             d[0]
             for d in self.sql(
                 """select table_name
-			from information_schema.tables
-			where table_catalog='{}'
-				and table_type = 'BASE TABLE'
-				and table_schema='{}'""".format(
+            from information_schema.tables
+            where table_catalog='{}'
+                and table_type = 'BASE TABLE'
+                and table_schema='{}'""".format(
                     self.cur_db_name, frappe.conf.get("db_schema", "public")
                 )
             )
@@ -284,8 +284,8 @@ class PostgresDatabase(PostgresExceptionUtil, Database):
         # hence using sql_ddl here for committing and then moving forward.
         return self.sql_ddl(
             f"""ALTER TABLE "{table_name}"
-				ALTER COLUMN "{column}" TYPE {type} {using_cast},
-				ALTER COLUMN "{column}" {null_constraint}"""
+                ALTER COLUMN "{column}" TYPE {type} {using_cast},
+                ALTER COLUMN "{column}" {null_constraint}"""
         )
 
     def rename_column(self, doctype: str, old_column_name: str, new_column_name: str):
@@ -295,36 +295,36 @@ class PostgresDatabase(PostgresExceptionUtil, Database):
     def create_auth_table(self):
         self.sql_ddl(
             """create table if not exists "__Auth" (
-				"doctype" VARCHAR(140) NOT NULL,
-				"id" VARCHAR(255) NOT NULL,
-				"fieldname" VARCHAR(140) NOT NULL,
-				"password" TEXT NOT NULL,
-				"encrypted" INT NOT NULL DEFAULT 0,
-				PRIMARY KEY ("doctype", "id", "fieldname")
-			)"""
+                "doctype" VARCHAR(140) NOT NULL,
+                "id" VARCHAR(255) NOT NULL,
+                "fieldname" VARCHAR(140) NOT NULL,
+                "password" TEXT NOT NULL,
+                "encrypted" INT NOT NULL DEFAULT 0,
+                PRIMARY KEY ("doctype", "id", "fieldname")
+            )"""
         )
 
     def create_global_search_table(self):
         if "__global_search" not in self.get_tables():
             self.sql(
                 f"""create table "__global_search"(
-				doctype varchar(100),
-				id varchar({self.VARCHAR_LEN}),
-				title varchar({self.VARCHAR_LEN}),
-				content text,
-				route varchar({self.VARCHAR_LEN}),
-				published int not null default 0,
-				unique (doctype, id))"""
+                doctype varchar(100),
+                id varchar({self.VARCHAR_LEN}),
+                title varchar({self.VARCHAR_LEN}),
+                content text,
+                route varchar({self.VARCHAR_LEN}),
+                published int not null default 0,
+                unique (doctype, id))"""
             )
 
     def create_user_settings_table(self):
         self.sql_ddl(
             """create table if not exists "__UserSettings" (
-			"user" VARCHAR(180) NOT NULL,
-			"doctype" VARCHAR(180) NOT NULL,
-			"data" TEXT,
-			UNIQUE ("user", "doctype")
-			)"""
+            "user" VARCHAR(180) NOT NULL,
+            "doctype" VARCHAR(180) NOT NULL,
+            "data" TEXT,
+            UNIQUE ("user", "doctype")
+            )"""
         )
 
     def updatedb(self, doctype, meta=None):
@@ -357,7 +357,7 @@ class PostgresDatabase(PostgresExceptionUtil, Database):
     def has_index(self, table_name, index_name):
         return self.sql(
             f"""SELECT 1 FROM pg_indexes WHERE tablename='{table_name}'
-			and indexname='{index_name}' limit 1"""
+            and indexname='{index_name}' limit 1"""
         )
 
     def add_index(self, doctype: str, fields: list, index_name: str | None = None):
@@ -377,17 +377,17 @@ class PostgresDatabase(PostgresExceptionUtil, Database):
 
         if not self.sql(
             """
-			SELECT CONSTRAINT_NAME
-			FROM information_schema.TABLE_CONSTRAINTS
-			WHERE table_name=%s
-			AND constraint_type='UNIQUE'
-			AND CONSTRAINT_NAME=%s""",
+            SELECT CONSTRAINT_NAME
+            FROM information_schema.TABLE_CONSTRAINTS
+            WHERE table_name=%s
+            AND constraint_type='UNIQUE'
+            AND CONSTRAINT_NAME=%s""",
             ("tab" + doctype, constraint_name),
         ):
             self.commit()
             self.sql(
                 """ALTER TABLE `tab{}`
-					ADD CONSTRAINT {} UNIQUE ({})""".format(
+                    ADD CONSTRAINT {} UNIQUE ({})""".format(
                     doctype, constraint_name, ", ".join(fields)
                 )
             )
@@ -397,26 +397,26 @@ class PostgresDatabase(PostgresExceptionUtil, Database):
         # pylint: disable=W1401
         return self.sql(
             f"""
-			SELECT a.column_name AS name,
-			CASE LOWER(a.data_type)
-				WHEN 'character varying' THEN CONCAT('varchar(', a.character_maximum_length ,')')
-				WHEN 'timestamp without time zone' THEN 'timestamp'
-				ELSE a.data_type
-			END AS type,
-			BOOL_OR(b.index) AS index,
-			SPLIT_PART(COALESCE(a.column_default, NULL), '::', 1) AS default,
-			BOOL_OR(b.unique) AS unique
-			FROM information_schema.columns a
-			LEFT JOIN
-				(SELECT indexdef, tablename,
-					indexdef LIKE '%UNIQUE INDEX%' AS unique,
-					indexdef NOT LIKE '%UNIQUE INDEX%' AS index
-					FROM pg_indexes
-					WHERE tablename='{table_name}') b
-				ON SUBSTRING(b.indexdef, '(.*)') LIKE CONCAT('%', a.column_name, '%')
-			WHERE a.table_name = '{table_name}'
-			GROUP BY a.column_name, a.data_type, a.column_default, a.character_maximum_length;
-		""",
+            SELECT a.column_name AS name,
+            CASE LOWER(a.data_type)
+                WHEN 'character varying' THEN CONCAT('varchar(', a.character_maximum_length ,')')
+                WHEN 'timestamp without time zone' THEN 'timestamp'
+                ELSE a.data_type
+            END AS type,
+            BOOL_OR(b.index) AS index,
+            SPLIT_PART(COALESCE(a.column_default, NULL), '::', 1) AS default,
+            BOOL_OR(b.unique) AS unique
+            FROM information_schema.columns a
+            LEFT JOIN
+                (SELECT indexdef, tablename,
+                    indexdef LIKE '%UNIQUE INDEX%' AS unique,
+                    indexdef NOT LIKE '%UNIQUE INDEX%' AS index
+                    FROM pg_indexes
+                    WHERE tablename='{table_name}') b
+                ON SUBSTRING(b.indexdef, '(.*)') LIKE CONCAT('%', a.column_name, '%')
+            WHERE a.table_name = '{table_name}'
+            GROUP BY a.column_name, a.data_type, a.column_default, a.character_maximum_length;
+        """,
             as_dict=1,
         )
 
@@ -437,13 +437,13 @@ class PostgresDatabase(PostgresExceptionUtil, Database):
     def get_database_list(self):
         return self.sql("SELECT datname FROM pg_database", pluck=True)
 
-	def estimate_count(self, doctype: str):
-		"""Get estimated count of total rows in a table."""
-		from frappe.utils.data import cint
+    def estimate_count(self, doctype: str):
+        """Get estimated count of total rows in a table."""
+        from frappe.utils.data import cint
 
-		table = get_table_name(doctype)
-		count = self.sql("select reltuples from pg_class where relname = %s", table)
-		return cint(count[0][0]) if count else 0
+        table = get_table_name(doctype)
+        count = self.sql("select reltuples from pg_class where relname = %s", table)
+        return cint(count[0][0]) if count else 0
 
 
 def modify_query(query):
@@ -459,7 +459,7 @@ def modify_query(query):
     #
     # >>> query = "c='abcd' , a >= 45, b = -45.0, c =   40, d=4500.0, e=3500.53, f=40psdfsd, g=9092094312, h=12.00023"
     # >>> re.sub(r"([=><]+)\s*([+-]?\d+)(\.0)?(?![a-zA-Z\.\d])", r"\1 '\2'", query)
-    # 	"c='abcd' , a >= '45', b = '-45', c = '40', d= '4500', e=3500.53, f=40psdfsd, g= '9092094312', h=12.00023
+    #   "c='abcd' , a >= '45', b = '-45', c = '40', d= '4500', e=3500.53, f=40psdfsd, g= '9092094312', h=12.00023
 
     return PG_TRANSFORM_PATTERN.sub(r"\1 '\2'", query)
 

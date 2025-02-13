@@ -204,10 +204,10 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
         """'Returns database size in MB"""
         db_size = self.sql(
             """
-			SELECT `table_schema` as `database_name`,
-			SUM(`data_length` + `index_length`) / 1024 / 1024 AS `database_size`
-			FROM information_schema.tables WHERE `table_schema` = %s GROUP BY `table_schema`
-			""",
+            SELECT `table_schema` as `database_name`,
+            SUM(`data_length` + `index_length`) / 1024 / 1024 AS `database_size`
+            FROM information_schema.tables WHERE `table_schema` = %s GROUP BY `table_schema`
+            """,
             self.cur_db_name,
             as_dict=True,
         )
@@ -234,9 +234,7 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
         # of this method should be limited.
 
         # pymysql expects unicode argument to escape_string with Python 3
-        s = frappe.as_unicode(escape_string(frappe.as_unicode(s)), "utf-8").replace(
-            "`", "\\`"
-        )
+        s = frappe.as_unicode(escape_string(frappe.as_unicode(s)), "utf-8").replace("`", "\\`")
 
         # NOTE separating % escape, because % escape should only be done when using LIKE operator
         # or when you use python format string to generate query that already has a %s
@@ -266,14 +264,10 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
         table_name = get_table_name(doctype)
         return self.sql(f"DESC `{table_name}`")
 
-    def change_column_type(
-        self, doctype: str, column: str, type: str, nullable: bool = False
-    ) -> list | tuple:
+    def change_column_type(self, doctype: str, column: str, type: str, nullable: bool = False) -> list | tuple:
         table_name = get_table_name(doctype)
         null_constraint = "NOT NULL" if not nullable else ""
-        return self.sql_ddl(
-            f"ALTER TABLE `{table_name}` MODIFY `{column}` {type} {null_constraint}"
-        )
+        return self.sql_ddl(f"ALTER TABLE `{table_name}` MODIFY `{column}` {type} {null_constraint}")
 
     def rename_column(self, doctype: str, old_column_name, new_column_name):
         current_data_type = self.get_column_type(doctype, old_column_name)
@@ -282,9 +276,9 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
 
         frappe.db.sql_ddl(
             f"""ALTER TABLE `{table_name}`
-				CHANGE COLUMN `{old_column_name}`
-				`{new_column_name}`
-				{current_data_type}"""
+                CHANGE COLUMN `{old_column_name}`
+                `{new_column_name}`
+                {current_data_type}"""
             # ^ Mariadb requires passing current data type again even if there's no change
             # This requirement is gone from v10.5
         )
@@ -292,40 +286,40 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
     def create_auth_table(self):
         self.sql_ddl(
             """create table if not exists `__Auth` (
-				`doctype` VARCHAR(140) NOT NULL,
-				`id` VARCHAR(255) NOT NULL,
-				`fieldname` VARCHAR(140) NOT NULL,
-				`password` TEXT NOT NULL,
-				`encrypted` INT(1) NOT NULL DEFAULT 0,
-				PRIMARY KEY (`doctype`, `id`, `fieldname`)
-			) ENGINE=InnoDB ROW_FORMAT=DYNAMIC CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci"""
+                `doctype` VARCHAR(140) NOT NULL,
+                `id` VARCHAR(255) NOT NULL,
+                `fieldname` VARCHAR(140) NOT NULL,
+                `password` TEXT NOT NULL,
+                `encrypted` INT(1) NOT NULL DEFAULT 0,
+                PRIMARY KEY (`doctype`, `id`, `fieldname`)
+            ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci"""
         )
 
     def create_global_search_table(self):
         if "__global_search" not in self.get_tables():
             self.sql(
                 f"""create table __global_search(
-				doctype varchar(100),
-				id varchar({self.VARCHAR_LEN}),
-				title varchar({self.VARCHAR_LEN}),
-				content text,
-				fulltext(content),
-				route varchar({self.VARCHAR_LEN}),
-				published int(1) not null default 0,
-				unique `doctype_id` (doctype, id))
-				COLLATE=utf8mb4_unicode_ci
-				ENGINE=MyISAM
-				CHARACTER SET=utf8mb4"""
+                doctype varchar(100),
+                id varchar({self.VARCHAR_LEN}),
+                title varchar({self.VARCHAR_LEN}),
+                content text,
+                fulltext(content),
+                route varchar({self.VARCHAR_LEN}),
+                published int(1) not null default 0,
+                unique `doctype_id` (doctype, id))
+                COLLATE=utf8mb4_unicode_ci
+                ENGINE=MyISAM
+                CHARACTER SET=utf8mb4"""
             )
 
     def create_user_settings_table(self):
         self.sql_ddl(
             """create table if not exists __UserSettings (
-			`user` VARCHAR(180) NOT NULL,
-			`doctype` VARCHAR(180) NOT NULL,
-			`data` TEXT,
-			UNIQUE(user, doctype)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8"""
+            `user` VARCHAR(180) NOT NULL,
+            `doctype` VARCHAR(180) NOT NULL,
+            `data` TEXT,
+            UNIQUE(user, doctype)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8"""
         )
 
     @staticmethod
@@ -336,21 +330,21 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
         """Returns list of column and its description"""
         return self.sql(
             f"""select
-			column_name as 'name',
-			column_type as 'type',
-			column_default as 'default',
-			COALESCE(
-				(select 1
-				from information_schema.statistics
-				where table_name="{table_name}"
-					and column_name=columns.column_name
-					and NON_UNIQUE=1
-					and Seq_in_index = 1
-					limit 1
-			), 0) as 'index',
-			column_key = 'UNI' as 'unique'
-			from information_schema.columns as columns
-			where table_name = '{table_name}' """,
+            column_name as 'name',
+            column_type as 'type',
+            column_default as 'default',
+            COALESCE(
+                (select 1
+                from information_schema.statistics
+                where table_name="{table_name}"
+                    and column_name=columns.column_name
+                    and NON_UNIQUE=1
+                    and Seq_in_index = 1
+                    limit 1
+            ), 0) as 'index',
+            column_key = 'UNI' as 'unique'
+            from information_schema.columns as columns
+            where table_name = '{table_name}' """,
             as_dict=1,
         )
 
@@ -363,8 +357,7 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
             frappe.qb.from_(information_schema.columns)
             .select(information_schema.columns.column_type)
             .where(
-                (information_schema.columns.table_name == table)
-                & (information_schema.columns.column_name == column)
+                (information_schema.columns.table_name == table) & (information_schema.columns.column_name == column)
             )
             .run(pluck=True)[0]
         )
@@ -372,12 +365,10 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
     def has_index(self, table_name, index_name):
         return self.sql(
             f"""SHOW INDEX FROM `{table_name}`
-			WHERE Key_name='{index_name}'"""
+            WHERE Key_name='{index_name}'"""
         )
 
-    def get_column_index(
-        self, table_name: str, fieldname: str, unique: bool = False
-    ) -> frappe._dict | None:
+    def get_column_index(self, table_name: str, fieldname: str, unique: bool = False) -> frappe._dict | None:
         """Check if column exists for a specific fields in specified order.
 
         This differs from db.has_index because it doesn't rely on index name but columns inside an
@@ -386,11 +377,11 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
 
         indexes = self.sql(
             f"""SHOW INDEX FROM `{table_name}`
-				WHERE Column_name = "{fieldname}"
-					AND Seq_in_index = 1
-					AND Non_unique={int(not unique)}
-					AND Index_type != 'FULLTEXT'
-				""",
+                WHERE Column_name = "{fieldname}"
+                    AND Seq_in_index = 1
+                    AND Non_unique={int(not unique)}
+                    AND Index_type != 'FULLTEXT'
+                """,
             as_dict=True,
         )
 
@@ -399,9 +390,9 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
         for index in indexes:
             clustered_index = self.sql(
                 f"""SHOW INDEX FROM `{table_name}`
-					WHERE Key_name = "{index.Key_name}"
-						AND Seq_in_index = 2
-					""",
+                    WHERE Key_name = "{index.Key_name}"
+                        AND Seq_in_index = 2
+                    """,
                 as_dict=True,
             )
             if not clustered_index:
@@ -416,7 +407,7 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
             self.commit()
             self.sql(
                 """ALTER TABLE `{}`
-				ADD INDEX `{}`({})""".format(
+                ADD INDEX `{}`({})""".format(
                     table_name, index_name, ", ".join(fields)
                 )
             )
@@ -429,13 +420,13 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
 
         if not self.sql(
             """select CONSTRAINT_NAME from information_schema.TABLE_CONSTRAINTS
-			where table_name=%s and constraint_type='UNIQUE' and CONSTRAINT_NAME=%s""",
+            where table_name=%s and constraint_type='UNIQUE' and CONSTRAINT_NAME=%s""",
             ("tab" + doctype, constraint_name),
         ):
             self.commit()
             self.sql(
                 """alter table `tab{}`
-					add unique `{}`({})""".format(
+                    add unique `{}`({})""".format(
                     doctype, constraint_name, ", ".join(fields)
                 )
             )
@@ -491,44 +482,44 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
 
         est_row_size = frappe.db.sql(
             """
-			SELECT SUM(col_sizes.col_size) AS EST_MAX_ROW_SIZE
-			FROM (
-				SELECT
-					cols.COLUMN_NAME,
-					CASE cols.DATA_TYPE
-						WHEN 'tinyint' THEN 1
-						WHEN 'smallint' THEN 2
-						WHEN 'mediumint' THEN 3
-						WHEN 'int' THEN 4
-						WHEN 'bigint' THEN 8
-						WHEN 'float' THEN IF(cols.NUMERIC_PRECISION > 24, 8, 4)
-						WHEN 'double' THEN 8
-						WHEN 'decimal' THEN ((cols.NUMERIC_PRECISION - cols.NUMERIC_SCALE) DIV 9)*4  + (cols.NUMERIC_SCALE DIV 9)*4 + CEIL(MOD(cols.NUMERIC_PRECISION - cols.NUMERIC_SCALE,9)/2) + CEIL(MOD(cols.NUMERIC_SCALE,9)/2)
-						WHEN 'bit' THEN (cols.NUMERIC_PRECISION + 7) DIV 8
-						WHEN 'year' THEN 1
-						WHEN 'date' THEN 3
-						WHEN 'time' THEN 3 + CEIL(cols.DATETIME_PRECISION /2)
-						WHEN 'datetime' THEN 5 + CEIL(cols.DATETIME_PRECISION /2)
-						WHEN 'timestamp' THEN 4 + CEIL(cols.DATETIME_PRECISION /2)
-						WHEN 'char' THEN cols.CHARACTER_OCTET_LENGTH
-						WHEN 'binary' THEN cols.CHARACTER_OCTET_LENGTH
-						WHEN 'varchar' THEN IF(cols.CHARACTER_OCTET_LENGTH > 255, 2, 1) + cols.CHARACTER_OCTET_LENGTH
-						WHEN 'varbinary' THEN IF(cols.CHARACTER_OCTET_LENGTH > 255, 2, 1) + cols.CHARACTER_OCTET_LENGTH
-						WHEN 'tinyblob' THEN 9
-						WHEN 'tinytext' THEN 9
-						WHEN 'blob' THEN 10
-						WHEN 'text' THEN 10
-						WHEN 'mediumblob' THEN 11
-						WHEN 'mediumtext' THEN 11
-						WHEN 'longblob' THEN 12
-						WHEN 'longtext' THEN 12
-						WHEN 'enum' THEN 2
-						WHEN 'set' THEN 8
-						ELSE 0
-					END AS col_size
-				FROM INFORMATION_SCHEMA.COLUMNS cols
-				WHERE cols.TABLE_NAME = %s
-			) AS col_sizes;""",
+            SELECT SUM(col_sizes.col_size) AS EST_MAX_ROW_SIZE
+            FROM (
+                SELECT
+                    cols.COLUMN_NAME,
+                    CASE cols.DATA_TYPE
+                        WHEN 'tinyint' THEN 1
+                        WHEN 'smallint' THEN 2
+                        WHEN 'mediumint' THEN 3
+                        WHEN 'int' THEN 4
+                        WHEN 'bigint' THEN 8
+                        WHEN 'float' THEN IF(cols.NUMERIC_PRECISION > 24, 8, 4)
+                        WHEN 'double' THEN 8
+                        WHEN 'decimal' THEN ((cols.NUMERIC_PRECISION - cols.NUMERIC_SCALE) DIV 9)*4  + (cols.NUMERIC_SCALE DIV 9)*4 + CEIL(MOD(cols.NUMERIC_PRECISION - cols.NUMERIC_SCALE,9)/2) + CEIL(MOD(cols.NUMERIC_SCALE,9)/2)
+                        WHEN 'bit' THEN (cols.NUMERIC_PRECISION + 7) DIV 8
+                        WHEN 'year' THEN 1
+                        WHEN 'date' THEN 3
+                        WHEN 'time' THEN 3 + CEIL(cols.DATETIME_PRECISION /2)
+                        WHEN 'datetime' THEN 5 + CEIL(cols.DATETIME_PRECISION /2)
+                        WHEN 'timestamp' THEN 4 + CEIL(cols.DATETIME_PRECISION /2)
+                        WHEN 'char' THEN cols.CHARACTER_OCTET_LENGTH
+                        WHEN 'binary' THEN cols.CHARACTER_OCTET_LENGTH
+                        WHEN 'varchar' THEN IF(cols.CHARACTER_OCTET_LENGTH > 255, 2, 1) + cols.CHARACTER_OCTET_LENGTH
+                        WHEN 'varbinary' THEN IF(cols.CHARACTER_OCTET_LENGTH > 255, 2, 1) + cols.CHARACTER_OCTET_LENGTH
+                        WHEN 'tinyblob' THEN 9
+                        WHEN 'tinytext' THEN 9
+                        WHEN 'blob' THEN 10
+                        WHEN 'text' THEN 10
+                        WHEN 'mediumblob' THEN 11
+                        WHEN 'mediumtext' THEN 11
+                        WHEN 'longblob' THEN 12
+                        WHEN 'longtext' THEN 12
+                        WHEN 'enum' THEN 2
+                        WHEN 'set' THEN 8
+                        ELSE 0
+                    END AS col_size
+                FROM INFORMATION_SCHEMA.COLUMNS cols
+                WHERE cols.TABLE_NAME = %s
+            ) AS col_sizes;""",
             (get_table_name(doctype),),
         )
 
@@ -543,27 +534,18 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
             if not self._conn:
                 self.connect()
 
-<<<<<<< HEAD
             original_cursor = self._cursor
             new_cursor = self._cursor = self._conn.cursor(SSCursor)
             yield
         finally:
             self._cursor = original_cursor
             new_cursor.close()
-=======
-			original_cursor = self._cursor
-			new_cursor = self._cursor = self._conn.cursor(SSCursor)
-			yield
-		finally:
-			self._cursor = original_cursor
-			new_cursor.close()
 
-	def estimate_count(self, doctype: str):
-		"""Get estimated count of total rows in a table."""
-		from frappe.utils.data import cint
+    def estimate_count(self, doctype: str):
+        """Get estimated count of total rows in a table."""
+        from frappe.utils.data import cint
 
-		table = get_table_name(doctype)
+        table = get_table_name(doctype)
 
-		count = self.sql("select table_rows from information_schema.tables where table_name = %s", table)
-		return cint(count[0][0]) if count else 0
->>>>>>> version-15
+        count = self.sql("select table_rows from information_schema.tables where table_name = %s", table)
+        return cint(count[0][0]) if count else 0
