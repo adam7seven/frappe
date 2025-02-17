@@ -153,14 +153,13 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
             let options = this.df.options.split("\n");
             for (var i = 0; i < options.length; i++) {
                 var opt = options[i];
-                var comma_index = opt.indexOf(",")
+                var comma_index = opt.indexOf(",");
                 if (comma_index === 0) {
                     if (!value) {
                         value = __(opt.substring(1));
                         break;
                     }
-                }
-                else if (comma_index > 0) {
+                } else if (comma_index > 0) {
                     if (value === opt.substring(0, comma_index)) {
                         value = __(opt.substring(comma_index + 1));
                         break;
@@ -181,7 +180,7 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
         var icon = "";
         this.label_span.innerHTML =
             (icon ? '<i class="' + icon + '"></i> ' : "") +
-            __(this.df.label, null, this.df.parent) || "&nbsp;";
+                __(this.df.label, null, this.df.parent) || "&nbsp;";
         this._label = this.df.label;
     }
 

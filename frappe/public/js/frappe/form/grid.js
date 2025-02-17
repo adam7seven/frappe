@@ -692,10 +692,10 @@ export default class Grid {
     get_modal_data() {
         return this.df.get_data
             ? this.df.get_data().filter((data) => {
-                if (!this.deleted_docs || !this.deleted_docs.includes(data.id)) {
-                    return data;
-                }
-            })
+                  if (!this.deleted_docs || !this.deleted_docs.includes(data.id)) {
+                      return data;
+                  }
+              })
             : [];
     }
 
@@ -772,11 +772,7 @@ export default class Grid {
     }
 
     get_docfield(fieldname) {
-        return frappe.meta.get_docfield(
-            this.doctype,
-            fieldname,
-            this.frm ? this.frm.docid : null
-        );
+        return frappe.meta.get_docfield(this.doctype, fieldname, this.frm ? this.frm.docid : null);
     }
 
     get_row(key) {
@@ -1000,7 +996,7 @@ export default class Grid {
                     if (
                         passes < 3 &&
                         ["Int", "Currency", "Float", "Check", "Percent"].indexOf(df.fieldtype) !==
-                        -1
+                            -1
                     ) {
                         // don't increase col size of these fields in first 3 passes
                         continue;
