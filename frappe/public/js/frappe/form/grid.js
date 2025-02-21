@@ -299,9 +299,9 @@ export default class Grid {
     }
 
     remove_all() {
-        this.grid_rows.forEach((row) => {
-            row.remove();
-        });
+        for (let i = this.grid_rows.length - 1; i >= 0; i--) {
+            this.grid_rows[i].remove();
+        }
     }
 
     refresh_remove_rows_button() {

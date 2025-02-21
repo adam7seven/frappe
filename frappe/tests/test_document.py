@@ -5,7 +5,7 @@ from datetime import timedelta
 from unittest.mock import Mock, patch
 
 import frappe
-from frappe.app import make_form_dict
+from frappe.app_core import make_form_dict
 from frappe.core.doctype.doctype.test_doctype import new_doctype
 from frappe.desk.doctype.note.note import Note
 from frappe.model.iding import make_autoid, parse_naming_series, revert_series_if_last

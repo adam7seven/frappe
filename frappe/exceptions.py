@@ -6,304 +6,316 @@ from werkzeug.exceptions import NotFound
 
 
 class SiteNotSpecifiedError(Exception):
-	def __init__(self, *args, **kwargs):
-		self.message = "Please specify --site sitename"
-		super(Exception, self).__init__(self.message)
+    def __init__(self, *args, **kwargs):
+        self.message = "Please specify --site sitename"
+        super(Exception, self).__init__(self.message)
 
 
 class UrlSchemeNotSupported(Exception):
-	pass
+    pass
 
 
 class ValidationError(Exception):
-	http_status_code = 417
+    http_status_code = 417
 
 
 class FrappeTypeError(TypeError):
-	http_status_code = 417
+    http_status_code = 417
 
 
 class AuthenticationError(Exception):
-	http_status_code = 401
+    http_status_code = 401
 
 
 class SessionExpired(Exception):
-	http_status_code = 401
+    http_status_code = 401
+
+
+class LicenseNotFoundError(Exception):
+    http_status_code = 403
+
+
+class LicenseInvalidError(Exception):
+    http_status_code = 403
+
+
+class LicenseExpiredError(Exception):
+    http_status_code = 403
 
 
 class PermissionError(Exception):
-	http_status_code = 403
+    http_status_code = 403
 
 
 class DoesNotExistError(ValidationError):
-	http_status_code = 404
+    http_status_code = 404
 
 
 class PageDoesNotExistError(ValidationError):
-	http_status_code = 404
+    http_status_code = 404
 
 
 class NameError(Exception):
-	http_status_code = 409
+    http_status_code = 409
 
 
 class OutgoingEmailError(Exception):
-	http_status_code = 501
+    http_status_code = 501
 
 
 class SessionStopped(Exception):
-	http_status_code = 503
+    http_status_code = 503
 
 
 class UnsupportedMediaType(Exception):
-	http_status_code = 415
+    http_status_code = 415
 
 
 class RequestToken(Exception):
-	http_status_code = 200
+    http_status_code = 200
 
 
 class Redirect(Exception):
-	def __init__(self, http_status_code: int = 301):
-		self.http_status_code = http_status_code
+    def __init__(self, http_status_code: int = 301):
+        self.http_status_code = http_status_code
 
 
 class CSRFTokenError(Exception):
-	http_status_code = 400
+    http_status_code = 400
 
 
 class TooManyRequestsError(Exception):
-	http_status_code = 429
+    http_status_code = 429
 
 
 class ImproperDBConfigurationError(Exception):
-	"""
-	Used when frappe detects that database or tables are not properly
-	configured
-	"""
+    """
+    Used when frappe detects that database or tables are not properly
+    configured
+    """
 
-	def __init__(self, reason, msg=None):
-		if not msg:
-			msg = "MariaDb is not properly configured"
-		super().__init__(msg)
-		self.reason = reason
+    def __init__(self, reason, msg=None):
+        if not msg:
+            msg = "MariaDb is not properly configured"
+        super().__init__(msg)
+        self.reason = reason
 
 
 class DuplicateEntryError(NameError):
-	pass
+    pass
 
 
 class DataError(ValidationError):
-	pass
+    pass
 
 
 class UnknownDomainError(Exception):
-	pass
+    pass
 
 
 class MappingMismatchError(ValidationError):
-	pass
+    pass
 
 
 class InvalidStatusError(ValidationError):
-	pass
+    pass
 
 
 class MandatoryError(ValidationError):
-	pass
+    pass
 
 
 class NonNegativeError(ValidationError):
-	pass
+    pass
 
 
 class InvalidSignatureError(ValidationError):
-	pass
+    pass
 
 
 class RateLimitExceededError(ValidationError):
-	http_status_code = 429
+    http_status_code = 429
 
 
 class CannotChangeConstantError(ValidationError):
-	pass
+    pass
 
 
 class CharacterLengthExceededError(ValidationError):
-	pass
+    pass
 
 
 class UpdateAfterSubmitError(ValidationError):
-	pass
+    pass
 
 
 class LinkValidationError(ValidationError):
-	pass
+    pass
 
 
 class CancelledLinkError(LinkValidationError):
-	pass
+    pass
 
 
 class DocstatusTransitionError(ValidationError):
-	pass
+    pass
 
 
 class TimestampMismatchError(ValidationError):
-	pass
+    pass
 
 
 class EmptyTableError(ValidationError):
-	pass
+    pass
 
 
 class LinkExistsError(ValidationError):
-	pass
+    pass
 
 
 class InvalidEmailAddressError(ValidationError):
-	pass
+    pass
 
 
 class InvalidNameError(ValidationError):
-	pass
+    pass
 
 
 class InvalidPhoneNumberError(ValidationError):
-	pass
+    pass
 
 
 class TemplateNotFoundError(ValidationError):
-	pass
+    pass
 
 
 class UniqueValidationError(ValidationError):
-	pass
+    pass
 
 
 class AppNotInstalledError(ValidationError):
-	pass
+    pass
 
 
 class IncorrectSitePath(NotFound):
-	pass
+    pass
 
 
 class ImplicitCommitError(ValidationError):
-	pass
+    pass
 
 
 class RetryBackgroundJobError(Exception):
-	pass
+    pass
 
 
 class DocumentLockedError(ValidationError):
-	pass
+    pass
 
 
 class CircularLinkingError(ValidationError):
-	pass
+    pass
 
 
 class SecurityException(Exception):
-	pass
+    pass
 
 
 class InvalidColumnName(ValidationError):
-	pass
+    pass
 
 
 class IncompatibleApp(ValidationError):
-	pass
+    pass
 
 
 class InvalidDates(ValidationError):
-	pass
+    pass
 
 
 class DataTooLongException(ValidationError):
-	pass
+    pass
 
 
 class FileAlreadyAttachedException(Exception):
-	pass
+    pass
 
 
 class DocumentAlreadyRestored(ValidationError):
-	pass
+    pass
 
 
 class AttachmentLimitReached(ValidationError):
-	pass
+    pass
 
 
 class QueryTimeoutError(Exception):
-	pass
+    pass
 
 
 class QueryDeadlockError(Exception):
-	pass
+    pass
 
 
 class InReadOnlyMode(ValidationError):
-	http_status_code = 503  # temporarily not available
+    http_status_code = 503  # temporarily not available
 
 
 class SessionBootFailed(ValidationError):
-	http_status_code = 500
+    http_status_code = 500
 
 
 class PrintFormatError(ValidationError):
-	pass
+    pass
 
 
 class TooManyWritesError(Exception):
-	pass
+    pass
 
 
 # OAuth exceptions
 class InvalidAuthorizationHeader(CSRFTokenError):
-	pass
+    pass
 
 
 class InvalidAuthorizationPrefix(CSRFTokenError):
-	pass
+    pass
 
 
 class InvalidAuthorizationToken(CSRFTokenError):
-	pass
+    pass
 
 
 class InvalidDatabaseFile(ValidationError):
-	pass
+    pass
 
 
 class ExecutableNotFound(FileNotFoundError):
-	pass
+    pass
 
 
 class InvalidRoundingMethod(FileNotFoundError):
-	pass
+    pass
 
 
 class InvalidRemoteException(Exception):
-	pass
+    pass
 
 
 class LinkExpired(ValidationError):
-	http_status_code = 410
-	title = "Link Expired"
-	message = "The link has expired"
+    http_status_code = 410
+    title = "Link Expired"
+    message = "The link has expired"
 
 
 class InvalidKeyError(ValidationError):
-	http_status_code = 401
-	title = "Invalid Key"
-	message = "The document key is invalid"
+    http_status_code = 401
+    title = "Invalid Key"
+    message = "The document key is invalid"
 
 
 class CommandFailedError(Exception):
-	def __init__(self, message: str, out: str, err: str):
-		super().__init__(message)
-		self.out = out
-		self.err = err
+    def __init__(self, message: str, out: str, err: str):
+        super().__init__(message)
+        self.out = out
+        self.err = err

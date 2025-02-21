@@ -1,0 +1,59 @@
+{% extends "templates/web.html" %}
+{% block title %}
+    {{ title or _("Manage License") }}
+{% endblock
+%}
+{% block page_content %}
+    <style>
+    {% include "templates/styles/card_style.css" %}
+    {% if fullpage %}
+
+    header, footer {
+        display: none;
+    }
+
+    html,
+    body {
+        background-color: #f5f7fa;
+    }
+    .hide{
+        display: none;
+    }
+
+    {% endif %}
+    {% if card_width %}
+
+    .page-card {
+        max-width: {{card_width}}px;
+    }
+
+    {% endif %}
+    </style>
+    <div class="page-card">
+        <h5 class="page-card-head">
+            <span class="indicator {{ indicator_color or 'blue' }}">{{ title or _("Message") }}</span>
+        </h5>
+        <div class="page-card-body">
+            {% block message_body %}
+                <p>License Status: {{ license_status }}</p>
+                {% if license_status == 'Valid' %}
+                    <p>License Version: {{ license_version }}</p>
+                    <p>License Begin Date: {{ license_begin_date }}</p>
+                    <p>License Expire Date: {{ license_expire_date }}</p>
+                {% else %}
+                    <p>There is no license registered, please import the license file.</p>
+                {% endif %}
+            {% endblock message_body %}
+        </div>
+        <div class="page-card-actions">
+            <button id="import-license" class="btn btn-sm btn-primary btn-block">Import License File</button>
+            <input type="file" id="license-input" class="hide" accept=".lic">
+        </div>
+        <div class="page-card-actions">
+            <button id="export-request" class="btn btn-sm btn-secondary btn-block">Export Request File</button>
+        </div>
+    </div>
+{% endblock page_content %}
+{% block script %}
+    <script>{% include "templates/includes/license/license.js" %}</script>
+{% endblock script %}
