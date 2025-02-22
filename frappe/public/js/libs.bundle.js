@@ -6,8 +6,8 @@ import "../js/lib/leaflet_draw/leaflet.draw.js";
 import "../js/lib/leaflet_control_locate/L.Control.Locate.js";
 import Sortable from "sortablejs";
 
-window.SetVueGlobals = (app) => {
-	app.config.globalProperties.__ = window.__;
-	app.config.globalProperties.frappe = window.frappe;
+window.SetVueGlobals = app => {
+    app.config.globalProperties.__ = window.__;
+    app.config.globalProperties.frappe = window.frappe;
 };
 window.Sortable = Sortable;

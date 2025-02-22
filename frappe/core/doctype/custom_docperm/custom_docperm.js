@@ -2,5 +2,5 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Custom DocPerm", {
-	refresh: function (frm) {},
+    refresh: function (frm) {}
 });

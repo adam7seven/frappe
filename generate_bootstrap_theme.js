@@ -6,23 +6,23 @@ let scss_content = process.argv[3];
 scss_content = scss_content.replace(/\\n/g, "\n");
 
 sass.render(
-	{
-		data: scss_content,
-		outputStyle: "compressed",
-		...sass_options,
-	},
-	function (err, result) {
-		if (err) {
-			console.error(err.formatted);
-			return;
-		}
+    {
+        data: scss_content,
+        outputStyle: "compressed",
+        ...sass_options
+    },
+    function (err, result) {
+        if (err) {
+            console.error(err.formatted);
+            return;
+        }
 
-		fs.writeFile(output_path, result.css, function (err) {
-			if (!err) {
-				console.log(output_path);
-			} else {
-				console.error(err);
-			}
-		});
-	},
+        fs.writeFile(output_path, result.css, function (err) {
+            if (!err) {
+                console.log(output_path);
+            } else {
+                console.error(err);
+            }
+        });
+    }
 );

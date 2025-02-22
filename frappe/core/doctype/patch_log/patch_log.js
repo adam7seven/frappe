@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Patch Log", {
-	refresh: function (frm) {
-		frm.disable_save();
-	},
+    refresh: function (frm) {
+        frm.disable_save();
+    }
 });

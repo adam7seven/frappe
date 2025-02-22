@@ -2,29 +2,29 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Letter Head", {
-	setup(frm) {
-		frm.get_field("instructions").html(INSTRUCTIONS);
-	},
+    setup(frm) {
+        frm.get_field("instructions").html(INSTRUCTIONS);
+    },
 
-	refresh: function (frm) {
-		frm.flag_public_attachments = true;
-	},
+    refresh: function (frm) {
+        frm.flag_public_attachments = true;
+    },
 
-	validate: (frm) => {
-		["header_script", "footer_script"].forEach((field) => {
-			if (!frm.doc[field]) return;
+    validate: frm => {
+        ["header_script", "footer_script"].forEach(field => {
+            if (!frm.doc[field]) return;
 
-			try {
-				eval(frm.doc[field]);
-			} catch (e) {
-				frappe.throw({
-					title: __("Error in Header/Footer Script"),
-					indicator: "orange",
-					message: '<pre class="small"><code>' + e.stack + "</code></pre>",
-				});
-			}
-		});
-	},
+            try {
+                eval(frm.doc[field]);
+            } catch (e) {
+                frappe.throw({
+                    title: __("Error in Header/Footer Script"),
+                    indicator: "orange",
+                    message: '<pre class="small"><code>' + e.stack + "</code></pre>"
+                });
+            }
+        });
+    }
 });
 
 const INSTRUCTIONS = `<h4>${__("Letter Head Scripts")}</h4>
@@ -32,7 +32,7 @@ const INSTRUCTIONS = `<h4>${__("Letter Head Scripts")}</h4>
 <pre>
 <code>
 // ${__(
-	"The following Header Script will add the current date to an element in 'Header HTML' with class 'header-content'",
+    "The following Header Script will add the current date to an element in 'Header HTML' with class 'header-content'"
 )}
 var el = document.getElementsByClassName("header-content");
 if (el.length > 0) {

@@ -2,5 +2,5 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Workflow State", {
-	refresh: function (frm) {},
+    refresh: function (frm) {}
 });

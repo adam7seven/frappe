@@ -16,18 +16,18 @@ import HeaderSize from "./header_size";
 frappe.provide("frappe.workspace_block");
 
 frappe.workspace_block.blocks = {
-	header: Header,
-	paragraph: Paragraph,
-	card: Card,
-	chart: Chart,
-	shortcut: Shortcut,
-	spacer: Spacer,
-	onboarding: Onboarding,
-	quick_list: QuickList,
-	number_card: NumberCard,
-	custom_block: CustomBlock,
+    header: Header,
+    paragraph: Paragraph,
+    card: Card,
+    chart: Chart,
+    shortcut: Shortcut,
+    spacer: Spacer,
+    onboarding: Onboarding,
+    quick_list: QuickList,
+    number_card: NumberCard,
+    custom_block: CustomBlock
 };
 
 frappe.workspace_block.tunes = {
-	header_size: HeaderSize,
+    header_size: HeaderSize
 };

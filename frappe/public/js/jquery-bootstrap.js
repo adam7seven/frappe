@@ -15,17 +15,4 @@ import Util from "bootstrap/js/dist/util";
 window.jQuery = jQuery;
 window.$ = jQuery;
 
-export {
-	Util,
-	Alert,
-	Button,
-	Carousel,
-	Collapse,
-	Dropdown,
-	Modal,
-	Popover,
-	Scrollspy,
-	Tab,
-	Toast,
-	Tooltip,
-};
+export { Util, Alert, Button, Carousel, Collapse, Dropdown, Modal, Popover, Scrollspy, Tab, Toast, Tooltip };

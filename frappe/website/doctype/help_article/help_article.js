@@ -2,10 +2,10 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Help Article", {
-	refresh: function (frm) {
-		frm.dashboard.clear_headline();
+    refresh: function (frm) {
+        frm.dashboard.clear_headline();
 
-		frm.dashboard.set_headline_alert(`
+        frm.dashboard.set_headline_alert(`
 			<div class="row">
 				<div class="col-md-6 col-xs-12">
 					<span class="indicator whitespace-nowrap green">
@@ -19,5 +19,5 @@ frappe.ui.form.on("Help Article", {
 				</div>
 			</div>
 		`);
-	},
+    }
 });
