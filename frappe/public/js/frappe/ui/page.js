@@ -58,7 +58,7 @@ frappe.ui.Page = class Page {
 					$(".page-head").css("top", "var(--navbar-height)");
 				}
 				last_scroll = current_scroll;
-			}, 500)
+			}, 500),
 		);
 	}
 
@@ -92,7 +92,7 @@ frappe.ui.Page = class Page {
 						<div class="layout-main-section"></div>\
 						<div class="layout-footer hide"></div>\
 					</div>\
-				</div>'
+				</div>',
 			);
 		} else {
 			this.add_view(
@@ -105,7 +105,7 @@ frappe.ui.Page = class Page {
 						<div class="layout-footer hide"></div>
 					</div>
 				</div>
-			`
+			`,
 			);
 
 			if (this.sidebar_position === "Right") {
@@ -184,7 +184,7 @@ frappe.ui.Page = class Page {
 					() => {
 						main.removeAttribute("tabindex");
 					},
-					{ once: true }
+					{ once: true },
 				);
 			})
 			.appendTo(this.sidebar);
@@ -245,8 +245,8 @@ frappe.ui.Page = class Page {
 		sidebar_toggle_icon.html(
 			frappe.utils.icon(
 				is_sidebar_visible ? "es-line-sidebar-collapse" : "es-line-sidebar-expand",
-				"md"
-			)
+				"md",
+			),
 		);
 	}
 
@@ -293,7 +293,7 @@ frappe.ui.Page = class Page {
 			size = icon.size || "xs";
 		}
 		return `${icon ? frappe.utils.icon(icon_name, size) : ""} <span class="hidden-xs"> ${__(
-			label
+			label,
 		)} </span>`;
 	}
 
@@ -520,7 +520,7 @@ frappe.ui.Page = class Page {
 			this.divider = parent.find(".dropdown-divider.user-action");
 			if (!this.divider.length) {
 				this.divider = $(
-					'<li class="dropdown-divider user-action visible-xs"></li>'
+					'<li class="dropdown-divider user-action visible-xs"></li>',
 				).prependTo(parent);
 			}
 			$li.addClass("user-action").insertBefore(this.divider);
@@ -596,7 +596,7 @@ frappe.ui.Page = class Page {
 
 	get_or_add_inner_group_button(label, align_right) {
 		var $group = this.inner_toolbar.find(
-			`.inner-group-button[data-label="${encodeURIComponent(label)}"]`
+			`.inner-group-button[data-label="${encodeURIComponent(label)}"]`,
 		);
 		if (!$group.length) {
 			$group = $(
@@ -606,7 +606,7 @@ frappe.ui.Page = class Page {
 						${frappe.utils.icon("select", "xs")}
 					</button>
 					<div role="menu" class="dropdown-menu ${align_right ? "dropdown-menu-right" : ""}"></div>
-				</div>`
+				</div>`,
 			).appendTo(this.inner_toolbar);
 		}
 		return $group;
@@ -614,7 +614,7 @@ frappe.ui.Page = class Page {
 
 	get_inner_group_button(label) {
 		return this.inner_toolbar.find(
-			`.inner-group-button[data-label="${encodeURIComponent(label)}"]`
+			`.inner-group-button[data-label="${encodeURIComponent(label)}"]`,
 		);
 	}
 
@@ -674,19 +674,19 @@ frappe.ui.Page = class Page {
 			if (!this.is_in_group_button_dropdown($group.find(".dropdown-menu"), "a", label)) {
 				return $(
 					`<a class="dropdown-item" href="#" onclick="return false;" data-label="${encodeURIComponent(
-						label
-					)}">${label}</a>`
+						label,
+					)}">${label}</a>`,
 				)
 					.on("click", _action)
 					.appendTo($group.find(".dropdown-menu"));
 			}
 		} else {
 			let button = this.inner_toolbar.find(
-				`button[data-label="${encodeURIComponent(label)}"]`
+				`button[data-label="${encodeURIComponent(label)}"]`,
 			);
 			if (button.length == 0) {
 				button = $(`<button data-label="${encodeURIComponent(
-					label
+					label,
 				)}" class="btn btn-${type} ellipsis">
 					${__(label)}
 				</button>`);
@@ -846,7 +846,7 @@ frappe.ui.Page = class Page {
 	add_label(label) {
 		this.show_form();
 		return $("<label class='col-md-1 page-only-label'>" + label + " </label>").appendTo(
-			this.page_form
+			this.page_form,
 		);
 	}
 	add_select(label, options) {

@@ -123,7 +123,7 @@ frappe.breadcrumbs = {
 
 		this.append_breadcrumb_element(
 			`/app/${frappe.router.slug(breadcrumbs.workspace)}`,
-			__(breadcrumbs.workspace)
+			__(breadcrumbs.workspace),
 		);
 	},
 

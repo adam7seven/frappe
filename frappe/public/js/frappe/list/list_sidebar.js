@@ -99,7 +99,7 @@ frappe.views.ListSidebar = class ListSidebar {
 			(this.list_view.meta.fields.find((i) => i.fieldname === "latitude") &&
 				this.list_view.meta.fields.find((i) => i.fieldname === "longitude")) ||
 			this.list_view.meta.fields.find(
-				(i) => i.fieldname === "location" && i.fieldtype == "Geolocation"
+				(i) => i.fieldname === "location" && i.fieldtype == "Geolocation",
 			)
 		) {
 			this.sidebar.find('.list-link[data-view="Map"]').removeClass("hide");
@@ -138,7 +138,7 @@ frappe.views.ListSidebar = class ListSidebar {
 						}
 
 						$(
-							'<li><a href="#' + route + '">' + __(r.title || r.name) + "</a></li>"
+							'<li><a href="#' + route + '">' + __(r.title || r.name) + "</a></li>",
 						).appendTo(dropdown);
 					}
 				}
@@ -153,7 +153,7 @@ frappe.views.ListSidebar = class ListSidebar {
 		// Sort reports alphabetically
 		var reports =
 			Object.values(frappe.boot.user.all_reports).sort((a, b) =>
-				a.title.localeCompare(b.title)
+				a.title.localeCompare(b.title),
 			) || [];
 
 		// from specially tagged reports
@@ -267,7 +267,7 @@ frappe.views.ListSidebar = class ListSidebar {
 					condition = "not like";
 				}
 				this.list_view.filter_area.add(this.doctype, fieldname, condition, label);
-			}
+			},
 		);
 
 		this.sidebar.find(".list-stats-dropdown .stat-result").html(tag_list);

@@ -86,7 +86,7 @@ frappe.ui.form.Share = class Share {
 				frm: this.frm,
 				shared: this.shared,
 				everyone: everyone,
-			})
+			}),
 		).appendTo(d.body);
 
 		if (frappe.model.can_share(null, this.frm)) {

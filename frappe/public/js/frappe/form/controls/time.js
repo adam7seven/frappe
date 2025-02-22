@@ -58,7 +58,7 @@ frappe.ui.form.ControlTime = class ControlTime extends frappe.ui.form.ControlDat
 			if (this.datepicker.selectedDates.length > 0) {
 				// if time is selected but different from value, refresh
 				const selected_date = moment(this.datepicker.selectedDates[0]).format(
-					this.time_format
+					this.time_format,
 				);
 
 				should_refresh = selected_date !== value;
@@ -70,7 +70,7 @@ frappe.ui.form.ControlTime = class ControlTime extends frappe.ui.form.ControlDat
 
 		if (should_refresh) {
 			this.datepicker.selectDate(
-				frappe.datetime.moment_to_date_obj(moment(value, time_format))
+				frappe.datetime.moment_to_date_obj(moment(value, time_format)),
 			);
 		}
 	}

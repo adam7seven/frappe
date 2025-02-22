@@ -175,10 +175,10 @@ export const useStore = defineStore("workflow-builder-store", () => {
 			let states = workflow.value.elements.filter((e) => e.type == "state");
 
 			let state = states.find(
-				(state) => state.data.workflow_builder_id == action.data.from_id
+				(state) => state.data.workflow_builder_id == action.data.from_id,
 			);
 			let next_state = states.find(
-				(state) => state.data.workflow_builder_id == action.data.to_id
+				(state) => state.data.workflow_builder_id == action.data.to_id,
 			);
 
 			if (action.data.to.length === 0 && next_state != undefined) {
@@ -197,7 +197,7 @@ export const useStore = defineStore("workflow-builder-store", () => {
 					...action.data,
 					state: action.data.from,
 					next_state: action.data.to,
-				})
+				}),
 			);
 		});
 

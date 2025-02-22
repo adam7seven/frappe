@@ -291,7 +291,7 @@ function remainder(numerator, denominator, precision) {
 
 function round_based_on_smallest_currency_fraction(value, currency, precision) {
 	var smallest_currency_fraction_value = flt(
-		frappe.model.get_value(":Currency", currency, "smallest_currency_fraction_value")
+		frappe.model.get_value(":Currency", currency, "smallest_currency_fraction_value"),
 	);
 
 	if (smallest_currency_fraction_value) {

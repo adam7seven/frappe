@@ -27,7 +27,7 @@ class FormTimeline extends BaseTimeline {
 				__("New Email"),
 				() => this.compose_mail(),
 				"es-line-add",
-				"btn-secondary"
+				"btn-secondary",
 			);
 		}
 		this.setup_new_event_button();
@@ -74,7 +74,7 @@ class FormTimeline extends BaseTimeline {
 							<span class="slider round"></span>
 						</label>
 					</div>
-				`
+				`,
 				)
 				.find("input[type=checkbox]")
 				.prop("checked", !me.only_communication)
@@ -138,7 +138,7 @@ class FormTimeline extends BaseTimeline {
 			content: get_user_message(
 				this.frm.doc.owner,
 				__("You created this"),
-				__("{0} created this", [get_user_link(this.frm.doc.owner)])
+				__("{0} created this", [get_user_link(this.frm.doc.owner)]),
 			),
 		};
 	}
@@ -149,7 +149,7 @@ class FormTimeline extends BaseTimeline {
 			content: get_user_message(
 				this.frm.doc.modified_by,
 				__("You last edited this"),
-				__("{0} last edited this", [get_user_link(this.frm.doc.modified_by)])
+				__("{0} last edited this", [get_user_link(this.frm.doc.modified_by)]),
 			),
 		};
 	}
@@ -182,7 +182,7 @@ class FormTimeline extends BaseTimeline {
 				content: get_user_message(
 					view.owner,
 					__("You viewed this"),
-					__("{0} viewed this", [get_user_link(view.owner)])
+					__("{0} viewed this", [get_user_link(view.owner)]),
 				),
 			});
 		});
@@ -273,7 +273,7 @@ class FormTimeline extends BaseTimeline {
 			});
 			more_items = this.get_communication_timeline_contents(
 				email_communications,
-				automated_messages
+				automated_messages,
 			);
 		}
 		return more_items;
@@ -413,13 +413,13 @@ class FormTimeline extends BaseTimeline {
 				? get_user_message(
 						attachment_log.owner,
 						__("You attached {0}", [filename], "Form timeline"),
-						__("{0} attached {1}", [user_link, filename], "Form timeline")
-				  )
+						__("{0} attached {1}", [user_link, filename], "Form timeline"),
+					)
 				: get_user_message(
 						attachment_log.owner,
 						__("You removed attachment {0}", [filename], "Form timeline"),
-						__("{0} removed attachment {1}", [user_link, filename], "Form timeline")
-				  );
+						__("{0} removed attachment {1}", [user_link, filename], "Form timeline"),
+					);
 
 			attachment_timeline_contents.push({
 				icon: is_file_upload ? "es-line-attachment" : "es-line-delete",
@@ -442,7 +442,7 @@ class FormTimeline extends BaseTimeline {
 			const timeline_content = get_user_message(
 				milestone_log.owner,
 				__("You changed {0} to {1}", [field, value], "Form timeline"),
-				__("{0} changed {1} to {2}", [user_link, field, value], "Form timeline")
+				__("{0} changed {1} to {2}", [user_link, field, value], "Form timeline"),
 			);
 
 			milestone_timeline_contents.push({
@@ -462,7 +462,7 @@ class FormTimeline extends BaseTimeline {
 			const timeline_content = get_user_message(
 				like_log.owner,
 				__("You Liked"),
-				__("{0} Liked", [get_user_link(like_log.owner)])
+				__("{0} Liked", [get_user_link(like_log.owner)]),
 			);
 
 			like_timeline_contents.push({
@@ -529,10 +529,10 @@ class FormTimeline extends BaseTimeline {
 		let reply = $(`<a class="action-btn reply">${frappe.utils.icon("reply", "md")}</a>`).click(
 			() => {
 				this.compose_mail(communication_doc);
-			}
+			},
 		);
 		let reply_all = $(
-			`<a class="action-btn reply-all">${frappe.utils.icon("reply-all", "md")}</a>`
+			`<a class="action-btn reply-all">${frappe.utils.icon("reply-all", "md")}</a>`,
 		).click(() => {
 			this.compose_mail(communication_doc, true);
 		});
@@ -654,7 +654,7 @@ class FormTimeline extends BaseTimeline {
 			edit_button = $(`<button class="btn btn-link action-btn">${__("Edit")}</a>`).click(
 				() => {
 					edit_button.edit_mode ? edit_box.submit() : edit_button.toggle_edit_mode();
-				}
+				},
 			);
 		}
 
@@ -710,7 +710,7 @@ class FormTimeline extends BaseTimeline {
 				(record) =>
 					record.communication_type === "Communication" &&
 					record.communication_medium === "Email" &&
-					(!from_recipient || record.sender === recipient)
+					(!from_recipient || record.sender === recipient),
 			)
 			.sort((a, b) => b.creation - a.creation);
 
@@ -732,7 +732,7 @@ class FormTimeline extends BaseTimeline {
 
 	copy_link(ev) {
 		let doc_link = frappe.urllib.get_full_url(
-			frappe.utils.get_form_link(this.frm.doctype, this.frm.docname)
+			frappe.utils.get_form_link(this.frm.doctype, this.frm.docname),
 		);
 		let element_id = $(ev.currentTarget).closest(".timeline-content").attr("id");
 		frappe.utils.copy_to_clipboard(`${doc_link}#${element_id}`);

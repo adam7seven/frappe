@@ -129,7 +129,7 @@ frappe.ui.form.DocumentFollow = class DocumentFollow {
 	follow_action() {
 		frappe.show_alert({
 			message: __(
-				"You are now following this document. You will receive daily updates via email. You can change this in User Settings."
+				"You are now following this document. You will receive daily updates via email. You can change this in User Settings.",
 			),
 			indicator: "orange",
 		});

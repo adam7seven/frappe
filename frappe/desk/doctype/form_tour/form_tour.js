@@ -35,7 +35,7 @@ frappe.ui.form.on("Form Tour", {
 			frm.doc.reference_doctype
 		) {
 			frappe.throw(
-				__("Referance Doctype and Dashboard Name both can't be used at the same time.")
+				__("Referance Doctype and Dashboard Name both can't be used at the same time."),
 			);
 		}
 		frm.doc.ui_tour && (frm.doc.page_route = JSON.stringify(await get_path(frm)));
@@ -58,20 +58,20 @@ frappe.ui.form.on("Form Tour", {
 				frm.fields_dict.steps.grid.update_docfield_property(
 					"fieldname",
 					"options",
-					[""].concat(options)
+					[""].concat(options),
 				);
-			}
+			},
 		);
 
 		frm.set_fields_as_options(
 			"parent_fieldname",
 			frm.doc.reference_doctype,
-			(df) => df.fieldtype == "Table" && !df.hidden
+			(df) => df.fieldtype == "Table" && !df.hidden,
 		).then((options) => {
 			frm.fields_dict.steps.grid.update_docfield_property(
 				"parent_fieldname",
 				"options",
-				[""].concat(options)
+				[""].concat(options),
 			);
 		});
 		if (!frm.doc.ui_tour) {
@@ -84,7 +84,7 @@ frappe.ui.form.on("Form Tour", {
 							ref_doctype: frm.doc.reference_doctype,
 						},
 					},
-					{ fields: ["name"] }
+					{ fields: ["name"] },
 				)
 				.then((reports) => {
 					if (reports.findIndex((r) => r.name == frm.doc.report_name) == -1) {
@@ -109,7 +109,7 @@ let add_custom_button = (frm) => {
 						},
 					});
 					delete frappe.boot.user.onboarding_status[frm.doc.name];
-				}
+				},
 			);
 		});
 	} else {
@@ -149,12 +149,12 @@ frappe.ui.form.on("Form Tour Step", {
 		frm.set_fields_as_options(
 			"fieldname",
 			parent_fieldname_df.options,
-			(df) => !df.hidden
+			(df) => !df.hidden,
 		).then((options) => {
 			frm.fields_dict.steps.grid.update_docfield_property(
 				"fieldname",
 				"options",
-				[""].concat(options)
+				[""].concat(options),
 			);
 			if (child_row.fieldname) {
 				frappe.model.set_value(cdt, cdn, "fieldname", child_row.fieldname);

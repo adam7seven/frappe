@@ -44,7 +44,7 @@ frappe.listview_settings["Recorder"] = {
 					const el = document.createElement("a");
 					el.setAttribute(
 						"href",
-						"data:application/json," + encodeURIComponent(JSON.stringify(data))
+						"data:application/json," + encodeURIComponent(JSON.stringify(data)),
 					);
 					el.setAttribute("download", filename);
 					el.click();
@@ -198,7 +198,7 @@ frappe.listview_settings["Recorder"] = {
 				});
 			},
 			__("Configure Recorder"),
-			__("Start Recording")
+			__("Start Recording"),
 		);
 	},
 

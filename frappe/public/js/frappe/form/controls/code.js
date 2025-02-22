@@ -33,7 +33,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
 				<svg class="es-icon es-line  icon-sm" style="" aria-hidden="true">
 					<use class="" href="#es-line-copy-light"></use>
 				</svg>
-			</button>`
+			</button>`,
 		);
 		this.copy_button.on("click", () => {
 			frappe.utils.copy_to_clipboard(this.get_model_value() || this.get_value());
@@ -44,7 +44,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
 	make_ace_editor() {
 		if (this.editor) return;
 		this.ace_editor_target = $('<div class="ace-editor-target"></div>').appendTo(
-			this.input_area
+			this.input_area,
 		);
 
 		// styling
@@ -65,7 +65,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
 		} else {
 			this.expanded = false;
 			this.$expand_button = $(
-				`<button class="btn btn-xs btn-default mt-2">${this.get_button_label()}</button>`
+				`<button class="btn btn-xs btn-default mt-2">${this.get_button_label()}</button>`,
 			)
 				.click(() => {
 					this.expanded = !this.expanded;
@@ -151,7 +151,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
 							meta: a.meta,
 							caption: a.caption,
 						};
-					})
+					}),
 				);
 			}
 		};
@@ -208,14 +208,14 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
 			console.warn(
 				`Invalid language option provided for field "${
 					this.df.label
-				}". Valid options are ${valid_languages.join(", ")}.`
+				}". Valid options are ${valid_languages.join(", ")}.`,
 			);
 		}
 
 		const ace_language_mode = language_map[language] || "";
 		this.editor.session.setMode(ace_language_mode);
 		this.editor.setKeyboardHandler(
-			`ace/keyboard/${frappe.boot.user.code_editor_type || "vscode"}`
+			`ace/keyboard/${frappe.boot.user.code_editor_type || "vscode"}`,
 		);
 	}
 

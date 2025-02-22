@@ -62,7 +62,7 @@ context("Control Phone", () => {
 			cy.get(`.phone-section .phone-wrapper[id*="${search_text.toLowerCase()}"]`).then(
 				(countries) => {
 					expect(i.length).to.equal(countries.length);
-				}
+				},
 			);
 		});
 	});

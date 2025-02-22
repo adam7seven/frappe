@@ -305,7 +305,7 @@ frappe.ui.form.FormTour = class FormTour {
 		frappe.ui.form.on(
 			this.frm.doctype,
 			"after_save",
-			() => this.on_finish && this.on_finish()
+			() => this.on_finish && this.on_finish(),
 		);
 	}
 

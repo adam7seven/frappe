@@ -7,7 +7,7 @@ function prettyDate(date, mini) {
 			(date || "")
 				.replace(/-/g, "/")
 				.replace(/[TZ]/g, " ")
-				.replace(/\.[0-9]*/, "")
+				.replace(/\.[0-9]*/, ""),
 		);
 	}
 

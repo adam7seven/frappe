@@ -28,7 +28,7 @@ context("Workspace Blocks", () => {
 		cy.get('.sidebar-item-container[item-title="Test Block Page"]').should(
 			"have.attr",
 			"item-public",
-			"0"
+			"0",
 		);
 		cy.wait(300);
 		cy.get('.standard-actions .btn-primary[data-label="Save"]').click();
@@ -36,7 +36,7 @@ context("Workspace Blocks", () => {
 		cy.get('.sidebar-item-container[item-title="Test Block Page"]').should(
 			"have.attr",
 			"item-public",
-			"0"
+			"0",
 		);
 
 		cy.wait("@new_page");

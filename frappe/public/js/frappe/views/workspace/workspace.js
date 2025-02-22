@@ -345,7 +345,7 @@ frappe.views.Workspace = class Workspace {
 					frappe.app.sidebar.toggle_sorting();
 				},
 				null,
-				__("Saving")
+				__("Saving"),
 			);
 
 		this.page.set_secondary_action(__("Discard"), async () => {
@@ -379,7 +379,7 @@ frappe.views.Workspace = class Workspace {
 				setData: function () {
 					//Do Nothing
 				},
-			}
+			},
 		);
 	}
 
@@ -445,7 +445,7 @@ frappe.views.Workspace = class Workspace {
 						d.set_df_property(
 							"parent",
 							"options",
-							this.get_value() ? me.public_parent_pages : me.private_parent_pages
+							this.get_value() ? me.public_parent_pages : me.private_parent_pages,
 						);
 						d.set_df_property("icon", "hidden", this.get_value() ? 0 : 1);
 						d.set_df_property("indicator_color", "hidden", this.get_value() ? 1 : 0);
@@ -651,7 +651,7 @@ frappe.views.Workspace = class Workspace {
 					(item) =>
 						item.type != "card" ||
 						(item.data.card_name !== "Custom Documents" &&
-							item.data.card_name !== "Custom Reports")
+							item.data.card_name !== "Custom Reports"),
 				);
 
 				if (

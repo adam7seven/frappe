@@ -47,7 +47,7 @@ frappe.ui.form.PrintView = class {
 		<div class="preview-beta-wrapper">
 			<iframe width="100%" height="0" frameBorder="0"></iframe>
 		</div>
-		`
+		`,
 		);
 
 		this.print_settings = frappe.model.get_doc(":Print Settings", "Print Settings");
@@ -80,7 +80,7 @@ frappe.ui.form.PrintView = class {
 				this.go_to_form_view();
 			},
 			"",
-			__("Form")
+			__("Form"),
 		);
 	}
 
@@ -115,7 +115,7 @@ frappe.ui.form.PrintView = class {
 				"<div class='form-message yellow p-3 mt-3'>" +
 				__("Footer might not be visible as {0} option is disabled</div>", [
 					`<a href="/app/print-settings/Print Settings">${__(
-						"Repeat Header and Footer"
+						"Repeat Header and Footer",
 					)}</a>`,
 				]);
 		}
@@ -132,7 +132,7 @@ frappe.ui.form.PrintView = class {
 			},
 		}).$input;
 		this.sidebar_dynamic_section = $(`<div class="dynamic-settings"></div>`).appendTo(
-			this.sidebar
+			this.sidebar,
 		);
 	}
 
@@ -173,7 +173,7 @@ frappe.ui.form.PrintView = class {
 
 		if (cint(this.print_settings.enable_print_server)) {
 			this.page.add_menu_item(__("Select Network Printer"), () =>
-				this.network_printer_setting_dialog()
+				this.network_printer_setting_dialog(),
 			);
 		}
 	}
@@ -235,7 +235,7 @@ frappe.ui.form.PrintView = class {
 						this.preview();
 					},
 				},
-				true
+				true,
 			);
 		}
 	}
@@ -293,7 +293,7 @@ frappe.ui.form.PrintView = class {
 				this.print_format_selector.val(data.print_format_name);
 			},
 			__("New Custom Print Format"),
-			__("Start")
+			__("Start"),
 		);
 	}
 
@@ -340,7 +340,7 @@ frappe.ui.form.PrintView = class {
 					frappe.set_route("print-format-builder");
 				},
 				__("New Custom Print Format"),
-				__("Start")
+				__("Start"),
 			);
 		});
 	}
@@ -437,7 +437,7 @@ frappe.ui.form.PrintView = class {
 		let base_url = frappe.urllib.get_base_url();
 		let print_css = frappe.assets.bundled_asset(
 			"print.bundle.css",
-			frappe.utils.is_rtl(this.lang_code)
+			frappe.utils.is_rtl(this.lang_code),
 		);
 		this.$print_format_body
 			.find("html")
@@ -445,7 +445,7 @@ frappe.ui.form.PrintView = class {
 		this.$print_format_body.find("html").attr("lang", this.lang_code);
 		this.$print_format_body.find("head").html(
 			`<style type="text/css">${out.style}</style>
-			<link href="${base_url}${print_css}" rel="stylesheet">`
+			<link href="${base_url}${print_css}" rel="stylesheet">`,
 		);
 
 		this.$print_format_body
@@ -475,7 +475,7 @@ frappe.ui.form.PrintView = class {
 			this.frm.page.set_view(
 				this.frm.page.previous_view_name === "print"
 					? "main"
-					: this.frm.page.previous_view_name || "main"
+					: this.frm.page.previous_view_name || "main",
 			);
 		}
 	}
@@ -498,7 +498,7 @@ frappe.ui.form.PrintView = class {
 			order: 1;
 			margin-top: auto;
 			padding-top: var(--padding-xl)
-		`
+		`,
 		);
 	}
 
@@ -533,11 +533,11 @@ frappe.ui.form.PrintView = class {
 					{
 						message: __('PDF printing via "Raw Print" is not supported.'),
 						subtitle: __(
-							"Please remove the printer mapping in Printer Settings and try again."
+							"Please remove the printer mapping in Printer Settings and try again.",
 						),
 						indicator: "info",
 					},
-					14
+					14,
 				);
 				//Note: need to solve "Error: Cannot parse (FILE)<URL> as a PDF file" to enable qz pdf printing.
 			}
@@ -547,11 +547,11 @@ frappe.ui.form.PrintView = class {
 				{
 					message: __("Printer mapping not set."),
 					subtitle: __(
-						"Please set a printer mapping for this print format in the Printer Settings"
+						"Please set a printer mapping for this print format in the Printer Settings",
 					),
 					indicator: "warning",
 				},
-				14
+				14,
 			);
 			me.printer_setting_dialog();
 		} else {
@@ -661,8 +661,8 @@ frappe.ui.form.PrintView = class {
 					encodeURIComponent(this.get_letterhead()) +
 					"&settings=" +
 					encodeURIComponent(JSON.stringify(this.additional_settings)) +
-					(this.lang_code ? "&_lang=" + this.lang_code : "")
-			)
+					(this.lang_code ? "&_lang=" + this.lang_code : ""),
+			),
 		);
 		if (!w) {
 			frappe.msgprint(__("Please enable pop-ups"));
@@ -731,7 +731,7 @@ frappe.ui.form.PrintView = class {
 		let print_format_printer_map = this.get_print_format_printer_map();
 		if (print_format_printer_map[this.frm.doctype]) {
 			return print_format_printer_map[this.frm.doctype].filter(
-				(printer_map) => printer_map.print_format == this.selected_format()
+				(printer_map) => printer_map.print_format == this.selected_format(),
 			);
 		} else {
 			return [];
@@ -837,13 +837,13 @@ frappe.ui.form.PrintView = class {
 					if (printer_mapping && printer_mapping.length) {
 						let print_format_list = printer_mapping.map((a) => a.print_format);
 						let has_duplicate = print_format_list.some(
-							(item, idx) => print_format_list.indexOf(item) != idx
+							(item, idx) => print_format_list.indexOf(item) != idx,
 						);
 						if (has_duplicate)
 							frappe.throw(
 								__(
-									"Cannot have multiple printers mapped to a single print format."
-								)
+									"Cannot have multiple printers mapped to a single print format.",
+								),
 							);
 					} else {
 						printer_mapping = [];
@@ -851,7 +851,7 @@ frappe.ui.form.PrintView = class {
 					dialog.print_format_printer_map = this.get_print_format_printer_map();
 					dialog.print_format_printer_map[this.frm.doctype] = printer_mapping;
 					localStorage.print_format_printer_map = JSON.stringify(
-						dialog.print_format_printer_map
+						dialog.print_format_printer_map,
 					);
 					dialog.hide();
 				},

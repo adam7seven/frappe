@@ -203,7 +203,7 @@ class QuickListDialog extends WidgetDialog {
 		if (this.values && this.values.quick_list_filter) {
 			this.filters = frappe.utils.get_filter_from_json(
 				this.values.quick_list_filter,
-				this.values.document_type
+				this.values.document_type,
 			);
 		}
 	}
@@ -434,7 +434,7 @@ class ShortcutDialog extends WidgetDialog {
 							const response = await frappe.db.get_value(
 								"Kanban Board",
 								{ reference_doctype: doctype },
-								"name"
+								"name",
 							);
 							if (response?.message?.name) views.push("Kanban");
 
@@ -466,7 +466,7 @@ class ShortcutDialog extends WidgetDialog {
 				label: __("DocType View"),
 				options: "List\nReport Builder\nDashboard\nTree\nNew\nCalendar\nKanban\nImage",
 				description: __(
-					"Which view of the associated DocType should this shortcut take you to?"
+					"Which view of the associated DocType should this shortcut take you to?",
 				),
 				default: "List",
 				depends_on: (state) => {
@@ -540,10 +540,8 @@ class ShortcutDialog extends WidgetDialog {
 					if (!$select.parent().find(".color-box").get(0)) {
 						$(`<div class="color-box"></div>`).insertBefore($select.get(0));
 					}
-					$select
-						.parent()
-						.find(".color-box")
-						.get(0).style.backgroundColor = `var(--text-on-${color})`;
+					$select.parent().find(".color-box").get(0).style.backgroundColor =
+						`var(--text-on-${color})`;
 				},
 			},
 			{
@@ -565,7 +563,7 @@ class ShortcutDialog extends WidgetDialog {
 		if (this.values && this.values.stats_filter) {
 			this.filters = frappe.utils.get_filter_from_json(
 				this.values.stats_filter,
-				this.values.link_to
+				this.values.link_to,
 			);
 		}
 	}
@@ -750,7 +748,7 @@ class NumberCardDialog extends WidgetDialog {
 		this.dialog.set_df_property(
 			"aggregate_function_based_on",
 			"options",
-			aggregate_function_fields
+			aggregate_function_fields,
 		);
 	}
 

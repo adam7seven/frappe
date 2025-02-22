@@ -45,7 +45,7 @@ frappe.ui.form.on("Website Theme", {
 				frm.app_theme_selector
 					.get_field("apps")
 					.select_options(
-						apps.map((d) => d.name).filter((app) => !ignored_apps.includes(app))
+						apps.map((d) => d.name).filter((app) => !ignored_apps.includes(app)),
 					);
 			});
 			return;

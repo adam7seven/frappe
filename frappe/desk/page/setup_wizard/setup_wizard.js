@@ -216,8 +216,8 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 		fail_msg = fail_msg
 			? fail_msg
 			: frappe.last_response.setup_wizard_failure_message
-			? frappe.last_response.setup_wizard_failure_message
-			: __("Failed to complete setup");
+				? frappe.last_response.setup_wizard_failure_message
+				: __("Failed to complete setup");
 
 		this.update_setup_message(__("Could not start up: ") + fail_msg);
 
@@ -271,7 +271,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
 		this.$working_state = this.get_message(
 			__("Setting up your system"),
-			__("Starting Frappe ...")
+			__("Starting Frappe ..."),
 		).appendTo(this.parent);
 
 		this.attach_abort_button();
@@ -282,7 +282,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
 	attach_abort_button() {
 		this.$abort_btn = $(
-			`<button class='btn btn-secondary btn-xs btn-abort text-muted'>${__("Retry")}</button>`
+			`<button class='btn btn-secondary btn-xs btn-abort text-muted'>${__("Retry")}</button>`,
 		);
 		this.$working_state.find(".content").append(this.$abort_btn);
 
@@ -425,7 +425,7 @@ frappe.setup.slides_settings = [
 			if (!slide.get_value("language")) {
 				let session_language =
 					frappe.setup.utils.get_language_name_from_code(
-						frappe.boot.lang || navigator.language
+						frappe.boot.lang || navigator.language,
 					) || "English";
 				let language_field = slide.get_field("language");
 
@@ -479,7 +479,7 @@ frappe.setup.slides_settings = [
 				const { first_name, last_name, email } = frappe.boot.user;
 				if (first_name || last_name) {
 					slide.form.fields_dict.full_name.set_input(
-						[first_name, last_name].join(" ").trim()
+						[first_name, last_name].join(" ").trim(),
 					);
 				}
 				slide.form.fields_dict.email.set_input(email);
@@ -559,7 +559,7 @@ frappe.setup.utils = {
 			.get_input("currency")
 			.empty()
 			.add_options(
-				frappe.utils.unique($.map(data.country_info, (opts) => opts.currency).sort())
+				frappe.utils.unique($.map(data.country_info, (opts) => opts.currency).sort()),
 			);
 
 		slide.get_input("timezone").empty().add_options(data.all_timezones);

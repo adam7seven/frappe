@@ -26,7 +26,7 @@ frappe.views.ListGroupBy = class ListGroupBy {
 			frappe.model.user_settings.save(
 				this.doctype,
 				"group_by_fields",
-				group_by_fields || null
+				group_by_fields || null,
 			);
 			this.group_by_fields = group_by_fields
 				? ["assigned_to", "owner", ...group_by_fields]
@@ -105,13 +105,13 @@ frappe.views.ListGroupBy = class ListGroupBy {
 			this.get_group_by_count(fieldname).then((field_count_list) => {
 				if (field_count_list.length) {
 					let applied_filter = this.list_view.get_filter_value(
-						fieldname == "assigned_to" ? "_assign" : fieldname
+						fieldname == "assigned_to" ? "_assign" : fieldname,
 					);
 					this.render_dropdown_items(
 						field_count_list,
 						fieldtype,
 						$dropdown,
-						applied_filter
+						applied_filter,
 					);
 					this.setup_search($dropdown);
 				} else {
@@ -133,7 +133,7 @@ frappe.views.ListGroupBy = class ListGroupBy {
 		$dropdown.html(
 			`<div class="empty-state group-by-empty">
 				${__("No filters found")}
-			</div>`
+			</div>`,
 		);
 	}
 
@@ -144,7 +144,7 @@ frappe.views.ListGroupBy = class ListGroupBy {
 	get_group_by_dropdown_fields() {
 		let group_by_fields = [];
 		let fields = this.list_view.meta.fields.filter((f) =>
-			["Select", "Link", "Data", "Int", "Check"].includes(f.fieldtype)
+			["Select", "Link", "Data", "Int", "Check"].includes(f.fieldtype),
 		);
 		group_by_fields.push({
 			label: __(this.doctype),
@@ -165,7 +165,7 @@ frappe.views.ListGroupBy = class ListGroupBy {
 
 		// remove filter of the current field
 		current_filters = current_filters.filter(
-			(f_arr) => !f_arr.includes(field === "assigned_to" ? "_assign" : field)
+			(f_arr) => !f_arr.includes(field === "assigned_to" ? "_assign" : field),
 		);
 
 		let args = {
@@ -179,7 +179,7 @@ frappe.views.ListGroupBy = class ListGroupBy {
 			field_counts = field_counts.filter((f) => f.count !== 0);
 			let current_user = field_counts.find((f) => f.name === frappe.session.user);
 			field_counts = field_counts.filter(
-				(f) => !["Guest", "Administrator", frappe.session.user].includes(f.name)
+				(f) => !["Guest", "Administrator", frappe.session.user].includes(f.name),
 			);
 			// Set frappe.session.user on top of the list
 			if (current_user) field_counts.unshift(current_user);

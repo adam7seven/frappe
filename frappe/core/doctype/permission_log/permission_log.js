@@ -31,7 +31,7 @@ frappe.ui.form.on("Permission Log", {
 						<td>${frappe.model.unscrub(key)}</td>
 						<td style="word-break: break-word" class="diff-remove">${changes["from"][key]}</td>
 						<td style="word-break: break-word" class="diff-add">${changes["to"][key]}</td>
-					</tr>`)
+					</tr>`),
 				);
 			}
 		});
@@ -61,8 +61,8 @@ frappe.ui.form.on("Permission Log", {
 							`<tr>
 							<td style="word-break: break-word">${frappe.model.unscrub(key)}</td>
 							<td style="word-break: break-word">${value}</td>
-						</tr>`
-						)
+						</tr>`,
+						),
 					);
 				}
 			});

@@ -17,7 +17,7 @@ frappe.ui.form.ControlPassword = class ControlPassword extends frappe.ui.form.Co
 						aria-valuemin="0" aria-valuemax="100">
 					</div>
 				</div>
-			</div>`
+			</div>`,
 		).insertAfter(this.$input);
 
 		this.progress_text = this.indicator.find(".progress-text");
@@ -30,7 +30,7 @@ frappe.ui.form.ControlPassword = class ControlPassword extends frappe.ui.form.Co
 				let hide_icon = me.$input.val() && !me.$input.val().includes("*");
 				me.toggle_password.toggleClass("hidden", !hide_icon);
 				me.get_password_strength(me.$input.val());
-			}, 500)
+			}, 500),
 		);
 
 		this.toggle_password = $(`

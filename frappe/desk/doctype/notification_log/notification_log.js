@@ -39,7 +39,7 @@ frappe.ui.form.on("Notification Log", {
 					doctype=${encodeURIComponent(attachment.doctype)}
 					&name=${encodeURIComponent(attachment.name)}
 					&format=${encodeURIComponent(attachment.print_format)}
-					&lang=${encodeURIComponent(attachment.lang)}`)
+					&lang=${encodeURIComponent(attachment.lang)}`),
 			);
 			if (!w) {
 				frappe.msgprint(__("Please enable pop-ups"));

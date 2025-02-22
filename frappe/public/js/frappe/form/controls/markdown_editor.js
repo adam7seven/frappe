@@ -15,8 +15,8 @@ frappe.ui.form.ControlMarkdownEditor = class ControlMarkdownEditor extends (
 		this.showing_preview = false;
 		this.preview_toggle_btn = $(
 			`<button class="btn btn-default btn-xs ${editor_class}-toggle">${__(
-				"Preview"
-			)}</button>`
+				"Preview",
+			)}</button>`,
 		).click((e) => {
 			if (!this.showing_preview) {
 				this.update_preview();
@@ -95,7 +95,7 @@ frappe.ui.form.ControlMarkdownEditor = class ControlMarkdownEditor extends (
 					}
 					this.editor.session.insert(
 						this.editor.getCursorPosition(),
-						`![](${encodeURI(file_doc.file_url)})`
+						`![](${encodeURI(file_doc.file_url)})`,
 					);
 				},
 			});

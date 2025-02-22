@@ -52,7 +52,7 @@ frappe.ui.form.ControlDateRange = class ControlDateRange extends frappe.ui.form.
 			var vals = value.split(",");
 			var from_date = moment(frappe.datetime.user_to_obj(vals[0])).format("YYYY-MM-DD");
 			var to_date = moment(frappe.datetime.user_to_obj(vals[vals.length - 1])).format(
-				"YYYY-MM-DD"
+				"YYYY-MM-DD",
 			);
 			return [from_date, to_date];
 		}

@@ -11,7 +11,7 @@ frappe.listview_settings["RQ Job"] = {
 					frappe.xcall("frappe.core.doctype.rq_job.rq_job.remove_failed_jobs");
 				});
 			},
-			__("Actions")
+			__("Actions"),
 		);
 
 		frappe.xcall("frappe.utils.scheduler.get_scheduler_status").then(({ status }) => {
@@ -36,7 +36,7 @@ frappe.listview_settings["RQ Job"] = {
 								});
 						});
 					},
-					__("Actions")
+					__("Actions"),
 				);
 			}
 		});

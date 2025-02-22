@@ -14,7 +14,7 @@ context("Client Script", () => {
 				enabled: 1,
 				script: `console.log('todo form script')`,
 			},
-			true
+			true,
 		);
 		cy.visit("/app/todo/new", {
 			onBeforeLoad(win) {
@@ -34,7 +34,7 @@ context("Client Script", () => {
 				enabled: 1,
 				script: `console.log('todo list script')`,
 			},
-			true
+			true,
 		);
 		cy.visit("/app/todo", {
 			onBeforeLoad(win) {
@@ -54,7 +54,7 @@ context("Client Script", () => {
 				enabled: 0,
 				script: `console.log('todo disabled script')`,
 			},
-			true
+			true,
 		);
 		cy.visit("/app/todo", {
 			onBeforeLoad(win) {
@@ -74,7 +74,7 @@ context("Client Script", () => {
 				enabled: 1,
 				script: `console.log('todo form script 1')`,
 			},
-			true
+			true,
 		);
 		cy.insert_doc(
 			"Client Script",
@@ -85,7 +85,7 @@ context("Client Script", () => {
 				enabled: 1,
 				script: `console.log('todo form script 2')`,
 			},
-			true
+			true,
 		);
 		cy.visit("/app/todo/new", {
 			onBeforeLoad(win) {

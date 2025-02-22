@@ -26,7 +26,7 @@ frappe.ui.GroupBy = class {
 				doctype: this.doctype,
 				group_by_conditions: this.get_group_by_fields(),
 				aggregate_function_conditions: sql_aggregate_functions,
-			})
+			}),
 		);
 
 		this.group_by_button.popover({
@@ -236,7 +236,7 @@ frappe.ui.GroupBy = class {
 						${__("Add Group")}
 					</span>
 				</button>
-			</div>`)
+			</div>`),
 		);
 
 		this.group_by_button = this.page.wrapper.find(".group-by-button");
@@ -321,7 +321,7 @@ frappe.ui.GroupBy = class {
 			// get properties of "aggregate_on", for example Net Total
 			docfield = Object.assign(
 				{},
-				frappe.meta.docfield_map[this.aggregate_on_doctype][this.aggregate_on_field]
+				frappe.meta.docfield_map[this.aggregate_on_doctype][this.aggregate_on_field],
 			);
 
 			if (this.aggregate_function === "sum") {
@@ -369,7 +369,7 @@ frappe.ui.GroupBy = class {
 
 		let excluded_fields = ["_liked_by", "idx", "name"];
 		const standard_fields = frappe.model.std_fields.filter(
-			(df) => !excluded_fields.includes(df.fieldname)
+			(df) => !excluded_fields.includes(df.fieldname),
 		);
 
 		const fields = this.report_view.meta.fields
@@ -384,10 +384,10 @@ frappe.ui.GroupBy = class {
 					"Dynamic Link",
 					"Autocomplete",
 					"Date",
-				].includes(f.fieldtype)
+				].includes(f.fieldtype),
 			);
 		this.group_by_fields[this.doctype] = fields.sort((a, b) =>
-			__(cstr(a.label)).localeCompare(cstr(__(b.label)))
+			__(cstr(a.label)).localeCompare(cstr(__(b.label))),
 		);
 		this.all_fields[this.doctype] = this.report_view.meta.fields;
 
@@ -414,7 +414,7 @@ frappe.ui.GroupBy = class {
 		const button_label = group_by_applied
 			? __("Grouped by <span style='font-weight:600;'>{0}</b>", [
 					this.get_group_by_field_label(),
-			  ])
+				])
 			: __("Add Group");
 
 		this.group_by_button
@@ -426,13 +426,13 @@ frappe.ui.GroupBy = class {
 		this.group_by_button.find(".button-label").html(button_label);
 		this.group_by_button.attr(
 			"title",
-			`Results are Grouped by ${this.get_group_by_field_label()}`
+			`Results are Grouped by ${this.get_group_by_field_label()}`,
 		);
 	}
 
 	get_group_by_field_label() {
 		let field = this.group_by_fields[this.group_by_doctype]?.find(
-			(field) => field.fieldname == this.group_by_field
+			(field) => field.fieldname == this.group_by_field,
 		);
 		return field?.label ? __(field.label, null, field.parent) : field?.fieldname;
 	}

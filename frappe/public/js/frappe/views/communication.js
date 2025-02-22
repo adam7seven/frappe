@@ -236,7 +236,7 @@ frappe.views.CommunicationComposer = class {
 		if (print_format != "Standard") {
 			print_format_lang = frappe.get_doc(
 				"Print Format",
-				print_format
+				print_format,
 			)?.default_print_language;
 		}
 
@@ -280,7 +280,7 @@ frappe.views.CommunicationComposer = class {
 				if (this.frm?.events.get_email_recipient_filters) {
 					args.extra_filters = this.frm.events.get_email_recipient_filters(
 						this.frm,
-						field
+						field,
 					);
 				}
 
@@ -690,7 +690,7 @@ frappe.views.CommunicationComposer = class {
 			$(me.dialog.wrapper).find("[data-file-name]:checked"),
 			function (element) {
 				return $(element).attr("data-file-name");
-			}
+			},
 		);
 
 		if (form_values.attach_document_print) {
@@ -699,7 +699,7 @@ frappe.views.CommunicationComposer = class {
 				form_values,
 				selected_attachments,
 				null,
-				form_values.select_print_format || ""
+				form_values.select_print_format || "",
 			);
 		} else {
 			me.send_email(btn, form_values, selected_attachments);
@@ -737,7 +737,7 @@ frappe.views.CommunicationComposer = class {
 					// silently fail
 					console.log(e);
 					console.warn(
-						"[Communication] IndexedDB is full. Cannot save message as draft"
+						"[Communication] IndexedDB is full. Cannot save message as draft",
 					); // eslint-disable-line
 				}
 			});
@@ -756,7 +756,7 @@ frappe.views.CommunicationComposer = class {
 					// silently fail
 					console.log(e);
 					console.warn(
-						"[Communication] IndexedDB is full. Cannot save message as draft"
+						"[Communication] IndexedDB is full. Cannot save message as draft",
 					);
 				}
 			});
@@ -814,7 +814,7 @@ frappe.views.CommunicationComposer = class {
 						frappe.msgprint(
 							__("Email not sent to {0} (unsubscribed / disabled)", [
 								frappe.utils.escape_html(r.message["emails_not_sent_to"]),
-							])
+							]),
 						);
 					}
 
@@ -834,7 +834,7 @@ frappe.views.CommunicationComposer = class {
 					}
 				} else {
 					frappe.msgprint(
-						__("There were errors while sending email. Please try again.")
+						__("There were errors while sending email. Please try again."),
 					);
 
 					// try the error callback if it exists
@@ -952,7 +952,7 @@ frappe.views.CommunicationComposer = class {
 		}
 
 		const communication_date = frappe.datetime.global_date_format(
-			last_email.communication_date || last_email.creation
+			last_email.communication_date || last_email.creation,
 		);
 
 		this.reply_set = true;

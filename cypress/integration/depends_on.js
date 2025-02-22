@@ -121,7 +121,7 @@ context("Depends On", () => {
 			"child_test_depends_on_field",
 			"1",
 			"child_dependant_field",
-			"Some Other Value"
+			"Some Other Value",
 		);
 
 		cy.get("@row1-form_in_grid").find(".grid-collapse-row").click();
@@ -142,7 +142,7 @@ context("Depends On", () => {
 	it("should display the field depending on other fields value", () => {
 		cy.new_form("Test Depends On");
 		cy.get('.control-input [data-fieldname="display_dependant_field"]').should(
-			"not.be.visible"
+			"not.be.visible",
 		);
 		cy.get('.control-input [data-fieldname="test_field"]').clear();
 		cy.fill_field("test_field", "Value");

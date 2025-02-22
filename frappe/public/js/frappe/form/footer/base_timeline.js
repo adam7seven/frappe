@@ -51,13 +51,13 @@ class BaseTimeline {
 		if (response instanceof Promise) {
 			response.then(() => {
 				this.timeline_items.sort(
-					(item1, item2) => new Date(item2.creation) - new Date(item1.creation)
+					(item1, item2) => new Date(item2.creation) - new Date(item1.creation),
 				);
 				this.timeline_items.forEach(this.add_timeline_item.bind(this));
 			});
 		} else {
 			this.timeline_items.sort(
-				(item1, item2) => new Date(item2.creation) - new Date(item1.creation)
+				(item1, item2) => new Date(item2.creation) - new Date(item1.creation),
 			);
 			this.timeline_items.forEach(this.add_timeline_item.bind(this));
 		}
@@ -105,7 +105,7 @@ class BaseTimeline {
 					<button class="btn btn-default btn-sm btn-load-more">
 						<span>${item.content}</span>
 					</button>
-				</div>`
+				</div>`,
 			);
 			timeline_item.find(".btn-load-more").on("click", async () => {
 				let more_items = await this.get_more_communication_timeline_contents();
@@ -133,7 +133,7 @@ class BaseTimeline {
 		}
 
 		timeline_item.append(
-			`<div class="timeline-content ${item.is_card ? "frappe-card" : ""}">`
+			`<div class="timeline-content ${item.is_card ? "frappe-card" : ""}">`,
 		);
 		let timeline_content = timeline_item.find(".timeline-content");
 		timeline_content.append(item.content);

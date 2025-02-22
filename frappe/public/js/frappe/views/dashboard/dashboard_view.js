@@ -37,7 +37,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 	setup_dashboard_customization() {
 		this.page.add_menu_item(__("Customize Dashboard"), () => this.customize());
 		this.page.add_menu_item(__("Reset Dashboard Customizations"), () =>
-			this.reset_dashboard_customization()
+			this.reset_dashboard_customization(),
 		);
 		this.add_customization_buttons();
 	}
@@ -65,7 +65,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 				this.save_dashboard_customization();
 				this.page.standard_actions.show();
 			},
-			{ btn_class: "btn-primary" }
+			{ btn_class: "btn-primary" },
 		);
 
 		this.discard_customizations_button = this.page.add_button(__("Discard"), () => {
@@ -100,7 +100,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 							document_type: this.doctype,
 							is_public: 1,
 						},
-						"charts"
+						"charts",
 					),
 				() =>
 					this.fetch_dashboard_items(
@@ -109,7 +109,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 							document_type: this.doctype,
 							is_public: 1,
 						},
-						"number_cards"
+						"number_cards",
 					),
 				() => this.render_dashboard(),
 			]);
@@ -190,7 +190,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 
 	render_empty_state() {
 		const no_result_message_html = `<p>${__(
-			"You haven't added any Dashboard Charts or Number Cards yet."
+			"You haven't added any Dashboard Charts or Number Cards yet.",
 		)}
 			<br>${__("Click On Customize to add your first widget")}</p>`;
 
@@ -252,7 +252,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 		frappe.model.user_settings.save(
 			this.doctype,
 			"dashboard_settings",
-			this.dashboard_settings
+			this.dashboard_settings,
 		);
 		this.make_dashboard();
 	}
@@ -452,7 +452,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 					frappe
 						.xcall(
 							"frappe.desk.doctype.dashboard_chart.dashboard_chart.create_dashboard_chart",
-							{ args: chart }
+							{ args: chart },
 						)
 						.then((doc) => {
 							this.chart_group.new_widget.on_create({

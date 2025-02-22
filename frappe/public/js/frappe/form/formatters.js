@@ -128,7 +128,7 @@ frappe.form.formatters = {
 			precision = docfield.precision;
 		} else {
 			precision = cint(
-				docfield.precision || frappe.boot.sysdefaults.currency_precision || 2
+				docfield.precision || frappe.boot.sysdefaults.currency_precision || 2,
 			);
 		}
 
@@ -199,7 +199,7 @@ frappe.form.formatters = {
 			if (frappe.model.can_read(doctype)) {
 				const a = document.createElement("a");
 				a.href = `/app/${encodeURIComponent(
-					frappe.router.slug(doctype)
+					frappe.router.slug(doctype),
 				)}/${encodeURIComponent(original_value)}`;
 				a.dataset.doctype = doctype;
 				a.dataset.name = original_value;
@@ -242,7 +242,7 @@ frappe.form.formatters = {
 			return moment(frappe.datetime.convert_to_user_tz(value)).format(
 				frappe.boot.sysdefaults.date_format.toUpperCase() +
 					" " +
-					(frappe.boot.sysdefaults.time_format || "HH:mm:ss")
+					(frappe.boot.sysdefaults.time_format || "HH:mm:ss"),
 			);
 		} else {
 			return "";
@@ -353,7 +353,7 @@ frappe.form.formatters = {
 					value: value,
 					style: workflow_state.style.toLowerCase(),
 					icon: workflow_state.icon,
-				}
+				},
 			);
 		} else {
 			return "<span class='label'>" + value + "</span>";

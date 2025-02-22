@@ -49,14 +49,14 @@ export default class ChartWidget extends Widget {
 		this.loading = $(
 			`<div class="chart-loading-state text-extra-muted" style="height: ${
 				this.height
-			}px;">${__("Loading...")}</div>`
+			}px;">${__("Loading...")}</div>`,
 		);
 		this.loading.appendTo(this.body);
 
 		this.empty = $(
 			`<div class="chart-loading-state text-extra-muted" style="height: ${
 				this.height
-			}px;">${__("No Data")}</div>`
+			}px;">${__("No Data")}</div>`,
 		);
 		this.empty.hide().appendTo(this.body);
 
@@ -127,7 +127,7 @@ export default class ChartWidget extends Widget {
 				{
 					label: __(this.chart_settings.heatmap_year) || __(this.chart_doc.heatmap_year),
 					options: frappe.dashboard_utils.get_years_since_creation(
-						frappe.boot.user.creation
+						frappe.boot.user.creation,
 					),
 					action: (selected_item) => {
 						this.selected_heatmap_year = selected_item;
@@ -221,7 +221,7 @@ export default class ChartWidget extends Widget {
 	render_date_range_field() {
 		if (!this.date_field_wrapper || !this.date_field_wrapper.is(":visible")) {
 			this.date_field_wrapper = $(
-				`<div class="dashboard-date-field pull-right"></div>`
+				`<div class="dashboard-date-field pull-right"></div>`,
 			).insertAfter(this.action_area.find(".timespan-filter"));
 
 			if (this.width !== "Full" && this.widget.width() < 700) {
@@ -342,7 +342,7 @@ export default class ChartWidget extends Widget {
 		this.filter_button = $(
 			`<div class="filter-chart btn btn-xs pull-right">
 				${frappe.utils.icon("filter", "sm")}
-			</div>`
+			</div>`,
 		);
 
 		this.filter_button.appendTo(this.action_area);
@@ -435,7 +435,7 @@ export default class ChartWidget extends Widget {
 				reset: reset,
 				config: this.chart_settings,
 				chart_name: this.chart_doc.chart_name,
-			}
+			},
 		);
 	}
 
@@ -475,8 +475,8 @@ export default class ChartWidget extends Widget {
 					.map(
 						(action) =>
 							`<li><a class="dropdown-item" data-action="${action.action}">${__(
-								action.label
-							)}</a></li>`
+								action.label,
+							)}</a></li>`,
 					)
 					.join("")}
 			</ul>
@@ -588,7 +588,7 @@ export default class ChartWidget extends Widget {
 		if (this.chart_doc.document_type) {
 			let doctype_meta = frappe.get_meta(this.chart_doc.document_type);
 			let field = doctype_meta.fields.find(
-				(x) => x.fieldname == this.chart_doc.value_based_on
+				(x) => x.fieldname == this.chart_doc.value_based_on,
 			);
 			fieldtype = field?.fieldtype;
 			options = field?.options;
@@ -615,7 +615,7 @@ export default class ChartWidget extends Widget {
 					frappe.format(
 						value,
 						{ fieldtype, options },
-						{ always_show_decimals: true, inline: true }
+						{ always_show_decimals: true, inline: true },
 					),
 			};
 		}
@@ -624,7 +624,7 @@ export default class ChartWidget extends Widget {
 			const heatmap_year = parseInt(
 				this.selected_heatmap_year ||
 					this.chart_settings.heatmap_year ||
-					this.chart_doc.heatmap_year
+					this.chart_doc.heatmap_year,
 			);
 			chart_args.data.start = new Date(`${heatmap_year}-01-01`);
 			chart_args.data.end = new Date(`${heatmap_year + 1}-01-01`);
@@ -725,7 +725,7 @@ export default class ChartWidget extends Widget {
 	prepare_chart_object() {
 		if (this.chart_doc.type == "Heatmap" && !this.chart_doc.heatmap_year) {
 			this.chart_doc.heatmap_year = frappe.dashboard_utils.get_year(
-				frappe.datetime.now_date()
+				frappe.datetime.now_date(),
 			);
 		}
 
@@ -742,7 +742,7 @@ export default class ChartWidget extends Widget {
 				.then((filters) => {
 					chart_saved_filters = this.update_default_date_filters(
 						filters,
-						chart_saved_filters
+						chart_saved_filters,
 					);
 					this.filters =
 						frappe.utils.parse_array(user_saved_filters) ||

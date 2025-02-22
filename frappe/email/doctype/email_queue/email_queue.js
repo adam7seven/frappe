@@ -16,8 +16,8 @@ frappe.ui.form.on("Email Queue", {
 						if (cint(frappe.sys_defaults.suspend_email_queue)) {
 							frappe.show_alert(
 								__(
-									"Email queue is currently suspended. Resume to automatically send emails."
-								)
+									"Email queue is currently suspended. Resume to automatically send emails.",
+								),
 							);
 						}
 					},
@@ -34,7 +34,7 @@ frappe.ui.form.on("Email Queue", {
 						frm.reload_doc();
 						frappe.show_alert({
 							message: __(
-								"Status Updated. The email will be picked up in the next scheduled run."
+								"Status Updated. The email will be picked up in the next scheduled run.",
 							),
 							indicator: "green",
 						});

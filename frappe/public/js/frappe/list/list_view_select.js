@@ -17,7 +17,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 			action,
 			true,
 			null,
-			this.icon_map[view] || "list"
+			this.icon_map[view] || "list",
 		);
 		$el.parent().attr("data-view", view);
 	}
@@ -117,7 +117,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 				action: () => this.setup_kanban_boards(),
 				current_view_handler: () => {
 					frappe.views.KanbanView.get_kanbans(this.doctype).then((kanbans) =>
-						this.setup_kanban_switcher(kanbans)
+						this.setup_kanban_switcher(kanbans),
 					);
 				},
 			},
@@ -127,7 +127,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 					(this.list_view.meta.fields.find((i) => i.fieldname === "latitude") &&
 						this.list_view.meta.fields.find((i) => i.fieldname === "longitude")) ||
 					this.list_view.meta.fields.find(
-						(i) => i.fieldname === "location" && i.fieldtype == "Geolocation"
+						(i) => i.fieldname === "location" && i.fieldtype == "Geolocation",
 					),
 				action: () => this.set_route("map"),
 			},
@@ -184,7 +184,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 		const kanban_switcher = this.page.add_custom_button_group(
 			__("Select Kanban"),
 			null,
-			this.list_view.$filter_section
+			this.list_view.$filter_section,
 		);
 
 		kanbans.map((k) => {
@@ -192,7 +192,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 				kanban_switcher,
 				k.name,
 				() => this.set_route("kanban", k.name),
-				false
+				false,
 			);
 		});
 
@@ -203,7 +203,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 				kanban_switcher,
 				__("Create New Kanban Board"),
 				() => frappe.views.KanbanView.show_kanban_dialog(this.doctype),
-				true
+				true,
 			);
 		}
 	}
@@ -247,7 +247,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 		// Sort reports alphabetically
 		var reports =
 			Object.values(frappe.boot.user.all_reports).sort((a, b) =>
-				a.title.localeCompare(b.title)
+				a.title.localeCompare(b.title),
 			) || [];
 
 		// from specially tagged reports
@@ -268,7 +268,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 					} else {
 						frappe.views.KanbanView.show_kanban_dialog(doctype);
 					}
-				}
+				},
 			);
 		}
 
@@ -326,7 +326,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 				account.email_id == "All Accounts" ? "All Accounts" : account.email_account;
 			let route = `/app/communication/view/inbox/${email_account}`;
 			let display_name = ["All Accounts", "Sent Mail", "Spam", "Trash"].includes(
-				account.email_id
+				account.email_id,
 			)
 				? __(account.email_id)
 				: account.email_account;

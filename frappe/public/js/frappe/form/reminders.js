@@ -93,7 +93,7 @@ export class ReminderManager {
 			})
 			.then((reminder) => {
 				frappe.show_alert(
-					__("Reminder set at {0}", [frappe.datetime.str_to_user(reminder.remind_at)])
+					__("Reminder set at {0}", [frappe.datetime.str_to_user(reminder.remind_at)]),
 				);
 			});
 	}

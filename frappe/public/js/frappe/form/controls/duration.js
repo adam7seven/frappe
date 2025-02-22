@@ -17,7 +17,7 @@ frappe.ui.form.ControlDuration = class ControlDuration extends frappe.ui.form.Co
 		this.$picker = $(
 			`<div class="duration-picker">
 				<div class="picker-row row"></div>
-			</div>`
+			</div>`,
 		);
 		this.$wrapper.append(this.$picker);
 		this.build_numeric_input("days", this.duration_options.hide_days);
@@ -86,7 +86,7 @@ frappe.ui.form.ControlDuration = class ControlDuration extends frappe.ui.form.Co
 				duration.days,
 				duration.hours,
 				duration.minutes,
-				duration.seconds
+				duration.seconds,
 			);
 			this.set_value(value);
 			this.set_focus();
@@ -211,6 +211,6 @@ function makeDurationParseRegex() {
 			_part("seconds", [__("s", null, "Seconds (Field: Duration)")]),
 			".*", // Fallback to ignore unknown parts
 		].join(""),
-		"i"
+		"i",
 	);
 }

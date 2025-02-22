@@ -53,7 +53,7 @@ frappe.listview_settings["User Permission"] = {
 												if (options.length > 5) {
 													dialog.fields_dict.applicable_doctypes.setup_select_all();
 												}
-											}
+											},
 										);
 									});
 								}
@@ -166,7 +166,7 @@ frappe.listview_settings["User Permission"] = {
 						frappe
 							.xcall(
 								"frappe.core.doctype.user_permission.user_permission.clear_user_permissions",
-								data
+								data,
 							)
 							.then((data) => {
 								dialog.hide();

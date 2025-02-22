@@ -45,7 +45,7 @@ export function fuzzy_match(pattern, str) {
 		max_matches,
 		0 /* next_match */,
 		recursion_count,
-		recursion_limit
+		recursion_limit,
 	);
 }
 
@@ -59,7 +59,7 @@ function fuzzy_match_recursive(
 	max_matches,
 	next_match,
 	recursion_count,
-	recursion_limit
+	recursion_limit,
 ) {
 	let out_score = 0;
 
@@ -111,7 +111,7 @@ function fuzzy_match_recursive(
 				max_matches,
 				next_match,
 				recursion_count,
-				recursion_limit
+				recursion_limit,
 			);
 
 			if (matched) {

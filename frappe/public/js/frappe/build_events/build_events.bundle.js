@@ -18,7 +18,7 @@ frappe.realtime.on("build_event", (data) => {
 						let filename = parts[0].split("/").slice(-1)[0];
 
 						frappe.assets._executed = frappe.assets._executed.filter(
-							(asset) => !asset.includes(`${filename}.bundle`)
+							(asset) => !asset.includes(`${filename}.bundle`),
 						);
 					}
 				}

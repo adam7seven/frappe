@@ -7,7 +7,7 @@ frappe.ui.form.on("Google Drive", {
 			frm.dashboard.set_headline(
 				__("To use Google Drive, enable {0}.", [
 					`<a href='/app/google-settings'>${__("Google Settings")}</a>`,
-				])
+				]),
 			);
 		}
 
@@ -17,7 +17,7 @@ frappe.ui.form.on("Google Drive", {
 				frm.dashboard.show_progress(
 					progress_title,
 					(data.progress / data.total) * 100,
-					data.message
+					data.message,
 				);
 				if (data.progress === data.total) {
 					frm.dashboard.hide_progress(progress_title);
@@ -45,8 +45,8 @@ frappe.ui.form.on("Google Drive", {
 		if (frm.doc.enable && frm.doc.backup_folder_name && !frm.doc.refresh_token) {
 			frm.dashboard.set_headline(
 				__(
-					"Click on <b>Authorize Google Drive Access</b> to authorize Google Drive Access."
-				)
+					"Click on <b>Authorize Google Drive Access</b> to authorize Google Drive Access.",
+				),
 			);
 		}
 

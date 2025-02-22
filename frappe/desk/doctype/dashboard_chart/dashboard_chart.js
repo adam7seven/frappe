@@ -14,7 +14,7 @@ frappe.ui.form.on("Dashboard Chart", {
 		let static_filters = JSON.parse(frm.doc.filters_json || "null");
 		static_filters = frappe.dashboard_utils.remove_common_static_filter_values(
 			static_filters,
-			dynamic_filters
+			dynamic_filters,
 		);
 
 		frm.set_value("filters_json", JSON.stringify(static_filters));
@@ -35,7 +35,7 @@ frappe.ui.form.on("Dashboard Chart", {
 				const dialog = frappe.dashboard_utils.get_add_to_dashboard_dialog(
 					frm.doc.name,
 					"Dashboard Chart",
-					"frappe.desk.doctype.dashboard_chart.dashboard_chart.add_chart_to_dashboard"
+					"frappe.desk.doctype.dashboard_chart.dashboard_chart.add_chart_to_dashboard",
 				);
 
 				if (!frm.doc.chart_name) {
@@ -84,7 +84,7 @@ frappe.ui.form.on("Dashboard Chart", {
 				frm.set_df_property(
 					"heatmap_year",
 					"options",
-					frappe.dashboard_utils.get_years_since_creation(creation_date)
+					frappe.dashboard_utils.get_years_since_creation(creation_date),
 				);
 			});
 		}
@@ -184,30 +184,30 @@ frappe.ui.form.on("Dashboard Chart", {
 					if (data.result.length) {
 						frm.field_options = frappe.report_utils.get_field_options_from_report(
 							data.columns,
-							data
+							data,
 						);
 						frm.set_df_property(
 							"x_field",
 							"options",
-							frm.field_options.non_numeric_fields
+							frm.field_options.non_numeric_fields,
 						);
 						if (!frm.field_options.numeric_fields.length) {
 							frappe.msgprint(
-								__("Report has no numeric fields, please change the Report Name")
+								__("Report has no numeric fields, please change the Report Name"),
 							);
 						} else {
 							let y_field_df = frappe.meta.get_docfield(
 								"Dashboard Chart Field",
 								"y_field",
-								frm.doc.name
+								frm.doc.name,
 							);
 							y_field_df.options = frm.field_options.numeric_fields;
 						}
 					} else {
 						frappe.msgprint(
 							__(
-								"Report has no data, please modify the filters or change the Report Name"
-							)
+								"Report has no data, please modify the filters or change the Report Name",
+							),
 						);
 					}
 				} else {
@@ -230,7 +230,7 @@ frappe.ui.form.on("Dashboard Chart", {
 			frm.set_df_property(
 				"time_interval",
 				"options",
-				time_interval_options[frm.doc.timespan]
+				time_interval_options[frm.doc.timespan],
 			);
 		}
 	},
@@ -252,7 +252,7 @@ frappe.ui.form.on("Dashboard Chart", {
 			frm.set_df_property(
 				"aggregate_function_based_on",
 				"options",
-				aggregate_function_fields
+				aggregate_function_fields,
 			);
 			frm.trigger("show_filters");
 		};
@@ -459,7 +459,7 @@ frappe.ui.form.on("Dashboard Chart", {
 		let fields = frappe.dashboard_utils.get_fields_for_dynamic_filter_dialog(
 			is_document_type,
 			filters,
-			frm.dynamic_filters
+			frm.dynamic_filters,
 		);
 
 		frm.dynamic_filter_table.on("click", () => {
@@ -540,7 +540,7 @@ frappe.ui.form.on("Dashboard Chart", {
 			if (doc_is_table) {
 				let parents = await frappe.xcall(
 					"frappe.desk.doctype.dashboard_chart.dashboard_chart.get_parent_doctypes",
-					{ child_type: document_type }
+					{ child_type: document_type },
 				);
 
 				frm.set_query("parent_document_type", function () {

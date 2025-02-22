@@ -19,8 +19,8 @@ frappe.views.InboxView = class InboxView extends frappe.views.ListView {
 		} else if (!route[3] || (route[3] !== "All Accounts" && !is_valid(route[3]))) {
 			frappe.throw(
 				__(
-					"No email account associated with the User. Please add an account under User > Email Inbox."
-				)
+					"No email account associated with the User. Please add an account under User > Email Inbox.",
+				),
 			);
 		}
 		return false;
@@ -116,8 +116,8 @@ frappe.views.InboxView = class InboxView extends frappe.views.ListView {
 			email.status == "Closed"
 				? `<span class="fa fa-check fa-large" title="${__(email.status)}"></span>`
 				: email.status == "Replied"
-				? `<span class="fa fa-mail-reply fa-large" title="${__(email.status)}"></span>`
-				: "";
+					? `<span class="fa fa-mail-reply fa-large" title="${__(email.status)}"></span>`
+					: "";
 
 		return `
 			<div class="level-item list-row-activity">

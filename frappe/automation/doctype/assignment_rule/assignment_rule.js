@@ -43,7 +43,7 @@ frappe.ui.form.on("Assignment Rule", {
 		};
 
 		labels.forEach((label) =>
-			frm.fields_dict["assignment_days"].grid.add_custom_button(label, set_days, "top")
+			frm.fields_dict["assignment_days"].grid.add_custom_button(label, set_days, "top"),
 		);
 	},
 
@@ -64,13 +64,13 @@ frappe.ui.form.on("Assignment Rule", {
 			(df) =>
 				["Dynamic Link", "Data"].includes(df.fieldtype) ||
 				(df.fieldtype == "Link" && df.options == "User"),
-			[{ label: "Owner", value: "owner" }]
+			[{ label: "Owner", value: "owner" }],
 		);
 		if (doctype) {
 			frm.set_fields_as_options("due_date_based_on", doctype, (df) =>
-				["Date", "Datetime"].includes(df.fieldtype)
+				["Date", "Datetime"].includes(df.fieldtype),
 			).then((options) =>
-				frm.set_df_property("due_date_based_on", "hidden", !options.length)
+				frm.set_df_property("due_date_based_on", "hidden", !options.length),
 			);
 		}
 	},

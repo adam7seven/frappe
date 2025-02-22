@@ -130,7 +130,7 @@ frappe.ui.Slide = class Slide {
 					}
 					field.reqd = 0;
 					return field;
-				})
+				}),
 			);
 
 			if (this.count === this.max_count) {
@@ -284,7 +284,7 @@ frappe.ui.Slides = class Slides {
 						slides_footer: this.$footer,
 						render_parent_dots: this.render_progress_dots.bind(this),
 						id: id,
-					})
+					}),
 				);
 				if (!this.unidirectional) {
 					this.slide_dict[id].make();
@@ -353,19 +353,19 @@ frappe.ui.Slides = class Slides {
 				<button class="prev-btn btn btn-secondary btn-sm" tabindex="0">${__(
 					"Previous",
 					null,
-					"Go to previous slide"
+					"Go to previous slide",
 				)}</button>
 			</div>
 			<div class="col-sm-8 text-right next-div">
 				<button class="complete-btn btn btn-sm primary">${__(
 					"Complete Setup",
 					null,
-					"Finish the setup wizard"
+					"Finish the setup wizard",
 				)}</button>
 				<button class="next-btn btn btn-default btn-sm" tabindex="0">${__(
 					"Next",
 					null,
-					"Go to next slide"
+					"Go to next slide",
 				)}</button>
 			</div>
 		</div>`).appendTo(this.$footer);

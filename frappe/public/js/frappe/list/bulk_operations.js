@@ -39,7 +39,7 @@ export default class BulkOperations {
 
 		if (valid_docs.length > MAX_PRINT_LIMIT) {
 			frappe.msgprint(
-				__("You can only print upto {0} documents at a time", [MAX_PRINT_LIMIT])
+				__("You can only print upto {0} documents at a time", [MAX_PRINT_LIMIT]),
 			);
 			return;
 		}
@@ -154,7 +154,7 @@ export default class BulkOperations {
 						"&letterhead=" +
 						encodeURIComponent(letterhead) +
 						"&options=" +
-						encodeURIComponent(pdf_options)
+						encodeURIComponent(pdf_options),
 				);
 
 				if (!w) {
@@ -212,7 +212,7 @@ export default class BulkOperations {
 
 				if (failed.length && !r._server_messages) {
 					frappe.throw(
-						__("Cannot delete {0}", [failed.map((f) => f.bold()).join(", ")])
+						__("Cannot delete {0}", [failed.map((f) => f.bold()).join(", ")]),
 					);
 				}
 				if (failed.length < docnames.length) {
@@ -310,7 +310,7 @@ export default class BulkOperations {
 	edit(docnames, field_mappings, done) {
 		let field_options = Object.keys(field_mappings).sort(function (a, b) {
 			return __(cstr(field_mappings[a].label)).localeCompare(
-				cstr(__(field_mappings[b].label))
+				cstr(__(field_mappings[b].label)),
 			);
 		});
 		const status_regex = /status/i;
@@ -364,7 +364,7 @@ export default class BulkOperations {
 							frappe.throw(
 								__("Cannot update {0}", [
 									failed.map((f) => (f.bold ? f.bold() : f)).join(", "),
-								])
+								]),
 							);
 						}
 						done();
@@ -409,7 +409,7 @@ export default class BulkOperations {
 				dialog.set_df_property(
 					"value",
 					"description",
-					__("You have not entered a value. The field will be set to empty.")
+					__("You have not entered a value. The field will be set to empty."),
 				);
 			} else {
 				dialog.set_df_property("value", "description", "");
@@ -462,7 +462,7 @@ export default class BulkOperations {
 		frappe.require("data_import_tools.bundle.js", () => {
 			const data_exporter = new frappe.data_import.DataExporter(
 				doctype,
-				"Insert New Records"
+				"Insert New Records",
 			);
 			data_exporter.dialog.set_value("export_records", "by_filter");
 			data_exporter.filter_group.add_filters_to_filter_group([

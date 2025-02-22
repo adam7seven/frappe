@@ -53,7 +53,7 @@ context("Login", () => {
 
 		// redirect-to /me page with params to mock OAuth 2.0 like request
 		cy.visit(
-			"/login?redirect-to=/me?" + encodeURIComponent(payload.toString().replace("+", " "))
+			"/login?redirect-to=/me?" + encodeURIComponent(payload.toString().replace("+", " ")),
 		);
 
 		cy.get("#login_email").type("Administrator");

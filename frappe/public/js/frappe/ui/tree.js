@@ -164,12 +164,12 @@ frappe.ui.Tree = class {
 					() => this.get_all_nodes(value, is_root, node.label),
 					(data_list) => this.render_children_of_all_nodes(data_list),
 					() => this.set_selected_node(node),
-			  ])
+				])
 			: frappe.run_serially([
 					() => this.get_nodes(value, is_root),
 					(data_set) => this.render_node_children(node, data_set),
 					() => this.set_selected_node(node),
-			  ]);
+				]);
 	}
 
 	render_children_of_all_nodes(data_list) {
@@ -276,7 +276,7 @@ frappe.ui.Tree = class {
 		$(
 			`<a class="tree-label" data-doctype="${this.args.doctype}" data-name="${
 				node.label
-			}"> ${this.get_node_label(node)}</a>`
+			}"> ${this.get_node_label(node)}</a>`,
 		).appendTo(node.$tree_link);
 
 		node.$tree_link.on("click", () => {
@@ -291,7 +291,7 @@ frappe.ui.Tree = class {
 			},
 			function () {
 				$(this).parent().removeClass("hover-active");
-			}
+			},
 		);
 	}
 

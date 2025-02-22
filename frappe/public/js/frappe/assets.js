@@ -61,7 +61,7 @@ class AssetManager {
 
 	clear_local_storage() {
 		["_last_load", "_version_number", "metadata_version", "page_info", "last_visited"].forEach(
-			(key) => localStorage.removeItem(key)
+			(key) => localStorage.removeItem(key),
 		);
 
 		// clear assets

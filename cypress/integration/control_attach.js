@@ -30,7 +30,7 @@ context("Attach Control", () => {
 		cy.findByRole("button", { name: "Link" }).click();
 		cy.findByPlaceholderText("Attach a web link").type(
 			"https://wallpaperplay.com/walls/full/8/2/b/72402.jpg",
-			{ force: true }
+			{ force: true },
 		);
 
 		//Clicking on the Upload button to upload the file
@@ -69,7 +69,7 @@ context("Attach Control", () => {
 		cy.findByRole("button", { name: "Link" }).click();
 		cy.findByPlaceholderText("Attach a web link").type(
 			"https://wallpaperplay.com/walls/full/8/2/b/72402.jpg",
-			{ force: true }
+			{ force: true },
 		);
 
 		//Clicking on the Upload button to upload the file
@@ -207,7 +207,7 @@ context("Attach Control with Failed Document Save", () => {
 		cy.findByRole("button", { name: "Link" }).click();
 		cy.findByPlaceholderText("Attach a web link").type(
 			"https://wallpaperplay.com/walls/full/8/2/b/72402.jpg",
-			{ force: true }
+			{ force: true },
 		);
 
 		//Clicking on the Upload button to upload the file

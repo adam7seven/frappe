@@ -39,8 +39,8 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
 					r,
 					__(
 						"Database Table Row Size Utilization: {0}%, this limits number of fields you can add.",
-						[r]
-					)
+						[r],
+					),
 				);
 			});
 	}
@@ -59,7 +59,7 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
 				__("Number of attachment fields are more than {}, limit updated to {}.", [
 					label,
 					no_of_attach_fields,
-				])
+				]),
 			);
 		}
 	}
@@ -83,7 +83,7 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
 			};
 			this.frm.set_value(
 				"autoname",
-				naming_rule_default_autoname_map[this.frm.doc.naming_rule] || ""
+				naming_rule_default_autoname_map[this.frm.doc.naming_rule] || "",
 			);
 			setTimeout(() => (this.frm.__from_naming_rule = false), 500);
 

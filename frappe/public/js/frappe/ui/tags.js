@@ -109,7 +109,7 @@ frappe.ui.Tags = class {
 				pill_wrapper.closest(".form-tag-row").remove();
 			},
 			null,
-			colored
+			colored,
 		);
 		if (this.onTagClick) {
 			$tag.on("click", ".pill-label", () => {

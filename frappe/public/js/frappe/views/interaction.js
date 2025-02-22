@@ -157,7 +157,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 			<p class='add-more-attachments'>\
 			<a class='text-muted small'><i class='octicon octicon-plus' style='font-size: 12px'></i> " +
 				__("Add Attachment") +
-				"</a></p>"
+				"</a></p>",
 		).appendTo(attach.empty());
 		attach.find(".add-more-attachments a").on("click", () => new frappe.ui.FileUploader(args));
 		this.render_attach();
@@ -188,8 +188,8 @@ frappe.views.InteractionComposer = class InteractionComposer {
 							' <a href="%(file_url)s" target="_blank" class="text-muted small">' +
 							'<i class="fa fa-share" style="vertical-align: middle; margin-left: 3px;"></i>' +
 							"</label></p>",
-						f
-					)
+						f,
+					),
 				).appendTo(attach);
 			});
 		}
@@ -206,7 +206,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 			$(me.dialog.wrapper).find("[data-file-name]:checked"),
 			function (element) {
 				return $(element).attr("data-file-name");
-			}
+			},
 		);
 
 		me.create_interaction(btn, form_values, selected_attachments);
@@ -273,7 +273,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 					}
 				} else {
 					frappe.msgprint(
-						__("There were errors while creating the document. Please try again.")
+						__("There were errors while creating the document. Please try again."),
 					);
 				}
 			},
@@ -320,7 +320,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 				} else {
 					frappe.show_alert({
 						message: __(
-							"The attachments could not be correctly linked to the new document"
+							"The attachments could not be correctly linked to the new document",
 						),
 						indicator: "orange",
 					});

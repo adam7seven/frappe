@@ -115,7 +115,7 @@ const insert_message = (data) => {
 
 	if ($(`.discussion-on-page[data-topic=${topic.name}]`).length) {
 		$(data.template).insertBefore(
-			`.discussion-on-page[data-topic=${topic.name}] .discussion-form`
+			`.discussion-on-page[data-topic=${topic.name}] .discussion-form`,
 		);
 	} else if (!first_topic && !this.single_thread && document_match_found) {
 		$(data.sidebar).insertBefore($(`.discussions-sidebar .sidebar-parent`).first());

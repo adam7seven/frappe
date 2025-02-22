@@ -30,7 +30,7 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 						<div class="help-box small text-extra-muted hide"></div>
 					</div>
 				</div>
-			</div>`
+			</div>`,
 			).appendTo(this.parent);
 
 			if (this.constructor.horizontal) {
@@ -126,8 +126,8 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 						"title",
 						__(
 							"This value is fetched from {0}'s {1} field",
-							me.df.fetch_from.split(".").map((value) => __(frappe.unscrub(value)))
-						)
+							me.df.fetch_from.split(".").map((value) => __(frappe.unscrub(value))),
+						),
 					);
 				}
 			}
@@ -177,7 +177,7 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 
 	set_doc_url() {
 		let unsupported_fieldtypes = frappe.model.no_value_type.filter(
-			(x) => frappe.model.table_fields.indexOf(x) === -1
+			(x) => frappe.model.table_fields.indexOf(x) === -1,
 		);
 
 		if (

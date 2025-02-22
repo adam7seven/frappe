@@ -31,10 +31,10 @@ frappe.ui.AddressAutocompleteDialog = class AddressAutocompleteDialog {
 									(field) =>
 										field.reqd &&
 										!field.default &&
-										field.fieldname !== "address_type"
+										field.fieldname !== "address_type",
 								);
 							const missing_fields = mandatory_fields.filter(
-								(field) => !address[field.fieldname]
+								(field) => !address[field.fieldname],
 							);
 							const is_valid = missing_fields.length === 0;
 							if (is_valid) {

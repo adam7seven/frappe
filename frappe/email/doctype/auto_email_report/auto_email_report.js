@@ -10,8 +10,8 @@ frappe.ui.form.on("Auto Email Report", {
 					frappe.urllib.get_full_url(
 						"/api/method/frappe.email.doctype.auto_email_report.auto_email_report.download?" +
 							"name=" +
-							encodeURIComponent(frm.doc.name)
-					)
+							encodeURIComponent(frm.doc.name),
+					),
 				);
 				if (!w) {
 					frappe.msgprint(__("Please enable pop-ups"));
@@ -94,10 +94,10 @@ frappe.ui.form.on("Auto Email Report", {
 					"</th><th>" +
 					__("Value") +
 					"</th></tr>\
-				</thead><tbody></tbody></table>"
+				</thead><tbody></tbody></table>",
 			).appendTo(wrapper);
 			$('<p class="text-muted small">' + __("Click table to edit") + "</p>").appendTo(
-				wrapper
+				wrapper,
 			);
 
 			var filters = {};

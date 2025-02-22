@@ -13,7 +13,7 @@ frappe.messages.get_waiting_message = function (msg) {
 	return repl(
 		'<div class="msg-box" style="width: 63%; margin: 30px auto;">\
 		<p class="text-center">%(msg)s</p></div>',
-		{ msg: msg }
+		{ msg: msg },
 	);
 };
 
@@ -102,7 +102,7 @@ frappe.prompt = function (fields, callback, title, primary_label) {
 			}
 			d.hide();
 			callback(values);
-		}
+		},
 	);
 	d.show();
 	return d;
@@ -229,7 +229,7 @@ frappe.msgprint = function (msg, title, is_minimizable) {
 
 		frappe.msg_dialog.set_primary_action(
 			__(data.primary_action.label) || __(data.primary_action_label) || __("Done"),
-			data.primary_action.action
+			data.primary_action.action,
 		);
 	} else {
 		if (frappe.msg_dialog.has_primary_action) {
@@ -241,7 +241,7 @@ frappe.msgprint = function (msg, title, is_minimizable) {
 	if (data.secondary_action) {
 		frappe.msg_dialog.set_secondary_action(data.secondary_action.action);
 		frappe.msg_dialog.set_secondary_action_label(
-			__(data.secondary_action.label) || __("Close")
+			__(data.secondary_action.label) || __("Close"),
 		);
 	}
 
@@ -264,7 +264,7 @@ frappe.msgprint = function (msg, title, is_minimizable) {
 		// set title only if it is explicitly given
 		// and no existing title exists
 		frappe.msg_dialog.set_title(
-			data.title || __("Message", null, "Default title of the message dialog")
+			data.title || __("Message", null, "Default title of the message dialog"),
 		);
 	}
 
@@ -349,7 +349,7 @@ frappe.verify_password = function (callback) {
 			});
 		},
 		__("Verify Password"),
-		__("Verify")
+		__("Verify"),
 	);
 };
 

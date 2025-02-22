@@ -32,7 +32,7 @@ frappe.ui.form.States = class FormStates {
 					const next_actions =
 						$.map(
 							transitions,
-							(d) => `${d.action.bold()} ${__("by Role")} ${d.allowed}`
+							(d) => `${d.action.bold()} ${__("by Role")} ${d.allowed}`,
 						).join(", ") || __("None: End of Workflow").bold();
 
 					const document_editable_by = frappe.workflow
@@ -47,14 +47,14 @@ frappe.ui.form.States = class FormStates {
 					<p>${__("Document is only editable by users with role")}: ${document_editable_by}</p>
 					<p>${__("Next actions")}: ${next_actions}</p>
 					<p>${__("{0}: Other permission rules may also apply", [__("Note").bold()])}</p>
-				`
+				`,
 						)
 						.css({ padding: "15px" });
 
 					d.show();
 				});
 			},
-			true
+			true,
 		);
 	}
 
@@ -141,7 +141,7 @@ frappe.ui.form.States = class FormStates {
 	set_default_state() {
 		var default_state = frappe.workflow.get_default_state(
 			this.frm.doctype,
-			this.frm.doc.docstatus
+			this.frm.doc.docstatus,
 		);
 		if (default_state) {
 			this.frm.set_value(this.state_fieldname, default_state);

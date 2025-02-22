@@ -11,7 +11,7 @@ context("Grid", () => {
 			.its("frappe")
 			.then((frappe) => {
 				return frappe.call(
-					"frappe.tests.ui_test_helpers.create_contact_phone_nos_records"
+					"frappe.tests.ui_test_helpers.create_contact_phone_nos_records",
 				);
 			});
 	});

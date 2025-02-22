@@ -114,7 +114,7 @@ frappe.ui.form.save = function (frm, action, callback, btn) {
 					const table_field = frappe.meta.docfield_map[doc.parenttype][doc.parentfield];
 
 					const table_label = __(
-						table_field.label || frappe.unscrub(table_field.fieldname)
+						table_field.label || frappe.unscrub(table_field.fieldname),
 					).bold();
 
 					message = __("Mandatory fields required in table {0}, Row {1}", [
@@ -230,7 +230,7 @@ frappe.ui.form.save = function (frm, action, callback, btn) {
 frappe.ui.form.remove_old_form_route = () => {
 	let current_route = frappe.get_route().join("/");
 	frappe.route_history = frappe.route_history.filter(
-		(route) => route.join("/") !== current_route
+		(route) => route.join("/") !== current_route,
 	);
 };
 
@@ -261,19 +261,19 @@ frappe.ui.form.update_calling_link = (newdoc) => {
 								frappe.utils.add_link_title(
 									newdoc.doctype,
 									newdoc.name,
-									newdoc[meta.title_field]
+									newdoc[meta.title_field],
 								);
 							}
 							frappe._from_link.set_value(newdoc.name);
 						}
-					}
+					},
 				);
 			} else {
 				if (meta.title_field && meta.show_title_field_in_link) {
 					frappe.utils.add_link_title(
 						newdoc.doctype,
 						newdoc.name,
-						newdoc[meta.title_field]
+						newdoc[meta.title_field],
 					);
 				}
 				frappe._from_link.set_value(newdoc.name);
@@ -288,7 +288,7 @@ frappe.ui.form.update_calling_link = (newdoc) => {
 					.set_route(
 						"Form",
 						frappe._from_link.frm.doctype,
-						frappe._from_link.frm.docname
+						frappe._from_link.frm.docname,
 					)
 					.then(() => {
 						frappe.utils.scroll_to(frappe._from_link_scrollY);

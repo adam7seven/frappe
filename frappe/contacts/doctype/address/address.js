@@ -36,7 +36,7 @@ frappe.ui.form.on("Address", {
 					function () {
 						frappe.set_route("Form", link.link_doctype, link.link_name);
 					},
-					__("Links")
+					__("Links"),
 				);
 			}
 		}

@@ -115,7 +115,7 @@ frappe.ui.form.ControlPhone = class ControlPhone extends frappe.ui.form.ControlD
 		let input_value = this.get_input_value();
 		if (!this.selected_icon.length) {
 			this.selected_icon = $(
-				`<div class="selected-phone">${frappe.utils.icon("down", "sm")}</div>`
+				`<div class="selected-phone">${frappe.utils.icon("down", "sm")}</div>`,
 			);
 			this.selected_icon.insertAfter(this.$input);
 			this.selected_icon.append($(`<span class= "country"></span>`));

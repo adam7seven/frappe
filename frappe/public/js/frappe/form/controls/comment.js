@@ -65,7 +65,7 @@ frappe.ui.form.ControlComment = class ControlComment extends frappe.ui.form.Cont
 			"text-change",
 			frappe.utils.debounce(() => {
 				this.update_state();
-			}, 300)
+			}, 300),
 		);
 	}
 

@@ -170,7 +170,7 @@ frappe.ui.OnboardingTour = class OnboardingTour {
 				if (this.driver_steps[step_index + 1]?.element.id == popover_id) return;
 
 				this.driver_steps = this.driver_steps.filter(
-					(step) => !step.element.id?.startsWith("popover")
+					(step) => !step.element.id?.startsWith("popover"),
 				);
 
 				let new_step = { ...this.driver_steps[step_index] };
@@ -301,7 +301,7 @@ frappe.ui.init_onboarding_tour = () => {
 	});
 	if (matching_tours.length == 0) return;
 	let current_tour = matching_tours.find(
-		(tour) => tour[0] == frappe.ui.currentTourInstance?.tour?.name
+		(tour) => tour[0] == frappe.ui.currentTourInstance?.tour?.name,
 	);
 	let next_tour = matching_tours.find((tour) => tour[0] == frappe.ui.next_form_tour);
 	if (current_tour) {

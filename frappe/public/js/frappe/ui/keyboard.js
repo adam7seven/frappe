@@ -42,7 +42,7 @@ frappe.ui.keys.add_shortcut = ({
 	let handler = (e) => {
 		let $focused_element = $(document.activeElement);
 		let is_input_focused = $focused_element.is(
-			"input, select, textarea, [contenteditable=true]"
+			"input, select, textarea, [contenteditable=true]",
 		);
 		if (is_input_focused && !ignore_inputs) return;
 		if (!condition()) return;
@@ -78,11 +78,11 @@ frappe.ui.keys.show_keyboard_shortcut_dialog = () => {
 
 	let global_shortcuts = standard_shortcuts.filter((shortcut) => !shortcut.page);
 	let current_page_shortcuts = standard_shortcuts.filter(
-		(shortcut) => shortcut.page && shortcut.page === window.cur_page.page.page
+		(shortcut) => shortcut.page && shortcut.page === window.cur_page.page.page,
 	);
 
 	let grid_shortcuts = standard_shortcuts.filter(
-		(shortcut) => shortcut.page && shortcut.page === window.cur_page.page.frm
+		(shortcut) => shortcut.page && shortcut.page === window.cur_page.page.frm,
 	);
 
 	function generate_shortcuts_html(shortcuts, heading) {
@@ -121,7 +121,7 @@ frappe.ui.keys.show_keyboard_shortcut_dialog = () => {
 	let global_shortcuts_html = generate_shortcuts_html(global_shortcuts, __("Global Shortcuts"));
 	let current_page_shortcuts_html = generate_shortcuts_html(
 		current_page_shortcuts,
-		__("Page Shortcuts")
+		__("Page Shortcuts"),
 	);
 	let grid_shortcuts_html = generate_shortcuts_html(grid_shortcuts, __("Grid Shortcuts"));
 

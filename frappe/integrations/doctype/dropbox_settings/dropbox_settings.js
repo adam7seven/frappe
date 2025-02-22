@@ -5,7 +5,7 @@ frappe.ui.form.on("Dropbox Settings", {
 	refresh: function (frm) {
 		frm.toggle_display(
 			["app_access_key", "app_secret_key"],
-			!frm.doc.__onload?.dropbox_setup_via_site_config
+			!frm.doc.__onload?.dropbox_setup_via_site_config,
 		);
 		frm.events.take_backup(frm);
 	},

@@ -125,7 +125,7 @@ frappe.db = {
 				limit,
 			},
 			cache ? "GET" : "POST",
-			{ cache }
+			{ cache },
 		);
 	},
 	get_link_options(doctype, txt = "", filters = {}) {

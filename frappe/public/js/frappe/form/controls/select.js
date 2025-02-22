@@ -79,7 +79,7 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
 				this.$input,
 				options || [],
 				this.df.sort_options,
-				this.df.context || this.df.parent || this.doctype
+				this.df.context || this.df.parent || this.doctype,
 			);
 
 			if (value === undefined && selected) {
@@ -125,7 +125,7 @@ frappe.ui.form.add_options = function (input, options_list, sort, doctype) {
 				.html(cstr(option.label))
 				.attr("value", option.value)
 				.prop("disabled", option.is_disabled)
-				.prop("selected", option.is_selected)
+				.prop("selected", option.is_selected),
 		)
 		.forEach(($option) => $option.appendTo($select.get(0)));
 

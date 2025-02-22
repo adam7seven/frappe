@@ -22,7 +22,7 @@ frappe.ui.form.ControlAttach = class ControlAttach extends frappe.ui.form.Contro
 					<a class="btn btn-xs btn-default" data-action="reload_attachment">${__("Reload File")}</a>
 					<a class="btn btn-xs btn-default" data-action="clear_attachment">${__("Clear")}</a>
 				</div>
-			</div>`
+			</div>`,
 		)
 			.prependTo(me.input_area)
 			.toggle(false);

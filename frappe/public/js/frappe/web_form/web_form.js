@@ -184,7 +184,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 				__("Discard?"),
 				__("Are you sure you want to discard the changes?"),
 				() => (window.location.href = path),
-				__("Discard")
+				__("Discard"),
 			);
 		} else {
 			window.location.href = path;
@@ -270,7 +270,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		}
 
 		this.$slide_progress = $(`<div class="slides-progress"></div>`).appendTo(
-			$(".center-area.paging")
+			$(".center-area.paging"),
 		);
 		this.$slide_progress.empty();
 
@@ -357,7 +357,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		if (!valid && valid !== undefined) {
 			frappe.msgprint(
 				__("Couldn't save, please check the data you have entered"),
-				__("Validation Error")
+				__("Validation Error"),
 			);
 			return false;
 		}

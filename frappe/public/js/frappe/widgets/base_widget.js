@@ -32,7 +32,7 @@ export default class Widget {
 				"drag-handle",
 				__("Drag"),
 				null,
-				this.action_area
+				this.action_area,
 			);
 
 		if (options.allow_hiding) {
@@ -50,7 +50,7 @@ export default class Widget {
 				"show-or-hide-button",
 				title,
 				null,
-				this.action_area
+				this.action_area,
 			);
 
 			this.show_or_hide_button = this.action_area.find(".show-or-hide-button");
@@ -63,7 +63,7 @@ export default class Widget {
 				"edit-button",
 				__("Edit"),
 				null,
-				this.action_area
+				this.action_area,
 			);
 	}
 
@@ -99,7 +99,7 @@ export default class Widget {
 		let title = max_chars ? frappe.ellipsis(base, max_chars) : base;
 
 		this.title_field[0].innerHTML = `<span class="ellipsis" title="${__(title)}">${__(
-			title
+			title,
 		)}</span>`;
 		if (max_chars) {
 			this.title_field[0].setAttribute("title", this.title || this.label);
@@ -178,7 +178,7 @@ export default class Widget {
 		const title = this.hidden ? __("Show") : __("Hide");
 
 		$(`<i class="${classname}" aria-hidden="true" title="${title}"></i>`).appendTo(
-			this.show_or_hide_button
+			this.show_or_hide_button,
 		);
 	}
 

@@ -93,7 +93,7 @@ frappe.ui.form.ControlTable = class ControlTable extends frappe.ui.form.Control 
 									doctype,
 									row_name,
 									fieldnames[data_index],
-									value
+									value,
 								);
 							}
 						});
@@ -105,7 +105,7 @@ frappe.ui.form.ControlTable = class ControlTable extends frappe.ui.form.Control 
 								progress,
 								data_length,
 								null,
-								true
+								true,
 							);
 						}
 					}

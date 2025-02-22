@@ -20,7 +20,7 @@ frappe.ui.form.on("Document Naming Rule", {
 				frm.save();
 			},
 			__("Proceed"),
-			false
+			false,
 		);
 	},
 	document_type: (frm) => {
@@ -38,7 +38,7 @@ frappe.ui.form.on("Document Naming Rule", {
 				frm.fields_dict.conditions.grid.update_docfield_property(
 					"field",
 					"options",
-					fieldnames
+					fieldnames,
 				);
 			});
 		}

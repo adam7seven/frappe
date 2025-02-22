@@ -86,7 +86,7 @@ frappe.views.RenderPreviewer = class RenderPreviewer {
 							method: spec.method,
 							arg: preview_document,
 						})
-						.then((message) => me.dialog.set_value(fieldname, message))
+						.then((message) => me.dialog.set_value(fieldname, message)),
 				);
 			});
 			await Promise.all(promises);

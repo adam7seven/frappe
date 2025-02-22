@@ -35,23 +35,23 @@ function get_version_timeline_content(version_doc, frm) {
 								__(
 									"You submitted this document {0}",
 									[updater_reference_link],
-									"Form timeline"
+									"Form timeline",
 								),
 								__(
 									"{0} submitted this document {1}",
 									[get_user_link(version_doc.owner), updater_reference_link],
-									"Form timeline"
-								)
-						  )
+									"Form timeline",
+								),
+							)
 						: get_user_message(
 								version_doc.owner,
 								__("You submitted this document", null, "Form timeline"),
 								__(
 									"{0} submitted this document",
 									[get_user_link(version_doc.owner)],
-									"Form timeline"
-								)
-						  );
+									"Form timeline",
+								),
+							);
 
 					out.push(get_version_comment(version_doc, message));
 				} else if (p[2] === 2) {
@@ -61,23 +61,23 @@ function get_version_timeline_content(version_doc, frm) {
 								__(
 									"You cancelled this document {1}",
 									[updater_reference_link],
-									"Form timeline"
+									"Form timeline",
 								),
 								__(
 									"{0} cancelled this document {1}",
 									[get_user_link(version_doc.owner), updater_reference_link],
-									"Form timeline"
-								)
-						  )
+									"Form timeline",
+								),
+							)
 						: get_user_message(
 								version_doc.owner,
 								__("You cancelled this document", null, "Form timeline"),
 								__(
 									"{0} cancelled this document",
 									[get_user_link(version_doc.owner)],
-									"Form timeline"
-								)
-						  );
+									"Form timeline",
+								),
+							);
 
 					out.push(get_version_comment(version_doc, message));
 				}
@@ -87,7 +87,7 @@ function get_version_timeline_content(version_doc, frm) {
 					const field_display_status = frappe.perm.get_field_display_status(
 						df,
 						null,
-						frm.perm
+						frm.perm,
 					);
 					if (
 						field_display_status === "Read" ||
@@ -99,7 +99,7 @@ function get_version_timeline_content(version_doc, frm) {
 								__(df.label, null, df.parent),
 								format_content_for_timeline(p[1]),
 								format_content_for_timeline(p[2]),
-							])
+							]),
 						);
 					}
 				}
@@ -118,16 +118,16 @@ function get_version_timeline_content(version_doc, frm) {
 							get_user_link(version_doc.owner),
 							parts.join(", "),
 							updater_reference_link,
-						])
-				  )
+						]),
+					)
 				: get_user_message(
 						version_doc.owner,
 						__("You changed the value of {0}", [parts.join(", ")]),
 						__("{0} changed the value of {1}", [
 							get_user_link(version_doc.owner),
 							parts.join(", "),
-						])
-				  );
+						]),
+					);
 
 			out.push(get_version_comment(version_doc, message));
 		}
@@ -143,14 +143,14 @@ function get_version_timeline_content(version_doc, frm) {
 					frappe.meta.get_docfield(
 						frm.fields_dict[row[0]].grid.doctype,
 						p[0],
-						frm.docname
+						frm.docname,
 					);
 
 				if (df && (!df.hidden || df.show_on_timeline)) {
 					var field_display_status = frappe.perm.get_field_display_status(
 						df,
 						null,
-						frm.perm
+						frm.perm,
 					);
 
 					if (
@@ -164,7 +164,7 @@ function get_version_timeline_content(version_doc, frm) {
 								format_content_for_timeline(p[1]),
 								format_content_for_timeline(p[2]),
 								row[1],
-							])
+							]),
 						);
 					}
 				}
@@ -184,16 +184,16 @@ function get_version_timeline_content(version_doc, frm) {
 							get_user_link(version_doc.owner),
 							parts.join(", "),
 							updater_reference_link,
-						])
-				  )
+						]),
+					)
 				: get_user_message(
 						version_doc.owner,
 						__("You changed the values for {0}", [parts.join(", ")]),
 						__("{0} changed the values for {1}", [
 							get_user_link(version_doc.owner),
 							parts.join(", "),
-						])
-				  );
+						]),
+					);
 
 			out.push(get_version_comment(version_doc, message));
 		}
@@ -210,7 +210,7 @@ function get_version_timeline_content(version_doc, frm) {
 					var field_display_status = frappe.perm.get_field_display_status(
 						df,
 						null,
-						frm.perm
+						frm.perm,
 					);
 
 					if (
@@ -272,8 +272,8 @@ function get_version_comment(version_doc, text) {
 								"Version",
 								version_doc.name,
 								true,
-								unlinked_content
-						  )
+								unlinked_content,
+							)
 						: "";
 					unlinked_content = "";
 					version_comment += element.outerHTML;
@@ -286,7 +286,7 @@ function get_version_comment(version_doc, text) {
 					"Version",
 					version_doc.name,
 					true,
-					unlinked_content
+					unlinked_content,
 				);
 			}
 			return version_comment;

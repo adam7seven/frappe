@@ -122,14 +122,14 @@ function add_helpful_links(frm) {
 			frm.set_df_property(
 				"password",
 				"description",
-				'To generate password visit <a href="https://knowledge.workspace.google.com/kb/how-to-create-app-passwords-000009237"> here'
+				'To generate password visit <a href="https://knowledge.workspace.google.com/kb/how-to-create-app-passwords-000009237"> here',
 			);
 			break;
 		case "Frappe Mail":
 			frm.set_df_property(
 				"api_secret",
 				"description",
-				'To know more visit <a href="https://github.com/frappe/mail"> here'
+				'To know more visit <a href="https://github.com/frappe/mail"> here',
 			);
 			break;
 	}
@@ -171,7 +171,7 @@ frappe.ui.form.on("Email Account", {
 		frm.set_df_property("append_to", "only_select", true);
 		frm.set_query(
 			"append_to",
-			"frappe.email.doctype.email_account.email_account.get_append_to"
+			"frappe.email.doctype.email_account.email_account.get_append_to",
 		);
 		frm.set_query("append_to", "imap_folder", function () {
 			return {
@@ -238,7 +238,7 @@ frappe.ui.form.on("Email Account", {
 				callback: (r) => {
 					if (!r.message) {
 						let msg = __(
-							'OAuth has been enabled but not authorised. Please use "Authorise API Access" button to do the same.'
+							'OAuth has been enabled but not authorised. Please use "Authorise API Access" button to do the same.',
 						);
 						frm.dashboard.clear_headline();
 						frm.dashboard.set_headline_alert(msg, "yellow");
@@ -272,7 +272,7 @@ frappe.ui.form.on("Email Account", {
 
 		if (frm.doc.email_sync_option == "ALL") {
 			var msg = __(
-				"You are selecting Sync Option as ALL, It will resync all read as well as unread message from server. This may also cause the duplication of Communication (emails)."
+				"You are selecting Sync Option as ALL, It will resync all read as well as unread message from server. This may also cause the duplication of Communication (emails).",
 			);
 			frappe.confirm(msg, null, function () {
 				frm.set_value("email_sync_option", "UNSEEN");
@@ -283,7 +283,7 @@ frappe.ui.form.on("Email Account", {
 	warn_autoreply_on_incoming: function (frm) {
 		if (frm.doc.enable_incoming && frm.doc.enable_auto_reply && frm.doc.__islocal) {
 			var msg = __(
-				"Enabling auto reply on an incoming email account will send automated replies to all the synchronized emails. Do you wish to continue?"
+				"Enabling auto reply on an incoming email account will send automated replies to all the synchronized emails. Do you wish to continue?",
 			);
 			frappe.confirm(msg, null, function () {
 				frm.set_value("enable_auto_reply", 0);

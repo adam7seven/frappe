@@ -57,7 +57,7 @@ export default class Onboarding extends Block {
 				this.block_widget.customize(this.options);
 				this.wrapper.setAttribute(
 					block_name,
-					this.block_widget.label || this.block_widget.onboarding_name
+					this.block_widget.label || this.block_widget.onboarding_name,
 				);
 				$(this.wrapper).find(".widget").addClass(`${widget_type} edit-mode`);
 				this.new_block_widget = this.block_widget.get_config();

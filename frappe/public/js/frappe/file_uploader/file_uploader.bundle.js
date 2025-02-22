@@ -77,11 +77,11 @@ class FileUploader {
 				let all_private = files.every((file) => file.private);
 				if (this.dialog) {
 					this.dialog.set_secondary_action_label(
-						all_private ? __("Set all public") : __("Set all private")
+						all_private ? __("Set all public") : __("Set all private"),
 					);
 				}
 			},
-			{ deep: true }
+			{ deep: true },
 		);
 
 		watch(
@@ -90,7 +90,7 @@ class FileUploader {
 				if (trigger_upload) {
 					this.upload_files();
 				}
-			}
+			},
 		);
 
 		watch(
@@ -99,7 +99,7 @@ class FileUploader {
 				if (close_dialog) {
 					this.dialog && this.dialog.hide();
 				}
-			}
+			},
 		);
 
 		watch(
@@ -112,7 +112,7 @@ class FileUploader {
 					this.dialog && this.dialog.footer.removeClass("hide");
 					this.dialog.$wrapper.data("bs.modal")._config.backdrop = true;
 				}
-			}
+			},
 		);
 
 		if (files && files.length) {

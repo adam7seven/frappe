@@ -32,7 +32,7 @@ frappe.ui.form.on("Workspace", {
 				message = __("Only Workspace Manager can edit public workspaces");
 			} else {
 				message = __(
-					"We do not allow editing of this document. Simply click the Edit button on the workspace page to make your workspace editable and customize it as you wish"
+					"We do not allow editing of this document. Simply click the Edit button on the workspace page to make your workspace editable and customize it as you wish",
 				);
 			}
 		}

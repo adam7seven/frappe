@@ -53,7 +53,7 @@ class Mention {
 			{
 				key: Keys.TAB,
 			},
-			this.selectHandler.bind(this)
+			this.selectHandler.bind(this),
 		);
 		quill.keyboard.bindings[Keys.TAB].unshift(quill.keyboard.bindings[Keys.TAB].pop());
 
@@ -61,7 +61,7 @@ class Mention {
 			{
 				key: Keys.ENTER,
 			},
-			this.selectHandler.bind(this)
+			this.selectHandler.bind(this),
 		);
 		quill.keyboard.bindings[Keys.ENTER].unshift(quill.keyboard.bindings[Keys.ENTER].pop());
 
@@ -69,21 +69,21 @@ class Mention {
 			{
 				key: Keys.ESCAPE,
 			},
-			this.escapeHandler.bind(this)
+			this.escapeHandler.bind(this),
 		);
 
 		quill.keyboard.addBinding(
 			{
 				key: Keys.UP,
 			},
-			this.upHandler.bind(this)
+			this.upHandler.bind(this),
 		);
 
 		quill.keyboard.addBinding(
 			{
 				key: Keys.DOWN,
 			},
-			this.downHandler.bind(this)
+			this.downHandler.bind(this),
 		);
 	}
 
@@ -160,7 +160,7 @@ class Mention {
 			value: itemLink
 				? `<a href="${itemLink}" target="_blank">${
 						this.mentionList.childNodes[this.itemIndex].dataset.value
-				  }`
+					}`
 				: this.mentionList.childNodes[this.itemIndex].dataset.value,
 			link: itemLink || null,
 			denotationChar: this.mentionList.childNodes[this.itemIndex].dataset.denotationChar,
@@ -177,7 +177,7 @@ class Mention {
 		this.quill.deleteText(
 			this.mentionCharPos,
 			this.cursorPos - this.mentionCharPos,
-			Quill.sources.API
+			Quill.sources.API,
 		);
 		this.quill.insertEmbed(this.mentionCharPos, "mention", data, Quill.sources.API);
 		this.quill.insertText(this.mentionCharPos + 1, " ", Quill.sources.API);
@@ -363,7 +363,7 @@ class Mention {
 				this.options.source(
 					textAfter,
 					this.renderList.bind(this, mentionChar),
-					mentionChar
+					mentionChar,
 				);
 			} else {
 				this.hideMentionList();

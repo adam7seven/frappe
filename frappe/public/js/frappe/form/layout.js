@@ -47,7 +47,7 @@ frappe.ui.form.Layout = class Layout {
 		`).appendTo(this.page);
 		this.tab_link_container = this.page.find(".form-tabs");
 		this.tabs_content = $(`<div class="form-tab-content tab-content"></div>`).appendTo(
-			this.page
+			this.page,
 		);
 		this.setup_events();
 	}
@@ -58,7 +58,7 @@ frappe.ui.form.Layout = class Layout {
 			fields = fields.concat(this.get_fields_from_layout());
 		} else {
 			fields = fields.concat(
-				frappe.meta.sort_docfields(frappe.meta.docfield_map[this.doctype])
+				frappe.meta.sort_docfields(frappe.meta.docfield_map[this.doctype]),
 			);
 		}
 
@@ -297,7 +297,7 @@ frappe.ui.form.Layout = class Layout {
 			this.current_tab ? this.current_tab.wrapper : this.page,
 			df,
 			this.card_layout,
-			this
+			this,
 		);
 		this.sections.push(this.section);
 		this.sections_dict[df.fieldname] = this.section;
@@ -514,7 +514,7 @@ frappe.ui.form.Layout = class Layout {
 					tabs_list.addClass("form-tabs-sticky-down");
 				}
 				last_scroll = current_scroll;
-			}, 500)
+			}, 500),
 		);
 
 		this.tab_link_container.off("click").on("click", ".nav-link", (e) => {
@@ -609,7 +609,7 @@ frappe.ui.form.Layout = class Layout {
 					grid_row.toggle_view(false, function () {
 						grid_row.grid.frm.layout.handle_tab(
 							grid_row.grid.df.parent,
-							grid_row.grid.df.fieldname
+							grid_row.grid.df.fieldname,
 						);
 					});
 				} else {
@@ -729,7 +729,7 @@ frappe.ui.form.Layout = class Layout {
 				this.set_dependant_property(
 					f.df.read_only_depends_on,
 					f.df.fieldname,
-					"read_only"
+					"read_only",
 				);
 			}
 		}
@@ -756,7 +756,7 @@ frappe.ui.form.Layout = class Layout {
 					value,
 					this.doc.parent,
 					fieldname,
-					this.doc.name
+					this.doc.name,
 				);
 				form_obj.setting_dependency = false;
 				// refresh child fields
@@ -798,7 +798,7 @@ frappe.ui.form.Layout = class Layout {
 			out = this.frm.script_manager.trigger(
 				expression.substr(3),
 				this.doctype,
-				this.docname
+				this.docname,
 			);
 		} else {
 			var value = doc[expression];

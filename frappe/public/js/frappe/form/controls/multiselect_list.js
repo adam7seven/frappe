@@ -66,7 +66,7 @@ frappe.ui.form.ControlMultiSelectList = class ControlMultiSelectList extends (
 						.uniqBy((opt) => opt.value);
 					this.set_selectable_items(options);
 				});
-			}, 300)
+			}, 300),
 		);
 		this.$list_wrapper.on("keydown", "input", (e) => {
 			if (e.key === "ArrowDown") {

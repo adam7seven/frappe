@@ -47,7 +47,7 @@ frappe.ui.form.on("Installed Applications", {
 
 		frappe
 			.xcall(
-				"frappe.core.doctype.installed_applications.installed_applications.get_installed_app_order"
+				"frappe.core.doctype.installed_applications.installed_applications.get_installed_app_order",
 			)
 			.then((data) => {
 				data.forEach((app) => {

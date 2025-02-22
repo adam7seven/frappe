@@ -36,7 +36,7 @@ frappe.call = function (opts) {
 				message: __("Connection Lost"),
 				subtitle: __("You are not connected to Internet. Retry after sometime."),
 			},
-			3
+			3,
 		);
 		opts.always && opts.always();
 		return $.ajax();
@@ -174,7 +174,7 @@ frappe.request.call = function (opts) {
 					title: __("Not permitted"),
 					indicator: "red",
 					message: __(
-						"You do not have enough permissions to access this resource. Please contact your manager to get access."
+						"You do not have enough permissions to access this resource. Please contact your manager to get access.",
 					),
 				});
 			}
@@ -186,7 +186,7 @@ frappe.request.call = function (opts) {
 				title: __("Please try again"),
 				indicator: "red",
 				message: __(
-					"Another transaction is blocking this one. Please try again in a few seconds."
+					"Another transaction is blocking this one. Please try again in a few seconds.",
 				),
 			});
 			opts.error_callback && opts.error_callback();
@@ -267,7 +267,7 @@ frappe.request.call = function (opts) {
 				Accept: "application/json",
 				"X-Frappe-CMD": (opts.args && opts.args.cmd) || "" || "",
 			},
-			opts.headers
+			opts.headers,
 		),
 		cache: window.dev_server ? false : opts.cache || false,
 	};
@@ -592,7 +592,7 @@ frappe.request.report_error = function (xhr, request_opts) {
 		});
 		communication_composer.dialog.$wrapper.css(
 			"z-index",
-			cint(frappe.msg_dialog.$wrapper.css("z-index")) + 1
+			cint(frappe.msg_dialog.$wrapper.css("z-index")) + 1,
 		);
 	};
 

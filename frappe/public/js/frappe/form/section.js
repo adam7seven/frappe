@@ -40,7 +40,7 @@ export default class Section {
 				this.description_wrapper = $(
 					`<div class="col-sm-12 form-section-description">
 						${__(this.df.description)}
-					</div>`
+					</div>`,
 				);
 
 				this.wrapper.append(this.description_wrapper);

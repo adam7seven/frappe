@@ -63,7 +63,7 @@ frappe.workflow = {
 
 			let allow_edit_roles = frappe.workflow.get_document_state_roles(doctype, state);
 			let has_common_role = frappe.user_roles.some((role) =>
-				allow_edit_roles.includes(role)
+				allow_edit_roles.includes(role),
 			);
 			return !has_common_role;
 		}
@@ -73,7 +73,7 @@ frappe.workflow = {
 		var update_fields = $.unique(
 			$.map(frappe.workflow.workflows[doctype].states || [], function (d) {
 				return d.update_field;
-			})
+			}),
 		);
 		return update_fields;
 	},

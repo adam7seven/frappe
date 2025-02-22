@@ -28,7 +28,7 @@ frappe.ui.form.on("Note", {
 					"hidden",
 					frm.is_note_editable && !field.hidden && frm.get_perm(field.permlevel, "write")
 						? 0
-						: 1
+						: 1,
 				);
 			}
 		}

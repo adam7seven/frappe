@@ -169,7 +169,7 @@ context("Web Form", () => {
 		cy.get(".web-list-table tbody tr:last").click();
 		cy.get(".breadcrumb-container .breadcrumb .breadcrumb-item:first a").should(
 			"contain.text",
-			"Notes"
+			"Notes",
 		);
 	});
 
@@ -183,7 +183,7 @@ context("Web Form", () => {
 		cy.get('.frappe-control[data-fieldname="title"] .control-input').should(
 			"have.css",
 			"display",
-			"none"
+			"none",
 		);
 	});
 

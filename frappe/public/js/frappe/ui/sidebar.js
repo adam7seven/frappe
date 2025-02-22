@@ -41,7 +41,7 @@ frappe.ui.Sidebar = class Sidebar {
 			frappe.render_template("apps_switcher", {
 				app_logo_url: frappe.boot.app_data[0].app_logo_url,
 				app_title: __(frappe.boot.app_data[0].app_title),
-			})
+			}),
 		).prependTo(this.wrapper.find(".body-sidebar"));
 
 		this.$sidebar = this.wrapper.find(".sidebar-items");
@@ -160,7 +160,7 @@ frappe.ui.Sidebar = class Sidebar {
 
 	build_sidebar_section(title, root_pages) {
 		let sidebar_section = $(
-			`<div class="standard-sidebar-section nested-container" data-title="${title}"></div>`
+			`<div class="standard-sidebar-section nested-container" data-title="${title}"></div>`,
 		);
 
 		this.prepare_sidebar(root_pages, sidebar_section, this.wrapper.find(".sidebar-items"));
@@ -236,7 +236,7 @@ frappe.ui.Sidebar = class Sidebar {
 		let sidebar_control = $item_container.find(".sidebar-item-control");
 
 		let child_items = this.all_pages.filter(
-			(page) => page.parent_page == item.name || page.parent_page == item.title
+			(page) => page.parent_page == item.name || page.parent_page == item.title,
 		);
 		if (child_items.length > 0) {
 			let child_container = $item_container.find(".sidebar-child-item");
@@ -332,7 +332,7 @@ frappe.ui.Sidebar = class Sidebar {
 			this.all_pages.some(
 				(e) =>
 					(e.parent_page == item.title || e.parent_page == item.name) &&
-					(e.is_hidden == 0 || !this.is_read_only)
+					(e.is_hidden == 0 || !this.is_read_only),
 			)
 		) {
 			$drop_icon.removeClass("hidden");
@@ -384,7 +384,7 @@ frappe.ui.Sidebar = class Sidebar {
 						"frappe.desk.doctype.workspace_settings.workspace_settings.set_sequence",
 						{
 							sidebar_items: sidebar_items,
-						}
+						},
 					);
 				},
 			});

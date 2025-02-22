@@ -20,7 +20,7 @@ class Leaderboard {
 		this.parent = parent;
 		this.page = this.parent.page;
 		this.page.sidebar.html(
-			`<ul class="standard-sidebar leaderboard-sidebar overlay-sidebar"></ul>`
+			`<ul class="standard-sidebar leaderboard-sidebar overlay-sidebar"></ul>`,
 		);
 		this.$sidebar_list = this.page.sidebar.find("ul");
 
@@ -44,7 +44,7 @@ class Leaderboard {
 								return field.label || field.fieldname;
 							}
 							return field;
-						}
+						},
 					);
 				}
 
@@ -123,7 +123,7 @@ class Leaderboard {
 			__("Timespan"),
 			this.timespans.map((d) => {
 				return { label: __(d), value: d };
-			})
+			}),
 		);
 		this.create_date_range_field();
 
@@ -131,7 +131,7 @@ class Leaderboard {
 			__("Field"),
 			this.options.selected_filter.map((d) => {
 				return { label: __(frappe.model.unscrub(d)), value: d };
-			})
+			}),
 		);
 
 		this.timespan_select.on("change", (e) => {
@@ -152,7 +152,7 @@ class Leaderboard {
 
 	create_date_range_field() {
 		let timespan_field = $(this.parent).find(
-			`.frappe-control[data-original-title="${__("Timespan")}"]`
+			`.frappe-control[data-original-title="${__("Timespan")}"]`,
 		);
 		this.date_range_field = $(`<div class="from-date-field"></div>`)
 			.insertAfter(timespan_field)
@@ -182,7 +182,7 @@ class Leaderboard {
 			let doctype = $li.find(".doctype-text").attr("doctype-value");
 
 			this.company_select.set_value(
-				frappe.defaults.get_default("company") || this.company_select.get_value()
+				frappe.defaults.get_default("company") || this.company_select.get_value(),
 			);
 			this.options.selected_doctype = doctype;
 			this.options.selected_filter = this.filters[doctype];
@@ -191,7 +191,7 @@ class Leaderboard {
 			this.type_select.empty().add_options(
 				this.options.selected_filter.map((d) => {
 					return { label: __(frappe.model.unscrub(d)), value: d };
-				})
+				}),
 			);
 			if (this.leaderboard_config[this.options.selected_doctype].company_disabled) {
 				$(this.parent).find("[data-original-title=Company]").hide();
@@ -210,7 +210,7 @@ class Leaderboard {
 	render_search_box() {
 		this.$search_box = $(`<div class="leaderboard-search form-group col-md-3">
 				<input type="text" placeholder=${__(
-					"Search"
+					"Search",
 				)} data-element="search" class="form-control leaderboard-search-input input-xs">
 			</div>`);
 
@@ -356,7 +356,7 @@ class Leaderboard {
 			fields.find((field) => {
 				let fieldname = field.fieldname || field;
 				return fieldname === this.options.selected_filter_item;
-			})
+			}),
 		);
 
 		const link = `/app/${frappe.router.slug(this.options.selected_doctype)}/${item.name}`;

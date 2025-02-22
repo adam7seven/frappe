@@ -121,7 +121,7 @@ context("Form", () => {
 							1,
 							"Contact Phone",
 							"is_primary_phone",
-							cdn
+							cdn,
 						);
 					});
 
@@ -144,7 +144,7 @@ context("Form", () => {
 							0,
 							"Contact Phone",
 							"is_primary_phone",
-							cdn
+							cdn,
 						);
 					});
 

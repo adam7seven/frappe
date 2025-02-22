@@ -47,7 +47,7 @@ export default class Tab {
 			hide = true;
 			if (
 				this.wrapper.find(
-					".form-section:not(.hide-control, .empty-section), .form-dashboard-section:not(.hide-control, .empty-section)"
+					".form-section:not(.hide-control, .empty-section), .form-dashboard-section:not(.hide-control, .empty-section)",
 				).length
 			) {
 				hide = false;

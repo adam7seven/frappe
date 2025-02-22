@@ -40,7 +40,7 @@ frappe.get_indicator = function (doc, doctype, show_workflow_state) {
 	let workflow_fieldname = frappe.workflow.get_state_fieldname(doctype);
 
 	let avoid_status_override = (frappe.workflow.avoid_status_override[doctype] || []).includes(
-		doc[workflow_fieldname]
+		doc[workflow_fieldname],
 	);
 	// workflow
 	if (

@@ -347,7 +347,7 @@ frappe.views.KanbanView.show_kanban_dialog = function (doctype) {
 				const values = dialog.get_values();
 				make_kanban_board(values.board_name, values.field_name, values.project).then(
 					() => dialog.hide(),
-					(err) => frappe.msgprint(err)
+					(err) => frappe.msgprint(err),
 				);
 			} else {
 				frappe.set_route("Form", "Customize Form", { doc_type: doctype });
@@ -371,7 +371,7 @@ frappe.views.KanbanView.show_kanban_dialog = function (doctype) {
 					<div>
 						<p class="text-medium">
 						${__(
-							'No fields found that can be used as a Kanban Column. Use the Customize Form to add a Custom Field of type "Select".'
+							'No fields found that can be used as a Kanban Column. Use the Customize Form to add a Custom Field of type "Select".',
 						)}
 						</p>
 					</div>

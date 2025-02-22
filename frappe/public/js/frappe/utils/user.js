@@ -33,8 +33,8 @@ $.extend(frappe.user, {
 			? __(
 					"You",
 					null,
-					"Name of the current user. For example: You edited this 5 hours ago."
-			  )
+					"Name of the current user. For example: You edited this 5 hours ago.",
+				)
 			: frappe.user_info(uid).fullname;
 	},
 	image: function (uid) {

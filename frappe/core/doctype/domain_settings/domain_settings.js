@@ -11,7 +11,7 @@ frappe.ui.form.on("Domain Settings", {
 					fieldtype: "MultiCheck",
 					get_data: () => {
 						let active_domains = (frm.doc.active_domains || []).map(
-							(row) => row.domain
+							(row) => row.domain,
 						);
 						return frappe.boot.all_domains.map((domain) => {
 							return {

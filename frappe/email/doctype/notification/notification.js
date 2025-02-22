@@ -36,7 +36,7 @@ frappe.notification = {
 				fields,
 				is_extra_receiver_field = (_) => {
 					return false;
-				}
+				},
 			) {
 				// finds receiver fields from the fields or any child table
 				// by default finds any link to the User doctype
@@ -80,12 +80,12 @@ frappe.notification = {
 			frm.set_df_property(
 				"date_changed",
 				"options",
-				get_date_change_options(["Date", "Datetime"])
+				get_date_change_options(["Date", "Datetime"]),
 			);
 			frm.set_df_property(
 				"datetime_changed",
 				"options",
-				get_date_change_options(["Datetime"])
+				get_date_change_options(["Datetime"]),
 			);
 
 			let receiver_fields = [];
@@ -103,7 +103,7 @@ frappe.notification = {
 			frm.fields_dict.recipients.grid.update_docfield_property(
 				"receiver_by_document_field",
 				"options",
-				[""].concat(["owner"]).concat(receiver_fields)
+				[""].concat(["owner"]).concat(receiver_fields),
 			);
 		});
 	},
@@ -240,7 +240,7 @@ frappe.ui.form.on("Notification", {
 			frm.set_df_property(
 				"channel",
 				"description",
-				`To use SMS Channel, initialize <a href="/app/sms-settings">SMS Settings</a>.`
+				`To use SMS Channel, initialize <a href="/app/sms-settings">SMS Settings</a>.`,
 			);
 		} else {
 			frm.set_df_property("channel", "description", ` `);

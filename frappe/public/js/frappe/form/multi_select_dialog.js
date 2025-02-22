@@ -275,7 +275,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 		if (this.allow_child_item_selection) {
 			this.child_doctype = frappe.meta.get_docfield(
 				this.doctype,
-				this.child_fieldname
+				this.child_fieldname,
 			).options;
 			columns[0].push({
 				fieldtype: "Check",
@@ -383,7 +383,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 						me.empty_list();
 						me.get_results();
 					}
-				}, 300)
+				}, 300),
 			);
 		});
 	}
@@ -401,7 +401,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 				}
 				return parent_names;
 			},
-			[]
+			[],
 		);
 
 		return parent_names;
@@ -418,7 +418,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 				}
 				return checked_names;
 			},
-			[]
+			[],
 		);
 
 		return checked_names;
@@ -462,16 +462,18 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 				${
 					head
 						? `<span class="ellipsis text-muted" title="${__(
-								frappe.model.unscrub(column)
-						  )}">${__(frappe.model.unscrub(column))}</span>`
+								frappe.model.unscrub(column),
+							)}">${__(frappe.model.unscrub(column))}</span>`
 						: column !== "name"
-						? `<span class="ellipsis result-row" title="${__(
-								result[column] || ""
-						  )}">${__(result[column] || "")}</span>`
-						: `<a href="${
-								"/app/" + frappe.router.slug(me.doctype) + "/" + result[column] ||
-								""
-						  }" class="list-id ellipsis" title="${__(result[column] || "")}">
+							? `<span class="ellipsis result-row" title="${__(
+									result[column] || "",
+								)}">${__(result[column] || "")}</span>`
+							: `<a href="${
+									"/app/" +
+										frappe.router.slug(me.doctype) +
+										"/" +
+										result[column] || ""
+								}" class="list-id ellipsis" title="${__(result[column] || "")}">
 							${__(result[column] || "")}</a>`
 				}
 			</div>`;
@@ -480,8 +482,8 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 		let $row = $(`<div class="list-item">
 			<div class="list-item__content" style="flex: 0 0 10px;">
 				<input type="checkbox" class="list-row-check" data-item-name="${result.name}" ${
-			result.checked ? "checked" : ""
-		}>
+					result.checked ? "checked" : ""
+				}>
 			</div>
 			${contents}
 		</div>`);
@@ -489,8 +491,8 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 		head
 			? $row.addClass("list-item--head")
 			: ($row = $(
-					`<div class="list-item-container" data-item-name="${result.name}"></div>`
-			  ).append($row));
+					`<div class="list-item-container" data-item-name="${result.name}"></div>`,
+				).append($row));
 
 		return $row;
 	}

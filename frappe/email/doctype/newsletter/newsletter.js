@@ -11,7 +11,7 @@ frappe.ui.form.on("Newsletter", {
 				() => {
 					frm.events.send_test_email(frm);
 				},
-				__("Preview")
+				__("Preview"),
 			);
 
 			frm.add_custom_button(
@@ -27,11 +27,11 @@ frappe.ui.form.on("Newsletter", {
 								links.map((link) => `<li>${link}</li>`).join("") +
 								"</ul>";
 							frm.dashboard.set_headline(
-								__("Following links are broken in the email content: {0}", [html])
+								__("Following links are broken in the email content: {0}", [html]),
 							);
 						} else {
 							frm.dashboard.set_headline(
-								__("No broken links found in the email content")
+								__("No broken links found in the email content"),
 							);
 							setTimeout(() => {
 								frm.dashboard.set_headline("");
@@ -39,7 +39,7 @@ frappe.ui.form.on("Newsletter", {
 						}
 					});
 				},
-				__("Preview")
+				__("Preview"),
 			);
 
 			frm.add_custom_button(
@@ -48,11 +48,11 @@ frappe.ui.form.on("Newsletter", {
 					if (frm.doc.schedule_send) {
 						frappe.confirm(
 							__(
-								"This newsletter was scheduled to send on a later date. Are you sure you want to send it now?"
+								"This newsletter was scheduled to send on a later date. Are you sure you want to send it now?",
 							),
 							function () {
 								frm.events.send_emails(frm);
-							}
+							},
 						);
 						return;
 					}
@@ -60,10 +60,10 @@ frappe.ui.form.on("Newsletter", {
 						__("Are you sure you want to send this newsletter now?"),
 						() => {
 							frm.events.send_emails(frm);
-						}
+						},
 					);
 				},
-				__("Send")
+				__("Send"),
 			);
 
 			frm.add_custom_button(
@@ -71,7 +71,7 @@ frappe.ui.form.on("Newsletter", {
 				() => {
 					frm.events.schedule_send_dialog(frm);
 				},
-				__("Send")
+				__("Send"),
 			);
 		}
 
@@ -92,7 +92,7 @@ frappe.ui.form.on("Newsletter", {
 			frm.refresh();
 			frappe.dom.unfreeze();
 			frappe.show_alert(
-				__("Queued {0} emails", [frappe.utils.shorten_number(frm.doc.total_recipients)])
+				__("Queued {0} emails", [frappe.utils.shorten_number(frm.doc.total_recipients)]),
 			);
 		});
 	},
@@ -202,7 +202,7 @@ frappe.ui.form.on("Newsletter", {
 			frm.dashboard.show_progress(
 				__("Sending emails"),
 				(stats.sent * 100) / frm.doc.total_recipients,
-				__("{0} of {1} sent", [stats.sent, frm.doc.total_recipients])
+				__("{0} of {1} sent", [stats.sent, frm.doc.total_recipients]),
 			);
 		} else if (stats.emails_queued) {
 			frm.page.set_indicator(__("Queued"), "blue");
@@ -220,7 +220,7 @@ frappe.ui.form.on("Newsletter", {
 		if (!frm.doc.email_sent && frm.doc.schedule_send) {
 			let datetime = frappe.datetime.global_date_format(frm.doc.schedule_send);
 			frm.dashboard.set_headline_alert(
-				__("This newsletter is scheduled to be sent on {0}", [datetime.bold()])
+				__("This newsletter is scheduled to be sent on {0}", [datetime.bold()]),
 			);
 		} else {
 			frm.dashboard.clear_headline();

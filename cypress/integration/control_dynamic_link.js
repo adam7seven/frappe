@@ -153,7 +153,7 @@ context("Dynamic Link", () => {
 		cy.get(".modal-title").should("have.text", "Error");
 		cy.get(".msgprint").should(
 			"have.text",
-			"System Settings is not a valid DocType for Dynamic Link"
+			"System Settings is not a valid DocType for Dynamic Link",
 		);
 	});
 });

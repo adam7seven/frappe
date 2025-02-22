@@ -35,7 +35,7 @@ frappe.ui.form.on("Energy Point Rule", {
 				.filter(
 					(df) =>
 						(df.fieldtype === "Link" && df.options === "User") ||
-						df.fieldtype === "Data"
+						df.fieldtype === "Data",
 				)
 				.map(map_for_options)
 				.concat([

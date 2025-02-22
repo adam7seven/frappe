@@ -22,10 +22,10 @@ context("Grid Keyboard Shortcut", () => {
 				cy.get(`[data-name="${contact_email_name}"]`).should(
 					"have.attr",
 					"data-idx",
-					`${total_count + 1}`
+					`${total_count + 1}`,
 				);
 			},
-			total_count
+			total_count,
 		);
 	});
 	it("Insert new row at the top", () => {

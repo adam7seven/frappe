@@ -13,7 +13,7 @@ frappe.ui.form.on("File", {
 		if (!frm.doc.is_private) {
 			frm.dashboard.set_headline(
 				__("This file is public. It can be accessed without authentication."),
-				"orange"
+				"orange",
 			);
 		}
 

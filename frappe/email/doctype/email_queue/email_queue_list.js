@@ -31,7 +31,7 @@ function show_toggle_sending_button(list_view) {
 			"frappe.email.doctype.email_queue.email_queue.toggle_sending",
 
 			// enable if disabled
-			{ enable: sending_disabled }
+			{ enable: sending_disabled },
 		);
 
 		// set new value for suspend_email_queue in sys_defaults
@@ -47,9 +47,9 @@ function add_bulk_retry_button_to_actions(list_view) {
 	list_view.page.add_actions_menu_item(__("Retry Sending"), () => {
 		frappe.msgprint(
 			__(
-				"Updating Email Queue Statuses. The emails will be picked up in the next scheduled run."
+				"Updating Email Queue Statuses. The emails will be picked up in the next scheduled run.",
 			),
-			__("Processing...")
+			__("Processing..."),
 		);
 
 		frappe.call({

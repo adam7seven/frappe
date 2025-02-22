@@ -58,7 +58,7 @@ export class UndoManager {
 				change.doctype,
 				change.docname,
 				change.fieldname,
-				change.old_value
+				change.old_value,
 			);
 		} else {
 			this.frm.set_value(change.fieldname, change.old_value);

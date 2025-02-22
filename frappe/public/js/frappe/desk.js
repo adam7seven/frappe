@@ -18,7 +18,7 @@ $(document).ready(function () {
 			indicator: "red",
 			title: __("Browser not supported"),
 			message: __(
-				"Some of the features might not work in your browser. Please update your browser to the latest version."
+				"Some of the features might not work in your browser. Please update your browser to the latest version.",
 			),
 		});
 	}
@@ -126,7 +126,7 @@ frappe.Application = class Application {
 			frappe.boot.user.onboarding_status != null
 		) {
 			let pending_tours = !frappe.boot.onboarding_tours.every(
-				(tour) => frappe.boot.user.onboarding_status[tour[0]]?.is_complete
+				(tour) => frappe.boot.user.onboarding_status[tour[0]]?.is_complete,
 			);
 			if (pending_tours && frappe.boot.onboarding_tours.length > 0) {
 				frappe.require("onboarding_tours.bundle.js", () => {
@@ -153,7 +153,7 @@ frappe.Application = class Application {
 
 		if (!frappe.boot.developer_mode) {
 			let console_security_message = __(
-				"Using this console may allow attackers to impersonate you and steal your information. Do not enter or paste code that you do not understand."
+				"Using this console may allow attackers to impersonate you and steal your information. Do not enter or paste code that you do not understand.",
 			);
 			console.log(`%c${console_security_message}`, "font-size: large");
 		}
@@ -161,7 +161,7 @@ frappe.Application = class Application {
 		frappe.realtime.on("version-update", function () {
 			var dialog = frappe.msgprint({
 				message: __(
-					"The application has been updated to a new version, please refresh this page"
+					"The application has been updated to a new version, please refresh this page",
 				),
 				indicator: "green",
 				title: __("Version Updated"),
@@ -217,7 +217,7 @@ frappe.Application = class Application {
 					label: __(
 						"Please enter the password for: <b>{0}</b>",
 						[email_id],
-						"Email Account"
+						"Email Account",
 					),
 					reqd: 1,
 				},
@@ -254,7 +254,7 @@ frappe.Application = class Application {
 					if (!passed["message"]) {
 						frappe.show_alert(
 							{ message: __("Login Failed please try again"), indicator: "error" },
-							5
+							5,
 						);
 						me.email_password_prompt(email_account, user, i);
 					} else {
@@ -305,7 +305,7 @@ frappe.Application = class Application {
 			"update_user_permissions",
 			frappe.utils.debounce(() => {
 				frappe.defaults.update_user_permissions();
-			}, 500)
+			}, 500),
 		);
 	}
 
@@ -361,7 +361,7 @@ frappe.Application = class Application {
 		if ($("#body").length) {
 			$(".splash").remove();
 			frappe.temp_container = $("<div id='temp-container' style='display: none;'>").appendTo(
-				"body"
+				"body",
 			);
 			frappe.container = new frappe.views.Container();
 		}
@@ -390,7 +390,7 @@ frappe.Application = class Application {
 	}
 	redirect_to_login() {
 		window.location.href = `/login?redirect-to=${encodeURIComponent(
-			window.location.pathname + window.location.search
+			window.location.pathname + window.location.search,
 		)}`;
 	}
 	set_favicon() {
@@ -543,7 +543,7 @@ frappe.Application = class Application {
 			if (user && user != frappe.session.user) {
 				frappe.msgprint({
 					message: __(
-						"You've logged in as another user from another tab. Refresh this page to continue using system."
+						"You've logged in as another user from another tab. Refresh this page to continue using system.",
 					),
 					title: __("User Changed"),
 					primary_action: {

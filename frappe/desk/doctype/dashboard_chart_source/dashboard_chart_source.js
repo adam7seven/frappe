@@ -12,7 +12,7 @@ frappe.ui.form.on("Dashboard Chart Source", {
 					dashboard_chart.source = frm.doc.name;
 					frappe.set_route("Form", "Dashboard Chart", dashboard_chart.name);
 				},
-				__("Create")
+				__("Create"),
 			);
 		}
 	},

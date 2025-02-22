@@ -30,7 +30,7 @@ context("Workspace 2.0", () => {
 		cy.get('.sidebar-item-container[item-title="Test Private Page"]').should(
 			"have.attr",
 			"item-public",
-			"0"
+			"0",
 		);
 		cy.wait(300);
 		cy.get('.standard-actions .btn-primary[data-label="Save"]').click();
@@ -38,7 +38,7 @@ context("Workspace 2.0", () => {
 		cy.get('.sidebar-item-container[item-title="Test Private Page"]').should(
 			"have.attr",
 			"item-public",
-			"0"
+			"0",
 		);
 
 		cy.wait("@new_page");
@@ -63,7 +63,7 @@ context("Workspace 2.0", () => {
 		cy.get('.sidebar-item-container[item-title="Test Child Page"]').should(
 			"have.attr",
 			"item-public",
-			"0"
+			"0",
 		);
 		cy.wait(300);
 		cy.get('.standard-actions .btn-primary[data-label="Save"]').click();
@@ -71,7 +71,7 @@ context("Workspace 2.0", () => {
 		cy.get('.sidebar-item-container[item-title="Test Child Page"]').should(
 			"have.attr",
 			"item-public",
-			"0"
+			"0",
 		);
 
 		cy.wait("@new_page");

@@ -200,7 +200,7 @@ frappe.router = {
 					doctype_route,
 					meta.force_re_route_to_default_view && meta.default_view
 						? meta.default_view
-						: null
+						: null,
 				);
 			} else if (route[1] && route[1] !== "view") {
 				let docname = route[1];
@@ -364,7 +364,8 @@ frappe.router = {
 					const route_options = frappe.route_options || {};
 					const query_params = Object.entries(route_options)
 						.map(
-							([key, value]) => `${key}=` + encodeURIComponent(JSON.stringify(value))
+							([key, value]) =>
+								`${key}=` + encodeURIComponent(JSON.stringify(value)),
 						)
 						.join("&");
 					this.push_state(sub_path, query_params ? `?${query_params}` : "");

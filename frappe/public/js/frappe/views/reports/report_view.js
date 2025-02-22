@@ -94,7 +94,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 	setup_paging_area() {
 		super.setup_paging_area();
 		const message = __(
-			"For comparison, use >5, <10 or =324. For ranges, use 5:10 (for values between 5 & 10)."
+			"For comparison, use >5, <10 or =324. For ranges, use 5:10 (for values between 5 & 10).",
 		);
 		this.$paging_area
 			.find(".level-left")
@@ -260,7 +260,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 								(key) =>
 									Array.isArray(doc[key]) &&
 									doc[key].length &&
-									doc[key][0].doctype === cdt
+									doc[key][0].doctype === cdt,
 							)
 							.map((key) => doc[key])
 							.map((a) => a[0])
@@ -420,7 +420,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 				this.build_chart_args(
 					this.chart_args.x_axis,
 					this.chart_args.y_axes,
-					this.chart_args.chart_type
+					this.chart_args.chart_type,
 				);
 
 				this.make_chart();
@@ -590,7 +590,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 									// child table cell
 									(doctype != updated_doc.doctype &&
 										a[doctype + ":name"] == docname) ||
-									doctype == updated_doc.doctype
+									doctype == updated_doc.doctype,
 							);
 
 						for (let field in _data) {
@@ -602,7 +602,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 										(key) =>
 											Array.isArray(updated_doc[key]) &&
 											updated_doc[key].length &&
-											updated_doc[key][0].doctype === cdt
+											updated_doc[key][0].doctype === cdt,
 									)
 									.map((key) => updated_doc[key])[0]
 									.filter((cdoc) => cdoc.name === _data[cdt + ":name"])[0];
@@ -688,7 +688,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 			out = this.frm.script_manager.trigger(
 				expression.substr(3),
 				this.doctype,
-				this.docname
+				this.docname,
 			);
 		} else {
 			var value = data[expression];
@@ -822,7 +822,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 			return column_name;
 		});
 		const cdt_name_fields = this.get_unique_cdt_in_view().map(
-			(cdt) => frappe.model.get_full_column_name("name", cdt) + " as " + `'${cdt}:name'`
+			(cdt) => frappe.model.get_full_column_name("name", cdt) + " as " + `'${cdt}:name'`,
 		);
 		fields = fields.concat(cdt_name_fields);
 
@@ -868,7 +868,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 			}
 			const field_label = frappe.meta.get_label(doctype, field[0]);
 			frappe.show_alert(
-				__("Also adding the dependent currency field {0}", [__(field_label).bold()])
+				__("Also adding the dependent currency field {0}", [__(field_label).bold()]),
 			);
 		}
 	}
@@ -881,7 +881,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 			this.refresh();
 			const field_label = frappe.meta.get_label(doctype, field[0]);
 			frappe.show_alert(
-				__("Also adding the status dependency field {0}", [__(field_label).bold()])
+				__("Also adding the status dependency field {0}", [__(field_label).bold()]),
 			);
 		}
 	}
@@ -928,7 +928,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 
 		// filter out docstatus field from picker
 		let std_fields = frappe.model.std_fields.filter(
-			(df) => !["docstatus", "_comments"].includes(df.fieldname)
+			(df) => !["docstatus", "_comments"].includes(df.fieldname),
 		);
 
 		// add status field derived from docstatus, if status is not a standard field
@@ -997,7 +997,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 					label: __(df.label, null, df.parent),
 					value: df.fieldname,
 					checked: this.fields.find(
-						(f) => f[0] === df.fieldname && f[1] === this.doctype
+						(f) => f[0] === df.fieldname && f[1] === this.doctype,
 					),
 				})),
 		});
@@ -1195,7 +1195,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 							{
 								always_show_decimals: true,
 							},
-							data[0]
+							data[0],
 						);
 						if (i === 0) {
 							return this.format_total_cell(formatted_value, col);
@@ -1236,7 +1236,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 							value,
 							col.docfield,
 							{ always_show_decimals: true },
-							d
+							d,
 						);
 					},
 				};
@@ -1343,7 +1343,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 				(data) => {
 					_save_report(data.name);
 				},
-				__("Save As")
+				__("Save As"),
 			);
 		}
 	}
@@ -1431,14 +1431,14 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 							return __("{0} is one of {1}", [
 								__(label),
 								frappe.utils.comma_or(
-									value.map((v) => frappe.format(v, docfield))
+									value.map((v) => frappe.format(v, docfield)),
 								),
 							]);
 						case "not in":
 							return __("{0} is not one of {1}", [
 								__(label),
 								frappe.utils.comma_or(
-									value.map((v) => frappe.format(v, docfield))
+									value.map((v) => frappe.format(v, docfield)),
 								),
 							]);
 						case "like":
@@ -1569,7 +1569,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 					d.$body.prepend(`
 						<div class="columns-search">
 							<input type="text" placeholder="${__(
-								"Search"
+								"Search",
 							)}" data-element="search" class="form-control input-xs">
 						</div>
 					`);
@@ -1650,7 +1650,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 							open_url_post(frappe.request.url, args);
 
 							d.hide();
-						}
+						},
 					);
 
 					d.show();
@@ -1698,7 +1698,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 				label: __("Delete"),
 				action: () =>
 					frappe.confirm("Are you sure you want to delete this report?", () =>
-						this.delete_report()
+						this.delete_report(),
 					),
 				shortcut: "Shift+Ctrl+D",
 			});
@@ -1733,7 +1733,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 		if (config) {
 			search_params.append(
 				"_group_by",
-				JSON.stringify([config.group_by, config.aggregate_on, config.aggregate_function])
+				JSON.stringify([config.group_by, config.aggregate_on, config.aggregate_function]),
 			);
 		}
 		return search_params;

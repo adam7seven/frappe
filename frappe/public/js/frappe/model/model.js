@@ -190,7 +190,7 @@ $.extend(frappe.model, {
 
 	is_non_std_field: function (fieldname) {
 		return ![...frappe.model.std_fields_list, ...frappe.model.child_table_field_list].includes(
-			fieldname
+			fieldname,
 		);
 	},
 
@@ -199,7 +199,7 @@ $.extend(frappe.model, {
 			[].concat(frappe.model.std_fields).concat(frappe.model.std_fields_table),
 			function (d) {
 				if (d.fieldname == fieldname) return d;
-			}
+			},
 		);
 		if (!docfield.length) {
 			//Standard fields are ignored in case of adding columns as a result of groupby
@@ -538,7 +538,7 @@ $.extend(frappe.model, {
 		fieldname,
 		value,
 		fieldtype,
-		skip_dirty_trigger = false
+		skip_dirty_trigger = false,
 	) {
 		/* help: Set a value locally (if changed) and execute triggers */
 
@@ -822,7 +822,7 @@ $.extend(frappe.model, {
 			frappe.throw(
 				__("Please specify") +
 					": " +
-					__(frappe.meta.get_label(doc.doctype, fieldname, doc.parent || doc.name))
+					__(frappe.meta.get_label(doc.doctype, fieldname, doc.parent || doc.name)),
 			);
 		}
 	},
@@ -879,7 +879,7 @@ $.extend(frappe.model, {
 				(frm.doc.fields?.find((i) => i.fieldname === "latitude") &&
 					frm.doc.fields?.find((i) => i.fieldname === "longitude")) ||
 				frm.doc.fields?.find(
-					(i) => i.fieldname === "location" && i.fieldtype == "Geolocation"
+					(i) => i.fieldname === "location" && i.fieldtype == "Geolocation",
 				)
 			) {
 				default_views.push("Map");

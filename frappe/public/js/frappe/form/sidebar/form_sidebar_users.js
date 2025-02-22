@@ -51,7 +51,7 @@ frappe.ui.form.SidebarUsers = class {
 		if (sidebar_users.length) {
 			this.parent.parent().removeClass("hidden");
 			this.parent.append(
-				frappe.render_template("users_in_sidebar", { users: sidebar_users })
+				frappe.render_template("users_in_sidebar", { users: sidebar_users }),
 			);
 		} else {
 			this.parent.parent().addClass("hidden");
@@ -69,7 +69,7 @@ frappe.ui.form.SidebarUsers = class {
 				frappe.show_alert(__("{0} is currently {1}", [users[0], message]));
 			} else {
 				frappe.show_alert(
-					__("{0} are currently {1}", [frappe.utils.comma_and(users), message])
+					__("{0} are currently {1}", [frappe.utils.comma_and(users), message]),
 				);
 			}
 		}

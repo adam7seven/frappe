@@ -37,7 +37,7 @@ frappe.get_modal = function (title, content) {
 					</div>
 				</div>
 			</div>
-		</div>`
+		</div>`,
 	);
 };
 

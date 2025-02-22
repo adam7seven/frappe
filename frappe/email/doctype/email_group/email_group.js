@@ -28,10 +28,10 @@ frappe.ui.form.on("Email Group", {
 							});
 						},
 						__("Import Subscribers"),
-						__("Import")
+						__("Import"),
 					);
 				},
-				__("Action")
+				__("Action"),
 			);
 
 			frm.add_custom_button(
@@ -57,10 +57,10 @@ frappe.ui.form.on("Email Group", {
 							});
 						},
 						__("Add Subscribers"),
-						__("Add")
+						__("Add"),
 					);
 				},
-				__("Action")
+				__("Action"),
 			);
 
 			frm.add_custom_button(
@@ -69,7 +69,7 @@ frappe.ui.form.on("Email Group", {
 					frappe.route_options = { email_group: frm.doc.name };
 					frappe.new_doc("Newsletter");
 				},
-				__("Action")
+				__("Action"),
 			);
 		}
 
@@ -87,7 +87,7 @@ frappe.ui.form.on("Email Group", {
 				frm.set_df_property(
 					"add_query_parameters",
 					"description",
-					`${__("Preview:")} ${r.message}`
+					`${__("Preview:")} ${r.message}`,
 				);
 			});
 		} else {

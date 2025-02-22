@@ -35,9 +35,9 @@ frappe.search.AwesomeBar = class AwesomeBar {
 					target = frappe.router.make_url(
 						frappe.router.convert_from_standard_route(
 							frappe.router.get_route_from_arguments(
-								typeof d.route === "string" ? [d.route] : d.route
-							)
-						)
+								typeof d.route === "string" ? [d.route] : d.route,
+							),
+						),
 					);
 				}
 				let html = `<span>${__(d.label || d.value)}</span>`;
@@ -81,14 +81,14 @@ frappe.search.AwesomeBar = class AwesomeBar {
 					me.options = me.options.concat(me.global_results);
 				} else {
 					me.options = me.options.concat(
-						me.deduplicate(frappe.search.utils.get_recent_pages(txt || ""))
+						me.deduplicate(frappe.search.utils.get_recent_pages(txt || "")),
 					);
 					me.options = me.options.concat(frappe.search.utils.get_frequent_links());
 				}
 				me.add_help();
 
 				awesomplete.list = me.deduplicate(me.options);
-			}, 100)
+			}, 100),
 		);
 
 		var open_recent = function () {
@@ -217,7 +217,7 @@ frappe.search.AwesomeBar = class AwesomeBar {
 				frappe.search.utils.get_dashboards(txt),
 				frappe.search.utils.get_recent_pages(txt || ""),
 				frappe.search.utils.get_executables(txt),
-				frappe.search.utils.get_marketplace_apps(txt)
+				frappe.search.utils.get_marketplace_apps(txt),
 			);
 		if (txt.charAt(0) === "#") {
 			options = frappe.tags.utils.get_tags(txt);
@@ -356,7 +356,7 @@ frappe.search.AwesomeBar = class AwesomeBar {
 				var maxDecimalPlaces = 0;
 				if (numbers) {
 					maxDecimalPlaces = Math.max(
-						...numbers.map((num) => getDecimalPlaces(parseFloat(num)))
+						...numbers.map((num) => getDecimalPlaces(parseFloat(num))),
 					);
 				}
 

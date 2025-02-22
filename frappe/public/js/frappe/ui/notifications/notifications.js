@@ -220,7 +220,7 @@ class NotificationsView extends BaseNotificationsView {
 				`<a class="recent-item text-center text-muted"
 					href="/app/List/Notification Log">
 					<div class="full-log-btn">${__("View Full Log")}</div>
-				</a>`
+				</a>`,
 			);
 		}
 	}
@@ -318,7 +318,7 @@ class NotificationsView extends BaseNotificationsView {
 						<div class="title">${__("No New notifications")}</div>
 						<div class="subtitle">
 							${__("Looks like you haven’t received any notifications.")}
-					</div></div></div>`)
+					</div></div></div>`),
 				);
 			}
 		}
@@ -357,7 +357,7 @@ class NotificationsView extends BaseNotificationsView {
 			{
 				value: cint(flag),
 				user: frappe.session.user,
-			}
+			},
 		);
 	}
 
@@ -376,7 +376,7 @@ class NotificationsView extends BaseNotificationsView {
 			if (this.notifications_icon.find(".notifications-unseen").is(":visible")) {
 				this.toggle_notification_icon(true);
 				frappe.call(
-					"frappe.desk.doctype.notification_log.notification_log.trigger_indicator_hide"
+					"frappe.desk.doctype.notification_log.notification_log.trigger_indicator_hide",
 				);
 			}
 		});
@@ -394,7 +394,7 @@ class EventsView extends BaseNotificationsView {
 					end: today,
 				},
 				"GET",
-				{ cache: true }
+				{ cache: true },
 			)
 			.then((event_list) => {
 				this.render_events_html(event_list);
@@ -465,7 +465,7 @@ class ChangelogFeedView extends BaseNotificationsView {
 			this.container.empty();
 			const get_changelog_feed_html = (changelog_feed_item) => {
 				const timestamp = frappe.datetime.prettyDate(
-					changelog_feed_item.posting_timestamp
+					changelog_feed_item.posting_timestamp,
 				);
 				const message_html = `<div class="message">
 							<div>${changelog_feed_item.title}</div>

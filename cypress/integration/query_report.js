@@ -10,7 +10,7 @@ context("Query Report", () => {
 				report_type: "Query Report",
 				query: "select * from tabToDo",
 			},
-			true
+			true,
 		).as("doc");
 		cy.create_records({
 			doctype: "ToDo",

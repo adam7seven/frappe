@@ -13,7 +13,7 @@ context("Navigation", () => {
 				script: "console.log('ran')",
 				enabled: 0,
 			},
-			true
+			true,
 		);
 		cy.visit(`/app/client-script/${encodeURIComponent("ABC#123")}`);
 		cy.title().should("eq", "ABC#123");

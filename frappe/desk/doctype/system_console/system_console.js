@@ -76,7 +76,7 @@ frappe.ui.form.on("System Console", {
 			frm.events.refresh_processlist(frm);
 			frm.processlist_interval = setInterval(
 				() => frm.events.refresh_processlist(frm),
-				5000
+				5000,
 			);
 		} else {
 			if (frm.processlist_interval) {

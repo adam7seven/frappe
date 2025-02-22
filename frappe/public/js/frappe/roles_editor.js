@@ -87,7 +87,7 @@ frappe.RoleEditor = class {
 										(p) =>
 											`<td class="text-muted bold">${
 												perm[p] ? frappe.utils.icon("check", "xs") : "-"
-											}</td>`
+											}</td>`,
 									)
 									.join("")}
 							</tr>

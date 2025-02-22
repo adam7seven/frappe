@@ -40,7 +40,7 @@ context("Control Date, Time and DateTime", () => {
 				cy.get(".form-control[data-fieldname=date]").focus();
 				cy.get(".datepickers-container .datepicker.active").should("be.visible");
 				cy.get(
-					".datepickers-container .datepicker.active .datepicker--cell-day.-current-"
+					".datepickers-container .datepicker.active .datepicker--cell-day.-current-",
 				).click({ force: true });
 
 				cy.window()

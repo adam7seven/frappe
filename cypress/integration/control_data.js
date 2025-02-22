@@ -41,7 +41,7 @@ context("Data Control", () => {
 	it("check custom formatters", () => {
 		cy.visit(`/app/doctype/User`);
 		cy.get(
-			'[data-fieldname="fields"] .grid-row[data-idx="3"] [data-fieldname="fieldtype"] .static-area'
+			'[data-fieldname="fields"] .grid-row[data-idx="3"] [data-fieldname="fieldtype"] .static-area',
 		).should("have.text", "Section Break");
 	});
 
@@ -130,7 +130,7 @@ context("Data Control", () => {
 		//Checking if the fields contains the data which has been filled in
 		cy.location("pathname").should(
 			"not.contains",
-			"/app/test-data-control/new-test-data-control"
+			"/app/test-data-control/new-test-data-control",
 		);
 		cy.get_field("name1").should("have.value", "Komal");
 		cy.get_field("email").should("have.value", "komal@test.com");

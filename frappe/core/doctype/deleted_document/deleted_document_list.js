@@ -23,15 +23,15 @@ frappe.listview_settings["Deleted Document"] = {
 							const { restored, invalid, failed } = r.message;
 							const restored_summary = message(
 								__("Documents restored successfully"),
-								restored
+								restored,
 							);
 							const invalid_summary = message(
 								__("Documents that were already restored"),
-								invalid
+								invalid,
 							);
 							const failed_summary = message(
 								__("Documents that failed to restore"),
-								failed
+								failed,
 							);
 							const summary = restored_summary + invalid_summary + failed_summary;
 

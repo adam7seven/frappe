@@ -96,7 +96,7 @@ frappe.provide("frappe.views");
 						},
 						function (err) {
 							console.error(err);
-						}
+						},
 					);
 			},
 			add_card: function (context, { card_title, column_title }) {
@@ -496,7 +496,7 @@ frappe.provide("frappe.views");
 					"<ul class='dropdown-menu'>" +
 					options +
 					"</ul>" +
-					"</div>"
+					"</div>",
 			);
 
 			list_row_right.html($dropdown);
@@ -549,7 +549,7 @@ frappe.provide("frappe.views");
 					title: column.title,
 					doctype: store.state.doctype,
 					indicator: frappe.scrub(column.indicator, "-"),
-				})
+				}),
 			).appendTo(wrapper);
 			// add task, archive
 			self.$kanban_cards = self.$kanban_column.find(".kanban-cards");

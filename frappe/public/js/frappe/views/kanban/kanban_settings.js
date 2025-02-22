@@ -234,7 +234,7 @@ export default class KanbanSettings {
 			.filter(
 				(field) =>
 					!ignore_fields.includes(field.fieldname) &&
-					!ignore_fieldtypes.includes(field.fieldtype)
+					!ignore_fieldtypes.includes(field.fieldtype),
 			)
 			.map((field) => {
 				return {

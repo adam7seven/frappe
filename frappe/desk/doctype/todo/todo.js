@@ -29,7 +29,7 @@ frappe.ui.form.on("ToDo", {
 						});
 					},
 					"fa fa-check",
-					"btn-success"
+					"btn-success",
 				);
 			} else {
 				frm.add_custom_button(
@@ -39,7 +39,7 @@ frappe.ui.form.on("ToDo", {
 						frm.save();
 					},
 					null,
-					"btn-default"
+					"btn-default",
 				);
 			}
 			frm.add_custom_button(
@@ -48,7 +48,7 @@ frappe.ui.form.on("ToDo", {
 					frappe.new_doc("ToDo");
 				},
 				null,
-				"btn-default"
+				"btn-default",
 			);
 		}
 	},

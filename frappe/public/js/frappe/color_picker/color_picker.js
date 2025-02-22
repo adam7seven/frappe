@@ -104,7 +104,7 @@ class Picker {
 		let color = utils.hsv_to_hex(
 			this.hue,
 			Math.round((x / w) * 100),
-			Math.round((1 - y / h) * 100)
+			Math.round((1 - y / h) * 100),
 		);
 		this.set_color(color);
 	}

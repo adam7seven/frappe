@@ -62,7 +62,7 @@ frappe.ui.form.on("Contact", {
 
 		if (frm.doc.links && frm.doc.links.length > 0) {
 			const filtered_links = frm.doc.links.filter(
-				(link) => link.link_doctype && link.link_name
+				(link) => link.link_doctype && link.link_name,
 			);
 
 			if (filtered_links.length > 0) {
@@ -89,7 +89,7 @@ frappe.ui.form.on("Contact", {
 					function () {
 						frappe.set_route("Form", link.link_doctype, link.link_name);
 					},
-					__("Links")
+					__("Links"),
 				);
 			}
 		}
@@ -98,9 +98,9 @@ frappe.ui.form.on("Contact", {
 			frm.page.add_menu_item(__("Download vCard"), function () {
 				window.open(
 					`/api/method/frappe.contacts.doctype.contact.contact.download_vcard?contact=${encodeURIComponent(
-						frm.doc.name
+						frm.doc.name,
 					)}`,
-					"_blank"
+					"_blank",
 				);
 			});
 		}
@@ -146,7 +146,7 @@ frappe.ui.form.on("Contact", {
 					if (r && r.name) {
 						frm.set_value("google_contacts", r.name);
 					}
-				}
+				},
 			);
 		}
 	},
@@ -164,7 +164,7 @@ frappe.ui.form.on("Dynamic Link", {
 					title_field,
 					function (r) {
 						frappe.model.set_value(cdt, cdn, "link_title", r[title_field]);
-					}
+					},
 				);
 			});
 		}

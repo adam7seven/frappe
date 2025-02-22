@@ -135,7 +135,7 @@ export default class Paragraph extends Block {
 				"drag-handle",
 				__("Drag"),
 				null,
-				$para_control
+				$para_control,
 			);
 
 			return this.wrapper;

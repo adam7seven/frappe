@@ -95,7 +95,7 @@ frappe.ui.form.Control = class BaseControl {
 			this.df,
 			frappe.model.get_doc(this.doctype, this.docname),
 			this.perm || (this.frm && this.frm.perm),
-			explain
+			explain,
 		);
 
 		// Match parent grid controls read only status
@@ -163,7 +163,7 @@ frappe.ui.form.Control = class BaseControl {
 		if (this.$wrapper.find(".clearfix .btn-translation").length) return;
 
 		const translation_btn = `<a class="btn-translation no-decoration text-muted" title="${__(
-			"Open Translation"
+			"Open Translation",
 		)}">
 				<i class="fa fa-globe"></i>
 			</a>`;
@@ -274,7 +274,7 @@ frappe.ui.form.Control = class BaseControl {
 				this.docname,
 				this.df.fieldname,
 				value,
-				this.df.fieldtype
+				this.df.fieldtype,
 			);
 		} else {
 			if (this.doc) {

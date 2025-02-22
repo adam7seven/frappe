@@ -42,7 +42,7 @@ export const useStore = defineStore("form-builder-store", () => {
 			active_element.value?.readOnly ||
 			active_element.value?.disabled ||
 			(active_element.value?.tagName !== "INPUT" &&
-				active_element.value?.tagName !== "TEXTAREA")
+				active_element.value?.tagName !== "TEXTAREA"),
 	);
 
 	// Actions
@@ -179,7 +179,7 @@ export const useStore = defineStore("form-builder-store", () => {
 			if (["Link", ...frappe.model.table_fields].includes(df.fieldtype) && !df.options) {
 				error_message = __(
 					"Options is required for field {0} of type {1}",
-					get_field_data(df)
+					get_field_data(df),
 				);
 			}
 
@@ -187,7 +187,7 @@ export const useStore = defineStore("form-builder-store", () => {
 			if (df.hidden && df.reqd && !df.default) {
 				error_message = __(
 					"{0} cannot be hidden and mandatory without any default value",
-					get_field_data(df)
+					get_field_data(df),
 				);
 			}
 
@@ -195,7 +195,7 @@ export const useStore = defineStore("form-builder-store", () => {
 			if (df.in_list_view && not_allowed_in_list_view.includes(df.fieldtype)) {
 				error_message = __(
 					"'In List View' is not allowed for field {0} of type {1}",
-					get_field_data(df)
+					get_field_data(df),
 				);
 			}
 
@@ -203,7 +203,7 @@ export const useStore = defineStore("form-builder-store", () => {
 			if (df.in_global_search && frappe.model.no_value_type.includes(df.fieldtype)) {
 				error_message = __(
 					"'In Global Search' is not allowed for field {0} of type {1}",
-					get_field_data(df)
+					get_field_data(df),
 				);
 			}
 
@@ -218,7 +218,7 @@ export const useStore = defineStore("form-builder-store", () => {
 				} catch (e) {
 					error_message = __(
 						"Invalid Filter Format for field {0} of type {1}. Try using filter icon on the field to set it correctly",
-						get_field_data(df)
+						get_field_data(df),
 					);
 				}
 			}

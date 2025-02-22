@@ -347,6 +347,6 @@ function get_fields_as_options(doctype, column_map) {
 					description: value,
 				};
 			});
-		})
+		}),
 	);
 }

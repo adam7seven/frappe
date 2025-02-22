@@ -4,7 +4,7 @@ frappe.report_utils = {
 	make_chart_options: function (
 		columns,
 		raw_data,
-		{ y_fields, x_field, chart_type, colors, height }
+		{ y_fields, x_field, chart_type, colors, height },
 	) {
 		const type = chart_type.toLowerCase();
 
@@ -227,7 +227,7 @@ frappe.report_utils = {
 					fieldname: "extra_fields",
 					collapsible: 0,
 				},
-				...extra_fields
+				...extra_fields,
 			);
 		}
 
@@ -247,7 +247,7 @@ frappe.report_utils = {
 				...report.data
 					.slice(0, 3)
 					.map((row) =>
-						columns.map((col) => row[is_query_report ? col.fieldname : col.field])
+						columns.map((col) => row[is_query_report ? col.fieldname : col.field]),
 					),
 			];
 
@@ -257,8 +257,8 @@ frappe.report_utils = {
 					PREVIEW_DATA,
 					dialog.get_value("csv_quoting"),
 					dialog.get_value("csv_delimiter"),
-					dialog.get_value("csv_decimal_sep")
-				)
+					dialog.get_value("csv_decimal_sep"),
+				),
 			);
 		}
 

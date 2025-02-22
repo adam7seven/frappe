@@ -54,7 +54,7 @@ frappe.ui.form.ControlIcon = class ControlIcon extends frappe.ui.form.ControlDat
 
 		if (!this.selected_icon) {
 			this.selected_icon = $(
-				`<div class="selected-icon">${frappe.utils.icon("folder-normal", "md")}</div>`
+				`<div class="selected-icon">${frappe.utils.icon("folder-normal", "md")}</div>`,
 			);
 			this.selected_icon.insertAfter(this.$input);
 		}

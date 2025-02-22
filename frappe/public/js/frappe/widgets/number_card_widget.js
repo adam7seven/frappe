@@ -115,7 +115,7 @@ export default class NumberCardWidget extends Widget {
 				aggregate_function_based_on: this.aggregate_function_based_on,
 				color: this.color,
 				filters_json: this.stats_filter,
-			}
+			},
 		);
 	}
 
@@ -196,7 +196,7 @@ export default class NumberCardWidget extends Widget {
 			return frappe.model.with_doctype(this.card_doc.document_type, () => {
 				const based_on_df = frappe.meta.get_docfield(
 					this.card_doc.document_type,
-					this.card_doc.aggregate_function_based_on
+					this.card_doc.aggregate_function_based_on,
 				);
 				this.set_formatted_number(based_on_df);
 			});
@@ -355,7 +355,7 @@ export default class NumberCardWidget extends Widget {
 							(action) =>
 								`<li class="dropdown-item">
 									<a data-action="${action.action}">${action.label}</a>
-								</li>`
+								</li>`,
 						)
 						.join("")}
 				</ul>

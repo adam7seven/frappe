@@ -55,7 +55,7 @@ context("Control Link", () => {
 				doctype_or_field: "DocType",
 				value: "0",
 			},
-			true
+			true,
 		);
 
 		cy.intercept("POST", "/api/method/frappe.desk.search.search_link").as("search_link");
@@ -135,7 +135,7 @@ context("Control Link", () => {
 				doctype_or_field: "DocType",
 				value: "1",
 			},
-			true
+			true,
 		);
 
 		cy.reload();
@@ -185,7 +185,7 @@ context("Control Link", () => {
 			cy.wait("@validate_link");
 			cy.get(".frappe-control[data-fieldname=assigned_by_full_name] .control-value").should(
 				"contain",
-				"Frappe"
+				"Frappe",
 			);
 
 			cy.window().its("cur_frm.doc.assigned_by").should("eq", cy.config("testUser"));
@@ -194,7 +194,7 @@ context("Control Link", () => {
 			cy.get("@input").clear().type("invalid input", { delay: 100 }).blur();
 			cy.get(".frappe-control[data-fieldname=assigned_by_full_name] .control-value").should(
 				"contain",
-				""
+				"",
 			);
 
 			cy.window().its("cur_frm.doc.assigned_by").should("eq", null);
@@ -211,7 +211,7 @@ context("Control Link", () => {
 			cy.get("@input").clear().blur();
 			cy.get(".frappe-control[data-fieldname=assigned_by_full_name] .control-value").should(
 				"contain",
-				""
+				"",
 			);
 
 			cy.window().its("cur_frm.doc.assigned_by").should("eq", "");
@@ -229,7 +229,7 @@ context("Control Link", () => {
 				property_type: "Text",
 				value: "Administrator",
 			},
-			true
+			true,
 		);
 		cy.reload();
 		cy.new_form("ToDo");
@@ -237,7 +237,7 @@ context("Control Link", () => {
 		cy.save();
 		cy.get(".frappe-control[data-fieldname=assigned_by_full_name] .control-value").should(
 			"contain",
-			"Administrator"
+			"Administrator",
 		);
 		// if user clears default value explicitly, system should not reset default again
 		cy.get_field("assigned_by").clear().blur();
@@ -245,7 +245,7 @@ context("Control Link", () => {
 		cy.get_field("assigned_by").should("have.value", "");
 		cy.get(".frappe-control[data-fieldname=assigned_by_full_name] .control-value").should(
 			"contain",
-			""
+			"",
 		);
 	});
 

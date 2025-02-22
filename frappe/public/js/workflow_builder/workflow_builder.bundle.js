@@ -31,7 +31,7 @@ class WorkflowBuilder {
 
 		// setup page actions
 		this.primary_btn = this.page.set_primary_action(__("Save"), () =>
-			this.store.save_changes()
+			this.store.save_changes(),
 		);
 
 		this.reset_changes_btn = this.page.add_button(__("Reset Changes"), () => {
@@ -39,7 +39,7 @@ class WorkflowBuilder {
 		});
 
 		this.go_to_doctype_btn = this.page.add_menu_item(__("Go to Workflow"), () =>
-			frappe.set_route("Form", "Workflow", this.workflow)
+			frappe.set_route("Form", "Workflow", this.workflow),
 		);
 	}
 

@@ -37,11 +37,11 @@ context("Kanban Board", () => {
 
 		cy.intercept(
 			"POST",
-			"/api/method/frappe.desk.doctype.kanban_board.kanban_board.save_settings"
+			"/api/method/frappe.desk.doctype.kanban_board.kanban_board.save_settings",
 		).as("save-kanban");
 		cy.intercept(
 			"POST",
-			"/api/method/frappe.desk.doctype.kanban_board.kanban_board.update_order"
+			"/api/method/frappe.desk.doctype.kanban_board.kanban_board.update_order",
 		).as("update-order");
 
 		cy.get(".page-actions .menu-btn-group > .btn").click();
@@ -81,7 +81,7 @@ context("Kanban Board", () => {
 			.click();
 		cy.get_open_dialog()
 			.find(
-				'.frappe-control[data-fieldname="fields_html"] div[data-label="ID"] .remove-field'
+				'.frappe-control[data-fieldname="fields_html"] div[data-label="ID"] .remove-field',
 			)
 			.click();
 
@@ -115,7 +115,7 @@ context("Kanban Board", () => {
 		// Menu button should be hidden (dropdown for 'Save Filters' and 'Delete Kanban Board')
 		cy.get(".no-list-sidebar .menu-btn-group .btn-default[data-original-title='Menu']").should(
 			"have.length",
-			0
+			0,
 		);
 		// Kanban Columns should be visible (read-only)
 		cy.get(".kanban .kanban-column").should("have.length", 2);

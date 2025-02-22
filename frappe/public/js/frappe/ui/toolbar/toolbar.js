@@ -10,7 +10,7 @@ frappe.ui.toolbar.Toolbar = class {
 			frappe.render_template("navbar", {
 				avatar: frappe.avatar(frappe.session.user, "avatar-medium"),
 				navbar_settings: frappe.boot.navbar_settings,
-			})
+			}),
 		);
 		$(".dropdown-toggle").dropdown();
 		$("#toolbar-user a[href]").click(function () {
@@ -76,7 +76,7 @@ frappe.ui.toolbar.Toolbar = class {
 				"click",
 				() =>
 					localStorage.setItem("dismissed_announcement_widget", true) ||
-					announcement_widget.addClass("hidden")
+					announcement_widget.addClass("hidden"),
 			);
 		}
 	}
@@ -169,7 +169,7 @@ frappe.ui.toolbar.Toolbar = class {
 
 			frappe.search.utils.make_function_searchable(
 				frappe.utils.generate_tracking_url,
-				__("Generate Tracking URL")
+				__("Generate Tracking URL"),
 			);
 
 			if (frappe.model.can_read("RQ Job")) {
@@ -195,7 +195,7 @@ $.extend(frappe.ui.toolbar, {
 		}
 
 		return $(
-			'<li class="custom-menu"><a><i class="fa-fw ' + icon + '"></i> ' + label + "</a></li>"
+			'<li class="custom-menu"><a><i class="fa-fw ' + icon + '"></i> ' + label + "</a></li>",
 		)
 			.insertBefore(menu.find(".divider"))
 			.find("a")
@@ -215,9 +215,9 @@ $.extend(frappe.ui.toolbar, {
 		let parent_element = $(".navbar-right").get(0);
 		let new_element = $(`<li class="${class_name}">
 			<a class="btn" href="${route}" title="${frappe.utils.to_title_case(
-			class_name,
-			true
-		)}" aria-haspopup="true" aria-expanded="true">
+				class_name,
+				true,
+			)}" aria-haspopup="true" aria-expanded="true">
 				<div>
 					<i class="octicon ${icon}"></i>
 				</div>
@@ -291,7 +291,7 @@ frappe.ui.toolbar.setup_session_defaults = function () {
 						frappe.set_route(
 							"Form",
 							"Session Default Settings",
-							"Session Default Settings"
+							"Session Default Settings",
 						);
 					},
 				};
@@ -320,7 +320,7 @@ frappe.ui.toolbar.setup_session_defaults = function () {
 							} else {
 								frappe.show_alert({
 									message: __(
-										"An error occurred while setting Session Defaults"
+										"An error occurred while setting Session Defaults",
 									),
 									indicator: "red",
 								});
@@ -329,7 +329,7 @@ frappe.ui.toolbar.setup_session_defaults = function () {
 					});
 				},
 				__("Session Defaults"),
-				__("Save")
+				__("Save"),
 			);
 		},
 	});

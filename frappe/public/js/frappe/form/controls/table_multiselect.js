@@ -37,7 +37,7 @@ frappe.ui.form.ControlTableMultiSelect = class ControlTableMultiSelect extends (
 							return this.frm.script_manager.trigger(
 								`before_${this.df.fieldname}_remove`,
 								this.df.options,
-								row.name
+								row.name,
 							);
 						},
 						() => {
@@ -46,7 +46,7 @@ frappe.ui.form.ControlTableMultiSelect = class ControlTableMultiSelect extends (
 							return this.frm.script_manager.trigger(
 								`${this.df.fieldname}_remove`,
 								this.df.options,
-								row.name
+								row.name,
 							);
 						},
 					]);
@@ -84,7 +84,7 @@ frappe.ui.form.ControlTableMultiSelect = class ControlTableMultiSelect extends (
 				const new_row = frappe.model.add_child(
 					this.frm.doc,
 					this.df.options,
-					this.df.fieldname
+					this.df.fieldname,
 				);
 				new_row[link_field.fieldname] = value;
 				this.rows = this.frm.doc[this.df.fieldname];
@@ -92,7 +92,7 @@ frappe.ui.form.ControlTableMultiSelect = class ControlTableMultiSelect extends (
 				this.frm.script_manager.trigger(
 					`${this.df.fieldname}_add`,
 					this.df.options,
-					new_row.name
+					new_row.name,
 				);
 			} else {
 				this.rows.push({

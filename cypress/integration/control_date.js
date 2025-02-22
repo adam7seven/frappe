@@ -31,10 +31,10 @@ context("Date Control", () => {
 
 		//Inputing values in the date field
 		cy.get(
-			".datepicker--years > .datepicker--cells > .datepicker--cell[data-year=2020]"
+			".datepicker--years > .datepicker--cells > .datepicker--cell[data-year=2020]",
 		).click();
 		cy.get(
-			".datepicker--months > .datepicker--cells > .datepicker--cell[data-month=0]"
+			".datepicker--months > .datepicker--cells > .datepicker--cell[data-month=0]",
 		).click();
 		cy.get(".datepicker--days > .datepicker--cells > .datepicker--cell[data-date=15]").click();
 
@@ -79,7 +79,7 @@ context("Date Control", () => {
 			// `expect` can not wait like `should`
 			cy.wait(500);
 			expect(win.cur_dialog.fields_dict.date.value).to.be.equal(
-				win.frappe.datetime.get_today()
+				win.frappe.datetime.get_today(),
 			);
 		});
 	});

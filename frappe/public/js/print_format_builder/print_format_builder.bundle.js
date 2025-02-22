@@ -19,7 +19,7 @@ class PrintFormatBuilder {
 			this.$component.toggle_preview();
 		});
 		let $reset_changes_btn = this.page.add_button(__("Reset Changes"), () =>
-			this.$component.$store.reset_changes()
+			this.$component.$store.reset_changes(),
 		);
 		this.page.add_menu_item(__("Edit Print Format"), () => {
 			frappe.set_route("Form", "Print Format", this.print_format);
@@ -45,14 +45,14 @@ class PrintFormatBuilder {
 					$reset_changes_btn.hide();
 				}
 			},
-			{ deep: true }
+			{ deep: true },
 		);
 
 		watch(
 			() => this.$component.show_preview,
 			(value) => {
 				$toggle_preview_btn.text(value ? __("Hide Preview") : __("Show Preview"));
-			}
+			},
 		);
 	}
 }

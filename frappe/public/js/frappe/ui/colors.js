@@ -34,7 +34,7 @@ frappe.ui.color = {
 		let color_map = {};
 		colors.forEach((color) => {
 			color_map[color] = shades.map((shade) =>
-				style.getPropertyValue(`--${color}-${shade}`).trim()
+				style.getPropertyValue(`--${color}-${shade}`).trim(),
 			);
 		});
 		return color_map;

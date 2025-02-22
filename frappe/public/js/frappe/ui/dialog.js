@@ -60,7 +60,7 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 				this.primary_action_label ||
 					this.action.primary.label ||
 					__("Submit", null, "Primary action in dialog"),
-				this.primary_action || this.action.primary.onsubmit
+				this.primary_action || this.action.primary.onsubmit,
 			);
 		}
 
@@ -73,7 +73,7 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 			(this.action.secondary && this.action.secondary.label)
 		) {
 			this.set_secondary_action_label(
-				this.secondary_action_label || this.action.secondary.label
+				this.secondary_action_label || this.action.secondary.label,
 			);
 		}
 
@@ -165,7 +165,7 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 	set_alert(text, alert_class = "info") {
 		this.clear_alert();
 		this.$alert = $(`<div class="alert alert-${alert_class}">${text}</div>`).prependTo(
-			this.body
+			this.body,
 		);
 		this.$message.text(text);
 	}

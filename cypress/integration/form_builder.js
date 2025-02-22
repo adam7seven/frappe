@@ -50,7 +50,7 @@ context("Form Builder", () => {
 		cy.get(".modal-body .filter-action-buttons .add-filter").click();
 		cy.wait(100);
 		cy.get(".modal-body .filter-box .list_filter .filter-field .link-field input").type(
-			"Male"
+			"Male",
 		);
 		cy.get(".btn-modal-primary").click();
 

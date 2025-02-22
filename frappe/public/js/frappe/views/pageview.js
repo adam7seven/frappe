@@ -151,8 +151,8 @@ frappe.show_message_page = function (opts) {
 				img: opts.img || "",
 				message: opts.message || "",
 				home: __("Home"),
-			}
-		)
+			},
+		),
 	);
 
 	frappe.container.change_to(opts.page_name);

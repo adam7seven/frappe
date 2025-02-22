@@ -140,7 +140,7 @@ frappe.ui.form.Review = class Review {
 		let subject = "";
 		let fullname = frappe.user.full_name(data.user);
 		let timestamp = `<span class="text-muted">${frappe.datetime.comment_when(
-			data.creation
+			data.creation,
 		)}</span>`;
 		let message_parts = [Math.abs(data.points), fullname, timestamp];
 		if (data.type === "Appreciation") {

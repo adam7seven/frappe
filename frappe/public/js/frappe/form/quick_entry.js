@@ -20,7 +20,7 @@ frappe.ui.form.make_quick_entry = (doctype, after_insert, init_callback, doc, fo
 		after_insert,
 		init_callback,
 		doc,
-		force
+		force,
 	);
 	return frappe.quick_entry.setup();
 };

@@ -34,7 +34,7 @@ class Picker {
 	setup_icons() {
 		this.icons.forEach((icon) => {
 			let $icon = $(
-				`<div id="${icon}" class="icon-wrapper">${frappe.utils.icon(icon, "md")}</div>`
+				`<div id="${icon}" class="icon-wrapper">${frappe.utils.icon(icon, "md")}</div>`,
 			);
 			this.icon_wrapper.append($icon);
 			const set_values = () => {

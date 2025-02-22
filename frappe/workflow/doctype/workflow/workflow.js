@@ -9,7 +9,7 @@ frappe.ui.form.on("Workflow", {
 		let title, note;
 		let workflow_builder_url = "/app/workflow-builder";
 		let msg = __(
-			"Workflow Builder allows you to create workflows visually. You can drag and drop states and link them to create transitions. Also you can update thieir properties from the sidebar."
+			"Workflow Builder allows you to create workflows visually. You can drag and drop states and link them to create transitions. Also you can update thieir properties from the sidebar.",
 		);
 
 		if (frm.is_new()) {
@@ -17,7 +17,7 @@ frappe.ui.form.on("Workflow", {
 		} else {
 			title = __("Edit your workflow visually using the Workflow Builder.");
 			note = __(
-				"NOTE: If you add states or transitions in the table, it will be reflected in the Workflow Builder but you will have to position them manually. Also Workflow Builder is currently in <b>BETA</b>."
+				"NOTE: If you add states or transitions in the table, it will be reflected in the Workflow Builder but you will have to position them manually. Also Workflow Builder is currently in <b>BETA</b>.",
 			);
 			workflow_builder_url += "/" + frm.doc.name;
 		}
@@ -88,9 +88,8 @@ frappe.ui.form.on("Workflow", {
 		});
 
 		if (updated_states.length) {
-			frm.doc._update_state_docstatus = await create_docstatus_change_warning(
-				updated_states
-			);
+			frm.doc._update_state_docstatus =
+				await create_docstatus_change_warning(updated_states);
 		}
 
 		return frm.trigger("get_orphaned_states_and_count").then(() => {
@@ -117,7 +116,7 @@ frappe.ui.form.on("Workflow", {
 			frm.fields_dict.states.grid.update_docfield_property(
 				"update_field",
 				"options",
-				[""].concat(fieldnames)
+				[""].concat(fieldnames),
 			);
 		});
 	},
@@ -127,7 +126,7 @@ frappe.ui.form.on("Workflow", {
 			</p>
 			<p>
 				${__(
-					"There are documents which have workflow states that do not exist in this Workflow. It is recommended that you add these states to the Workflow and change their states before removing these states."
+					"There are documents which have workflow states that do not exist in this Workflow. It is recommended that you add these states to the Workflow and change their states before removing these states.",
 				)}
 			</p>`;
 		const message_html = warning_html + frm.state_table_html;
@@ -140,7 +139,7 @@ frappe.ui.form.on("Workflow", {
 			__("Workflow States Don't Exist"),
 			message_html,
 			proceed_action,
-			__("Save Anyway")
+			__("Save Anyway"),
 		);
 	},
 	set_table_html: function (frm) {
@@ -261,10 +260,10 @@ async function create_docstatus_change_warning(updated_states) {
 				Do you want to update the docstatus of existing documents in those states?<br>
 				This does not undo any effect bought in by the document's existing docstatus.
 				`,
-				[updated_states.join(", ")]
+				[updated_states.join(", ")],
 			),
 			() => resolve(true),
-			() => resolve(false)
+			() => resolve(false),
 		);
 	});
 }

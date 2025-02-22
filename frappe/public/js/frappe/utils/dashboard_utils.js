@@ -30,7 +30,7 @@ frappe.dashboard_utils = {
 						<a class="dropdown-item" data-fieldname="${
 							filter.fieldnames[i]
 						}" data-option="${encodeURIComponent(option)}">${__(option)}</a>
-					</li>`
+					</li>`,
 					)
 					.join("");
 			} else {
@@ -38,8 +38,8 @@ frappe.dashboard_utils = {
 					.map(
 						(option) =>
 							`<li><a class="dropdown-item" data-option="${encodeURIComponent(
-								option
-							)}">${__(option)}</a></li>`
+								option,
+							)}">${__(option)}</a></li>`,
 					)
 					.join("");
 			}
@@ -108,7 +108,7 @@ frappe.dashboard_utils = {
 				"frappe.desk.doctype.dashboard_settings.dashboard_settings.create_dashboard_settings",
 				{
 					user: frappe.session.user,
-				}
+				},
 			)
 			.then((settings) => {
 				return settings;

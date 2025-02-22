@@ -120,7 +120,7 @@ export default class ListFilter {
 					$li.remove();
 					this.remove_filter(name).then(() => this.refresh());
 					this.list_view.filter_area.remove_filters(applied_filters);
-				}
+				},
 			);
 		});
 	}
@@ -150,7 +150,7 @@ export default class ListFilter {
 						this.is_global_input.toggle(has_value);
 					}
 				}
-			}, 300)
+			}, 300),
 		);
 	}
 

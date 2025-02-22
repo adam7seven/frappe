@@ -116,7 +116,7 @@ frappe.ui.AppsSwitcher = class AppsSwitcher {
 				app_route: "/",
 				app_logo_url: "/assets/frappe/images/web.svg",
 			},
-			this.app_switcher_menu
+			this.app_switcher_menu,
 		);
 	}
 

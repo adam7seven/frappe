@@ -207,7 +207,7 @@ $.extend(frappe, {
 					icon +
 					' text-muted"></i><br>' +
 					text +
-					"</div>"
+					"</div>",
 			)
 			.appendTo(document.body);
 	},
@@ -233,13 +233,13 @@ $.extend(frappe, {
 			$(".user-image").attr("src", frappe.get_cookie("user_image"));
 
 			$(".user-image-wrapper").html(
-				frappe.avatar(null, "avatar-medium", null, null, null, true)
+				frappe.avatar(null, "avatar-medium", null, null, null, true),
 			);
 			$(".user-image-sidebar").html(
-				frappe.avatar(null, "avatar-medium", null, null, null, true)
+				frappe.avatar(null, "avatar-medium", null, null, null, true),
 			);
 			$(".user-image-myaccount").html(
-				frappe.avatar(null, "avatar-large", null, null, null, true)
+				frappe.avatar(null, "avatar-large", null, null, null, true),
 			);
 		}
 	},
@@ -252,8 +252,8 @@ $.extend(frappe, {
 			freeze.html(
 				repl(
 					'<div class="freeze-message-container"><div class="freeze-message">%(msg)s</div></div>',
-					{ msg: msg || "" }
-				)
+					{ msg: msg || "" },
+				),
 			);
 
 			setTimeout(function () {
@@ -388,7 +388,7 @@ $.extend(frappe, {
 						language_switcher.append(
 							$("<option></option>")
 								.attr("value", language_doc.language_code)
-								.text(language_doc.language_name)
+								.text(language_doc.language_name),
 						);
 					});
 					$("#language-switcher").removeClass("hide");
@@ -426,7 +426,7 @@ frappe.setup_search = function (target, search_scope) {
 
 	let $search_input = $(`<div class="dropdown" id="dropdownMenuSearch">
 			<input type="search" class="form-control" placeholder="${__(
-				"Search the docs (Press / to focus)"
+				"Search the docs (Press / to focus)",
 			)}" />
 			<div class="overflow-hidden shadow dropdown-menu w-100" aria-labelledby="dropdownMenuSearch">
 			</div>
@@ -497,7 +497,7 @@ frappe.setup_search = function (target, search_scope) {
 					$dropdown_menu.addClass("show");
 					dropdownItems = $dropdown_menu.find(".dropdown-item");
 				});
-		}, 500)
+		}, 500),
 	);
 
 	$input.on("focus", () => {
@@ -565,7 +565,7 @@ window.valid_email = function (id) {
 	// copied regex from frappe/utils.js validate_type
 	// eslint-disable-next-line
 	return /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/.test(
-		id.toLowerCase()
+		id.toLowerCase(),
 	);
 };
 
@@ -596,7 +596,7 @@ window.ask_to_login = function ask_to_login() {
 		if (localStorage) {
 			localStorage.setItem(
 				"last_visited",
-				window.location.href.replace(window.location.origin, "")
+				window.location.href.replace(window.location.origin, ""),
 			);
 		}
 		window.location.href = "login";

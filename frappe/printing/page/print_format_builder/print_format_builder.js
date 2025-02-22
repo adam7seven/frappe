@@ -47,10 +47,10 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 		this.page.main.css({ "border-color": "transparent" });
 
 		this.page.sidebar = $('<div class="print-format-builder-sidebar"></div>').appendTo(
-			this.page.sidebar
+			this.page.sidebar,
 		);
 		this.page.main = $('<div class="col-md-12 print-format-builder-main"></div>').appendTo(
-			this.page.main
+			this.page.main,
 		);
 
 		// future-bindings for buttons on sections / fields
@@ -167,7 +167,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 					me.print_format = null;
 					me.refresh();
 				},
-				true
+				true,
 			);
 			me.page.clear_inner_toolbar();
 			me.page.add_inner_button(__("Edit Properties"), function () {
@@ -179,7 +179,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 		// prepend custom HTML field
 		var fields = [this.get_custom_html_field()].concat(this.meta.fields);
 		this.page.sidebar.html(
-			$(frappe.render_template("print_format_builder_sidebar", { fields: fields }))
+			$(frappe.render_template("print_format_builder_sidebar", { fields: fields })),
 		);
 		this.setup_field_filter();
 	}
@@ -197,7 +197,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 			frappe.render_template("print_format_builder_layout", {
 				data: this.layout_data,
 				me: this,
-			})
+			}),
 		).appendTo(this.page.main);
 		this.setup_sortable();
 		this.setup_add_section();
@@ -271,7 +271,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 				} else {
 					f = $.extend(
 						frappe.meta.get_docfield(me.print_format.doc_type, f.fieldname) || {},
-						f
+						f,
 					);
 				}
 			}
@@ -449,7 +449,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 				me.update_columns_in_section(
 					section,
 					no_of_columns,
-					cint(d.get_value("no_of_columns"))
+					cint(d.get_value("no_of_columns")),
 				);
 
 				section.attr("data-label", d.get_value("label") || "");
@@ -572,7 +572,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 			for (let i = no_of_columns; i < new_no_of_columns; i++) {
 				var col = $(
 					'<div class="section-column">\
-					<div class="print-format-builder-column"></div></div>'
+					<div class="print-format-builder-column"></div></div>',
 				).appendTo(section);
 				me.setup_sortable_for_column(col.find(".print-format-builder-column").get(0));
 			}
@@ -592,7 +592,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 				frappe.render_template("print_format_builder_section", {
 					section: section,
 					me: me,
-				})
+				}),
 			).appendTo(me.page.main.find(".print-format-builder-layout"));
 
 			me.setup_sortable_for_column($section.find(".print-format-builder-column").get(0));
@@ -665,7 +665,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 					fields: fields,
 					column_names: column_names,
 					widths: widths,
-				})
+				}),
 			).appendTo(d.body);
 
 			Sortable.create($body.find(".column-selector-list").get(0));
@@ -726,7 +726,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 			me.get_edit_html_dialog(
 				__("Edit Custom HTML"),
 				__("Custom HTML"),
-				$(this).parents(".print-format-builder-field:first").find(".html-content")
+				$(this).parents(".print-format-builder-field:first").find(".html-content"),
 			);
 		});
 	}
@@ -747,7 +747,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 					options:
 						"<p>" +
 						__(
-							"You can add dynamic properties from the document by using Jinja templating."
+							"You can add dynamic properties from the document by using Jinja templating.",
 						) +
 						__("For example: If you want to include the document ID, use {0}", [
 							"<code>{{ doc.name }}</code>",

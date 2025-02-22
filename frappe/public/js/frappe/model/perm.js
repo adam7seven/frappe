@@ -166,7 +166,7 @@ $.extend(frappe.perm, {
 				const user_permissions_for_doctype = user_permissions[df.options] || [];
 				const allowed_records = frappe.perm.get_allowed_docs_for_doctype(
 					user_permissions_for_doctype,
-					doctype
+					doctype,
 				);
 				if (allowed_records.length) {
 					rules[df.label] = allowed_records;

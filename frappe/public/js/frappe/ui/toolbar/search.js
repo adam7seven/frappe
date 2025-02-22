@@ -28,7 +28,7 @@ frappe.search.SearchDialog = class {
 				</div>
 				<span class="search-icon">
 					${frappe.utils.icon("search")}
-				</span>`
+				</span>`,
 			);
 	}
 
@@ -60,7 +60,7 @@ frappe.search.SearchDialog = class {
 						},
 						(err) => {
 							console.error(err);
-						}
+						},
 					);
 				},
 			},
@@ -78,7 +78,7 @@ frappe.search.SearchDialog = class {
 						},
 						(err) => {
 							console.error(err);
-						}
+						},
 					);
 				},
 			},
@@ -127,7 +127,7 @@ frappe.search.SearchDialog = class {
 						this.current_keyword = "";
 						this.put_placeholder(this.search.empty_state_text);
 					}
-				}, 300)
+				}, 300),
 			);
 		});
 	}
@@ -176,7 +176,7 @@ frappe.search.SearchDialog = class {
 						},
 						(err) => {
 							console.error(err);
-						}
+						},
 					);
 			} else {
 				let results = this.nav_lists[type].slice(0, this.more_count);
@@ -251,7 +251,7 @@ frappe.search.SearchDialog = class {
 			this.full_lists[set.title] = this.render_full_list(
 				set.title,
 				set.results,
-				set.fetch_type
+				set.fetch_type,
 			);
 		});
 
@@ -392,7 +392,7 @@ frappe.search.SearchDialog = class {
 			this.$body.find(".list-more").hide();
 			let no_of_results = this.$body.find(".result").length;
 			let no_of_results_cue = $(
-				'<div class="results-status">' + no_of_results + " results found</div>"
+				'<div class="results-status">' + no_of_results + " results found</div>",
 			);
 			this.$body.find(".more-results:last").append(no_of_results_cue);
 		}

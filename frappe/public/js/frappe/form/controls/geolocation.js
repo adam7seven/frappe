@@ -18,7 +18,7 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
 			this.map_area = $(
 				`<div class="map-wrapper border">
 					<div id="${this.map_id}" style="min-height: 400px; z-index: 1; max-width:100%"></div>
-				</div>`
+				</div>`,
 			);
 
 			$(this.disp_area).html(this.map_area);
@@ -76,7 +76,7 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
 				pointToLayer: this.point_to_layer,
 				style: this.set_style,
 				onEachFeature: this.on_each_feature,
-			})
+			}),
 		);
 		this.add_non_group_layers(data_layers, this.editableLayers);
 		this.editableLayers.addTo(this.map);
@@ -157,7 +157,7 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
 		this.map.setView(frappe.utils.map_defaults.center, frappe.utils.map_defaults.zoom);
 
 		L.tileLayer(frappe.utils.map_defaults.tiles, frappe.utils.map_defaults.options).addTo(
-			this.map
+			this.map,
 		);
 
 		this.editableLayers = new L.FeatureGroup();

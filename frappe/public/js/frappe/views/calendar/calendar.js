@@ -80,7 +80,7 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 						frappe.show_alert(
 							__("{0} is not a valid Calendar. Redirecting to default Calendar.", [
 								calendar_name.bold(),
-							])
+							]),
 						);
 						frappe.set_route("List", this.doctype, "Calendar", "default");
 						return;
@@ -164,7 +164,7 @@ frappe.views.Calendar = class Calendar {
 		this.footnote_area = frappe.utils.set_footnote(
 			this.footnote_area,
 			this.$wrapper,
-			__("Select or drag across time slots to create a new event.")
+			__("Select or drag across time slots to create a new event."),
 		);
 		this.footnote_area.css({ "border-top": "0px" });
 
@@ -191,8 +191,8 @@ frappe.views.Calendar = class Calendar {
 			let value = $(this).hasClass("fc-dayGridWeek-button")
 				? "dayGridWeek"
 				: $(this).hasClass("fc-dayGridDay-button")
-				? "dayGridDay"
-				: "dayGridMonth";
+					? "dayGridDay"
+					: "dayGridMonth";
 			me.set_localStorage_option("cal_initialView", value);
 		});
 
@@ -329,7 +329,7 @@ frappe.views.Calendar = class Calendar {
 			dateClick: function (info) {
 				if (info.view.type === "dayGridMonth") {
 					const $date_cell = $(
-						"td[data-date=" + info.date.toISOString().slice(0, 10) + "]"
+						"td[data-date=" + info.date.toISOString().slice(0, 10) + "]",
 					);
 
 					if ($date_cell.hasClass("date-clicked")) {

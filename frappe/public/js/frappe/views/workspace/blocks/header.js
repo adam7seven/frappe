@@ -45,7 +45,7 @@ export default class Header extends Block {
 				"drag-handle",
 				__("Drag"),
 				null,
-				$widget_control
+				$widget_control,
 			);
 
 			return this.wrapper;

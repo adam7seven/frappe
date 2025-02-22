@@ -15,7 +15,7 @@ context("Report View", () => {
 				enabled: 0,
 				docstatus: 1, // submit document
 			},
-			true
+			true,
 		);
 	});
 

@@ -97,7 +97,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				this.refresh();
 			},
 			"",
-			__("Reload Report")
+			__("Reload Report"),
 		);
 	}
 
@@ -188,7 +188,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 			() => {
 				this.add_card_to_dashboard();
 			},
-			__("Actions")
+			__("Actions"),
 		);
 	}
 
@@ -201,7 +201,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				() => {
 					this.open_create_chart_dialog();
 				},
-				__("Actions")
+				__("Actions"),
 			);
 
 			if (this.chart_fields || this.chart_options) {
@@ -211,7 +211,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 					() => {
 						this.add_chart_to_dashboard();
 					},
-					__("Actions")
+					__("Actions"),
 				);
 			}
 		} else {
@@ -223,7 +223,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 	add_card_to_dashboard() {
 		let field_options = frappe.report_utils.get_field_options_from_report(
 			this.columns,
-			this.raw_data
+			this.raw_data,
 		);
 		const dashboard_field = frappe.dashboard_utils.get_dashboard_link_field();
 		const set_standard = frappe.boot.developer_mode;
@@ -297,7 +297,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 						this.chart_fields || this.chart_options,
 						values.dashboard,
 						values.dashboard_chart_name,
-						set_standard
+						set_standard,
 					);
 					dialog.hide();
 				},
@@ -324,7 +324,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 			args,
 			dashboard_name,
 			card_name,
-			"Number Card"
+			"Number Card",
 		);
 	}
 
@@ -372,7 +372,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 			args,
 			dashboard_name,
 			chart_name,
-			"Dashboard Chart"
+			"Dashboard Chart",
 		);
 	}
 
@@ -431,7 +431,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 						frappe.dom.eval(settings.script || "");
 						frappe.after_ajax(() => {
 							this.report_settings = this.get_local_report_settings(
-								settings.custom_report_name
+								settings.custom_report_name,
 							);
 							this.report_settings.html_format = settings.html_format;
 							this.report_settings.execution_time = settings.execution_time || 0;
@@ -479,7 +479,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 			if (filter.df.depends_on) {
 				filter.guardian_has_value = this.evaluate_depends_on_value(
 					filter.df.depends_on,
-					filter.df.label
+					filter.df.label,
 				);
 
 				if (filter.guardian_has_value) {
@@ -509,7 +509,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 					out = frappe.utils.eval(expression.substr(5), { doc });
 				} catch (e) {
 					frappe.throw(
-						__('Invalid "depends_on" expression set in filter {0}', [filter_label])
+						__('Invalid "depends_on" expression set in filter {0}', [filter_label]),
 					);
 				}
 			} else {
@@ -727,7 +727,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 							this.chart_options = frappe.report_utils.make_chart_options(
 								this.columns,
 								this.raw_data,
-								this.chart_fields
+								this.chart_fields,
 							);
 							this.chart_options && this.render_chart(this.chart_options);
 						}
@@ -774,17 +774,17 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 						frappe.urllib.get_full_url(
 							"/api/method/frappe.core.doctype.prepared_report.prepared_report.download_attachment?" +
 								"dn=" +
-								encodeURIComponent(doc.name)
-						)
+								encodeURIComponent(doc.name),
+						),
 					);
 				},
-				__("Actions")
+				__("Actions"),
 			);
 
 			let pretty_diff = frappe.datetime.comment_when(doc.report_end_time);
 			const days_old = frappe.datetime.get_day_diff(
 				frappe.datetime.now_datetime(),
-				doc.report_end_time
+				doc.report_end_time,
 			);
 			if (days_old > 1) {
 				pretty_diff = `<span style="color:var(--red-600)">${pretty_diff}</span>`;
@@ -834,7 +834,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		if (!this.primary_button || this.primary_button.text() !== primary_action.label) {
 			this.primary_button = this.page.set_primary_action(
 				primary_action.label,
-				primary_action.click
+				primary_action.click,
 			);
 		}
 	}
@@ -850,7 +850,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				{
 					filters: this.get_filter_values(),
 					report_name: this.report_name,
-				}
+				},
 			)
 			.then((reports) => {
 				this.queued_prepared_reports = reports;
@@ -862,7 +862,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 						message,
 						() => this.generate_background_report(),
 						__("Proceed Anyway"),
-						true
+						true,
 					);
 
 					this.prepared_report_dialog.footer.prepend(`
@@ -872,7 +872,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 
 					frappe.utils.bind_actions_with_object(
 						this.prepared_report_dialog.wrapper,
-						this
+						this,
 					);
 				} else {
 					this.generate_background_report();
@@ -887,16 +887,16 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				? `<a class="underline" href="${route}">${__("1 Report")}</a>`
 				: `<a class="underline" href="${route}">${__("{0} Reports", [
 						reports.length,
-				  ])}</a>`;
+					])}</a>`;
 
 		const no_of_reports_html =
 			reports.length == 1
 				? `${__("There is {0} with the same filters already in the queue:", [
 						report_link_html,
-				  ])}`
+					])}`
 				: `${__("There are {0} with the same filters already in the queue:", [
 						report_link_html,
-				  ])}`;
+					])}`;
 
 		let warning_message = `
 			<p>
@@ -935,7 +935,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 						filters: filters,
 					},
 					callback: resolve,
-				})
+				}),
 			).then((r) => {
 				const data = r.message;
 				// Rememeber the name of Prepared Report doc
@@ -966,7 +966,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		if (data.length > 1000000) {
 			let msg = __(
 				"This report contains {0} rows and is too big to display in browser, you can {1} this report instead.",
-				[cstr(format_number(data.length, null, 0)).bold(), __("export").bold()]
+				[cstr(format_number(data.length, null, 0)).bold(), __("export").bold()],
 			);
 
 			this.toggle_message(true, `${frappe.utils.icon("solid-warning")} ${msg}`);
@@ -1038,8 +1038,8 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		let options = this.report_settings.get_chart_data
 			? this.report_settings.get_chart_data(data.columns, data.result)
 			: data.chart
-			? data.chart
-			: undefined;
+				? data.chart
+				: undefined;
 
 		if (!(options && options.data && options.data.labels && options.data.labels.length > 0))
 			return;
@@ -1054,7 +1054,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 							options: options.options,
 						},
 						options.options,
-						options
+						options,
 					),
 			};
 		}
@@ -1076,7 +1076,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		const me = this;
 		let field_options = frappe.report_utils.get_field_options_from_report(
 			this.columns,
-			this.raw_data
+			this.raw_data,
 		);
 
 		function set_chart_values(values) {
@@ -1103,7 +1103,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				let options = frappe.report_utils.make_chart_options(
 					me.columns,
 					me.raw_data,
-					values
+					values,
 				);
 				me.chart_fields = values;
 				wrapper.empty();
@@ -1201,15 +1201,15 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				let options = frappe.report_utils.make_chart_options(
 					this.columns,
 					this.raw_data,
-					values
+					values,
 				);
 				me.chart_fields = values;
 
 				let x_field_label = field_options.numeric_fields.filter(
-					(field) => field.value == values.y_fields[0]
+					(field) => field.value == values.y_fields[0],
 				)[0].label;
 				let y_field_label = field_options.non_numeric_fields.filter(
-					(field) => field.value == values.x_field
+					(field) => field.value == values.x_field,
 				)[0].label;
 
 				options.title = __("{0}: {1} vs {2}", [
@@ -1260,7 +1260,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 					value,
 					column,
 					{ for_print: false, always_show_decimals: true },
-					data
+					data,
 				);
 			};
 
@@ -1292,7 +1292,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 							column,
 							data,
 							format_cell,
-							filter
+							filter,
 						);
 					}
 					return format_cell(value, row, column, data);
@@ -1577,7 +1577,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				open_url_post(frappe.request.url, args);
 
 				this.export_dialog.hide();
-			}
+			},
 		);
 
 		this.export_dialog.show();
@@ -1632,7 +1632,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 
 		if (print_settings && print_settings.columns) {
 			columns = this.get_visible_columns().filter((column) =>
-				print_settings.columns.includes(column.fieldname)
+				print_settings.columns.includes(column.fieldname),
 			);
 		} else {
 			columns = custom_format ? this.columns : this.get_visible_columns();
@@ -1661,7 +1661,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 						false,
 						(print_settings) => this.print_report(print_settings),
 						this.report_doc.letter_head,
-						this.get_visible_columns()
+						this.get_visible_columns(),
 					);
 					this.add_portrait_warning(dialog);
 				},
@@ -1675,7 +1675,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 						false,
 						(print_settings) => this.pdf_report(print_settings),
 						this.report_doc.letter_head,
-						this.get_visible_columns()
+						this.get_visible_columns(),
 					);
 
 					this.add_portrait_warning(dialog);
@@ -1714,7 +1714,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 								})),
 								change: () => {
 									const { doctype, fieldname } = JSON.parse(
-										d.get_value("doctype")
+										d.get_value("doctype"),
 									);
 									frappe.model.with_doctype(doctype, () => {
 										let options = frappe.meta
@@ -1736,7 +1736,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 													return 1;
 												}
 												return 0;
-											})
+											}),
 										);
 									});
 								},
@@ -1760,7 +1760,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 							Object.assign(values, { doctype, fieldname });
 							let df = frappe.meta.get_docfield(values.doctype, values.field);
 							const insert_after_index = this.columns.findIndex(
-								(column) => column.label === values.insert_after
+								(column) => column.label === values.insert_after,
 							);
 
 							custom_columns.push({
@@ -1785,7 +1785,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 									field: values.field,
 									doctype: values.doctype,
 									names: Array.from(
-										this.doctype_field_map[values.doctype][fieldname]
+										this.doctype_field_map[values.doctype][fieldname],
 									),
 								},
 								callback: (r) => {
@@ -1794,7 +1794,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 										custom_columns,
 										custom_data,
 										values,
-										insert_after_index
+										insert_after_index,
 									);
 									d.hide();
 								},
@@ -1927,7 +1927,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 					doctype: doc_field_pair[0],
 					fieldname: doc_field_pair[1],
 				};
-			})
+			}),
 		);
 		doctypes.forEach((doc) => {
 			if (!(doc.doctype in this.doctype_field_map))
@@ -1978,7 +1978,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 	show_footer_message() {
 		this.$report_footer && this.$report_footer.remove();
 		this.$report_footer = $(`<div class="report-footer text-muted"></div>`).appendTo(
-			this.page.main
+			this.page.main,
 		);
 		if (this.tree_report) {
 			this.$tree_footer = $(`<div class="tree-footer col-md-3">
@@ -1998,7 +1998,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		}
 
 		const message = __(
-			"For comparison, use >5, <10 or =324. For ranges, use 5:10 (for values between 5 & 10)."
+			"For comparison, use >5, <10 or =324. For ranges, use 5:10 (for values between 5 & 10).",
 		);
 		const execution_time_msg = __("Execution Time: {0} sec", [this.execution_time || 0.1]);
 
@@ -2064,8 +2064,8 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		let message =
 			this.prepared_report && !this.prepared_report_document
 				? __(
-						"This is a background report. Please set the appropriate filters and then generate a new one."
-				  )
+						"This is a background report. Please set the appropriate filters and then generate a new one.",
+					)
 				: this.get_no_result_message();
 
 		this.toggle_message(flag, message);

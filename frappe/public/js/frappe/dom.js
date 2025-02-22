@@ -157,8 +157,8 @@ frappe.dom = {
 			freeze.html(
 				repl(
 					'<div class="freeze-message-container"><div class="freeze-message"><p class="lead">%(msg)s</p></div></div>',
-					{ msg: msg || "" }
-				)
+					{ msg: msg || "" },
+				),
 			);
 
 			setTimeout(function () {
@@ -248,7 +248,7 @@ frappe.dom = {
 	},
 	pixel_to_inches(pixels) {
 		const div = $(
-			'<div id="dpi" style="height: 1in; width: 1in; left: 100%; position: fixed; top: 100%;"></div>'
+			'<div id="dpi" style="height: 1in; width: 1in; left: 100%; position: fixed; top: 100%;"></div>',
 		);
 		div.appendTo(document.body);
 
@@ -309,7 +309,7 @@ frappe.get_data_pill = (
 	target_id = null,
 	remove_action = null,
 	image = null,
-	colored = false
+	colored = false,
 ) => {
 	let color = "",
 		style = "";

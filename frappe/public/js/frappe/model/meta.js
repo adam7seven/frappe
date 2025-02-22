@@ -82,7 +82,7 @@ $.extend(frappe.meta, {
 			value,
 			df,
 			options,
-			doc
+			doc,
 		) {
 			return repl('<span class="indicator %(color)s">%(name)s</span>', {
 				color: get_color(),
@@ -140,7 +140,7 @@ $.extend(frappe.meta, {
 			frappe.utils.filter_dict(frappe.meta.docfield_map[doctype], filters),
 			function (df) {
 				return df.fieldname;
-			}
+			},
 		);
 	},
 
@@ -180,7 +180,7 @@ $.extend(frappe.meta, {
 					__("Warning: Unable to find {0} in any table related to {1}", [
 						key,
 						__(doctype),
-					])
+					]),
 				);
 			}
 		}
@@ -189,7 +189,7 @@ $.extend(frappe.meta, {
 
 	get_parentfield: function (parent_dt, child_dt) {
 		var df = (frappe.get_meta(parent_dt).fields || []).filter(
-			(df) => frappe.model.table_fields.includes(df.fieldtype) && df.options === child_dt
+			(df) => frappe.model.table_fields.includes(df.fieldtype) && df.options === child_dt,
 		);
 		if (!df.length) throw "parentfield not found for " + parent_dt + ", " + child_dt;
 		return df[0].fieldname;
@@ -258,7 +258,7 @@ $.extend(frappe.meta, {
 		var default_print_format = locals.DocType[doctype].default_print_format;
 		let enable_raw_printing = frappe.model.get_doc(
 			":Print Settings",
-			"Print Settings"
+			"Print Settings",
 		).enable_raw_printing;
 		var print_formats = frappe
 			.get_list("Print Format", { doc_type: doctype })

@@ -67,12 +67,12 @@ frappe.ui.form.on("DocType", {
 			frm.dashboard.add_comment(
 				__("DocTypes cannot be modified, please use {0} instead", [customize_form_link]),
 				"blue",
-				true
+				true,
 			);
 		} else if (frappe.boot.developer_mode) {
 			frm.dashboard.clear_comment();
 			let msg = __(
-				"This site is running in developer mode. Any change made here will be updated in code."
+				"This site is running in developer mode. Any change made here will be updated in code.",
 			);
 			frm.dashboard.add_comment(msg, "yellow", true);
 		}

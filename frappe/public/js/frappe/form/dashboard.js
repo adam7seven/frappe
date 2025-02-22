@@ -112,7 +112,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 
 		$.each(percent, function (i, opts) {
 			$(
-				`<div class="progress-bar ${opts.progress_class}" style="width: ${opts.width}" title="${opts.title}"></div>`
+				`<div class="progress-bar ${opts.progress_class}" style="width: ${opts.width}" title="${opts.title}"></div>`,
 			).appendTo(progress);
 		});
 
@@ -176,7 +176,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 	make_progress_chart(title) {
 		this.progress_area.show();
 		return $('<div class="progress-chart" title="' + (title || "") + '"></div>').appendTo(
-			this.progress_area.body
+			this.progress_area.body,
 		);
 	}
 
@@ -459,7 +459,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 				d.doctype,
 				cint(d.open_count),
 				cint(d.count),
-				d.names
+				d.names,
 			);
 		});
 
@@ -467,14 +467,14 @@ frappe.ui.form.Dashboard = class FormDashboard {
 			me.frm.dashboard.set_badge_count_for_external_link(
 				d.doctype,
 				cint(d.open_count),
-				cint(d.count)
+				cint(d.count),
 			);
 		});
 	}
 
 	set_badge_count_for_external_link(doctype, open_count, count) {
 		let $link = $(this.transactions_area).find(
-			'.document-link[data-doctype="' + doctype + '"]'
+			'.document-link[data-doctype="' + doctype + '"]',
 		);
 
 		this.set_badge_count_common(open_count, count, $link);
@@ -482,7 +482,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 
 	set_badge_count_for_internal_link(doctype, open_count, count, names) {
 		let $link = $(this.transactions_area).find(
-			'.document-link[data-doctype="' + doctype + '"]'
+			'.document-link[data-doctype="' + doctype + '"]',
 		);
 
 		this.set_badge_count_common(open_count, count, $link);
@@ -569,7 +569,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 				color +
 				'">' +
 				label +
-				"</span></div>"
+				"</span></div>",
 		).appendTo(this.stats_area_row);
 	}
 

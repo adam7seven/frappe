@@ -204,7 +204,7 @@ frappe.ui.Capture = class {
 		$(this.$template.find(".fc-preview-container")).html(
 			`<div class="row">
 				${images}
-			</div>`
+			</div>`,
 		);
 
 		this.setup_capture_action();
@@ -284,7 +284,7 @@ frappe.ui.Capture = class {
 				me.stop_media_stream();
 				me.render_stream();
 			},
-			"btn-switch"
+			"btn-switch",
 		);
 	}
 

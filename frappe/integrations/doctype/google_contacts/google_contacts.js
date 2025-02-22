@@ -7,7 +7,7 @@ frappe.ui.form.on("Google Contacts", {
 			frm.dashboard.set_headline(
 				__("To use Google Contacts, enable {0}.", [
 					`<a href='/app/google-settings'>${__("Google Settings")}</a>`,
-				])
+				]),
 			);
 		}
 
@@ -16,7 +16,7 @@ frappe.ui.form.on("Google Contacts", {
 				frm.dashboard.show_progress(
 					"Import Google Contacts",
 					(data.progress / data.total) * 100,
-					__("Importing {0} of {1}", [data.progress, data.total])
+					__("Importing {0} of {1}", [data.progress, data.total]),
 				);
 				if (data.progress === data.total) {
 					frm.dashboard.hide_progress("Import Google Contacts");

@@ -47,7 +47,7 @@ frappe.ui.Scanner = class Scanner {
 				},
 				(errorMessage) => {
 					// parse error, ignore it.
-				}
+				},
 			)
 			.catch((err) => {
 				this.is_alive = false;

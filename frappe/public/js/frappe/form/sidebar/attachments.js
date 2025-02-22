@@ -139,7 +139,7 @@ frappe.ui.form.Attachments = class Attachments {
 					let to_be_removed = me
 						.get_attachments()
 						.filter(
-							(attachment) => attachment.file_name === target_attachment.file_name
+							(attachment) => attachment.file_name === target_attachment.file_name,
 						);
 					to_be_removed.forEach((attachment) => me.remove_attachment(attachment.name));
 				});

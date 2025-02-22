@@ -30,7 +30,7 @@ frappe.ui.form.on("Report", {
 							break;
 					}
 				},
-				"fa fa-table"
+				"fa fa-table",
 			);
 		}
 
@@ -44,7 +44,7 @@ frappe.ui.form.on("Report", {
 						frm.reload_doc();
 					});
 				},
-				doc.disabled ? "fa fa-check" : "fa fa-off"
+				doc.disabled ? "fa fa-check" : "fa fa-off",
 			);
 		}
 

@@ -88,7 +88,7 @@ context("Dashboard links", () => {
 
 		cy.get(".document-link .btn-new").click();
 		cy.get(
-			'.frappe-control[data-fieldname="child_table"] .rows .data-row .col[data-fieldname="doctype_to_link"]'
+			'.frappe-control[data-fieldname="child_table"] .rows .data-row .col[data-fieldname="doctype_to_link"]',
 		).should("contain.text", "Test Linking");
 	});
 });

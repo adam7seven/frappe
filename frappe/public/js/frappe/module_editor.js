@@ -50,7 +50,7 @@ frappe.ModuleEditor = class ModuleEditor {
 				let module_doc = frappe.model.add_child(
 					this.frm.doc,
 					"Block Module",
-					"block_modules"
+					"block_modules",
 				);
 				module_doc.module = module;
 			}

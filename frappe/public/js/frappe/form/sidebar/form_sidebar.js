@@ -94,7 +94,7 @@ frappe.ui.form.Sidebar = class {
 			get_user_message(
 				this.frm.doc.owner,
 				__("You created this", null),
-				__("{0} created this", [get_user_link(this.frm.doc.owner)])
+				__("{0} created this", [get_user_link(this.frm.doc.owner)]),
 			) +
 			" · " +
 			comment_when(this.frm.doc.creation);
@@ -103,7 +103,7 @@ frappe.ui.form.Sidebar = class {
 			get_user_message(
 				this.frm.doc.modified_by,
 				__("You last edited this", null),
-				__("{0} last edited this", [get_user_link(this.frm.doc.modified_by)])
+				__("{0} last edited this", [get_user_link(this.frm.doc.modified_by)]),
 			) +
 			" · " +
 			comment_when(this.frm.doc.modified);
@@ -201,8 +201,8 @@ frappe.ui.form.Sidebar = class {
 			.html(label)
 			.appendTo(
 				$('<div class="user-action-row"></div>').appendTo(
-					this.user_actions.removeClass("hidden")
-				)
+					this.user_actions.removeClass("hidden"),
+				),
 			)
 			.on("click", click);
 	}

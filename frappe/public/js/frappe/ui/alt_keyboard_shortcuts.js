@@ -79,14 +79,14 @@ function get_shortcut_for_key(key) {
 
 	if ($current_dropdown && $current_dropdown.is(".open")) {
 		shortcut = shortcuts.find((shortcut) =>
-			$.contains($current_dropdown[0], shortcut.$target[0])
+			$.contains($current_dropdown[0], shortcut.$target[0]),
 		);
 	}
 
 	if (shortcut) return shortcut;
 
 	shortcut = shortcuts.find((shortcut) =>
-		$.contains(window.cur_page.page.page.wrapper[0], shortcut.$target[0])
+		$.contains(window.cur_page.page.page.wrapper[0], shortcut.$target[0]),
 	);
 
 	return shortcut;

@@ -63,7 +63,7 @@ frappe.ui.form.on("Communication", {
 				function () {
 					frm.trigger("reply_all");
 				},
-				__("Actions")
+				__("Actions"),
 			);
 
 			frm.add_custom_button(
@@ -71,7 +71,7 @@ frappe.ui.form.on("Communication", {
 				function () {
 					frm.trigger("forward_mail");
 				},
-				__("Actions")
+				__("Actions"),
 			);
 
 			frm.add_custom_button(
@@ -79,7 +79,7 @@ frappe.ui.form.on("Communication", {
 				function () {
 					frm.trigger("mark_as_read_unread");
 				},
-				__("Actions")
+				__("Actions"),
 			);
 
 			frm.add_custom_button(
@@ -87,7 +87,7 @@ frappe.ui.form.on("Communication", {
 				function () {
 					frm.trigger("show_move_dialog");
 				},
-				__("Actions")
+				__("Actions"),
 			);
 
 			if (frm.doc.email_status != "Spam")
@@ -96,7 +96,7 @@ frappe.ui.form.on("Communication", {
 					function () {
 						frm.trigger("mark_as_spam");
 					},
-					__("Actions")
+					__("Actions"),
 				);
 
 			if (frm.doc.email_status != "Trash") {
@@ -105,7 +105,7 @@ frappe.ui.form.on("Communication", {
 					function () {
 						frm.trigger("move_to_trash");
 					},
-					__("Actions")
+					__("Actions"),
 				);
 			}
 
@@ -114,7 +114,7 @@ frappe.ui.form.on("Communication", {
 				function () {
 					frm.trigger("add_to_contact");
 				},
-				__("Create")
+				__("Create"),
 			);
 		}
 
@@ -128,7 +128,7 @@ frappe.ui.form.on("Communication", {
 				function () {
 					frm.trigger("add_to_contact");
 				},
-				__("Actions")
+				__("Actions"),
 			);
 		}
 	},
@@ -182,7 +182,7 @@ frappe.ui.form.on("Communication", {
 							message: __("Document not Relinked"),
 							indicator: "info",
 						});
-					}
+					},
 				);
 			}
 		});

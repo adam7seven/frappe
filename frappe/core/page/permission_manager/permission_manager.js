@@ -9,7 +9,7 @@ frappe.pages["permission-manager"].on_page_load = (wrapper) => {
 	frappe.breadcrumbs.add("Setup");
 
 	$("<div class='perm-engine' style='min-height: 200px; padding: 15px;'></div>").appendTo(
-		page.main
+		page.main,
 	);
 	$(frappe.render_template("permission_manager_help", {})).appendTo(page.main);
 	wrapper.permission_engine = new frappe.PermissionEngine(wrapper);
@@ -204,7 +204,7 @@ frappe.PermissionEngine = class PermissionEngine {
 				<thead><tr></tr></thead>\
 				<tbody></tbody>\
 			</table>\
-		</div>"
+		</div>",
 		).appendTo(this.body);
 
 		const table_columns = [
@@ -283,7 +283,7 @@ frappe.PermissionEngine = class PermissionEngine {
 					<label><input type='checkbox'>${__(label)}</input></label>
 					<p class='help-box small text-muted'>${__(description)}</p>
 				</div>
-			</div>`
+			</div>`,
 		)
 			.appendTo(cell)
 			.attr("data-fieldname", fieldname);
@@ -347,7 +347,7 @@ frappe.PermissionEngine = class PermissionEngine {
 						frappe.msgprint(
 							__("Users with role {0}:", [__(role)]) +
 								"<br>" +
-								r.message.join("<br>")
+								r.message.join("<br>"),
 						);
 					},
 				});
@@ -358,8 +358,8 @@ frappe.PermissionEngine = class PermissionEngine {
 	add_delete_button(row, d) {
 		$(
 			`<button class='btn btn-danger btn-remove-perm btn-xs'>${frappe.utils.icon(
-				"delete"
-			)}</button>`
+				"delete",
+			)}</button>`,
 		)
 			.appendTo($(`<td class="pt-4">`).appendTo(row))
 			.attr("data-doctype", d.parent)
@@ -458,7 +458,7 @@ frappe.PermissionEngine = class PermissionEngine {
 							reqd: 1,
 							fieldname: "permlevel",
 							description: __(
-								"Level 0 is for document level permissions, higher levels for field level permissions."
+								"Level 0 is for document level permissions, higher levels for field level permissions.",
 							),
 						},
 					],
@@ -494,7 +494,7 @@ frappe.PermissionEngine = class PermissionEngine {
 				});
 				d.show();
 			},
-			"small-add"
+			"small-add",
 		);
 	}
 

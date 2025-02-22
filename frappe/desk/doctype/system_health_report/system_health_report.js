@@ -8,7 +8,7 @@ frappe.ui.form.on("System Health Report", {
 			frappe
 				.xcall(
 					"frappe.desk.doctype.system_health_report.system_health_report.get_job_status",
-					{ job_id: frm.doc.test_job_id }
+					{ job_id: frm.doc.test_job_id },
 				)
 				.then((status) => {
 					poll_attempts += 1;
@@ -25,7 +25,7 @@ frappe.ui.form.on("System Health Report", {
 			frm.set_value("socketio_ping_check", "Pass");
 			frm.set_value(
 				"socketio_transport_mode",
-				frappe.realtime.socket.io?.engine?.transport?.name
+				frappe.realtime.socket.io?.engine?.transport?.name,
 			);
 		});
 		frappe.realtime.emit("ping");

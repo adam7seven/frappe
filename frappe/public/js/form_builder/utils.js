@@ -329,7 +329,7 @@ export function confirm_dialog(
 	primary_action,
 	primary_action_label,
 	secondary_action,
-	secondary_action_label
+	secondary_action_label,
 ) {
 	let d = new frappe.ui.Dialog({
 		title: title,

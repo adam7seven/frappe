@@ -83,7 +83,7 @@ class RealTimeClient {
 					data.percent,
 					100,
 					data.description,
-					true
+					true,
 				);
 			}
 		});

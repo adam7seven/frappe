@@ -19,7 +19,7 @@ context("Grid Search", () => {
 					"frappe.tests.ui_test_helpers.insert_doctype_with_child_table_record",
 					{
 						name: doctype_with_child_table_name,
-					}
+					},
 				);
 			});
 	});

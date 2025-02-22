@@ -13,7 +13,7 @@ $(document).ready(function () {
 				const response = r.message;
 				if (response.trial_end_date) {
 					$(".layout-main-section").before(
-						generateTrialSubscriptionBanner(response.trial_end_date)
+						generateTrialSubscriptionBanner(response.trial_end_date),
 					);
 
 					addLoginToFCDropdownItem();
@@ -88,8 +88,8 @@ function showFCLoginDialog(email) {
 			</div>
 			<p class="text-danger" id="fc-login-error"></p>
 		</div>`,
-				frappe.app
-			)
+				frappe.app,
+			),
 		);
 
 		d.add_custom_action("Didn't receive code? Resend", () => {
@@ -119,15 +119,15 @@ function showFCLoginDialog(email) {
 					window.fc_login_dialog.hide();
 					window.open(
 						`${frappeCloudBaseEndpoint}/api/method/press.api.developer.saas.login_to_fc?token=${message.login_token}`,
-						"_blank"
+						"_blank",
 					);
 					frappe.msgprint({
 						title: __("Frappe Cloud Login Successful"),
 						indicator: "green",
 						message: `<p>${__(
-							"You will be redirected to Frappe Cloud soon."
+							"You will be redirected to Frappe Cloud soon.",
 						)}</p><p>${__(
-							"If you haven't been redirected,"
+							"If you haven't been redirected,",
 						)} <a href="${frappeCloudBaseEndpoint}/api/method/press.api.developer.saas.login_to_fc?token=${
 							message.login_token
 						}" target="_blank">${__("Click here to login")}</a></p>`,
@@ -149,7 +149,7 @@ function showFCLoginDialog(email) {
 
 function addLoginToFCDropdownItem() {
 	$(".dropdown-navbar-user .dropdown-menu .dropdown-item:last()").before(
-		`<div class="dropdown-item login-to-fc" target="_blank">Login to Frappe Cloud</div>`
+		`<div class="dropdown-item login-to-fc" target="_blank">Login to Frappe Cloud</div>`,
 	);
 }
 

@@ -15,7 +15,7 @@ context("MultiSelectDialog", () => {
 			],
 		};
 		const promises = Array.from({ length: 25 }).map(() =>
-			cy.insert_doc("Contact", contact_template, true)
+			cy.insert_doc("Contact", contact_template, true),
 		);
 		Promise.all(promises);
 	});

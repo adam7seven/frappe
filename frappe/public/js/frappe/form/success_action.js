@@ -9,7 +9,7 @@ frappe.ui.form.SuccessAction = class SuccessAction {
 
 	load_setting() {
 		this.setting = frappe.boot.success_action.find(
-			(setting) => setting.ref_doctype === this.form.doctype
+			(setting) => setting.ref_doctype === this.form.doctype,
 		);
 	}
 
@@ -36,7 +36,7 @@ frappe.ui.form.SuccessAction = class SuccessAction {
 
 			const $buttons = this.get_actions().map((action) => {
 				const $btn = $(
-					`<button class="next-action"><span>${__(action.label)}</span></button>`
+					`<button class="next-action"><span>${__(action.label)}</span></button>`,
 				);
 				$btn.click(() => action.action(this.form));
 				return $btn;
@@ -52,7 +52,7 @@ frappe.ui.form.SuccessAction = class SuccessAction {
 					body: html,
 					indicator: "green",
 				},
-				setting.action_timeout || 7
+				setting.action_timeout || 7,
 			);
 		});
 	}

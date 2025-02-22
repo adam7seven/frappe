@@ -220,7 +220,7 @@ Cypress.Commands.add(
 			cy.get("@input").type(value, { waitForAnimations: false, force: true });
 		}
 		return cy.get("@input");
-	}
+	},
 );
 
 Cypress.Commands.add(
@@ -238,7 +238,7 @@ Cypress.Commands.add(
 			return cy.get(selector).find(".form-control:visible, .static-area:visible").first();
 		}
 		return cy.get(selector);
-	}
+	},
 );
 
 Cypress.Commands.add("awesomebar", (text) => {
@@ -355,7 +355,7 @@ Cypress.Commands.add("insert_doc", (doctype, args, ignore_duplicate) => {
 						message = `Document insert failed, response: ${JSON.stringify(
 							res,
 							null,
-							"\t"
+							"\t",
 						)}`;
 					}
 					expect(res.status).to.be.oneOf(status_codes, message);

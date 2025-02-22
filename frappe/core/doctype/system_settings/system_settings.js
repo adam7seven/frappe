@@ -65,7 +65,7 @@ frappe.ui.form.on("System Settings", {
 	rounding_method: function (frm) {
 		if (frm.doc.rounding_method == frappe.boot.sysdefaults.rounding_method) return;
 		let msg = __(
-			"Changing rounding method on site with data can result in unexpected behaviour."
+			"Changing rounding method on site with data can result in unexpected behaviour.",
 		);
 		msg += "<br>";
 		msg += __("Do you still want to proceed?");
@@ -75,7 +75,7 @@ frappe.ui.form.on("System Settings", {
 			() => {},
 			() => {
 				frm.set_value("rounding_method", frappe.boot.sysdefaults.rounding_method);
-			}
+			},
 		);
 	},
 

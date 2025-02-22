@@ -12,7 +12,7 @@ frappe.utils.logtypes.show_log_retention_message = (doctype) => {
 
 	const add_sidebar_message = (message) => {
 		let sidebar_entry = $('<div class="sidebar-section></div>').appendTo(
-			cur_list.page.sidebar
+			cur_list.page.sidebar,
 		);
 		$(`<div>${message}</div>`).appendTo(sidebar_entry);
 	};

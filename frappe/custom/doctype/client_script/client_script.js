@@ -8,7 +8,7 @@ frappe.ui.form.on("Client Script", {
 	refresh(frm) {
 		if (frm.doc.dt && frm.doc.script) {
 			frm.add_custom_button(__("Go to {0}", [frm.doc.dt]), () =>
-				frappe.set_route("List", frm.doc.dt, "List")
+				frappe.set_route("List", frm.doc.dt, "List"),
 			);
 		}
 

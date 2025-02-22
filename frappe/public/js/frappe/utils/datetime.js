@@ -172,7 +172,7 @@ $.extend(frappe.datetime, {
 			const system_datetime = moment.tz(
 				val,
 				frappe.defaultDatetimeFormat,
-				frappe.boot.time_zone.system
+				frappe.boot.time_zone.system,
 			);
 			const user_datetime = system_datetime.clone().tz(frappe.boot.time_zone.user);
 
@@ -281,7 +281,7 @@ $.extend(frappe.datetime, {
 		return moment(
 			d,
 			[frappe.defaultDateFormat, frappe.defaultDatetimeFormat, frappe.defaultTimeFormat],
-			true
+			true,
 		).isValid();
 	},
 

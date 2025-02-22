@@ -38,7 +38,7 @@ frappe.views.FormFactory = class FormFactory extends frappe.views.Factory {
 			doctype,
 			this.page,
 			true,
-			frappe.router.doctype_layout
+			frappe.router.doctype_layout,
 		);
 	}
 

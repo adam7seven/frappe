@@ -61,7 +61,7 @@ export default class ShortcutWidget extends Widget {
 		if (this.in_customize_mode) return;
 
 		$(frappe.utils.icon("es-line-arrow-up-right", "xs", "", "", "ml-2")).appendTo(
-			this.action_area
+			this.action_area,
 		);
 
 		this.widget.addClass("shortcut-widget-box");
@@ -100,11 +100,11 @@ export default class ShortcutWidget extends Widget {
 		const label = get_label();
 		let color = this.color && count ? this.color.toLowerCase() : "gray";
 		$(
-			`<div class="indicator-pill no-indicator-dot ellipsis ${color}">${__(label)}</div>`
+			`<div class="indicator-pill no-indicator-dot ellipsis ${color}">${__(label)}</div>`,
 		).appendTo(this.action_area);
 
 		$(frappe.utils.icon("es-line-arrow-up-right", "xs", "", "", "ml-2")).appendTo(
-			this.action_area
+			this.action_area,
 		);
 	}
 }

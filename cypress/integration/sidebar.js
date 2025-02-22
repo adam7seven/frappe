@@ -23,7 +23,7 @@ const attach_file = (file, no_of_files = 1) => {
 			(el, idx) =>
 				"cypress/fixtures/sample_attachments/attachment-" +
 				(idx + 1) +
-				(idx == 0 ? ".jpg" : ".txt")
+				(idx == 0 ? ".jpg" : ".txt"),
 		);
 	}
 
@@ -104,7 +104,7 @@ context("Sidebar", () => {
 
 			//To check if filter is added in "Assigned To" dropdown after assignment
 			cy.get(
-				".group-by-field.show > .dropdown-menu > .group-by-item > .dropdown-item"
+				".group-by-field.show > .dropdown-menu > .group-by-item > .dropdown-item",
 			).should("contain", "1");
 
 			//To check if there is no filter added to the listview
@@ -112,19 +112,19 @@ context("Sidebar", () => {
 
 			//To add a filter to display data into the listview
 			cy.get(
-				".group-by-field.show > .dropdown-menu > .group-by-item > .dropdown-item"
+				".group-by-field.show > .dropdown-menu > .group-by-item > .dropdown-item",
 			).click();
 
 			//To check if filter is applied
 			cy.click_filter_button().get(".filter-label").should("contain", "1");
 			cy.get(".fieldname-select-area > .awesomplete > .form-control").should(
 				"have.value",
-				"Assigned To"
+				"Assigned To",
 			);
 			cy.get(".condition").should("have.value", "like");
 			cy.get(".filter-field > .form-group > .input-with-feedback").should(
 				"have.value",
-				`%${cy.config("testUser")}%`
+				`%${cy.config("testUser")}%`,
 			);
 			cy.click_filter_button();
 

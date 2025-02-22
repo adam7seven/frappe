@@ -3,7 +3,7 @@ frappe.preview_email = function (
 	args,
 	header,
 	with_container = false,
-	only_html = false
+	only_html = false,
 ) {
 	return frappe
 		.call({

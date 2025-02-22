@@ -40,7 +40,7 @@ frappe.listview_settings["DocType"] = {
 				fieldname: "is_submittable",
 				fieldtype: "Check",
 				description: __(
-					"Once submitted, submittable documents cannot be changed. They can only be Cancelled and Amended."
+					"Once submitted, submittable documents cannot be changed. They can only be Cancelled and Amended.",
 				),
 				depends_on: "eval:!doc.istable && !doc.issingle",
 				default: is_submittable,
@@ -65,7 +65,7 @@ frappe.listview_settings["DocType"] = {
 				fieldname: "issingle",
 				fieldtype: "Check",
 				description: __(
-					"Single Types have only one record no tables associated. Values are stored in tabSingles"
+					"Single Types have only one record no tables associated. Values are stored in tabSingles",
 				),
 				depends_on: "eval:!doc.istable && !doc.is_submittable",
 				default: is_single,

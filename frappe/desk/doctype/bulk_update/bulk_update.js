@@ -24,7 +24,7 @@ frappe.ui.form.on("Bulk Update", {
 						frappe.throw(
 							__("Cannot update {0}", [
 								failed.map((f) => (f.bold ? f.bold() : f)).join(", "),
-							])
+							]),
 						);
 					} else {
 						frappe.msgprint({

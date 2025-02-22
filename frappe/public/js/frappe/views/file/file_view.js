@@ -8,7 +8,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 			frappe.set_route(
 				"List",
 				"File",
-				view_user_settings.last_folder || frappe.boot.home_folder
+				view_user_settings.last_folder || frappe.boot.home_folder,
 			);
 			return true;
 		}
@@ -109,7 +109,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 							});
 						},
 						__("Enter folder name"),
-						__("Create")
+						__("Create"),
 					);
 				},
 			},
@@ -272,7 +272,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 						: frappe.utils.icon(icon_class, {
 								width: "40px",
 								height: "45px",
-						  });
+							});
 				const name = escape(d.name);
 				const draggable = d.type == "Folder" ? false : true;
 				return `
@@ -297,7 +297,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 		this.$result.empty().html(
 			`<div class="file-grid">
 				${html}
-			</div>`
+			</div>`,
 		);
 	}
 
@@ -329,8 +329,8 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 
 		let header_selector_html = !frappe.views.FileView.grid_view
 			? `<input class="level-item list-check-all hidden-xs" type="checkbox" title="${__(
-					"Select All"
-			  )}">`
+					"Select All",
+				)}">`
 			: "";
 
 		let header_columns_html = !frappe.views.FileView.grid_view
@@ -420,7 +420,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 			e.target.style.opacity = "0.4";
 			frappe.file_manager.cut(
 				[{ name: $(e.currentTarget).attr("data-name") }],
-				this.current_folder
+				this.current_folder,
 			);
 		});
 
@@ -429,7 +429,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 			(e) => {
 				e.preventDefault();
 			},
-			false
+			false,
 		);
 
 		this.$result.on("dragend", ".files .file-wrapper", (e) => {

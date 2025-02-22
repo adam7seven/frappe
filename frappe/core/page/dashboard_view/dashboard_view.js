@@ -85,12 +85,12 @@ class Dashboard {
 
 	render_charts() {
 		return this.get_permitted_items(
-			"frappe.desk.doctype.dashboard.dashboard.get_permitted_charts"
+			"frappe.desk.doctype.dashboard.dashboard.get_permitted_charts",
 		).then((charts) => {
 			if (!charts.length) {
 				frappe.msgprint(
 					__("No Permitted Charts on this Dashboard"),
-					__("No Permitted Charts")
+					__("No Permitted Charts"),
 				);
 			}
 
@@ -125,7 +125,7 @@ class Dashboard {
 
 	render_cards() {
 		return this.get_permitted_items(
-			"frappe.desk.doctype.dashboard.dashboard.get_permitted_cards"
+			"frappe.desk.doctype.dashboard.dashboard.get_permitted_cards",
 		).then((cards) => {
 			if (!cards.length) {
 				return;
@@ -187,7 +187,7 @@ class Dashboard {
 					this.page.add_menu_item(
 						name,
 						() => frappe.set_route("dashboard-view", name),
-						1
+						1,
 					);
 				}
 			});

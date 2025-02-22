@@ -280,7 +280,7 @@ export default class WebFormList {
 
 		frappe.has_permission(this.doctype, "", "delete", () => {
 			this.add_button(actions, "delete-rows", "danger", true, "Delete", () =>
-				this.delete_rows()
+				this.delete_rows(),
 			);
 		});
 	}
@@ -381,7 +381,7 @@ frappe.ui.WebFormListRow = class WebFormListRow {
 			let value =
 				(this.doc[field.fieldname] &&
 					__(
-						formatter(this.doc[field.fieldname], field, { only_value: 1 }, this.doc)
+						formatter(this.doc[field.fieldname], field, { only_value: 1 }, this.doc),
 					)) ||
 				"";
 			let cell = $(`<td><p class="ellipsis">${value}</p></td>`);

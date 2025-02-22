@@ -7,7 +7,7 @@ frappe.avatar = function (
 	title,
 	image_url = null,
 	remove_color = false,
-	filterable = false
+	filterable = false,
 ) {
 	let user_info;
 	if (user) {
@@ -39,7 +39,7 @@ frappe.avatar = function (
 		title,
 		image_url || user_info.image,
 		remove_color,
-		data_attr
+		data_attr,
 	);
 };
 
@@ -88,7 +88,14 @@ frappe.avatar_group = function (users, limit = 4, options = {}) {
 
 	let html = display_users
 		.map((user) =>
-			frappe.avatar(user, "avatar-small " + css_class, null, null, false, options.filterable)
+			frappe.avatar(
+				user,
+				"avatar-small " + css_class,
+				null,
+				null,
+				false,
+				options.filterable,
+			),
 		)
 		.join("");
 	if (extra_users.length === 1) {
@@ -98,7 +105,7 @@ frappe.avatar_group = function (users, limit = 4, options = {}) {
 			null,
 			null,
 			false,
-			options.filterable
+			options.filterable,
 		);
 	} else if (extra_users.length > 1) {
 		html = `
@@ -260,7 +267,7 @@ frappe.get_cookies = function getCookies() {
 		});
 	} else {
 		c.match(
-			/(?:^|\s+)([!#$%&'*+\-.0-9A-Z^`a-z|~]+)=([!#$%&'*+\-.0-9A-Z^`a-z|~]*|"(?:[\x20-\x7E\x80\xFF]|\\[\x00-\x7F])*")(?=\s*[,;]|$)/g
+			/(?:^|\s+)([!#$%&'*+\-.0-9A-Z^`a-z|~]+)=([!#$%&'*+\-.0-9A-Z^`a-z|~]*|"(?:[\x20-\x7E\x80\xFF]|\\[\x00-\x7F])*")(?=\s*[,;]|$)/g,
 		).map(function ($0, $1) {
 			var name = $0,
 				value = $1.charAt(0) === '"' ? $1.substr(1, -1).replace(/\\(.)/g, "$1") : $1;
@@ -319,7 +326,7 @@ frappe.utils.sanitise_redirect = (url) => {
 		return (url) => {
 			function domain(url) {
 				let base_domain = /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:/\n?]+)/gim.exec(
-					url
+					url,
 				);
 				return base_domain == null ? "" : base_domain[1];
 			}
@@ -367,7 +374,7 @@ frappe.utils.sanitise_redirect = (url) => {
 		const REGEX_ESC_UNIT = /\s*(&#x.{1,7})?/;
 		const REGEX_SCRIPT = new RegExp(
 			Array.from("javascript").join(REGEX_ESC_UNIT.source),
-			"gi"
+			"gi",
 		);
 
 		return url.replace(REGEX_SCRIPT, "");
@@ -440,7 +447,7 @@ frappe.utils.new_auto_repeat_prompt = function (frm) {
 			});
 		},
 		__("Auto Repeat"),
-		__("Save")
+		__("Save"),
 	);
 };
 

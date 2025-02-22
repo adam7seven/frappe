@@ -53,5 +53,5 @@ describe(
 				check_button_count(button_name);
 			});
 		});
-	}
+	},
 );

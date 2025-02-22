@@ -84,13 +84,13 @@ frappe.ui.form.on("Data Import", {
 
 		if (frm.doc.status === "Partial Success") {
 			frm.add_custom_button(__("Export Errored Rows"), () =>
-				frm.trigger("export_errored_rows")
+				frm.trigger("export_errored_rows"),
 			);
 		}
 
 		if (frm.doc.status.includes("Success")) {
 			frm.add_custom_button(__("Go to {0} List", [__(frm.doc.reference_doctype)]), () =>
-				frappe.set_route("List", frm.doc.reference_doctype)
+				frappe.set_route("List", frm.doc.reference_doctype),
 			);
 		}
 	},
@@ -156,7 +156,7 @@ frappe.ui.form.on("Data Import", {
 					message +=
 						"<br/>" +
 						__(
-							"Please click on 'Export Errored Rows', fix the errors and import again."
+							"Please click on 'Export Errored Rows', fix the errors and import again.",
 						);
 				}
 
@@ -210,7 +210,7 @@ frappe.ui.form.on("Data Import", {
 		frappe.require("data_import_tools.bundle.js", () => {
 			frm.data_exporter = new frappe.data_import.DataExporter(
 				frm.doc.reference_doctype,
-				frm.doc.import_type
+				frm.doc.import_type,
 			);
 		});
 	},
@@ -312,7 +312,7 @@ frappe.ui.form.on("Data Import", {
 			"/api/method/frappe.core.doctype.data_import.data_import.download_errored_template",
 			{
 				data_import_name: frm.doc.name,
-			}
+			},
 		);
 	},
 
@@ -321,7 +321,7 @@ frappe.ui.form.on("Data Import", {
 			"/api/method/frappe.core.doctype.data_import.data_import.download_import_log",
 			{
 				data_import_name: frm.doc.name,
-			}
+			},
 		);
 	},
 
@@ -424,7 +424,7 @@ frappe.ui.form.on("Data Import", {
 									`<span class="underline">${frappe.utils.get_form_link(
 										frm.doc.reference_doctype,
 										log.docname,
-										true
+										true,
 									)}<span>`,
 								]);
 							} else {
@@ -432,7 +432,7 @@ frappe.ui.form.on("Data Import", {
 									`<span class="underline">${frappe.utils.get_form_link(
 										frm.doc.reference_doctype,
 										log.docname,
-										true
+										true,
 									)}<span>`,
 								]);
 							}
@@ -516,7 +516,7 @@ frappe.ui.form.on("Data Import", {
 				} else {
 					frm.toggle_display("import_log_section", false);
 					frm.add_custom_button(__("Export Import Log"), () =>
-						frm.trigger("export_import_log")
+						frm.trigger("export_import_log"),
 					);
 				}
 			},

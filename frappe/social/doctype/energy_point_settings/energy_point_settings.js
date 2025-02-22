@@ -34,7 +34,7 @@ function show_review_points_dialog() {
 					{
 						user: values.user,
 						points: values.points,
-					}
+					},
 				)
 				.then(() => {
 					frappe.show_alert({

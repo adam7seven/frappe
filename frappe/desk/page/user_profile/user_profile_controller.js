@@ -50,7 +50,7 @@ class UserProfile {
 		this.$user_search_button = this.page.set_secondary_action(
 			__("Change User"),
 			() => this.show_user_search_dialog(),
-			{ icon: "change", size: "sm" }
+			{ icon: "change", size: "sm" },
 		);
 	}
 
@@ -152,7 +152,7 @@ class UserProfile {
 				{
 					user: this.user_id,
 					field: field,
-				}
+				},
 			)
 			.then((chart) => {
 				if (chart.labels.length) {
@@ -230,7 +230,7 @@ class UserProfile {
 			filters,
 			"chart-filter",
 			".line-chart-options",
-			1
+			1,
 		);
 	}
 
@@ -249,7 +249,7 @@ class UserProfile {
 		frappe.dashboard_utils.render_chart_filters(
 			filters,
 			"chart-filter",
-			".percentage-chart-options"
+			".percentage-chart-options",
 		);
 	}
 
@@ -258,7 +258,7 @@ class UserProfile {
 			{
 				label: frappe.dashboard_utils.get_year(frappe.datetime.now_date()),
 				options: frappe.dashboard_utils.get_years_since_creation(
-					frappe.boot.user.creation
+					frappe.boot.user.creation,
 				),
 				action: (selected_item) => {
 					this.update_heatmap_data(frappe.datetime.obj_to_str(selected_item));
@@ -336,7 +336,7 @@ class UserProfile {
 				user_location: this.user.location,
 				user_interest: this.user.interest,
 				user_bio: this.user.bio,
-			})
+			}),
 		);
 
 		this.setup_user_profile_links();
@@ -373,7 +373,7 @@ class UserProfile {
 				"frappe.social.doctype.energy_point_log.energy_point_log.get_user_energy_and_review_points",
 				{
 					user: this.user_id,
-				}
+				},
 			)
 			.then((r) => {
 				if (r[this.user_id]) {
@@ -443,7 +443,7 @@ class UserProfileTimeline extends BaseTimeline {
 			}
 			this.show_more_button.toggle(activities.length === this.activity_limit);
 			this.timeline_items = activities.map((activity) =>
-				this.get_activity_timeline_item(activity)
+				this.get_activity_timeline_item(activity),
 			);
 		});
 	}
@@ -469,7 +469,7 @@ class UserProfileTimeline extends BaseTimeline {
 
 	setup_show_more_activity() {
 		this.show_more_button = $(
-			`<a class="show-more-activity-btn">${__("Show More Activity")}</a>`
+			`<a class="show-more-activity-btn">${__("Show More Activity")}</a>`,
 		);
 		this.show_more_button.hide();
 		this.footer.append(this.show_more_button);
@@ -483,7 +483,7 @@ class UserProfileTimeline extends BaseTimeline {
 				this.show_more_button.hide();
 			}
 			let timeline_items = activities.map((activity) =>
-				this.get_activity_timeline_item(activity)
+				this.get_activity_timeline_item(activity),
 			);
 			timeline_items.map((item) => this.add_timeline_item(item, true));
 		});

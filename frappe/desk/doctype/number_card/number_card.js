@@ -37,7 +37,7 @@ frappe.ui.form.on("Number Card", {
 			const dialog = frappe.dashboard_utils.get_add_to_dashboard_dialog(
 				frm.doc.name,
 				"Number Card",
-				"frappe.desk.doctype.number_card.number_card.add_card_to_dashboard"
+				"frappe.desk.doctype.number_card.number_card.add_card_to_dashboard",
 			);
 
 			if (!frm.doc.name) {
@@ -53,7 +53,7 @@ frappe.ui.form.on("Number Card", {
 		let static_filters = JSON.parse(frm.doc.filters_json || "null");
 		static_filters = frappe.dashboard_utils.remove_common_static_filter_values(
 			static_filters,
-			dynamic_filters
+			dynamic_filters,
 		);
 
 		frm.set_value("filters_json", JSON.stringify(static_filters));
@@ -133,7 +133,7 @@ frappe.ui.form.on("Number Card", {
 				frm.set_df_property(
 					"aggregate_function_based_on",
 					"options",
-					aggregate_based_on_fields
+					aggregate_based_on_fields,
 				);
 			});
 			frm.trigger("render_filters_table");
@@ -174,23 +174,23 @@ frappe.ui.form.on("Number Card", {
 				if (data.result.length) {
 					frm.field_options = frappe.report_utils.get_field_options_from_report(
 						data.columns,
-						data
+						data,
 					);
 					frm.set_df_property(
 						"report_field",
 						"options",
-						frm.field_options.numeric_fields
+						frm.field_options.numeric_fields,
 					);
 					if (!frm.field_options.numeric_fields.length) {
 						frappe.msgprint(
-							__("Report has no numeric fields, please change the Report Name")
+							__("Report has no numeric fields, please change the Report Name"),
 						);
 					}
 				} else {
 					frappe.msgprint(
 						__(
-							"Report has no data, please modify the filters or change the Report Name"
-						)
+							"Report has no data, please modify the filters or change the Report Name",
+						),
 					);
 				}
 			});
@@ -356,7 +356,7 @@ frappe.ui.form.on("Number Card", {
 		let fields = frappe.dashboard_utils.get_fields_for_dynamic_filter_dialog(
 			is_document_type,
 			filters,
-			frm.dynamic_filters
+			frm.dynamic_filters,
 		);
 
 		frm.dynamic_filter_table.on("click", () => {
@@ -438,7 +438,7 @@ frappe.ui.form.on("Number Card", {
 		if (document_type && doc_is_table) {
 			let parents = await frappe.xcall(
 				"frappe.desk.doctype.dashboard_chart.dashboard_chart.get_parent_doctypes",
-				{ child_type: document_type }
+				{ child_type: document_type },
 			);
 
 			frm.set_query("parent_document_type", function () {

@@ -133,7 +133,7 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 
 				const input_value = this.get_input_value();
 				this.parse_validate_and_set_in_model(input_value);
-			}, 300)
+			}, 300),
 		);
 
 		$(this.quill.root).on("keydown", (e) => {
@@ -338,7 +338,7 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 		valueElement.innerHTML = value;
 
 		const firstBulletLiElements = valueElement.querySelectorAll(
-			"ol li[data-list=bullet]:first-child"
+			"ol li[data-list=bullet]:first-child",
 		);
 		firstBulletLiElements.forEach((li) => {
 			const parent = li.parentNode;

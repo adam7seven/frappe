@@ -83,7 +83,7 @@ frappe.ui.form.ScriptManager = class ScriptManager {
 	make(ControllerClass) {
 		this.frm.cscript = extend_cscript(
 			this.frm.cscript,
-			new ControllerClass({ frm: this.frm })
+			new ControllerClass({ frm: this.frm }),
 		);
 	}
 	trigger(event_name, doctype, name) {
@@ -236,7 +236,7 @@ frappe.ui.form.ScriptManager = class ScriptManager {
 					frappe.meta.get_docfields(field.df.options, me.frm.docname),
 					function (i, df) {
 						setup_add_fetch(df);
-					}
+					},
 				);
 			}
 		});
@@ -271,7 +271,7 @@ frappe.ui.form.ScriptManager = class ScriptManager {
 				current_row.doctype,
 				current_row.name,
 				fieldname,
-				data[0][fieldname]
+				data[0][fieldname],
 			);
 		});
 	}

@@ -37,7 +37,7 @@ frappe.ui.form.on("Web Form", {
 		if (frm.doc.is_standard && !frappe.boot.developer_mode) {
 			frm.disable_form();
 			frappe.show_alert(
-				__("Standard Web Forms can not be modified, duplicate the Web Form instead.")
+				__("Standard Web Forms can not be modified, duplicate the Web Form instead."),
 			);
 		}
 		render_list_settings_message(frm);
@@ -74,7 +74,7 @@ frappe.ui.form.on("Web Form", {
 		}
 
 		let page_break_count = frm.doc.web_form_fields.filter(
-			(f) => f.fieldtype == "Page Break"
+			(f) => f.fieldtype == "Page Break",
 		).length;
 
 		if (page_break_count >= 10) {
@@ -136,7 +136,7 @@ frappe.ui.form.on("Web Form", {
 			[frm.fields_dict.web_form_fields.grid, frm.fields_dict.list_columns.grid].forEach(
 				(obj) => {
 					obj.update_docfield_property("fieldname", "options", options);
-				}
+				},
 			);
 		};
 
@@ -311,7 +311,7 @@ frappe.ui.form.on("Web Form Field", {
 
 		if (doc.fieldtype == "Page Break") {
 			let page_break_count = frm.doc.web_form_fields.filter(
-				(f) => f.fieldtype == "Page Break"
+				(f) => f.fieldtype == "Page Break",
 			).length;
 			page_break_count >= 10 &&
 				frappe.throw(__("There can be only 9 Page Break fields in a Web Form"));
@@ -366,7 +366,7 @@ function render_list_settings_message(frm) {
 		`;
 		let message = __(
 			"Login is required to see web form list view. Enable {0} to see list settings",
-			[go_to_login_required_field]
+			[go_to_login_required_field],
 		);
 		$(frm.fields_dict["list_setting_message"].wrapper)
 			.html($(`<div class="form-message blue">${message}</div>`))

@@ -35,17 +35,17 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 		L.Icon.Default.imagePath = frappe.utils.map_defaults.image_path;
 		this.map = L.map(this.map_id).setView(
 			frappe.utils.map_defaults.center,
-			frappe.utils.map_defaults.zoom
+			frappe.utils.map_defaults.zoom,
 		);
 
 		L.tileLayer(frappe.utils.map_defaults.tiles, frappe.utils.map_defaults.options).addTo(
-			this.map
+			this.map,
 		);
 
 		L.control.scale().addTo(this.map);
 		if (this.coords.features && this.coords.features.length) {
 			this.coords.features.forEach((coords) =>
-				L.geoJSON(coords).bindPopup(coords.properties.name).addTo(this.map)
+				L.geoJSON(coords).bindPopup(coords.properties.name).addTo(this.map),
 			);
 			let lastCoords = this.coords.features[0].geometry.coordinates.reverse();
 			this.map.panTo(lastCoords, 8);
@@ -58,7 +58,7 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 
 		if (
 			cur_list.meta.fields.find(
-				(i) => i.fieldname === "location" && i.fieldtype === "Geolocation"
+				(i) => i.fieldname === "location" && i.fieldtype === "Geolocation",
 			)
 		) {
 			this.type = "location_field";

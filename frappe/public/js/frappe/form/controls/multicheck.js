@@ -7,7 +7,7 @@ frappe.ui.form.ControlMultiCheck = class ControlMultiCheck extends frappe.ui.for
 		super.make();
 		if (this.df.label) {
 			this.$label = $(`<label class="control-label">${this.df.label}</label>`).appendTo(
-				this.wrapper
+				this.wrapper,
 			);
 		}
 		this.$load_state = $(`<div class="load-state text-muted small">${__("Loading")}...</div>`);

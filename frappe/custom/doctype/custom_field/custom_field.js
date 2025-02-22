@@ -39,12 +39,12 @@ frappe.ui.form.on("Custom Field", {
 							__("Customize Form"),
 							{
 								doc_type: frm.doc.dt,
-							}
+							},
 						),
-					]
+					],
 				),
 				"yellow",
-				true
+				true,
 			);
 		}
 	},
@@ -89,7 +89,7 @@ frappe.ui.form.on("Custom Field", {
 	fieldtype: function (frm) {
 		if (frm.doc.fieldtype == "Link") {
 			frm.fields_dict["options_help"].disp_area.innerHTML = __(
-				"Name of the Document Type (DocType) you want this field to be linked to. e.g. Customer"
+				"Name of the Document Type (DocType) you want this field to be linked to. e.g. Customer",
 			);
 		} else if (frm.doc.fieldtype == "Select") {
 			frm.fields_dict["options_help"].disp_area.innerHTML =
@@ -105,7 +105,7 @@ frappe.ui.form.on("Custom Field", {
 				"<br>";
 		} else if (frm.doc.fieldtype == "Dynamic Link") {
 			frm.fields_dict["options_help"].disp_area.innerHTML = __(
-				"Fieldname which will be the DocType for this link field."
+				"Fieldname which will be the DocType for this link field.",
 			);
 		} else {
 			frm.fields_dict["options_help"].disp_area.innerHTML = "";
@@ -129,12 +129,12 @@ frappe.ui.form.on("Custom Field", {
 								{
 									custom_field: frm.doc.name,
 									fieldname: data.fieldname,
-								}
+								},
 							)
 							.then(() => frm.reload());
 					},
 					__("Rename Fieldname"),
-					__("Rename")
+					__("Rename"),
 				);
 			});
 		}

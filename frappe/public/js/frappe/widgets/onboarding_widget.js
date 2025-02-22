@@ -55,21 +55,21 @@ export default class OnboardingWidget extends Widget {
 						"md",
 						"",
 						"",
-						"step-icon"
+						"step-icon",
 					)}</div>
 					<div class="step-index step-skipped">${frappe.utils.icon(
 						"es-line-close-circle",
 						"md",
 						"",
 						"--icon-stroke: var(--gray-600);",
-						"step-icon"
+						"step-icon",
 					)}</div>
 					<div class="step-index step-complete">${frappe.utils.icon(
 						"es-solid-success",
 						"md",
 						"",
 						"",
-						"step-icon"
+						"step-icon",
 					)}</div>
 					<div class="step-text">${__(step.title)}</div>
 				</div>
@@ -131,7 +131,7 @@ export default class OnboardingWidget extends Widget {
 				$(
 					`<button class="btn btn-default btn-sm">${
 						__(step.action_label) || __(step.action)
-					}</button>`
+					}</button>`,
 				)
 					.appendTo(this.step_footer)
 					.on("click", () => actions[step.action](step));
@@ -159,7 +159,7 @@ export default class OnboardingWidget extends Widget {
 			this.step_footer.empty();
 
 			const video = $(
-				`<div class="video-player" data-plyr-provider="youtube" data-plyr-embed-id="${step.intro_video_url}"></div>`
+				`<div class="video-player" data-plyr-provider="youtube" data-plyr-embed-id="${step.intro_video_url}"></div>`,
 			);
 			video.appendTo(this.step_body);
 			let plyr = new frappe.Plyr(video[0], {
@@ -170,7 +170,7 @@ export default class OnboardingWidget extends Widget {
 			$(
 				`<button class="btn btn-primary btn-sm">${
 					__(step.action_label) || __(step.action)
-				}</button>`
+				}</button>`,
 			)
 				.appendTo(this.step_footer)
 				.on("click", () => {
@@ -431,14 +431,14 @@ export default class OnboardingWidget extends Widget {
 					};
 				} else {
 					frappe.show_alert(
-						__("Document Saved") + "<br>" + __("Let us continue with the onboarding")
+						__("Document Saved") + "<br>" + __("Let us continue with the onboarding"),
 					);
 					this.mark_complete(step);
 				}
 			},
 			null,
 			null,
-			true
+			true,
 		);
 	}
 
@@ -524,7 +524,7 @@ export default class OnboardingWidget extends Widget {
 		if (this.docs_url) {
 			documentation = __(
 				'Congratulations on completing the module setup. If you want to learn more you can refer to the documentation <a target="_blank" href="{0}">here</a>.',
-				[this.docs_url]
+				[this.docs_url],
 			);
 		}
 
@@ -572,8 +572,8 @@ export default class OnboardingWidget extends Widget {
 			`<div class="btn btn-sm btn-secondary small" style="cursor:pointer;">${__(
 				"Dismiss",
 				null,
-				"Stop showing the onboarding widget."
-			)}</div>`
+				"Stop showing the onboarding widget.",
+			)}</div>`,
 		);
 		dismiss.on("click", () => {
 			let dismissed = JSON.parse(localStorage.getItem("dismissed-onboarding") || "{}");
@@ -614,7 +614,7 @@ export default class OnboardingWidget extends Widget {
 		const { message } = await frappe.db.get_value(
 			"Form Tour",
 			{ reference_doctype: doctype },
-			["first_document"]
+			["first_document"],
 		);
 		let docname;
 
