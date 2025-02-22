@@ -5,7 +5,9 @@ from . import __version__ as app_version
 app_name = "frappe"
 app_title = "Frappe Framework"
 app_publisher = "Frappe Technologies"
-app_description = "Full stack web framework with Python, Javascript, MariaDB, Redis, Node"
+app_description = (
+    "Full stack web framework with Python, Javascript, MariaDB, Redis, Node"
+)
 app_license = "MIT"
 app_logo_url = "/assets/frappe/images/frappe-framework-logo.svg"
 develop_version = "15.x.x-develop"
@@ -132,7 +134,9 @@ has_permission = {
     "Notification Settings": "frappe.desk.doctype.notification_settings.notification_settings.has_permission",
 }
 
-has_website_permission = {"Address": "frappe.contacts.doctype.address.address.has_website_permission"}
+has_website_permission = {
+    "Address": "frappe.contacts.doctype.address.address.has_website_permission"
+}
 
 jinja = {
     "methods": "frappe.utils.jinja_globals",
@@ -262,7 +266,9 @@ scheduler_events = {
         "frappe.email.doctype.auto_email_report.auto_email_report.send_monthly",
         "frappe.social.doctype.energy_point_log.energy_point_log.send_monthly_summary",
     ],
-    "monthly_long": ["frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_monthly"],
+    "monthly_long": [
+        "frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_monthly"
+    ],
 }
 
 sounds = [

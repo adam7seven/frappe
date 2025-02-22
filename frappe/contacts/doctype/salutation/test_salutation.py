@@ -4,4 +4,4 @@ from frappe.tests.utils import FrappeTestCase
 
 
 class TestSalutation(FrappeTestCase):
-	pass
+    pass

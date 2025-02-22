@@ -145,7 +145,9 @@ class TestSearch(FrappeTestCase):
             ["User", "Random", "email", 0, 10, {}],
         )
         self.assertListEqual(
-            get_data("User", "Random", "email", page_len="2", start="10", filters=dict()),
+            get_data(
+                "User", "Random", "email", page_len="2", start="10", filters=dict()
+            ),
             ["User", "Random", "email", 10, 2, {}],
         )
 
@@ -156,12 +158,16 @@ class TestSearch(FrappeTestCase):
         )
 
         # return empty string if passed doctype is invalid
-        self.assertListEqual(get_data("Random DocType", "Random", "email", "2", "10", dict()), [])
+        self.assertListEqual(
+            get_data("Random DocType", "Random", "email", "2", "10", dict()), []
+        )
 
         # should not fail if function is called via frappe.call with extra arguments
         args = ("Random DocType", "Random", "email", "2", "10", dict())
         kwargs = {"as_dict": False}
-        self.assertListEqual(frappe.call("frappe.tests.test_search.get_data", *args, **kwargs), [])
+        self.assertListEqual(
+            frappe.call("frappe.tests.test_search.get_data", *args, **kwargs), []
+        )
 
         # should not fail if query has @ symbol in it
         results = search_link("User", "user@random", searchfield="id")
@@ -204,7 +210,9 @@ def get_data(doctype, txt, searchfield, start, page_len, filters):
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
-def query_with_reference_doctype(doctype, txt, searchfield, start, page_len, filters, reference_doctype=None):
+def query_with_reference_doctype(
+    doctype, txt, searchfield, start, page_len, filters, reference_doctype=None
+):
     return []
 
 
@@ -224,7 +232,9 @@ def setup_test_link_field_order(TestCase):
                 "custom": 1,
                 "is_tree": 1,
                 "autoid": "field:random",
-                "fields": [{"fieldname": "random", "label": "Random", "fieldtype": "Data"}],
+                "fields": [
+                    {"fieldname": "random", "label": "Random", "fieldtype": "Data"}
+                ],
             }
         ).insert()
         TestCase.tree_doc.search_fields = "parent_test_tree_order"
@@ -233,7 +243,9 @@ def setup_test_link_field_order(TestCase):
         TestCase.tree_doc = frappe.get_doc("DocType", TestCase.tree_doctype_id)
 
     # Create root for the tree doctype
-    if not frappe.db.exists(TestCase.tree_doctype_id, {"random": TestCase.parent_doctype_id}):
+    if not frappe.db.exists(
+        TestCase.tree_doctype_id, {"random": TestCase.parent_doctype_id}
+    ):
         frappe.get_doc(
             {
                 "doctype": TestCase.tree_doctype_id,

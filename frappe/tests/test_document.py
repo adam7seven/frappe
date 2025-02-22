@@ -58,7 +58,9 @@ class TestDocument(FrappeTestCase):
         )
         d.insert()
         self.assertTrue(d.id.startswith("EV"))
-        self.assertEqual(frappe.db.get_value("Event", d.id, "subject"), "test-doc-test-event 1")
+        self.assertEqual(
+            frappe.db.get_value("Event", d.id, "subject"), "test-doc-test-event 1"
+        )
 
         # test if default values are added
         self.assertEqual(d.send_reminder, 1)
@@ -81,7 +83,9 @@ class TestDocument(FrappeTestCase):
             .id
         )
 
-        doc = frappe.get_doc({"doctype": parent, "child_table": [{"some_fieldname": "xasd"}]}).insert()
+        doc = frappe.get_doc(
+            {"doctype": parent, "child_table": [{"some_fieldname": "xasd"}]}
+        ).insert()
         doc.append("child_table", {})
         doc.save()
         self.assertEqual(doc.child_table[-1].some_fieldname, default)
@@ -97,14 +101,18 @@ class TestDocument(FrappeTestCase):
         )
         d.insert()
         self.assertTrue(d.id.startswith("EV"))
-        self.assertEqual(frappe.db.get_value("Event", d.id, "subject"), "test-doc-test-event 2")
+        self.assertEqual(
+            frappe.db.get_value("Event", d.id, "subject"), "test-doc-test-event 2"
+        )
 
     def test_update(self):
         d = self.test_insert()
         d.subject = "subject changed"
         d.save()
 
-        self.assertEqual(frappe.db.get_value(d.doctype, d.id, "subject"), "subject changed")
+        self.assertEqual(
+            frappe.db.get_value(d.doctype, d.id, "subject"), "subject changed"
+        )
 
     def test_value_changed(self):
         d = self.test_insert()
@@ -136,7 +144,9 @@ class TestDocument(FrappeTestCase):
 
     def test_text_editor_field(self):
         try:
-            frappe.get_doc(doctype="Activity Log", subject="test", message='<img src="test.png" />').insert()
+            frappe.get_doc(
+                doctype="Activity Log", subject="test", message='<img src="test.png" />'
+            ).insert()
         except frappe.MandatoryError:
             self.fail("Text Editor false positive mandatory error")
 
@@ -266,10 +276,14 @@ class TestDocument(FrappeTestCase):
                 prefix = series.rsplit(".", 1)[0]
 
             prefix = parse_naming_series(prefix)
-            old_current = frappe.db.get_value("Series", prefix, "current", order_by="id")
+            old_current = frappe.db.get_value(
+                "Series", prefix, "current", order_by="id"
+            )
 
             revert_series_if_last(series, id)
-            new_current = cint(frappe.db.get_value("Series", prefix, "current", order_by="id"))
+            new_current = cint(
+                frappe.db.get_value("Series", prefix, "current", order_by="id")
+            )
 
             self.assertEqual(cint(old_current) - 1, new_current)
 
@@ -336,7 +350,9 @@ class TestDocument(FrappeTestCase):
         self.assertEqual(len(doc.get("fields", limit=3)), 3)
 
         # limit with filters
-        self.assertEqual(len(doc.get("fields", filters={"fieldtype": "Data"}, limit=3)), 3)
+        self.assertEqual(
+            len(doc.get("fields", filters={"fieldtype": "Data"}, limit=3)), 3
+        )
 
     def test_virtual_fields(self):
         """Virtual fields are accessible via API and Form views, whenever .as_dict is invoked"""
@@ -354,7 +370,11 @@ class TestDocument(FrappeTestCase):
 
         @contextmanager
         def customize_note(with_options=False):
-            options = "frappe.utils.now_datetime() - frappe.utils.get_datetime(doc.creation)" if with_options else ""
+            options = (
+                "frappe.utils.now_datetime() - frappe.utils.get_datetime(doc.creation)"
+                if with_options
+                else ""
+            )
             custom_field = frappe.get_doc(
                 {
                     "doctype": "Custom Field",
@@ -595,4 +615,6 @@ class TestDocumentWebView(FrappeTestCase):
             )
         )
         self.assertEqual(sent_docs - all_docs, set(), "All docs should be inserted")
-        self.assertEqual(sent_child_docs - all_child_docs, set(), "All child docs should be inserted")
+        self.assertEqual(
+            sent_child_docs - all_child_docs, set(), "All child docs should be inserted"
+        )

@@ -5,4 +5,4 @@ from frappe.tests.utils import FrappeTestCase
 
 
 class TestListViewSettings(FrappeTestCase):
-	pass
+    pass

@@ -52,7 +52,12 @@ def qualified_name(obj) -> str:
         return f"{module}.{qualname}"
 
 
-def raise_type_error(arg_name: str, arg_type: type, arg_value: object, current_exception: Exception | None = None):
+def raise_type_error(
+    arg_name: str,
+    arg_type: type,
+    arg_value: object,
+    current_exception: Exception | None = None,
+):
     """
     Raise a TypeError with a message that includes the name of the argument, the expected type
     and the actual type of the value passed.
@@ -113,7 +118,10 @@ def transform_parameter_types(func: Callable, args: tuple, kwargs: dict):
         # if the type is a ForwardRef or str, ignore it
         if isinstance(current_arg_type, ForwardRef | str):
             continue
-        elif any(isinstance(x, ForwardRef | str) for x in getattr(current_arg_type, "__args__", [])):
+        elif any(
+            isinstance(x, ForwardRef | str)
+            for x in getattr(current_arg_type, "__args__", [])
+        ):
             continue
 
         # allow slack for Frappe types
@@ -130,15 +138,21 @@ def transform_parameter_types(func: Callable, args: tuple, kwargs: dict):
                 current_arg_type = Union[current_arg_type]  # noqa: UP007
 
             elif param_def.default != current_arg_type:
-                current_arg_type = Union[current_arg_type, type(param_def.default)]  # noqa: UP007
+                current_arg_type = Union[
+                    current_arg_type, type(param_def.default)
+                ]  # noqa: UP007
         elif isinstance(current_arg_type, tuple):
             current_arg_type = Union[current_arg_type]  # noqa: UP007
 
         # validate the type set using pydantic - raise a TypeError if Validation is raised or Ellipsis is returned
         try:
-            current_arg_value_after = TypeAdapter(current_arg_type).validate_python(current_arg_value)
+            current_arg_value_after = TypeAdapter(current_arg_type).validate_python(
+                current_arg_value
+            )
         except (TypeError, PyValidationError) as e:
-            raise_type_error(current_arg, current_arg_type, current_arg_value, current_exception=e)
+            raise_type_error(
+                current_arg, current_arg_type, current_arg_value, current_exception=e
+            )
 
         if isinstance(current_arg_value_after, EllipsisType):
             raise_type_error(current_arg, current_arg_type, current_arg_value)

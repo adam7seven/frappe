@@ -4,4 +4,4 @@ from frappe.tests.utils import FrappeTestCase
 
 
 class TestDashboardChartSource(FrappeTestCase):
-	pass
+    pass

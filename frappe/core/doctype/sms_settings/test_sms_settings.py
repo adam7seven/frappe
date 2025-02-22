@@ -4,4 +4,4 @@ from frappe.tests.utils import FrappeTestCase
 
 
 class TestSMSSettings(FrappeTestCase):
-	pass
+    pass

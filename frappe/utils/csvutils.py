@@ -131,10 +131,14 @@ def check_record(d):
         val = d[key]
         if docfield:
             if docfield.reqd and (val == "" or val is None):
-                frappe.msgprint(_("{0} is required").format(docfield.label), raise_exception=1)
+                frappe.msgprint(
+                    _("{0} is required").format(docfield.label), raise_exception=1
+                )
 
             if docfield.fieldtype == "Select" and val and docfield.options:
-                options = get_select_options(docfield.options, docfield.options_has_label)
+                options = get_select_options(
+                    docfield.options, docfield.options_has_label
+                )
                 if val not in options:
                     frappe.throw(
                         _("{0} must be one of {1}").format(
@@ -225,7 +229,11 @@ def validate_google_sheets_url(url):
     from urllib.parse import urlparse
 
     u = urlparse(url)
-    if u.scheme != "https" or u.netloc != "docs.google.com" or "/spreadsheets/" not in u.path:
+    if (
+        u.scheme != "https"
+        or u.netloc != "docs.google.com"
+        or "/spreadsheets/" not in u.path
+    ):
         frappe.throw(
             _('"{0}" is not a valid Google Sheets URL').format(url),
             title=_("Invalid URL"),

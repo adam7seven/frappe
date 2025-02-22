@@ -7,4 +7,4 @@ from frappe.tests.utils import FrappeTestCase
 
 
 class TestWebsiteSidebar(FrappeTestCase):
-	pass
+    pass

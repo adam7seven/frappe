@@ -30,7 +30,9 @@ if typing.TYPE_CHECKING:
     help="Copy the files instead of symlinking",
     envvar="FRAPPE_HARD_LINK_ASSETS",
 )
-@click.option("--production", is_flag=True, default=False, help="Build assets in production mode")
+@click.option(
+    "--production", is_flag=True, default=False, help="Build assets in production mode"
+)
 @click.option("--verbose", is_flag=True, default=False, help="Verbose")
 @click.option(
     "--force",
@@ -272,7 +274,9 @@ def execute(context, method, args=None, kwargs=None, profile=False):
                 ret = frappe.get_attr(method)(*args, **kwargs)
             except Exception:
                 # eval is safe here because input is from console
-                ret = eval(method + "(*args, **kwargs)", globals(), locals())  # nosemgrep
+                ret = eval(
+                    method + "(*args, **kwargs)", globals(), locals()
+                )  # nosemgrep
 
             if profile:
                 import pstats
@@ -420,7 +424,10 @@ def import_doc(context, path, force=False):
     "file_path",
     type=click.Path(exists=True, dir_okay=False, resolve_path=True),
     required=True,
-    help=("Path to import file (.csv, .xlsx)." "Consider that relative paths will resolve from 'sites' directory"),
+    help=(
+        "Path to import file (.csv, .xlsx)."
+        "Consider that relative paths will resolve from 'sites' directory"
+    ),
 )
 @click.option("--doctype", type=str, required=True)
 @click.option(
@@ -436,7 +443,9 @@ def import_doc(context, path, force=False):
     is_flag=True,
     help="Submit document after importing it",
 )
-@click.option("--mute-emails", default=True, is_flag=True, help="Mute emails during import")
+@click.option(
+    "--mute-emails", default=True, is_flag=True, help="Mute emails during import"
+)
 @pass_context
 def data_import(
     context,
@@ -522,9 +531,13 @@ def _enter_console(extra_args=None):
     from frappe.utils import get_site_path
 
     if frappe.conf.db_type == "mariadb":
-        os.environ["MYSQL_HISTFILE"] = os.path.abspath(get_site_path("logs", "mariadb_console.log"))
+        os.environ["MYSQL_HISTFILE"] = os.path.abspath(
+            get_site_path("logs", "mariadb_console.log")
+        )
     else:
-        os.environ["PSQL_HISTORY"] = os.path.abspath(get_site_path("logs", "postgresql_console.log"))
+        os.environ["PSQL_HISTORY"] = os.path.abspath(
+            get_site_path("logs", "postgresql_console.log")
+        )
 
     bin, args, bin_name = get_command(
         socket=frappe.conf.db_socket,
@@ -537,7 +550,9 @@ def _enter_console(extra_args=None):
     )
     if not bin:
         frappe.throw(
-            _("{} not found in PATH! This is required to access the console.").format(bin_name),
+            _("{} not found in PATH! This is required to access the console.").format(
+                bin_name
+            ),
             exc=frappe.ExecutableNotFound,
         )
     os.execv(bin, [bin, *args])
@@ -548,7 +563,10 @@ def _enter_console(extra_args=None):
 def jupyter(context):
     """Start an interactive jupyter notebook"""
     installed_packages = (
-        r.split("==", 1)[0] for r in subprocess.check_output([sys.executable, "-m", "pip", "freeze"], encoding="utf8")
+        r.split("==", 1)[0]
+        for r in subprocess.check_output(
+            [sys.executable, "-m", "pip", "freeze"], encoding="utf8"
+        )
     )
 
     if "jupyter" not in installed_packages:
@@ -677,7 +695,9 @@ def console(context, autoreload=False):
     type=click.Choice(["DYNAMIC", "COMPACT", "REDUNDANT", "COMPRESSED"]),
     help="Set ROW_FORMAT parameter for said table(s)",
 )
-@click.option("--failfast", is_flag=True, default=False, help="Exit on first failure occurred")
+@click.option(
+    "--failfast", is_flag=True, default=False, help="Exit on first failure occurred"
+)
 @pass_context
 def transform_database(context, table, engine, row_format, failfast):
     "Transform site database through given parameters"
@@ -760,7 +780,9 @@ def transform_database(context, table, engine, row_format, failfast):
 @click.option("--module", help="Run tests in a module")
 @click.option("--profile", is_flag=True, default=False)
 @click.option("--coverage", is_flag=True, default=False)
-@click.option("--skip-test-records", is_flag=True, default=False, help="Don't create test records")
+@click.option(
+    "--skip-test-records", is_flag=True, default=False, help="Don't create test records"
+)
 @click.option(
     "--skip-before-tests",
     is_flag=True,
@@ -840,7 +862,9 @@ def run_tests(
 @click.option("--build-number", help="Build number", default=1)
 @click.option("--total-builds", help="Total number of builds", default=1)
 @click.option("--with-coverage", is_flag=True, help="Build coverage file")
-@click.option("--use-orchestrator", is_flag=True, help="Use orchestrator to run parallel tests")
+@click.option(
+    "--use-orchestrator", is_flag=True, help="Use orchestrator to run parallel tests"
+)
 @click.option("--dry-run", is_flag=True, default=False, help="Dont actually run tests")
 @pass_context
 def run_parallel_tests(
@@ -941,7 +965,9 @@ def run_ui_tests(
 
     # run for headless mode
     run_or_open = f"run --browser {browser}" if headless else "open"
-    formatted_command = f"{site_env} {password_env} {coverage_env} {cypress_path} {run_or_open}"
+    formatted_command = (
+        f"{site_env} {password_env} {coverage_env} {cypress_path} {run_or_open}"
+    )
 
     if os.environ.get("CYPRESS_RECORD_KEY"):
         formatted_command += " --record"
@@ -1011,7 +1037,9 @@ def serve(
 
 
 @click.command("request")
-@click.option("--args", help="arguments like `?cmd=test&key=value` or `/api/request/method?..`")
+@click.option(
+    "--args", help="arguments like `?cmd=test&key=value` or `/api/request/method?..`"
+)
 @click.option("--path", help="path to request JSON")
 @pass_context
 def request(context, args=None, path=None):
@@ -1025,7 +1053,9 @@ def request(context, args=None, path=None):
             frappe.connect()
             if args:
                 if "?" in args:
-                    frappe.local.form_dict = frappe._dict([a.split("=") for a in args.split("?")[-1].split("&")])
+                    frappe.local.form_dict = frappe._dict(
+                        [a.split("=") for a in args.split("?")[-1].split("&")]
+                    )
                 else:
                     frappe.local.form_dict = frappe._dict()
 
@@ -1060,7 +1090,10 @@ def make_app(destination, app_name, no_git=False):
     from frappe.utils import get_sites
 
     if app_name in get_sites():
-        click.secho(f"Your bench has a site called {app_name}, please choose another name for the app.", fg="red")
+        click.secho(
+            f"Your bench has a site called {app_name}, please choose another name for the app.",
+            fg="red",
+        )
         sys.exit(1)
 
     from frappe.utils.boilerplate import make_boilerplate
@@ -1089,7 +1122,9 @@ def create_patch():
     default=False,
     help="Set value in bench config",
 )
-@click.option("-p", "--parse", is_flag=True, default=False, help="Evaluate as Python Object")
+@click.option(
+    "-p", "--parse", is_flag=True, default=False, help="Evaluate as Python Object"
+)
 @pass_context
 def set_config(context, key, value, global_=False, parse=False):
     "Insert/Update a value in site_config.json"
@@ -1103,7 +1138,9 @@ def set_config(context, key, value, global_=False, parse=False):
     if global_:
         sites_path = os.getcwd()
         common_site_config_path = os.path.join(sites_path, "common_site_config.json")
-        update_site_config(key, value, validate=False, site_config_path=common_site_config_path)
+        update_site_config(
+            key, value, validate=False, site_config_path=common_site_config_path
+        )
     else:
         if not context.sites:
             raise SiteNotSpecifiedError
@@ -1140,24 +1177,36 @@ def get_version(output):
         app_info = frappe._dict()
 
         try:
-            app_info.commit = Repo(frappe.get_app_source_path(app)).head.object.hexsha[:7]
+            app_info.commit = Repo(frappe.get_app_source_path(app)).head.object.hexsha[
+                :7
+            ]
         except InvalidGitRepositoryError:
             app_info.commit = ""
 
         app_info.app = app
         app_info.branch = get_app_branch(app)
-        app_info.version = getattr(app_hooks, f"{app_info.branch}_version", None) or module.__version__
+        app_info.version = (
+            getattr(app_hooks, f"{app_info.branch}_version", None) or module.__version__
+        )
 
         data.append(app_info)
 
     {
-        "legacy": lambda: [click.echo(f"{app_info.app} {app_info.version}") for app_info in data],
+        "legacy": lambda: [
+            click.echo(f"{app_info.app} {app_info.version}") for app_info in data
+        ],
         "plain": lambda: [
-            click.echo(f"{app_info.app} {app_info.version} {app_info.branch} ({app_info.commit})") for app_info in data
+            click.echo(
+                f"{app_info.app} {app_info.version} {app_info.branch} ({app_info.commit})"
+            )
+            for app_info in data
         ],
         "table": lambda: render_table(
             [["App", "Version", "Branch", "Commit"]]
-            + [[app_info.app, app_info.version, app_info.branch, app_info.commit] for app_info in data]
+            + [
+                [app_info.app, app_info.version, app_info.branch, app_info.commit]
+                for app_info in data
+            ]
         ),
         "json": lambda: click.echo(json.dumps(data, indent=4)),
     }[output]()

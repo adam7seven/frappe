@@ -5,4 +5,4 @@ from frappe.tests.utils import FrappeTestCase
 
 
 class TestUserGroupMember(FrappeTestCase):
-	pass
+    pass

@@ -44,7 +44,9 @@ class Report(Document):
         reference_report: DF.Data | None
         report_id: DF.Data
         report_script: DF.Code | None
-        report_type: DF.Literal["Report Builder", "Query Report", "Script Report", "Custom Report"]
+        report_type: DF.Literal[
+            "Report Builder", "Query Report", "Script Report", "Custom Report"
+        ]
         roles: DF.Table[HasRole]
         timeout: DF.Int
 
@@ -56,7 +58,10 @@ class Report(Document):
 
         if not self.is_standard:
             self.is_standard = "No"
-            if frappe.session.user == "Administrator" and getattr(frappe.local.conf, "developer_mode", 0) == 1:
+            if (
+                frappe.session.user == "Administrator"
+                and getattr(frappe.local.conf, "developer_mode", 0) == 1
+            ):
                 self.is_standard = "Yes"
 
         if self.is_standard == "No":
@@ -65,10 +70,18 @@ class Report(Document):
                 frappe.only_for("Script Manager", True)
 
             if frappe.db.get_value("Report", self.id, "is_standard") == "Yes":
-                frappe.throw(_("Cannot edit a standard report. Please duplicate and create a new report"))
+                frappe.throw(
+                    _(
+                        "Cannot edit a standard report. Please duplicate and create a new report"
+                    )
+                )
 
         if self.is_standard == "Yes" and frappe.session.user != "Administrator":
-            frappe.throw(_("Only Administrator can save a standard report. Please rename and save."))
+            frappe.throw(
+                _(
+                    "Only Administrator can save a standard report. Please rename and save."
+                )
+            )
 
         if self.report_type == "Report Builder":
             self.update_report_json()
@@ -93,7 +106,10 @@ class Report(Document):
         delete_custom_role("report", self.id)
 
     def get_columns(self):
-        return [d.as_dict(no_default_fields=True, no_child_table_fields=True) for d in self.columns]
+        return [
+            d.as_dict(no_default_fields=True, no_child_table_fields=True)
+            for d in self.columns
+        ]
 
     @frappe.whitelist()
     def set_doctype_roles(self):
@@ -107,7 +123,12 @@ class Report(Document):
         """Returns true if Has Role is not set or the user is allowed."""
         from frappe.utils import has_common
 
-        allowed = [d.role for d in frappe.get_all("Has Role", fields=["role"], filters={"parent": self.id})]
+        allowed = [
+            d.role
+            for d in frappe.get_all(
+                "Has Role", fields=["role"], filters={"parent": self.id}
+            )
+        ]
 
         custom_roles = get_custom_allowed_roles("report", self.id)
 
@@ -128,7 +149,10 @@ class Report(Document):
         if frappe.flags.in_import:
             return
 
-        if self.is_standard == "Yes" and (frappe.local.conf.get("developer_mode") or 0) == 1:
+        if (
+            self.is_standard == "Yes"
+            and (frappe.local.conf.get("developer_mode") or 0) == 1
+        ):
             export_to_files(
                 record_list=[["Report", self.id]],
                 record_module=self.module,
@@ -144,12 +168,16 @@ class Report(Document):
 
     def execute_query_report(self, filters):
         if not self.query:
-            frappe.throw(_("Must specify a Query to run"), title=_("Report Document Error"))
+            frappe.throw(
+                _("Must specify a Query to run"), title=_("Report Document Error")
+            )
 
         check_safe_sql_query(self.query)
 
         result = [list(t) for t in frappe.db.sql(self.query, filters)]
-        columns = self.get_columns() or [cstr(c[0]) for c in frappe.db.get_description()]
+        columns = self.get_columns() or [
+            cstr(c[0]) for c in frappe.db.get_description()
+        ]
 
         return [columns, result]
 
@@ -183,7 +211,9 @@ class Report(Document):
 
     def execute_module(self, filters):
         # report in python module
-        module = self.module or frappe.db.get_value("DocType", self.ref_doctype, "module")
+        module = self.module or frappe.db.get_value(
+            "DocType", self.ref_doctype, "module"
+        )
         method_name = get_report_module_dotted_path(module, self.id) + ".execute"
         return frappe.get_attr(method_name)(frappe._dict(filters))
 
@@ -206,7 +236,9 @@ class Report(Document):
         are_default_filters=True,
     ):
         if self.report_type in ("Query Report", "Script Report", "Custom Report"):
-            columns, result = self.run_query_report(filters, user, ignore_prepared_report, are_default_filters)
+            columns, result = self.run_query_report(
+                filters, user, ignore_prepared_report, are_default_filters
+            )
         else:
             columns, result = self.run_standard_report(filters, limit, user)
 
@@ -307,7 +339,9 @@ class Report(Document):
         else:
             columns = [["id", self.ref_doctype]]
             columns.extend(
-                [df.fieldname, self.ref_doctype] for df in frappe.get_meta(self.ref_doctype).fields if df.in_list_view
+                [df.fieldname, self.ref_doctype]
+                for df in frappe.get_meta(self.ref_doctype).fields
+                if df.in_list_view
             )
         return columns
 
@@ -326,7 +360,11 @@ class Report(Document):
     def get_standard_report_order_by(self, params):
         group_by_args = None
         if params.get("sort_by"):
-            order_by = Report._format(params.get("sort_by").split(".")) + " " + params.get("sort_order")
+            order_by = (
+                Report._format(params.get("sort_by").split("."))
+                + " "
+                + params.get("sort_order")
+            )
 
         elif params.get("order_by"):
             order_by = params.get("order_by")
@@ -335,7 +373,10 @@ class Report(Document):
 
         if params.get("sort_by_next"):
             order_by += (
-                ", " + Report._format(params.get("sort_by_next").split(".")) + " " + params.get("sort_order_next")
+                ", "
+                + Report._format(params.get("sort_by_next").split("."))
+                + " "
+                + params.get("sort_order_next")
             )
 
         group_by = None
@@ -412,7 +453,9 @@ def get_group_by_field(args, doctype):
     if args["aggregate_function"] == "count":
         group_by_field = "count(*) as _aggregate_column"
     else:
-        group_by_field = f"{args.aggregate_function}({args.aggregate_on}) as _aggregate_column"
+        group_by_field = (
+            f"{args.aggregate_function}({args.aggregate_on}) as _aggregate_column"
+        )
 
     return group_by_field
 
@@ -423,7 +466,9 @@ def get_group_by_column_label(args, meta):
     else:
         sql_fn_map = {"avg": "Average", "sum": "Sum"}
         aggregate_on_label = meta.get_label(args.aggregate_on)
-        label = _("{0} of {1}").format(_(sql_fn_map[args.aggregate_function]), _(aggregate_on_label))
+        label = _("{0} of {1}").format(
+            _(sql_fn_map[args.aggregate_function]), _(aggregate_on_label)
+        )
     return label
 
 

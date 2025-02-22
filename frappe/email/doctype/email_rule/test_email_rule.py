@@ -4,4 +4,4 @@ from frappe.tests.utils import FrappeTestCase
 
 
 class TestEmailRule(FrappeTestCase):
-	pass
+    pass

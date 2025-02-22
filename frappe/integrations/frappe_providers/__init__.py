@@ -5,4 +5,4 @@ from frappe.integrations.frappe_providers.frappecloud import frappecloud_migrato
 
 
 def migrate_to():
-	return frappecloud_migrator()
+    return frappecloud_migrator()

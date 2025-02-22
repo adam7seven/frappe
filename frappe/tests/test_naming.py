@@ -50,7 +50,9 @@ class TestNaming(FrappeTestCase):
         note = frappe.get_doc({"doctype": DOCTYPE, "title": TITLE}).insert()
 
         self.assertEqual(append_number_if_id_exists(DOCTYPE, note.id), f"{note.id}-1")
-        self.assertEqual(append_number_if_id_exists(DOCTYPE, TITLE, "title", "_"), f"{TITLE}_1")
+        self.assertEqual(
+            append_number_if_id_exists(DOCTYPE, TITLE, "title", "_"), f"{TITLE}_1"
+        )
 
     def test_field_autoid_id_sync(self):
         country = frappe.get_last_doc("Country")
@@ -63,7 +65,9 @@ class TestNaming(FrappeTestCase):
         self.assertEqual(country.id, country.country_id)
 
     def test_child_table_naming(self):
-        child_dt_with_naming = new_doctype(istable=1, autoid="field:some_fieldname").insert()
+        child_dt_with_naming = new_doctype(
+            istable=1, autoid="field:some_fieldname"
+        ).insert()
         dt_with_child_autoid = new_doctype(
             fields=[
                 {
@@ -109,7 +113,9 @@ class TestNaming(FrappeTestCase):
 
         series = int(series) - 1
 
-        self.assertEqual(doc.id, f"TODO-{now_datetime().strftime('%m')}-{description}-{series:02}")
+        self.assertEqual(
+            doc.id, f"TODO-{now_datetime().strftime('%m')}-{description}-{series:02}"
+        )
 
     def test_format_autoid_for_datetime_field(self):
         """Test if datetime, date and time objects get converted to strings for naming."""
@@ -158,9 +164,13 @@ class TestNaming(FrappeTestCase):
         series = f"TEST-{year}-"
         key = "TEST-.YYYY.-"
         id = f"TEST-{year}-00001"
-        frappe.db.sql("""INSERT INTO `tabSeries` (id, current) values (%s, 1)""", (series,))
+        frappe.db.sql(
+            """INSERT INTO `tabSeries` (id, current) values (%s, 1)""", (series,)
+        )
         revert_series_if_last(key, id)
-        current_index = frappe.db.sql("""SELECT current from `tabSeries` where id = %s""", series, as_dict=True)[0]
+        current_index = frappe.db.sql(
+            """SELECT current from `tabSeries` where id = %s""", series, as_dict=True
+        )[0]
 
         self.assertEqual(current_index.get("current"), 0)
         frappe.db.delete("Series", {"id": series})
@@ -168,9 +178,13 @@ class TestNaming(FrappeTestCase):
         series = f"TEST-{year}-"
         key = "TEST-.YYYY.-.#####"
         id = f"TEST-{year}-00002"
-        frappe.db.sql("""INSERT INTO `tabSeries` (id, current) values (%s, 2)""", (series,))
+        frappe.db.sql(
+            """INSERT INTO `tabSeries` (id, current) values (%s, 2)""", (series,)
+        )
         revert_series_if_last(key, id)
-        current_index = frappe.db.sql("""SELECT current from `tabSeries` where id = %s""", series, as_dict=True)[0]
+        current_index = frappe.db.sql(
+            """SELECT current from `tabSeries` where id = %s""", series, as_dict=True
+        )[0]
 
         self.assertEqual(current_index.get("current"), 1)
         frappe.db.delete("Series", {"id": series})
@@ -179,9 +193,13 @@ class TestNaming(FrappeTestCase):
         key = "TEST-"
         id = "TEST-00003"
         frappe.db.delete("Series", {"id": series})
-        frappe.db.sql("""INSERT INTO `tabSeries` (id, current) values (%s, 3)""", (series,))
+        frappe.db.sql(
+            """INSERT INTO `tabSeries` (id, current) values (%s, 3)""", (series,)
+        )
         revert_series_if_last(key, id)
-        current_index = frappe.db.sql("""SELECT current from `tabSeries` where id = %s""", series, as_dict=True)[0]
+        current_index = frappe.db.sql(
+            """SELECT current from `tabSeries` where id = %s""", series, as_dict=True
+        )[0]
 
         self.assertEqual(current_index.get("current"), 2)
         frappe.db.delete("Series", {"id": series})
@@ -190,9 +208,13 @@ class TestNaming(FrappeTestCase):
         key = "TEST1-.#####.-2021-22"
         id = "TEST1-00003-2021-22"
         frappe.db.delete("Series", {"id": series})
-        frappe.db.sql("""INSERT INTO `tabSeries` (id, current) values (%s, 3)""", (series,))
+        frappe.db.sql(
+            """INSERT INTO `tabSeries` (id, current) values (%s, 3)""", (series,)
+        )
         revert_series_if_last(key, id)
-        current_index = frappe.db.sql("""SELECT current from `tabSeries` where id = %s""", series, as_dict=True)[0]
+        current_index = frappe.db.sql(
+            """SELECT current from `tabSeries` where id = %s""", series, as_dict=True
+        )[0]
 
         self.assertEqual(current_index.get("current"), 2)
         frappe.db.delete("Series", {"id": series})
@@ -201,9 +223,13 @@ class TestNaming(FrappeTestCase):
         key = ".#####.-2021-22"
         id = "00003-2021-22"
         frappe.db.delete("Series", {"id": series})
-        frappe.db.sql("""INSERT INTO `tabSeries` (id, current) values (%s, 3)""", (series,))
+        frappe.db.sql(
+            """INSERT INTO `tabSeries` (id, current) values (%s, 3)""", (series,)
+        )
         revert_series_if_last(key, id)
-        current_index = frappe.db.sql("""SELECT current from `tabSeries` where id = %s""", series, as_dict=True)[0]
+        current_index = frappe.db.sql(
+            """SELECT current from `tabSeries` where id = %s""", series, as_dict=True
+        )[0]
 
         self.assertEqual(current_index.get("current"), 2)
 
@@ -294,10 +320,14 @@ class TestNaming(FrappeTestCase):
         from frappe.core.doctype.doctype.test_doctype import new_doctype
 
         doctype = "autoinc_doctype" + frappe.generate_hash(length=5)
-        dt = new_doctype(doctype, autoid="autoincrement").insert(ignore_permissions=True)
+        dt = new_doctype(doctype, autoid="autoincrement").insert(
+            ignore_permissions=True
+        )
 
         for i in range(1, 20):
-            self.assertEqual(frappe.new_doc(doctype).save(ignore_permissions=True).id, i)
+            self.assertEqual(
+                frappe.new_doc(doctype).save(ignore_permissions=True).id, i
+            )
 
         dt.delete(ignore_permissions=True)
 

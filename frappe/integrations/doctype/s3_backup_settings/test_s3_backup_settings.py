@@ -4,4 +4,4 @@ from frappe.tests.utils import FrappeTestCase
 
 
 class TestS3BackupSettings(FrappeTestCase):
-	pass
+    pass

@@ -22,7 +22,12 @@ import frappe.rate_limiter
 import frappe.recorder
 import frappe.utils.response
 from frappe import _
-from frappe.auth import SAFE_HTTP_METHODS, UNSAFE_HTTP_METHODS, HTTPRequest, validate_auth
+from frappe.auth import (
+    SAFE_HTTP_METHODS,
+    UNSAFE_HTTP_METHODS,
+    HTTPRequest,
+    validate_auth,
+)
 from frappe.middlewares import StaticDataMiddleware
 from frappe.utils import CallbackManager, cint, get_site_name
 from frappe.utils.data import escape_html
@@ -225,7 +230,9 @@ def set_cors_headers(response):
 
     # only required for preflight requests
     if request.method == "OPTIONS":
-        cors_headers["Access-Control-Allow-Methods"] = request.headers.get("Access-Control-Request-Method")
+        cors_headers["Access-Control-Allow-Methods"] = request.headers.get(
+            "Access-Control-Request-Method"
+        )
 
         if allowed_headers := request.headers.get("Access-Control-Request-Headers"):
             cors_headers["Access-Control-Allow-Headers"] = allowed_headers
@@ -243,9 +250,15 @@ def handle_exception(e):
     return_as_message = False
     accept_header = frappe.get_request_header("Accept") or ""
     respond_as_json = (
-        frappe.get_request_header("Accept") and (frappe.local.is_ajax or "application/json" in accept_header)
-    ) or (frappe.local.request.path.startswith("/api/") and not accept_header.startswith("text"))
-    allow_traceback = frappe.get_system_settings("allow_error_traceback") if frappe.db else False
+        frappe.get_request_header("Accept")
+        and (frappe.local.is_ajax or "application/json" in accept_header)
+    ) or (
+        frappe.local.request.path.startswith("/api/")
+        and not accept_header.startswith("text")
+    )
+    allow_traceback = (
+        frappe.get_system_settings("allow_error_traceback") if frappe.db else False
+    )
 
     if not frappe.session.user:
         # If session creation fails then user won't be unset. This causes a lot of code that
@@ -301,11 +314,19 @@ def handle_exception(e):
     else:
         traceback = "<pre>" + escape_html(frappe.get_traceback()) + "</pre>"
         # disable traceback in production if flag is set
-        if frappe.local.flags.disable_traceback or not allow_traceback and not frappe.local.dev_server:
+        if (
+            frappe.local.flags.disable_traceback
+            or not allow_traceback
+            and not frappe.local.dev_server
+        ):
             traceback = ""
 
         frappe.respond_as_web_page(
-            "Server Error", traceback, http_status_code=http_status_code, indicator_color="red", width=640
+            "Server Error",
+            traceback,
+            http_status_code=http_status_code,
+            indicator_color="red",
+            width=640,
         )
         return_as_message = True
 
@@ -328,7 +349,9 @@ def handle_exception(e):
 
 def sync_database(rollback: bool) -> bool:
     # if HTTP method would change server state, commit if necessary
-    if frappe.db and (frappe.local.flags.commit or frappe.local.request.method in UNSAFE_HTTP_METHODS):
+    if frappe.db and (
+        frappe.local.flags.commit or frappe.local.request.method in UNSAFE_HTTP_METHODS
+    ):
         frappe.db.commit()
         rollback = False
     elif frappe.db:
@@ -412,7 +435,9 @@ def serve(
         application = application_with_statics()
 
     if proxy or os.environ.get("USE_PROXY"):
-        application = ProxyFix(application, x_for=1, x_proto=1, x_host=1, x_port=1, x_prefix=1)
+        application = ProxyFix(
+            application, x_for=1, x_proto=1, x_host=1, x_port=1, x_prefix=1
+        )
 
     application.debug = True
     application.config = {"SERVER_NAME": "127.0.0.1:8000"}
@@ -439,9 +464,13 @@ def serve(
 def application_with_statics():
     global application, _sites_path
 
-    application = SharedDataMiddleware(application, {"/assets": str(os.path.join(_sites_path, "assets"))})
+    application = SharedDataMiddleware(
+        application, {"/assets": str(os.path.join(_sites_path, "assets"))}
+    )
 
-    application = StaticDataMiddleware(application, {"/files": str(os.path.abspath(_sites_path))})
+    application = StaticDataMiddleware(
+        application, {"/files": str(os.path.abspath(_sites_path))}
+    )
 
     return application
 

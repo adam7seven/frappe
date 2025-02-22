@@ -255,12 +255,16 @@ def init(site: str, sites_path: str = ".", new_site: bool = False, force=False) 
         _register_fault_handler()
         _one_time_setup[local.conf.db_type] = True
 
-    setup_module_map(include_all_apps=not (frappe.request or frappe.job or frappe.flags.in_migrate))
+    setup_module_map(
+        include_all_apps=not (frappe.request or frappe.job or frappe.flags.in_migrate)
+    )
 
     local.initialised = True
 
 
-def connect(site: str | None = None, db_name: str | None = None, set_admin_as_user: bool = True) -> None:
+def connect(
+    site: str | None = None, db_name: str | None = None, set_admin_as_user: bool = True
+) -> None:
     """Connect to site database instance.
 
     :param site: If site is given, calls `frappe.init`.
@@ -272,7 +276,9 @@ def connect(site: str | None = None, db_name: str | None = None, set_admin_as_us
     if site:
         init(site)
 
-    assert db_name or local.conf.db_name, "site must be fully initialized, db_name missing"
+    assert (
+        db_name or local.conf.db_name
+    ), "site must be fully initialized, db_name missing"
     assert local.conf.db_password, "site must be fully initialized, db_password missing"
 
     local.db = get_db(
@@ -317,7 +323,9 @@ def connect_replica() -> bool:
     return True
 
 
-def get_site_config(sites_path: str | None = None, site_path: str | None = None) -> dict[str, Any]:
+def get_site_config(
+    sites_path: str | None = None, site_path: str | None = None
+) -> dict[str, Any]:
     """Returns `site_config.json` combined with `sites/common_site_config.json`.
     `site_config` is a set of site wide settings like database name, password, email etc.
     """
@@ -350,15 +358,27 @@ def get_site_config(sites_path: str | None = None, site_path: str | None = None)
         }[db_type]
 
     config["redis_queue"] = (
-        os.environ.get("FRAPPE_REDIS_QUEUE") or config.get("redis_queue") or "redis://127.0.0.1:11311"
+        os.environ.get("FRAPPE_REDIS_QUEUE")
+        or config.get("redis_queue")
+        or "redis://127.0.0.1:11311"
     )
     config["redis_cache"] = (
-        os.environ.get("FRAPPE_REDIS_CACHE") or config.get("redis_cache") or "redis://127.0.0.1:13311"
+        os.environ.get("FRAPPE_REDIS_CACHE")
+        or config.get("redis_cache")
+        or "redis://127.0.0.1:13311"
     )
-    config["db_type"] = os.environ.get("FRAPPE_DB_TYPE") or config.get("db_type") or "mariadb"
+    config["db_type"] = (
+        os.environ.get("FRAPPE_DB_TYPE") or config.get("db_type") or "mariadb"
+    )
     config["db_socket"] = os.environ.get("FRAPPE_DB_SOCKET") or config.get("db_socket")
-    config["db_host"] = os.environ.get("FRAPPE_DB_HOST") or config.get("db_host") or "127.0.0.1"
-    config["db_port"] = os.environ.get("FRAPPE_DB_PORT") or config.get("db_port") or db_default_ports(config["db_type"])
+    config["db_host"] = (
+        os.environ.get("FRAPPE_DB_HOST") or config.get("db_host") or "127.0.0.1"
+    )
+    config["db_port"] = (
+        os.environ.get("FRAPPE_DB_PORT")
+        or config.get("db_port")
+        or db_default_ports(config["db_type"])
+    )
 
     # Allow externally extending the config with hooks
     if extra_config := config.get("extra_config"):
@@ -509,7 +529,9 @@ def msgprint(
 
     def _raise_exception():
         if raise_exception:
-            if inspect.isclass(raise_exception) and issubclass(raise_exception, Exception):
+            if inspect.isclass(raise_exception) and issubclass(
+                raise_exception, Exception
+            ):
                 exc = raise_exception(msg)
             else:
                 exc = ValidationError(msg)
@@ -821,7 +843,9 @@ def whitelist(allow_guest=False, xss_safe=False, methods=None):
         global whitelisted, guest_methods, xss_safe_methods, allowed_http_methods_for_whitelisted_func
 
         # validate argument types only if request is present
-        in_request_or_test = lambda: getattr(local, "request", None) or local.flags.in_test  # noqa: E731
+        in_request_or_test = (
+            lambda: getattr(local, "request", None) or local.flags.in_test
+        )  # noqa: E731
 
         # get function from the unbound / bound method
         # this is needed because functions can be compared, but not methods
@@ -852,7 +876,9 @@ def is_whitelisted(method):
     is_guest = session["user"] == "Guest"
     if method not in whitelisted or is_guest and method not in guest_methods:
         summary = _("You are not permitted to access this resource.")
-        detail = _("Function {0} is not whitelisted.").format(bold(f"{method.__module__}.{method.__name__}"))
+        detail = _("Function {0} is not whitelisted.").format(
+            bold(f"{method.__module__}.{method.__name__}")
+        )
         msg = f"<details><summary>{summary}</summary>{detail}</details>"
         throw(msg, PermissionError, title=_("Method Not Allowed"))
 
@@ -1042,14 +1068,20 @@ def has_permission(
     )
 
     if throw and not out:
-        document_label = f"{_(doctype)} {doc if isinstance(doc, str) else doc.id}" if doc else _(doctype)
+        document_label = (
+            f"{_(doctype)} {doc if isinstance(doc, str) else doc.id}"
+            if doc
+            else _(doctype)
+        )
         frappe.flags.error_message = _("No permission for {0}").format(document_label)
         raise frappe.PermissionError
 
     return out
 
 
-def has_website_permission(doc=None, ptype="read", user=None, verbose=False, doctype=None):
+def has_website_permission(
+    doc=None, ptype="read", user=None, verbose=False, doctype=None
+):
     """Raises `frappe.PermissionError` if not permitted.
 
     :param doctype: DocType for which permission is to be check.
@@ -1092,7 +1124,9 @@ def is_table(doctype: str) -> bool:
     """Returns True if `istable` property (indicating child Table) is set for given DocType."""
 
     def get_tables():
-        return db.get_values("DocType", filters={"istable": 1}, order_by=None, pluck=True)
+        return db.get_values(
+            "DocType", filters={"istable": 1}, order_by=None, pluck=True
+        )
 
     tables = cache.get_value("is_table", get_tables)
     return doctype in tables
@@ -1219,7 +1253,9 @@ def clear_document_cache(doctype: str, id: str | None = None) -> None:
         delattr(local, "website_settings")
 
 
-def get_cached_value(doctype: str, id: str, fieldname: str = "id", as_dict: bool = False) -> Any:
+def get_cached_value(
+    doctype: str, id: str, fieldname: str = "id", as_dict: bool = False
+) -> Any:
     try:
         doc = get_cached_doc(doctype, id)
     except DoesNotExistError:
@@ -1293,7 +1329,11 @@ def get_doc(*args, **kwargs):
     doc = frappe.model.document.get_doc(*args, **kwargs)
 
     # Replace cache if stale one exists
-    if not kwargs.get("for_update") and (key := can_cache_doc(args)) and cache.exists(key):
+    if (
+        not kwargs.get("for_update")
+        and (key := can_cache_doc(args))
+        and cache.exists(key)
+    ):
         _set_document_in_cache(key, doc)
 
     return doc
@@ -1301,7 +1341,9 @@ def get_doc(*args, **kwargs):
 
 def get_last_doc(doctype, filters=None, order_by="creation desc", *, for_update=False):
     """Get last created document of this type."""
-    d = get_all(doctype, filters=filters, limit_page_length=1, order_by=order_by, pluck="id")
+    d = get_all(
+        doctype, filters=filters, limit_page_length=1, order_by=order_by, pluck="id"
+    )
     if d:
         return get_doc(doctype, d[0], for_update=for_update)
     else:
@@ -1396,7 +1438,9 @@ def reload_doc(
 
     import frappe.modules
 
-    return frappe.modules.reload_doc(module, dt, dn, force=force, reset_permissions=reset_permissions)
+    return frappe.modules.reload_doc(
+        module, dt, dn, force=force, reset_permissions=reset_permissions
+    )
 
 
 @whitelist(methods=["POST", "PUT"])
@@ -1681,7 +1725,9 @@ def get_file_items(path, raise_not_found=False, ignore_empty_lines=True):
         content = frappe.utils.strip(content)
 
         return [
-            p.strip() for p in content.splitlines() if (not ignore_empty_lines) or (p.strip() and not p.startswith("#"))
+            p.strip()
+            for p in content.splitlines()
+            if (not ignore_empty_lines) or (p.strip() and not p.startswith("#"))
         ]
     else:
         return []
@@ -1710,7 +1756,11 @@ def read_file(path, raise_not_found=False):
 def get_attr(method_string: str) -> Any:
     """Get python method object from its name."""
     app_name = method_string.split(".", 1)[0]
-    if not local.flags.in_uninstall and not local.flags.in_install and app_name not in get_installed_apps():
+    if (
+        not local.flags.in_uninstall
+        and not local.flags.in_install
+        and app_name not in get_installed_apps()
+    ):
         throw(_("App {0} is not installed").format(app_name), AppNotInstalledError)
 
     modulename = ".".join(method_string.split(".")[:-1])
@@ -1942,7 +1992,9 @@ def redirect(url):
     raise Redirect
 
 
-def redirect_to_message(title, html, http_status_code=None, context=None, indicator_color=None):
+def redirect_to_message(
+    title, html, http_status_code=None, context=None, indicator_color=None
+):
     """Redirects to /message?id=random
     Similar to respond_as_web_page, but used to 'redirect' and show message pages like success, failure, etc. with a detailed message
 
@@ -1977,7 +2029,9 @@ def build_match_conditions(doctype, as_condition=True):
     """Return match (User permissions) for given doctype as list or SQL."""
     import frappe.desk.reportview
 
-    return frappe.desk.reportview.build_match_conditions(doctype, as_condition=as_condition)
+    return frappe.desk.reportview.build_match_conditions(
+        doctype, as_condition=as_condition
+    )
 
 
 def get_list(doctype, *args, **kwargs):
@@ -2200,7 +2254,9 @@ def attach_print(
             )
         else:
             ext = ".html"
-            content = html or scrub_urls(get_print(doctype, id, **kwargs)).encode("utf-8")
+            content = html or scrub_urls(get_print(doctype, id, **kwargs)).encode(
+                "utf-8"
+            )
 
     local.flags.ignore_print_permissions = False
 
@@ -2341,7 +2397,9 @@ def get_desk_link(doctype, id):
     title = get_value(doctype, id, meta.get_title_field())
 
     html = '<a href="/app/Form/{doctype}/{id}" style="font-weight: bold;">{doctype_local} {title_local}</a>'
-    return html.format(doctype=doctype, id=id, doctype_local=_(doctype), title_local=_(title))
+    return html.format(
+        doctype=doctype, id=id, doctype_local=_(doctype), title_local=_(title)
+    )
 
 
 def bold(text):

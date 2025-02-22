@@ -234,7 +234,9 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
         # of this method should be limited.
 
         # pymysql expects unicode argument to escape_string with Python 3
-        s = frappe.as_unicode(escape_string(frappe.as_unicode(s)), "utf-8").replace("`", "\\`")
+        s = frappe.as_unicode(escape_string(frappe.as_unicode(s)), "utf-8").replace(
+            "`", "\\`"
+        )
 
         # NOTE separating % escape, because % escape should only be done when using LIKE operator
         # or when you use python format string to generate query that already has a %s
@@ -264,10 +266,14 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
         table_name = get_table_name(doctype)
         return self.sql(f"DESC `{table_name}`")
 
-    def change_column_type(self, doctype: str, column: str, type: str, nullable: bool = False) -> list | tuple:
+    def change_column_type(
+        self, doctype: str, column: str, type: str, nullable: bool = False
+    ) -> list | tuple:
         table_name = get_table_name(doctype)
         null_constraint = "NOT NULL" if not nullable else ""
-        return self.sql_ddl(f"ALTER TABLE `{table_name}` MODIFY `{column}` {type} {null_constraint}")
+        return self.sql_ddl(
+            f"ALTER TABLE `{table_name}` MODIFY `{column}` {type} {null_constraint}"
+        )
 
     def rename_column(self, doctype: str, old_column_name, new_column_name):
         current_data_type = self.get_column_type(doctype, old_column_name)
@@ -357,7 +363,8 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
             frappe.qb.from_(information_schema.columns)
             .select(information_schema.columns.column_type)
             .where(
-                (information_schema.columns.table_name == table) & (information_schema.columns.column_name == column)
+                (information_schema.columns.table_name == table)
+                & (information_schema.columns.column_name == column)
             )
             .run(pluck=True)[0]
         )
@@ -368,7 +375,9 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
             WHERE Key_name='{index_name}'"""
         )
 
-    def get_column_index(self, table_name: str, fieldname: str, unique: bool = False) -> frappe._dict | None:
+    def get_column_index(
+        self, table_name: str, fieldname: str, unique: bool = False
+    ) -> frappe._dict | None:
         """Check if column exists for a specific fields in specified order.
 
         This differs from db.has_index because it doesn't rely on index name but columns inside an
@@ -547,5 +556,8 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
 
         table = get_table_name(doctype)
 
-        count = self.sql("select table_rows from information_schema.tables where table_name = %s", table)
+        count = self.sql(
+            "select table_rows from information_schema.tables where table_name = %s",
+            table,
+        )
         return cint(count[0][0]) if count else 0

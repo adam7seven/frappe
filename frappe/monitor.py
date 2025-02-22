@@ -101,7 +101,9 @@ class Monitor:
             if self.data.transaction_type == "request":
                 if response:
                     self.data.request.status_code = response.status_code
-                    self.data.request.response_length = int(response.headers.get("Content-Length", 0))
+                    self.data.request.response_length = int(
+                        response.headers.get("Content-Length", 0)
+                    )
                 else:
                     self.data.request.status_code = 500
 
@@ -116,7 +118,9 @@ class Monitor:
             traceback.print_exc()
 
     def store(self):
-        serialized = json.dumps(self.data, sort_keys=True, default=str, separators=(",", ":"))
+        serialized = json.dumps(
+            self.data, sort_keys=True, default=str, separators=(",", ":")
+        )
         length = frappe.cache.rpush(MONITOR_REDIS_KEY, serialized)
         if cint(length) > MONITOR_MAX_ENTRIES:
             frappe.cache.ltrim(MONITOR_REDIS_KEY, 1, -1)

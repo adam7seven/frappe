@@ -6,5 +6,5 @@ from frappe.tests.utils import FrappeTestCase
 
 
 class TestSystemHealthReport(FrappeTestCase):
-	def test_it_works(self):
-		frappe.get_doc("System Health Report")
+    def test_it_works(self):
+        frappe.get_doc("System Health Report")

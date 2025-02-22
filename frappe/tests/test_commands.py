@@ -70,11 +70,19 @@ def missing_in_backup(doctypes: list, file: os.PathLike) -> list:
     Returns:
             doctypes(list): doctypes that are missing in backup
     """
-    predicate = 'COPY public."tab{}"' if frappe.conf.db_type == "postgres" else "CREATE TABLE `tab{}`"
+    predicate = (
+        'COPY public."tab{}"'
+        if frappe.conf.db_type == "postgres"
+        else "CREATE TABLE `tab{}`"
+    )
     with gzip.open(file, "rb") as f:
         content = f.read().decode("utf8").lower()
 
-    return [doctype for doctype in doctypes if predicate.format(doctype).lower() not in content]
+    return [
+        doctype
+        for doctype in doctypes
+        if predicate.format(doctype).lower() not in content
+    ]
 
 
 def exists_in_backup(doctypes: list, file: os.PathLike) -> bool:
@@ -157,7 +165,9 @@ class BaseTestCommands(FrappeTestCase):
             cmd_input = kwargs.get("cmd_input", None)
             if cmd_input:
                 if not isinstance(cmd_input, bytes):
-                    raise Exception(f"The input should be of type bytes, not {type(cmd_input).__name__}")
+                    raise Exception(
+                        f"The input should be of type bytes, not {type(cmd_input).__name__}"
+                    )
 
                 del kwargs["cmd_input"]
             kwargs.update(site)
@@ -240,7 +250,9 @@ class TestCommands(BaseTestCommands):
         # Note:
         # terminal command has been escaped to avoid .format string replacement
         # The returned value has quotes which have been trimmed for the test
-        self.execute("""bench --site {site} execute frappe.bold --kwargs '{{"text": "DocType"}}'""")
+        self.execute(
+            """bench --site {site} execute frappe.bold --kwargs '{{"text": "DocType"}}'"""
+        )
         self.assertEqual(self.returncode, 0)
         self.assertEqual(self.stdout[1:-1], frappe.bold(text="DocType"))
 
@@ -304,7 +316,8 @@ class TestCommands(BaseTestCommands):
         self.execute("bench --site {test_site} backup --exclude 'ToDo'", site_data)
         site_data.update({"kw": "\"{'partial':True}\""})
         self.execute(
-            "bench --site {test_site} execute" " frappe.utils.backups.fetch_latest_backups --kwargs {kw}",
+            "bench --site {test_site} execute"
+            " frappe.utils.backups.fetch_latest_backups --kwargs {kw}",
             site_data,
         )
         site_data.update({"database": json.loads(self.stdout)["database"]})
@@ -358,7 +371,9 @@ class TestCommands(BaseTestCommands):
         self.assertIn(app, self.stdout)
 
         # test 1: remove app from installed_apps global default
-        self.execute("bench --site {site} remove-from-installed-apps {app}", {"app": app})
+        self.execute(
+            "bench --site {site} remove-from-installed-apps {app}", {"app": app}
+        )
         self.assertEqual(self.returncode, 0)
         self.execute("bench --site {site} list-apps")
         self.assertNotIn(app, self.stdout)
@@ -465,10 +480,16 @@ class TestCommands(BaseTestCommands):
         original_password = frappe.conf.admin_password or "admin"
         self.execute("bench --site {site} set-admin-password %s" % original_password)
         self.assertEqual(self.returncode, 0)
-        self.assertEqual(check_password("Administrator", original_password), "Administrator")
+        self.assertEqual(
+            check_password("Administrator", original_password), "Administrator"
+        )
 
     @skipIf(
-        not (frappe.conf.root_password and frappe.conf.admin_password and frappe.conf.db_type == "mariadb"),
+        not (
+            frappe.conf.root_password
+            and frappe.conf.admin_password
+            and frappe.conf.db_type == "mariadb"
+        ),
         "DB Root password and Admin password not set in config",
     )
     def test_bench_drop_site_should_archive_site(self):
@@ -483,7 +504,9 @@ class TestCommands(BaseTestCommands):
         )
         self.assertEqual(self.returncode, 0)
 
-        self.execute(f"bench drop-site {site} --force --root-password {frappe.conf.root_password}")
+        self.execute(
+            f"bench drop-site {site} --force --root-password {frappe.conf.root_password}"
+        )
         self.assertEqual(self.returncode, 0)
 
         bench_path = get_bench_path()
@@ -493,7 +516,11 @@ class TestCommands(BaseTestCommands):
         self.assertTrue(os.path.exists(archive_directory))
 
     @skipIf(
-        not (frappe.conf.root_password and frappe.conf.admin_password and frappe.conf.db_type == "mariadb"),
+        not (
+            frappe.conf.root_password
+            and frappe.conf.admin_password
+            and frappe.conf.db_type == "mariadb"
+        ),
         "DB Root password and Admin password not set in config",
     )
     def test_force_install_app(self):
@@ -508,7 +535,9 @@ class TestCommands(BaseTestCommands):
         app_name = "frappe"
 
         # set admin password in site_config as when frappe force installs, we don't have the conf
-        self.execute(f"bench --site {TEST_SITE} set-config admin_password {frappe.conf.admin_password}")
+        self.execute(
+            f"bench --site {TEST_SITE} set-config admin_password {frappe.conf.admin_password}"
+        )
 
         # try installing the frappe_docs app again on test site
         self.execute(f"bench --site {TEST_SITE} install-app {app_name}")
@@ -637,7 +666,9 @@ class TestBackups(BaseTestCommands):
 
         tables_before = frappe.db.get_tables(cached=False)
 
-        self.execute("bench --site {site} clear-log-table --days=30 --doctype='Error Log'")
+        self.execute(
+            "bench --site {site} clear-log-table --days=30 --doctype='Error Log'"
+        )
         self.assertEqual(self.returncode, 0)
         frappe.db.commit()
 
@@ -705,7 +736,9 @@ class TestBackups(BaseTestCommands):
         self.execute("bench --site {site} backup --verbose")
         self.assertEqual(self.returncode, 0)
         database = fetch_latest_backups(partial=True)["database"]
-        self.assertEqual([], missing_in_backup(self.backup_map["includes"]["includes"], database))
+        self.assertEqual(
+            [], missing_in_backup(self.backup_map["includes"]["includes"], database)
+        )
 
     def test_backup_excluding_specific_doctypes(self):
         """Take a backup with (exclude) backup options set (`frappe.conf.backup.excludes`, `--exclude`)"""
@@ -717,8 +750,12 @@ class TestBackups(BaseTestCommands):
         self.execute("bench --site {site} backup --verbose")
         self.assertEqual(self.returncode, 0)
         database = fetch_latest_backups(partial=True)["database"]
-        self.assertFalse(exists_in_backup(self.backup_map["excludes"]["excludes"], database))
-        self.assertEqual([], missing_in_backup(self.backup_map["includes"]["includes"], database))
+        self.assertFalse(
+            exists_in_backup(self.backup_map["excludes"]["excludes"], database)
+        )
+        self.assertEqual(
+            [], missing_in_backup(self.backup_map["includes"]["includes"], database)
+        )
 
         # test 2: take a backup with --exclude
         self.execute(
@@ -727,7 +764,9 @@ class TestBackups(BaseTestCommands):
         )
         self.assertEqual(self.returncode, 0)
         database = fetch_latest_backups(partial=True)["database"]
-        self.assertFalse(exists_in_backup(self.backup_map["excludes"]["excludes"], database))
+        self.assertFalse(
+            exists_in_backup(self.backup_map["excludes"]["excludes"], database)
+        )
 
     def test_selective_backup_priority_resolution(self):
         """Take a backup with conflicting backup options set (`frappe.conf.excludes`, `--include`)"""
@@ -737,14 +776,18 @@ class TestBackups(BaseTestCommands):
         )
         self.assertEqual(self.returncode, 0)
         database = fetch_latest_backups(partial=True)["database"]
-        self.assertEqual([], missing_in_backup(self.backup_map["includes"]["includes"], database))
+        self.assertEqual(
+            [], missing_in_backup(self.backup_map["includes"]["includes"], database)
+        )
 
     def test_dont_backup_conf(self):
         """Take a backup ignoring frappe.conf.backup settings (with --ignore-backup-conf option)"""
         self.execute("bench --site {site} backup --ignore-backup-conf")
         self.assertEqual(self.returncode, 0)
         database = fetch_latest_backups()["database"]
-        self.assertEqual([], missing_in_backup(self.backup_map["excludes"]["excludes"], database))
+        self.assertEqual(
+            [], missing_in_backup(self.backup_map["excludes"]["excludes"], database)
+        )
 
 
 class TestRemoveApp(FrappeTestCase):
@@ -781,7 +824,9 @@ class TestRemoveApp(FrappeTestCase):
 
         self.assertIn("Report", doctype_to_link_field_map)
         self.assertIn(module_def_linked_doctype.id, doctype_to_link_field_map)
-        self.assertEqual(doctype_to_link_field_map[module_def_linked_doctype.id], "notmodule")
+        self.assertEqual(
+            doctype_to_link_field_map[module_def_linked_doctype.id], "notmodule"
+        )
         self.assertNotIn("DocType", doctype_to_link_field_map)
 
         doctypes_to_delete = _delete_modules([test_module.id], dry_run=False)

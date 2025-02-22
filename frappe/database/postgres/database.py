@@ -59,7 +59,9 @@ class PostgresExceptionUtil:
     @staticmethod
     def is_timedout(e):
         # http://initd.org/psycopg/docs/extensions.html?highlight=datatype#psycopg2.extensions.QueryCanceledError
-        return isinstance(e, (psycopg2.extensions.QueryCanceledError | LockNotAvailable))
+        return isinstance(
+            e, (psycopg2.extensions.QueryCanceledError | LockNotAvailable)
+        )
 
     @staticmethod
     def is_read_only_mode_error(e) -> bool:
@@ -95,11 +97,15 @@ class PostgresExceptionUtil:
 
     @staticmethod
     def is_primary_key_violation(e):
-        return getattr(e, "pgcode", None) == UNIQUE_VIOLATION and "_pkey" in cstr(e.args[0])
+        return getattr(e, "pgcode", None) == UNIQUE_VIOLATION and "_pkey" in cstr(
+            e.args[0]
+        )
 
     @staticmethod
     def is_unique_key_violation(e):
-        return getattr(e, "pgcode", None) == UNIQUE_VIOLATION and "_key" in cstr(e.args[0])
+        return getattr(e, "pgcode", None) == UNIQUE_VIOLATION and "_key" in cstr(
+            e.args[0]
+        )
 
     @staticmethod
     def is_duplicate_fieldname(e):
@@ -107,7 +113,9 @@ class PostgresExceptionUtil:
 
     @staticmethod
     def is_statement_timeout(e):
-        return PostgresDatabase.is_timedout(e) or isinstance(e, frappe.QueryTimeoutError)
+        return PostgresDatabase.is_timedout(e) or isinstance(
+            e, frappe.QueryTimeoutError
+        )
 
     @staticmethod
     def is_data_too_long(e):
@@ -265,7 +273,9 @@ class PostgresDatabase(PostgresExceptionUtil, Database):
 
     def describe(self, doctype: str) -> list | tuple:
         table_name = get_table_name(doctype)
-        return self.sql(f"SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME = '{table_name}'")
+        return self.sql(
+            f"SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME = '{table_name}'"
+        )
 
     def change_column_type(
         self,
@@ -290,7 +300,9 @@ class PostgresDatabase(PostgresExceptionUtil, Database):
 
     def rename_column(self, doctype: str, old_column_name: str, new_column_name: str):
         table_name = get_table_name(doctype)
-        frappe.db.sql_ddl(f"ALTER TABLE `{table_name}` RENAME COLUMN `{old_column_name}` TO `{new_column_name}`")
+        frappe.db.sql_ddl(
+            f"ALTER TABLE `{table_name}` RENAME COLUMN `{old_column_name}` TO `{new_column_name}`"
+        )
 
     def create_auth_table(self):
         self.sql_ddl(
@@ -367,7 +379,9 @@ class PostgresDatabase(PostgresExceptionUtil, Database):
         index_name = index_name or self.get_index_name(fields)
         fields_str = '", "'.join(re.sub(r"\(.*\)", "", field) for field in fields)
 
-        self.sql_ddl(f'CREATE INDEX IF NOT EXISTS "{index_name}" ON `{table_name}` ("{fields_str}")')
+        self.sql_ddl(
+            f'CREATE INDEX IF NOT EXISTS "{index_name}" ON `{table_name}` ("{fields_str}")'
+        )
 
     def add_unique(self, doctype, fields, constraint_name=None):
         if isinstance(fields, str):
@@ -429,7 +443,8 @@ class PostgresDatabase(PostgresExceptionUtil, Database):
             frappe.qb.from_(information_schema.columns)
             .select(information_schema.columns.data_type)
             .where(
-                (information_schema.columns.table_name == table) & (information_schema.columns.column_name == column)
+                (information_schema.columns.table_name == table)
+                & (information_schema.columns.column_name == column)
             )
             .run(pluck=True)[0]
         )

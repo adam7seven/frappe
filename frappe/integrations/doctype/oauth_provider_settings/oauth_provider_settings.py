@@ -7,21 +7,25 @@ from frappe.model.document import Document
 
 
 class OAuthProviderSettings(Document):
-	# begin: auto-generated types
-	# This code is auto-generated. Do not modify anything in this block.
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
 
-	from typing import TYPE_CHECKING
+    from typing import TYPE_CHECKING
 
-	if TYPE_CHECKING:
-		from frappe.types import DF
+    if TYPE_CHECKING:
+        from frappe.types import DF
 
-		skip_authorization: DF.Literal["Force", "Auto"]
-	# end: auto-generated types
-	pass
+        skip_authorization: DF.Literal["Force", "Auto"]
+    # end: auto-generated types
+    pass
 
 
 def get_oauth_settings():
-	"""Returns oauth settings"""
-	return frappe._dict(
-		{"skip_authorization": frappe.db.get_single_value("OAuth Provider Settings", "skip_authorization")}
-	)
+    """Returns oauth settings"""
+    return frappe._dict(
+        {
+            "skip_authorization": frappe.db.get_single_value(
+                "OAuth Provider Settings", "skip_authorization"
+            )
+        }
+    )
