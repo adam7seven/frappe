@@ -23,9 +23,7 @@ def sanitize_searchfield(searchfield: str):
         return
 
     if SPECIAL_CHAR_PATTERN.search(searchfield):
-        frappe.throw(
-            _("Invalid Search Field {0}").format(searchfield), frappe.DataError
-        )
+        frappe.throw(_("Invalid Search Field {0}").format(searchfield), frappe.DataError)
 
 
 class LinkSearchResults(TypedDict):
@@ -149,9 +147,7 @@ def search_widget(
 
         for f in search_fields:
             fmeta = meta.get_field(f.strip())
-            if not meta.translated_doctype and (
-                f == "id" or (fmeta and fmeta.fieldtype in field_types)
-            ):
+            if not meta.translated_doctype and (f == "id" or (fmeta and fmeta.fieldtype in field_types)):
                 or_filters.append([doctype, f.strip(), "like", f"%{txt}%"])
 
     if meta.get("fields", {"fieldname": "enabled", "fieldtype": "Check"}):
@@ -176,7 +172,15 @@ def search_widget(
     if not meta.translated_doctype:
         _txt = frappe.db.escape((txt or "").replace("%", "").replace("@", ""))
         # locate returns 0 if string is not found, convert 0 to null and then sort null to end in order by
-        _relevance = f"(1 / nullif(locate({_txt}, `tab{doctype}`.`id`), 0))"
+        _relevance = ""
+        if meta.autoid == "autoincrement":
+            val = 0
+            if _txt and _txt.isdigit():
+                val = int(_txt)
+            _relevance = f"`tab{doctype}`.`id`"
+        else:
+            _relevance = f"(1 / nullif(locate({_txt}, `tab{doctype}`.`id`), 0))"
+        print("_relevance", _relevance)
         formatted_fields.append(f"""{_relevance} as `_relevance`""")
         # Since we are sorting by alias postgres needs to know number of column we are sorting
         if frappe.db.db_type == "mariadb":
@@ -255,13 +259,7 @@ def get_std_fields_list(meta, key):
 
 def build_for_autosuggest(res: list[tuple], doctype: str) -> list[LinkSearchResults]:
     def to_string(parts):
-        return ", ".join(
-            unique(
-                _(cstr(part)) if meta.translated_doctype else cstr(part)
-                for part in parts
-                if part
-            )
-        )
+        return ", ".join(unique(_(cstr(part)) if meta.translated_doctype else cstr(part) for part in parts if part))
 
     results = []
     meta = frappe.get_meta(doctype)
@@ -275,13 +273,9 @@ def build_for_autosuggest(res: list[tuple], doctype: str) -> list[LinkSearchResu
             if len(item) >= 3 and item[2] == label:
                 # remove redundant title ("label") value
                 del item[2]
-            results.append(
-                {"value": item[0], "label": label, "description": to_string(item[1:])}
-            )
+            results.append({"value": item[0], "label": label, "description": to_string(item[1:])})
     else:
-        results.extend(
-            {"value": item[0], "description": to_string(item[1:])} for item in res
-        )
+        results.extend({"value": item[0], "description": to_string(item[1:])} for item in res)
 
     return results
 
@@ -301,9 +295,7 @@ def relevance_sorter(key, query, as_dict):
 
 @frappe.whitelist()
 def get_ids_for_mentions(search_term):
-    users_for_mentions = frappe.cache.get_value(
-        "users_for_mentions", get_users_for_mentions
-    )
+    users_for_mentions = frappe.cache.get_value("users_for_mentions", get_users_for_mentions)
     user_groups = frappe.cache.get_value("user_groups", get_user_groups)
 
     filtered_mentions = []
@@ -335,9 +327,7 @@ def get_users_for_mentions():
 
 
 def get_user_groups():
-    return frappe.get_all(
-        "User Group", fields=["id as id", "id as value"], update={"is_group": True}
-    )
+    return frappe.get_all("User Group", fields=["id as id", "id as value"], update={"is_group": True})
 
 
 @frappe.whitelist()
