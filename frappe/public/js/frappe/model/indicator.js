@@ -40,7 +40,7 @@ frappe.get_indicator = function (doc, doctype, show_workflow_state) {
     let workflow_fieldname = frappe.workflow.get_state_fieldname(doctype);
 
     let avoid_status_override = (frappe.workflow.avoid_status_override[doctype] || []).includes(
-        doc[workflow_fieldname]
+        doc[workflow_fieldname],
     );
     // workflow
     if (
@@ -82,28 +82,26 @@ frappe.get_indicator = function (doc, doctype, show_workflow_state) {
     if (doc.status && meta && meta.states && meta.states.find((d) => d.title === doc.status)) {
         let state = meta.states.find((d) => d.title === doc.status);
         let color_class = frappe.scrub(state.color, "-");
-        let df = meta.fields.find(x => x.fieldname === "status")
+        let df = meta.fields.find((x) => x.fieldname === "status");
         let status_txt = doc.status;
         if (df && df.fieldtype === "Select" && df.options_has_label && df.options) {
             let options = df.options.split("\n");
             for (var i = 0; i < options.length; i++) {
                 var opt = options[i];
-                var comma_index = opt.indexOf(",")
+                var comma_index = opt.indexOf(",");
                 if (comma_index === 0) {
                     if (!status_txt) {
                         status_txt = __(opt.substring(1));
                         break;
                     }
-                }
-                else if (comma_index > 0) {
+                } else if (comma_index > 0) {
                     if (status_txt === opt.substring(0, comma_index)) {
                         status_txt = __(opt.substring(comma_index + 1));
                         break;
                     }
                 }
             }
-        }
-        else {
+        } else {
             status_txt = __(doc.status);
         }
 

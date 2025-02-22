@@ -39,7 +39,7 @@ export default class BulkOperations {
 
         if (valid_docs.length > MAX_PRINT_LIMIT) {
             frappe.msgprint(
-                __("You can only print upto {0} documents at a time", [MAX_PRINT_LIMIT])
+                __("You can only print upto {0} documents at a time", [MAX_PRINT_LIMIT]),
             );
             return;
         }
@@ -143,18 +143,18 @@ export default class BulkOperations {
             } else {
                 const w = window.open(
                     "/api/method/frappe.utils.print_format.download_multi_pdf?" +
-                    "doctype=" +
-                    encodeURIComponent(this.doctype) +
-                    "&id=" +
-                    encodeURIComponent(json_string) +
-                    "&format=" +
-                    encodeURIComponent(print_format) +
-                    "&no_letterhead=" +
-                    (with_letterhead ? "0" : "1") +
-                    "&letterhead=" +
-                    encodeURIComponent(letterhead) +
-                    "&options=" +
-                    encodeURIComponent(pdf_options)
+                        "doctype=" +
+                        encodeURIComponent(this.doctype) +
+                        "&id=" +
+                        encodeURIComponent(json_string) +
+                        "&format=" +
+                        encodeURIComponent(print_format) +
+                        "&no_letterhead=" +
+                        (with_letterhead ? "0" : "1") +
+                        "&letterhead=" +
+                        encodeURIComponent(letterhead) +
+                        "&options=" +
+                        encodeURIComponent(pdf_options),
                 );
 
                 if (!w) {
@@ -198,9 +198,7 @@ export default class BulkOperations {
                 method: "frappe.desk.reportview.delete_items",
                 freeze: true,
                 freeze_message:
-                    docids.length <= 10
-                        ? __("Deleting {0} records...", [docids.length])
-                        : null,
+                    docids.length <= 10 ? __("Deleting {0} records...", [docids.length]) : null,
                 args: {
                     items: docids,
                     doctype: this.doctype,
@@ -212,7 +210,7 @@ export default class BulkOperations {
 
                 if (failed.length && !r._server_messages) {
                     frappe.throw(
-                        __("Cannot delete {0}", [failed.map((f) => f.bold()).join(", ")])
+                        __("Cannot delete {0}", [failed.map((f) => f.bold()).join(", ")]),
                     );
                 }
                 if (failed.length < docids.length) {
@@ -310,7 +308,7 @@ export default class BulkOperations {
     edit(docids, field_mappings, done) {
         let field_options = Object.keys(field_mappings).sort(function (a, b) {
             return __(cstr(field_mappings[a].label)).localeCompare(
-                cstr(__(field_mappings[b].label))
+                cstr(__(field_mappings[b].label)),
             );
         });
         const status_regex = /status/i;
@@ -364,7 +362,7 @@ export default class BulkOperations {
                             frappe.throw(
                                 __("Cannot update {0}", [
                                     failed.map((f) => (f.bold ? f.bold() : f)).join(", "),
-                                ])
+                                ]),
                             );
                         }
                         done();
@@ -396,11 +394,10 @@ export default class BulkOperations {
                     if (df.options_has_label) {
                         for (var i = 0; i < options.length; i++) {
                             var opt = options[i];
-                            var comma_index = opt.indexOf(",")
+                            var comma_index = opt.indexOf(",");
                             if (comma_index === 0) {
                                 options[i] = "";
-                            }
-                            else if (comma_index > 0) {
+                            } else if (comma_index > 0) {
                                 options[i] = opt.substring(0, comma_index);
                             }
                         }
@@ -423,7 +420,7 @@ export default class BulkOperations {
                 dialog.set_df_property(
                     "value",
                     "description",
-                    __("You have not entered a value. The field will be set to empty.")
+                    __("You have not entered a value. The field will be set to empty."),
                 );
             } else {
                 dialog.set_df_property("value", "description", "");
@@ -476,7 +473,7 @@ export default class BulkOperations {
         frappe.require("data_import_tools.bundle.js", () => {
             const data_exporter = new frappe.data_import.DataExporter(
                 doctype,
-                "Insert New Records"
+                "Insert New Records",
             );
             data_exporter.dialog.set_value("export_records", "by_filter");
             data_exporter.filter_group.add_filters_to_filter_group([

@@ -157,9 +157,9 @@ frappe.views.BaseList = class BaseList {
         return frappe.model.with_doctype(this.doctype);
     }
 
-    show_skeleton() { }
+    show_skeleton() {}
 
-    hide_skeleton() { }
+    hide_skeleton() {}
 
     check_permissions() {
         return true;
@@ -213,7 +213,7 @@ frappe.views.BaseList = class BaseList {
 
             this.views_menu = this.page.add_custom_button_group(
                 label_map[this.view_name] || label_map["List"],
-                icon_map[this.view_name] || "list"
+                icon_map[this.view_name] || "list",
             );
             this.views_list = new frappe.views.ListViewSelect({
                 doctype: this.doctype,
@@ -232,7 +232,7 @@ frappe.views.BaseList = class BaseList {
             const $secondary_action = this.page.set_secondary_action(
                 this.secondary_action.label,
                 this.secondary_action.action,
-                this.secondary_action.icon
+                this.secondary_action.icon,
             );
             if (!this.secondary_action.icon) {
                 $secondary_action.addClass("hidden-xs");
@@ -246,7 +246,7 @@ frappe.views.BaseList = class BaseList {
                     this.refresh();
                 },
                 "",
-                __("Reload List")
+                __("Reload List"),
             );
         }
     }
@@ -263,7 +263,7 @@ frappe.views.BaseList = class BaseList {
                     item.label,
                     item.action,
                     item.standard,
-                    item.shortcut
+                    item.shortcut,
                 );
                 if (item.class) {
                     $item && $item.addClass(item.class);
@@ -310,7 +310,7 @@ frappe.views.BaseList = class BaseList {
                 this.setup_no_result_area,
                 this.setup_freeze_area,
                 this.setup_paging_area,
-            ].map((fn) => fn.bind(this))
+            ].map((fn) => fn.bind(this)),
         );
     }
 
@@ -376,15 +376,15 @@ frappe.views.BaseList = class BaseList {
 				<div class="level-left">
 					<div class="btn-group">
 						${paging_values
-                .map(
-                    (value) => `
+                            .map(
+                                (value) => `
 							<button type="button" class="btn btn-default btn-sm btn-paging"
 								data-value="${value}">
 								${value}
 							</button>
-						`
-                )
-                .join("")}
+						`,
+                            )
+                            .join("")}
 					</div>
 				</div>
 				<div class="level-right">
@@ -392,7 +392,7 @@ frappe.views.BaseList = class BaseList {
 						${__("Load More")}
 					</button>
 				</div>
-			</div>`
+			</div>`,
         ).hide();
         this.$frappe_list.append(this.$paging_area);
 
@@ -553,9 +553,9 @@ frappe.views.BaseList = class BaseList {
         // show a freeze message while data is loading
     }
 
-    before_render() { }
+    before_render() {}
 
-    after_render() { }
+    after_render() {}
 
     render() {
         // for child classes
@@ -600,7 +600,7 @@ class FilterArea {
             : this.list_view.page.page_form;
 
         this.list_view.$filter_section = $('<div class="filter-section flex">').appendTo(
-            filter_area
+            filter_area,
         );
 
         this.$filter_list_wrapper = this.list_view.$filter_section;
@@ -608,7 +608,7 @@ class FilterArea {
 
         this.debounced_refresh_list_view = frappe.utils.debounce(
             this.refresh_list_view.bind(this),
-            300
+            300,
         );
         this.setup();
     }
@@ -765,7 +765,7 @@ class FilterArea {
 
     make_standard_filters() {
         this.standard_filters_wrapper = this.list_view.page.page_form.find(
-            ".standard-filter-section"
+            ".standard-filter-section",
         );
         let fields = [];
 
@@ -795,7 +795,7 @@ class FilterArea {
                 .filter(
                     (df) =>
                         df.fieldname === title_field ||
-                        (df.in_standard_filter && frappe.model.is_value_type(df.fieldtype))
+                        (df.in_standard_filter && frappe.model.is_value_type(df.fieldtype)),
                 )
                 .map((df) => {
                     let options = df.options;
@@ -824,11 +824,10 @@ class FilterArea {
                         if (df.options_has_label) {
                             for (var i = 0; i < options.length; i++) {
                                 var opt = options[i];
-                                var comma_index = opt.indexOf(",")
+                                var comma_index = opt.indexOf(",");
                                 if (comma_index === 0) {
                                     options[i] = "";
-                                }
-                                else if (comma_index > 0) {
+                                } else if (comma_index > 0) {
                                     options[i] = opt.substring(0, comma_index);
                                 }
                             }
@@ -857,7 +856,7 @@ class FilterArea {
                         ignore_link_validation: fieldtype === "Dynamic Link",
                         is_filter: 1,
                     };
-                })
+                }),
         );
 
         fields.map((df) => {

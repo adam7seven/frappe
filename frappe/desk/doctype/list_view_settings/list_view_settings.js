@@ -2,6 +2,6 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("List View Settings", {
-	// refresh: function(frm) {
-	// }
+    // refresh: function(frm) {
+    // }
 });

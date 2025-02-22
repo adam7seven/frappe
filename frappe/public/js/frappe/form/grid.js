@@ -164,7 +164,7 @@ export default class Grid {
 
     set_doc_url() {
         let unsupported_fieldtypes = frappe.model.no_value_type.filter(
-            (x) => frappe.model.table_fields.indexOf(x) === -1
+            (x) => frappe.model.table_fields.indexOf(x) === -1,
         );
 
         if (
@@ -311,11 +311,11 @@ export default class Grid {
 
         this.remove_rows_button.toggleClass(
             "hidden",
-            this.wrapper.find(".grid-body .grid-row-check:checked:first").length ? false : true
+            this.wrapper.find(".grid-body .grid-row-check:checked:first").length ? false : true,
         );
 
         let select_all_checkbox_checked = this.wrapper.find(
-            ".grid-heading-row .grid-row-check:checked:first"
+            ".grid-heading-row .grid-row-check:checked:first",
         ).length;
         let show_delete_all_btn =
             select_all_checkbox_checked && this.data.length > this.get_selected_children().length;
@@ -417,7 +417,7 @@ export default class Grid {
             this.display_status = frappe.perm.get_field_display_status(
                 this.df,
                 this.frm.doc,
-                this.perm
+                this.perm,
             );
         } else if (this.df.is_web_form && this.control) {
             this.display_status = this.control.get_status();
@@ -551,7 +551,7 @@ export default class Grid {
             this.df = frappe.meta.get_docfield(
                 this.frm.doctype,
                 this.df.fieldname,
-                this.frm.docid
+                this.frm.docid,
             );
         } else {
             // use non-doc specific docfield
@@ -606,7 +606,7 @@ export default class Grid {
                     this.frm.script_manager.trigger(
                         this.df.fieldname + "_move",
                         this.df.options,
-                        doc.id
+                        doc.id,
                     );
                 this.refresh();
                 this.frm && this.frm.dirty();
@@ -825,7 +825,7 @@ export default class Grid {
                     this.frm.doc,
                     this.df.options,
                     this.df.fieldname,
-                    idx
+                    idx,
                 );
                 if (copy_doc) {
                     d = this.duplicate_row(d, copy_doc);
@@ -1113,7 +1113,7 @@ export default class Grid {
                         },
                         on_success(file) {
                             var data = frappe.utils.csv_to_array(
-                                frappe.utils.get_decoded_string(file.dataurl)
+                                frappe.utils.get_decoded_string(file.dataurl),
                             );
                             // row #2 contains fieldnames;
                             var fieldnames = data[2];
@@ -1134,7 +1134,7 @@ export default class Grid {
                                             var fieldname = fieldnames[ci];
                                             var df = frappe.meta.get_docfield(
                                                 me.df.options,
-                                                fieldname
+                                                fieldname,
                                             );
                                             if (df) {
                                                 d[fieldnames[ci]] = value_formatter_map[

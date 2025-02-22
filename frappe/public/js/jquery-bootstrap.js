@@ -16,16 +16,16 @@ window.jQuery = jQuery;
 window.$ = jQuery;
 
 export {
-	Util,
-	Alert,
-	Button,
-	Carousel,
-	Collapse,
-	Dropdown,
-	Modal,
-	Popover,
-	Scrollspy,
-	Tab,
-	Toast,
-	Tooltip,
+    Util,
+    Alert,
+    Button,
+    Carousel,
+    Collapse,
+    Dropdown,
+    Modal,
+    Popover,
+    Scrollspy,
+    Tab,
+    Toast,
+    Tooltip,
 };

@@ -24,7 +24,7 @@ license.bind_events = function () {
                                 message: __("The license import successfully"),
                                 indicator: "green",
                             },
-                            5
+                            5,
                         );
                         setTimeout(() => {
                             window.location.reload(true);

@@ -86,7 +86,7 @@ $.extend(frappe.model, {
 
         // Table types should be initialized
         let fieldtypes_without_default = frappe.model.no_value_type.filter(
-            (fieldtype) => !frappe.model.table_fields.includes(fieldtype)
+            (fieldtype) => !frappe.model.table_fields.includes(fieldtype),
         );
         docfields.forEach((f) => {
             if (
@@ -114,12 +114,14 @@ $.extend(frappe.model, {
                 //���ѡ���а������ţ��򰴶��Ÿ��
                 for (var i = 0; i < options.length; i++) {
                     var opt = options[i];
-                    var comma_index = opt.indexOf(",")
+                    var comma_index = opt.indexOf(",");
                     if (comma_index === 0) {
                         options[i] = { label: __(opt.substring(1)), value: "" };
-                    }
-                    else if (comma_index > 0) {
-                        options[i] = { label: __(opt.substring(comma_index + 1)), value: opt.substring(0, comma_index) };
+                    } else if (comma_index > 0) {
+                        options[i] = {
+                            label: __(opt.substring(comma_index + 1)),
+                            value: opt.substring(0, comma_index),
+                        };
                     }
                 }
                 doc[f.fieldname] = options[0];
@@ -149,7 +151,7 @@ $.extend(frappe.model, {
         if (user_permissions) {
             ({ allowed_records, default_doc } = frappe.perm.filter_allowed_docs_for_doctype(
                 user_permissions[df.options],
-                doc.doctype
+                doc.doctype,
             ));
         }
         var meta = frappe.get_meta(doc.doctype);
@@ -337,7 +339,7 @@ $.extend(frappe.model, {
     open_mapped_doc: function (opts) {
         if (opts.frm && opts.frm.doc.__unsaved) {
             frappe.throw(
-                __("You have unsaved changes in this form. Please save before you continue.")
+                __("You have unsaved changes in this form. Please save before you continue."),
             );
         } else if (!opts.source_id && opts.frm) {
             opts.source_id = opts.frm.doc.id;
@@ -360,10 +362,7 @@ $.extend(frappe.model, {
                 if (!r.exc) {
                     frappe.model.sync(r.message);
                     if (opts.run_link_triggers) {
-                        frappe.get_doc(
-                            r.message.doctype,
-                            r.message.id
-                        ).__run_link_triggers = true;
+                        frappe.get_doc(r.message.doctype, r.message.id).__run_link_triggers = true;
                     }
                     frappe.set_route("Form", r.message.doctype, r.message.id);
                 }

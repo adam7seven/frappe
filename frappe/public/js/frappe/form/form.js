@@ -301,7 +301,7 @@ frappe.ui.form.Form = class FrappeForm {
                     me.layout.refresh_sections();
                     return me.script_manager.trigger(fieldname, doc.doctype, doc.id);
                 }
-            }
+            },
         );
 
         // on table fields
@@ -473,7 +473,7 @@ frappe.ui.form.Form = class FrappeForm {
                                 () => {
                                     this.execute_action(action);
                                 },
-                                action.group
+                                action.group,
                             );
                         }
                     }
@@ -690,11 +690,7 @@ frappe.ui.form.Form = class FrappeForm {
             }
         }
 
-        if (
-            this.meta.autoid &&
-            this.meta.autoid.substr(0, 6) == "field:" &&
-            !this.doc.__islocal
-        ) {
+        if (this.meta.autoid && this.meta.autoid.substr(0, 6) == "field:" && !this.doc.__islocal) {
             var fn = this.meta.autoid.substr(6);
 
             if (this.doc[fn]) {
@@ -863,11 +859,11 @@ frappe.ui.form.Form = class FrappeForm {
                             },
                             btn,
                             () => me.handle_save_fail(btn, on_error),
-                            resolve
+                            resolve,
                         );
                     });
                 },
-                () => me.handle_save_fail(btn, on_error)
+                () => me.handle_save_fail(btn, on_error),
             );
         });
     }
@@ -945,7 +941,7 @@ frappe.ui.form.Form = class FrappeForm {
                     },
                 ],
             },
-            () => me.handle_save_fail(btn, on_error)
+            () => me.handle_save_fail(btn, on_error),
         );
 
         // if user can cancel all linked docs, add action to the dialog
@@ -1001,7 +997,7 @@ frappe.ui.form.Form = class FrappeForm {
             frappe.confirm(
                 __("Permanently Cancel {0}?", [this.docid]),
                 cancel_doc,
-                me.handle_save_fail(btn, on_error)
+                me.handle_save_fail(btn, on_error),
             );
         }
     }
@@ -1027,7 +1023,7 @@ frappe.ui.form.Form = class FrappeForm {
             .then((is_amended) => {
                 if (is_amended) {
                     frappe.throw(
-                        __("This document is already amended, you cannot ammend it again")
+                        __("This document is already amended, you cannot ammend it again"),
                     );
                 }
                 this.validate_form_action("Amend");
@@ -1068,8 +1064,8 @@ frappe.ui.form.Form = class FrappeForm {
                 __(
                     "No permission to '{0}' {1}",
                     [__(action), __(this.doc.doctype)],
-                    "{0} = verb, {1} = object"
-                )
+                    "{0} = verb, {1} = object",
+                ),
             );
         }
     }
@@ -1125,10 +1121,10 @@ frappe.ui.form.Form = class FrappeForm {
                 this.dashboard.clear_headline();
                 this.dashboard.set_headline_alert(
                     __("This form has been modified after you have loaded it") +
-                    '<button class="btn btn-xs btn-primary pull-right" onclick="cur_frm.reload_doc()">' +
-                    __("Refresh") +
-                    "</button>",
-                    "alert-warning"
+                        '<button class="btn btn-xs btn-primary pull-right" onclick="cur_frm.reload_doc()">' +
+                        __("Refresh") +
+                        "</button>",
+                    "alert-warning",
                 );
             } else {
                 this.debounced_reload_doc();
@@ -1162,7 +1158,7 @@ frappe.ui.form.Form = class FrappeForm {
     add_web_link(path, label) {
         label = __(label) || __("See on Website");
         this.web_link = this.sidebar
-            .add_user_action(__(label), function () { })
+            .add_user_action(__(label), function () {})
             .attr("href", path || this.doc.route)
             .attr("target", "_blank");
     }
@@ -1224,7 +1220,7 @@ frappe.ui.form.Form = class FrappeForm {
         }
 
         frappe.re_route[frappe.router.get_sub_path()] = `${encodeURIComponent(
-            frappe.router.slug(this.doctype)
+            frappe.router.slug(this.doctype),
         )}/${encodeURIComponent(id)}`;
         !frappe._from_link && frappe.set_route("Form", this.doctype, id);
     }
@@ -1235,7 +1231,7 @@ frappe.ui.form.Form = class FrappeForm {
         if (this.is_dirty()) {
             frappe.toast({
                 message: __(
-                    "This document has unsaved changes which might not appear in final PDF. <br> Consider saving the document before printing."
+                    "This document has unsaved changes which might not appear in final PDF. <br> Consider saving the document before printing.",
                 ),
                 indicator: "yellow",
             });
@@ -1477,7 +1473,7 @@ frappe.ui.form.Form = class FrappeForm {
             if (docfield) {
                 var label = __(docfield.label || "", null, docfield.parent).replace(
                     /\([^\)]*\)/g,
-                    ""
+                    "",
                 ); // eslint-disable-line
                 if (parentfield) {
                     grid_field_label_map[doctype + "-" + fname] =
@@ -1541,7 +1537,7 @@ frappe.ui.form.Form = class FrappeForm {
                 df = frappe.meta.get_docfield(
                     filtered_fields[0].parent,
                     table_field,
-                    table_row_id
+                    table_row_id,
                 );
             }
         }
@@ -1607,7 +1603,7 @@ frappe.ui.form.Form = class FrappeForm {
         var doc = frappe.model.add_child(
             this.doc,
             frappe.meta.get_docfield(this.doctype, fieldname).options,
-            fieldname
+            fieldname,
         );
         if (values) {
             // Values of unique keys should not be overridden
@@ -1647,7 +1643,7 @@ frappe.ui.form.Form = class FrappeForm {
                                 me.doc,
                                 fieldobj.df.options,
                                 fieldobj.df.fieldname,
-                                idx + 1
+                                idx + 1,
                             );
 
                             // Don't set standard field, avoid mutating input too.
@@ -1667,7 +1663,7 @@ frappe.ui.form.Form = class FrappeForm {
                             f,
                             v,
                             me.fieldtype,
-                            skip_dirty_trigger
+                            skip_dirty_trigger,
                         );
                     }
                 }
@@ -1768,7 +1764,7 @@ frappe.ui.form.Form = class FrappeForm {
             this.doc[fieldname],
             frappe.meta.get_docfield(this.doctype, fieldname, this.docid),
             { no_icon: true },
-            this.doc
+            this.doc,
         );
     }
 
@@ -1823,7 +1819,7 @@ frappe.ui.form.Form = class FrappeForm {
             value,
             df,
             options,
-            doc
+            doc,
         ) {
             if (value) {
                 var label;
@@ -1922,9 +1918,7 @@ frappe.ui.form.Form = class FrappeForm {
         frappe.model
             .get_children(this.doc, table_fieldname)
             .filter((child) => !frappe.model.has_value(child.doctype, child.id, fieldname))
-            .forEach((child) =>
-                frappe.model.set_value(child.doctype, child.id, fieldname, value)
-            );
+            .forEach((child) => frappe.model.set_value(child.doctype, child.id, fieldname, value));
     }
 
     get_sum(table_fieldname, fieldname) {
@@ -2023,7 +2017,7 @@ frappe.ui.form.Form = class FrappeForm {
         reference_doctype,
         filter_function,
         default_options = [],
-        table_fieldname
+        table_fieldname,
     ) {
         if (!reference_doctype) return Promise.resolve();
         let options = default_options || [];
@@ -2040,7 +2034,7 @@ frappe.ui.form.Form = class FrappeForm {
                         "options",
                         options,
                         this.doc.id,
-                        table_fieldname
+                        table_fieldname,
                     );
                 resolve(options);
             });
@@ -2072,7 +2066,7 @@ frappe.ui.form.Form = class FrappeForm {
             docinfo.communications.map((d) => d.sender && d.delivery_status === "sent"),
             docinfo.comments.map((d) => d.owner),
             docinfo.versions.map((d) => d.owner),
-            docinfo.assignments.map((d) => d.owner)
+            docinfo.assignments.map((d) => d.owner),
         );
 
         return involved_users
@@ -2121,10 +2115,10 @@ frappe.ui.form.Form = class FrappeForm {
 						</div>
 						<div class="col-md-6">
 							<a href='/app/submission-queue?ref_doctype=${encodeURIComponent(
-                            this.doctype
-                        )}&ref_docid=${encodeURIComponent(this.docid)}'>${__(
-                            "All Submissions"
-                        )}</a>
+                                this.doctype,
+                            )}&ref_docid=${encodeURIComponent(this.docid)}'>${__(
+                                "All Submissions",
+                            )}</a>
 						`;
                     }
 

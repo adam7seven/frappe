@@ -283,7 +283,7 @@ Object.assign(frappe.utils, {
 
         return String(txt).replace(
             /&amp;|&lt;|&gt;|&quot;|&#39;|&#x60;|&#x3D;/g,
-            (char) => unescape_html_mapping[char] || char
+            (char) => unescape_html_mapping[char] || char,
         );
     },
 
@@ -315,7 +315,7 @@ Object.assign(frappe.utils, {
         content.find("blockquote").parent("blockquote").addClass("hidden").before(
             '<p><a class="text-muted btn btn-default toggle-blockquote" style="padding: 2px 7px 0px; line-height: 1;"> \
 					• • • \
-				</a></p>'
+				</a></p>',
         );
         return content.html();
     },
@@ -325,7 +325,7 @@ Object.assign(frappe.utils, {
         additional_offset,
         element_to_be_scrolled,
         callback,
-        highlight_element = false
+        highlight_element = false,
     ) {
         if (frappe.flags.disable_auto_scroll) return;
 
@@ -352,7 +352,7 @@ Object.assign(frappe.utils, {
                     function () {
                         $(element).removeClass("highlight");
                     },
-                    { once: true }
+                    { once: true },
                 );
             }
         };
@@ -525,7 +525,7 @@ Object.assign(frappe.utils, {
                         "Paid",
                         "Success",
                     ],
-                    text
+                    text,
                 )
             ) {
                 style = "success";
@@ -742,7 +742,7 @@ Object.assign(frappe.utils, {
                 '([^"\\' +
                 strDelimiter +
                 "\\r\\n]*))",
-            "gi"
+            "gi",
         );
 
         // Create an array to hold our data. Give the array
@@ -921,7 +921,7 @@ Object.assign(frappe.utils, {
         id,
         html = false,
         display_text = null,
-        query_params_obj = null
+        query_params_obj = null,
     ) {
         display_text = display_text || id;
         id = encodeURIComponent(id);
@@ -1398,8 +1398,8 @@ Object.assign(frappe.utils, {
         if (summary.type == "separator") {
             return $(`<div class="summary-separator">
 				<div class="summary-value ${summary.color ? summary.color.toLowerCase() : "text-muted"}">${
-                summary.value
-            }</div>
+                    summary.value
+                }</div>
 			</div>`);
         }
         let df = { fieldtype: summary.datatype };
@@ -1413,8 +1413,8 @@ Object.assign(frappe.utils, {
         let color = summary.indicator
             ? summary.indicator.toLowerCase()
             : summary.color
-            ? summary.color.toLowerCase()
-            : "";
+              ? summary.color.toLowerCase()
+              : "";
 
         return $(`<div class="summary-item">
 			<span class="summary-label">${__(summary.label)}</span>
@@ -1436,8 +1436,8 @@ Object.assign(frappe.utils, {
                     (letterhead ? "0" : "1") +
                     "&letterhead=" +
                     encodeURIComponent(letterhead) +
-                    (lang_code ? "&_lang=" + lang_code : "")
-            )
+                    (lang_code ? "&_lang=" + lang_code : ""),
+            ),
         );
 
         if (!w) {
@@ -1456,7 +1456,7 @@ Object.assign(frappe.utils, {
     add_custom_button(html, action, class_name = "", title = "", btn_type, wrapper, prepend) {
         if (!btn_type) btn_type = "btn-secondary";
         let button = $(
-            `<button class="btn ${btn_type} btn-xs ${class_name}" title="${title}">${html}</button>`
+            `<button class="btn ${btn_type} btn-xs ${class_name}" title="${title}">${html}</button>`,
         );
         button.click((event) => {
             event.stopPropagation();
@@ -1772,10 +1772,10 @@ Object.assign(frappe.utils, {
                     __("Tracking URL generated and copied to clipboard") +
                         ": <br>" +
                         `<a href="${url}">${url.bold()}</a>`,
-                    __("Here's your tracking URL")
+                    __("Here's your tracking URL"),
                 );
             },
-            __("Generate Tracking URL")
+            __("Generate Tracking URL"),
         );
     },
 });

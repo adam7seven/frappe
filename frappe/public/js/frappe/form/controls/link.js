@@ -301,13 +301,13 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
                         let filter_string = me.df.filter_description
                             ? me.df.filter_description
                             : args.filters
-                                ? me.get_filter_description(args.filters)
-                                : null;
+                              ? me.get_filter_description(args.filters)
+                              : null;
                         if (filter_string) {
                             r.message.push({
                                 html: `<span class="text-muted" style="line-height: 1.5">${filter_string}</span>`,
                                 value: "",
-                                action: () => { },
+                                action: () => {},
                             });
                         }
 
@@ -358,7 +358,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
                         });
                     },
                 });
-            }, 500)
+            }, 500),
         );
 
         this.$input.on("blur", function () {
@@ -584,7 +584,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
                 var q = get_query(
                     (this.frm && this.frm.doc) || this.doc,
                     this.doctype,
-                    this.docid
+                    this.docid,
                 );
 
                 if (typeof q === "string") {
@@ -681,7 +681,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
                         this.docid,
                         target_field,
                         field_value,
-                        this.df.fieldtype
+                        this.df.fieldtype,
                     );
                 }
             }

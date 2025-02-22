@@ -51,7 +51,7 @@ export default class GridRow {
             frappe.meta.make_docfield_copy_for(
                 this.parent_df.options,
                 this.doc.id,
-                this.docfields
+                this.docfields,
             );
             const docfields = frappe.meta.get_docfields(this.parent_df.options, this.doc.id);
             if (update) {
@@ -59,7 +59,7 @@ export default class GridRow {
                 this.docfields.forEach((df) => {
                     Object.assign(
                         df,
-                        docfields.find((d) => d.fieldname === df.fieldname)
+                        docfields.find((d) => d.fieldname === df.fieldname),
                     );
                 });
             } else {
@@ -105,7 +105,7 @@ export default class GridRow {
                             return this.frm.script_manager.trigger(
                                 "before_" + this.grid.df.fieldname + "_remove",
                                 this.doc.doctype,
-                                this.doc.id
+                                this.doc.id,
                             );
                         },
                         () => {
@@ -114,7 +114,7 @@ export default class GridRow {
                             this.frm.script_manager.trigger(
                                 this.grid.df.fieldname + "_remove",
                                 this.doc.doctype,
-                                this.doc.id
+                                this.doc.id,
                             );
                             this.frm.dirty();
                             this.grid.refresh();
@@ -187,7 +187,7 @@ export default class GridRow {
                 $(me.frm.wrapper).trigger("grid-move-row", [me.frm, me]);
             },
             __("Move To"),
-            "Update"
+            "Update",
         );
     }
     refresh() {
@@ -221,7 +221,7 @@ export default class GridRow {
         // row index
         if (!this.row_index) {
             this.row_index = $(
-                `<div class="template-row-index">${this.row_check_html}<span></span></div>`
+                `<div class="template-row-index">${this.row_check_html}<span></span></div>`,
             ).appendTo(this.row);
         }
 
@@ -236,7 +236,7 @@ export default class GridRow {
                     doc: this.doc ? frappe.get_format_helper(this.doc) : null,
                     frm: this.frm,
                     row: this,
-                })
+                }),
             );
     }
     render_row(refresh) {
@@ -254,13 +254,13 @@ export default class GridRow {
             this.row_check = $(
                 `<div class="row-check sortable-handle col">
                     ${this.row_check_html}
-                </div>`
+                </div>`,
             ).appendTo(this.row);
 
             this.row_index = $(
                 `<div class="row-index sortable-handle col">
                     <span>${txt}</span>
-                </div>`
+                </div>`,
             )
                 .appendTo(this.row)
                 .on("click", function (e) {
@@ -274,7 +274,7 @@ export default class GridRow {
             this.row_index = $(
                 `<div class="row-index col search">
                     <input type="text" class="form-control input-xs text-center" >
-                </div>`
+                </div>`,
             ).appendTo(this.row);
 
             this.row_index.find("input").on(
@@ -295,13 +295,13 @@ export default class GridRow {
 
                     this.grid.grid_sortable.option(
                         "disabled",
-                        Object.keys(this.grid.filter).length !== 0
+                        Object.keys(this.grid.filter).length !== 0,
                     );
 
                     this.grid.prevent_build = true;
                     me.grid.refresh();
                     this.grid.prevent_build = false;
-                }, 500)
+                }, 500),
             );
             frappe.utils.only_allow_num_decimal(this.row_index.find("input"));
         }
@@ -452,7 +452,7 @@ export default class GridRow {
 
     column_selector_for_dialog() {
         let docfields = this.prepare_columns_for_dialog(
-            this.selected_columns_for_grid.map((field) => field.fieldname)
+            this.selected_columns_for_grid.map((field) => field.fieldname),
         );
 
         let d = new frappe.ui.Dialog({
@@ -515,7 +515,7 @@ export default class GridRow {
         // First, add selected fields
         selected_fields.forEach((selectedField) => {
             const selectedColumn = this.docfields.find(
-                (column) => column.fieldname === selectedField
+                (column) => column.fieldname === selectedField,
             );
             if (selectedColumn && !selectedColumn.hidden && show_field(selectedColumn.fieldtype)) {
                 fields.push({
@@ -552,8 +552,9 @@ export default class GridRow {
 
                 fields += `
                     <div class='control-input flex align-center form-control fields_order sortable-handle sortable'
-                        style='display: block; margin-bottom: 5px; padding: 0 8px; cursor: pointer; height: 32px;' data-fieldname='${docfield.fieldname
-                    }'
+                        style='display: block; margin-bottom: 5px; padding: 0 8px; cursor: pointer; height: 32px;' data-fieldname='${
+                            docfield.fieldname
+                        }'
                         data-label='${docfield.label}' data-type='${docfield.fieldtype}'>
 
                         <div class='row'>
@@ -712,19 +713,17 @@ export default class GridRow {
             if (this.doc && df.fieldtype === "Select") {
                 if (!df.options_has_label) {
                     txt = __(txt);
-                }
-                else {
+                } else {
                     let options = df.options.split("\n");
                     for (var i = 0; i < options.length; i++) {
                         var opt = options[i];
-                        var comma_index = opt.indexOf(",")
+                        var comma_index = opt.indexOf(",");
                         if (comma_index === 0) {
                             if (!txt) {
                                 txt = __(opt.substring(1));
                                 break;
                             }
-                        }
-                        else if (comma_index > 0) {
+                        } else if (comma_index > 0) {
                             if (txt === opt.substring(0, comma_index)) {
                                 txt = __(opt.substring(comma_index + 1));
                                 break;
@@ -802,11 +801,7 @@ export default class GridRow {
                 frappe.throw(__('Invalid "depends_on" expression'));
             }
         } else if (expression.substr(0, 3) == "fn:" && this.frm) {
-            out = this.frm.script_manager.trigger(
-                expression.substr(3),
-                this.doctype,
-                this.docid
-            );
+            out = this.frm.script_manager.trigger(expression.substr(3), this.doctype, this.docid);
         } else {
             var value = doc[expression];
             if ($.isArray(value)) {
@@ -845,7 +840,7 @@ export default class GridRow {
         }
 
         let $col = $(
-            '<div class="col grid-static-col col-xs-' + colsize + ' search"></div>'
+            '<div class="col grid-static-col col-xs-' + colsize + ' search"></div>',
         ).appendTo(this.row);
 
         let $search_input = $(`
@@ -875,7 +870,7 @@ export default class GridRow {
                 if (this.grid.grid_sortable) {
                     this.grid.grid_sortable.option(
                         "disabled",
-                        Object.keys(this.grid.filter).length !== 0
+                        Object.keys(this.grid.filter).length !== 0,
                     );
                 }
 
@@ -883,7 +878,7 @@ export default class GridRow {
                 this.grid.grid_pagination.go_to_page(1);
                 this.grid.refresh();
                 this.grid.prevent_build = false;
-            }, 500)
+            }, 500),
         );
 
         ["Currency", "Float", "Int", "Percent", "Rating"].includes(df.fieldtype) &&
@@ -967,7 +962,7 @@ export default class GridRow {
         }
 
         var $col = $(
-            '<div class="col grid-static-col col-xs-' + colsize + " " + add_class + '"></div>'
+            '<div class="col grid-static-col col-xs-' + colsize + " " + add_class + '"></div>',
         )
             .attr("data-fieldname", df.fieldname)
             .attr("data-fieldtype", df.fieldtype)
@@ -1283,7 +1278,7 @@ export default class GridRow {
                 is_down_arrow_key_press,
                 false,
                 is_down_arrow_key_press,
-                !is_down_arrow_key_press
+                !is_down_arrow_key_press,
             );
             idx = is_down_arrow_key_press ? cint(this.grid.grid_rows.length) - 1 : 0;
         } else if (ctrl_key) {
@@ -1359,7 +1354,7 @@ export default class GridRow {
             this.grid.cannot_add_rows || (this.grid.df && this.grid.df.cannot_add_rows);
         this.wrapper
             .find(
-                ".grid-insert-row-below, .grid-insert-row, .grid-duplicate-row, .grid-append-row"
+                ".grid-insert-row-below, .grid-insert-row, .grid-duplicate-row, .grid-append-row",
             )
             .toggle(!cannot_add_rows);
 
@@ -1448,14 +1443,13 @@ export default class GridRow {
                 let options = df.options.split("\n");
                 for (var i = 0; i < options.length; i++) {
                     var opt = options[i];
-                    var comma_index = opt.indexOf(",")
+                    var comma_index = opt.indexOf(",");
                     if (comma_index === 0) {
                         if (!txt) {
                             txt = __(opt.substring(1));
                             break;
                         }
-                    }
-                    else if (comma_index > 0) {
+                    } else if (comma_index > 0) {
                         if (txt === opt.substring(0, comma_index)) {
                             txt = __(opt.substring(comma_index + 1));
                             break;
