@@ -23,9 +23,7 @@ frappe.ui.form.ControlSignature = class ControlSignature extends frappe.ui.form.
 			<div class="missing-image attach-missing-image">
 				${frappe.utils.icon("restriction", "md")}</i>
 			</div></div>`).prependTo(this.$input_wrapper);
-        this.img = $("<img class='img-responsive attach-image-display'>")
-            .appendTo(this.img_wrapper)
-            .toggle(false);
+        this.img = $("<img class='img-responsive attach-image-display'>").appendTo(this.img_wrapper).toggle(false);
     }
 
     make_pad() {
@@ -38,7 +36,7 @@ frappe.ui.form.ControlSignature = class ControlSignature extends frappe.ui.form.
                     decorColor: "black",
                     width,
                     lineWidth: 2,
-                    backgroundColor: "var(--control-bg)",
+                    backgroundColor: "var(--control-bg)"
                 })
                 .on("change", this.on_save_sign.bind(this));
             this.load_pad();

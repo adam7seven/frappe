@@ -19,8 +19,8 @@ frappe.listview_settings["Workflow"] = {
         },
         action(doc) {
             frappe.set_route("workflow-builder", doc.id);
-        },
-    },
+        }
+    }
 };
 
 frappe.help.youtube_id["Workflow"] = "yObJUg9FxFs";

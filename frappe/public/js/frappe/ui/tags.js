@@ -17,8 +17,7 @@ frappe.ui.Tags = class {
         this.$input = $(`<input class="tags-input form-control"></input>`);
 
         this.$inputWrapper = this.get_list_element(this.$input);
-        this.$placeholder =
-            $(`<button class="add-tags-btn text-muted btn btn-link icon-btn" id="add_tags">
+        this.$placeholder = $(`<button class="add-tags-btn text-muted btn btn-link icon-btn" id="add_tags">
 				${__(placeholder)}
 			</button>`);
         this.$placeholder.appendTo(this.$ul.find(".form-sidebar-items"));
@@ -37,7 +36,7 @@ frappe.ui.Tags = class {
             me.$input.val("");
         };
 
-        this.$input.keypress((e) => {
+        this.$input.keypress(e => {
             if (e.which == 13 || e.keyCode == 13) select_tag();
         });
         this.$input.focusout(select_tag);
@@ -109,7 +108,7 @@ frappe.ui.Tags = class {
                 pill_wrapper.closest(".form-tag-row").remove();
             },
             null,
-            colored,
+            colored
         );
         if (this.onTagClick) {
             $tag.on("click", ".pill-label", () => {

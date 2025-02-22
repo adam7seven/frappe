@@ -13,9 +13,9 @@ context("Report View", () => {
                 title: "Doc 1",
                 description: "Random Text",
                 enabled: 0,
-                docstatus: 1, // submit document
+                docstatus: 1 // submit document
             },
-            true,
+            true
         );
     });
 
@@ -37,10 +37,10 @@ context("Report View", () => {
         cy.call("frappe.client.get_value", {
             doctype: doctype_id,
             filters: {
-                title: "Doc 1",
+                title: "Doc 1"
             },
-            fieldname: "enabled",
-        }).then((r) => {
+            fieldname: "enabled"
+        }).then(r => {
             expect(r.message.enabled).to.equals(1);
         });
     });

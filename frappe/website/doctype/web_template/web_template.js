@@ -21,5 +21,5 @@ frappe.ui.form.on("Web Template", {
             frm.dashboard.clear_headline();
             frm.dashboard.set_headline(__("Please save to edit the template."));
         }
-    },
+    }
 });

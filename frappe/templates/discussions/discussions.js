@@ -9,23 +9,23 @@ frappe.ready(() => {
         }
     });
 
-    $(".search-field").keyup((e) => {
+    $(".search-field").keyup(e => {
         search_topic(e);
     });
 
-    $(".reply").click((e) => {
+    $(".reply").click(e => {
         show_new_topic_modal(e);
     });
 
-    $(".login-from-discussion").click((e) => {
+    $(".login-from-discussion").click(e => {
         login_from_discussion(e);
     });
 
-    $("#discussion-modal .close").click((e) => {
+    $("#discussion-modal .close").click(e => {
         $("#discussion-modal .discussions-comment").html("");
     });
 
-    $(document).on("click", ".sidebar-parent", (e) => {
+    $(document).on("click", ".sidebar-parent", e => {
         if ($(e.currentTarget).attr("aria-expanded") == "true") {
             e.stopPropagation();
         }
@@ -35,7 +35,7 @@ frappe.ready(() => {
         }, 0);
     });
 
-    $(document).on("keydown", ".discussions-comment", (e) => {
+    $(document).on("keydown", ".discussions-comment", e => {
         if (
             (e.ctrlKey || e.metaKey) &&
             (e.keyCode == 13 || e.which == 13) &&
@@ -46,7 +46,7 @@ frappe.ready(() => {
         }
     });
 
-    $(document).on("click", ".submit-discussion", (e) => {
+    $(document).on("click", ".submit-discussion", e => {
         submit_discussion(e);
     });
 
@@ -54,20 +54,20 @@ frappe.ready(() => {
         hide_sidebar();
     });
 
-    $(document).on("click", ".back-button", (e) => {
+    $(document).on("click", ".back-button", e => {
         back_to_sidebar(e);
     });
 
-    $(document).on("click", ".dismiss-reply", (e) => {
+    $(document).on("click", ".dismiss-reply", e => {
         dismiss_reply(e);
     });
 
-    $(document).on("click", ".reply-card .dropdown-menu", (e) => {
+    $(document).on("click", ".reply-card .dropdown-menu", e => {
         perform_action(e);
     });
 });
 
-const show_new_topic_modal = (e) => {
+const show_new_topic_modal = e => {
     e.preventDefault();
     $("#discussion-modal").modal("show");
     make_comment_editor($("#discussion-modal .discussions-comment"));
@@ -78,26 +78,26 @@ const show_new_topic_modal = (e) => {
 const setup_socket_io = () => {
     frappe.realtime.init(window.socketio_port || "9000");
 
-    frappe.realtime.on("publish_message", (data) => {
+    frappe.realtime.on("publish_message", data => {
         publish_message(data);
     });
 
-    frappe.realtime.on("update_message", (data) => {
+    frappe.realtime.on("update_message", data => {
         update_message(data);
     });
 
-    frappe.realtime.socket.on("delete_message", (data) => {
+    frappe.realtime.socket.on("delete_message", data => {
         delete_message(data);
     });
 };
 
-const publish_message = (data) => {
+const publish_message = data => {
     post_message_cleanup();
     data = enhance_template(data);
     insert_message(data);
 };
 
-const enhance_template = (data) => {
+const enhance_template = data => {
     data.template = hide_actions_on_conditions(data.template, data.reply_owner);
     data.template = style_avatar_frame(data.template);
     data.sidebar = style_avatar_frame(data.sidebar);
@@ -105,18 +105,15 @@ const enhance_template = (data) => {
     return data;
 };
 
-const insert_message = (data) => {
+const insert_message = data => {
     const topic = data.topic_info;
     const first_topic = !$(".reply-card").length;
     const doctype = decodeURIComponent($(".discussions-parent").attr("data-doctype"));
     const docid = decodeURIComponent($(".discussions-parent").attr("data-docid"));
-    const document_match_found =
-        doctype == topic.reference_doctype && docid == topic.reference_docid;
+    const document_match_found = doctype == topic.reference_doctype && docid == topic.reference_docid;
 
     if ($(`.discussion-on-page[data-topic=${topic.id}]`).length) {
-        $(data.template).insertBefore(
-            `.discussion-on-page[data-topic=${topic.id}] .discussion-form`,
-        );
+        $(data.template).insertBefore(`.discussion-on-page[data-topic=${topic.id}] .discussion-form`);
     } else if (!first_topic && !this.single_thread && document_match_found) {
         $(data.sidebar).insertBefore($(`.discussions-sidebar .sidebar-parent`).first());
         $(`#discussion-group`).prepend(data.new_topic_template);
@@ -137,7 +134,7 @@ const insert_message = (data) => {
     update_reply_count(topic.id);
 };
 
-const update_message = (data) => {
+const update_message = data => {
     const reply_card = $(`[data-reply=${data.reply_id}]`);
     reply_card.find(".reply-body").removeClass("hide");
     reply_card.find(".reply-edit-card").addClass("hide");
@@ -156,13 +153,13 @@ const post_message_cleanup = () => {
     this.comment_editor && this.comment_editor.set_value("comment_editor", "");
 };
 
-const update_reply_count = (topic) => {
+const update_reply_count = topic => {
     let reply_count = $(`[data-target='#t${topic}']`).find(".reply-count").text();
     reply_count = parseInt(reply_count) + 1;
     $(`[data-target='#t${topic}']`).find(".reply-count").text(reply_count);
 };
 
-const search_topic = (e) => {
+const search_topic = e => {
     let input = $(e.currentTarget).val();
 
     let topics = $(".discussions-parent .discussion-topic-title");
@@ -209,7 +206,7 @@ const has_common_substring = (str1, str2) => {
     return substring_found;
 };
 
-const submit_discussion = (e) => {
+const submit_discussion = e => {
     e.preventDefault();
     e.stopImmediatePropagation();
 
@@ -233,13 +230,13 @@ const submit_discussion = (e) => {
                 reply: reply,
                 title: title,
                 topic_id: target.closest(".discussion-on-page").attr("data-topic"),
-                reply_id: reply_id,
-            },
+                reply_id: reply_id
+            }
         });
     }
 };
 
-const login_from_discussion = (e) => {
+const login_from_discussion = e => {
     e.preventDefault();
     const redirect = $(e.currentTarget).attr("data-redirect") || window.location.href;
     window.location.href = `/login?redirect-to=${redirect}`;
@@ -254,17 +251,15 @@ const add_color_to_avatars = () => {
     });
 };
 
-const get_color_from_palette = (element) => {
+const get_color_from_palette = element => {
     const palette = frappe.get_palette(element.attr("title"));
     return { "background-color": `var(${palette[0]})`, color: `var(${palette[1]})` };
 };
 
-const style_avatar_frame = (template) => {
+const style_avatar_frame = template => {
     const $template = $(template);
     $template.find(".avatar-frame").length &&
-        $template
-            .find(".avatar-frame")
-            .css(get_color_from_palette($template.find(".avatar-frame")));
+        $template.find(".avatar-frame").css(get_color_from_palette($template.find(".avatar-frame")));
     return $template.prop("outerHTML");
 };
 
@@ -283,7 +278,7 @@ const back_to_sidebar = () => {
     $(".reply").removeClass("hide");
 };
 
-const perform_action = (e) => {
+const perform_action = e => {
     const action = $(e.target).data().action;
 
     if (action === "edit") {
@@ -293,7 +288,7 @@ const perform_action = (e) => {
     }
 };
 
-const edit_reply = (e) => {
+const edit_reply = e => {
     const reply_card = $(e.target).closest(".reply-card");
     reply_card.find(".reply-edit-card").removeClass("hide");
     reply_card.find(".reply-body").addClass("hide	");
@@ -302,16 +297,16 @@ const edit_reply = (e) => {
     make_comment_editor(reply_card.find(".discussions-comment"));
 };
 
-const delete_reply = (e) => {
+const delete_reply = e => {
     frappe.call({
         method: "frappe.website.doctype.discussion_reply.discussion_reply.delete_message",
         args: {
-            reply_id: $(e.target).closest(".reply-card").data("reply"),
-        },
+            reply_id: $(e.target).closest(".reply-card").data("reply")
+        }
     });
 };
 
-const dismiss_reply = (e) => {
+const dismiss_reply = e => {
     const reply_card = $(e.currentTarget).closest(".reply-card");
     reply_card.find(".reply-edit-card").addClass("hide");
     reply_card.find(".reply-body").removeClass("hide");
@@ -326,11 +321,11 @@ const hide_actions_on_conditions = (template, owner) => {
     return $template.prop("outerHTML");
 };
 
-const delete_message = (data) => {
+const delete_message = data => {
     $(`[data-reply=${data.reply_id}]`).addClass("hide");
 };
 
-const make_comment_editor = (element) => {
+const make_comment_editor = element => {
     this.comment_editor = new frappe.ui.FieldGroup({
         fields: [
             {
@@ -348,12 +343,12 @@ const make_comment_editor = (element) => {
                         ["link", "image"],
                         [{ list: "ordered" }, { list: "bullet" }],
                         [{ align: [] }],
-                        ["clean"],
+                        ["clean"]
                     ];
-                },
-            },
+                }
+            }
         ],
-        body: element,
+        body: element
     });
     this.comment_editor.make();
     element.find(".form-section:last").removeClass("empty-section");

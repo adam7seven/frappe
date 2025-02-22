@@ -12,7 +12,7 @@ frappe.ui.form.LinkedWith = class LinkedWith {
         $(this.dialog.body).html(
             `<div class="text-muted text-center" style="padding: 30px 0px">
 				${__("Loading")}...
-			</div>`,
+			</div>`
         );
 
         this.dialog.show();
@@ -20,16 +20,16 @@ frappe.ui.form.LinkedWith = class LinkedWith {
 
     make_dialog() {
         this.dialog = new frappe.ui.Dialog({
-            title: __("Linked With"),
+            title: __("Linked With")
         });
 
         this.dialog.on_page_show = () => {
             frappe
                 .xcall("frappe.desk.form.linked_with.get", {
                     doctype: this.frm.doctype,
-                    docid: this.frm.docid,
+                    docid: this.frm.docid
                 })
-                .then((r) => {
+                .then(r => {
                     this.frm.__linked_docs = r;
                 })
                 .then(() => this.make_html());
@@ -45,12 +45,12 @@ frappe.ui.form.LinkedWith = class LinkedWith {
             html = __("Not Linked to any record");
         } else {
             html = linked_doctypes
-                .map((doctype) => {
+                .map(doctype => {
                     const docs = linked_docs[doctype];
                     return `
 					<div class="list-item-table margin-bottom">
 						${this.make_doc_head(doctype)}
-						${docs.map((doc) => this.make_doc_row(doc, doctype)).join("")}
+						${docs.map(doc => this.make_doc_row(doc, doctype)).join("")}
 					</div>
 				`;
                 })

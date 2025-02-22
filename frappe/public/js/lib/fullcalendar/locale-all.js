@@ -18,8 +18,7 @@
             (a.m = e),
             (a.c = t),
             (a.d = function (e, t, n) {
-                a.o(e, t) ||
-                    Object.defineProperty(e, t, { configurable: !1, enumerable: !0, get: n });
+                a.o(e, t) || Object.defineProperty(e, t, { configurable: !1, enumerable: !0, get: n });
             }),
             (a.n = function (e) {
                 var t =
@@ -134,31 +133,10 @@
                     "September",
                     "Oktober",
                     "November",
-                    "Desember",
+                    "Desember"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mrt",
-                    "Apr",
-                    "Mei",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Okt",
-                    "Nov",
-                    "Des",
-                ],
-                dayNames: [
-                    "Sondag",
-                    "Maandag",
-                    "Dinsdag",
-                    "Woensdag",
-                    "Donderdag",
-                    "Vrydag",
-                    "Saterdag",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des"],
+                dayNames: ["Sondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrydag", "Saterdag"],
                 dayNamesShort: ["Son", "Maa", "Din", "Woe", "Don", "Vry", "Sat"],
                 dayNamesMin: ["So", "Ma", "Di", "Wo", "Do", "Vr", "Sa"],
                 weekHeader: "Wk",
@@ -166,7 +144,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("af", {
                     buttonText: {
@@ -174,11 +152,11 @@
                         month: "Maand",
                         week: "Week",
                         day: "Dag",
-                        list: "Agenda",
+                        list: "Agenda"
                     },
                     allDayHtml: "Heeldag",
                     eventLimitText: "Addisionele",
-                    noEventsMessage: "Daar is geen gebeurtenisse nie",
+                    noEventsMessage: "Daar is geen gebeurtenisse nie"
                 });
         },
         function (e, a, t) {
@@ -187,12 +165,10 @@
             })(0, function (e) {
                 return e.defineLocale("af", {
                     months: "Januarie_Februarie_Maart_April_Mei_Junie_Julie_Augustus_September_Oktober_November_Desember".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "Jan_Feb_Mrt_Apr_Mei_Jun_Jul_Aug_Sep_Okt_Nov_Des".split("_"),
-                    weekdays: "Sondag_Maandag_Dinsdag_Woensdag_Donderdag_Vrydag_Saterdag".split(
-                        "_",
-                    ),
+                    weekdays: "Sondag_Maandag_Dinsdag_Woensdag_Donderdag_Vrydag_Saterdag".split("_"),
                     weekdaysShort: "Son_Maa_Din_Woe_Don_Vry_Sat".split("_"),
                     weekdaysMin: "So_Ma_Di_Wo_Do_Vr_Sa".split("_"),
                     meridiemParse: /vm|nm/i,
@@ -208,7 +184,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd, D MMMM YYYY HH:mm",
+                        LLLL: "dddd, D MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[Vandag om] LT",
@@ -216,7 +192,7 @@
                         nextWeek: "dddd [om] LT",
                         lastDay: "[Gister om] LT",
                         lastWeek: "[Laas] dddd [om] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "oor %s",
@@ -232,13 +208,13 @@
                         M: "'n maand",
                         MM: "%d maande",
                         y: "'n jaar",
-                        yy: "%d jaar",
+                        yy: "%d jaar"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}(ste|de)/,
                     ordinal: function (e) {
                         return e + (1 === e || 8 === e || e >= 20 ? "ste" : "de");
                     },
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -262,40 +238,24 @@
                     "سبتمبر",
                     "أكتوبر",
                     "نوفمبر",
-                    "ديسمبر",
+                    "ديسمبر"
                 ],
                 monthNamesShort: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
-                dayNames: [
-                    "الأحد",
-                    "الاثنين",
-                    "الثلاثاء",
-                    "الأربعاء",
-                    "الخميس",
-                    "الجمعة",
-                    "السبت",
-                ],
-                dayNamesShort: [
-                    "الأحد",
-                    "الاثنين",
-                    "الثلاثاء",
-                    "الأربعاء",
-                    "الخميس",
-                    "الجمعة",
-                    "السبت",
-                ],
+                dayNames: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"],
+                dayNamesShort: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"],
                 dayNamesMin: ["ح", "ن", "ث", "ر", "خ", "ج", "س"],
                 weekHeader: "أسبوع",
                 dateFormat: "dd/mm/yy",
                 firstDay: 6,
                 isRTL: !0,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("ar-dz", {
                     buttonText: { month: "شهر", week: "أسبوع", day: "يوم", list: "أجندة" },
                     allDayText: "اليوم كله",
                     eventLimitText: "أخرى",
-                    noEventsMessage: "أي أحداث لعرض",
+                    noEventsMessage: "أي أحداث لعرض"
                 });
         },
         function (e, a, t) {
@@ -303,13 +263,8 @@
                 a(t(0));
             })(0, function (e) {
                 return e.defineLocale("ar-dz", {
-                    months: "جانفي_فيفري_مارس_أفريل_ماي_جوان_جويلية_أوت_سبتمبر_أكتوبر_نوفمبر_ديسمبر".split(
-                        "_",
-                    ),
-                    monthsShort:
-                        "جانفي_فيفري_مارس_أفريل_ماي_جوان_جويلية_أوت_سبتمبر_أكتوبر_نوفمبر_ديسمبر".split(
-                            "_",
-                        ),
+                    months: "جانفي_فيفري_مارس_أفريل_ماي_جوان_جويلية_أوت_سبتمبر_أكتوبر_نوفمبر_ديسمبر".split("_"),
+                    monthsShort: "جانفي_فيفري_مارس_أفريل_ماي_جوان_جويلية_أوت_سبتمبر_أكتوبر_نوفمبر_ديسمبر".split("_"),
                     weekdays: "الأحد_الإثنين_الثلاثاء_الأربعاء_الخميس_الجمعة_السبت".split("_"),
                     weekdaysShort: "احد_اثنين_ثلاثاء_اربعاء_خميس_جمعة_سبت".split("_"),
                     weekdaysMin: "أح_إث_ثلا_أر_خم_جم_سب".split("_"),
@@ -320,7 +275,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd D MMMM YYYY HH:mm",
+                        LLLL: "dddd D MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[اليوم على الساعة] LT",
@@ -328,7 +283,7 @@
                         nextWeek: "dddd [على الساعة] LT",
                         lastDay: "[أمس على الساعة] LT",
                         lastWeek: "dddd [على الساعة] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "في %s",
@@ -344,9 +299,9 @@
                         M: "شهر",
                         MM: "%d أشهر",
                         y: "سنة",
-                        yy: "%d سنوات",
+                        yy: "%d سنوات"
                     },
-                    week: { dow: 0, doy: 4 },
+                    week: { dow: 0, doy: 4 }
                 });
             });
         },
@@ -370,18 +325,10 @@
                     "سبتمبر",
                     "أكتوبر",
                     "نوفمبر",
-                    "ديسمبر",
+                    "ديسمبر"
                 ],
                 monthNamesShort: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
-                dayNames: [
-                    "الأحد",
-                    "الاثنين",
-                    "الثلاثاء",
-                    "الأربعاء",
-                    "الخميس",
-                    "الجمعة",
-                    "السبت",
-                ],
+                dayNames: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"],
                 dayNamesShort: ["أحد", "اثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت"],
                 dayNamesMin: ["ح", "ن", "ث", "ر", "خ", "ج", "س"],
                 weekHeader: "أسبوع",
@@ -389,13 +336,13 @@
                 firstDay: 0,
                 isRTL: !0,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("ar-kw", {
                     buttonText: { month: "شهر", week: "أسبوع", day: "يوم", list: "أجندة" },
                     allDayText: "اليوم كله",
                     eventLimitText: "أخرى",
-                    noEventsMessage: "أي أحداث لعرض",
+                    noEventsMessage: "أي أحداث لعرض"
                 });
         },
         function (e, a, t) {
@@ -403,13 +350,8 @@
                 a(t(0));
             })(0, function (e) {
                 return e.defineLocale("ar-kw", {
-                    months: "يناير_فبراير_مارس_أبريل_ماي_يونيو_يوليوز_غشت_شتنبر_أكتوبر_نونبر_دجنبر".split(
-                        "_",
-                    ),
-                    monthsShort:
-                        "يناير_فبراير_مارس_أبريل_ماي_يونيو_يوليوز_غشت_شتنبر_أكتوبر_نونبر_دجنبر".split(
-                            "_",
-                        ),
+                    months: "يناير_فبراير_مارس_أبريل_ماي_يونيو_يوليوز_غشت_شتنبر_أكتوبر_نونبر_دجنبر".split("_"),
+                    monthsShort: "يناير_فبراير_مارس_أبريل_ماي_يونيو_يوليوز_غشت_شتنبر_أكتوبر_نونبر_دجنبر".split("_"),
                     weekdays: "الأحد_الإتنين_الثلاثاء_الأربعاء_الخميس_الجمعة_السبت".split("_"),
                     weekdaysShort: "احد_اتنين_ثلاثاء_اربعاء_خميس_جمعة_سبت".split("_"),
                     weekdaysMin: "ح_ن_ث_ر_خ_ج_س".split("_"),
@@ -420,7 +362,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd D MMMM YYYY HH:mm",
+                        LLLL: "dddd D MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[اليوم على الساعة] LT",
@@ -428,7 +370,7 @@
                         nextWeek: "dddd [على الساعة] LT",
                         lastDay: "[أمس على الساعة] LT",
                         lastWeek: "dddd [على الساعة] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "في %s",
@@ -444,9 +386,9 @@
                         M: "شهر",
                         MM: "%d أشهر",
                         y: "سنة",
-                        yy: "%d سنوات",
+                        yy: "%d سنوات"
                     },
-                    week: { dow: 0, doy: 12 },
+                    week: { dow: 0, doy: 12 }
                 });
             });
         },
@@ -470,18 +412,10 @@
                     "سبتمبر",
                     "أكتوبر",
                     "نوفمبر",
-                    "ديسمبر",
+                    "ديسمبر"
                 ],
                 monthNamesShort: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
-                dayNames: [
-                    "الأحد",
-                    "الاثنين",
-                    "الثلاثاء",
-                    "الأربعاء",
-                    "الخميس",
-                    "الجمعة",
-                    "السبت",
-                ],
+                dayNames: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"],
                 dayNamesShort: ["أحد", "اثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت"],
                 dayNamesMin: ["ح", "ن", "ث", "ر", "خ", "ج", "س"],
                 weekHeader: "أسبوع",
@@ -489,13 +423,13 @@
                 firstDay: 0,
                 isRTL: !0,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("ar-ly", {
                     buttonText: { month: "شهر", week: "أسبوع", day: "يوم", list: "أجندة" },
                     allDayText: "اليوم كله",
                     eventLimitText: "أخرى",
-                    noEventsMessage: "أي أحداث لعرض",
+                    noEventsMessage: "أي أحداث لعرض"
                 });
         },
         function (e, a, t) {
@@ -512,7 +446,7 @@
                         7: "7",
                         8: "8",
                         9: "9",
-                        0: "0",
+                        0: "0"
                     },
                     t = function (e) {
                         return 0 === e
@@ -528,54 +462,12 @@
                                     : 5;
                     },
                     n = {
-                        s: [
-                            "أقل من ثانية",
-                            "ثانية واحدة",
-                            ["ثانيتان", "ثانيتين"],
-                            "%d ثوان",
-                            "%d ثانية",
-                            "%d ثانية",
-                        ],
-                        m: [
-                            "أقل من دقيقة",
-                            "دقيقة واحدة",
-                            ["دقيقتان", "دقيقتين"],
-                            "%d دقائق",
-                            "%d دقيقة",
-                            "%d دقيقة",
-                        ],
-                        h: [
-                            "أقل من ساعة",
-                            "ساعة واحدة",
-                            ["ساعتان", "ساعتين"],
-                            "%d ساعات",
-                            "%d ساعة",
-                            "%d ساعة",
-                        ],
-                        d: [
-                            "أقل من يوم",
-                            "يوم واحد",
-                            ["يومان", "يومين"],
-                            "%d أيام",
-                            "%d يومًا",
-                            "%d يوم",
-                        ],
-                        M: [
-                            "أقل من شهر",
-                            "شهر واحد",
-                            ["شهران", "شهرين"],
-                            "%d أشهر",
-                            "%d شهرا",
-                            "%d شهر",
-                        ],
-                        y: [
-                            "أقل من عام",
-                            "عام واحد",
-                            ["عامان", "عامين"],
-                            "%d أعوام",
-                            "%d عامًا",
-                            "%d عام",
-                        ],
+                        s: ["أقل من ثانية", "ثانية واحدة", ["ثانيتان", "ثانيتين"], "%d ثوان", "%d ثانية", "%d ثانية"],
+                        m: ["أقل من دقيقة", "دقيقة واحدة", ["دقيقتان", "دقيقتين"], "%d دقائق", "%d دقيقة", "%d دقيقة"],
+                        h: ["أقل من ساعة", "ساعة واحدة", ["ساعتان", "ساعتين"], "%d ساعات", "%d ساعة", "%d ساعة"],
+                        d: ["أقل من يوم", "يوم واحد", ["يومان", "يومين"], "%d أيام", "%d يومًا", "%d يوم"],
+                        M: ["أقل من شهر", "شهر واحد", ["شهران", "شهرين"], "%d أشهر", "%d شهرا", "%d شهر"],
+                        y: ["أقل من عام", "عام واحد", ["عامان", "عامين"], "%d أعوام", "%d عامًا", "%d عام"]
                     },
                     r = function (e) {
                         return function (a, r, s, d) {
@@ -596,7 +488,7 @@
                         "سبتمبر",
                         "أكتوبر",
                         "نوفمبر",
-                        "ديسمبر",
+                        "ديسمبر"
                     ];
                 return e.defineLocale("ar-ly", {
                     months: s,
@@ -611,7 +503,7 @@
                         L: "D/‏M/‏YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd D MMMM YYYY HH:mm",
+                        LLLL: "dddd D MMMM YYYY HH:mm"
                     },
                     meridiemParse: /ص|م/,
                     isPM: function (e) {
@@ -626,7 +518,7 @@
                         nextWeek: "dddd [عند الساعة] LT",
                         lastDay: "[أمس عند الساعة] LT",
                         lastWeek: "dddd [عند الساعة] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "بعد %s",
@@ -642,7 +534,7 @@
                         M: r("M"),
                         MM: r("M"),
                         y: r("y"),
-                        yy: r("y"),
+                        yy: r("y")
                     },
                     preparse: function (e) {
                         return e.replace(/،/g, ",");
@@ -654,7 +546,7 @@
                             })
                             .replace(/,/g, "،");
                     },
-                    week: { dow: 6, doy: 12 },
+                    week: { dow: 6, doy: 12 }
                 });
             });
         },
@@ -678,18 +570,10 @@
                     "سبتمبر",
                     "أكتوبر",
                     "نوفمبر",
-                    "ديسمبر",
+                    "ديسمبر"
                 ],
                 monthNamesShort: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
-                dayNames: [
-                    "الأحد",
-                    "الاثنين",
-                    "الثلاثاء",
-                    "الأربعاء",
-                    "الخميس",
-                    "الجمعة",
-                    "السبت",
-                ],
+                dayNames: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"],
                 dayNamesShort: ["أحد", "اثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت"],
                 dayNamesMin: ["ح", "ن", "ث", "ر", "خ", "ج", "س"],
                 weekHeader: "أسبوع",
@@ -697,13 +581,13 @@
                 firstDay: 0,
                 isRTL: !0,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("ar-ma", {
                     buttonText: { month: "شهر", week: "أسبوع", day: "يوم", list: "أجندة" },
                     allDayText: "اليوم كله",
                     eventLimitText: "أخرى",
-                    noEventsMessage: "أي أحداث لعرض",
+                    noEventsMessage: "أي أحداث لعرض"
                 });
         },
         function (e, a, t) {
@@ -711,13 +595,8 @@
                 a(t(0));
             })(0, function (e) {
                 return e.defineLocale("ar-ma", {
-                    months: "يناير_فبراير_مارس_أبريل_ماي_يونيو_يوليوز_غشت_شتنبر_أكتوبر_نونبر_دجنبر".split(
-                        "_",
-                    ),
-                    monthsShort:
-                        "يناير_فبراير_مارس_أبريل_ماي_يونيو_يوليوز_غشت_شتنبر_أكتوبر_نونبر_دجنبر".split(
-                            "_",
-                        ),
+                    months: "يناير_فبراير_مارس_أبريل_ماي_يونيو_يوليوز_غشت_شتنبر_أكتوبر_نونبر_دجنبر".split("_"),
+                    monthsShort: "يناير_فبراير_مارس_أبريل_ماي_يونيو_يوليوز_غشت_شتنبر_أكتوبر_نونبر_دجنبر".split("_"),
                     weekdays: "الأحد_الإثنين_الثلاثاء_الأربعاء_الخميس_الجمعة_السبت".split("_"),
                     weekdaysShort: "احد_اثنين_ثلاثاء_اربعاء_خميس_جمعة_سبت".split("_"),
                     weekdaysMin: "ح_ن_ث_ر_خ_ج_س".split("_"),
@@ -728,7 +607,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd D MMMM YYYY HH:mm",
+                        LLLL: "dddd D MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[اليوم على الساعة] LT",
@@ -736,7 +615,7 @@
                         nextWeek: "dddd [على الساعة] LT",
                         lastDay: "[أمس على الساعة] LT",
                         lastWeek: "dddd [على الساعة] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "في %s",
@@ -752,9 +631,9 @@
                         M: "شهر",
                         MM: "%d أشهر",
                         y: "سنة",
-                        yy: "%d سنوات",
+                        yy: "%d سنوات"
                     },
-                    week: { dow: 6, doy: 12 },
+                    week: { dow: 6, doy: 12 }
                 });
             });
         },
@@ -778,18 +657,10 @@
                     "سبتمبر",
                     "أكتوبر",
                     "نوفمبر",
-                    "ديسمبر",
+                    "ديسمبر"
                 ],
                 monthNamesShort: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
-                dayNames: [
-                    "الأحد",
-                    "الاثنين",
-                    "الثلاثاء",
-                    "الأربعاء",
-                    "الخميس",
-                    "الجمعة",
-                    "السبت",
-                ],
+                dayNames: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"],
                 dayNamesShort: ["أحد", "اثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت"],
                 dayNamesMin: ["ح", "ن", "ث", "ر", "خ", "ج", "س"],
                 weekHeader: "أسبوع",
@@ -797,13 +668,13 @@
                 firstDay: 0,
                 isRTL: !0,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("ar-sa", {
                     buttonText: { month: "شهر", week: "أسبوع", day: "يوم", list: "أجندة" },
                     allDayText: "اليوم كله",
                     eventLimitText: "أخرى",
-                    noEventsMessage: "أي أحداث لعرض",
+                    noEventsMessage: "أي أحداث لعرض"
                 });
         },
         function (e, a, t) {
@@ -820,7 +691,7 @@
                         7: "٧",
                         8: "٨",
                         9: "٩",
-                        0: "٠",
+                        0: "٠"
                     },
                     t = {
                         "١": "1",
@@ -832,16 +703,13 @@
                         "٧": "7",
                         "٨": "8",
                         "٩": "9",
-                        "٠": "0",
+                        "٠": "0"
                     };
                 return e.defineLocale("ar-sa", {
-                    months: "يناير_فبراير_مارس_أبريل_مايو_يونيو_يوليو_أغسطس_سبتمبر_أكتوبر_نوفمبر_ديسمبر".split(
-                        "_",
+                    months: "يناير_فبراير_مارس_أبريل_مايو_يونيو_يوليو_أغسطس_سبتمبر_أكتوبر_نوفمبر_ديسمبر".split("_"),
+                    monthsShort: "يناير_فبراير_مارس_أبريل_مايو_يونيو_يوليو_أغسطس_سبتمبر_أكتوبر_نوفمبر_ديسمبر".split(
+                        "_"
                     ),
-                    monthsShort:
-                        "يناير_فبراير_مارس_أبريل_مايو_يونيو_يوليو_أغسطس_سبتمبر_أكتوبر_نوفمبر_ديسمبر".split(
-                            "_",
-                        ),
                     weekdays: "الأحد_الإثنين_الثلاثاء_الأربعاء_الخميس_الجمعة_السبت".split("_"),
                     weekdaysShort: "أحد_إثنين_ثلاثاء_أربعاء_خميس_جمعة_سبت".split("_"),
                     weekdaysMin: "ح_ن_ث_ر_خ_ج_س".split("_"),
@@ -852,7 +720,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd D MMMM YYYY HH:mm",
+                        LLLL: "dddd D MMMM YYYY HH:mm"
                     },
                     meridiemParse: /ص|م/,
                     isPM: function (e) {
@@ -867,7 +735,7 @@
                         nextWeek: "dddd [على الساعة] LT",
                         lastDay: "[أمس على الساعة] LT",
                         lastWeek: "dddd [على الساعة] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "في %s",
@@ -883,7 +751,7 @@
                         M: "شهر",
                         MM: "%d أشهر",
                         y: "سنة",
-                        yy: "%d سنوات",
+                        yy: "%d سنوات"
                     },
                     preparse: function (e) {
                         return e
@@ -899,7 +767,7 @@
                             })
                             .replace(/,/g, "،");
                     },
-                    week: { dow: 0, doy: 6 },
+                    week: { dow: 0, doy: 6 }
                 });
             });
         },
@@ -923,18 +791,10 @@
                     "سبتمبر",
                     "أكتوبر",
                     "نوفمبر",
-                    "ديسمبر",
+                    "ديسمبر"
                 ],
                 monthNamesShort: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
-                dayNames: [
-                    "الأحد",
-                    "الاثنين",
-                    "الثلاثاء",
-                    "الأربعاء",
-                    "الخميس",
-                    "الجمعة",
-                    "السبت",
-                ],
+                dayNames: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"],
                 dayNamesShort: ["أحد", "اثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت"],
                 dayNamesMin: ["ح", "ن", "ث", "ر", "خ", "ج", "س"],
                 weekHeader: "أسبوع",
@@ -942,13 +802,13 @@
                 firstDay: 0,
                 isRTL: !0,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("ar-tn", {
                     buttonText: { month: "شهر", week: "أسبوع", day: "يوم", list: "أجندة" },
                     allDayText: "اليوم كله",
                     eventLimitText: "أخرى",
-                    noEventsMessage: "أي أحداث لعرض",
+                    noEventsMessage: "أي أحداث لعرض"
                 });
         },
         function (e, a, t) {
@@ -956,13 +816,8 @@
                 a(t(0));
             })(0, function (e) {
                 return e.defineLocale("ar-tn", {
-                    months: "جانفي_فيفري_مارس_أفريل_ماي_جوان_جويلية_أوت_سبتمبر_أكتوبر_نوفمبر_ديسمبر".split(
-                        "_",
-                    ),
-                    monthsShort:
-                        "جانفي_فيفري_مارس_أفريل_ماي_جوان_جويلية_أوت_سبتمبر_أكتوبر_نوفمبر_ديسمبر".split(
-                            "_",
-                        ),
+                    months: "جانفي_فيفري_مارس_أفريل_ماي_جوان_جويلية_أوت_سبتمبر_أكتوبر_نوفمبر_ديسمبر".split("_"),
+                    monthsShort: "جانفي_فيفري_مارس_أفريل_ماي_جوان_جويلية_أوت_سبتمبر_أكتوبر_نوفمبر_ديسمبر".split("_"),
                     weekdays: "الأحد_الإثنين_الثلاثاء_الأربعاء_الخميس_الجمعة_السبت".split("_"),
                     weekdaysShort: "أحد_إثنين_ثلاثاء_أربعاء_خميس_جمعة_سبت".split("_"),
                     weekdaysMin: "ح_ن_ث_ر_خ_ج_س".split("_"),
@@ -973,7 +828,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd D MMMM YYYY HH:mm",
+                        LLLL: "dddd D MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[اليوم على الساعة] LT",
@@ -981,7 +836,7 @@
                         nextWeek: "dddd [على الساعة] LT",
                         lastDay: "[أمس على الساعة] LT",
                         lastWeek: "dddd [على الساعة] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "في %s",
@@ -997,9 +852,9 @@
                         M: "شهر",
                         MM: "%d أشهر",
                         y: "سنة",
-                        yy: "%d سنوات",
+                        yy: "%d سنوات"
                     },
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -1023,18 +878,10 @@
                     "سبتمبر",
                     "أكتوبر",
                     "نوفمبر",
-                    "ديسمبر",
+                    "ديسمبر"
                 ],
                 monthNamesShort: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
-                dayNames: [
-                    "الأحد",
-                    "الاثنين",
-                    "الثلاثاء",
-                    "الأربعاء",
-                    "الخميس",
-                    "الجمعة",
-                    "السبت",
-                ],
+                dayNames: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"],
                 dayNamesShort: ["أحد", "اثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت"],
                 dayNamesMin: ["ح", "ن", "ث", "ر", "خ", "ج", "س"],
                 weekHeader: "أسبوع",
@@ -1042,13 +889,13 @@
                 firstDay: 0,
                 isRTL: !0,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("ar", {
                     buttonText: { month: "شهر", week: "أسبوع", day: "يوم", list: "أجندة" },
                     allDayText: "اليوم كله",
                     eventLimitText: "أخرى",
-                    noEventsMessage: "أي أحداث لعرض",
+                    noEventsMessage: "أي أحداث لعرض"
                 });
         },
         function (e, a, t) {
@@ -1065,7 +912,7 @@
                         7: "٧",
                         8: "٨",
                         9: "٩",
-                        0: "٠",
+                        0: "٠"
                     },
                     t = {
                         "١": "1",
@@ -1077,7 +924,7 @@
                         "٧": "7",
                         "٨": "8",
                         "٩": "9",
-                        "٠": "0",
+                        "٠": "0"
                     },
                     n = function (e) {
                         return 0 === e
@@ -1093,54 +940,12 @@
                                     : 5;
                     },
                     r = {
-                        s: [
-                            "أقل من ثانية",
-                            "ثانية واحدة",
-                            ["ثانيتان", "ثانيتين"],
-                            "%d ثوان",
-                            "%d ثانية",
-                            "%d ثانية",
-                        ],
-                        m: [
-                            "أقل من دقيقة",
-                            "دقيقة واحدة",
-                            ["دقيقتان", "دقيقتين"],
-                            "%d دقائق",
-                            "%d دقيقة",
-                            "%d دقيقة",
-                        ],
-                        h: [
-                            "أقل من ساعة",
-                            "ساعة واحدة",
-                            ["ساعتان", "ساعتين"],
-                            "%d ساعات",
-                            "%d ساعة",
-                            "%d ساعة",
-                        ],
-                        d: [
-                            "أقل من يوم",
-                            "يوم واحد",
-                            ["يومان", "يومين"],
-                            "%d أيام",
-                            "%d يومًا",
-                            "%d يوم",
-                        ],
-                        M: [
-                            "أقل من شهر",
-                            "شهر واحد",
-                            ["شهران", "شهرين"],
-                            "%d أشهر",
-                            "%d شهرا",
-                            "%d شهر",
-                        ],
-                        y: [
-                            "أقل من عام",
-                            "عام واحد",
-                            ["عامان", "عامين"],
-                            "%d أعوام",
-                            "%d عامًا",
-                            "%d عام",
-                        ],
+                        s: ["أقل من ثانية", "ثانية واحدة", ["ثانيتان", "ثانيتين"], "%d ثوان", "%d ثانية", "%d ثانية"],
+                        m: ["أقل من دقيقة", "دقيقة واحدة", ["دقيقتان", "دقيقتين"], "%d دقائق", "%d دقيقة", "%d دقيقة"],
+                        h: ["أقل من ساعة", "ساعة واحدة", ["ساعتان", "ساعتين"], "%d ساعات", "%d ساعة", "%d ساعة"],
+                        d: ["أقل من يوم", "يوم واحد", ["يومان", "يومين"], "%d أيام", "%d يومًا", "%d يوم"],
+                        M: ["أقل من شهر", "شهر واحد", ["شهران", "شهرين"], "%d أشهر", "%d شهرا", "%d شهر"],
+                        y: ["أقل من عام", "عام واحد", ["عامان", "عامين"], "%d أعوام", "%d عامًا", "%d عام"]
                     },
                     s = function (e) {
                         return function (a, t, s, d) {
@@ -1161,7 +966,7 @@
                         "سبتمبر",
                         "أكتوبر",
                         "نوفمبر",
-                        "ديسمبر",
+                        "ديسمبر"
                     ];
                 return e.defineLocale("ar", {
                     months: d,
@@ -1176,7 +981,7 @@
                         L: "D/‏M/‏YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd D MMMM YYYY HH:mm",
+                        LLLL: "dddd D MMMM YYYY HH:mm"
                     },
                     meridiemParse: /ص|م/,
                     isPM: function (e) {
@@ -1191,7 +996,7 @@
                         nextWeek: "dddd [عند الساعة] LT",
                         lastDay: "[أمس عند الساعة] LT",
                         lastWeek: "dddd [عند الساعة] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "بعد %s",
@@ -1207,7 +1012,7 @@
                         M: s("M"),
                         MM: s("M"),
                         y: s("y"),
-                        yy: s("y"),
+                        yy: s("y")
                     },
                     preparse: function (e) {
                         return e
@@ -1223,7 +1028,7 @@
                             })
                             .replace(/,/g, "،");
                     },
-                    week: { dow: 6, doy: 12 },
+                    week: { dow: 6, doy: 12 }
                 });
             });
         },
@@ -1247,7 +1052,7 @@
                     "Верасень",
                     "Кастрычнік",
                     "Лістапад",
-                    "Снежань",
+                    "Снежань"
                 ],
                 monthNamesShort: [
                     "Студ",
@@ -1261,17 +1066,9 @@
                     "Вер",
                     "Каст",
                     "Ліст",
-                    "Снеж",
+                    "Снеж"
                 ],
-                dayNames: [
-                    "нядзеля",
-                    "панядзелак",
-                    "аўторак",
-                    "серада",
-                    "чацвер",
-                    "пятніца",
-                    "субота",
-                ],
+                dayNames: ["нядзеля", "панядзелак", "аўторак", "серада", "чацвер", "пятніца", "субота"],
                 dayNamesShort: ["ндз", "пнд", "аўт", "срд", "чцв", "птн", "сбт"],
                 dayNamesMin: ["Нд", "Пн", "Ат", "Ср", "Чц", "Пт", "Сб"],
                 weekHeader: "Ндз",
@@ -1279,20 +1076,20 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("be", {
                     buttonText: {
                         month: "Месяц",
                         week: "Тыдзень",
                         day: "Дзень",
-                        list: "Парадак дня",
+                        list: "Парадак дня"
                     },
                     allDayHtml: "Увесь<br />дзень",
                     eventLimitText: function (e) {
                         return "+ яшчэ " + e;
                     },
-                    noEventsMessage: "Няма падзей для адлюстравання",
+                    noEventsMessage: "Няма падзей для адлюстравання"
                 });
         },
         function (e, a, t) {
@@ -1314,7 +1111,7 @@
                         hh: t ? "гадзіна_гадзіны_гадзін" : "гадзіну_гадзіны_гадзін",
                         dd: "дзень_дні_дзён",
                         MM: "месяц_месяцы_месяцаў",
-                        yy: "год_гады_гадоў",
+                        yy: "год_гады_гадоў"
                     };
                     return "m" === n
                         ? t
@@ -1329,23 +1126,18 @@
                 return e.defineLocale("be", {
                     months: {
                         format: "студзеня_лютага_сакавіка_красавіка_траўня_чэрвеня_ліпеня_жніўня_верасня_кастрычніка_лістапада_снежня".split(
-                            "_",
+                            "_"
                         ),
                         standalone:
                             "студзень_люты_сакавік_красавік_травень_чэрвень_ліпень_жнівень_верасень_кастрычнік_лістапад_снежань".split(
-                                "_",
-                            ),
+                                "_"
+                            )
                     },
-                    monthsShort: "студ_лют_сак_крас_трав_чэрв_ліп_жнів_вер_каст_ліст_снеж".split(
-                        "_",
-                    ),
+                    monthsShort: "студ_лют_сак_крас_трав_чэрв_ліп_жнів_вер_каст_ліст_снеж".split("_"),
                     weekdays: {
-                        format: "нядзелю_панядзелак_аўторак_сераду_чацвер_пятніцу_суботу".split(
-                            "_",
-                        ),
-                        standalone:
-                            "нядзеля_панядзелак_аўторак_серада_чацвер_пятніца_субота".split("_"),
-                        isFormat: /\[ ?[Ууў] ?(?:мінулую|наступную)? ?\] ?dddd/,
+                        format: "нядзелю_панядзелак_аўторак_сераду_чацвер_пятніцу_суботу".split("_"),
+                        standalone: "нядзеля_панядзелак_аўторак_серада_чацвер_пятніца_субота".split("_"),
+                        isFormat: /\[ ?[Ууў] ?(?:мінулую|наступную)? ?\] ?dddd/
                     },
                     weekdaysShort: "нд_пн_ат_ср_чц_пт_сб".split("_"),
                     weekdaysMin: "нд_пн_ат_ср_чц_пт_сб".split("_"),
@@ -1355,7 +1147,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D MMMM YYYY г.",
                         LLL: "D MMMM YYYY г., HH:mm",
-                        LLLL: "dddd, D MMMM YYYY г., HH:mm",
+                        LLLL: "dddd, D MMMM YYYY г., HH:mm"
                     },
                     calendar: {
                         sameDay: "[Сёння ў] LT",
@@ -1377,7 +1169,7 @@
                                     return "[У мінулы] dddd [ў] LT";
                             }
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "праз %s",
@@ -1392,7 +1184,7 @@
                         M: "месяц",
                         MM: t,
                         y: "год",
-                        yy: t,
+                        yy: t
                     },
                     meridiemParse: /ночы|раніцы|дня|вечара/,
                     isPM: function (e) {
@@ -1409,9 +1201,7 @@
                             case "DDD":
                             case "w":
                             case "W":
-                                return (e % 10 != 2 && e % 10 != 3) ||
-                                    e % 100 == 12 ||
-                                    e % 100 == 13
+                                return (e % 10 != 2 && e % 10 != 3) || e % 100 == 12 || e % 100 == 13
                                     ? e + "-ы"
                                     : e + "-і";
                             case "D":
@@ -1420,7 +1210,7 @@
                                 return e;
                         }
                     },
-                    week: { dow: 1, doy: 7 },
+                    week: { dow: 1, doy: 7 }
                 });
             });
         },
@@ -1445,31 +1235,10 @@
                     "Септември",
                     "Октомври",
                     "Ноември",
-                    "Декември",
+                    "Декември"
                 ],
-                monthNamesShort: [
-                    "Яну",
-                    "Фев",
-                    "Мар",
-                    "Апр",
-                    "Май",
-                    "Юни",
-                    "Юли",
-                    "Авг",
-                    "Сеп",
-                    "Окт",
-                    "Нов",
-                    "Дек",
-                ],
-                dayNames: [
-                    "Неделя",
-                    "Понеделник",
-                    "Вторник",
-                    "Сряда",
-                    "Четвъртък",
-                    "Петък",
-                    "Събота",
-                ],
+                monthNamesShort: ["Яну", "Фев", "Мар", "Апр", "Май", "Юни", "Юли", "Авг", "Сеп", "Окт", "Нов", "Дек"],
+                dayNames: ["Неделя", "Понеделник", "Вторник", "Сряда", "Четвъртък", "Петък", "Събота"],
                 dayNamesShort: ["Нед", "Пон", "Вто", "Сря", "Чет", "Пет", "Съб"],
                 dayNamesMin: ["Не", "По", "Вт", "Ср", "Че", "Пе", "Съ"],
                 weekHeader: "Wk",
@@ -1477,7 +1246,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("bg", {
                     buttonText: { month: "Месец", week: "Седмица", day: "Ден", list: "График" },
@@ -1485,7 +1254,7 @@
                     eventLimitText: function (e) {
                         return "+още " + e;
                     },
-                    noEventsMessage: "Няма събития за показване",
+                    noEventsMessage: "Няма събития за показване"
                 });
         },
         function (e, a, t) {
@@ -1494,7 +1263,7 @@
             })(0, function (e) {
                 return e.defineLocale("bg", {
                     months: "януари_февруари_март_април_май_юни_юли_август_септември_октомври_ноември_декември".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "яну_фев_мар_апр_май_юни_юли_авг_сеп_окт_ное_дек".split("_"),
                     weekdays: "неделя_понеделник_вторник_сряда_четвъртък_петък_събота".split("_"),
@@ -1506,7 +1275,7 @@
                         L: "D.MM.YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY H:mm",
-                        LLLL: "dddd, D MMMM YYYY H:mm",
+                        LLLL: "dddd, D MMMM YYYY H:mm"
                     },
                     calendar: {
                         sameDay: "[Днес в] LT",
@@ -1526,7 +1295,7 @@
                                     return "[Миналия] dddd [в] LT";
                             }
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "след %s",
@@ -1542,7 +1311,7 @@
                         M: "месец",
                         MM: "%d месеца",
                         y: "година",
-                        yy: "%d години",
+                        yy: "%d години"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}-(ев|ен|ти|ви|ри|ми)/,
                     ordinal: function (e) {
@@ -1562,7 +1331,7 @@
                                       ? e + "-ми"
                                       : e + "-ти";
                     },
-                    week: { dow: 1, doy: 7 },
+                    week: { dow: 1, doy: 7 }
                 });
             });
         },
@@ -1586,31 +1355,10 @@
                     "Septembar",
                     "Oktobar",
                     "Novmbar",
-                    "Decembar",
+                    "Decembar"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "Maj",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Okt",
-                    "Nov",
-                    "Dec",
-                ],
-                dayNames: [
-                    "Nedjelja",
-                    "Ponedjeljak",
-                    "Utorak",
-                    "Srijeda",
-                    "Četvrtak",
-                    "Petak",
-                    "Subota",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"],
+                dayNames: ["Nedjelja", "Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak", "Subota"],
                 dayNamesShort: ["Ned", "Pon", "Uto", "Sri", "Čet", "Pet", "Sub"],
                 dayNamesMin: ["Ne", "Po", "Ut", "Sr", "Če", "Pe", "Su"],
                 weekHeader: "Sed",
@@ -1618,7 +1366,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("bs", {
                     buttonText: {
@@ -1627,13 +1375,13 @@
                         month: "Mjesec",
                         week: "Sedmica",
                         day: "Dan",
-                        list: "Raspored",
+                        list: "Raspored"
                     },
                     allDayText: "Cijeli dan",
                     eventLimitText: function (e) {
                         return "+ još " + e;
                     },
-                    noEventsMessage: "Nema događaja za prikazivanje",
+                    noEventsMessage: "Nema događaja za prikazivanje"
                 });
         },
         function (e, a, t) {
@@ -1644,54 +1392,30 @@
                     var n = e + " ";
                     switch (t) {
                         case "ss":
-                            return (n +=
-                                1 === e
-                                    ? "sekunda"
-                                    : 2 === e || 3 === e || 4 === e
-                                      ? "sekunde"
-                                      : "sekundi");
+                            return (n += 1 === e ? "sekunda" : 2 === e || 3 === e || 4 === e ? "sekunde" : "sekundi");
                         case "m":
                             return a ? "jedna minuta" : "jedne minute";
                         case "mm":
-                            return (n +=
-                                1 === e
-                                    ? "minuta"
-                                    : 2 === e || 3 === e || 4 === e
-                                      ? "minute"
-                                      : "minuta");
+                            return (n += 1 === e ? "minuta" : 2 === e || 3 === e || 4 === e ? "minute" : "minuta");
                         case "h":
                             return a ? "jedan sat" : "jednog sata";
                         case "hh":
-                            return (n +=
-                                1 === e ? "sat" : 2 === e || 3 === e || 4 === e ? "sata" : "sati");
+                            return (n += 1 === e ? "sat" : 2 === e || 3 === e || 4 === e ? "sata" : "sati");
                         case "dd":
                             return (n += 1 === e ? "dan" : "dana");
                         case "MM":
-                            return (n +=
-                                1 === e
-                                    ? "mjesec"
-                                    : 2 === e || 3 === e || 4 === e
-                                      ? "mjeseca"
-                                      : "mjeseci");
+                            return (n += 1 === e ? "mjesec" : 2 === e || 3 === e || 4 === e ? "mjeseca" : "mjeseci");
                         case "yy":
-                            return (n +=
-                                1 === e
-                                    ? "godina"
-                                    : 2 === e || 3 === e || 4 === e
-                                      ? "godine"
-                                      : "godina");
+                            return (n += 1 === e ? "godina" : 2 === e || 3 === e || 4 === e ? "godine" : "godina");
                     }
                 }
                 return e.defineLocale("bs", {
                     months: "januar_februar_mart_april_maj_juni_juli_august_septembar_oktobar_novembar_decembar".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort:
-                        "jan._feb._mar._apr._maj._jun._jul._aug._sep._okt._nov._dec.".split("_"),
+                    monthsShort: "jan._feb._mar._apr._maj._jun._jul._aug._sep._okt._nov._dec.".split("_"),
                     monthsParseExact: !0,
-                    weekdays: "nedjelja_ponedjeljak_utorak_srijeda_četvrtak_petak_subota".split(
-                        "_",
-                    ),
+                    weekdays: "nedjelja_ponedjeljak_utorak_srijeda_četvrtak_petak_subota".split("_"),
                     weekdaysShort: "ned._pon._uto._sri._čet._pet._sub.".split("_"),
                     weekdaysMin: "ne_po_ut_sr_če_pe_su".split("_"),
                     weekdaysParseExact: !0,
@@ -1701,7 +1425,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D. MMMM YYYY",
                         LLL: "D. MMMM YYYY H:mm",
-                        LLLL: "dddd, D. MMMM YYYY H:mm",
+                        LLLL: "dddd, D. MMMM YYYY H:mm"
                     },
                     calendar: {
                         sameDay: "[danas u] LT",
@@ -1736,7 +1460,7 @@
                                     return "[prošli] dddd [u] LT";
                             }
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "za %s",
@@ -1752,11 +1476,11 @@
                         M: "mjesec",
                         MM: a,
                         y: "godinu",
-                        yy: a,
+                        yy: a
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 7 },
+                    week: { dow: 1, doy: 7 }
                 });
             });
         },
@@ -1780,31 +1504,10 @@
                     "setembre",
                     "octubre",
                     "novembre",
-                    "desembre",
+                    "desembre"
                 ],
-                monthNamesShort: [
-                    "gen",
-                    "feb",
-                    "març",
-                    "abr",
-                    "maig",
-                    "juny",
-                    "jul",
-                    "ag",
-                    "set",
-                    "oct",
-                    "nov",
-                    "des",
-                ],
-                dayNames: [
-                    "diumenge",
-                    "dilluns",
-                    "dimarts",
-                    "dimecres",
-                    "dijous",
-                    "divendres",
-                    "dissabte",
-                ],
+                monthNamesShort: ["gen", "feb", "març", "abr", "maig", "juny", "jul", "ag", "set", "oct", "nov", "des"],
+                dayNames: ["diumenge", "dilluns", "dimarts", "dimecres", "dijous", "divendres", "dissabte"],
                 dayNamesShort: ["dg", "dl", "dt", "dc", "dj", "dv", "ds"],
                 dayNamesMin: ["dg", "dl", "dt", "dc", "dj", "dv", "ds"],
                 weekHeader: "Set",
@@ -1812,13 +1515,13 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("ca", {
                     buttonText: { month: "Mes", week: "Setmana", day: "Dia", list: "Agenda" },
                     allDayText: "Tot el dia",
                     eventLimitText: "més",
-                    noEventsMessage: "No hi ha esdeveniments per mostrar",
+                    noEventsMessage: "No hi ha esdeveniments per mostrar"
                 });
         },
         function (e, a, t) {
@@ -1829,19 +1532,16 @@
                     months: {
                         standalone:
                             "gener_febrer_març_abril_maig_juny_juliol_agost_setembre_octubre_novembre_desembre".split(
-                                "_",
+                                "_"
                             ),
                         format: "de gener_de febrer_de març_d'abril_de maig_de juny_de juliol_d'agost_de setembre_d'octubre_de novembre_de desembre".split(
-                            "_",
+                            "_"
                         ),
-                        isFormat: /D[oD]?(\s)+MMMM/,
+                        isFormat: /D[oD]?(\s)+MMMM/
                     },
-                    monthsShort:
-                        "gen._febr._març_abr._maig_juny_jul._ag._set._oct._nov._des.".split("_"),
+                    monthsShort: "gen._febr._març_abr._maig_juny_jul._ag._set._oct._nov._des.".split("_"),
                     monthsParseExact: !0,
-                    weekdays: "diumenge_dilluns_dimarts_dimecres_dijous_divendres_dissabte".split(
-                        "_",
-                    ),
+                    weekdays: "diumenge_dilluns_dimarts_dimecres_dijous_divendres_dissabte".split("_"),
                     weekdaysShort: "dg._dl._dt._dc._dj._dv._ds.".split("_"),
                     weekdaysMin: "dg_dl_dt_dc_dj_dv_ds".split("_"),
                     weekdaysParseExact: !0,
@@ -1854,7 +1554,7 @@
                         LLL: "D MMMM [de] YYYY [a les] H:mm",
                         lll: "D MMM YYYY, H:mm",
                         LLLL: "dddd D MMMM [de] YYYY [a les] H:mm",
-                        llll: "ddd D MMM YYYY, H:mm",
+                        llll: "ddd D MMM YYYY, H:mm"
                     },
                     calendar: {
                         sameDay: function () {
@@ -1870,13 +1570,9 @@
                             return "[ahir a " + (1 !== this.hours() ? "les" : "la") + "] LT";
                         },
                         lastWeek: function () {
-                            return (
-                                "[el] dddd [passat a " +
-                                (1 !== this.hours() ? "les" : "la") +
-                                "] LT"
-                            );
+                            return "[el] dddd [passat a " + (1 !== this.hours() ? "les" : "la") + "] LT";
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "d'aquí %s",
@@ -1892,15 +1588,14 @@
                         M: "un mes",
                         MM: "%d mesos",
                         y: "un any",
-                        yy: "%d anys",
+                        yy: "%d anys"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}(r|n|t|è|a)/,
                     ordinal: function (e, a) {
-                        var t =
-                            1 === e ? "r" : 2 === e ? "n" : 3 === e ? "r" : 4 === e ? "t" : "è";
+                        var t = 1 === e ? "r" : 2 === e ? "n" : 3 === e ? "r" : 4 === e ? "t" : "è";
                         return ("w" !== a && "W" !== a) || (t = "a"), e + t;
                     },
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -1924,22 +1619,9 @@
                     "září",
                     "říjen",
                     "listopad",
-                    "prosinec",
+                    "prosinec"
                 ],
-                monthNamesShort: [
-                    "led",
-                    "úno",
-                    "bře",
-                    "dub",
-                    "kvě",
-                    "čer",
-                    "čvc",
-                    "srp",
-                    "zář",
-                    "říj",
-                    "lis",
-                    "pro",
-                ],
+                monthNamesShort: ["led", "úno", "bře", "dub", "kvě", "čer", "čvc", "srp", "zář", "říj", "lis", "pro"],
                 dayNames: ["neděle", "pondělí", "úterý", "středa", "čtvrtek", "pátek", "sobota"],
                 dayNamesShort: ["ne", "po", "út", "st", "čt", "pá", "so"],
                 dayNamesMin: ["ne", "po", "út", "st", "čt", "pá", "so"],
@@ -1948,7 +1630,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("cs", {
                     buttonText: { month: "Měsíc", week: "Týden", day: "Den", list: "Agenda" },
@@ -1956,7 +1638,7 @@
                     eventLimitText: function (e) {
                         return "+další: " + e;
                     },
-                    noEventsMessage: "Žádné akce k zobrazení",
+                    noEventsMessage: "Žádné akce k zobrazení"
                 });
         },
         function (e, a, t) {
@@ -1995,10 +1677,7 @@
                             return t || r ? s + (a(e) ? "roky" : "let") : s + "lety";
                     }
                 }
-                var n =
-                        "leden_únor_březen_duben_květen_červen_červenec_srpen_září_říjen_listopad_prosinec".split(
-                            "_",
-                        ),
+                var n = "leden_únor_březen_duben_květen_červen_červenec_srpen_září_říjen_listopad_prosinec".split("_"),
                     r = "led_úno_bře_dub_kvě_čvn_čvc_srp_zář_říj_lis_pro".split("_"),
                     s = [
                         /^led/i,
@@ -2012,7 +1691,7 @@
                         /^zář/i,
                         /^říj/i,
                         /^lis/i,
-                        /^pro/i,
+                        /^pro/i
                     ],
                     d =
                         /^(leden|únor|březen|duben|květen|červenec|července|červen|června|srpen|září|říjen|listopad|prosinec|led|úno|bře|dub|kvě|čvn|čvc|srp|zář|říj|lis|pro)/i;
@@ -2037,7 +1716,7 @@
                         LL: "D. MMMM YYYY",
                         LLL: "D. MMMM YYYY H:mm",
                         LLLL: "dddd D. MMMM YYYY H:mm",
-                        l: "D. M. YYYY",
+                        l: "D. M. YYYY"
                     },
                     calendar: {
                         sameDay: "[dnes v] LT",
@@ -2076,7 +1755,7 @@
                                     return "[minulou sobotu v] LT";
                             }
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "za %s",
@@ -2092,11 +1771,11 @@
                         M: t,
                         MM: t,
                         y: t,
-                        yy: t,
+                        yy: t
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -2120,22 +1799,9 @@
                     "September",
                     "Oktober",
                     "November",
-                    "December",
+                    "December"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "Maj",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Okt",
-                    "Nov",
-                    "Dec",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"],
                 dayNames: ["Søndag", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag"],
                 dayNamesShort: ["Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør"],
                 dayNamesMin: ["Sø", "Ma", "Ti", "On", "To", "Fr", "Lø"],
@@ -2144,13 +1810,13 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("da", {
                     buttonText: { month: "Måned", week: "Uge", day: "Dag", list: "Agenda" },
                     allDayText: "Hele dagen",
                     eventLimitText: "flere",
-                    noEventsMessage: "Ingen arrangementer at vise",
+                    noEventsMessage: "Ingen arrangementer at vise"
                 });
         },
         function (e, a, t) {
@@ -2159,7 +1825,7 @@
             })(0, function (e) {
                 return e.defineLocale("da", {
                     months: "januar_februar_marts_april_maj_juni_juli_august_september_oktober_november_december".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "jan_feb_mar_apr_maj_jun_jul_aug_sep_okt_nov_dec".split("_"),
                     weekdays: "søndag_mandag_tirsdag_onsdag_torsdag_fredag_lørdag".split("_"),
@@ -2171,7 +1837,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D. MMMM YYYY",
                         LLL: "D. MMMM YYYY HH:mm",
-                        LLLL: "dddd [d.] D. MMMM YYYY [kl.] HH:mm",
+                        LLLL: "dddd [d.] D. MMMM YYYY [kl.] HH:mm"
                     },
                     calendar: {
                         sameDay: "[i dag kl.] LT",
@@ -2179,7 +1845,7 @@
                         nextWeek: "på dddd [kl.] LT",
                         lastDay: "[i går kl.] LT",
                         lastWeek: "[i] dddd[s kl.] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "om %s",
@@ -2195,11 +1861,11 @@
                         M: "en måned",
                         MM: "%d måneder",
                         y: "et år",
-                        yy: "%d år",
+                        yy: "%d år"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -2223,31 +1889,10 @@
                     "September",
                     "Oktober",
                     "November",
-                    "Dezember",
+                    "Dezember"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mär",
-                    "Apr",
-                    "Mai",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Okt",
-                    "Nov",
-                    "Dez",
-                ],
-                dayNames: [
-                    "Sonntag",
-                    "Montag",
-                    "Dienstag",
-                    "Mittwoch",
-                    "Donnerstag",
-                    "Freitag",
-                    "Samstag",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
+                dayNames: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
                 dayNamesShort: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
                 dayNamesMin: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
                 weekHeader: "KW",
@@ -2255,7 +1900,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("de-at", {
                     buttonText: {
@@ -2263,13 +1908,13 @@
                         month: "Monat",
                         week: "Woche",
                         day: "Tag",
-                        list: "Terminübersicht",
+                        list: "Terminübersicht"
                     },
                     allDayText: "Ganztägig",
                     eventLimitText: function (e) {
                         return "+ weitere " + e;
                     },
-                    noEventsMessage: "Keine Ereignisse anzuzeigen",
+                    noEventsMessage: "Keine Ereignisse anzuzeigen"
                 });
         },
         function (e, a, t) {
@@ -2285,20 +1930,17 @@
                         M: ["ein Monat", "einem Monat"],
                         MM: [e + " Monate", e + " Monaten"],
                         y: ["ein Jahr", "einem Jahr"],
-                        yy: [e + " Jahre", e + " Jahren"],
+                        yy: [e + " Jahre", e + " Jahren"]
                     };
                     return a ? r[t][0] : r[t][1];
                 }
                 return e.defineLocale("de-at", {
                     months: "Jänner_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort:
-                        "Jän._Feb._März_Apr._Mai_Juni_Juli_Aug._Sep._Okt._Nov._Dez.".split("_"),
+                    monthsShort: "Jän._Feb._März_Apr._Mai_Juni_Juli_Aug._Sep._Okt._Nov._Dez.".split("_"),
                     monthsParseExact: !0,
-                    weekdays: "Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag".split(
-                        "_",
-                    ),
+                    weekdays: "Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag".split("_"),
                     weekdaysShort: "So._Mo._Di._Mi._Do._Fr._Sa.".split("_"),
                     weekdaysMin: "So_Mo_Di_Mi_Do_Fr_Sa".split("_"),
                     weekdaysParseExact: !0,
@@ -2308,7 +1950,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D. MMMM YYYY",
                         LLL: "D. MMMM YYYY HH:mm",
-                        LLLL: "dddd, D. MMMM YYYY HH:mm",
+                        LLLL: "dddd, D. MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[heute um] LT [Uhr]",
@@ -2316,7 +1958,7 @@
                         nextDay: "[morgen um] LT [Uhr]",
                         nextWeek: "dddd [um] LT [Uhr]",
                         lastDay: "[gestern um] LT [Uhr]",
-                        lastWeek: "[letzten] dddd [um] LT [Uhr]",
+                        lastWeek: "[letzten] dddd [um] LT [Uhr]"
                     },
                     relativeTime: {
                         future: "in %s",
@@ -2332,11 +1974,11 @@
                         M: a,
                         MM: a,
                         y: a,
-                        yy: a,
+                        yy: a
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -2360,31 +2002,10 @@
                     "September",
                     "Oktober",
                     "November",
-                    "Dezember",
+                    "Dezember"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mär",
-                    "Apr",
-                    "Mai",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Okt",
-                    "Nov",
-                    "Dez",
-                ],
-                dayNames: [
-                    "Sonntag",
-                    "Montag",
-                    "Dienstag",
-                    "Mittwoch",
-                    "Donnerstag",
-                    "Freitag",
-                    "Samstag",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
+                dayNames: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
                 dayNamesShort: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
                 dayNamesMin: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
                 weekHeader: "KW",
@@ -2392,7 +2013,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("de-ch", {
                     buttonText: {
@@ -2400,13 +2021,13 @@
                         month: "Monat",
                         week: "Woche",
                         day: "Tag",
-                        list: "Terminübersicht",
+                        list: "Terminübersicht"
                     },
                     allDayText: "Ganztägig",
                     eventLimitText: function (e) {
                         return "+ weitere " + e;
                     },
-                    noEventsMessage: "Keine Ereignisse anzuzeigen",
+                    noEventsMessage: "Keine Ereignisse anzuzeigen"
                 });
         },
         function (e, a, t) {
@@ -2422,20 +2043,17 @@
                         M: ["ein Monat", "einem Monat"],
                         MM: [e + " Monate", e + " Monaten"],
                         y: ["ein Jahr", "einem Jahr"],
-                        yy: [e + " Jahre", e + " Jahren"],
+                        yy: [e + " Jahre", e + " Jahren"]
                     };
                     return a ? r[t][0] : r[t][1];
                 }
                 return e.defineLocale("de-ch", {
                     months: "Januar_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort:
-                        "Jan._Feb._März_Apr._Mai_Juni_Juli_Aug._Sep._Okt._Nov._Dez.".split("_"),
+                    monthsShort: "Jan._Feb._März_Apr._Mai_Juni_Juli_Aug._Sep._Okt._Nov._Dez.".split("_"),
                     monthsParseExact: !0,
-                    weekdays: "Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag".split(
-                        "_",
-                    ),
+                    weekdays: "Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag".split("_"),
                     weekdaysShort: "So_Mo_Di_Mi_Do_Fr_Sa".split("_"),
                     weekdaysMin: "So_Mo_Di_Mi_Do_Fr_Sa".split("_"),
                     weekdaysParseExact: !0,
@@ -2445,7 +2063,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D. MMMM YYYY",
                         LLL: "D. MMMM YYYY HH:mm",
-                        LLLL: "dddd, D. MMMM YYYY HH:mm",
+                        LLLL: "dddd, D. MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[heute um] LT [Uhr]",
@@ -2453,7 +2071,7 @@
                         nextDay: "[morgen um] LT [Uhr]",
                         nextWeek: "dddd [um] LT [Uhr]",
                         lastDay: "[gestern um] LT [Uhr]",
-                        lastWeek: "[letzten] dddd [um] LT [Uhr]",
+                        lastWeek: "[letzten] dddd [um] LT [Uhr]"
                     },
                     relativeTime: {
                         future: "in %s",
@@ -2469,11 +2087,11 @@
                         M: a,
                         MM: a,
                         y: a,
-                        yy: a,
+                        yy: a
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -2497,31 +2115,10 @@
                     "September",
                     "Oktober",
                     "November",
-                    "Dezember",
+                    "Dezember"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mär",
-                    "Apr",
-                    "Mai",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Okt",
-                    "Nov",
-                    "Dez",
-                ],
-                dayNames: [
-                    "Sonntag",
-                    "Montag",
-                    "Dienstag",
-                    "Mittwoch",
-                    "Donnerstag",
-                    "Freitag",
-                    "Samstag",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
+                dayNames: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
                 dayNamesShort: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
                 dayNamesMin: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
                 weekHeader: "KW",
@@ -2529,7 +2126,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("de", {
                     buttonText: {
@@ -2537,14 +2134,14 @@
                         month: "Monat",
                         week: "Woche",
                         day: "Tag",
-                        list: "Terminübersicht",
+                        list: "Terminübersicht"
                     },
                     allDayText: "Ganztägig",
                     eventLimitText: function (e) {
                         return "+ weitere " + e;
                     },
                     noEventsMessage: "Keine Ereignisse anzuzeigen",
-                    dayOfMonthFormat: "ddd DD.MM.",
+                    dayOfMonthFormat: "ddd DD.MM."
                 });
         },
         function (e, a, t) {
@@ -2560,20 +2157,17 @@
                         M: ["ein Monat", "einem Monat"],
                         MM: [e + " Monate", e + " Monaten"],
                         y: ["ein Jahr", "einem Jahr"],
-                        yy: [e + " Jahre", e + " Jahren"],
+                        yy: [e + " Jahre", e + " Jahren"]
                     };
                     return a ? r[t][0] : r[t][1];
                 }
                 return e.defineLocale("de", {
                     months: "Januar_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort:
-                        "Jan._Feb._März_Apr._Mai_Juni_Juli_Aug._Sep._Okt._Nov._Dez.".split("_"),
+                    monthsShort: "Jan._Feb._März_Apr._Mai_Juni_Juli_Aug._Sep._Okt._Nov._Dez.".split("_"),
                     monthsParseExact: !0,
-                    weekdays: "Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag".split(
-                        "_",
-                    ),
+                    weekdays: "Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag".split("_"),
                     weekdaysShort: "So._Mo._Di._Mi._Do._Fr._Sa.".split("_"),
                     weekdaysMin: "So_Mo_Di_Mi_Do_Fr_Sa".split("_"),
                     weekdaysParseExact: !0,
@@ -2583,7 +2177,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D. MMMM YYYY",
                         LLL: "D. MMMM YYYY HH:mm",
-                        LLLL: "dddd, D. MMMM YYYY HH:mm",
+                        LLLL: "dddd, D. MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[heute um] LT [Uhr]",
@@ -2591,7 +2185,7 @@
                         nextDay: "[morgen um] LT [Uhr]",
                         nextWeek: "dddd [um] LT [Uhr]",
                         lastDay: "[gestern um] LT [Uhr]",
-                        lastWeek: "[letzten] dddd [um] LT [Uhr]",
+                        lastWeek: "[letzten] dddd [um] LT [Uhr]"
                     },
                     relativeTime: {
                         future: "in %s",
@@ -2607,11 +2201,11 @@
                         M: a,
                         MM: a,
                         y: a,
-                        yy: a,
+                        yy: a
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -2635,31 +2229,10 @@
                     "Σεπτέμβριος",
                     "Οκτώβριος",
                     "Νοέμβριος",
-                    "Δεκέμβριος",
+                    "Δεκέμβριος"
                 ],
-                monthNamesShort: [
-                    "Ιαν",
-                    "Φεβ",
-                    "Μαρ",
-                    "Απρ",
-                    "Μαι",
-                    "Ιουν",
-                    "Ιουλ",
-                    "Αυγ",
-                    "Σεπ",
-                    "Οκτ",
-                    "Νοε",
-                    "Δεκ",
-                ],
-                dayNames: [
-                    "Κυριακή",
-                    "Δευτέρα",
-                    "Τρίτη",
-                    "Τετάρτη",
-                    "Πέμπτη",
-                    "Παρασκευή",
-                    "Σάββατο",
-                ],
+                monthNamesShort: ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μαι", "Ιουν", "Ιουλ", "Αυγ", "Σεπ", "Οκτ", "Νοε", "Δεκ"],
+                dayNames: ["Κυριακή", "Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο"],
                 dayNamesShort: ["Κυρ", "Δευ", "Τρι", "Τετ", "Πεμ", "Παρ", "Σαβ"],
                 dayNamesMin: ["Κυ", "Δε", "Τρ", "Τε", "Πε", "Πα", "Σα"],
                 weekHeader: "Εβδ",
@@ -2667,18 +2240,18 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("el", {
                     buttonText: {
                         month: "Μήνας",
                         week: "Εβδομάδα",
                         day: "Ημέρα",
-                        list: "Ατζέντα",
+                        list: "Ατζέντα"
                     },
                     allDayText: "Ολοήμερο",
                     eventLimitText: "περισσότερα",
-                    noEventsMessage: "Δεν υπάρχουν γεγονότα για να εμφανιστεί",
+                    noEventsMessage: "Δεν υπάρχουν γεγονότα για να εμφανιστεί"
                 });
         },
         function (e, a, t) {
@@ -2694,11 +2267,11 @@
                 return e.defineLocale("el", {
                     monthsNominativeEl:
                         "Ιανουάριος_Φεβρουάριος_Μάρτιος_Απρίλιος_Μάιος_Ιούνιος_Ιούλιος_Αύγουστος_Σεπτέμβριος_Οκτώβριος_Νοέμβριος_Δεκέμβριος".split(
-                            "_",
+                            "_"
                         ),
                     monthsGenitiveEl:
                         "Ιανουαρίου_Φεβρουαρίου_Μαρτίου_Απριλίου_Μαΐου_Ιουνίου_Ιουλίου_Αυγούστου_Σεπτεμβρίου_Οκτωβρίου_Νοεμβρίου_Δεκεμβρίου".split(
-                            "_",
+                            "_"
                         ),
                     months: function (e, a) {
                         return e
@@ -2724,7 +2297,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY h:mm A",
-                        LLLL: "dddd, D MMMM YYYY h:mm A",
+                        LLLL: "dddd, D MMMM YYYY h:mm A"
                     },
                     calendarEl: {
                         sameDay: "[Σήμερα {}] LT",
@@ -2739,14 +2312,12 @@
                                     return "[την προηγούμενη] dddd [{}] LT";
                             }
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     calendar: function (e, t) {
                         var n = this._calendarEl[e],
                             r = t && t.hours();
-                        return (
-                            a(n) && (n = n.apply(t)), n.replace("{}", r % 12 == 1 ? "στη" : "στις")
-                        );
+                        return a(n) && (n = n.apply(t)), n.replace("{}", r % 12 == 1 ? "στη" : "στις");
                     },
                     relativeTime: {
                         future: "σε %s",
@@ -2762,11 +2333,11 @@
                         M: "ένας μήνας",
                         MM: "%d μήνες",
                         y: "ένας χρόνος",
-                        yy: "%d χρόνια",
+                        yy: "%d χρόνια"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}η/,
                     ordinal: "%dη",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -2790,31 +2361,10 @@
                     "September",
                     "October",
                     "November",
-                    "December",
+                    "December"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "May",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Oct",
-                    "Nov",
-                    "Dec",
-                ],
-                dayNames: [
-                    "Sunday",
-                    "Monday",
-                    "Tuesday",
-                    "Wednesday",
-                    "Thursday",
-                    "Friday",
-                    "Saturday",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                dayNames: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
                 dayNamesShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 dayNamesMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
                 weekHeader: "Wk",
@@ -2822,7 +2372,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("en-au");
         },
@@ -2832,12 +2382,10 @@
             })(0, function (e) {
                 return e.defineLocale("en-au", {
                     months: "January_February_March_April_May_June_July_August_September_October_November_December".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec".split("_"),
-                    weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split(
-                        "_",
-                    ),
+                    weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"),
                     weekdaysShort: "Sun_Mon_Tue_Wed_Thu_Fri_Sat".split("_"),
                     weekdaysMin: "Su_Mo_Tu_We_Th_Fr_Sa".split("_"),
                     longDateFormat: {
@@ -2846,7 +2394,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY h:mm A",
-                        LLLL: "dddd, D MMMM YYYY h:mm A",
+                        LLLL: "dddd, D MMMM YYYY h:mm A"
                     },
                     calendar: {
                         sameDay: "[Today at] LT",
@@ -2854,7 +2402,7 @@
                         nextWeek: "dddd [at] LT",
                         lastDay: "[Yesterday at] LT",
                         lastWeek: "[Last] dddd [at] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "in %s",
@@ -2870,25 +2418,17 @@
                         M: "a month",
                         MM: "%d months",
                         y: "a year",
-                        yy: "%d years",
+                        yy: "%d years"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}(st|nd|rd|th)/,
                     ordinal: function (e) {
                         var a = e % 10;
                         return (
                             e +
-                            (1 == ~~((e % 100) / 10)
-                                ? "th"
-                                : 1 === a
-                                  ? "st"
-                                  : 2 === a
-                                    ? "nd"
-                                    : 3 === a
-                                      ? "rd"
-                                      : "th")
+                            (1 == ~~((e % 100) / 10) ? "th" : 1 === a ? "st" : 2 === a ? "nd" : 3 === a ? "rd" : "th")
                         );
                     },
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -2901,12 +2441,10 @@
             })(0, function (e) {
                 return e.defineLocale("en-ca", {
                     months: "January_February_March_April_May_June_July_August_September_October_November_December".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec".split("_"),
-                    weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split(
-                        "_",
-                    ),
+                    weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"),
                     weekdaysShort: "Sun_Mon_Tue_Wed_Thu_Fri_Sat".split("_"),
                     weekdaysMin: "Su_Mo_Tu_We_Th_Fr_Sa".split("_"),
                     longDateFormat: {
@@ -2915,7 +2453,7 @@
                         L: "YYYY-MM-DD",
                         LL: "MMMM D, YYYY",
                         LLL: "MMMM D, YYYY h:mm A",
-                        LLLL: "dddd, MMMM D, YYYY h:mm A",
+                        LLLL: "dddd, MMMM D, YYYY h:mm A"
                     },
                     calendar: {
                         sameDay: "[Today at] LT",
@@ -2923,7 +2461,7 @@
                         nextWeek: "dddd [at] LT",
                         lastDay: "[Yesterday at] LT",
                         lastWeek: "[Last] dddd [at] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "in %s",
@@ -2939,24 +2477,16 @@
                         M: "a month",
                         MM: "%d months",
                         y: "a year",
-                        yy: "%d years",
+                        yy: "%d years"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}(st|nd|rd|th)/,
                     ordinal: function (e) {
                         var a = e % 10;
                         return (
                             e +
-                            (1 == ~~((e % 100) / 10)
-                                ? "th"
-                                : 1 === a
-                                  ? "st"
-                                  : 2 === a
-                                    ? "nd"
-                                    : 3 === a
-                                      ? "rd"
-                                      : "th")
+                            (1 == ~~((e % 100) / 10) ? "th" : 1 === a ? "st" : 2 === a ? "nd" : 3 === a ? "rd" : "th")
                         );
-                    },
+                    }
                 });
             });
         },
@@ -2980,31 +2510,10 @@
                     "September",
                     "October",
                     "November",
-                    "December",
+                    "December"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "May",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Oct",
-                    "Nov",
-                    "Dec",
-                ],
-                dayNames: [
-                    "Sunday",
-                    "Monday",
-                    "Tuesday",
-                    "Wednesday",
-                    "Thursday",
-                    "Friday",
-                    "Saturday",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                dayNames: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
                 dayNamesShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 dayNamesMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
                 weekHeader: "Wk",
@@ -3012,7 +2521,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("en-gb");
         },
@@ -3022,12 +2531,10 @@
             })(0, function (e) {
                 return e.defineLocale("en-gb", {
                     months: "January_February_March_April_May_June_July_August_September_October_November_December".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec".split("_"),
-                    weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split(
-                        "_",
-                    ),
+                    weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"),
                     weekdaysShort: "Sun_Mon_Tue_Wed_Thu_Fri_Sat".split("_"),
                     weekdaysMin: "Su_Mo_Tu_We_Th_Fr_Sa".split("_"),
                     longDateFormat: {
@@ -3036,7 +2543,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd, D MMMM YYYY HH:mm",
+                        LLLL: "dddd, D MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[Today at] LT",
@@ -3044,7 +2551,7 @@
                         nextWeek: "dddd [at] LT",
                         lastDay: "[Yesterday at] LT",
                         lastWeek: "[Last] dddd [at] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "in %s",
@@ -3060,25 +2567,17 @@
                         M: "a month",
                         MM: "%d months",
                         y: "a year",
-                        yy: "%d years",
+                        yy: "%d years"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}(st|nd|rd|th)/,
                     ordinal: function (e) {
                         var a = e % 10;
                         return (
                             e +
-                            (1 == ~~((e % 100) / 10)
-                                ? "th"
-                                : 1 === a
-                                  ? "st"
-                                  : 2 === a
-                                    ? "nd"
-                                    : 3 === a
-                                      ? "rd"
-                                      : "th")
+                            (1 == ~~((e % 100) / 10) ? "th" : 1 === a ? "st" : 2 === a ? "nd" : 3 === a ? "rd" : "th")
                         );
                     },
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -3091,12 +2590,10 @@
             })(0, function (e) {
                 return e.defineLocale("en-ie", {
                     months: "January_February_March_April_May_June_July_August_September_October_November_December".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec".split("_"),
-                    weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split(
-                        "_",
-                    ),
+                    weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"),
                     weekdaysShort: "Sun_Mon_Tue_Wed_Thu_Fri_Sat".split("_"),
                     weekdaysMin: "Su_Mo_Tu_We_Th_Fr_Sa".split("_"),
                     longDateFormat: {
@@ -3105,7 +2602,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd D MMMM YYYY HH:mm",
+                        LLLL: "dddd D MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[Today at] LT",
@@ -3113,7 +2610,7 @@
                         nextWeek: "dddd [at] LT",
                         lastDay: "[Yesterday at] LT",
                         lastWeek: "[Last] dddd [at] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "in %s",
@@ -3129,25 +2626,17 @@
                         M: "a month",
                         MM: "%d months",
                         y: "a year",
-                        yy: "%d years",
+                        yy: "%d years"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}(st|nd|rd|th)/,
                     ordinal: function (e) {
                         var a = e % 10;
                         return (
                             e +
-                            (1 == ~~((e % 100) / 10)
-                                ? "th"
-                                : 1 === a
-                                  ? "st"
-                                  : 2 === a
-                                    ? "nd"
-                                    : 3 === a
-                                      ? "rd"
-                                      : "th")
+                            (1 == ~~((e % 100) / 10) ? "th" : 1 === a ? "st" : 2 === a ? "nd" : 3 === a ? "rd" : "th")
                         );
                     },
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -3171,31 +2660,10 @@
                     "September",
                     "October",
                     "November",
-                    "December",
+                    "December"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "May",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Oct",
-                    "Nov",
-                    "Dec",
-                ],
-                dayNames: [
-                    "Sunday",
-                    "Monday",
-                    "Tuesday",
-                    "Wednesday",
-                    "Thursday",
-                    "Friday",
-                    "Saturday",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                dayNames: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
                 dayNamesShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 dayNamesMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
                 weekHeader: "Wk",
@@ -3203,7 +2671,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("en-nz");
         },
@@ -3213,12 +2681,10 @@
             })(0, function (e) {
                 return e.defineLocale("en-nz", {
                     months: "January_February_March_April_May_June_July_August_September_October_November_December".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec".split("_"),
-                    weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split(
-                        "_",
-                    ),
+                    weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"),
                     weekdaysShort: "Sun_Mon_Tue_Wed_Thu_Fri_Sat".split("_"),
                     weekdaysMin: "Su_Mo_Tu_We_Th_Fr_Sa".split("_"),
                     longDateFormat: {
@@ -3227,7 +2693,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY h:mm A",
-                        LLLL: "dddd, D MMMM YYYY h:mm A",
+                        LLLL: "dddd, D MMMM YYYY h:mm A"
                     },
                     calendar: {
                         sameDay: "[Today at] LT",
@@ -3235,7 +2701,7 @@
                         nextWeek: "dddd [at] LT",
                         lastDay: "[Yesterday at] LT",
                         lastWeek: "[Last] dddd [at] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "in %s",
@@ -3251,25 +2717,17 @@
                         M: "a month",
                         MM: "%d months",
                         y: "a year",
-                        yy: "%d years",
+                        yy: "%d years"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}(st|nd|rd|th)/,
                     ordinal: function (e) {
                         var a = e % 10;
                         return (
                             e +
-                            (1 == ~~((e % 100) / 10)
-                                ? "th"
-                                : 1 === a
-                                  ? "st"
-                                  : 2 === a
-                                    ? "nd"
-                                    : 3 === a
-                                      ? "rd"
-                                      : "th")
+                            (1 == ~~((e % 100) / 10) ? "th" : 1 === a ? "st" : 2 === a ? "nd" : 3 === a ? "rd" : "th")
                         );
                     },
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -3293,31 +2751,10 @@
                     "septiembre",
                     "octubre",
                     "noviembre",
-                    "diciembre",
+                    "diciembre"
                 ],
-                monthNamesShort: [
-                    "ene",
-                    "feb",
-                    "mar",
-                    "abr",
-                    "may",
-                    "jun",
-                    "jul",
-                    "ago",
-                    "sep",
-                    "oct",
-                    "nov",
-                    "dic",
-                ],
-                dayNames: [
-                    "domingo",
-                    "lunes",
-                    "martes",
-                    "miércoles",
-                    "jueves",
-                    "viernes",
-                    "sábado",
-                ],
+                monthNamesShort: ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"],
+                dayNames: ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"],
                 dayNamesShort: ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"],
                 dayNamesMin: ["D", "L", "M", "X", "J", "V", "S"],
                 weekHeader: "Sm",
@@ -3325,13 +2762,13 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("es-do", {
                     buttonText: { month: "Mes", week: "Semana", day: "Día", list: "Agenda" },
                     allDayHtml: "Todo<br/>el día",
                     eventLimitText: "más",
-                    noEventsMessage: "No hay eventos para mostrar",
+                    noEventsMessage: "No hay eventos para mostrar"
                 });
         },
         function (e, a, t) {
@@ -3352,13 +2789,13 @@
                         /^sep/i,
                         /^oct/i,
                         /^nov/i,
-                        /^dic/i,
+                        /^dic/i
                     ],
                     r =
                         /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i;
                 return e.defineLocale("es-do", {
                     months: "enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: function (e, n) {
                         return e ? (/-MMM-/.test(n) ? t[e.month()] : a[e.month()]) : a;
@@ -3382,7 +2819,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D [de] MMMM [de] YYYY",
                         LLL: "D [de] MMMM [de] YYYY h:mm A",
-                        LLLL: "dddd, D [de] MMMM [de] YYYY h:mm A",
+                        LLLL: "dddd, D [de] MMMM [de] YYYY h:mm A"
                     },
                     calendar: {
                         sameDay: function () {
@@ -3398,11 +2835,9 @@
                             return "[ayer a la" + (1 !== this.hours() ? "s" : "") + "] LT";
                         },
                         lastWeek: function () {
-                            return (
-                                "[el] dddd [pasado a la" + (1 !== this.hours() ? "s" : "") + "] LT"
-                            );
+                            return "[el] dddd [pasado a la" + (1 !== this.hours() ? "s" : "") + "] LT";
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "en %s",
@@ -3418,11 +2853,11 @@
                         M: "un mes",
                         MM: "%d meses",
                         y: "un año",
-                        yy: "%d años",
+                        yy: "%d años"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}º/,
                     ordinal: "%dº",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -3446,31 +2881,10 @@
                     "septiembre",
                     "octubre",
                     "noviembre",
-                    "diciembre",
+                    "diciembre"
                 ],
-                monthNamesShort: [
-                    "ene",
-                    "feb",
-                    "mar",
-                    "abr",
-                    "may",
-                    "jun",
-                    "jul",
-                    "ago",
-                    "sep",
-                    "oct",
-                    "nov",
-                    "dic",
-                ],
-                dayNames: [
-                    "domingo",
-                    "lunes",
-                    "martes",
-                    "miércoles",
-                    "jueves",
-                    "viernes",
-                    "sábado",
-                ],
+                monthNamesShort: ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"],
+                dayNames: ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"],
                 dayNamesShort: ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"],
                 dayNamesMin: ["D", "L", "M", "X", "J", "V", "S"],
                 weekHeader: "Sm",
@@ -3478,13 +2892,13 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("es-us", {
                     buttonText: { month: "Mes", week: "Semana", day: "Día", list: "Agenda" },
                     allDayHtml: "Todo<br/>el día",
                     eventLimitText: "más",
-                    noEventsMessage: "No hay eventos para mostrar",
+                    noEventsMessage: "No hay eventos para mostrar"
                 });
         },
         function (e, a, t) {
@@ -3505,13 +2919,13 @@
                         /^sep/i,
                         /^oct/i,
                         /^nov/i,
-                        /^dic/i,
+                        /^dic/i
                     ],
                     r =
                         /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i;
                 return e.defineLocale("es-us", {
                     months: "enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: function (e, n) {
                         return e ? (/-MMM-/.test(n) ? t[e.month()] : a[e.month()]) : a;
@@ -3535,7 +2949,7 @@
                         L: "MM/DD/YYYY",
                         LL: "D [de] MMMM [de] YYYY",
                         LLL: "D [de] MMMM [de] YYYY h:mm A",
-                        LLLL: "dddd, D [de] MMMM [de] YYYY h:mm A",
+                        LLLL: "dddd, D [de] MMMM [de] YYYY h:mm A"
                     },
                     calendar: {
                         sameDay: function () {
@@ -3551,11 +2965,9 @@
                             return "[ayer a la" + (1 !== this.hours() ? "s" : "") + "] LT";
                         },
                         lastWeek: function () {
-                            return (
-                                "[el] dddd [pasado a la" + (1 !== this.hours() ? "s" : "") + "] LT"
-                            );
+                            return "[el] dddd [pasado a la" + (1 !== this.hours() ? "s" : "") + "] LT";
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "en %s",
@@ -3571,11 +2983,11 @@
                         M: "un mes",
                         MM: "%d meses",
                         y: "un año",
-                        yy: "%d años",
+                        yy: "%d años"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}º/,
                     ordinal: "%dº",
-                    week: { dow: 0, doy: 6 },
+                    week: { dow: 0, doy: 6 }
                 });
             });
         },
@@ -3599,31 +3011,10 @@
                     "septiembre",
                     "octubre",
                     "noviembre",
-                    "diciembre",
+                    "diciembre"
                 ],
-                monthNamesShort: [
-                    "ene",
-                    "feb",
-                    "mar",
-                    "abr",
-                    "may",
-                    "jun",
-                    "jul",
-                    "ago",
-                    "sep",
-                    "oct",
-                    "nov",
-                    "dic",
-                ],
-                dayNames: [
-                    "domingo",
-                    "lunes",
-                    "martes",
-                    "miércoles",
-                    "jueves",
-                    "viernes",
-                    "sábado",
-                ],
+                monthNamesShort: ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"],
+                dayNames: ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"],
                 dayNamesShort: ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"],
                 dayNamesMin: ["D", "L", "M", "X", "J", "V", "S"],
                 weekHeader: "Sm",
@@ -3631,13 +3022,13 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("es", {
                     buttonText: { month: "Mes", week: "Semana", day: "Día", list: "Agenda" },
                     allDayHtml: "Todo<br/>el día",
                     eventLimitText: "más",
-                    noEventsMessage: "No hay eventos para mostrar",
+                    noEventsMessage: "No hay eventos para mostrar"
                 });
         },
         function (e, a, t) {
@@ -3658,13 +3049,13 @@
                         /^sep/i,
                         /^oct/i,
                         /^nov/i,
-                        /^dic/i,
+                        /^dic/i
                     ],
                     r =
                         /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i;
                 return e.defineLocale("es", {
                     months: "enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: function (e, n) {
                         return e ? (/-MMM-/.test(n) ? t[e.month()] : a[e.month()]) : a;
@@ -3688,7 +3079,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D [de] MMMM [de] YYYY",
                         LLL: "D [de] MMMM [de] YYYY H:mm",
-                        LLLL: "dddd, D [de] MMMM [de] YYYY H:mm",
+                        LLLL: "dddd, D [de] MMMM [de] YYYY H:mm"
                     },
                     calendar: {
                         sameDay: function () {
@@ -3704,11 +3095,9 @@
                             return "[ayer a la" + (1 !== this.hours() ? "s" : "") + "] LT";
                         },
                         lastWeek: function () {
-                            return (
-                                "[el] dddd [pasado a la" + (1 !== this.hours() ? "s" : "") + "] LT"
-                            );
+                            return "[el] dddd [pasado a la" + (1 !== this.hours() ? "s" : "") + "] LT";
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "en %s",
@@ -3724,12 +3113,12 @@
                         M: "un mes",
                         MM: "%d meses",
                         y: "un año",
-                        yy: "%d años",
+                        yy: "%d años"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}º/,
                     ordinal: "%dº",
                     week: { dow: 1, doy: 4 },
-                    invalidDate: "Fecha invalida",
+                    invalidDate: "Fecha invalida"
                 });
             });
         },
@@ -3753,7 +3142,7 @@
                     "September",
                     "Oktoober",
                     "November",
-                    "Detsember",
+                    "Detsember"
                 ],
                 monthNamesShort: [
                     "Jaan",
@@ -3767,17 +3156,9 @@
                     "Sept",
                     "Okt",
                     "Nov",
-                    "Dets",
+                    "Dets"
                 ],
-                dayNames: [
-                    "Pühapäev",
-                    "Esmaspäev",
-                    "Teisipäev",
-                    "Kolmapäev",
-                    "Neljapäev",
-                    "Reede",
-                    "Laupäev",
-                ],
+                dayNames: ["Pühapäev", "Esmaspäev", "Teisipäev", "Kolmapäev", "Neljapäev", "Reede", "Laupäev"],
                 dayNamesShort: ["Pühap", "Esmasp", "Teisip", "Kolmap", "Neljap", "Reede", "Laup"],
                 dayNamesMin: ["P", "E", "T", "K", "N", "R", "L"],
                 weekHeader: "näd",
@@ -3785,7 +3166,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("et", {
                     buttonText: { month: "Kuu", week: "Nädal", day: "Päev", list: "Päevakord" },
@@ -3793,7 +3174,7 @@
                     eventLimitText: function (e) {
                         return "+ veel " + e;
                     },
-                    noEventsMessage: "Kuvamiseks puuduvad sündmused",
+                    noEventsMessage: "Kuvamiseks puuduvad sündmused"
                 });
         },
         function (e, a, t) {
@@ -3812,20 +3193,16 @@
                         M: ["kuu aja", "kuu aega", "üks kuu"],
                         MM: [e + " kuu", e + " kuud"],
                         y: ["ühe aasta", "aasta", "üks aasta"],
-                        yy: [e + " aasta", e + " aastat"],
+                        yy: [e + " aasta", e + " aastat"]
                     };
                     return a ? (r[t][2] ? r[t][2] : r[t][1]) : n ? r[t][0] : r[t][1];
                 }
                 return e.defineLocale("et", {
                     months: "jaanuar_veebruar_märts_aprill_mai_juuni_juuli_august_september_oktoober_november_detsember".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort:
-                        "jaan_veebr_märts_apr_mai_juuni_juuli_aug_sept_okt_nov_dets".split("_"),
-                    weekdays:
-                        "pühapäev_esmaspäev_teisipäev_kolmapäev_neljapäev_reede_laupäev".split(
-                            "_",
-                        ),
+                    monthsShort: "jaan_veebr_märts_apr_mai_juuni_juuli_aug_sept_okt_nov_dets".split("_"),
+                    weekdays: "pühapäev_esmaspäev_teisipäev_kolmapäev_neljapäev_reede_laupäev".split("_"),
                     weekdaysShort: "P_E_T_K_N_R_L".split("_"),
                     weekdaysMin: "P_E_T_K_N_R_L".split("_"),
                     longDateFormat: {
@@ -3834,7 +3211,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D. MMMM YYYY",
                         LLL: "D. MMMM YYYY H:mm",
-                        LLLL: "dddd, D. MMMM YYYY H:mm",
+                        LLLL: "dddd, D. MMMM YYYY H:mm"
                     },
                     calendar: {
                         sameDay: "[Täna,] LT",
@@ -3842,7 +3219,7 @@
                         nextWeek: "[Järgmine] dddd LT",
                         lastDay: "[Eile,] LT",
                         lastWeek: "[Eelmine] dddd LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "%s pärast",
@@ -3858,11 +3235,11 @@
                         M: a,
                         MM: a,
                         y: a,
-                        yy: a,
+                        yy: a
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -3886,7 +3263,7 @@
                     "iraila",
                     "urria",
                     "azaroa",
-                    "abendua",
+                    "abendua"
                 ],
                 monthNamesShort: [
                     "urt.",
@@ -3900,17 +3277,9 @@
                     "ira.",
                     "urr.",
                     "aza.",
-                    "abe.",
+                    "abe."
                 ],
-                dayNames: [
-                    "igandea",
-                    "astelehena",
-                    "asteartea",
-                    "asteazkena",
-                    "osteguna",
-                    "ostirala",
-                    "larunbata",
-                ],
+                dayNames: ["igandea", "astelehena", "asteartea", "asteazkena", "osteguna", "ostirala", "larunbata"],
                 dayNamesShort: ["ig.", "al.", "ar.", "az.", "og.", "ol.", "lr."],
                 dayNamesMin: ["ig", "al", "ar", "az", "og", "ol", "lr"],
                 weekHeader: "As",
@@ -3918,18 +3287,18 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("eu", {
                     buttonText: {
                         month: "Hilabetea",
                         week: "Astea",
                         day: "Eguna",
-                        list: "Agenda",
+                        list: "Agenda"
                     },
                     allDayHtml: "Egun<br/>osoa",
                     eventLimitText: "gehiago",
-                    noEventsMessage: "Ez dago ekitaldirik erakusteko",
+                    noEventsMessage: "Ez dago ekitaldirik erakusteko"
                 });
         },
         function (e, a, t) {
@@ -3938,15 +3307,11 @@
             })(0, function (e) {
                 return e.defineLocale("eu", {
                     months: "urtarrila_otsaila_martxoa_apirila_maiatza_ekaina_uztaila_abuztua_iraila_urria_azaroa_abendua".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort:
-                        "urt._ots._mar._api._mai._eka._uzt._abu._ira._urr._aza._abe.".split("_"),
+                    monthsShort: "urt._ots._mar._api._mai._eka._uzt._abu._ira._urr._aza._abe.".split("_"),
                     monthsParseExact: !0,
-                    weekdays:
-                        "igandea_astelehena_asteartea_asteazkena_osteguna_ostirala_larunbata".split(
-                            "_",
-                        ),
+                    weekdays: "igandea_astelehena_asteartea_asteazkena_osteguna_ostirala_larunbata".split("_"),
                     weekdaysShort: "ig._al._ar._az._og._ol._lr.".split("_"),
                     weekdaysMin: "ig_al_ar_az_og_ol_lr".split("_"),
                     weekdaysParseExact: !0,
@@ -3960,7 +3325,7 @@
                         l: "YYYY-M-D",
                         ll: "YYYY[ko] MMM D[a]",
                         lll: "YYYY[ko] MMM D[a] HH:mm",
-                        llll: "ddd, YYYY[ko] MMM D[a] HH:mm",
+                        llll: "ddd, YYYY[ko] MMM D[a] HH:mm"
                     },
                     calendar: {
                         sameDay: "[gaur] LT[etan]",
@@ -3968,7 +3333,7 @@
                         nextWeek: "dddd LT[etan]",
                         lastDay: "[atzo] LT[etan]",
                         lastWeek: "[aurreko] dddd LT[etan]",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "%s barru",
@@ -3984,11 +3349,11 @@
                         M: "hilabete bat",
                         MM: "%d hilabete",
                         y: "urte bat",
-                        yy: "%d urte",
+                        yy: "%d urte"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 7 },
+                    week: { dow: 1, doy: 7 }
                 });
             });
         },
@@ -4012,7 +3377,7 @@
                     "سپتامبر",
                     "اکتبر",
                     "نوامبر",
-                    "دسامبر",
+                    "دسامبر"
                 ],
                 monthNamesShort: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
                 dayNames: ["يکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه", "شنبه"],
@@ -4023,7 +3388,7 @@
                 firstDay: 6,
                 isRTL: !0,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("fa", {
                     buttonText: { month: "ماه", week: "هفته", day: "روز", list: "برنامه" },
@@ -4031,7 +3396,7 @@
                     eventLimitText: function (e) {
                         return "بیش از " + e;
                     },
-                    noEventsMessage: "هیچ رویدادی به نمایش",
+                    noEventsMessage: "هیچ رویدادی به نمایش"
                 });
         },
         function (e, a, t) {
@@ -4048,7 +3413,7 @@
                         7: "۷",
                         8: "۸",
                         9: "۹",
-                        0: "۰",
+                        0: "۰"
                     },
                     t = {
                         "۱": "1",
@@ -4060,16 +3425,11 @@
                         "۷": "7",
                         "۸": "8",
                         "۹": "9",
-                        "۰": "0",
+                        "۰": "0"
                     };
                 return e.defineLocale("fa", {
-                    months: "ژانویه_فوریه_مارس_آوریل_مه_ژوئن_ژوئیه_اوت_سپتامبر_اکتبر_نوامبر_دسامبر".split(
-                        "_",
-                    ),
-                    monthsShort:
-                        "ژانویه_فوریه_مارس_آوریل_مه_ژوئن_ژوئیه_اوت_سپتامبر_اکتبر_نوامبر_دسامبر".split(
-                            "_",
-                        ),
+                    months: "ژانویه_فوریه_مارس_آوریل_مه_ژوئن_ژوئیه_اوت_سپتامبر_اکتبر_نوامبر_دسامبر".split("_"),
+                    monthsShort: "ژانویه_فوریه_مارس_آوریل_مه_ژوئن_ژوئیه_اوت_سپتامبر_اکتبر_نوامبر_دسامبر".split("_"),
                     weekdays: "یک‌شنبه_دوشنبه_سه‌شنبه_چهارشنبه_پنج‌شنبه_جمعه_شنبه".split("_"),
                     weekdaysShort: "یک‌شنبه_دوشنبه_سه‌شنبه_چهارشنبه_پنج‌شنبه_جمعه_شنبه".split("_"),
                     weekdaysMin: "ی_د_س_چ_پ_ج_ش".split("_"),
@@ -4080,7 +3440,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd, D MMMM YYYY HH:mm",
+                        LLLL: "dddd, D MMMM YYYY HH:mm"
                     },
                     meridiemParse: /قبل از ظهر|بعد از ظهر/,
                     isPM: function (e) {
@@ -4095,7 +3455,7 @@
                         nextWeek: "dddd [ساعت] LT",
                         lastDay: "[دیروز ساعت] LT",
                         lastWeek: "dddd [پیش] [ساعت] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "در %s",
@@ -4111,7 +3471,7 @@
                         M: "یک ماه",
                         MM: "%d ماه",
                         y: "یک سال",
-                        yy: "%d سال",
+                        yy: "%d سال"
                     },
                     preparse: function (e) {
                         return e
@@ -4129,7 +3489,7 @@
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}م/,
                     ordinal: "%dم",
-                    week: { dow: 6, doy: 12 },
+                    week: { dow: 6, doy: 12 }
                 });
             });
         },
@@ -4153,7 +3513,7 @@
                     "Syyskuu",
                     "Lokakuu",
                     "Marraskuu",
-                    "Joulukuu",
+                    "Joulukuu"
                 ],
                 monthNamesShort: [
                     "Tammi",
@@ -4167,36 +3527,28 @@
                     "Syys",
                     "Loka",
                     "Marras",
-                    "Joulu",
+                    "Joulu"
                 ],
                 dayNamesShort: ["Su", "Ma", "Ti", "Ke", "To", "Pe", "La"],
-                dayNames: [
-                    "Sunnuntai",
-                    "Maanantai",
-                    "Tiistai",
-                    "Keskiviikko",
-                    "Torstai",
-                    "Perjantai",
-                    "Lauantai",
-                ],
+                dayNames: ["Sunnuntai", "Maanantai", "Tiistai", "Keskiviikko", "Torstai", "Perjantai", "Lauantai"],
                 dayNamesMin: ["Su", "Ma", "Ti", "Ke", "To", "Pe", "La"],
                 weekHeader: "Vk",
                 dateFormat: "d.m.yy",
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("fi", {
                     buttonText: {
                         month: "Kuukausi",
                         week: "Viikko",
                         day: "Päivä",
-                        list: "Tapahtumat",
+                        list: "Tapahtumat"
                     },
                     allDayText: "Koko päivä",
                     eventLimitText: "lisää",
-                    noEventsMessage: "Ei näytettäviä tapahtumia",
+                    noEventsMessage: "Ei näytettäviä tapahtumia"
                 });
         },
         function (e, a, t) {
@@ -4240,34 +3592,14 @@
                 function t(e, a) {
                     return e < 10 ? (a ? r[e] : n[e]) : e;
                 }
-                var n =
-                        "nolla yksi kaksi kolme neljä viisi kuusi seitsemän kahdeksan yhdeksän".split(
-                            " ",
-                        ),
-                    r = [
-                        "nolla",
-                        "yhden",
-                        "kahden",
-                        "kolmen",
-                        "neljän",
-                        "viiden",
-                        "kuuden",
-                        n[7],
-                        n[8],
-                        n[9],
-                    ];
+                var n = "nolla yksi kaksi kolme neljä viisi kuusi seitsemän kahdeksan yhdeksän".split(" "),
+                    r = ["nolla", "yhden", "kahden", "kolmen", "neljän", "viiden", "kuuden", n[7], n[8], n[9]];
                 return e.defineLocale("fi", {
                     months: "tammikuu_helmikuu_maaliskuu_huhtikuu_toukokuu_kesäkuu_heinäkuu_elokuu_syyskuu_lokakuu_marraskuu_joulukuu".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort:
-                        "tammi_helmi_maalis_huhti_touko_kesä_heinä_elo_syys_loka_marras_joulu".split(
-                            "_",
-                        ),
-                    weekdays:
-                        "sunnuntai_maanantai_tiistai_keskiviikko_torstai_perjantai_lauantai".split(
-                            "_",
-                        ),
+                    monthsShort: "tammi_helmi_maalis_huhti_touko_kesä_heinä_elo_syys_loka_marras_joulu".split("_"),
+                    weekdays: "sunnuntai_maanantai_tiistai_keskiviikko_torstai_perjantai_lauantai".split("_"),
                     weekdaysShort: "su_ma_ti_ke_to_pe_la".split("_"),
                     weekdaysMin: "su_ma_ti_ke_to_pe_la".split("_"),
                     longDateFormat: {
@@ -4280,7 +3612,7 @@
                         l: "D.M.YYYY",
                         ll: "Do MMM YYYY",
                         lll: "Do MMM YYYY, [klo] HH.mm",
-                        llll: "ddd, Do MMM YYYY, [klo] HH.mm",
+                        llll: "ddd, Do MMM YYYY, [klo] HH.mm"
                     },
                     calendar: {
                         sameDay: "[tänään] [klo] LT",
@@ -4288,7 +3620,7 @@
                         nextWeek: "dddd [klo] LT",
                         lastDay: "[eilen] [klo] LT",
                         lastWeek: "[viime] dddd[na] [klo] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "%s päästä",
@@ -4304,11 +3636,11 @@
                         M: a,
                         MM: a,
                         y: a,
-                        yy: a,
+                        yy: a
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -4332,7 +3664,7 @@
                     "septembre",
                     "octobre",
                     "novembre",
-                    "décembre",
+                    "décembre"
                 ],
                 monthNamesShort: [
                     "janv.",
@@ -4346,17 +3678,9 @@
                     "sept.",
                     "oct.",
                     "nov.",
-                    "déc.",
+                    "déc."
                 ],
-                dayNames: [
-                    "dimanche",
-                    "lundi",
-                    "mardi",
-                    "mercredi",
-                    "jeudi",
-                    "vendredi",
-                    "samedi",
-                ],
+                dayNames: ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"],
                 dayNamesShort: ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."],
                 dayNamesMin: ["D", "L", "M", "M", "J", "V", "S"],
                 weekHeader: "Sem.",
@@ -4364,7 +3688,7 @@
                 firstDay: 0,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("fr-ca", {
                     buttonText: {
@@ -4372,11 +3696,11 @@
                         month: "Mois",
                         week: "Semaine",
                         day: "Jour",
-                        list: "Mon planning",
+                        list: "Mon planning"
                     },
                     allDayHtml: "Toute la<br/>journée",
                     eventLimitText: "en plus",
-                    noEventsMessage: "Aucun événement à afficher",
+                    noEventsMessage: "Aucun événement à afficher"
                 });
         },
         function (e, a, t) {
@@ -4385,12 +3709,9 @@
             })(0, function (e) {
                 return e.defineLocale("fr-ca", {
                     months: "janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort:
-                        "janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.".split(
-                            "_",
-                        ),
+                    monthsShort: "janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.".split("_"),
                     monthsParseExact: !0,
                     weekdays: "dimanche_lundi_mardi_mercredi_jeudi_vendredi_samedi".split("_"),
                     weekdaysShort: "dim._lun._mar._mer._jeu._ven._sam.".split("_"),
@@ -4402,7 +3723,7 @@
                         L: "YYYY-MM-DD",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd D MMMM YYYY HH:mm",
+                        LLLL: "dddd D MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[Aujourd’hui à] LT",
@@ -4410,7 +3731,7 @@
                         nextWeek: "dddd [à] LT",
                         lastDay: "[Hier à] LT",
                         lastWeek: "dddd [dernier à] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "dans %s",
@@ -4426,7 +3747,7 @@
                         M: "un mois",
                         MM: "%d mois",
                         y: "un an",
-                        yy: "%d ans",
+                        yy: "%d ans"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}(er|e)/,
                     ordinal: function (e, a) {
@@ -4442,7 +3763,7 @@
                             case "W":
                                 return e + (1 === e ? "re" : "e");
                         }
-                    },
+                    }
                 });
             });
         },
@@ -4466,7 +3787,7 @@
                     "septembre",
                     "octobre",
                     "novembre",
-                    "décembre",
+                    "décembre"
                 ],
                 monthNamesShort: [
                     "janv.",
@@ -4480,17 +3801,9 @@
                     "sept.",
                     "oct.",
                     "nov.",
-                    "déc.",
+                    "déc."
                 ],
-                dayNames: [
-                    "dimanche",
-                    "lundi",
-                    "mardi",
-                    "mercredi",
-                    "jeudi",
-                    "vendredi",
-                    "samedi",
-                ],
+                dayNames: ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"],
                 dayNamesShort: ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."],
                 dayNamesMin: ["D", "L", "M", "M", "J", "V", "S"],
                 weekHeader: "Sm",
@@ -4498,7 +3811,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("fr-ch", {
                     buttonText: {
@@ -4506,11 +3819,11 @@
                         month: "Mois",
                         week: "Semaine",
                         day: "Jour",
-                        list: "Mon planning",
+                        list: "Mon planning"
                     },
                     allDayHtml: "Toute la<br/>journée",
                     eventLimitText: "en plus",
-                    noEventsMessage: "Aucun événement à afficher",
+                    noEventsMessage: "Aucun événement à afficher"
                 });
         },
         function (e, a, t) {
@@ -4519,12 +3832,9 @@
             })(0, function (e) {
                 return e.defineLocale("fr-ch", {
                     months: "janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort:
-                        "janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.".split(
-                            "_",
-                        ),
+                    monthsShort: "janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.".split("_"),
                     monthsParseExact: !0,
                     weekdays: "dimanche_lundi_mardi_mercredi_jeudi_vendredi_samedi".split("_"),
                     weekdaysShort: "dim._lun._mar._mer._jeu._ven._sam.".split("_"),
@@ -4536,7 +3846,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd D MMMM YYYY HH:mm",
+                        LLLL: "dddd D MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[Aujourd’hui à] LT",
@@ -4544,7 +3854,7 @@
                         nextWeek: "dddd [à] LT",
                         lastDay: "[Hier à] LT",
                         lastWeek: "dddd [dernier à] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "dans %s",
@@ -4560,7 +3870,7 @@
                         M: "un mois",
                         MM: "%d mois",
                         y: "un an",
-                        yy: "%d ans",
+                        yy: "%d ans"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}(er|e)/,
                     ordinal: function (e, a) {
@@ -4577,7 +3887,7 @@
                                 return e + (1 === e ? "re" : "e");
                         }
                     },
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -4601,7 +3911,7 @@
                     "septembre",
                     "octobre",
                     "novembre",
-                    "décembre",
+                    "décembre"
                 ],
                 monthNamesShort: [
                     "janv.",
@@ -4615,17 +3925,9 @@
                     "sept.",
                     "oct.",
                     "nov.",
-                    "déc.",
+                    "déc."
                 ],
-                dayNames: [
-                    "dimanche",
-                    "lundi",
-                    "mardi",
-                    "mercredi",
-                    "jeudi",
-                    "vendredi",
-                    "samedi",
-                ],
+                dayNames: ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"],
                 dayNamesShort: ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."],
                 dayNamesMin: ["D", "L", "M", "M", "J", "V", "S"],
                 weekHeader: "Sem.",
@@ -4633,7 +3935,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("fr", {
                     buttonText: {
@@ -4641,11 +3943,11 @@
                         month: "Mois",
                         week: "Semaine",
                         day: "Jour",
-                        list: "Mon planning",
+                        list: "Mon planning"
                     },
                     allDayHtml: "Toute la<br/>journée",
                     eventLimitText: "en plus",
-                    noEventsMessage: "Aucun événement à afficher",
+                    noEventsMessage: "Aucun événement à afficher"
                 });
         },
         function (e, a, t) {
@@ -4654,12 +3956,9 @@
             })(0, function (e) {
                 return e.defineLocale("fr", {
                     months: "janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort:
-                        "janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.".split(
-                            "_",
-                        ),
+                    monthsShort: "janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.".split("_"),
                     monthsParseExact: !0,
                     weekdays: "dimanche_lundi_mardi_mercredi_jeudi_vendredi_samedi".split("_"),
                     weekdaysShort: "dim._lun._mar._mer._jeu._ven._sam.".split("_"),
@@ -4671,7 +3970,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd D MMMM YYYY HH:mm",
+                        LLLL: "dddd D MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[Aujourd’hui à] LT",
@@ -4679,7 +3978,7 @@
                         nextWeek: "dddd [à] LT",
                         lastDay: "[Hier à] LT",
                         lastWeek: "dddd [dernier à] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "dans %s",
@@ -4695,7 +3994,7 @@
                         M: "un mois",
                         MM: "%d mois",
                         y: "un an",
-                        yy: "%d ans",
+                        yy: "%d ans"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}(er|)/,
                     ordinal: function (e, a) {
@@ -4713,7 +4012,7 @@
                                 return e + (1 === e ? "re" : "e");
                         }
                     },
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -4737,22 +4036,9 @@
                     "Setembro",
                     "Outubro",
                     "Novembro",
-                    "Decembro",
+                    "Decembro"
                 ],
-                monthNamesShort: [
-                    "Xan",
-                    "Feb",
-                    "Mar",
-                    "Abr",
-                    "Mai",
-                    "Xuñ",
-                    "Xul",
-                    "Ago",
-                    "Set",
-                    "Out",
-                    "Nov",
-                    "Dec",
-                ],
+                monthNamesShort: ["Xan", "Feb", "Mar", "Abr", "Mai", "Xuñ", "Xul", "Ago", "Set", "Out", "Nov", "Dec"],
                 dayNames: ["Domingo", "Luns", "Martes", "Mércores", "Xoves", "Venres", "Sábado"],
                 dayNamesShort: ["Dom", "Lun", "Mar", "Mér", "Xov", "Ven", "Sáb"],
                 dayNamesMin: ["Do", "Lu", "Ma", "Mé", "Xo", "Ve", "Sá"],
@@ -4761,13 +4047,13 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("gl", {
                     buttonText: { month: "Mes", week: "Semana", day: "Día", list: "Axenda" },
                     allDayHtml: "Todo<br/>o día",
                     eventLimitText: "máis",
-                    noEventsMessage: "Non hai eventos para amosar",
+                    noEventsMessage: "Non hai eventos para amosar"
                 });
         },
         function (e, a, t) {
@@ -4776,10 +4062,9 @@
             })(0, function (e) {
                 return e.defineLocale("gl", {
                     months: "xaneiro_febreiro_marzo_abril_maio_xuño_xullo_agosto_setembro_outubro_novembro_decembro".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort:
-                        "xan._feb._mar._abr._mai._xuñ._xul._ago._set._out._nov._dec.".split("_"),
+                    monthsShort: "xan._feb._mar._abr._mai._xuñ._xul._ago._set._out._nov._dec.".split("_"),
                     monthsParseExact: !0,
                     weekdays: "domingo_luns_martes_mércores_xoves_venres_sábado".split("_"),
                     weekdaysShort: "dom._lun._mar._mér._xov._ven._sáb.".split("_"),
@@ -4791,7 +4076,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D [de] MMMM [de] YYYY",
                         LLL: "D [de] MMMM [de] YYYY H:mm",
-                        LLLL: "dddd, D [de] MMMM [de] YYYY H:mm",
+                        LLLL: "dddd, D [de] MMMM [de] YYYY H:mm"
                     },
                     calendar: {
                         sameDay: function () {
@@ -4807,11 +4092,9 @@
                             return "[onte " + (1 !== this.hours() ? "á" : "a") + "] LT";
                         },
                         lastWeek: function () {
-                            return (
-                                "[o] dddd [pasado " + (1 !== this.hours() ? "ás" : "a") + "] LT"
-                            );
+                            return "[o] dddd [pasado " + (1 !== this.hours() ? "ás" : "a") + "] LT";
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: function (e) {
@@ -4829,11 +4112,11 @@
                         M: "un mes",
                         MM: "%d meses",
                         y: "un ano",
-                        yy: "%d anos",
+                        yy: "%d anos"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}º/,
                     ordinal: "%dº",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -4857,22 +4140,9 @@
                     "ספטמבר",
                     "אוקטובר",
                     "נובמבר",
-                    "דצמבר",
+                    "דצמבר"
                 ],
-                monthNamesShort: [
-                    "ינו",
-                    "פבר",
-                    "מרץ",
-                    "אפר",
-                    "מאי",
-                    "יוני",
-                    "יולי",
-                    "אוג",
-                    "ספט",
-                    "אוק",
-                    "נוב",
-                    "דצמ",
-                ],
+                monthNamesShort: ["ינו", "פבר", "מרץ", "אפר", "מאי", "יוני", "יולי", "אוג", "ספט", "אוק", "נוב", "דצמ"],
                 dayNames: ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"],
                 dayNamesShort: ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "שבת"],
                 dayNamesMin: ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "שבת"],
@@ -4881,14 +4151,14 @@
                 firstDay: 0,
                 isRTL: !0,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("he", {
                     buttonText: { month: "חודש", week: "שבוע", day: "יום", list: "סדר יום" },
                     allDayText: "כל היום",
                     eventLimitText: "אחר",
                     noEventsMessage: "אין אירועים להצגה",
-                    weekNumberTitle: "שבוע",
+                    weekNumberTitle: "שבוע"
                 });
         },
         function (e, a, t) {
@@ -4896,12 +4166,8 @@
                 a(t(0));
             })(0, function (e) {
                 return e.defineLocale("he", {
-                    months: "ינואר_פברואר_מרץ_אפריל_מאי_יוני_יולי_אוגוסט_ספטמבר_אוקטובר_נובמבר_דצמבר".split(
-                        "_",
-                    ),
-                    monthsShort: "ינו׳_פבר׳_מרץ_אפר׳_מאי_יוני_יולי_אוג׳_ספט׳_אוק׳_נוב׳_דצמ׳".split(
-                        "_",
-                    ),
+                    months: "ינואר_פברואר_מרץ_אפריל_מאי_יוני_יולי_אוגוסט_ספטמבר_אוקטובר_נובמבר_דצמבר".split("_"),
+                    monthsShort: "ינו׳_פבר׳_מרץ_אפר׳_מאי_יוני_יולי_אוג׳_ספט׳_אוק׳_נוב׳_דצמ׳".split("_"),
                     weekdays: "ראשון_שני_שלישי_רביעי_חמישי_שישי_שבת".split("_"),
                     weekdaysShort: "א׳_ב׳_ג׳_ד׳_ה׳_ו׳_ש׳".split("_"),
                     weekdaysMin: "א_ב_ג_ד_ה_ו_ש".split("_"),
@@ -4915,7 +4181,7 @@
                         l: "D/M/YYYY",
                         ll: "D MMM YYYY",
                         lll: "D MMM YYYY HH:mm",
-                        llll: "ddd, D MMM YYYY HH:mm",
+                        llll: "ddd, D MMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[היום ב־]LT",
@@ -4923,7 +4189,7 @@
                         nextWeek: "dddd [בשעה] LT",
                         lastDay: "[אתמול ב־]LT",
                         lastWeek: "[ביום] dddd [האחרון בשעה] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "בעוד %s",
@@ -4946,12 +4212,8 @@
                         },
                         y: "שנה",
                         yy: function (e) {
-                            return 2 === e
-                                ? "שנתיים"
-                                : e % 10 == 0 && 10 !== e
-                                  ? e + " שנה"
-                                  : e + " שנים";
-                        },
+                            return 2 === e ? "שנתיים" : e % 10 == 0 && 10 !== e ? e + " שנה" : e + " שנים";
+                        }
                     },
                     meridiemParse: /אחה"צ|לפנה"צ|אחרי הצהריים|לפני הצהריים|לפנות בוקר|בבוקר|בערב/i,
                     isPM: function (e) {
@@ -4971,7 +4233,7 @@
                                       ? 'אחה"צ'
                                       : "אחרי הצהריים"
                                   : "בערב";
-                    },
+                    }
                 });
             });
         },
@@ -4995,31 +4257,10 @@
                     "सितम्बर",
                     "अक्टूबर",
                     "नवम्बर",
-                    "दिसम्बर",
+                    "दिसम्बर"
                 ],
-                monthNamesShort: [
-                    "जन",
-                    "फर",
-                    "मार्च",
-                    "अप्रेल",
-                    "मई",
-                    "जून",
-                    "जूलाई",
-                    "अग",
-                    "सित",
-                    "अक्ट",
-                    "नव",
-                    "दि",
-                ],
-                dayNames: [
-                    "रविवार",
-                    "सोमवार",
-                    "मंगलवार",
-                    "बुधवार",
-                    "गुरुवार",
-                    "शुक्रवार",
-                    "शनिवार",
-                ],
+                monthNamesShort: ["जन", "फर", "मार्च", "अप्रेल", "मई", "जून", "जूलाई", "अग", "सित", "अक्ट", "नव", "दि"],
+                dayNames: ["रविवार", "सोमवार", "मंगलवार", "बुधवार", "गुरुवार", "शुक्रवार", "शनिवार"],
                 dayNamesShort: ["रवि", "सोम", "मंगल", "बुध", "गुरु", "शुक्र", "शनि"],
                 dayNamesMin: ["रवि", "सोम", "मंगल", "बुध", "गुरु", "शुक्र", "शनि"],
                 weekHeader: "हफ्ता",
@@ -5027,7 +4268,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("hi", {
                     buttonText: { month: "महीना", week: "सप्ताह", day: "दिन", list: "कार्यसूची" },
@@ -5035,7 +4276,7 @@
                     eventLimitText: function (e) {
                         return "+अधिक " + e;
                     },
-                    noEventsMessage: "कोई घटनाओं को प्रदर्शित करने के लिए",
+                    noEventsMessage: "कोई घटनाओं को प्रदर्शित करने के लिए"
                 });
         },
         function (e, a, t) {
@@ -5052,7 +4293,7 @@
                         7: "७",
                         8: "८",
                         9: "९",
-                        0: "०",
+                        0: "०"
                     },
                     t = {
                         "१": "1",
@@ -5064,14 +4305,11 @@
                         "७": "7",
                         "८": "8",
                         "९": "9",
-                        "०": "0",
+                        "०": "0"
                     };
                 return e.defineLocale("hi", {
-                    months: "जनवरी_फ़रवरी_मार्च_अप्रैल_मई_जून_जुलाई_अगस्त_सितम्बर_अक्टूबर_नवम्बर_दिसम्बर".split(
-                        "_",
-                    ),
-                    monthsShort:
-                        "जन._फ़र._मार्च_अप्रै._मई_जून_जुल._अग._सित._अक्टू._नव._दिस.".split("_"),
+                    months: "जनवरी_फ़रवरी_मार्च_अप्रैल_मई_जून_जुलाई_अगस्त_सितम्बर_अक्टूबर_नवम्बर_दिसम्बर".split("_"),
+                    monthsShort: "जन._फ़र._मार्च_अप्रै._मई_जून_जुल._अग._सित._अक्टू._नव._दिस.".split("_"),
                     monthsParseExact: !0,
                     weekdays: "रविवार_सोमवार_मंगलवार_बुधवार_गुरूवार_शुक्रवार_शनिवार".split("_"),
                     weekdaysShort: "रवि_सोम_मंगल_बुध_गुरू_शुक्र_शनि".split("_"),
@@ -5082,7 +4320,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY, A h:mm बजे",
-                        LLLL: "dddd, D MMMM YYYY, A h:mm बजे",
+                        LLLL: "dddd, D MMMM YYYY, A h:mm बजे"
                     },
                     calendar: {
                         sameDay: "[आज] LT",
@@ -5090,7 +4328,7 @@
                         nextWeek: "dddd, LT",
                         lastDay: "[कल] LT",
                         lastWeek: "[पिछले] dddd, LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "%s में",
@@ -5106,7 +4344,7 @@
                         M: "एक महीने",
                         MM: "%d महीने",
                         y: "एक वर्ष",
-                        yy: "%d वर्ष",
+                        yy: "%d वर्ष"
                     },
                     preparse: function (e) {
                         return e.replace(/[१२३४५६७८९०]/g, function (e) {
@@ -5138,17 +4376,9 @@
                         );
                     },
                     meridiem: function (e, a, t) {
-                        return e < 4
-                            ? "रात"
-                            : e < 10
-                              ? "सुबह"
-                              : e < 17
-                                ? "दोपहर"
-                                : e < 20
-                                  ? "शाम"
-                                  : "रात";
+                        return e < 4 ? "रात" : e < 10 ? "सुबह" : e < 17 ? "दोपहर" : e < 20 ? "शाम" : "रात";
                     },
-                    week: { dow: 0, doy: 6 },
+                    week: { dow: 0, doy: 6 }
                 });
             });
         },
@@ -5172,31 +4402,10 @@
                     "Rujan",
                     "Listopad",
                     "Studeni",
-                    "Prosinac",
+                    "Prosinac"
                 ],
-                monthNamesShort: [
-                    "Sij",
-                    "Velj",
-                    "Ožu",
-                    "Tra",
-                    "Svi",
-                    "Lip",
-                    "Srp",
-                    "Kol",
-                    "Ruj",
-                    "Lis",
-                    "Stu",
-                    "Pro",
-                ],
-                dayNames: [
-                    "Nedjelja",
-                    "Ponedjeljak",
-                    "Utorak",
-                    "Srijeda",
-                    "Četvrtak",
-                    "Petak",
-                    "Subota",
-                ],
+                monthNamesShort: ["Sij", "Velj", "Ožu", "Tra", "Svi", "Lip", "Srp", "Kol", "Ruj", "Lis", "Stu", "Pro"],
+                dayNames: ["Nedjelja", "Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak", "Subota"],
                 dayNamesShort: ["Ned", "Pon", "Uto", "Sri", "Čet", "Pet", "Sub"],
                 dayNamesMin: ["Ne", "Po", "Ut", "Sr", "Če", "Pe", "Su"],
                 weekHeader: "Tje",
@@ -5204,7 +4413,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("hr", {
                     buttonText: {
@@ -5213,13 +4422,13 @@
                         month: "Mjesec",
                         week: "Tjedan",
                         day: "Dan",
-                        list: "Raspored",
+                        list: "Raspored"
                     },
                     allDayText: "Cijeli dan",
                     eventLimitText: function (e) {
                         return "+ još " + e;
                     },
-                    noEventsMessage: "Nema događaja za prikaz",
+                    noEventsMessage: "Nema događaja za prikaz"
                 });
         },
         function (e, a, t) {
@@ -5230,60 +4439,36 @@
                     var n = e + " ";
                     switch (t) {
                         case "ss":
-                            return (n +=
-                                1 === e
-                                    ? "sekunda"
-                                    : 2 === e || 3 === e || 4 === e
-                                      ? "sekunde"
-                                      : "sekundi");
+                            return (n += 1 === e ? "sekunda" : 2 === e || 3 === e || 4 === e ? "sekunde" : "sekundi");
                         case "m":
                             return a ? "jedna minuta" : "jedne minute";
                         case "mm":
-                            return (n +=
-                                1 === e
-                                    ? "minuta"
-                                    : 2 === e || 3 === e || 4 === e
-                                      ? "minute"
-                                      : "minuta");
+                            return (n += 1 === e ? "minuta" : 2 === e || 3 === e || 4 === e ? "minute" : "minuta");
                         case "h":
                             return a ? "jedan sat" : "jednog sata";
                         case "hh":
-                            return (n +=
-                                1 === e ? "sat" : 2 === e || 3 === e || 4 === e ? "sata" : "sati");
+                            return (n += 1 === e ? "sat" : 2 === e || 3 === e || 4 === e ? "sata" : "sati");
                         case "dd":
                             return (n += 1 === e ? "dan" : "dana");
                         case "MM":
-                            return (n +=
-                                1 === e
-                                    ? "mjesec"
-                                    : 2 === e || 3 === e || 4 === e
-                                      ? "mjeseca"
-                                      : "mjeseci");
+                            return (n += 1 === e ? "mjesec" : 2 === e || 3 === e || 4 === e ? "mjeseca" : "mjeseci");
                         case "yy":
-                            return (n +=
-                                1 === e
-                                    ? "godina"
-                                    : 2 === e || 3 === e || 4 === e
-                                      ? "godine"
-                                      : "godina");
+                            return (n += 1 === e ? "godina" : 2 === e || 3 === e || 4 === e ? "godine" : "godina");
                     }
                 }
                 return e.defineLocale("hr", {
                     months: {
                         format: "siječnja_veljače_ožujka_travnja_svibnja_lipnja_srpnja_kolovoza_rujna_listopada_studenoga_prosinca".split(
-                            "_",
+                            "_"
                         ),
                         standalone:
                             "siječanj_veljača_ožujak_travanj_svibanj_lipanj_srpanj_kolovoz_rujan_listopad_studeni_prosinac".split(
-                                "_",
-                            ),
+                                "_"
+                            )
                     },
-                    monthsShort:
-                        "sij._velj._ožu._tra._svi._lip._srp._kol._ruj._lis._stu._pro.".split("_"),
+                    monthsShort: "sij._velj._ožu._tra._svi._lip._srp._kol._ruj._lis._stu._pro.".split("_"),
                     monthsParseExact: !0,
-                    weekdays: "nedjelja_ponedjeljak_utorak_srijeda_četvrtak_petak_subota".split(
-                        "_",
-                    ),
+                    weekdays: "nedjelja_ponedjeljak_utorak_srijeda_četvrtak_petak_subota".split("_"),
                     weekdaysShort: "ned._pon._uto._sri._čet._pet._sub.".split("_"),
                     weekdaysMin: "ne_po_ut_sr_če_pe_su".split("_"),
                     weekdaysParseExact: !0,
@@ -5293,7 +4478,7 @@
                         L: "DD.MM.YYYY",
                         LL: "Do MMMM YYYY",
                         LLL: "Do MMMM YYYY H:mm",
-                        LLLL: "dddd, Do MMMM YYYY H:mm",
+                        LLLL: "dddd, Do MMMM YYYY H:mm"
                     },
                     calendar: {
                         sameDay: "[danas u] LT",
@@ -5329,7 +4514,7 @@
                                     return "[prošli] dddd [u] LT";
                             }
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "za %s",
@@ -5345,11 +4530,11 @@
                         M: "mjesec",
                         MM: a,
                         y: "godinu",
-                        yy: a,
+                        yy: a
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 7 },
+                    week: { dow: 1, doy: 7 }
                 });
             });
         },
@@ -5373,31 +4558,10 @@
                     "Szeptember",
                     "Október",
                     "November",
-                    "December",
+                    "December"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Már",
-                    "Ápr",
-                    "Máj",
-                    "Jún",
-                    "Júl",
-                    "Aug",
-                    "Szep",
-                    "Okt",
-                    "Nov",
-                    "Dec",
-                ],
-                dayNames: [
-                    "Vasárnap",
-                    "Hétfő",
-                    "Kedd",
-                    "Szerda",
-                    "Csütörtök",
-                    "Péntek",
-                    "Szombat",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Már", "Ápr", "Máj", "Jún", "Júl", "Aug", "Szep", "Okt", "Nov", "Dec"],
+                dayNames: ["Vasárnap", "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat"],
                 dayNamesShort: ["Vas", "Hét", "Ked", "Sze", "Csü", "Pén", "Szo"],
                 dayNamesMin: ["V", "H", "K", "Sze", "Cs", "P", "Szo"],
                 weekHeader: "Hét",
@@ -5405,13 +4569,13 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !0,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("hu", {
                     buttonText: { month: "Hónap", week: "Hét", day: "Nap", list: "Napló" },
                     allDayText: "Egész nap",
                     eventLimitText: "további",
-                    noEventsMessage: "Nincs megjeleníthető esemény",
+                    noEventsMessage: "Nincs megjeleníthető esemény"
                 });
         },
         function (e, a, t) {
@@ -5454,7 +4618,7 @@
                 var n = "vasárnap hétfőn kedden szerdán csütörtökön pénteken szombaton".split(" ");
                 return e.defineLocale("hu", {
                     months: "január_február_március_április_május_június_július_augusztus_szeptember_október_november_december".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "jan_feb_márc_ápr_máj_jún_júl_aug_szept_okt_nov_dec".split("_"),
                     weekdays: "vasárnap_hétfő_kedd_szerda_csütörtök_péntek_szombat".split("_"),
@@ -5466,7 +4630,7 @@
                         L: "YYYY.MM.DD.",
                         LL: "YYYY. MMMM D.",
                         LLL: "YYYY. MMMM D. H:mm",
-                        LLLL: "YYYY. MMMM D., dddd H:mm",
+                        LLLL: "YYYY. MMMM D., dddd H:mm"
                     },
                     meridiemParse: /de|du/i,
                     isPM: function (e) {
@@ -5485,7 +4649,7 @@
                         lastWeek: function () {
                             return t.call(this, !1);
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "%s múlva",
@@ -5501,11 +4665,11 @@
                         M: a,
                         MM: a,
                         y: a,
-                        yy: a,
+                        yy: a
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -5529,22 +4693,9 @@
                     "September",
                     "Oktober",
                     "Nopember",
-                    "Desember",
+                    "Desember"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "Mei",
-                    "Jun",
-                    "Jul",
-                    "Agus",
-                    "Sep",
-                    "Okt",
-                    "Nop",
-                    "Des",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agus", "Sep", "Okt", "Nop", "Des"],
                 dayNames: ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"],
                 dayNamesShort: ["Min", "Sen", "Sel", "Rab", "kam", "Jum", "Sab"],
                 dayNamesMin: ["Mg", "Sn", "Sl", "Rb", "Km", "jm", "Sb"],
@@ -5553,13 +4704,13 @@
                 firstDay: 0,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("id", {
                     buttonText: { month: "Bulan", week: "Minggu", day: "Hari", list: "Agenda" },
                     allDayHtml: "Sehari<br/>penuh",
                     eventLimitText: "lebih",
-                    noEventsMessage: "Tidak ada acara untuk ditampilkan",
+                    noEventsMessage: "Tidak ada acara untuk ditampilkan"
                 });
         },
         function (e, a, t) {
@@ -5568,7 +4719,7 @@
             })(0, function (e) {
                 return e.defineLocale("id", {
                     months: "Januari_Februari_Maret_April_Mei_Juni_Juli_Agustus_September_Oktober_November_Desember".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "Jan_Feb_Mar_Apr_Mei_Jun_Jul_Agt_Sep_Okt_Nov_Des".split("_"),
                     weekdays: "Minggu_Senin_Selasa_Rabu_Kamis_Jumat_Sabtu".split("_"),
@@ -5580,7 +4731,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY [pukul] HH.mm",
-                        LLLL: "dddd, D MMMM YYYY [pukul] HH.mm",
+                        LLLL: "dddd, D MMMM YYYY [pukul] HH.mm"
                     },
                     meridiemParse: /pagi|siang|sore|malam/,
                     meridiemHour: function (e, a) {
@@ -5606,7 +4757,7 @@
                         nextWeek: "dddd [pukul] LT",
                         lastDay: "[Kemarin pukul] LT",
                         lastWeek: "dddd [lalu pukul] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "dalam %s",
@@ -5622,9 +4773,9 @@
                         M: "sebulan",
                         MM: "%d bulan",
                         y: "setahun",
-                        yy: "%d tahun",
+                        yy: "%d tahun"
                     },
-                    week: { dow: 1, doy: 7 },
+                    week: { dow: 1, doy: 7 }
                 });
             });
         },
@@ -5648,22 +4799,9 @@
                     "September",
                     "Október",
                     "Nóvember",
-                    "Desember",
+                    "Desember"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "Maí",
-                    "Jún",
-                    "Júl",
-                    "Ágú",
-                    "Sep",
-                    "Okt",
-                    "Nóv",
-                    "Des",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "Maí", "Jún", "Júl", "Ágú", "Sep", "Okt", "Nóv", "Des"],
                 dayNames: [
                     "Sunnudagur",
                     "Mánudagur",
@@ -5671,7 +4809,7 @@
                     "Miðvikudagur",
                     "Fimmtudagur",
                     "Föstudagur",
-                    "Laugardagur",
+                    "Laugardagur"
                 ],
                 dayNamesShort: ["Sun", "Mán", "Þri", "Mið", "Fim", "Fös", "Lau"],
                 dayNamesMin: ["Su", "Má", "Þr", "Mi", "Fi", "Fö", "La"],
@@ -5680,13 +4818,13 @@
                 firstDay: 0,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("is", {
                     buttonText: { month: "Mánuður", week: "Vika", day: "Dagur", list: "Dagskrá" },
                     allDayHtml: "Allan<br/>daginn",
                     eventLimitText: "meira",
-                    noEventsMessage: "Engir viðburðir til að sýna",
+                    noEventsMessage: "Engir viðburðir til að sýna"
                 });
         },
         function (e, a, t) {
@@ -5706,15 +4844,9 @@
                         case "m":
                             return t ? "mínúta" : "mínútu";
                         case "mm":
-                            return a(e)
-                                ? s + (t || r ? "mínútur" : "mínútum")
-                                : t
-                                  ? s + "mínúta"
-                                  : s + "mínútu";
+                            return a(e) ? s + (t || r ? "mínútur" : "mínútum") : t ? s + "mínúta" : s + "mínútu";
                         case "hh":
-                            return a(e)
-                                ? s + (t || r ? "klukkustundir" : "klukkustundum")
-                                : s + "klukkustund";
+                            return a(e) ? s + (t || r ? "klukkustundir" : "klukkustundum") : s + "klukkustund";
                         case "d":
                             return t ? "dagur" : r ? "dag" : "degi";
                         case "dd":
@@ -5738,20 +4870,17 @@
                         case "y":
                             return t || r ? "ár" : "ári";
                         case "yy":
-                            return a(e)
-                                ? s + (t || r ? "ár" : "árum")
-                                : s + (t || r ? "ár" : "ári");
+                            return a(e) ? s + (t || r ? "ár" : "árum") : s + (t || r ? "ár" : "ári");
                     }
                 }
                 return e.defineLocale("is", {
                     months: "janúar_febrúar_mars_apríl_maí_júní_júlí_ágúst_september_október_nóvember_desember".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "jan_feb_mar_apr_maí_jún_júl_ágú_sep_okt_nóv_des".split("_"),
-                    weekdays:
-                        "sunnudagur_mánudagur_þriðjudagur_miðvikudagur_fimmtudagur_föstudagur_laugardagur".split(
-                            "_",
-                        ),
+                    weekdays: "sunnudagur_mánudagur_þriðjudagur_miðvikudagur_fimmtudagur_föstudagur_laugardagur".split(
+                        "_"
+                    ),
                     weekdaysShort: "sun_mán_þri_mið_fim_fös_lau".split("_"),
                     weekdaysMin: "Su_Má_Þr_Mi_Fi_Fö_La".split("_"),
                     longDateFormat: {
@@ -5760,7 +4889,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D. MMMM YYYY",
                         LLL: "D. MMMM YYYY [kl.] H:mm",
-                        LLLL: "dddd, D. MMMM YYYY [kl.] H:mm",
+                        LLLL: "dddd, D. MMMM YYYY [kl.] H:mm"
                     },
                     calendar: {
                         sameDay: "[í dag kl.] LT",
@@ -5768,7 +4897,7 @@
                         nextWeek: "dddd [kl.] LT",
                         lastDay: "[í gær kl.] LT",
                         lastWeek: "[síðasta] dddd [kl.] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "eftir %s",
@@ -5784,11 +4913,11 @@
                         M: t,
                         MM: t,
                         y: t,
-                        yy: t,
+                        yy: t
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -5812,31 +4941,10 @@
                     "Settembre",
                     "Ottobre",
                     "Novembre",
-                    "Dicembre",
+                    "Dicembre"
                 ],
-                monthNamesShort: [
-                    "Gen",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "Mag",
-                    "Giu",
-                    "Lug",
-                    "Ago",
-                    "Set",
-                    "Ott",
-                    "Nov",
-                    "Dic",
-                ],
-                dayNames: [
-                    "Domenica",
-                    "Lunedì",
-                    "Martedì",
-                    "Mercoledì",
-                    "Giovedì",
-                    "Venerdì",
-                    "Sabato",
-                ],
+                monthNamesShort: ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"],
+                dayNames: ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"],
                 dayNamesShort: ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"],
                 dayNamesMin: ["Do", "Lu", "Ma", "Me", "Gi", "Ve", "Sa"],
                 weekHeader: "Sm",
@@ -5844,20 +4952,20 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("it", {
                     buttonText: {
                         month: "Mese",
                         week: "Settimana",
                         day: "Giorno",
-                        list: "Agenda",
+                        list: "Agenda"
                     },
                     allDayHtml: "Tutto il<br/>giorno",
                     eventLimitText: function (e) {
                         return "+altri " + e;
                     },
-                    noEventsMessage: "Non ci sono eventi da visualizzare",
+                    noEventsMessage: "Non ci sono eventi da visualizzare"
                 });
         },
         function (e, a, t) {
@@ -5866,12 +4974,10 @@
             })(0, function (e) {
                 return e.defineLocale("it", {
                     months: "gennaio_febbraio_marzo_aprile_maggio_giugno_luglio_agosto_settembre_ottobre_novembre_dicembre".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "gen_feb_mar_apr_mag_giu_lug_ago_set_ott_nov_dic".split("_"),
-                    weekdays: "domenica_lunedì_martedì_mercoledì_giovedì_venerdì_sabato".split(
-                        "_",
-                    ),
+                    weekdays: "domenica_lunedì_martedì_mercoledì_giovedì_venerdì_sabato".split("_"),
                     weekdaysShort: "dom_lun_mar_mer_gio_ven_sab".split("_"),
                     weekdaysMin: "do_lu_ma_me_gi_ve_sa".split("_"),
                     longDateFormat: {
@@ -5880,62 +4986,38 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd D MMMM YYYY HH:mm",
+                        LLLL: "dddd D MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: function () {
-                            return (
-                                "[Oggi a" +
-                                (this.hours() > 1 ? "lle " : 0 === this.hours() ? " " : "ll'") +
-                                "]LT"
-                            );
+                            return "[Oggi a" + (this.hours() > 1 ? "lle " : 0 === this.hours() ? " " : "ll'") + "]LT";
                         },
                         nextDay: function () {
-                            return (
-                                "[Domani a" +
-                                (this.hours() > 1 ? "lle " : 0 === this.hours() ? " " : "ll'") +
-                                "]LT"
-                            );
+                            return "[Domani a" + (this.hours() > 1 ? "lle " : 0 === this.hours() ? " " : "ll'") + "]LT";
                         },
                         nextWeek: function () {
-                            return (
-                                "dddd [a" +
-                                (this.hours() > 1 ? "lle " : 0 === this.hours() ? " " : "ll'") +
-                                "]LT"
-                            );
+                            return "dddd [a" + (this.hours() > 1 ? "lle " : 0 === this.hours() ? " " : "ll'") + "]LT";
                         },
                         lastDay: function () {
-                            return (
-                                "[Ieri a" +
-                                (this.hours() > 1 ? "lle " : 0 === this.hours() ? " " : "ll'") +
-                                "]LT"
-                            );
+                            return "[Ieri a" + (this.hours() > 1 ? "lle " : 0 === this.hours() ? " " : "ll'") + "]LT";
                         },
                         lastWeek: function () {
                             switch (this.day()) {
                                 case 0:
                                     return (
                                         "[La scorsa] dddd [a" +
-                                        (this.hours() > 1
-                                            ? "lle "
-                                            : 0 === this.hours()
-                                              ? " "
-                                              : "ll'") +
+                                        (this.hours() > 1 ? "lle " : 0 === this.hours() ? " " : "ll'") +
                                         "]LT"
                                     );
                                 default:
                                     return (
                                         "[Lo scorso] dddd [a" +
-                                        (this.hours() > 1
-                                            ? "lle "
-                                            : 0 === this.hours()
-                                              ? " "
-                                              : "ll'") +
+                                        (this.hours() > 1 ? "lle " : 0 === this.hours() ? " " : "ll'") +
                                         "]LT"
                                     );
                             }
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: function (e) {
@@ -5953,11 +5035,11 @@
                         M: "un mese",
                         MM: "%d mesi",
                         y: "un anno",
-                        yy: "%d anni",
+                        yy: "%d anni"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}º/,
                     ordinal: "%dº",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -5969,20 +5051,7 @@
                 prevText: "&#x3C;前",
                 nextText: "次&#x3E;",
                 currentText: "今日",
-                monthNames: [
-                    "1月",
-                    "2月",
-                    "3月",
-                    "4月",
-                    "5月",
-                    "6月",
-                    "7月",
-                    "8月",
-                    "9月",
-                    "10月",
-                    "11月",
-                    "12月",
-                ],
+                monthNames: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
                 monthNamesShort: [
                     "1月",
                     "2月",
@@ -5995,7 +5064,7 @@
                     "9月",
                     "10月",
                     "11月",
-                    "12月",
+                    "12月"
                 ],
                 dayNames: ["日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"],
                 dayNamesShort: ["日", "月", "火", "水", "木", "金", "土"],
@@ -6005,7 +5074,7 @@
                 firstDay: 0,
                 isRTL: !1,
                 showMonthAfterYear: !0,
-                yearSuffix: "年",
+                yearSuffix: "年"
             }),
                 n.locale("ja", {
                     buttonText: { month: "月", week: "週", day: "日", list: "予定リスト" },
@@ -6013,7 +5082,7 @@
                     eventLimitText: function (e) {
                         return "他 " + e + " 件";
                     },
-                    noEventsMessage: "表示する予定はありません",
+                    noEventsMessage: "表示する予定はありません"
                 });
         },
         function (e, a, t) {
@@ -6029,7 +5098,7 @@
                             offset: 1,
                             name: "平成",
                             narrow: "㍻",
-                            abbr: "H",
+                            abbr: "H"
                         },
                         {
                             since: "1926-12-25",
@@ -6037,7 +5106,7 @@
                             offset: 1,
                             name: "昭和",
                             narrow: "㍼",
-                            abbr: "S",
+                            abbr: "S"
                         },
                         {
                             since: "1912-07-30",
@@ -6045,7 +5114,7 @@
                             offset: 1,
                             name: "大正",
                             narrow: "㍽",
-                            abbr: "T",
+                            abbr: "T"
                         },
                         {
                             since: "1873-01-01",
@@ -6053,7 +5122,7 @@
                             offset: 6,
                             name: "明治",
                             narrow: "㍾",
-                            abbr: "M",
+                            abbr: "M"
                         },
                         {
                             since: "0001-01-01",
@@ -6061,7 +5130,7 @@
                             offset: 1,
                             name: "西暦",
                             narrow: "AD",
-                            abbr: "AD",
+                            abbr: "AD"
                         },
                         {
                             since: "0000-12-31",
@@ -6069,8 +5138,8 @@
                             offset: 1,
                             name: "紀元前",
                             narrow: "BC",
-                            abbr: "BC",
-                        },
+                            abbr: "BC"
+                        }
                     ],
                     eraYearOrdinalRegex: /(元|\d+)年/,
                     eraYearOrdinalParse: function (e, a) {
@@ -6091,7 +5160,7 @@
                         l: "YYYY/MM/DD",
                         ll: "YYYY年M月D日",
                         lll: "YYYY年M月D日 HH:mm",
-                        llll: "YYYY年M月D日(ddd) HH:mm",
+                        llll: "YYYY年M月D日(ddd) HH:mm"
                     },
                     meridiemParse: /午前|午後/i,
                     isPM: function (e) {
@@ -6110,7 +5179,7 @@
                         lastWeek: function (e) {
                             return this.week() !== e.week() ? "[先週]dddd LT" : "dddd LT";
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}日/,
                     ordinal: function (e, a) {
@@ -6139,8 +5208,8 @@
                         M: "1ヶ月",
                         MM: "%dヶ月",
                         y: "1年",
-                        yy: "%d年",
-                    },
+                        yy: "%d年"
+                    }
                 });
             });
         },
@@ -6164,31 +5233,10 @@
                     "სექტემბერი",
                     "ოქტომბერი",
                     "ნოემბერი",
-                    "დეკემბერი",
+                    "დეკემბერი"
                 ],
-                monthNamesShort: [
-                    "იან",
-                    "თებ",
-                    "მარ",
-                    "აპრ",
-                    "მაი",
-                    "ივნ",
-                    "ივლ",
-                    "აგვ",
-                    "სექ",
-                    "ოქტ",
-                    "ნოე",
-                    "დეკ",
-                ],
-                dayNames: [
-                    "კვირა",
-                    "ორშაბათი",
-                    "სამშაბათი",
-                    "ოთხშაბათი",
-                    "ხუთშაბათი",
-                    "პარასკევი",
-                    "შაბათი",
-                ],
+                monthNamesShort: ["იან", "თებ", "მარ", "აპრ", "მაი", "ივნ", "ივლ", "აგვ", "სექ", "ოქტ", "ნოე", "დეკ"],
+                dayNames: ["კვირა", "ორშაბათი", "სამშაბათი", "ოთხშაბათი", "ხუთშაბათი", "პარასკევი", "შაბათი"],
                 dayNamesShort: ["კვი", "ორშ", "სამ", "ოთხ", "ხუთ", "პარ", "შაბ"],
                 dayNamesMin: ["კვ", "ორ", "სა", "ოთ", "ხუ", "პა", "შა"],
                 weekHeader: "კვ",
@@ -6196,7 +5244,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("ka", {
                     buttonText: { month: "თვე", week: "კვირა", day: "დღე", list: "დღის წესრიგი" },
@@ -6204,7 +5252,7 @@
                     eventLimitText: function (e) {
                         return "+ კიდევ " + e;
                     },
-                    noEventsMessage: "ღონისძიებები არ არის",
+                    noEventsMessage: "ღონისძიებები არ არის"
                 });
         },
         function (e, a, t) {
@@ -6213,18 +5261,13 @@
             })(0, function (e) {
                 return e.defineLocale("ka", {
                     months: "იანვარი_თებერვალი_მარტი_აპრილი_მაისი_ივნისი_ივლისი_აგვისტო_სექტემბერი_ოქტომბერი_ნოემბერი_დეკემბერი".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "იან_თებ_მარ_აპრ_მაი_ივნ_ივლ_აგვ_სექ_ოქტ_ნოე_დეკ".split("_"),
                     weekdays: {
-                        standalone:
-                            "კვირა_ორშაბათი_სამშაბათი_ოთხშაბათი_ხუთშაბათი_პარასკევი_შაბათი".split(
-                                "_",
-                            ),
-                        format: "კვირას_ორშაბათს_სამშაბათს_ოთხშაბათს_ხუთშაბათს_პარასკევს_შაბათს".split(
-                            "_",
-                        ),
-                        isFormat: /(წინა|შემდეგ)/,
+                        standalone: "კვირა_ორშაბათი_სამშაბათი_ოთხშაბათი_ხუთშაბათი_პარასკევი_შაბათი".split("_"),
+                        format: "კვირას_ორშაბათს_სამშაბათს_ოთხშაბათს_ხუთშაბათს_პარასკევს_შაბათს".split("_"),
+                        isFormat: /(წინა|შემდეგ)/
                     },
                     weekdaysShort: "კვი_ორშ_სამ_ოთხ_ხუთ_პარ_შაბ".split("_"),
                     weekdaysMin: "კვ_ორ_სა_ოთ_ხუ_პა_შა".split("_"),
@@ -6234,7 +5277,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd, D MMMM YYYY HH:mm",
+                        LLLL: "dddd, D MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[დღეს] LT[-ზე]",
@@ -6242,7 +5285,7 @@
                         lastDay: "[გუშინ] LT[-ზე]",
                         nextWeek: "[შემდეგ] dddd LT[-ზე]",
                         lastWeek: "[წინა] dddd LT-ზე",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: function (e) {
@@ -6268,7 +5311,7 @@
                         M: "თვე",
                         MM: "%d თვე",
                         y: "წელი",
-                        yy: "%d წელი",
+                        yy: "%d წელი"
                     },
                     dayOfMonthOrdinalParse: /0|1-ლი|მე-\d{1,2}|\d{1,2}-ე/,
                     ordinal: function (e) {
@@ -6280,7 +5323,7 @@
                                 ? "მე-" + e
                                 : e + "-ე";
                     },
-                    week: { dow: 1, doy: 7 },
+                    week: { dow: 1, doy: 7 }
                 });
             });
         },
@@ -6304,31 +5347,10 @@
                     "Қыркүйек",
                     "Қазан",
                     "Қараша",
-                    "Желтоқсан",
+                    "Желтоқсан"
                 ],
-                monthNamesShort: [
-                    "Қаң",
-                    "Ақп",
-                    "Нау",
-                    "Сәу",
-                    "Мам",
-                    "Мау",
-                    "Шіл",
-                    "Там",
-                    "Қыр",
-                    "Қаз",
-                    "Қар",
-                    "Жел",
-                ],
-                dayNames: [
-                    "Жексенбі",
-                    "Дүйсенбі",
-                    "Сейсенбі",
-                    "Сәрсенбі",
-                    "Бейсенбі",
-                    "Жұма",
-                    "Сенбі",
-                ],
+                monthNamesShort: ["Қаң", "Ақп", "Нау", "Сәу", "Мам", "Мау", "Шіл", "Там", "Қыр", "Қаз", "Қар", "Жел"],
+                dayNames: ["Жексенбі", "Дүйсенбі", "Сейсенбі", "Сәрсенбі", "Бейсенбі", "Жұма", "Сенбі"],
                 dayNamesShort: ["жкс", "дсн", "ссн", "срс", "бсн", "жма", "снб"],
                 dayNamesMin: ["Жк", "Дс", "Сс", "Ср", "Бс", "Жм", "Сн"],
                 weekHeader: "Не",
@@ -6336,7 +5358,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("kk", {
                     buttonText: { month: "Ай", week: "Апта", day: "Күн", list: "Күн тәртібі" },
@@ -6344,7 +5366,7 @@
                     eventLimitText: function (e) {
                         return "+ тағы " + e;
                     },
-                    noEventsMessage: "Көрсету үшін оқиғалар жоқ",
+                    noEventsMessage: "Көрсету үшін оқиғалар жоқ"
                 });
         },
         function (e, a, t) {
@@ -6371,11 +5393,11 @@
                     70: "-ші",
                     80: "-ші",
                     90: "-шы",
-                    100: "-ші",
+                    100: "-ші"
                 };
                 return e.defineLocale("kk", {
                     months: "қаңтар_ақпан_наурыз_сәуір_мамыр_маусым_шілде_тамыз_қыркүйек_қазан_қараша_желтоқсан".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "қаң_ақп_нау_сәу_мам_мау_шіл_там_қыр_қаз_қар_жел".split("_"),
                     weekdays: "жексенбі_дүйсенбі_сейсенбі_сәрсенбі_бейсенбі_жұма_сенбі".split("_"),
@@ -6387,7 +5409,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd, D MMMM YYYY HH:mm",
+                        LLLL: "dddd, D MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[Бүгін сағат] LT",
@@ -6395,7 +5417,7 @@
                         nextWeek: "dddd [сағат] LT",
                         lastDay: "[Кеше сағат] LT",
                         lastWeek: "[Өткен аптаның] dddd [сағат] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "%s ішінде",
@@ -6411,7 +5433,7 @@
                         M: "бір ай",
                         MM: "%d ай",
                         y: "бір жыл",
-                        yy: "%d жыл",
+                        yy: "%d жыл"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}-(ші|шы)/,
                     ordinal: function (e) {
@@ -6419,7 +5441,7 @@
                             n = e >= 100 ? 100 : null;
                         return e + (a[e] || a[t] || a[n]);
                     },
-                    week: { dow: 1, doy: 7 },
+                    week: { dow: 1, doy: 7 }
                 });
             });
         },
@@ -6431,20 +5453,7 @@
                 prevText: "이전달",
                 nextText: "다음달",
                 currentText: "오늘",
-                monthNames: [
-                    "1월",
-                    "2월",
-                    "3월",
-                    "4월",
-                    "5월",
-                    "6월",
-                    "7월",
-                    "8월",
-                    "9월",
-                    "10월",
-                    "11월",
-                    "12월",
-                ],
+                monthNames: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
                 monthNamesShort: [
                     "1월",
                     "2월",
@@ -6457,7 +5466,7 @@
                     "9월",
                     "10월",
                     "11월",
-                    "12월",
+                    "12월"
                 ],
                 dayNames: ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"],
                 dayNamesShort: ["일", "월", "화", "수", "목", "금", "토"],
@@ -6467,13 +5476,13 @@
                 firstDay: 0,
                 isRTL: !1,
                 showMonthAfterYear: !0,
-                yearSuffix: "년",
+                yearSuffix: "년"
             }),
                 n.locale("ko", {
                     buttonText: { month: "월", week: "주", day: "일", list: "일정목록" },
                     allDayText: "종일",
                     eventLimitText: "개",
-                    noEventsMessage: "일정이 없습니다",
+                    noEventsMessage: "일정이 없습니다"
                 });
         },
         function (e, a, t) {
@@ -6496,7 +5505,7 @@
                         l: "YYYY.MM.DD.",
                         ll: "YYYY년 MMMM D일",
                         lll: "YYYY년 MMMM D일 A h:mm",
-                        llll: "YYYY년 MMMM D일 dddd A h:mm",
+                        llll: "YYYY년 MMMM D일 dddd A h:mm"
                     },
                     calendar: {
                         sameDay: "오늘 LT",
@@ -6504,7 +5513,7 @@
                         nextWeek: "dddd LT",
                         lastDay: "어제 LT",
                         lastWeek: "지난주 dddd LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "%s 후",
@@ -6520,7 +5529,7 @@
                         M: "한 달",
                         MM: "%d달",
                         y: "일 년",
-                        yy: "%d년",
+                        yy: "%d년"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}(일|월|주)/,
                     ordinal: function (e, a) {
@@ -6544,7 +5553,7 @@
                     },
                     meridiem: function (e, a, t) {
                         return e < 12 ? "오전" : "오후";
-                    },
+                    }
                 });
             });
         },
@@ -6568,31 +5577,10 @@
                     "September",
                     "Oktober",
                     "November",
-                    "Dezember",
+                    "Dezember"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mäe",
-                    "Abr",
-                    "Mee",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Okt",
-                    "Nov",
-                    "Dez",
-                ],
-                dayNames: [
-                    "Sonndeg",
-                    "Méindeg",
-                    "Dënschdeg",
-                    "Mëttwoch",
-                    "Donneschdeg",
-                    "Freideg",
-                    "Samschdeg",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mäe", "Abr", "Mee", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
+                dayNames: ["Sonndeg", "Méindeg", "Dënschdeg", "Mëttwoch", "Donneschdeg", "Freideg", "Samschdeg"],
                 dayNamesShort: ["Son", "Méi", "Dën", "Mët", "Don", "Fre", "Sam"],
                 dayNamesMin: ["So", "Mé", "Dë", "Më", "Do", "Fr", "Sa"],
                 weekHeader: "W",
@@ -6600,18 +5588,18 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("lb", {
                     buttonText: {
                         month: "Mount",
                         week: "Woch",
                         day: "Dag",
-                        list: "Terminiwwersiicht",
+                        list: "Terminiwwersiicht"
                     },
                     allDayText: "Ganzen Dag",
                     eventLimitText: "méi",
-                    noEventsMessage: "Nee Evenementer ze affichéieren",
+                    noEventsMessage: "Nee Evenementer ze affichéieren"
                 });
         },
         function (e, a, t) {
@@ -6624,7 +5612,7 @@
                         h: ["eng Stonn", "enger Stonn"],
                         d: ["een Dag", "engem Dag"],
                         M: ["ee Mount", "engem Mount"],
-                        y: ["ee Joer", "engem Joer"],
+                        y: ["ee Joer", "engem Joer"]
                     };
                     return a ? r[t][0] : r[t][1];
                 }
@@ -6651,15 +5639,11 @@
                 }
                 return e.defineLocale("lb", {
                     months: "Januar_Februar_Mäerz_Abrëll_Mee_Juni_Juli_August_September_Oktober_November_Dezember".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort:
-                        "Jan._Febr._Mrz._Abr._Mee_Jun._Jul._Aug._Sept._Okt._Nov._Dez.".split("_"),
+                    monthsShort: "Jan._Febr._Mrz._Abr._Mee_Jun._Jul._Aug._Sept._Okt._Nov._Dez.".split("_"),
                     monthsParseExact: !0,
-                    weekdays:
-                        "Sonndeg_Méindeg_Dënschdeg_Mëttwoch_Donneschdeg_Freideg_Samschdeg".split(
-                            "_",
-                        ),
+                    weekdays: "Sonndeg_Méindeg_Dënschdeg_Mëttwoch_Donneschdeg_Freideg_Samschdeg".split("_"),
                     weekdaysShort: "So._Mé._Dë._Më._Do._Fr._Sa.".split("_"),
                     weekdaysMin: "So_Mé_Dë_Më_Do_Fr_Sa".split("_"),
                     weekdaysParseExact: !0,
@@ -6669,7 +5653,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D. MMMM YYYY",
                         LLL: "D. MMMM YYYY H:mm [Auer]",
-                        LLLL: "dddd, D. MMMM YYYY H:mm [Auer]",
+                        LLLL: "dddd, D. MMMM YYYY H:mm [Auer]"
                     },
                     calendar: {
                         sameDay: "[Haut um] LT",
@@ -6685,7 +5669,7 @@
                                 default:
                                     return "[Leschte] dddd [um] LT";
                             }
-                        },
+                        }
                     },
                     relativeTime: {
                         future: t,
@@ -6701,11 +5685,11 @@
                         M: a,
                         MM: "%d Méint",
                         y: a,
-                        yy: "%d Joer",
+                        yy: "%d Joer"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -6729,22 +5713,9 @@
                     "Rugsėjis",
                     "Spalis",
                     "Lapkritis",
-                    "Gruodis",
+                    "Gruodis"
                 ],
-                monthNamesShort: [
-                    "Sau",
-                    "Vas",
-                    "Kov",
-                    "Bal",
-                    "Geg",
-                    "Bir",
-                    "Lie",
-                    "Rugp",
-                    "Rugs",
-                    "Spa",
-                    "Lap",
-                    "Gru",
-                ],
+                monthNamesShort: ["Sau", "Vas", "Kov", "Bal", "Geg", "Bir", "Lie", "Rugp", "Rugs", "Spa", "Lap", "Gru"],
                 dayNames: [
                     "sekmadienis",
                     "pirmadienis",
@@ -6752,7 +5723,7 @@
                     "trečiadienis",
                     "ketvirtadienis",
                     "penktadienis",
-                    "šeštadienis",
+                    "šeštadienis"
                 ],
                 dayNamesShort: ["sek", "pir", "ant", "tre", "ket", "pen", "šeš"],
                 dayNamesMin: ["Se", "Pr", "An", "Tr", "Ke", "Pe", "Še"],
@@ -6761,18 +5732,18 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !0,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("lt", {
                     buttonText: {
                         month: "Mėnuo",
                         week: "Savaitė",
                         day: "Diena",
-                        list: "Darbotvarkė",
+                        list: "Darbotvarkė"
                     },
                     allDayText: "Visą dieną",
                     eventLimitText: "daugiau",
-                    noEventsMessage: "Nėra įvykių rodyti",
+                    noEventsMessage: "Nėra įvykių rodyti"
                 });
         },
         function (e, a, t) {
@@ -6812,29 +5783,29 @@
                     M: "mėnuo_mėnesio_mėnesį",
                     MM: "mėnesiai_mėnesių_mėnesius",
                     y: "metai_metų_metus",
-                    yy: "metai_metų_metus",
+                    yy: "metai_metų_metus"
                 };
                 return e.defineLocale("lt", {
                     months: {
                         format: "sausio_vasario_kovo_balandžio_gegužės_birželio_liepos_rugpjūčio_rugsėjo_spalio_lapkričio_gruodžio".split(
-                            "_",
+                            "_"
                         ),
                         standalone:
                             "sausis_vasaris_kovas_balandis_gegužė_birželis_liepa_rugpjūtis_rugsėjis_spalis_lapkritis_gruodis".split(
-                                "_",
+                                "_"
                             ),
-                        isFormat: /D[oD]?(\[[^\[\]]*\]|\s)+MMMM?|MMMM?(\[[^\[\]]*\]|\s)+D[oD]?/,
+                        isFormat: /D[oD]?(\[[^\[\]]*\]|\s)+MMMM?|MMMM?(\[[^\[\]]*\]|\s)+D[oD]?/
                     },
                     monthsShort: "sau_vas_kov_bal_geg_bir_lie_rgp_rgs_spa_lap_grd".split("_"),
                     weekdays: {
                         format: "sekmadienį_pirmadienį_antradienį_trečiadienį_ketvirtadienį_penktadienį_šeštadienį".split(
-                            "_",
+                            "_"
                         ),
                         standalone:
                             "sekmadienis_pirmadienis_antradienis_trečiadienis_ketvirtadienis_penktadienis_šeštadienis".split(
-                                "_",
+                                "_"
                             ),
-                        isFormat: /dddd HH:mm/,
+                        isFormat: /dddd HH:mm/
                     },
                     weekdaysShort: "Sek_Pir_Ant_Tre_Ket_Pen_Šeš".split("_"),
                     weekdaysMin: "S_P_A_T_K_Pn_Š".split("_"),
@@ -6849,7 +5820,7 @@
                         l: "YYYY-MM-DD",
                         ll: "YYYY [m.] MMMM D [d.]",
                         lll: "YYYY [m.] MMMM D [d.], HH:mm [val.]",
-                        llll: "YYYY [m.] MMMM D [d.], ddd, HH:mm [val.]",
+                        llll: "YYYY [m.] MMMM D [d.], ddd, HH:mm [val.]"
                     },
                     calendar: {
                         sameDay: "[Šiandien] LT",
@@ -6857,7 +5828,7 @@
                         nextWeek: "dddd LT",
                         lastDay: "[Vakar] LT",
                         lastWeek: "[Praėjusį] dddd LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "po %s",
@@ -6873,13 +5844,13 @@
                         M: t,
                         MM: s,
                         y: t,
-                        yy: s,
+                        yy: s
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}-oji/,
                     ordinal: function (e) {
                         return e + "-oji";
                     },
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -6903,31 +5874,10 @@
                     "Septembris",
                     "Oktobris",
                     "Novembris",
-                    "Decembris",
+                    "Decembris"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "Mai",
-                    "Jūn",
-                    "Jūl",
-                    "Aug",
-                    "Sep",
-                    "Okt",
-                    "Nov",
-                    "Dec",
-                ],
-                dayNames: [
-                    "svētdiena",
-                    "pirmdiena",
-                    "otrdiena",
-                    "trešdiena",
-                    "ceturtdiena",
-                    "piektdiena",
-                    "sestdiena",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "Mai", "Jūn", "Jūl", "Aug", "Sep", "Okt", "Nov", "Dec"],
+                dayNames: ["svētdiena", "pirmdiena", "otrdiena", "trešdiena", "ceturtdiena", "piektdiena", "sestdiena"],
                 dayNamesShort: ["svt", "prm", "otr", "tre", "ctr", "pkt", "sst"],
                 dayNamesMin: ["Sv", "Pr", "Ot", "Tr", "Ct", "Pk", "Ss"],
                 weekHeader: "Ned.",
@@ -6935,20 +5885,20 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("lv", {
                     buttonText: {
                         month: "Mēnesis",
                         week: "Nedēļa",
                         day: "Diena",
-                        list: "Dienas kārtība",
+                        list: "Dienas kārtība"
                     },
                     allDayText: "Visu dienu",
                     eventLimitText: function (e) {
                         return "+vēl " + e;
                     },
-                    noEventsMessage: "Nav notikumu",
+                    noEventsMessage: "Nav notikumu"
                 });
         },
         function (e, a, t) {
@@ -6984,17 +5934,14 @@
                     M: "mēneša_mēnešiem_mēnesis_mēneši".split("_"),
                     MM: "mēneša_mēnešiem_mēnesis_mēneši".split("_"),
                     y: "gada_gadiem_gads_gadi".split("_"),
-                    yy: "gada_gadiem_gads_gadi".split("_"),
+                    yy: "gada_gadiem_gads_gadi".split("_")
                 };
                 return e.defineLocale("lv", {
                     months: "janvāris_februāris_marts_aprīlis_maijs_jūnijs_jūlijs_augusts_septembris_oktobris_novembris_decembris".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "jan_feb_mar_apr_mai_jūn_jūl_aug_sep_okt_nov_dec".split("_"),
-                    weekdays:
-                        "svētdiena_pirmdiena_otrdiena_trešdiena_ceturtdiena_piektdiena_sestdiena".split(
-                            "_",
-                        ),
+                    weekdays: "svētdiena_pirmdiena_otrdiena_trešdiena_ceturtdiena_piektdiena_sestdiena".split("_"),
                     weekdaysShort: "Sv_P_O_T_C_Pk_S".split("_"),
                     weekdaysMin: "Sv_P_O_T_C_Pk_S".split("_"),
                     weekdaysParseExact: !0,
@@ -7004,7 +5951,7 @@
                         L: "DD.MM.YYYY.",
                         LL: "YYYY. [gada] D. MMMM",
                         LLL: "YYYY. [gada] D. MMMM, HH:mm",
-                        LLLL: "YYYY. [gada] D. MMMM, dddd, HH:mm",
+                        LLLL: "YYYY. [gada] D. MMMM, dddd, HH:mm"
                     },
                     calendar: {
                         sameDay: "[Šodien pulksten] LT",
@@ -7012,7 +5959,7 @@
                         nextWeek: "dddd [pulksten] LT",
                         lastDay: "[Vakar pulksten] LT",
                         lastWeek: "[Pagājušā] dddd [pulksten] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "pēc %s",
@@ -7028,11 +5975,11 @@
                         M: n,
                         MM: t,
                         y: n,
-                        yy: t,
+                        yy: t
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -7056,31 +6003,10 @@
                     "Септември",
                     "Октомври",
                     "Ноември",
-                    "Декември",
+                    "Декември"
                 ],
-                monthNamesShort: [
-                    "Јан",
-                    "Фев",
-                    "Мар",
-                    "Апр",
-                    "Мај",
-                    "Јун",
-                    "Јул",
-                    "Авг",
-                    "Сеп",
-                    "Окт",
-                    "Ное",
-                    "Дек",
-                ],
-                dayNames: [
-                    "Недела",
-                    "Понеделник",
-                    "Вторник",
-                    "Среда",
-                    "Четврток",
-                    "Петок",
-                    "Сабота",
-                ],
+                monthNamesShort: ["Јан", "Фев", "Мар", "Апр", "Мај", "Јун", "Јул", "Авг", "Сеп", "Окт", "Ное", "Дек"],
+                dayNames: ["Недела", "Понеделник", "Вторник", "Среда", "Четврток", "Петок", "Сабота"],
                 dayNamesShort: ["Нед", "Пон", "Вто", "Сре", "Чет", "Пет", "Саб"],
                 dayNamesMin: ["Не", "По", "Вт", "Ср", "Че", "Пе", "Са"],
                 weekHeader: "Сед",
@@ -7088,7 +6014,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("mk", {
                     buttonText: { month: "Месец", week: "Недела", day: "Ден", list: "График" },
@@ -7096,7 +6022,7 @@
                     eventLimitText: function (e) {
                         return "+повеќе " + e;
                     },
-                    noEventsMessage: "Нема настани за прикажување",
+                    noEventsMessage: "Нема настани за прикажување"
                 });
         },
         function (e, a, t) {
@@ -7105,7 +6031,7 @@
             })(0, function (e) {
                 return e.defineLocale("mk", {
                     months: "јануари_февруари_март_април_мај_јуни_јули_август_септември_октомври_ноември_декември".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "јан_фев_мар_апр_мај_јун_јул_авг_сеп_окт_ное_дек".split("_"),
                     weekdays: "недела_понеделник_вторник_среда_четврток_петок_сабота".split("_"),
@@ -7117,7 +6043,7 @@
                         L: "D.MM.YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY H:mm",
-                        LLLL: "dddd, D MMMM YYYY H:mm",
+                        LLLL: "dddd, D MMMM YYYY H:mm"
                     },
                     calendar: {
                         sameDay: "[Денес во] LT",
@@ -7137,7 +6063,7 @@
                                     return "[Изминатиот] dddd [во] LT";
                             }
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "за %s",
@@ -7153,7 +6079,7 @@
                         M: "еден месец",
                         MM: "%d месеци",
                         y: "една година",
-                        yy: "%d години",
+                        yy: "%d години"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}-(ев|ен|ти|ви|ри|ми)/,
                     ordinal: function (e) {
@@ -7173,7 +6099,7 @@
                                       ? e + "-ми"
                                       : e + "-ти";
                     },
-                    week: { dow: 1, doy: 7 },
+                    week: { dow: 1, doy: 7 }
                 });
             });
         },
@@ -7197,22 +6123,9 @@
                     "September",
                     "Oktober",
                     "November",
-                    "Disember",
+                    "Disember"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mac",
-                    "Apr",
-                    "Mei",
-                    "Jun",
-                    "Jul",
-                    "Ogo",
-                    "Sep",
-                    "Okt",
-                    "Nov",
-                    "Dis",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mac", "Apr", "Mei", "Jun", "Jul", "Ogo", "Sep", "Okt", "Nov", "Dis"],
                 dayNames: ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"],
                 dayNamesShort: ["Aha", "Isn", "Sel", "Rab", "kha", "Jum", "Sab"],
                 dayNamesMin: ["Ah", "Is", "Se", "Ra", "Kh", "Ju", "Sa"],
@@ -7221,7 +6134,7 @@
                 firstDay: 0,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("ms-my", {
                     buttonText: { month: "Bulan", week: "Minggu", day: "Hari", list: "Agenda" },
@@ -7229,7 +6142,7 @@
                     eventLimitText: function (e) {
                         return "masih ada " + e + " acara";
                     },
-                    noEventsMessage: "Tiada peristiwa untuk dipaparkan",
+                    noEventsMessage: "Tiada peristiwa untuk dipaparkan"
                 });
         },
         function (e, a, t) {
@@ -7238,7 +6151,7 @@
             })(0, function (e) {
                 return e.defineLocale("ms-my", {
                     months: "Januari_Februari_Mac_April_Mei_Jun_Julai_Ogos_September_Oktober_November_Disember".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "Jan_Feb_Mac_Apr_Mei_Jun_Jul_Ogs_Sep_Okt_Nov_Dis".split("_"),
                     weekdays: "Ahad_Isnin_Selasa_Rabu_Khamis_Jumaat_Sabtu".split("_"),
@@ -7250,7 +6163,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY [pukul] HH.mm",
-                        LLLL: "dddd, D MMMM YYYY [pukul] HH.mm",
+                        LLLL: "dddd, D MMMM YYYY [pukul] HH.mm"
                     },
                     meridiemParse: /pagi|tengahari|petang|malam/,
                     meridiemHour: function (e, a) {
@@ -7268,13 +6181,7 @@
                         );
                     },
                     meridiem: function (e, a, t) {
-                        return e < 11
-                            ? "pagi"
-                            : e < 15
-                              ? "tengahari"
-                              : e < 19
-                                ? "petang"
-                                : "malam";
+                        return e < 11 ? "pagi" : e < 15 ? "tengahari" : e < 19 ? "petang" : "malam";
                     },
                     calendar: {
                         sameDay: "[Hari ini pukul] LT",
@@ -7282,7 +6189,7 @@
                         nextWeek: "dddd [pukul] LT",
                         lastDay: "[Kelmarin pukul] LT",
                         lastWeek: "dddd [lepas pukul] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "dalam %s",
@@ -7298,9 +6205,9 @@
                         M: "sebulan",
                         MM: "%d bulan",
                         y: "setahun",
-                        yy: "%d tahun",
+                        yy: "%d tahun"
                     },
-                    week: { dow: 1, doy: 7 },
+                    week: { dow: 1, doy: 7 }
                 });
             });
         },
@@ -7324,22 +6231,9 @@
                     "September",
                     "Oktober",
                     "November",
-                    "Disember",
+                    "Disember"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mac",
-                    "Apr",
-                    "Mei",
-                    "Jun",
-                    "Jul",
-                    "Ogo",
-                    "Sep",
-                    "Okt",
-                    "Nov",
-                    "Dis",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mac", "Apr", "Mei", "Jun", "Jul", "Ogo", "Sep", "Okt", "Nov", "Dis"],
                 dayNames: ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"],
                 dayNamesShort: ["Aha", "Isn", "Sel", "Rab", "kha", "Jum", "Sab"],
                 dayNamesMin: ["Ah", "Is", "Se", "Ra", "Kh", "Ju", "Sa"],
@@ -7348,7 +6242,7 @@
                 firstDay: 0,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("ms", {
                     buttonText: { month: "Bulan", week: "Minggu", day: "Hari", list: "Agenda" },
@@ -7356,7 +6250,7 @@
                     eventLimitText: function (e) {
                         return "masih ada " + e + " acara";
                     },
-                    noEventsMessage: "Tiada peristiwa untuk dipaparkan",
+                    noEventsMessage: "Tiada peristiwa untuk dipaparkan"
                 });
         },
         function (e, a, t) {
@@ -7365,7 +6259,7 @@
             })(0, function (e) {
                 return e.defineLocale("ms", {
                     months: "Januari_Februari_Mac_April_Mei_Jun_Julai_Ogos_September_Oktober_November_Disember".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "Jan_Feb_Mac_Apr_Mei_Jun_Jul_Ogs_Sep_Okt_Nov_Dis".split("_"),
                     weekdays: "Ahad_Isnin_Selasa_Rabu_Khamis_Jumaat_Sabtu".split("_"),
@@ -7377,7 +6271,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY [pukul] HH.mm",
-                        LLLL: "dddd, D MMMM YYYY [pukul] HH.mm",
+                        LLLL: "dddd, D MMMM YYYY [pukul] HH.mm"
                     },
                     meridiemParse: /pagi|tengahari|petang|malam/,
                     meridiemHour: function (e, a) {
@@ -7395,13 +6289,7 @@
                         );
                     },
                     meridiem: function (e, a, t) {
-                        return e < 11
-                            ? "pagi"
-                            : e < 15
-                              ? "tengahari"
-                              : e < 19
-                                ? "petang"
-                                : "malam";
+                        return e < 11 ? "pagi" : e < 15 ? "tengahari" : e < 19 ? "petang" : "malam";
                     },
                     calendar: {
                         sameDay: "[Hari ini pukul] LT",
@@ -7409,7 +6297,7 @@
                         nextWeek: "dddd [pukul] LT",
                         lastDay: "[Kelmarin pukul] LT",
                         lastWeek: "dddd [lepas pukul] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "dalam %s",
@@ -7425,9 +6313,9 @@
                         M: "sebulan",
                         MM: "%d bulan",
                         y: "setahun",
-                        yy: "%d tahun",
+                        yy: "%d tahun"
                     },
-                    week: { dow: 1, doy: 7 },
+                    week: { dow: 1, doy: 7 }
                 });
             });
         },
@@ -7451,22 +6339,9 @@
                     "september",
                     "oktober",
                     "november",
-                    "desember",
+                    "desember"
                 ],
-                monthNamesShort: [
-                    "jan",
-                    "feb",
-                    "mar",
-                    "apr",
-                    "mai",
-                    "jun",
-                    "jul",
-                    "aug",
-                    "sep",
-                    "okt",
-                    "nov",
-                    "des",
-                ],
+                monthNamesShort: ["jan", "feb", "mar", "apr", "mai", "jun", "jul", "aug", "sep", "okt", "nov", "des"],
                 dayNamesShort: ["søn", "man", "tir", "ons", "tor", "fre", "lør"],
                 dayNames: ["søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"],
                 dayNamesMin: ["sø", "ma", "ti", "on", "to", "fr", "lø"],
@@ -7475,13 +6350,13 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("nb", {
                     buttonText: { month: "Måned", week: "Uke", day: "Dag", list: "Agenda" },
                     allDayText: "Hele dagen",
                     eventLimitText: "til",
-                    noEventsMessage: "Ingen hendelser å vise",
+                    noEventsMessage: "Ingen hendelser å vise"
                 });
         },
         function (e, a, t) {
@@ -7490,10 +6365,9 @@
             })(0, function (e) {
                 return e.defineLocale("nb", {
                     months: "januar_februar_mars_april_mai_juni_juli_august_september_oktober_november_desember".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort:
-                        "jan._feb._mars_apr._mai_juni_juli_aug._sep._okt._nov._des.".split("_"),
+                    monthsShort: "jan._feb._mars_apr._mai_juni_juli_aug._sep._okt._nov._des.".split("_"),
                     monthsParseExact: !0,
                     weekdays: "søndag_mandag_tirsdag_onsdag_torsdag_fredag_lørdag".split("_"),
                     weekdaysShort: "sø._ma._ti._on._to._fr._lø.".split("_"),
@@ -7505,7 +6379,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D. MMMM YYYY",
                         LLL: "D. MMMM YYYY [kl.] HH:mm",
-                        LLLL: "dddd D. MMMM YYYY [kl.] HH:mm",
+                        LLLL: "dddd D. MMMM YYYY [kl.] HH:mm"
                     },
                     calendar: {
                         sameDay: "[i dag kl.] LT",
@@ -7513,7 +6387,7 @@
                         nextWeek: "dddd [kl.] LT",
                         lastDay: "[i går kl.] LT",
                         lastWeek: "[forrige] dddd [kl.] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "om %s",
@@ -7529,11 +6403,11 @@
                         M: "en måned",
                         MM: "%d måneder",
                         y: "ett år",
-                        yy: "%d år",
+                        yy: "%d år"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -7557,31 +6431,10 @@
                     "september",
                     "oktober",
                     "november",
-                    "december",
+                    "december"
                 ],
-                monthNamesShort: [
-                    "jan",
-                    "feb",
-                    "mrt",
-                    "apr",
-                    "mei",
-                    "jun",
-                    "jul",
-                    "aug",
-                    "sep",
-                    "okt",
-                    "nov",
-                    "dec",
-                ],
-                dayNames: [
-                    "zondag",
-                    "maandag",
-                    "dinsdag",
-                    "woensdag",
-                    "donderdag",
-                    "vrijdag",
-                    "zaterdag",
-                ],
+                monthNamesShort: ["jan", "feb", "mrt", "apr", "mei", "jun", "jul", "aug", "sep", "okt", "nov", "dec"],
+                dayNames: ["zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag"],
                 dayNamesShort: ["zon", "maa", "din", "woe", "don", "vri", "zat"],
                 dayNamesMin: ["zo", "ma", "di", "wo", "do", "vr", "za"],
                 weekHeader: "Wk",
@@ -7589,13 +6442,13 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("nl-be", {
                     buttonText: { month: "Maand", week: "Week", day: "Dag", list: "Agenda" },
                     allDayText: "Hele dag",
                     eventLimitText: "extra",
-                    noEventsMessage: "Geen evenementen om te laten zien",
+                    noEventsMessage: "Geen evenementen om te laten zien"
                 });
         },
         function (e, a, t) {
@@ -7616,13 +6469,13 @@
                         /^sep/i,
                         /^okt/i,
                         /^nov/i,
-                        /^dec/i,
+                        /^dec/i
                     ],
                     r =
                         /^(januari|februari|maart|april|mei|ju[nl]i|augustus|september|oktober|november|december|jan\.?|feb\.?|mrt\.?|apr\.?|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i;
                 return e.defineLocale("nl-be", {
                     months: "januari_februari_maart_april_mei_juni_juli_augustus_september_oktober_november_december".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: function (e, n) {
                         return e ? (/-MMM-/.test(n) ? t[e.month()] : a[e.month()]) : a;
@@ -7636,9 +6489,7 @@
                     monthsParse: n,
                     longMonthsParse: n,
                     shortMonthsParse: n,
-                    weekdays: "zondag_maandag_dinsdag_woensdag_donderdag_vrijdag_zaterdag".split(
-                        "_",
-                    ),
+                    weekdays: "zondag_maandag_dinsdag_woensdag_donderdag_vrijdag_zaterdag".split("_"),
                     weekdaysShort: "zo._ma._di._wo._do._vr._za.".split("_"),
                     weekdaysMin: "zo_ma_di_wo_do_vr_za".split("_"),
                     weekdaysParseExact: !0,
@@ -7648,7 +6499,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd D MMMM YYYY HH:mm",
+                        LLLL: "dddd D MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[vandaag om] LT",
@@ -7656,7 +6507,7 @@
                         nextWeek: "dddd [om] LT",
                         lastDay: "[gisteren om] LT",
                         lastWeek: "[afgelopen] dddd [om] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "over %s",
@@ -7672,13 +6523,13 @@
                         M: "één maand",
                         MM: "%d maanden",
                         y: "één jaar",
-                        yy: "%d jaar",
+                        yy: "%d jaar"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}(ste|de)/,
                     ordinal: function (e) {
                         return e + (1 === e || 8 === e || e >= 20 ? "ste" : "de");
                     },
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -7702,31 +6553,10 @@
                     "september",
                     "oktober",
                     "november",
-                    "december",
+                    "december"
                 ],
-                monthNamesShort: [
-                    "jan",
-                    "feb",
-                    "mrt",
-                    "apr",
-                    "mei",
-                    "jun",
-                    "jul",
-                    "aug",
-                    "sep",
-                    "okt",
-                    "nov",
-                    "dec",
-                ],
-                dayNames: [
-                    "zondag",
-                    "maandag",
-                    "dinsdag",
-                    "woensdag",
-                    "donderdag",
-                    "vrijdag",
-                    "zaterdag",
-                ],
+                monthNamesShort: ["jan", "feb", "mrt", "apr", "mei", "jun", "jul", "aug", "sep", "okt", "nov", "dec"],
+                dayNames: ["zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag"],
                 dayNamesShort: ["zon", "maa", "din", "woe", "don", "vri", "zat"],
                 dayNamesMin: ["zo", "ma", "di", "wo", "do", "vr", "za"],
                 weekHeader: "Wk",
@@ -7734,7 +6564,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("nl", {
                     buttonText: {
@@ -7742,11 +6572,11 @@
                         month: "Maand",
                         week: "Week",
                         day: "Dag",
-                        list: "Agenda",
+                        list: "Agenda"
                     },
                     allDayText: "Hele dag",
                     eventLimitText: "extra",
-                    noEventsMessage: "Geen evenementen om te laten zien",
+                    noEventsMessage: "Geen evenementen om te laten zien"
                 });
         },
         function (e, a, t) {
@@ -7767,13 +6597,13 @@
                         /^sep/i,
                         /^okt/i,
                         /^nov/i,
-                        /^dec/i,
+                        /^dec/i
                     ],
                     r =
                         /^(januari|februari|maart|april|mei|ju[nl]i|augustus|september|oktober|november|december|jan\.?|feb\.?|mrt\.?|apr\.?|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i;
                 return e.defineLocale("nl", {
                     months: "januari_februari_maart_april_mei_juni_juli_augustus_september_oktober_november_december".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: function (e, n) {
                         return e ? (/-MMM-/.test(n) ? t[e.month()] : a[e.month()]) : a;
@@ -7787,9 +6617,7 @@
                     monthsParse: n,
                     longMonthsParse: n,
                     shortMonthsParse: n,
-                    weekdays: "zondag_maandag_dinsdag_woensdag_donderdag_vrijdag_zaterdag".split(
-                        "_",
-                    ),
+                    weekdays: "zondag_maandag_dinsdag_woensdag_donderdag_vrijdag_zaterdag".split("_"),
                     weekdaysShort: "zo._ma._di._wo._do._vr._za.".split("_"),
                     weekdaysMin: "zo_ma_di_wo_do_vr_za".split("_"),
                     weekdaysParseExact: !0,
@@ -7799,7 +6627,7 @@
                         L: "DD-MM-YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd D MMMM YYYY HH:mm",
+                        LLLL: "dddd D MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[vandaag om] LT",
@@ -7807,7 +6635,7 @@
                         nextWeek: "dddd [om] LT",
                         lastDay: "[gisteren om] LT",
                         lastWeek: "[afgelopen] dddd [om] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "over %s",
@@ -7823,13 +6651,13 @@
                         M: "één maand",
                         MM: "%d maanden",
                         y: "één jaar",
-                        yy: "%d jaar",
+                        yy: "%d jaar"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}(ste|de)/,
                     ordinal: function (e) {
                         return e + (1 === e || 8 === e || e >= 20 ? "ste" : "de");
                     },
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -7853,22 +6681,9 @@
                     "september",
                     "oktober",
                     "november",
-                    "desember",
+                    "desember"
                 ],
-                monthNamesShort: [
-                    "jan",
-                    "feb",
-                    "mar",
-                    "apr",
-                    "mai",
-                    "jun",
-                    "jul",
-                    "aug",
-                    "sep",
-                    "okt",
-                    "nov",
-                    "des",
-                ],
+                monthNamesShort: ["jan", "feb", "mar", "apr", "mai", "jun", "jul", "aug", "sep", "okt", "nov", "des"],
                 dayNamesShort: ["sun", "mån", "tys", "ons", "tor", "fre", "lau"],
                 dayNames: ["sundag", "måndag", "tysdag", "onsdag", "torsdag", "fredag", "laurdag"],
                 dayNamesMin: ["su", "må", "ty", "on", "to", "fr", "la"],
@@ -7877,13 +6692,13 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("nn", {
                     buttonText: { month: "Månad", week: "Veke", day: "Dag", list: "Agenda" },
                     allDayText: "Heile dagen",
                     eventLimitText: "til",
-                    noEventsMessage: "Ingen hendelser å vise",
+                    noEventsMessage: "Ingen hendelser å vise"
                 });
         },
         function (e, a, t) {
@@ -7892,10 +6707,9 @@
             })(0, function (e) {
                 return e.defineLocale("nn", {
                     months: "januar_februar_mars_april_mai_juni_juli_august_september_oktober_november_desember".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort:
-                        "jan._feb._mars_apr._mai_juni_juli_aug._sep._okt._nov._des.".split("_"),
+                    monthsShort: "jan._feb._mars_apr._mai_juni_juli_aug._sep._okt._nov._des.".split("_"),
                     monthsParseExact: !0,
                     weekdays: "sundag_måndag_tysdag_onsdag_torsdag_fredag_laurdag".split("_"),
                     weekdaysShort: "su._må._ty._on._to._fr._lau.".split("_"),
@@ -7907,7 +6721,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D. MMMM YYYY",
                         LLL: "D. MMMM YYYY [kl.] H:mm",
-                        LLLL: "dddd D. MMMM YYYY [kl.] HH:mm",
+                        LLLL: "dddd D. MMMM YYYY [kl.] HH:mm"
                     },
                     calendar: {
                         sameDay: "[I dag klokka] LT",
@@ -7915,7 +6729,7 @@
                         nextWeek: "dddd [klokka] LT",
                         lastDay: "[I går klokka] LT",
                         lastWeek: "[Føregåande] dddd [klokka] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "om %s",
@@ -7931,11 +6745,11 @@
                         M: "ein månad",
                         MM: "%d månader",
                         y: "eit år",
-                        yy: "%d år",
+                        yy: "%d år"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -7959,31 +6773,10 @@
                     "Wrzesień",
                     "Październik",
                     "Listopad",
-                    "Grudzień",
+                    "Grudzień"
                 ],
-                monthNamesShort: [
-                    "Sty",
-                    "Lu",
-                    "Mar",
-                    "Kw",
-                    "Maj",
-                    "Cze",
-                    "Lip",
-                    "Sie",
-                    "Wrz",
-                    "Pa",
-                    "Lis",
-                    "Gru",
-                ],
-                dayNames: [
-                    "Niedziela",
-                    "Poniedziałek",
-                    "Wtorek",
-                    "Środa",
-                    "Czwartek",
-                    "Piątek",
-                    "Sobota",
-                ],
+                monthNamesShort: ["Sty", "Lu", "Mar", "Kw", "Maj", "Cze", "Lip", "Sie", "Wrz", "Pa", "Lis", "Gru"],
+                dayNames: ["Niedziela", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota"],
                 dayNamesShort: ["Nie", "Pn", "Wt", "Śr", "Czw", "Pt", "So"],
                 dayNamesMin: ["N", "Pn", "Wt", "Śr", "Cz", "Pt", "So"],
                 weekHeader: "Tydz",
@@ -7991,18 +6784,18 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("pl", {
                     buttonText: {
                         month: "Miesiąc",
                         week: "Tydzień",
                         day: "Dzień",
-                        list: "Plan dnia",
+                        list: "Plan dnia"
                     },
                     allDayText: "Cały dzień",
                     eventLimitText: "więcej",
-                    noEventsMessage: "Brak wydarzeń do wyświetlenia",
+                    noEventsMessage: "Brak wydarzeń do wyświetlenia"
                 });
         },
         function (e, a, t) {
@@ -8033,11 +6826,11 @@
                 }
                 var n =
                         "styczeń_luty_marzec_kwiecień_maj_czerwiec_lipiec_sierpień_wrzesień_październik_listopad_grudzień".split(
-                            "_",
+                            "_"
                         ),
                     r =
                         "stycznia_lutego_marca_kwietnia_maja_czerwca_lipca_sierpnia_września_października_listopada_grudnia".split(
-                            "_",
+                            "_"
                         );
                 return e.defineLocale("pl", {
                     months: function (e, a) {
@@ -8050,9 +6843,7 @@
                             : n;
                     },
                     monthsShort: "sty_lut_mar_kwi_maj_cze_lip_sie_wrz_paź_lis_gru".split("_"),
-                    weekdays: "niedziela_poniedziałek_wtorek_środa_czwartek_piątek_sobota".split(
-                        "_",
-                    ),
+                    weekdays: "niedziela_poniedziałek_wtorek_środa_czwartek_piątek_sobota".split("_"),
                     weekdaysShort: "ndz_pon_wt_śr_czw_pt_sob".split("_"),
                     weekdaysMin: "Nd_Pn_Wt_Śr_Cz_Pt_So".split("_"),
                     longDateFormat: {
@@ -8061,7 +6852,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd, D MMMM YYYY HH:mm",
+                        LLLL: "dddd, D MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[Dziś o] LT",
@@ -8093,7 +6884,7 @@
                                     return "[W zeszły] dddd [o] LT";
                             }
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "za %s",
@@ -8109,11 +6900,11 @@
                         M: "miesiąc",
                         MM: t,
                         y: "rok",
-                        yy: t,
+                        yy: t
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -8137,22 +6928,9 @@
                     "Setembro",
                     "Outubro",
                     "Novembro",
-                    "Dezembro",
+                    "Dezembro"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Fev",
-                    "Mar",
-                    "Abr",
-                    "Mai",
-                    "Jun",
-                    "Jul",
-                    "Ago",
-                    "Set",
-                    "Out",
-                    "Nov",
-                    "Dez",
-                ],
+                monthNamesShort: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
                 dayNames: [
                     "Domingo",
                     "Segunda-feira",
@@ -8160,7 +6938,7 @@
                     "Quarta-feira",
                     "Quinta-feira",
                     "Sexta-feira",
-                    "Sábado",
+                    "Sábado"
                 ],
                 dayNamesShort: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
                 dayNamesMin: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
@@ -8169,7 +6947,7 @@
                 firstDay: 0,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("pt-br", {
                     buttonText: { month: "Mês", week: "Semana", day: "Dia", list: "Compromissos" },
@@ -8177,7 +6955,7 @@
                     eventLimitText: function (e) {
                         return "mais +" + e;
                     },
-                    noEventsMessage: "Não há eventos para mostrar",
+                    noEventsMessage: "Não há eventos para mostrar"
                 });
         },
         function (e, a, t) {
@@ -8186,13 +6964,12 @@
             })(0, function (e) {
                 return e.defineLocale("pt-br", {
                     months: "janeiro_fevereiro_março_abril_maio_junho_julho_agosto_setembro_outubro_novembro_dezembro".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "jan_fev_mar_abr_mai_jun_jul_ago_set_out_nov_dez".split("_"),
-                    weekdays:
-                        "domingo_segunda-feira_terça-feira_quarta-feira_quinta-feira_sexta-feira_sábado".split(
-                            "_",
-                        ),
+                    weekdays: "domingo_segunda-feira_terça-feira_quarta-feira_quinta-feira_sexta-feira_sábado".split(
+                        "_"
+                    ),
                     weekdaysShort: "dom_seg_ter_qua_qui_sex_sáb".split("_"),
                     weekdaysMin: "do_2ª_3ª_4ª_5ª_6ª_sá".split("_"),
                     weekdaysParseExact: !0,
@@ -8202,7 +6979,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D [de] MMMM [de] YYYY",
                         LLL: "D [de] MMMM [de] YYYY [às] HH:mm",
-                        LLLL: "dddd, D [de] MMMM [de] YYYY [às] HH:mm",
+                        LLLL: "dddd, D [de] MMMM [de] YYYY [às] HH:mm"
                     },
                     calendar: {
                         sameDay: "[Hoje às] LT",
@@ -8214,7 +6991,7 @@
                                 ? "[Último] dddd [às] LT"
                                 : "[Última] dddd [às] LT";
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "em %s",
@@ -8230,10 +7007,10 @@
                         M: "um mês",
                         MM: "%d meses",
                         y: "um ano",
-                        yy: "%d anos",
+                        yy: "%d anos"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}º/,
-                    ordinal: "%dº",
+                    ordinal: "%dº"
                 });
             });
         },
@@ -8257,22 +7034,9 @@
                     "Setembro",
                     "Outubro",
                     "Novembro",
-                    "Dezembro",
+                    "Dezembro"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Fev",
-                    "Mar",
-                    "Abr",
-                    "Mai",
-                    "Jun",
-                    "Jul",
-                    "Ago",
-                    "Set",
-                    "Out",
-                    "Nov",
-                    "Dez",
-                ],
+                monthNamesShort: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
                 dayNames: [
                     "Domingo",
                     "Segunda-feira",
@@ -8280,7 +7044,7 @@
                     "Quarta-feira",
                     "Quinta-feira",
                     "Sexta-feira",
-                    "Sábado",
+                    "Sábado"
                 ],
                 dayNamesShort: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
                 dayNamesMin: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
@@ -8289,13 +7053,13 @@
                 firstDay: 0,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("pt", {
                     buttonText: { month: "Mês", week: "Semana", day: "Dia", list: "Agenda" },
                     allDayText: "Todo o dia",
                     eventLimitText: "mais",
-                    noEventsMessage: "Não há eventos para mostrar",
+                    noEventsMessage: "Não há eventos para mostrar"
                 });
         },
         function (e, a, t) {
@@ -8304,13 +7068,12 @@
             })(0, function (e) {
                 return e.defineLocale("pt", {
                     months: "janeiro_fevereiro_março_abril_maio_junho_julho_agosto_setembro_outubro_novembro_dezembro".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "jan_fev_mar_abr_mai_jun_jul_ago_set_out_nov_dez".split("_"),
-                    weekdays:
-                        "Domingo_Segunda-feira_Terça-feira_Quarta-feira_Quinta-feira_Sexta-feira_Sábado".split(
-                            "_",
-                        ),
+                    weekdays: "Domingo_Segunda-feira_Terça-feira_Quarta-feira_Quinta-feira_Sexta-feira_Sábado".split(
+                        "_"
+                    ),
                     weekdaysShort: "Dom_Seg_Ter_Qua_Qui_Sex_Sáb".split("_"),
                     weekdaysMin: "Do_2ª_3ª_4ª_5ª_6ª_Sá".split("_"),
                     weekdaysParseExact: !0,
@@ -8320,7 +7083,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D [de] MMMM [de] YYYY",
                         LLL: "D [de] MMMM [de] YYYY HH:mm",
-                        LLLL: "dddd, D [de] MMMM [de] YYYY HH:mm",
+                        LLLL: "dddd, D [de] MMMM [de] YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[Hoje às] LT",
@@ -8332,7 +7095,7 @@
                                 ? "[Último] dddd [às] LT"
                                 : "[Última] dddd [às] LT";
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "em %s",
@@ -8348,11 +7111,11 @@
                         M: "um mês",
                         MM: "%d meses",
                         y: "um ano",
-                        yy: "%d anos",
+                        yy: "%d anos"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}º/,
                     ordinal: "%dº",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -8376,22 +7139,9 @@
                     "Septembrie",
                     "Octombrie",
                     "Noiembrie",
-                    "Decembrie",
+                    "Decembrie"
                 ],
-                monthNamesShort: [
-                    "Ian",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "Mai",
-                    "Iun",
-                    "Iul",
-                    "Aug",
-                    "Sep",
-                    "Oct",
-                    "Nov",
-                    "Dec",
-                ],
+                monthNamesShort: ["Ian", "Feb", "Mar", "Apr", "Mai", "Iun", "Iul", "Aug", "Sep", "Oct", "Nov", "Dec"],
                 dayNames: ["Duminică", "Luni", "Marţi", "Miercuri", "Joi", "Vineri", "Sâmbătă"],
                 dayNamesShort: ["Dum", "Lun", "Mar", "Mie", "Joi", "Vin", "Sâm"],
                 dayNamesMin: ["Du", "Lu", "Ma", "Mi", "Jo", "Vi", "Sâ"],
@@ -8400,7 +7150,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("ro", {
                     buttonText: {
@@ -8409,13 +7159,13 @@
                         month: "Lună",
                         week: "Săptămână",
                         day: "Zi",
-                        list: "Agendă",
+                        list: "Agendă"
                     },
                     allDayText: "Toată ziua",
                     eventLimitText: function (e) {
                         return "+alte " + e;
                     },
-                    noEventsMessage: "Nu există evenimente de afișat",
+                    noEventsMessage: "Nu există evenimente de afișat"
                 });
         },
         function (e, a, t) {
@@ -8429,19 +7179,16 @@
                             hh: "ore",
                             dd: "zile",
                             MM: "luni",
-                            yy: "ani",
+                            yy: "ani"
                         },
                         r = " ";
-                    return (
-                        (e % 100 >= 20 || (e >= 100 && e % 100 == 0)) && (r = " de "), e + r + n[t]
-                    );
+                    return (e % 100 >= 20 || (e >= 100 && e % 100 == 0)) && (r = " de "), e + r + n[t];
                 }
                 return e.defineLocale("ro", {
                     months: "ianuarie_februarie_martie_aprilie_mai_iunie_iulie_august_septembrie_octombrie_noiembrie_decembrie".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort:
-                        "ian._feb._mart._apr._mai_iun._iul._aug._sept._oct._nov._dec.".split("_"),
+                    monthsShort: "ian._feb._mart._apr._mai_iun._iul._aug._sept._oct._nov._dec.".split("_"),
                     monthsParseExact: !0,
                     weekdays: "duminică_luni_marți_miercuri_joi_vineri_sâmbătă".split("_"),
                     weekdaysShort: "Dum_Lun_Mar_Mie_Joi_Vin_Sâm".split("_"),
@@ -8452,7 +7199,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY H:mm",
-                        LLLL: "dddd, D MMMM YYYY H:mm",
+                        LLLL: "dddd, D MMMM YYYY H:mm"
                     },
                     calendar: {
                         sameDay: "[azi la] LT",
@@ -8460,7 +7207,7 @@
                         nextWeek: "dddd [la] LT",
                         lastDay: "[ieri la] LT",
                         lastWeek: "[fosta] dddd [la] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "peste %s",
@@ -8476,9 +7223,9 @@
                         M: "o lună",
                         MM: a,
                         y: "un an",
-                        yy: a,
+                        yy: a
                     },
-                    week: { dow: 1, doy: 7 },
+                    week: { dow: 1, doy: 7 }
                 });
             });
         },
@@ -8502,31 +7249,10 @@
                     "Сентябрь",
                     "Октябрь",
                     "Ноябрь",
-                    "Декабрь",
+                    "Декабрь"
                 ],
-                monthNamesShort: [
-                    "Янв",
-                    "Фев",
-                    "Мар",
-                    "Апр",
-                    "Май",
-                    "Июн",
-                    "Июл",
-                    "Авг",
-                    "Сен",
-                    "Окт",
-                    "Ноя",
-                    "Дек",
-                ],
-                dayNames: [
-                    "воскресенье",
-                    "понедельник",
-                    "вторник",
-                    "среда",
-                    "четверг",
-                    "пятница",
-                    "суббота",
-                ],
+                monthNamesShort: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
+                dayNames: ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"],
                 dayNamesShort: ["вск", "пнд", "втр", "срд", "чтв", "птн", "сбт"],
                 dayNamesMin: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
                 weekHeader: "Нед",
@@ -8534,20 +7260,20 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("ru", {
                     buttonText: {
                         month: "Месяц",
                         week: "Неделя",
                         day: "День",
-                        list: "Повестка дня",
+                        list: "Повестка дня"
                     },
                     allDayText: "Весь день",
                     eventLimitText: function (e) {
                         return "+ ещё " + e;
                     },
-                    noEventsMessage: "Нет событий для отображения",
+                    noEventsMessage: "Нет событий для отображения"
                 });
         },
         function (e, a, t) {
@@ -8569,7 +7295,7 @@
                         hh: "час_часа_часов",
                         dd: "день_дня_дней",
                         MM: "месяц_месяца_месяцев",
-                        yy: "год_года_лет",
+                        yy: "год_года_лет"
                     };
                     return "m" === n ? (t ? "минута" : "минуту") : e + " " + a(r[n], +e);
                 }
@@ -8585,36 +7311,24 @@
                     /^сен/i,
                     /^окт/i,
                     /^ноя/i,
-                    /^дек/i,
+                    /^дек/i
                 ];
                 return e.defineLocale("ru", {
                     months: {
                         format: "января_февраля_марта_апреля_мая_июня_июля_августа_сентября_октября_ноября_декабря".split(
-                            "_",
+                            "_"
                         ),
                         standalone:
-                            "январь_февраль_март_апрель_май_июнь_июль_август_сентябрь_октябрь_ноябрь_декабрь".split(
-                                "_",
-                            ),
+                            "январь_февраль_март_апрель_май_июнь_июль_август_сентябрь_октябрь_ноябрь_декабрь".split("_")
                     },
                     monthsShort: {
-                        format: "янв._февр._мар._апр._мая_июня_июля_авг._сент._окт._нояб._дек.".split(
-                            "_",
-                        ),
-                        standalone:
-                            "янв._февр._март_апр._май_июнь_июль_авг._сент._окт._нояб._дек.".split(
-                                "_",
-                            ),
+                        format: "янв._февр._мар._апр._мая_июня_июля_авг._сент._окт._нояб._дек.".split("_"),
+                        standalone: "янв._февр._март_апр._май_июнь_июль_авг._сент._окт._нояб._дек.".split("_")
                     },
                     weekdays: {
-                        standalone:
-                            "воскресенье_понедельник_вторник_среда_четверг_пятница_суббота".split(
-                                "_",
-                            ),
-                        format: "воскресенье_понедельник_вторник_среду_четверг_пятницу_субботу".split(
-                            "_",
-                        ),
-                        isFormat: /\[ ?[Вв] ?(?:прошлую|следующую|эту)? ?\] ?dddd/,
+                        standalone: "воскресенье_понедельник_вторник_среда_четверг_пятница_суббота".split("_"),
+                        format: "воскресенье_понедельник_вторник_среду_четверг_пятницу_субботу".split("_"),
+                        isFormat: /\[ ?[Вв] ?(?:прошлую|следующую|эту)? ?\] ?dddd/
                     },
                     weekdaysShort: "вс_пн_вт_ср_чт_пт_сб".split("_"),
                     weekdaysMin: "вс_пн_вт_ср_чт_пт_сб".split("_"),
@@ -8635,7 +7349,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D MMMM YYYY г.",
                         LLL: "D MMMM YYYY г., H:mm",
-                        LLLL: "dddd, D MMMM YYYY г., H:mm",
+                        LLLL: "dddd, D MMMM YYYY г., H:mm"
                     },
                     calendar: {
                         sameDay: "[Сегодня, в] LT",
@@ -8673,7 +7387,7 @@
                                     return "[В прошлую] dddd, [в] LT";
                             }
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "через %s",
@@ -8689,7 +7403,7 @@
                         M: "месяц",
                         MM: t,
                         y: "год",
-                        yy: t,
+                        yy: t
                     },
                     meridiemParse: /ночи|утра|дня|вечера/i,
                     isPM: function (e) {
@@ -8714,7 +7428,7 @@
                                 return e;
                         }
                     },
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -8738,31 +7452,10 @@
                     "september",
                     "október",
                     "november",
-                    "december",
+                    "december"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "Máj",
-                    "Jún",
-                    "Júl",
-                    "Aug",
-                    "Sep",
-                    "Okt",
-                    "Nov",
-                    "Dec",
-                ],
-                dayNames: [
-                    "nedeľa",
-                    "pondelok",
-                    "utorok",
-                    "streda",
-                    "štvrtok",
-                    "piatok",
-                    "sobota",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "Máj", "Jún", "Júl", "Aug", "Sep", "Okt", "Nov", "Dec"],
+                dayNames: ["nedeľa", "pondelok", "utorok", "streda", "štvrtok", "piatok", "sobota"],
                 dayNamesShort: ["Ned", "Pon", "Uto", "Str", "Štv", "Pia", "Sob"],
                 dayNamesMin: ["Ne", "Po", "Ut", "St", "Št", "Pia", "So"],
                 weekHeader: "Ty",
@@ -8770,7 +7463,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("sk", {
                     buttonText: { month: "Mesiac", week: "Týždeň", day: "Deň", list: "Rozvrh" },
@@ -8778,7 +7471,7 @@
                     eventLimitText: function (e) {
                         return "+ďalšie: " + e;
                     },
-                    noEventsMessage: "Žiadne akcie na zobrazenie",
+                    noEventsMessage: "Žiadne akcie na zobrazenie"
                 });
         },
         function (e, a, t) {
@@ -8817,10 +7510,7 @@
                             return t || r ? s + (a(e) ? "roky" : "rokov") : s + "rokmi";
                     }
                 }
-                var n =
-                        "január_február_marec_apríl_máj_jún_júl_august_september_október_november_december".split(
-                            "_",
-                        ),
+                var n = "január_február_marec_apríl_máj_jún_júl_august_september_október_november_december".split("_"),
                     r = "jan_feb_mar_apr_máj_jún_júl_aug_sep_okt_nov_dec".split("_");
                 return e.defineLocale("sk", {
                     months: n,
@@ -8834,7 +7524,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D. MMMM YYYY",
                         LLL: "D. MMMM YYYY H:mm",
-                        LLLL: "dddd D. MMMM YYYY H:mm",
+                        LLLL: "dddd D. MMMM YYYY H:mm"
                     },
                     calendar: {
                         sameDay: "[dnes o] LT",
@@ -8873,7 +7563,7 @@
                                     return "[minulú sobotu o] LT";
                             }
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "za %s",
@@ -8889,11 +7579,11 @@
                         M: t,
                         MM: t,
                         y: t,
-                        yy: t,
+                        yy: t
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -8917,31 +7607,10 @@
                     "September",
                     "Oktober",
                     "November",
-                    "December",
+                    "December"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "Maj",
-                    "Jun",
-                    "Jul",
-                    "Avg",
-                    "Sep",
-                    "Okt",
-                    "Nov",
-                    "Dec",
-                ],
-                dayNames: [
-                    "Nedelja",
-                    "Ponedeljek",
-                    "Torek",
-                    "Sreda",
-                    "Četrtek",
-                    "Petek",
-                    "Sobota",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Avg", "Sep", "Okt", "Nov", "Dec"],
+                dayNames: ["Nedelja", "Ponedeljek", "Torek", "Sreda", "Četrtek", "Petek", "Sobota"],
                 dayNamesShort: ["Ned", "Pon", "Tor", "Sre", "Čet", "Pet", "Sob"],
                 dayNamesMin: ["Ne", "Po", "To", "Sr", "Če", "Pe", "So"],
                 weekHeader: "Teden",
@@ -8949,13 +7618,13 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("sl", {
                     buttonText: { month: "Mesec", week: "Teden", day: "Dan", list: "Dnevni red" },
                     allDayText: "Ves dan",
                     eventLimitText: "več",
-                    noEventsMessage: "Ni dogodkov za prikaz",
+                    noEventsMessage: "Ni dogodkov za prikaz"
                 });
         },
         function (e, a, t) {
@@ -9077,10 +7746,9 @@
                 }
                 return e.defineLocale("sl", {
                     months: "januar_februar_marec_april_maj_junij_julij_avgust_september_oktober_november_december".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort:
-                        "jan._feb._mar._apr._maj._jun._jul._avg._sep._okt._nov._dec.".split("_"),
+                    monthsShort: "jan._feb._mar._apr._maj._jun._jul._avg._sep._okt._nov._dec.".split("_"),
                     monthsParseExact: !0,
                     weekdays: "nedelja_ponedeljek_torek_sreda_četrtek_petek_sobota".split("_"),
                     weekdaysShort: "ned._pon._tor._sre._čet._pet._sob.".split("_"),
@@ -9092,7 +7760,7 @@
                         L: "DD. MM. YYYY",
                         LL: "D. MMMM YYYY",
                         LLL: "D. MMMM YYYY H:mm",
-                        LLLL: "dddd, D. MMMM YYYY H:mm",
+                        LLLL: "dddd, D. MMMM YYYY H:mm"
                     },
                     calendar: {
                         sameDay: "[danes ob] LT",
@@ -9128,7 +7796,7 @@
                                     return "[prejšnji] dddd [ob] LT";
                             }
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "čez %s",
@@ -9144,11 +7812,11 @@
                         M: a,
                         MM: a,
                         y: a,
-                        yy: a,
+                        yy: a
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 7 },
+                    week: { dow: 1, doy: 7 }
                 });
             });
         },
@@ -9172,31 +7840,10 @@
                     "Shtator",
                     "Tetor",
                     "Nëntor",
-                    "Dhjetor",
+                    "Dhjetor"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Shk",
-                    "Mar",
-                    "Pri",
-                    "Maj",
-                    "Qer",
-                    "Kor",
-                    "Gus",
-                    "Sht",
-                    "Tet",
-                    "Nën",
-                    "Dhj",
-                ],
-                dayNames: [
-                    "E Diel",
-                    "E Hënë",
-                    "E Martë",
-                    "E Mërkurë",
-                    "E Enjte",
-                    "E Premte",
-                    "E Shtune",
-                ],
+                monthNamesShort: ["Jan", "Shk", "Mar", "Pri", "Maj", "Qer", "Kor", "Gus", "Sht", "Tet", "Nën", "Dhj"],
+                dayNames: ["E Diel", "E Hënë", "E Martë", "E Mërkurë", "E Enjte", "E Premte", "E Shtune"],
                 dayNamesShort: ["Di", "Hë", "Ma", "Më", "En", "Pr", "Sh"],
                 dayNamesMin: ["Di", "Hë", "Ma", "Më", "En", "Pr", "Sh"],
                 weekHeader: "Ja",
@@ -9204,7 +7851,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("sq", {
                     buttonText: { month: "Muaj", week: "Javë", day: "Ditë", list: "Listë" },
@@ -9212,7 +7859,7 @@
                     eventLimitText: function (e) {
                         return "+më tepër " + e;
                     },
-                    noEventsMessage: "Nuk ka evente për të shfaqur",
+                    noEventsMessage: "Nuk ka evente për të shfaqur"
                 });
         },
         function (e, a, t) {
@@ -9220,13 +7867,9 @@
                 a(t(0));
             })(0, function (e) {
                 return e.defineLocale("sq", {
-                    months: "Janar_Shkurt_Mars_Prill_Maj_Qershor_Korrik_Gusht_Shtator_Tetor_Nëntor_Dhjetor".split(
-                        "_",
-                    ),
+                    months: "Janar_Shkurt_Mars_Prill_Maj_Qershor_Korrik_Gusht_Shtator_Tetor_Nëntor_Dhjetor".split("_"),
                     monthsShort: "Jan_Shk_Mar_Pri_Maj_Qer_Kor_Gus_Sht_Tet_Nën_Dhj".split("_"),
-                    weekdays: "E Diel_E Hënë_E Martë_E Mërkurë_E Enjte_E Premte_E Shtunë".split(
-                        "_",
-                    ),
+                    weekdays: "E Diel_E Hënë_E Martë_E Mërkurë_E Enjte_E Premte_E Shtunë".split("_"),
                     weekdaysShort: "Die_Hën_Mar_Mër_Enj_Pre_Sht".split("_"),
                     weekdaysMin: "D_H_Ma_Më_E_P_Sh".split("_"),
                     weekdaysParseExact: !0,
@@ -9243,7 +7886,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd, D MMMM YYYY HH:mm",
+                        LLLL: "dddd, D MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[Sot në] LT",
@@ -9251,7 +7894,7 @@
                         nextWeek: "dddd [në] LT",
                         lastDay: "[Dje në] LT",
                         lastWeek: "dddd [e kaluar në] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "në %s",
@@ -9267,11 +7910,11 @@
                         M: "një muaj",
                         MM: "%d muaj",
                         y: "një vit",
-                        yy: "%d vite",
+                        yy: "%d vite"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -9295,31 +7938,10 @@
                     "Септембар",
                     "Октобар",
                     "Новембар",
-                    "Децембар",
+                    "Децембар"
                 ],
-                monthNamesShort: [
-                    "Јан",
-                    "Феб",
-                    "Мар",
-                    "Апр",
-                    "Мај",
-                    "Јун",
-                    "Јул",
-                    "Авг",
-                    "Сеп",
-                    "Окт",
-                    "Нов",
-                    "Дец",
-                ],
-                dayNames: [
-                    "Недеља",
-                    "Понедељак",
-                    "Уторак",
-                    "Среда",
-                    "Четвртак",
-                    "Петак",
-                    "Субота",
-                ],
+                monthNamesShort: ["Јан", "Феб", "Мар", "Апр", "Мај", "Јун", "Јул", "Авг", "Сеп", "Окт", "Нов", "Дец"],
+                dayNames: ["Недеља", "Понедељак", "Уторак", "Среда", "Четвртак", "Петак", "Субота"],
                 dayNamesShort: ["Нед", "Пон", "Уто", "Сре", "Чет", "Пет", "Суб"],
                 dayNamesMin: ["Не", "По", "Ут", "Ср", "Че", "Пе", "Су"],
                 weekHeader: "Сед",
@@ -9327,7 +7949,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("sr-cyrl", {
                     buttonText: {
@@ -9336,13 +7958,13 @@
                         month: "Месец",
                         week: "Недеља",
                         day: "Дан",
-                        list: "Планер",
+                        list: "Планер"
                     },
                     allDayText: "Цео дан",
                     eventLimitText: function (e) {
                         return "+ још " + e;
                     },
-                    noEventsMessage: "Нема догађаја за приказ",
+                    noEventsMessage: "Нема догађаја за приказ"
                 });
         },
         function (e, a, t) {
@@ -9358,27 +7980,21 @@
                         hh: ["сат", "сата", "сати"],
                         dd: ["дан", "дана", "дана"],
                         MM: ["месец", "месеца", "месеци"],
-                        yy: ["година", "године", "година"],
+                        yy: ["година", "године", "година"]
                     },
                     correctGrammaticalCase: function (e, a) {
                         return 1 === e ? a[0] : e >= 2 && e <= 4 ? a[1] : a[2];
                     },
                     translate: function (e, t, n) {
                         var r = a.words[n];
-                        return 1 === n.length
-                            ? t
-                                ? r[0]
-                                : r[1]
-                            : e + " " + a.correctGrammaticalCase(e, r);
-                    },
+                        return 1 === n.length ? (t ? r[0] : r[1]) : e + " " + a.correctGrammaticalCase(e, r);
+                    }
                 };
                 return e.defineLocale("sr-cyrl", {
                     months: "јануар_фебруар_март_април_мај_јун_јул_август_септембар_октобар_новембар_децембар".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort: "јан._феб._мар._апр._мај_јун_јул_авг._сеп._окт._нов._дец.".split(
-                        "_",
-                    ),
+                    monthsShort: "јан._феб._мар._апр._мај_јун_јул_авг._сеп._окт._нов._дец.".split("_"),
                     monthsParseExact: !0,
                     weekdays: "недеља_понедељак_уторак_среда_четвртак_петак_субота".split("_"),
                     weekdaysShort: "нед._пон._уто._сре._чет._пет._суб.".split("_"),
@@ -9390,7 +8006,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D. MMMM YYYY",
                         LLL: "D. MMMM YYYY H:mm",
-                        LLLL: "dddd, D. MMMM YYYY H:mm",
+                        LLLL: "dddd, D. MMMM YYYY H:mm"
                     },
                     calendar: {
                         sameDay: "[данас у] LT",
@@ -9419,10 +8035,10 @@
                                 "[прошле] [среде] [у] LT",
                                 "[прошлог] [четвртка] [у] LT",
                                 "[прошлог] [петка] [у] LT",
-                                "[прошле] [суботе] [у] LT",
+                                "[прошле] [суботе] [у] LT"
                             ][this.day()];
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "за %s",
@@ -9438,11 +8054,11 @@
                         M: "месец",
                         MM: a.translate,
                         y: "годину",
-                        yy: a.translate,
+                        yy: a.translate
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 7 },
+                    week: { dow: 1, doy: 7 }
                 });
             });
         },
@@ -9466,31 +8082,10 @@
                     "Septembar",
                     "Oktobar",
                     "Novembar",
-                    "Decembar",
+                    "Decembar"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "Maj",
-                    "Jun",
-                    "Jul",
-                    "Avg",
-                    "Sep",
-                    "Okt",
-                    "Nov",
-                    "Dec",
-                ],
-                dayNames: [
-                    "Nedelja",
-                    "Ponedeljak",
-                    "Utorak",
-                    "Sreda",
-                    "Četvrtak",
-                    "Petak",
-                    "Subota",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Avg", "Sep", "Okt", "Nov", "Dec"],
+                dayNames: ["Nedelja", "Ponedeljak", "Utorak", "Sreda", "Četvrtak", "Petak", "Subota"],
                 dayNamesShort: ["Ned", "Pon", "Uto", "Sre", "Čet", "Pet", "Sub"],
                 dayNamesMin: ["Ne", "Po", "Ut", "Sr", "Če", "Pe", "Su"],
                 weekHeader: "Sed",
@@ -9498,7 +8093,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("sr", {
                     buttonText: {
@@ -9507,13 +8102,13 @@
                         month: "Mеsеc",
                         week: "Nеdеlja",
                         day: "Dan",
-                        list: "Planеr",
+                        list: "Planеr"
                     },
                     allDayText: "Cеo dan",
                     eventLimitText: function (e) {
                         return "+ još " + e;
                     },
-                    noEventsMessage: "Nеma događaja za prikaz",
+                    noEventsMessage: "Nеma događaja za prikaz"
                 });
         },
         function (e, a, t) {
@@ -9529,27 +8124,21 @@
                         hh: ["sat", "sata", "sati"],
                         dd: ["dan", "dana", "dana"],
                         MM: ["mesec", "meseca", "meseci"],
-                        yy: ["godina", "godine", "godina"],
+                        yy: ["godina", "godine", "godina"]
                     },
                     correctGrammaticalCase: function (e, a) {
                         return 1 === e ? a[0] : e >= 2 && e <= 4 ? a[1] : a[2];
                     },
                     translate: function (e, t, n) {
                         var r = a.words[n];
-                        return 1 === n.length
-                            ? t
-                                ? r[0]
-                                : r[1]
-                            : e + " " + a.correctGrammaticalCase(e, r);
-                    },
+                        return 1 === n.length ? (t ? r[0] : r[1]) : e + " " + a.correctGrammaticalCase(e, r);
+                    }
                 };
                 return e.defineLocale("sr", {
                     months: "januar_februar_mart_april_maj_jun_jul_avgust_septembar_oktobar_novembar_decembar".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort: "jan._feb._mar._apr._maj_jun_jul_avg._sep._okt._nov._dec.".split(
-                        "_",
-                    ),
+                    monthsShort: "jan._feb._mar._apr._maj_jun_jul_avg._sep._okt._nov._dec.".split("_"),
                     monthsParseExact: !0,
                     weekdays: "nedelja_ponedeljak_utorak_sreda_četvrtak_petak_subota".split("_"),
                     weekdaysShort: "ned._pon._uto._sre._čet._pet._sub.".split("_"),
@@ -9561,7 +8150,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D. MMMM YYYY",
                         LLL: "D. MMMM YYYY H:mm",
-                        LLLL: "dddd, D. MMMM YYYY H:mm",
+                        LLLL: "dddd, D. MMMM YYYY H:mm"
                     },
                     calendar: {
                         sameDay: "[danas u] LT",
@@ -9590,10 +8179,10 @@
                                 "[prošle] [srede] [u] LT",
                                 "[prošlog] [četvrtka] [u] LT",
                                 "[prošlog] [petka] [u] LT",
-                                "[prošle] [subote] [u] LT",
+                                "[prošle] [subote] [u] LT"
                             ][this.day()];
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "za %s",
@@ -9609,11 +8198,11 @@
                         M: "mesec",
                         MM: a.translate,
                         y: "godinu",
-                        yy: a.translate,
+                        yy: a.translate
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}\./,
                     ordinal: "%d.",
-                    week: { dow: 1, doy: 7 },
+                    week: { dow: 1, doy: 7 }
                 });
             });
         },
@@ -9637,22 +8226,9 @@
                     "September",
                     "Oktober",
                     "November",
-                    "December",
+                    "December"
                 ],
-                monthNamesShort: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "Maj",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Okt",
-                    "Nov",
-                    "Dec",
-                ],
+                monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"],
                 dayNamesShort: ["Sön", "Mån", "Tis", "Ons", "Tor", "Fre", "Lör"],
                 dayNames: ["Söndag", "Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag"],
                 dayNamesMin: ["Sö", "Må", "Ti", "On", "To", "Fr", "Lö"],
@@ -9661,13 +8237,13 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("sv", {
                     buttonText: { month: "Månad", week: "Vecka", day: "Dag", list: "Program" },
                     allDayText: "Heldag",
                     eventLimitText: "till",
-                    noEventsMessage: "Inga händelser att visa",
+                    noEventsMessage: "Inga händelser att visa"
                 });
         },
         function (e, a, t) {
@@ -9676,7 +8252,7 @@
             })(0, function (e) {
                 return e.defineLocale("sv", {
                     months: "januari_februari_mars_april_maj_juni_juli_augusti_september_oktober_november_december".split(
-                        "_",
+                        "_"
                     ),
                     monthsShort: "jan_feb_mar_apr_maj_jun_jul_aug_sep_okt_nov_dec".split("_"),
                     weekdays: "söndag_måndag_tisdag_onsdag_torsdag_fredag_lördag".split("_"),
@@ -9690,7 +8266,7 @@
                         LLL: "D MMMM YYYY [kl.] HH:mm",
                         LLLL: "dddd D MMMM YYYY [kl.] HH:mm",
                         lll: "D MMM YYYY HH:mm",
-                        llll: "ddd D MMM YYYY HH:mm",
+                        llll: "ddd D MMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[Idag] LT",
@@ -9698,7 +8274,7 @@
                         lastDay: "[Igår] LT",
                         nextWeek: "[På] dddd LT",
                         lastWeek: "[I] dddd[s] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "om %s",
@@ -9714,23 +8290,14 @@
                         M: "en månad",
                         MM: "%d månader",
                         y: "ett år",
-                        yy: "%d år",
+                        yy: "%d år"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}(\:e|\:a)/,
                     ordinal: function (e) {
                         var a = e % 10;
-                        return (
-                            e +
-                            (1 == ~~((e % 100) / 10)
-                                ? ":e"
-                                : 1 === a
-                                  ? ":a"
-                                  : 2 === a
-                                    ? ":a"
-                                    : ":e")
-                        );
+                        return e + (1 == ~~((e % 100) / 10) ? ":e" : 1 === a ? ":a" : 2 === a ? ":a" : ":e");
                     },
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -9754,7 +8321,7 @@
                     "กันยายน",
                     "ตุลาคม",
                     "พฤศจิกายน",
-                    "ธันวาคม",
+                    "ธันวาคม"
                 ],
                 monthNamesShort: [
                     "ม.ค.",
@@ -9768,7 +8335,7 @@
                     "ก.ย.",
                     "ต.ค.",
                     "พ.ย.",
-                    "ธ.ค.",
+                    "ธ.ค."
                 ],
                 dayNames: ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"],
                 dayNamesShort: ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."],
@@ -9778,13 +8345,13 @@
                 firstDay: 0,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("th", {
                     buttonText: { month: "เดือน", week: "สัปดาห์", day: "วัน", list: "แผนงาน" },
                     allDayText: "ตลอดวัน",
                     eventLimitText: "เพิ่มเติม",
-                    noEventsMessage: "ไม่มีกิจกรรมที่จะแสดง",
+                    noEventsMessage: "ไม่มีกิจกรรมที่จะแสดง"
                 });
         },
         function (e, a, t) {
@@ -9793,12 +8360,9 @@
             })(0, function (e) {
                 return e.defineLocale("th", {
                     months: "มกราคม_กุมภาพันธ์_มีนาคม_เมษายน_พฤษภาคม_มิถุนายน_กรกฎาคม_สิงหาคม_กันยายน_ตุลาคม_พฤศจิกายน_ธันวาคม".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort:
-                        "ม.ค._ก.พ._มี.ค._เม.ย._พ.ค._มิ.ย._ก.ค._ส.ค._ก.ย._ต.ค._พ.ย._ธ.ค.".split(
-                            "_",
-                        ),
+                    monthsShort: "ม.ค._ก.พ._มี.ค._เม.ย._พ.ค._มิ.ย._ก.ค._ส.ค._ก.ย._ต.ค._พ.ย._ธ.ค.".split("_"),
                     monthsParseExact: !0,
                     weekdays: "อาทิตย์_จันทร์_อังคาร_พุธ_พฤหัสบดี_ศุกร์_เสาร์".split("_"),
                     weekdaysShort: "อาทิตย์_จันทร์_อังคาร_พุธ_พฤหัส_ศุกร์_เสาร์".split("_"),
@@ -9810,7 +8374,7 @@
                         L: "DD/MM/YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY เวลา H:mm",
-                        LLLL: "วันddddที่ D MMMM YYYY เวลา H:mm",
+                        LLLL: "วันddddที่ D MMMM YYYY เวลา H:mm"
                     },
                     meridiemParse: /ก่อนเที่ยง|หลังเที่ยง/,
                     isPM: function (e) {
@@ -9825,7 +8389,7 @@
                         nextWeek: "dddd[หน้า เวลา] LT",
                         lastDay: "[เมื่อวานนี้ เวลา] LT",
                         lastWeek: "[วัน]dddd[ที่แล้ว เวลา] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "อีก %s",
@@ -9841,8 +8405,8 @@
                         M: "1 เดือน",
                         MM: "%d เดือน",
                         y: "1 ปี",
-                        yy: "%d ปี",
-                    },
+                        yy: "%d ปี"
+                    }
                 });
             });
         },
@@ -9866,31 +8430,10 @@
                     "Eylül",
                     "Ekim",
                     "Kasım",
-                    "Aralık",
+                    "Aralık"
                 ],
-                monthNamesShort: [
-                    "Oca",
-                    "Şub",
-                    "Mar",
-                    "Nis",
-                    "May",
-                    "Haz",
-                    "Tem",
-                    "Ağu",
-                    "Eyl",
-                    "Eki",
-                    "Kas",
-                    "Ara",
-                ],
-                dayNames: [
-                    "Pazar",
-                    "Pazartesi",
-                    "Salı",
-                    "Çarşamba",
-                    "Perşembe",
-                    "Cuma",
-                    "Cumartesi",
-                ],
+                monthNamesShort: ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"],
+                dayNames: ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"],
                 dayNamesShort: ["Pz", "Pt", "Sa", "Ça", "Pe", "Cu", "Ct"],
                 dayNamesMin: ["Pz", "Pt", "Sa", "Ça", "Pe", "Cu", "Ct"],
                 weekHeader: "Hf",
@@ -9898,7 +8441,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("tr", {
                     buttonText: {
@@ -9906,11 +8449,11 @@
                         month: "Ay",
                         week: "Hafta",
                         day: "Gün",
-                        list: "Ajanda",
+                        list: "Ajanda"
                     },
                     allDayText: "Tüm gün",
                     eventLimitText: "daha fazla",
-                    noEventsMessage: "Gösterilecek etkinlik yok",
+                    noEventsMessage: "Gösterilecek etkinlik yok"
                 });
         },
         function (e, a, t) {
@@ -9935,12 +8478,10 @@
                     10: "'uncu",
                     30: "'uncu",
                     60: "'ıncı",
-                    90: "'ıncı",
+                    90: "'ıncı"
                 };
                 return e.defineLocale("tr", {
-                    months: "Ocak_Şubat_Mart_Nisan_Mayıs_Haziran_Temmuz_Ağustos_Eylül_Ekim_Kasım_Aralık".split(
-                        "_",
-                    ),
+                    months: "Ocak_Şubat_Mart_Nisan_Mayıs_Haziran_Temmuz_Ağustos_Eylül_Ekim_Kasım_Aralık".split("_"),
                     monthsShort: "Oca_Şub_Mar_Nis_May_Haz_Tem_Ağu_Eyl_Eki_Kas_Ara".split("_"),
                     weekdays: "Pazar_Pazartesi_Salı_Çarşamba_Perşembe_Cuma_Cumartesi".split("_"),
                     weekdaysShort: "Paz_Pts_Sal_Çar_Per_Cum_Cts".split("_"),
@@ -9951,7 +8492,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D MMMM YYYY",
                         LLL: "D MMMM YYYY HH:mm",
-                        LLLL: "dddd, D MMMM YYYY HH:mm",
+                        LLLL: "dddd, D MMMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[bugün saat] LT",
@@ -9959,7 +8500,7 @@
                         nextWeek: "[gelecek] dddd [saat] LT",
                         lastDay: "[dün] LT",
                         lastWeek: "[geçen] dddd [saat] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "%s sonra",
@@ -9975,7 +8516,7 @@
                         M: "bir ay",
                         MM: "%d ay",
                         y: "bir yıl",
-                        yy: "%d yıl",
+                        yy: "%d yıl"
                     },
                     ordinal: function (e, t) {
                         switch (t) {
@@ -9992,7 +8533,7 @@
                                 return e + (a[n] || a[r] || a[s]);
                         }
                     },
-                    week: { dow: 1, doy: 7 },
+                    week: { dow: 1, doy: 7 }
                 });
             });
         },
@@ -10016,31 +8557,10 @@
                     "Вересень",
                     "Жовтень",
                     "Листопад",
-                    "Грудень",
+                    "Грудень"
                 ],
-                monthNamesShort: [
-                    "Січ",
-                    "Лют",
-                    "Бер",
-                    "Кві",
-                    "Тра",
-                    "Чер",
-                    "Лип",
-                    "Сер",
-                    "Вер",
-                    "Жов",
-                    "Лис",
-                    "Гру",
-                ],
-                dayNames: [
-                    "неділя",
-                    "понеділок",
-                    "вівторок",
-                    "середа",
-                    "четвер",
-                    "п’ятниця",
-                    "субота",
-                ],
+                monthNamesShort: ["Січ", "Лют", "Бер", "Кві", "Тра", "Чер", "Лип", "Сер", "Вер", "Жов", "Лис", "Гру"],
+                dayNames: ["неділя", "понеділок", "вівторок", "середа", "четвер", "п’ятниця", "субота"],
                 dayNamesShort: ["нед", "пнд", "вів", "срд", "чтв", "птн", "сбт"],
                 dayNamesMin: ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
                 weekHeader: "Тиж",
@@ -10048,20 +8568,20 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("uk", {
                     buttonText: {
                         month: "Місяць",
                         week: "Тиждень",
                         day: "День",
-                        list: "Порядок денний",
+                        list: "Порядок денний"
                     },
                     allDayText: "Увесь день",
                     eventLimitText: function (e) {
                         return "+ще " + e + "...";
                     },
-                    noEventsMessage: "Немає подій для відображення",
+                    noEventsMessage: "Немає подій для відображення"
                 });
         },
         function (e, a, t) {
@@ -10083,7 +8603,7 @@
                         hh: t ? "година_години_годин" : "годину_години_годин",
                         dd: "день_дні_днів",
                         MM: "місяць_місяці_місяців",
-                        yy: "рік_роки_років",
+                        yy: "рік_роки_років"
                     };
                     return "m" === n
                         ? t
@@ -10098,18 +8618,9 @@
                 function n(e, a) {
                     var t,
                         n = {
-                            nominative:
-                                "неділя_понеділок_вівторок_середа_четвер_п’ятниця_субота".split(
-                                    "_",
-                                ),
-                            accusative:
-                                "неділю_понеділок_вівторок_середу_четвер_п’ятницю_суботу".split(
-                                    "_",
-                                ),
-                            genitive:
-                                "неділі_понеділка_вівторка_середи_четверга_п’ятниці_суботи".split(
-                                    "_",
-                                ),
+                            nominative: "неділя_понеділок_вівторок_середа_четвер_п’ятниця_субота".split("_"),
+                            accusative: "неділю_понеділок_вівторок_середу_четвер_п’ятницю_суботу".split("_"),
+                            genitive: "неділі_понеділка_вівторка_середи_четверга_п’ятниці_суботи".split("_")
                         };
                     return !0 === e
                         ? n.nominative.slice(1, 7).concat(n.nominative.slice(0, 1))
@@ -10130,16 +8641,14 @@
                 return e.defineLocale("uk", {
                     months: {
                         format: "січня_лютого_березня_квітня_травня_червня_липня_серпня_вересня_жовтня_листопада_грудня".split(
-                            "_",
+                            "_"
                         ),
                         standalone:
                             "січень_лютий_березень_квітень_травень_червень_липень_серпень_вересень_жовтень_листопад_грудень".split(
-                                "_",
-                            ),
+                                "_"
+                            )
                     },
-                    monthsShort: "січ_лют_бер_квіт_трав_черв_лип_серп_вер_жовт_лист_груд".split(
-                        "_",
-                    ),
+                    monthsShort: "січ_лют_бер_квіт_трав_черв_лип_серп_вер_жовт_лист_груд".split("_"),
                     weekdays: n,
                     weekdaysShort: "нд_пн_вт_ср_чт_пт_сб".split("_"),
                     weekdaysMin: "нд_пн_вт_ср_чт_пт_сб".split("_"),
@@ -10149,7 +8658,7 @@
                         L: "DD.MM.YYYY",
                         LL: "D MMMM YYYY р.",
                         LLL: "D MMMM YYYY р., HH:mm",
-                        LLLL: "dddd, D MMMM YYYY р., HH:mm",
+                        LLLL: "dddd, D MMMM YYYY р., HH:mm"
                     },
                     calendar: {
                         sameDay: r("[Сьогодні "),
@@ -10169,7 +8678,7 @@
                                     return r("[Минулого] dddd [").call(this);
                             }
                         },
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "за %s",
@@ -10185,7 +8694,7 @@
                         M: "місяць",
                         MM: t,
                         y: "рік",
-                        yy: t,
+                        yy: t
                     },
                     meridiemParse: /ночі|ранку|дня|вечора/,
                     isPM: function (e) {
@@ -10209,7 +8718,7 @@
                                 return e;
                         }
                     },
-                    week: { dow: 1, doy: 7 },
+                    week: { dow: 1, doy: 7 }
                 });
             });
         },
@@ -10233,7 +8742,7 @@
                     "Tháng Chín",
                     "Tháng Mười",
                     "Tháng Mười Một",
-                    "Tháng Mười Hai",
+                    "Tháng Mười Hai"
                 ],
                 monthNamesShort: [
                     "Tháng 1",
@@ -10247,17 +8756,9 @@
                     "Tháng 9",
                     "Tháng 10",
                     "Tháng 11",
-                    "Tháng 12",
+                    "Tháng 12"
                 ],
-                dayNames: [
-                    "Chủ Nhật",
-                    "Thứ Hai",
-                    "Thứ Ba",
-                    "Thứ Tư",
-                    "Thứ Năm",
-                    "Thứ Sáu",
-                    "Thứ Bảy",
-                ],
+                dayNames: ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"],
                 dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
                 dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
                 weekHeader: "Tu",
@@ -10265,7 +8766,7 @@
                 firstDay: 0,
                 isRTL: !1,
                 showMonthAfterYear: !1,
-                yearSuffix: "",
+                yearSuffix: ""
             }),
                 n.locale("vi", {
                     buttonText: { month: "Tháng", week: "Tuần", day: "Ngày", list: "Lịch biểu" },
@@ -10273,7 +8774,7 @@
                     eventLimitText: function (e) {
                         return "+ thêm " + e;
                     },
-                    noEventsMessage: "Không có sự kiện để hiển thị",
+                    noEventsMessage: "Không có sự kiện để hiển thị"
                 });
         },
         function (e, a, t) {
@@ -10282,10 +8783,9 @@
             })(0, function (e) {
                 return e.defineLocale("vi", {
                     months: "tháng 1_tháng 2_tháng 3_tháng 4_tháng 5_tháng 6_tháng 7_tháng 8_tháng 9_tháng 10_tháng 11_tháng 12".split(
-                        "_",
+                        "_"
                     ),
-                    monthsShort:
-                        "Th01_Th02_Th03_Th04_Th05_Th06_Th07_Th08_Th09_Th10_Th11_Th12".split("_"),
+                    monthsShort: "Th01_Th02_Th03_Th04_Th05_Th06_Th07_Th08_Th09_Th10_Th11_Th12".split("_"),
                     monthsParseExact: !0,
                     weekdays: "chủ nhật_thứ hai_thứ ba_thứ tư_thứ năm_thứ sáu_thứ bảy".split("_"),
                     weekdaysShort: "CN_T2_T3_T4_T5_T6_T7".split("_"),
@@ -10308,7 +8808,7 @@
                         l: "DD/M/YYYY",
                         ll: "D MMM YYYY",
                         lll: "D MMM YYYY HH:mm",
-                        llll: "ddd, D MMM YYYY HH:mm",
+                        llll: "ddd, D MMM YYYY HH:mm"
                     },
                     calendar: {
                         sameDay: "[Hôm nay lúc] LT",
@@ -10316,7 +8816,7 @@
                         nextWeek: "dddd [tuần tới lúc] LT",
                         lastDay: "[Hôm qua lúc] LT",
                         lastWeek: "dddd [tuần trước lúc] LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     relativeTime: {
                         future: "%s tới",
@@ -10332,13 +8832,13 @@
                         M: "một tháng",
                         MM: "%d tháng",
                         y: "một năm",
-                        yy: "%d năm",
+                        yy: "%d năm"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}/,
                     ordinal: function (e) {
                         return e;
                     },
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -10362,7 +8862,7 @@
                     "九月",
                     "十月",
                     "十一月",
-                    "十二月",
+                    "十二月"
                 ],
                 monthNamesShort: [
                     "一月",
@@ -10376,7 +8876,7 @@
                     "九月",
                     "十月",
                     "十一月",
-                    "十二月",
+                    "十二月"
                 ],
                 dayNames: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
                 dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
@@ -10386,7 +8886,7 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !0,
-                yearSuffix: "年",
+                yearSuffix: "年"
             }),
                 n.locale("zh-cn", {
                     buttonText: { month: "月", week: "周", day: "日", list: "日程" },
@@ -10394,7 +8894,7 @@
                     eventLimitText: function (e) {
                         return "另外 " + e + " 个";
                     },
-                    noEventsMessage: "没有事件显示",
+                    noEventsMessage: "没有事件显示"
                 });
         },
         function (e, a, t) {
@@ -10402,9 +8902,7 @@
                 a(t(0));
             })(0, function (e) {
                 return e.defineLocale("zh-cn", {
-                    months: "一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月".split(
-                        "_",
-                    ),
+                    months: "一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月".split("_"),
                     monthsShort: "1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月".split("_"),
                     weekdays: "星期日_星期一_星期二_星期三_星期四_星期五_星期六".split("_"),
                     weekdaysShort: "周日_周一_周二_周三_周四_周五_周六".split("_"),
@@ -10419,7 +8917,7 @@
                         l: "YYYY/M/D",
                         ll: "YYYY年M月D日",
                         lll: "YYYY年M月D日 HH:mm",
-                        llll: "YYYY年M月D日dddd HH:mm",
+                        llll: "YYYY年M月D日dddd HH:mm"
                     },
                     meridiemParse: /凌晨|早上|上午|中午|下午|晚上/,
                     meridiemHour: function (e, a) {
@@ -10454,7 +8952,7 @@
                         nextWeek: "[下]ddddLT",
                         lastDay: "[昨天]LT",
                         lastWeek: "[上]ddddLT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}(日|月|周)/,
                     ordinal: function (e, a) {
@@ -10486,9 +8984,9 @@
                         M: "1 个月",
                         MM: "%d 个月",
                         y: "1 年",
-                        yy: "%d 年",
+                        yy: "%d 年"
                     },
-                    week: { dow: 1, doy: 4 },
+                    week: { dow: 1, doy: 4 }
                 });
             });
         },
@@ -10512,7 +9010,7 @@
                     "九月",
                     "十月",
                     "十一月",
-                    "十二月",
+                    "十二月"
                 ],
                 monthNamesShort: [
                     "一月",
@@ -10526,7 +9024,7 @@
                     "九月",
                     "十月",
                     "十一月",
-                    "十二月",
+                    "十二月"
                 ],
                 dayNames: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
                 dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
@@ -10536,13 +9034,13 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !0,
-                yearSuffix: "年",
+                yearSuffix: "年"
             }),
                 n.locale("zh-hk", {
                     buttonText: { month: "月", week: "週", day: "天", list: "活動列表" },
                     allDayText: "整天",
                     eventLimitText: "顯示更多",
-                    noEventsMessage: "没有任何活動",
+                    noEventsMessage: "没有任何活動"
                 });
         },
         function (e, a, t) {
@@ -10550,9 +9048,7 @@
                 a(t(0));
             })(0, function (e) {
                 return e.defineLocale("zh-hk", {
-                    months: "一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月".split(
-                        "_",
-                    ),
+                    months: "一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月".split("_"),
                     monthsShort: "1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月".split("_"),
                     weekdays: "星期日_星期一_星期二_星期三_星期四_星期五_星期六".split("_"),
                     weekdaysShort: "週日_週一_週二_週三_週四_週五_週六".split("_"),
@@ -10567,7 +9063,7 @@
                         l: "YYYY/M/D",
                         ll: "YYYY年M月D日",
                         lll: "YYYY年M月D日 HH:mm",
-                        llll: "YYYY年M月D日dddd HH:mm",
+                        llll: "YYYY年M月D日dddd HH:mm"
                     },
                     meridiemParse: /凌晨|早上|上午|中午|下午|晚上/,
                     meridiemHour: function (e, a) {
@@ -10604,7 +9100,7 @@
                         nextWeek: "[下]ddddLT",
                         lastDay: "[昨天]LT",
                         lastWeek: "[上]ddddLT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}(日|月|週)/,
                     ordinal: function (e, a) {
@@ -10636,8 +9132,8 @@
                         M: "1 個月",
                         MM: "%d 個月",
                         y: "1 年",
-                        yy: "%d 年",
-                    },
+                        yy: "%d 年"
+                    }
                 });
             });
         },
@@ -10661,7 +9157,7 @@
                     "九月",
                     "十月",
                     "十一月",
-                    "十二月",
+                    "十二月"
                 ],
                 monthNamesShort: [
                     "一月",
@@ -10675,7 +9171,7 @@
                     "九月",
                     "十月",
                     "十一月",
-                    "十二月",
+                    "十二月"
                 ],
                 dayNames: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
                 dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
@@ -10685,13 +9181,13 @@
                 firstDay: 1,
                 isRTL: !1,
                 showMonthAfterYear: !0,
-                yearSuffix: "年",
+                yearSuffix: "年"
             }),
                 n.locale("zh-tw", {
                     buttonText: { month: "月", week: "週", day: "天", list: "活動列表" },
                     allDayText: "整天",
                     eventLimitText: "顯示更多",
-                    noEventsMessage: "没有任何活動",
+                    noEventsMessage: "没有任何活動"
                 });
         },
         function (e, a, t) {
@@ -10699,9 +9195,7 @@
                 a(t(0));
             })(0, function (e) {
                 return e.defineLocale("zh-tw", {
-                    months: "一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月".split(
-                        "_",
-                    ),
+                    months: "一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月".split("_"),
                     monthsShort: "1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月".split("_"),
                     weekdays: "星期日_星期一_星期二_星期三_星期四_星期五_星期六".split("_"),
                     weekdaysShort: "週日_週一_週二_週三_週四_週五_週六".split("_"),
@@ -10716,7 +9210,7 @@
                         l: "YYYY/M/D",
                         ll: "YYYY年M月D日",
                         lll: "YYYY年M月D日 HH:mm",
-                        llll: "YYYY年M月D日dddd HH:mm",
+                        llll: "YYYY年M月D日dddd HH:mm"
                     },
                     meridiemParse: /凌晨|早上|上午|中午|下午|晚上/,
                     meridiemHour: function (e, a) {
@@ -10753,7 +9247,7 @@
                         nextWeek: "[下]dddd LT",
                         lastDay: "[昨天] LT",
                         lastWeek: "[上]dddd LT",
-                        sameElse: "L",
+                        sameElse: "L"
                     },
                     dayOfMonthOrdinalParse: /\d{1,2}(日|月|週)/,
                     ordinal: function (e, a) {
@@ -10785,8 +9279,8 @@
                         M: "1 個月",
                         MM: "%d 個月",
                         y: "1 年",
-                        yy: "%d 年",
-                    },
+                        yy: "%d 年"
+                    }
                 });
             });
         },
@@ -11093,8 +9587,7 @@
                 r = t(1);
             n.locale("en"),
                 r.locale("en"),
-                window.jQuery.datepicker &&
-                    window.jQuery.datepicker.setDefaults(window.jQuery.datepicker.regional[""]);
-        },
+                window.jQuery.datepicker && window.jQuery.datepicker.setDefaults(window.jQuery.datepicker.regional[""]);
+        }
     ]);
 });

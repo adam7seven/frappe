@@ -13,8 +13,8 @@ export default {
             fieldtype: "Data",
             in_list_view: 1,
             label: "Title",
-            unique: 1,
-        },
+            unique: 1
+        }
     ],
     links: [],
     istable: 1,
@@ -26,5 +26,5 @@ export default {
     permissions: [],
     sort_field: "modified",
     sort_order: "ASC",
-    track_changes: 1,
+    track_changes: 1
 };

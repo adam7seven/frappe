@@ -8,5 +8,5 @@ frappe.ui.form.on("Console Log", {
             window.localStorage.setItem("system_console_type", frm.doc.type);
             frappe.set_route("Form", "System Console");
         });
-    },
+    }
 });

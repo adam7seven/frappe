@@ -17,8 +17,8 @@ frappe.ui.form.on("Server Script", {
         }
 
         frm.call("get_autocompletion_items")
-            .then((r) => r.message)
-            .then((items) => {
+            .then(r => r.message)
+            .then(items => {
                 frm.set_df_property("script", "autocompletions", items);
             });
 
@@ -26,10 +26,9 @@ frappe.ui.form.on("Server Script", {
     },
 
     check_safe_exec(frm) {
-        frappe.xcall("frappe.core.doctype.server_script.server_script.enabled").then((enabled) => {
+        frappe.xcall("frappe.core.doctype.server_script.server_script.enabled").then(enabled => {
             if (enabled === false) {
-                let docs_link =
-                    "https://frappeframework.com/docs/user/en/desk/scripting/server-script";
+                let docs_link = "https://frappeframework.com/docs/user/en/desk/scripting/server-script";
                 let docs = `<a href=${docs_link}>${__("Official Documentation")}</a>`;
 
                 frm.dashboard.clear_comment();
@@ -93,5 +92,5 @@ where tenant_id = 2
 order by creation desc
 </code></pre>
 `);
-    },
+    }
 });

@@ -25,7 +25,7 @@ frappe.search.AwesomeBar = class AwesomeBar {
             data: function (item, input) {
                 return {
                     label: item.index || "",
-                    value: item.value,
+                    value: item.value
                 };
             },
             item: function (item, term) {
@@ -34,17 +34,14 @@ frappe.search.AwesomeBar = class AwesomeBar {
                 if (d.route) {
                     target = frappe.router.make_url(
                         frappe.router.convert_from_standard_route(
-                            frappe.router.get_route_from_arguments(
-                                typeof d.route === "string" ? [d.route] : d.route,
-                            ),
-                        ),
+                            frappe.router.get_route_from_arguments(typeof d.route === "string" ? [d.route] : d.route)
+                        )
                     );
                 }
                 let html = `<span>${__(d.label || d.value)}</span>`;
 
                 if (d.description && d.value !== d.description) {
-                    html +=
-                        '<br><span class="text-muted ellipsis">' + __(d.description) + "</span>";
+                    html += '<br><span class="text-muted ellipsis">' + __(d.description) + "</span>";
                 }
 
                 return $("<li></li>")
@@ -54,7 +51,7 @@ frappe.search.AwesomeBar = class AwesomeBar {
             },
             sort: function (a, b) {
                 return b.label - a.label;
-            },
+            }
         });
 
         // Added to aid UI testing of global search
@@ -80,15 +77,13 @@ frappe.search.AwesomeBar = class AwesomeBar {
                     me.options = me.options.concat(me.build_options(txt));
                     me.options = me.options.concat(me.global_results);
                 } else {
-                    me.options = me.options.concat(
-                        me.deduplicate(frappe.search.utils.get_recent_pages(txt || "")),
-                    );
+                    me.options = me.options.concat(me.deduplicate(frappe.search.utils.get_recent_pages(txt || "")));
                     me.options = me.options.concat(frappe.search.utils.get_frequent_links());
                 }
                 me.add_help();
 
                 awesomplete.list = me.deduplicate(me.options);
-            }, 100),
+            }, 100)
         );
 
         var open_recent = function () {
@@ -136,7 +131,7 @@ frappe.search.AwesomeBar = class AwesomeBar {
             $input.val("");
         });
 
-        $input.on("keydown", (e) => {
+        $input.on("keydown", e => {
             if (e.key == "Escape") {
                 $input.trigger("blur");
             }
@@ -184,7 +179,7 @@ frappe.search.AwesomeBar = class AwesomeBar {
                     "</td></tr>\
 				</table>";
                 frappe.msgprint(txt, __("Search Help"));
-            },
+            }
         });
     }
 
@@ -217,7 +212,7 @@ frappe.search.AwesomeBar = class AwesomeBar {
                 frappe.search.utils.get_dashboards(txt),
                 frappe.search.utils.get_recent_pages(txt || ""),
                 frappe.search.utils.get_executables(txt),
-                frappe.search.utils.get_marketplace_apps(txt),
+                frappe.search.utils.get_marketplace_apps(txt)
             );
         if (txt.charAt(0) === "#") {
             options = frappe.tags.utils.get_tags(txt);
@@ -233,16 +228,11 @@ frappe.search.AwesomeBar = class AwesomeBar {
             routes = [];
         options.forEach(function (option) {
             if (option.route) {
-                if (
-                    option.route[0] === "List" &&
-                    option.route[2] !== "Report" &&
-                    option.route[2] !== "Inbox"
-                ) {
+                if (option.route[0] === "List" && option.route[2] !== "Report" && option.route[2] !== "Inbox") {
                     option.route.splice(2);
                 }
 
-                var str_route =
-                    typeof option.route === "string" ? option.route : option.route.join("/");
+                var str_route = typeof option.route === "string" ? option.route : option.route.join("/");
                 if (routes.indexOf(str_route) === -1) {
                     out.push(option);
                     routes.push(str_route);
@@ -309,7 +299,7 @@ frappe.search.AwesomeBar = class AwesomeBar {
             default: "Search",
             onclick: function () {
                 frappe.searchdialog.search.init_search(txt, "global_search");
-            },
+            }
         });
     }
 
@@ -332,7 +322,7 @@ frappe.search.AwesomeBar = class AwesomeBar {
                 },
                 index: 90,
                 default: "Current",
-                match: txt,
+                match: txt
             });
         }
     }
@@ -354,7 +344,7 @@ frappe.search.AwesomeBar = class AwesomeBar {
                     default: "Calculator",
                     onclick: function () {
                         frappe.msgprint(formatted_value, __("Result"));
-                    },
+                    }
                 });
             } catch (e) {
                 // pass
@@ -369,7 +359,7 @@ frappe.search.AwesomeBar = class AwesomeBar {
                 value: frappe.utils.get_random(16),
                 onclick: function () {
                     frappe.msgprint(frappe.utils.get_random(16), __("Result"));
-                },
+                }
             });
         }
     }

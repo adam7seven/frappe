@@ -53,7 +53,7 @@ context("Folder Navigation", () => {
             waitForAnimations: false,
             parseSpecialCharSequences: false,
             force: true,
-            delay: 100,
+            delay: 100
         });
         cy.click_modal_primary_button("Upload");
 
@@ -69,7 +69,7 @@ context("Folder Navigation", () => {
 
         cy.intercept({
             method: "POST",
-            url: "api/method/frappe.desk.reportview.delete_items",
+            url: "api/method/frappe.desk.reportview.delete_items"
         }).as("file_deleted");
 
         //Deleting the added file from the Test folder

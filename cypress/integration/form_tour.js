@@ -5,7 +5,7 @@ context.skip("Form Tour", () => {
         return cy
             .window()
             .its("frappe")
-            .then((frappe) => {
+            .then(frappe => {
                 return frappe.call("frappe.tests.ui_test_helpers.create_form_tour");
             });
     });
@@ -76,11 +76,7 @@ context.skip("Form Tour", () => {
 
         // move to collapse row step
         cy.wait(500);
-        cy.get(".driver-popover-title")
-            .contains("Test Title 4")
-            .siblings()
-            .get("@next_btn")
-            .click();
+        cy.get(".driver-popover-title").contains("Test Title 4").siblings().get("@next_btn").click();
         cy.wait(500);
         // collapse row
         cy.get(".grid-row-open .grid-collapse-row").click();

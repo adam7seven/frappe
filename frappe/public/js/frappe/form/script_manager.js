@@ -81,10 +81,7 @@ frappe.ui.form.ScriptManager = class ScriptManager {
         $.extend(this, opts);
     }
     make(ControllerClass) {
-        this.frm.cscript = extend_cscript(
-            this.frm.cscript,
-            new ControllerClass({ frm: this.frm }),
-        );
+        this.frm.cscript = extend_cscript(this.frm.cscript, new ControllerClass({ frm: this.frm }));
     }
     trigger(event_id, doctype, id) {
         // trigger all the form level events that
@@ -119,7 +116,7 @@ frappe.ui.form.ScriptManager = class ScriptManager {
         };
 
         // make list of functions to be run serially
-        handlers.new_style.forEach((_function) => {
+        handlers.new_style.forEach(_function => {
             if (event_id === "setup") {
                 // setup must be called immediately
                 runner(_function, false);
@@ -128,7 +125,7 @@ frappe.ui.form.ScriptManager = class ScriptManager {
             }
         });
 
-        handlers.old_style.forEach((_function) => {
+        handlers.old_style.forEach(_function => {
             if (event_id === "setup") {
                 // setup must be called immediately
                 runner(_function, true);
@@ -149,7 +146,7 @@ frappe.ui.form.ScriptManager = class ScriptManager {
         let me = this;
         let handlers = {
             old_style: [],
-            new_style: [],
+            new_style: []
         };
         if (frappe.ui.form.handlers[doctype] && frappe.ui.form.handlers[doctype][event_id]) {
             $.each(frappe.ui.form.handlers[doctype][event_id], function (i, fn) {
@@ -186,7 +183,7 @@ frappe.ui.form.ScriptManager = class ScriptManager {
                 frappe.msgprint({
                     title: __("Error in Client Script"),
                     indicator: "orange",
-                    message: '<pre class="small"><code>' + e.stack + "</code></pre>",
+                    message: '<pre class="small"><code>' + e.stack + "</code></pre>"
                 });
             }
         }
@@ -210,7 +207,7 @@ frappe.ui.form.ScriptManager = class ScriptManager {
                     "Datetime",
                     "Select",
                     "Duration",
-                    "Time",
+                    "Time"
                 ].includes(df.fieldtype) ||
                 df.read_only == 1 ||
                 df.is_virtual == 1;
@@ -225,12 +222,9 @@ frappe.ui.form.ScriptManager = class ScriptManager {
         $.each(this.frm.fields, function (i, field) {
             setup_add_fetch(field.df);
             if (frappe.model.table_fields.includes(field.df.fieldtype)) {
-                $.each(
-                    frappe.meta.get_docfields(field.df.options, me.frm.docid),
-                    function (i, df) {
-                        setup_add_fetch(df);
-                    },
-                );
+                $.each(frappe.meta.get_docfields(field.df.options, me.frm.docid), function (i, df) {
+                    setup_add_fetch(df);
+                });
             }
         });
 
@@ -259,12 +253,7 @@ frappe.ui.form.ScriptManager = class ScriptManager {
         }
 
         $.each(fieldnames, function (i, fieldname) {
-            frappe.model.set_value(
-                current_row.doctype,
-                current_row.id,
-                fieldname,
-                data[0][fieldname],
-            );
+            frappe.model.set_value(current_row.doctype, current_row.id, fieldname, data[0][fieldname]);
         });
     }
 };

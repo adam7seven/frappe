@@ -27,10 +27,7 @@ export default class HeaderSize {
     render() {
         this.button = document.createElement("button");
         this.button.type = "button";
-        this.button.innerHTML = `${frappe.utils.icon("header", "sm")}${frappe.utils.icon(
-            "small-down",
-            "xs",
-        )}`;
+        this.button.innerHTML = `${frappe.utils.icon("header", "sm")}${frappe.utils.icon("small-down", "xs")}`;
         this.button.classList = "header-inline-tool";
 
         return this.button;
@@ -42,9 +39,7 @@ export default class HeaderSize {
         for (const h of ["h1", "h2", "h3", "h4", "h5", "h6"]) {
             if (termWrapper && termWrapper.classList.contains(h)) {
                 let num = h.match(/\d+/)[0];
-                $(".header-inline-tool svg:first-child").replaceWith(
-                    frappe.utils.icon(`header-${num}`, "md"),
-                );
+                $(".header-inline-tool svg:first-child").replaceWith(frappe.utils.icon(`header-${num}`, "md"));
             }
         }
 
@@ -77,10 +72,7 @@ export default class HeaderSize {
         }
 
         if (parent_tag.innerText == selected_text) {
-            if (
-                !parent_tag.classList.contains("ce-header") &&
-                !parent_tag.classList.contains("ce-paragraph")
-            ) {
+            if (!parent_tag.classList.contains("ce-header") && !parent_tag.classList.contains("ce-paragraph")) {
                 this.remove_parent_tag(range, parent_node.parentElement, span);
                 parent_tag.remove();
             }

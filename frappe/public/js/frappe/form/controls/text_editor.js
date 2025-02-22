@@ -31,7 +31,7 @@ let font_sizes = [
     "54px",
     "64px",
     "96px",
-    "128px",
+    "128px"
 ];
 const Size = Quill.import("attributors/style/size");
 Size.whitelist = font_sizes;
@@ -40,7 +40,7 @@ Quill.register(Size, true);
 // table
 const Table = Quill.import("formats/table-container");
 const superCreate = Table.create.bind(Table);
-Table.create = (value) => {
+Table.create = value => {
     const node = superCreate(value);
     node.classList.add("table");
     node.classList.add("table-bordered");
@@ -94,9 +94,7 @@ class CustomColor extends Inline {
     constructor(domNode, value) {
         super(domNode, value);
         this.domNode.style.color = this.domNode.color;
-        domNode.outerHTML = this.domNode.outerHTML
-            .replace(/<font/g, "<span")
-            .replace(/<\/font>/g, "</span>");
+        domNode.outerHTML = this.domNode.outerHTML.replace(/<font/g, "<span").replace(/<\/font>/g, "</span>");
     }
 }
 
@@ -133,22 +131,22 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 
                 const input_value = this.get_input_value();
                 this.parse_validate_and_set_in_model(input_value);
-            }, 300),
+            }, 300)
         );
 
-        $(this.quill.root).on("keydown", (e) => {
+        $(this.quill.root).on("keydown", e => {
             const key = frappe.ui.keys && frappe.ui.keys.get_key(e);
             if (["ctrl+b", "meta+b"].includes(key)) {
                 e.stopPropagation();
             }
         });
 
-        $(this.quill.root).on("drop", (e) => {
+        $(this.quill.root).on("drop", e => {
             e.stopPropagation();
         });
 
         // table commands
-        this.$wrapper.on("click", ".ql-table .ql-picker-item", (e) => {
+        this.$wrapper.on("click", ".ql-table .ql-picker-item", e => {
             const $target = $(e.currentTarget);
             const action = $target.data().value;
             e.preventDefault();
@@ -204,12 +202,12 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
                 table: true,
                 imageResize: {},
                 magicUrl: true,
-                mention: this.get_mention_options(),
+                mention: this.get_mention_options()
             },
             theme: this.df.theme || "snow",
             readOnly: this.disabled,
             bounds: this.quill_container[0],
-            placeholder: this.df.placeholder || "",
+            placeholder: this.df.placeholder || ""
         };
 
         // In a grid row where space is constrained, hide the toolbar.
@@ -233,7 +231,7 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
             source: frappe.utils.debounce(async function (search_term, renderList) {
                 let method = me.mention_search_method || "frappe.desk.search.get_ids_for_mentions";
                 let values = await frappe.xcall(method, {
-                    search_term,
+                    search_term
                 });
 
                 let sorted_values = me.prioritize_involved_users_in_mention(values);
@@ -242,7 +240,7 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
             renderItem(item) {
                 let value = item.value;
                 return `${value} ${item.is_group ? frappe.utils.icon("users") : ""}`;
-            },
+            }
         };
     }
 
@@ -253,8 +251,8 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
             [];
 
         return values
-            .filter((val) => involved_users.includes(val.id))
-            .concat(values.filter((val) => !involved_users.includes(val.id)));
+            .filter(val => involved_users.includes(val.id))
+            .concat(values.filter(val => !involved_users.includes(val.id)));
     }
 
     get_toolbar_options() {
@@ -280,10 +278,10 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
                         "insert-column-left",
                         "delete-row",
                         "delete-column",
-                        "delete-table",
-                    ],
-                },
-            ],
+                        "delete-table"
+                    ]
+                }
+            ]
         ];
     }
 

@@ -45,7 +45,7 @@ export default class Header extends Block {
                 "drag-handle",
                 __("Drag"),
                 null,
-                $widget_control,
+                $widget_control
             );
 
             return this.wrapper;
@@ -55,7 +55,7 @@ export default class Header extends Block {
 
     merge(data) {
         const newData = {
-            text: this.data.text + data.text,
+            text: this.data.text + data.text
         };
 
         this.data = newData;
@@ -69,7 +69,7 @@ export default class Header extends Block {
         this.wrapper = this._element;
         return {
             text: this.wrapper.innerHTML.replace(/&nbsp;/gi, ""),
-            col: this.get_col(),
+            col: this.get_col()
         };
     }
 
@@ -85,8 +85,8 @@ export default class Header extends Block {
                 b: true,
                 i: true,
                 a: true,
-                span: true,
-            },
+                span: true
+            }
         };
     }
 
@@ -144,7 +144,7 @@ export default class Header extends Block {
     static get toolbox() {
         return {
             title: "Heading",
-            icon: frappe.utils.icon("header", "sm"),
+            icon: frappe.utils.icon("header", "sm")
         };
     }
 }

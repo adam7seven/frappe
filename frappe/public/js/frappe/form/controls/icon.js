@@ -20,7 +20,7 @@ frappe.ui.form.ControlIcon = class ControlIcon extends frappe.ui.form.ControlDat
         this.picker = new Picker({
             parent: picker_wrapper,
             icon: this.get_icon(),
-            icons: frappe.symbols,
+            icons: frappe.symbols
         });
 
         this.$wrapper
@@ -36,7 +36,7 @@ frappe.ui.form.ControlIcon = class ControlIcon extends frappe.ui.form.ControlDat
 				</div>
 			`,
                 content: () => picker_wrapper,
-                html: true,
+                html: true
             })
             .on("show.bs.popover", () => {
                 setTimeout(() => {
@@ -48,27 +48,25 @@ frappe.ui.form.ControlIcon = class ControlIcon extends frappe.ui.form.ControlDat
                 $(window).off("hashchange.icon-popover");
             });
 
-        this.picker.on_change = (icon) => {
+        this.picker.on_change = icon => {
             this.set_value(icon);
         };
 
         if (!this.selected_icon) {
-            this.selected_icon = $(
-                `<div class="selected-icon">${frappe.utils.icon("folder-normal", "md")}</div>`,
-            );
+            this.selected_icon = $(`<div class="selected-icon">${frappe.utils.icon("folder-normal", "md")}</div>`);
             this.selected_icon.insertAfter(this.$input);
         }
 
         this.$wrapper
             .find(".selected-icon")
             .parent()
-            .on("click", (e) => {
+            .on("click", e => {
                 this.$wrapper.popover("toggle");
                 if (!this.get_icon()) {
                     this.$input.val("");
                 }
                 e.stopPropagation();
-                $("body").on("click.icon-popover", (ev) => {
+                $("body").on("click.icon-popover", ev => {
                     if (!$(ev.target).parents().is(".popover")) {
                         this.$wrapper.popover("hide");
                     }

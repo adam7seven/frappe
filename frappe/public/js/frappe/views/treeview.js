@@ -10,13 +10,10 @@ frappe.views.TreeFactory = class TreeFactory extends frappe.views.Factory {
         frappe.model.with_doctype(route[1], function () {
             var options = {
                 doctype: route[1],
-                meta: frappe.get_meta(route[1]),
+                meta: frappe.get_meta(route[1])
             };
 
-            if (
-                !frappe.treeview_settings[route[1]] &&
-                !frappe.meta.get_docfield(route[1], "is_group")
-            ) {
+            if (!frappe.treeview_settings[route[1]] && !frappe.meta.get_docfield(route[1], "is_group")) {
                 frappe.msgprint(__("Tree view is not available for {0}", [route[1]]));
                 return false;
             }
@@ -89,15 +86,12 @@ frappe.views.TreeView = class TreeView {
             frappe.ui.make_app_page({ parent: this.parent, single_column: true });
             this.page = this.parent.page;
             frappe.container.change_to(this.page_id);
-            frappe.breadcrumbs.add(
-                me.opts.breadcrumb || locals.DocType[me.doctype].module,
-                me.doctype,
-            );
+            frappe.breadcrumbs.add(me.opts.breadcrumb || locals.DocType[me.doctype].module, me.doctype);
 
             this.set_title();
 
             this.page.main.css({
-                "min-height": "300px",
+                "min-height": "300px"
             });
 
             this.page.main.addClass("frappe-card");
@@ -178,7 +172,7 @@ frappe.views.TreeView = class TreeView {
                     }
                     me.make_tree();
                 }
-            },
+            }
         });
     }
     make_tree() {
@@ -204,9 +198,9 @@ frappe.views.TreeView = class TreeView {
             get_label: this.opts.get_label,
             on_render: this.opts.onrender,
             on_get_node: this.opts.on_get_node,
-            on_click: (node) => {
+            on_click: node => {
                 this.select_node(node);
-            },
+            }
         });
 
         cur_tree = this.tree;
@@ -220,13 +214,13 @@ frappe.views.TreeView = class TreeView {
         frappe.call({
             method: "frappe.utils.nestedset.rebuild_tree",
             args: {
-                doctype: me.doctype,
+                doctype: me.doctype
             },
             callback: function (r) {
                 if (!r.exc) {
                     me.make_tree();
                 }
-            },
+            }
         });
     }
 
@@ -245,8 +239,8 @@ frappe.views.TreeView = class TreeView {
             $(
                 frappe.render_template(me.opts.view_template, {
                     data: node.data,
-                    doctype: me.doctype,
-                }),
+                    doctype: me.doctype
+                })
             ).appendTo(this.node_view);
         }
     }
@@ -261,7 +255,7 @@ frappe.views.TreeView = class TreeView {
                 },
                 click: function (node) {
                     frappe.set_route("Form", me.doctype, node.label);
-                },
+                }
             },
             {
                 label: __("Add Child"),
@@ -271,7 +265,7 @@ frappe.views.TreeView = class TreeView {
                 click: function (node) {
                     me.new_node();
                 },
-                btnClass: "hidden-xs",
+                btnClass: "hidden-xs"
             },
             {
                 label: __("Reid"),
@@ -289,7 +283,7 @@ frappe.views.TreeView = class TreeView {
                         me.tree.refresh();
                     });
                 },
-                btnClass: "hidden-xs",
+                btnClass: "hidden-xs"
             },
             {
                 label: __("Delete"),
@@ -301,13 +295,13 @@ frappe.views.TreeView = class TreeView {
                         node.parent.remove();
                     });
                 },
-                btnClass: "hidden-xs",
-            },
+                btnClass: "hidden-xs"
+            }
         ];
 
         if (this.opts.toolbar && this.opts.extend_toolbar) {
-            toolbar = toolbar.filter((btn) => {
-                return !me.opts.toolbar.find((d) => d["label"] == btn["label"]);
+            toolbar = toolbar.filter(btn => {
+                return !me.opts.toolbar.find(d => d["label"] == btn["label"]);
             });
             return toolbar.concat(this.opts.toolbar);
         } else if (this.opts.toolbar && !this.opts.extend_toolbar) {
@@ -330,12 +324,11 @@ frappe.views.TreeView = class TreeView {
         // the dialog
         var d = new frappe.ui.Dialog({
             title: __("New {0}", [__(me.doctype)]),
-            fields: me.fields,
+            fields: me.fields
         });
 
         var args = $.extend({}, me.args);
-        args["parent_" + me.doctype.toLowerCase().replace(/ /g, "_").replace(/-/g, "_")] =
-            me.args["parent"];
+        args["parent_" + me.doctype.toLowerCase().replace(/ /g, "_").replace(/-/g, "_")] = me.args["parent"];
 
         d.set_value("is_group", 0);
         d.set_values(args);
@@ -369,7 +362,7 @@ frappe.views.TreeView = class TreeView {
                 },
                 always: function () {
                     frappe.dom.unfreeze();
-                },
+                }
             });
         });
         d.show();
@@ -382,8 +375,8 @@ frappe.views.TreeView = class TreeView {
                 fieldtype: "Check",
                 fieldname: "is_group",
                 label: __("Group Node"),
-                description: __("Further nodes can be only created under 'Group' type nodes"),
-            },
+                description: __("Further nodes can be only created under 'Group' type nodes")
+            }
         ];
 
         if (this.opts.fields) {
@@ -401,10 +394,7 @@ frappe.views.TreeView = class TreeView {
         });
 
         mandatory_fields.map(function (d) {
-            if (
-                $.inArray(d.fieldname, me.ignore_fields) === -1 &&
-                $.inArray(d.fieldname, opts_field_names) === -1
-            ) {
+            if ($.inArray(d.fieldname, me.ignore_fields) === -1 && $.inArray(d.fieldname, opts_field_names) === -1) {
                 me.fields.push(d);
             }
         });
@@ -425,8 +415,8 @@ frappe.views.TreeView = class TreeView {
                     doctype: me.doctype,
                     report_id: me.page_id,
                     page: tree,
-                    method: "Print",
-                },
+                    method: "Print"
+                }
             });
         });
     }
@@ -438,7 +428,7 @@ frappe.views.TreeView = class TreeView {
                 function () {
                     me.new_node();
                 },
-                "add",
+                "add"
             );
         }
     }
@@ -450,20 +440,20 @@ frappe.views.TreeView = class TreeView {
                 label: __("View List"),
                 action: function () {
                     frappe.set_route("List", me.doctype);
-                },
+                }
             },
             {
                 label: __("Print"),
                 action: function () {
                     me.print_tree();
-                },
+                }
             },
             {
                 label: __("Refresh"),
                 action: function () {
                     me.make_tree();
-                },
-            },
+                }
+            }
         ];
 
         if (
@@ -475,7 +465,7 @@ frappe.views.TreeView = class TreeView {
                 label: __("Rebuild Tree"),
                 action: function () {
                     me.rebuild_tree();
-                },
+                }
             });
         }
 

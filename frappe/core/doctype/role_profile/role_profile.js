@@ -16,5 +16,5 @@ frappe.ui.form.on("Role Profile", {
         if (frm.roles_editor) {
             frm.roles_editor.set_roles_in_table();
         }
-    },
+    }
 });

@@ -14,7 +14,7 @@ context("Customize Form", () => {
             Expression: "format:",
             "Expression (old style)": "",
             Random: "hash",
-            "By script": "",
+            "By script": ""
         };
         Cypress._.forOwn(naming_rule_default_autoid_map, (value, naming_rule) => {
             cy.fill_field("naming_rule", naming_rule, "Select");

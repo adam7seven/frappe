@@ -2,7 +2,7 @@ frappe.pages["backups"].on_page_load = function (wrapper) {
     var page = frappe.ui.make_app_page({
         parent: wrapper,
         title: __("Download Backups"),
-        single_column: true,
+        single_column: true
     });
 
     page.add_inner_button(__("Set Number of Backups"), function () {
@@ -12,7 +12,7 @@ frappe.pages["backups"].on_page_load = function (wrapper) {
     page.add_inner_button(__("Download Files Backup"), function () {
         frappe.call({
             method: "frappe.desk.page.backups.backups.schedule_files_backup",
-            args: { user_email: frappe.session.user_email },
+            args: { user_email: frappe.session.user_email }
         });
     });
 
@@ -25,16 +25,16 @@ frappe.pages["backups"].on_page_load = function (wrapper) {
                         frappe.msgprint({
                             title: __("Backup Encryption Key"),
                             message: __(r.message),
-                            indicator: "blue",
+                            indicator: "blue"
                         });
-                    },
+                    }
                 });
             });
         } else {
             frappe.msgprint({
                 title: __("Error"),
                 message: __("System Manager privileges required."),
-                indicator: "red",
+                indicator: "red"
             });
         }
     });

@@ -3,13 +3,9 @@
 
 frappe.ui.form.on("Global Search Settings", {
     refresh: function (frm) {
-        frappe.realtime.on("global_search_settings", (data) => {
+        frappe.realtime.on("global_search_settings", data => {
             if (data.progress) {
-                frm.dashboard.show_progress(
-                    "Setting up Global Search",
-                    (data.progress / data.total) * 100,
-                    data.msg,
-                );
+                frm.dashboard.show_progress("Setting up Global Search", (data.progress / data.total) * 100, data.msg);
                 if (data.progress === data.total) {
                     frm.dashboard.hide_progress("Setting up Global Search");
                 }
@@ -22,11 +18,11 @@ frappe.ui.form.on("Global Search Settings", {
                 callback: function () {
                     frappe.show_alert({
                         message: __("Global Search Document Types Reset."),
-                        indicator: "green",
+                        indicator: "green"
                     });
                     frm.refresh();
-                },
+                }
             });
         });
-    },
+    }
 });

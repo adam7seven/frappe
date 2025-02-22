@@ -7,8 +7,8 @@ frappe.ui.form.on("Bulk Update", {
             return {
                 filters: [
                     ["DocType", "issingle", "=", 0],
-                    ["DocType", "id", "not in", frappe.model.core_doctypes_list],
-                ],
+                    ["DocType", "id", "not in", frappe.model.core_doctypes_list]
+                ]
             };
         });
 
@@ -16,21 +16,17 @@ frappe.ui.form.on("Bulk Update", {
             if (!frm.doc.update_value) {
                 frappe.throw(__('Field "value" is mandatory. Please specify value to be updated'));
             } else {
-                frm.call("bulk_update").then((r) => {
+                frm.call("bulk_update").then(r => {
                     let failed = r.message;
                     if (!failed) failed = [];
 
                     if (failed.length && !r._server_messages) {
-                        frappe.throw(
-                            __("Cannot update {0}", [
-                                failed.map((f) => (f.bold ? f.bold() : f)).join(", "),
-                            ]),
-                        );
+                        frappe.throw(__("Cannot update {0}", [failed.map(f => (f.bold ? f.bold() : f)).join(", ")]));
                     } else {
                         frappe.msgprint({
                             title: __("Success"),
                             message: __("Updated Successfully"),
-                            indicator: "green",
+                            indicator: "green"
                         });
                     }
 
@@ -54,5 +50,5 @@ frappe.ui.form.on("Bulk Update", {
             });
             frm.set_df_property("field", "options", options);
         });
-    },
+    }
 });

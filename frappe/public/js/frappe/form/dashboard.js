@@ -15,7 +15,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
             css_class: "progress-area",
             hidden: 1,
             collapsible: 1,
-            is_dashboard_section: 1,
+            is_dashboard_section: 1
         });
 
         this.heatmap_area = this.make_section({
@@ -27,7 +27,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
             body_html: `
 				<div id="heatmap-${frappe.model.scrub(this.frm.doctype)}" class="heatmap"></div>
 				<div class="text-muted small heatmap-message hidden"></div>
-			`,
+			`
         });
 
         this.chart_area = this.make_section({
@@ -35,7 +35,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
             css_class: "form-graph",
             hidden: 1,
             collapsible: 1,
-            is_dashboard_section: 1,
+            is_dashboard_section: 1
         });
 
         this.stats_area_row = $(`<div class="row"></div>`);
@@ -45,7 +45,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
             hidden: 1,
             collapsible: 1,
             is_dashboard_section: 1,
-            body_html: this.stats_area_row,
+            body_html: this.stats_area_row
         });
 
         this.transactions_area = $(`<div class="transactions"></div>`);
@@ -56,7 +56,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
             hidden: 1,
             collapsible: 1,
             is_dashboard_section: 1,
-            body_html: this.transactions_area,
+            body_html: this.transactions_area
         });
     }
 
@@ -96,7 +96,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
             body_html,
             make_card: true,
             collapsible: 1,
-            is_dashboard_section: 1,
+            is_dashboard_section: 1
         };
         return new Section(this.parent, options).body;
     }
@@ -112,7 +112,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 
         $.each(percent, function (i, opts) {
             $(
-                `<div class="progress-bar ${opts.progress_class}" style="width: ${opts.width}" title="${opts.title}"></div>`,
+                `<div class="progress-bar ${opts.progress_class}" style="width: ${opts.width}" title="${opts.title}"></div>`
             ).appendTo(progress);
         });
 
@@ -168,16 +168,14 @@ frappe.ui.form.Dashboard = class FormDashboard {
             {
                 title: title,
                 width: width + "%",
-                progress_class: progress_class,
-            },
+                progress_class: progress_class
+            }
         ];
     }
 
     make_progress_chart(title) {
         this.progress_area.show();
-        return $('<div class="progress-chart" title="' + (title || "") + '"></div>').appendTo(
-            this.progress_area.body,
-        );
+        return $('<div class="progress-chart" title="' + (title || "") + '"></div>').appendTo(this.progress_area.body);
     }
 
     refresh() {
@@ -192,10 +190,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 
         let show = false;
 
-        if (
-            this.data &&
-            ((this.data.transactions || []).length || (this.data.reports || []).length)
-        ) {
+        if (this.data && ((this.data.transactions || []).length || (this.data.reports || []).length)) {
             if (this.data.docstatus && this.frm.doc.docstatus !== this.data.docstatus) {
                 // limited docstatus
                 return;
@@ -236,7 +231,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
         let element = this.links_area.wrapper[0];
 
         new IntersectionObserver((entries, observer) => {
-            entries.forEach((entry) => {
+            entries.forEach(entry => {
                 if (entry.intersectionRatio > 0) {
                     me.set_open_count();
                     observer.disconnect(); // only required for first load.
@@ -265,8 +260,8 @@ frappe.ui.form.Dashboard = class FormDashboard {
 
         if (this.data && (this.data.transactions || []).length) {
             // check if label already exists, add items to it
-            this.data.transactions.map((group) => {
-                opts.map((d) => {
+            this.data.transactions.map(group => {
+                opts.map(d => {
                     if (d.label == group.label) {
                         group_added.push(d.label);
                         group.items.push(...d.items);
@@ -275,7 +270,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
             });
 
             // if label not already present, add new label and items under it
-            opts.map((d) => {
+            opts.map(d => {
                 if (!group_added.includes(d.label)) {
                     this.data.transactions.push(d);
                 }
@@ -346,7 +341,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
         if (this.data.reports && this.data.reports.length) {
             $(frappe.render_template("report_links", this.data)).appendTo(parent);
             // bind reports
-            parent.find(".report-link").on("click", (e) => {
+            parent.find(".report-link").on("click", e => {
                 this.open_report($(e.target).parent());
             });
         }
@@ -369,10 +364,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
         let doctype = $link.attr("data-doctype"),
             ids = $link.attr("data-names") || [];
 
-        if (
-            this.internal_links_found &&
-            this.internal_links_found.find((d) => d.doctype === doctype)
-        ) {
+        if (this.internal_links_found && this.internal_links_found.find(d => d.doctype === doctype)) {
             if (ids.length) {
                 frappe.route_options = { id: ["in", ids] };
             } else {
@@ -433,7 +425,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
             args: {
                 doctype: this.frm.doctype,
                 id: this.frm.docid,
-                items: items,
+                items: items
             },
             callback: function (r) {
                 if (r.message.timeline_data) {
@@ -445,7 +437,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
                 me.frm.dashboard_data = r.message;
                 me._fetched_counts = true;
                 me.frm.trigger("dashboard_update");
-            },
+            }
         });
     }
 
@@ -455,35 +447,22 @@ frappe.ui.form.Dashboard = class FormDashboard {
         this.internal_links_found = count.internal_links_found;
 
         $.each(count.internal_links_found, function (i, d) {
-            me.frm.dashboard.set_badge_count_for_internal_link(
-                d.doctype,
-                cint(d.open_count),
-                cint(d.count),
-                d.ids,
-            );
+            me.frm.dashboard.set_badge_count_for_internal_link(d.doctype, cint(d.open_count), cint(d.count), d.ids);
         });
 
         $.each(count.external_links_found, function (i, d) {
-            me.frm.dashboard.set_badge_count_for_external_link(
-                d.doctype,
-                cint(d.open_count),
-                cint(d.count),
-            );
+            me.frm.dashboard.set_badge_count_for_external_link(d.doctype, cint(d.open_count), cint(d.count));
         });
     }
 
     set_badge_count_for_external_link(doctype, open_count, count) {
-        let $link = $(this.transactions_area).find(
-            '.document-link[data-doctype="' + doctype + '"]',
-        );
+        let $link = $(this.transactions_area).find('.document-link[data-doctype="' + doctype + '"]');
 
         this.set_badge_count_common(open_count, count, $link);
     }
 
     set_badge_count_for_internal_link(doctype, open_count, count, ids) {
-        let $link = $(this.transactions_area).find(
-            '.document-link[data-doctype="' + doctype + '"]',
-        );
+        let $link = $(this.transactions_area).find('.document-link[data-doctype="' + doctype + '"]');
 
         this.set_badge_count_common(open_count, count, $link);
 
@@ -524,7 +503,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
             count_label: "interactions",
             discreteDomains: 1,
             radius: 3,
-            data: {},
+            data: {}
         });
 
         // center the heatmap
@@ -569,7 +548,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
                 color +
                 '">' +
                 label +
-                "</span></div>",
+                "</span></div>"
         ).appendTo(this.stats_area_row);
     }
 
@@ -579,7 +558,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
         let method = this.data.graph_method;
         let args = {
             doctype: this.frm.doctype,
-            docid: this.frm.doc.id,
+            docid: this.frm.doc.id
         };
         $.extend(args, this.data.graph_method_args);
 
@@ -595,7 +574,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
                 } else {
                     me.hide();
                 }
-            },
+            }
         });
     }
 
@@ -608,8 +587,8 @@ frappe.ui.form.Dashboard = class FormDashboard {
             truncateLegends: 1,
             axisOptions: {
                 shortenYAxisNumbers: 1,
-                numberFormatter: frappe.utils.format_chart_axis_number,
-            },
+                numberFormatter: frappe.utils.format_chart_axis_number
+            }
         });
         this.show();
 

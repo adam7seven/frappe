@@ -15,7 +15,7 @@ frappe.ui.form.on("Prepared Report", {
 			<tbody></tbody>
 		</table>`);
 
-        Object.keys(filters).forEach((key) => {
+        Object.keys(filters).forEach(key => {
             const filter_row = $(`<tr>
 				<td>${frappe.model.unscrub(key)}</td>
 				<td>${filters[key]}</td>
@@ -45,5 +45,5 @@ frappe.ui.form.on("Prepared Report", {
                 frappe.set_route("query-report", frm.doc.report_id);
             });
         }
-    },
+    }
 });

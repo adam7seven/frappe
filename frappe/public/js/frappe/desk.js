@@ -18,8 +18,8 @@ $(document).ready(function () {
             indicator: "red",
             title: __("Browser not supported"),
             message: __(
-                "Some of the features might not work in your browser. Please update your browser to the latest version.",
-            ),
+                "Some of the features might not work in your browser. Please update your browser to the latest version."
+            )
         });
     }
     frappe.start_app();
@@ -56,7 +56,7 @@ frappe.Application = class Application {
                     frappe.theme_switcher = new frappe.ui.ThemeSwitcher();
                     frappe.theme_switcher.show();
                 }
-            },
+            }
         });
 
         frappe.ui.add_system_theme_switch_listener();
@@ -67,20 +67,16 @@ frappe.Application = class Application {
         });
         observer.observe(root, {
             attributes: true,
-            attributeFilter: ["data-theme-mode"],
+            attributeFilter: ["data-theme-mode"]
         });
 
         frappe.ui.set_theme();
 
         // page container
         this.make_page_container();
-        if (
-            !window.Cypress &&
-            frappe.boot.onboarding_tours &&
-            frappe.boot.user.onboarding_status != null
-        ) {
+        if (!window.Cypress && frappe.boot.onboarding_tours && frappe.boot.user.onboarding_status != null) {
             let pending_tours = !frappe.boot.onboarding_tours.every(
-                (tour) => frappe.boot.user.onboarding_status[tour[0]]?.is_complete,
+                tour => frappe.boot.user.onboarding_status[tour[0]]?.is_complete
             );
             if (pending_tours && frappe.boot.onboarding_tours.length > 0) {
                 frappe.require("onboarding_tours.bundle.js", () => {
@@ -111,7 +107,7 @@ frappe.Application = class Application {
 
         if (!frappe.boot.developer_mode) {
             let console_security_message = __(
-                "Using this console may allow attackers to impersonate you and steal your information. Do not enter or paste code that you do not understand.",
+                "Using this console may allow attackers to impersonate you and steal your information. Do not enter or paste code that you do not understand."
             );
             console.log(`%c${console_security_message}`, "font-size: large");
         }
@@ -125,11 +121,9 @@ frappe.Application = class Application {
 
         frappe.realtime.on("version-update", function () {
             var dialog = frappe.msgprint({
-                message: __(
-                    "The application has been updated to a new version, please refresh this page",
-                ),
+                message: __("The application has been updated to a new version, please refresh this page"),
                 indicator: "green",
-                title: __("Version Updated"),
+                title: __("Version Updated")
             });
             dialog.set_primary_action(__("Refresh"), function () {
                 location.reload(true);
@@ -154,7 +148,7 @@ frappe.Application = class Application {
 
         frappe.broadcast.emit("boot", {
             csrf_token: frappe.csrf_token,
-            user: frappe.session.user,
+            user: frappe.session.user
         });
     }
 
@@ -176,7 +170,7 @@ frappe.Application = class Application {
         frappe.call({
             method: "frappe.core.doctype.user.user.get_email_awaiting",
             args: {
-                user: user,
+                user: user
             },
             callback: function (email_account) {
                 email_account = email_account["message"];
@@ -186,7 +180,7 @@ frappe.Application = class Application {
                         me.email_password_prompt(email_account, user, i);
                     }
                 }
-            },
+            }
         });
     }
 
@@ -199,19 +193,15 @@ frappe.Application = class Application {
                 {
                     fieldname: "password",
                     fieldtype: "Password",
-                    label: __(
-                        "Please enter the password for: <b>{0}</b>",
-                        [email_id],
-                        "Email Account",
-                    ),
-                    reqd: 1,
+                    label: __("Please enter the password for: <b>{0}</b>", [email_id], "Email Account"),
+                    reqd: 1
                 },
                 {
                     fieldname: "submit",
                     fieldtype: "Button",
-                    label: __("Submit", null, "Submit password for Email Account"),
-                },
-            ],
+                    label: __("Submit", null, "Submit password for Email Account")
+                }
+            ]
         });
         d.get_input("submit").on("click", function () {
             //setup spinner
@@ -221,9 +211,9 @@ frappe.Application = class Application {
                 fields: [
                     {
                         fieldtype: "HTML",
-                        fieldname: "checking",
-                    },
-                ],
+                        fieldname: "checking"
+                    }
+                ]
             });
             s.fields_dict.checking.$wrapper.html('<i class="fa fa-spinner fa-spin fa-4x"></i>');
             s.show();
@@ -231,16 +221,13 @@ frappe.Application = class Application {
                 method: "frappe.email.doctype.email_account.email_account.set_email_password",
                 args: {
                     email_account: email_account[i]["email_account"],
-                    password: d.get_value("password"),
+                    password: d.get_value("password")
                 },
                 callback: function (passed) {
                     s.hide();
                     d.hide(); //hide waiting indication
                     if (!passed["message"]) {
-                        frappe.show_alert(
-                            { message: __("Login Failed please try again"), indicator: "error" },
-                            5,
-                        );
+                        frappe.show_alert({ message: __("Login Failed please try again"), indicator: "error" }, 5);
                         me.email_password_prompt(email_account, user, i);
                     } else {
                         if (i + 1 < email_account.length) {
@@ -248,7 +235,7 @@ frappe.Application = class Application {
                             me.email_password_prompt(email_account, user, i);
                         }
                     }
-                },
+                }
             });
         });
         d.show();
@@ -288,7 +275,7 @@ frappe.Application = class Application {
             "update_user_permissions",
             frappe.utils.debounce(() => {
                 frappe.defaults.update_user_permissions();
-            }, 500),
+            }, 500)
         );
     }
 
@@ -343,9 +330,7 @@ frappe.Application = class Application {
     make_page_container() {
         if ($("#body").length) {
             $(".splash").remove();
-            frappe.temp_container = $("<div id='temp-container' style='display: none;'>").appendTo(
-                "body",
-            );
+            frappe.temp_container = $("<div id='temp-container' style='display: none;'>").appendTo("body");
             frappe.container = new frappe.views.Container();
         }
     }
@@ -365,7 +350,7 @@ frappe.Application = class Application {
                     return;
                 }
                 me.redirect_to_login();
-            },
+            }
         });
     }
     handle_session_expired() {
@@ -373,12 +358,12 @@ frappe.Application = class Application {
     }
     redirect_to_login() {
         window.location.href = `/login?redirect-to=${encodeURIComponent(
-            window.location.pathname + window.location.search,
+            window.location.pathname + window.location.search
         )}`;
     }
     redirect_to_license() {
         window.location.href = `/license?redirect-to=${encodeURIComponent(
-            window.location.pathname + window.location.search,
+            window.location.pathname + window.location.search
         )}`;
     }
     set_favicon() {
@@ -429,12 +414,12 @@ frappe.Application = class Application {
         var change_log_dialog = frappe.msgprint({
             message: frappe.render_template("change_log", { change_log: change_log }),
             title: __("Updated To A New Version 🎉"),
-            wide: true,
+            wide: true
         });
         change_log_dialog.keep_open = true;
         change_log_dialog.custom_onhide = function () {
             frappe.call({
-                method: "frappe.utils.change_log.update_last_known_versions",
+                method: "frappe.utils.change_log.update_last_known_versions"
             });
             me.show_notes();
         };
@@ -468,8 +453,8 @@ frappe.Application = class Application {
                             frappe.call({
                                 method: "frappe.desk.doctype.note.note.mark_as_seen",
                                 args: {
-                                    note: note.id,
-                                },
+                                    note: note.id
+                                }
                             });
                         }
 
@@ -488,13 +473,13 @@ frappe.Application = class Application {
     }
 
     setup_energy_point_listeners() {
-        frappe.realtime.on("energy_point_alert", (message) => {
+        frappe.realtime.on("energy_point_alert", message => {
             frappe.show_alert(message);
         });
     }
 
     setup_copy_doc_listener() {
-        $("body").on("paste", (e) => {
+        $("body").on("paste", e => {
             try {
                 let pasted_data = frappe.utils.get_clipboard_data(e);
                 let doc = JSON.parse(pasted_data);
@@ -531,15 +516,15 @@ frappe.Application = class Application {
             if (user && user != frappe.session.user) {
                 frappe.msgprint({
                     message: __(
-                        "You've logged in as another user from another tab. Refresh this page to continue using system.",
+                        "You've logged in as another user from another tab. Refresh this page to continue using system."
                     ),
                     title: __("User Changed"),
                     primary_action: {
                         label: __("Refresh"),
                         action: () => {
                             window.location.reload();
-                        },
-                    },
+                        }
+                    }
                 });
                 return;
             }
@@ -554,8 +539,8 @@ frappe.Application = class Application {
     setup_moment() {
         moment.updateLocale("en", {
             week: {
-                dow: frappe.datetime.get_first_day_of_the_week_index(),
-            },
+                dow: frappe.datetime.get_first_day_of_the_week_index()
+            }
         });
         moment.locale("en");
         moment.user_utc_offset = moment().utcOffset();

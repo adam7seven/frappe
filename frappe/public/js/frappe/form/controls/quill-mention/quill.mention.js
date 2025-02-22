@@ -26,7 +26,7 @@ class Mention {
             offsetLeft: 0,
             isolateCharacter: false,
             fixMentionsToQuill: false,
-            defaultMenuOrientation: "bottom",
+            defaultMenuOrientation: "bottom"
         };
 
         Object.assign(this.options, options);
@@ -51,39 +51,39 @@ class Mention {
 
         quill.keyboard.addBinding(
             {
-                key: Keys.TAB,
+                key: Keys.TAB
             },
-            this.selectHandler.bind(this),
+            this.selectHandler.bind(this)
         );
         quill.keyboard.bindings[Keys.TAB].unshift(quill.keyboard.bindings[Keys.TAB].pop());
 
         quill.keyboard.addBinding(
             {
-                key: Keys.ENTER,
+                key: Keys.ENTER
             },
-            this.selectHandler.bind(this),
+            this.selectHandler.bind(this)
         );
         quill.keyboard.bindings[Keys.ENTER].unshift(quill.keyboard.bindings[Keys.ENTER].pop());
 
         quill.keyboard.addBinding(
             {
-                key: Keys.ESCAPE,
+                key: Keys.ESCAPE
             },
-            this.escapeHandler.bind(this),
+            this.escapeHandler.bind(this)
         );
 
         quill.keyboard.addBinding(
             {
-                key: Keys.UP,
+                key: Keys.UP
             },
-            this.upHandler.bind(this),
+            this.upHandler.bind(this)
         );
 
         quill.keyboard.addBinding(
             {
-                key: Keys.DOWN,
+                key: Keys.DOWN
             },
-            this.downHandler.bind(this),
+            this.downHandler.bind(this)
         );
     }
 
@@ -158,13 +158,11 @@ class Mention {
         return {
             id: this.mentionList.childNodes[this.itemIndex].dataset.id,
             value: itemLink
-                ? `<a href="${itemLink}" target="_blank">${
-                      this.mentionList.childNodes[this.itemIndex].dataset.value
-                  }`
+                ? `<a href="${itemLink}" target="_blank">${this.mentionList.childNodes[this.itemIndex].dataset.value}`
                 : this.mentionList.childNodes[this.itemIndex].dataset.value,
             link: itemLink || null,
             denotationChar: this.mentionList.childNodes[this.itemIndex].dataset.denotationChar,
-            isGroup: this.mentionList.childNodes[this.itemIndex].dataset.isGroup,
+            isGroup: this.mentionList.childNodes[this.itemIndex].dataset.isGroup
         };
     }
 
@@ -174,11 +172,7 @@ class Mention {
 
     selectItem() {
         const data = this.getItemData();
-        this.quill.deleteText(
-            this.mentionCharPos,
-            this.cursorPos - this.mentionCharPos,
-            Quill.sources.API,
-        );
+        this.quill.deleteText(this.mentionCharPos, this.cursorPos - this.mentionCharPos, Quill.sources.API);
         this.quill.insertEmbed(this.mentionCharPos, "mention", data, Quill.sources.API);
         this.quill.insertText(this.mentionCharPos + 1, " ", Quill.sources.API);
         this.quill.setSelection(this.mentionCharPos + 2, Quill.sources.API);
@@ -251,8 +245,7 @@ class Mention {
     }
 
     containerBottomIsNotVisible(topPos, containerPos) {
-        const mentionContainerBottom =
-            topPos + this.mentionContainer.offsetHeight + containerPos.top;
+        const mentionContainerBottom = topPos + this.mentionContainer.offsetHeight + containerPos.top;
         return mentionContainerBottom > window.pageYOffset + window.innerHeight;
     }
 
@@ -360,11 +353,7 @@ class Mention {
             const textAfter = beforeCursorPos.substring(mentionCharIndex + 1);
             if (textAfter.length >= this.options.minChars && this.hasValidChars(textAfter)) {
                 const mentionChar = beforeCursorPos[mentionCharIndex];
-                this.options.source(
-                    textAfter,
-                    this.renderList.bind(this, mentionChar),
-                    mentionChar,
-                );
+                this.options.source(textAfter, this.renderList.bind(this, mentionChar), mentionChar);
             } else {
                 this.hideMentionList();
             }

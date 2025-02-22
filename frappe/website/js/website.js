@@ -12,7 +12,7 @@ $.extend(frappe, {
         if (typeof links === "string") {
             links = [links];
         }
-        links = links.map((link) => frappe.bundled_asset(link));
+        links = links.map(link => frappe.bundled_asset(link));
         for (let link of links) {
             await this.add_asset_to_head(link);
         }
@@ -29,7 +29,7 @@ $.extend(frappe, {
         return path;
     },
     add_asset_to_head(link) {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             if (frappe._assets_loaded.includes(link)) return resolve();
             let el;
             if (link.split(".").pop() === "js") {
@@ -57,12 +57,12 @@ $.extend(frappe, {
             frappe.call({
                 method: method,
                 args: params,
-                callback: (r) => {
+                callback: r => {
                     resolve(r.message);
                 },
-                error: (r) => {
+                error: r => {
                     reject(r.message);
-                },
+                }
             });
         });
     },
@@ -72,7 +72,7 @@ $.extend(frappe, {
             opts = {
                 method: arguments[0],
                 args: arguments[1],
-                callback: arguments[2],
+                callback: arguments[2]
             };
         }
 
@@ -87,7 +87,7 @@ $.extend(frappe, {
             dataType: "json",
             headers: {
                 "X-Frappe-CSRF-Token": frappe.csrf_token,
-                "X-Frappe-CMD": (opts.args && opts.args.cmd) || "" || "",
+                "X-Frappe-CMD": (opts.args && opts.args.cmd) || "" || ""
             },
             statusCode: opts.statusCode || {
                 404: function () {
@@ -99,8 +99,8 @@ $.extend(frappe, {
                 200: function (data) {
                     if (opts.callback) opts.callback(data);
                     if (opts.success) opts.success(data);
-                },
-            },
+                }
+            }
         }).always(function (data) {
             if (opts.freeze) {
                 frappe.unfreeze();
@@ -153,7 +153,7 @@ $.extend(frappe, {
         if (data._server_messages) {
             var server_messages = JSON.parse(data._server_messages || "[]");
             server_messages
-                .map((msg) => {
+                .map(msg => {
                     // temp fix for messages sent as dict
                     try {
                         return JSON.parse(msg);
@@ -202,13 +202,7 @@ $.extend(frappe, {
         if (!icon) icon = "fa fa-refresh fa-spin";
         frappe.hide_message();
         $('<div class="message-overlay"></div>')
-            .html(
-                '<div class="content"><i class="' +
-                    icon +
-                    ' text-muted"></i><br>' +
-                    text +
-                    "</div>",
-            )
+            .html('<div class="content"><i class="' + icon + ' text-muted"></i><br>' + text + "</div>")
             .appendTo(document.body);
     },
     has_permission: function (doctype, docid, perm_type, callback) {
@@ -223,7 +217,7 @@ $.extend(frappe, {
                         return callback(r);
                     }
                 }
-            },
+            }
         });
     },
     render_user: function () {
@@ -232,15 +226,9 @@ $.extend(frappe, {
             $(".logged-in").toggle(true);
             $(".user-image").attr("src", frappe.get_cookie("user_image"));
 
-            $(".user-image-wrapper").html(
-                frappe.avatar(null, "avatar-medium", null, null, null, true),
-            );
-            $(".user-image-sidebar").html(
-                frappe.avatar(null, "avatar-medium", null, null, null, true),
-            );
-            $(".user-image-myaccount").html(
-                frappe.avatar(null, "avatar-large", null, null, null, true),
-            );
+            $(".user-image-wrapper").html(frappe.avatar(null, "avatar-medium", null, null, null, true));
+            $(".user-image-sidebar").html(frappe.avatar(null, "avatar-medium", null, null, null, true));
+            $(".user-image-myaccount").html(frappe.avatar(null, "avatar-large", null, null, null, true));
         }
     },
     freeze_count: 0,
@@ -250,10 +238,9 @@ $.extend(frappe, {
             var freeze = $('<div id="freeze" class="modal-backdrop fade"></div>').appendTo("body");
 
             freeze.html(
-                repl(
-                    '<div class="freeze-message-container"><div class="freeze-message">%(msg)s</div></div>',
-                    { msg: msg || "" },
-                ),
+                repl('<div class="freeze-message-container"><div class="freeze-message">%(msg)s</div></div>', {
+                    msg: msg || ""
+                })
             );
 
             setTimeout(function () {
@@ -376,25 +363,23 @@ $.extend(frappe, {
         if (frappe.session.user === "Guest" && window.show_language_picker) {
             frappe
                 .call("frappe.translate.get_all_languages", {
-                    with_language_name: true,
+                    with_language_name: true
                 })
-                .then((res) => {
+                .then(res => {
                     let language_list = res.message;
                     let language = frappe.get_cookie("preferred_language");
                     let language_codes = [];
                     let language_switcher = $("#language-switcher .form-control");
-                    language_list.forEach((language_doc) => {
+                    language_list.forEach(language_doc => {
                         language_codes.push(language_doc.language_code);
                         language_switcher.append(
                             $("<option></option>")
                                 .attr("value", language_doc.language_code)
-                                .text(language_doc.language_name),
+                                .text(language_doc.language_name)
                         );
                     });
                     $("#language-switcher").removeClass("hide");
-                    language =
-                        language ||
-                        (language_codes.includes(navigator.language) ? navigator.language : "en");
+                    language = language || (language_codes.includes(navigator.language) ? navigator.language : "en");
                     language_switcher.val(language);
                     document.documentElement.lang = language;
                     language_switcher.change(() => {
@@ -407,7 +392,7 @@ $.extend(frappe, {
     },
     setup_videos: () => {
         // converts video images into youtube embeds (via Page Builder)
-        $(".section-video-wrapper").on("click", (e) => {
+        $(".section-video-wrapper").on("click", e => {
             let $video = $(e.currentTarget);
             let id = $video.data("youtubeId");
             console.log(id);
@@ -416,7 +401,7 @@ $.extend(frappe, {
 				<iframe allowfullscreen="" class="section-video" f;rameborder="0" src="//youtube.com/embed/${id}?autoplay=1"></iframe>
 			`);
         });
-    },
+    }
 });
 
 frappe.setup_search = function (target, search_scope) {
@@ -449,7 +434,7 @@ frappe.setup_search = function (target, search_scope) {
     let dropdownItems;
     let offsetIndex = 0;
 
-    $(document).on("keypress", (e) => {
+    $(document).on("keypress", e => {
         if ($(e.target).is("textarea, input, select")) {
             return;
         }
@@ -473,17 +458,17 @@ frappe.setup_search = function (target, search_scope) {
                     args: {
                         scope: search_scope || null,
                         query: $input.val(),
-                        limit: 5,
-                    },
+                        limit: 5
+                    }
                 })
-                .then((r) => {
+                .then(r => {
                     let results = r.message || [];
                     let dropdown_html;
                     if (results.length == 0) {
                         dropdown_html = `<div class="dropdown-item">No results found</div>`;
                     } else {
                         dropdown_html = results
-                            .map((r) => {
+                            .map(r => {
                                 return `<a class="dropdown-item" href="/${r.path}">
 						<h6>${r.title_highlights || r.title}</h6>
 						<div style="white-space: normal;">${r.content_highlights}</div>
@@ -495,7 +480,7 @@ frappe.setup_search = function (target, search_scope) {
                     $dropdown_menu.addClass("show");
                     dropdownItems = $dropdown_menu.find(".dropdown-item");
                 });
-        }, 500),
+        }, 500)
     );
 
     $input.on("focus", () => {
@@ -563,7 +548,7 @@ window.valid_email = function (id) {
     // copied regex from frappe/utils.js validate_type
     // eslint-disable-next-line
     return /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/.test(
-        id.toLowerCase(),
+        id.toLowerCase()
     );
 };
 
@@ -592,10 +577,7 @@ window.is_html = function is_html(txt) {
 window.ask_to_login = function ask_to_login() {
     if (!frappe.is_user_logged_in()) {
         if (localStorage) {
-            localStorage.setItem(
-                "last_visited",
-                window.location.href.replace(window.location.origin, ""),
-            );
+            localStorage.setItem("last_visited", window.location.href.replace(window.location.origin, ""));
         }
         window.location.href = "login";
     }
@@ -615,13 +597,13 @@ $(document).ready(function () {
     let apps = frappe.boot?.apps_data?.apps;
     let obj = {
         label: __("Apps"),
-        route: "/apps",
+        route: "/apps"
     };
     if (apps?.length) {
         if (apps.length == 1) {
             obj = {
                 label: __(apps[0].title),
-                route: apps[0].route,
+                route: apps[0].route
             };
         }
         let is_desk_apps = frappe.boot?.apps_data?.is_desk_apps;

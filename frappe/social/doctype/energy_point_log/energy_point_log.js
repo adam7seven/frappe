@@ -18,25 +18,25 @@ frappe.ui.form.on("Energy Point Log", {
                     fieldname: "reason",
                     fieldtype: "Small Text",
                     label: __("Reason"),
-                    reqd: 1,
-                },
+                    reqd: 1
+                }
             ],
-            primary_action: (values) => {
+            primary_action: values => {
                 return frm
                     .call("revert", {
-                        reason: values.reason,
+                        reason: values.reason
                     })
-                    .then((res) => {
+                    .then(res => {
                         let revert_log = res.message;
                         revert_dialog.hide();
                         revert_dialog.clear();
-                        frappe.model.docinfo[frm.doc.reference_doctype][
-                            frm.doc.reference_id
-                        ].energy_point_logs.unshift(revert_log);
+                        frappe.model.docinfo[frm.doc.reference_doctype][frm.doc.reference_id].energy_point_logs.unshift(
+                            revert_log
+                        );
                         frm.refresh();
                     });
             },
-            primary_action_label: __("Submit"),
+            primary_action_label: __("Submit")
         });
         revert_dialog.show();
     },
@@ -46,5 +46,5 @@ frappe.ui.form.on("Energy Point Log", {
         frm.fields_dict.reference_id.$input_wrapper
             .find(".control-value")
             .wrapInner(`<a href='/app/${frappe.router.slug(dt)}/${dn}'></a>`);
-    },
+    }
 });

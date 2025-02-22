@@ -18,7 +18,7 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
         this.map_area = $(
             `<div class="map-wrapper border">
 				<div id="${this.map_id}" style="min-height: 400px; z-index: 1; max-width:100%"></div>
-			</div>`,
+			</div>`
         );
 
         $(this.disp_area).html(this.map_area);
@@ -64,8 +64,8 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
             L.geoJson(JSON.parse(value), {
                 pointToLayer: this.point_to_layer,
                 style: this.set_style,
-                onEachFeature: this.on_each_feature,
-            }),
+                onEachFeature: this.on_each_feature
+            })
         );
         this.add_non_group_layers(data_layers, this.editableLayers);
         this.editableLayers.addTo(this.map);
@@ -121,10 +121,10 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
                 const feature = circleToGeoJSON.call(this);
                 feature.properties = {
                     point_type: "circle",
-                    radius: this.getRadius(),
+                    radius: this.getRadius()
                 };
                 return feature;
-            },
+            }
         });
 
         L.CircleMarker.include({
@@ -132,10 +132,10 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
                 const feature = circleToGeoJSON.call(this);
                 feature.properties = {
                     point_type: "circlemarker",
-                    radius: this.getRadius(),
+                    radius: this.getRadius()
                 };
                 return feature;
-            },
+            }
         });
 
         L.Icon.Default.imagePath = frappe.utils.map_defaults.image_path;
@@ -145,9 +145,7 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
         this.map = L.map(this.map_id);
         this.map.setView(frappe.utils.map_defaults.center, frappe.utils.map_defaults.zoom);
 
-        L.tileLayer(frappe.utils.map_defaults.tiles, frappe.utils.map_defaults.options).addTo(
-            this.map,
-        );
+        L.tileLayer(frappe.utils.map_defaults.tiles, frappe.utils.map_defaults.options).addTo(this.map);
 
         this.editableLayers = new L.FeatureGroup();
     }
@@ -159,10 +157,7 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
     }
 
     bind_leaflet_draw_control() {
-        if (
-            !frappe.perm.has_perm(this.doctype, this.df.permlevel, "write", this.doc) ||
-            this.df.read_only
-        ) {
+        if (!frappe.perm.has_perm(this.doctype, this.df.permlevel, "write", this.doc) || this.df.read_only) {
             return;
         }
 
@@ -177,35 +172,35 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
                 polyline: {
                     shapeOptions: {
                         color: frappe.ui.color.get("blue"),
-                        weight: 10,
-                    },
+                        weight: 10
+                    }
                 },
                 polygon: {
                     allowIntersection: false, // Restricts shapes to simple polygons
                     drawError: {
                         color: frappe.ui.color.get("orange"), // Color the shape will turn when intersects
-                        message: "<strong>Oh snap!<strong> you can't draw that!", // Message that will show when intersect
+                        message: "<strong>Oh snap!<strong> you can't draw that!" // Message that will show when intersect
                     },
                     shapeOptions: {
-                        color: frappe.ui.color.get("blue"),
-                    },
+                        color: frappe.ui.color.get("blue")
+                    }
                 },
                 circle: true,
                 rectangle: {
                     shapeOptions: {
-                        clickable: false,
-                    },
-                },
+                        clickable: false
+                    }
+                }
             },
             edit: {
                 featureGroup: this.editableLayers, //REQUIRED!!
-                remove: true,
-            },
+                remove: true
+            }
         });
     }
 
     bind_leaflet_event_listeners() {
-        this.map.on("draw:created", (e) => {
+        this.map.on("draw:created", e => {
             var type = e.layerType,
                 layer = e.layer;
             if (type === "marker") {
@@ -215,7 +210,7 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
             this.set_value(JSON.stringify(this.editableLayers.toGeoJSON()));
         });
 
-        this.map.on("draw:deleted draw:edited", (e) => {
+        this.map.on("draw:deleted draw:edited", e => {
             const { layer } = e;
             this.editableLayers.removeLayer(layer);
             this.set_value(JSON.stringify(this.editableLayers.toGeoJSON()));
@@ -226,7 +221,7 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
         // https://gis.stackexchange.com/a/203773
         // Would benefit from https://github.com/Leaflet/Leaflet/issues/4461
         if (source_layer instanceof L.LayerGroup) {
-            source_layer.eachLayer((layer) => {
+            source_layer.eachLayer(layer => {
                 this.add_non_group_layers(layer, target_group);
             });
         } else {
@@ -235,7 +230,7 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
     }
 
     clear_editable_layers() {
-        this.editableLayers.eachLayer((l) => {
+        this.editableLayers.eachLayer(l => {
             this.editableLayers.removeLayer(l);
         });
     }
@@ -245,7 +240,7 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
         try {
             this.map.invalidateSize();
             this.map.fitBounds(this.editableLayers.getBounds(), {
-                padding: [50, 50],
+                padding: [50, 50]
             });
         } catch (err) {
             // suppress error if layer has a point.

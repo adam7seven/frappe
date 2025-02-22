@@ -84,7 +84,7 @@ frappe.number_format_info = {
     "#,##,###.##": { decimal_str: ".", group_sep: "," },
     "#,###.###": { decimal_str: ".", group_sep: "," },
     "#.###": { decimal_str: "", group_sep: "." },
-    "#,###": { decimal_str: "", group_sep: "," },
+    "#,###": { decimal_str: "", group_sep: "," }
 };
 
 window.format_number = function (v, format, decimals) {
@@ -145,8 +145,7 @@ window.format_number = function (v, format, decimals) {
 function format_currency(v, currency, decimals) {
     const format = get_number_format(currency);
     const symbol = get_currency_symbol(currency);
-    const show_symbol_on_right =
-        frappe.model.get_value(":Currency", currency, "symbol_on_right") ?? false;
+    const show_symbol_on_right = frappe.model.get_value(":Currency", currency, "symbol_on_right") ?? false;
 
     if (decimals === undefined) {
         decimals = frappe.boot.sysdefaults.currency_precision || null;
@@ -164,8 +163,7 @@ function format_currency(v, currency, decimals) {
 
 function get_currency_symbol(currency) {
     if (frappe.boot) {
-        if (frappe.boot.sysdefaults && frappe.boot.sysdefaults.hide_currency_symbol == "Yes")
-            return null;
+        if (frappe.boot.sysdefaults && frappe.boot.sysdefaults.hide_currency_symbol == "Yes") return null;
 
         if (!currency) currency = frappe.boot.sysdefaults.currency;
 
@@ -201,8 +199,7 @@ function get_number_format_info(format) {
 }
 
 function _round(num, precision, rounding_method) {
-    rounding_method =
-        rounding_method || frappe.boot.sysdefaults.rounding_method || "Banker's Rounding (legacy)";
+    rounding_method = rounding_method || frappe.boot.sysdefaults.rounding_method || "Banker's Rounding (legacy)";
 
     let is_negative = num < 0 ? true : false;
 
@@ -291,7 +288,7 @@ function remainder(numerator, denominator, precision) {
 
 function round_based_on_smallest_currency_fraction(value, currency, precision) {
     var smallest_currency_fraction_value = flt(
-        frappe.model.get_value(":Currency", currency, "smallest_currency_fraction_value"),
+        frappe.model.get_value(":Currency", currency, "smallest_currency_fraction_value")
     );
 
     if (smallest_currency_fraction_value) {
@@ -328,5 +325,5 @@ Object.assign(window, {
     precision,
     remainder,
     round_based_on_smallest_currency_fraction,
-    in_list,
+    in_list
 });

@@ -24,8 +24,8 @@ frappe.ui.form.ControlColor = class ControlColor extends frappe.ui.form.ControlD
                 "#EC864B",
                 "#4F9DD9",
                 "#39E4A5",
-                "#B4CD29",
-            ],
+                "#B4CD29"
+            ]
         });
 
         this.$wrapper
@@ -41,7 +41,7 @@ frappe.ui.form.ControlColor = class ControlColor extends frappe.ui.form.ControlD
 				</div>
 			`,
                 content: () => picker_wrapper,
-                html: true,
+                html: true
             })
             .on("show.bs.popover", () => {
                 setTimeout(() => {
@@ -53,7 +53,7 @@ frappe.ui.form.ControlColor = class ControlColor extends frappe.ui.form.ControlD
                 $(window).off("hashchange.color-popover");
             });
 
-        this.picker.on_change = (color) => {
+        this.picker.on_change = color => {
             this.set_value(color);
         };
 
@@ -65,13 +65,13 @@ frappe.ui.form.ControlColor = class ControlColor extends frappe.ui.form.ControlD
         this.$wrapper
             .find(".selected-color")
             .parent()
-            .on("click", (e) => {
+            .on("click", e => {
                 this.$wrapper.popover("toggle");
                 if (!this.get_color()) {
                     this.$input.val("");
                 }
                 e.stopPropagation();
-                $("body").on("click.color-popover", (ev) => {
+                $("body").on("click.color-popover", ev => {
                     if (!$(ev.target).parents().is(".popover")) {
                         this.$wrapper.popover("hide");
                     }
@@ -95,7 +95,7 @@ frappe.ui.form.ControlColor = class ControlColor extends frappe.ui.form.ControlD
         super.set_formatted_input(value);
         this.$input?.val(value);
         this.selected_color?.css({
-            "background-color": value || "transparent",
+            "background-color": value || "transparent"
         });
         this.selected_color?.toggleClass("no-value", !value);
     }

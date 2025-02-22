@@ -14,20 +14,17 @@ context("Grid Search", () => {
         return cy
             .window()
             .its("frappe")
-            .then((frappe) => {
-                return frappe.xcall(
-                    "frappe.tests.ui_test_helpers.insert_doctype_with_child_table_record",
-                    {
-                        name: doctype_with_child_table_name,
-                    },
-                );
+            .then(frappe => {
+                return frappe.xcall("frappe.tests.ui_test_helpers.insert_doctype_with_child_table_record", {
+                    name: doctype_with_child_table_name
+                });
             });
     });
 
     it("Test search row visibility", () => {
         cy.window()
             .its("frappe")
-            .then((frappe) => {
+            .then(frappe => {
                 frappe.model.user_settings.save("Doctype With Child Table", "GridView", {
                     "Child Table Doctype 1": [
                         { fieldname: "data", columns: 2 },
@@ -35,8 +32,8 @@ context("Grid Search", () => {
                         { fieldname: "check", columns: 1 },
                         { fieldname: "rating", columns: 2 },
                         { fieldname: "duration", columns: 2 },
-                        { fieldname: "date", columns: 2 },
-                    ],
+                        { fieldname: "date", columns: 2 }
+                    ]
                 });
             });
 
@@ -59,16 +56,12 @@ context("Grid Search", () => {
         cy.get("@table").find(".grid-heading-row .row-index.search input").clear();
 
         // Data Column
-        cy.get("@table")
-            .find('.grid-heading-row .search input[data-fieldtype="Data"]')
-            .type("Data");
+        cy.get("@table").find('.grid-heading-row .search input[data-fieldtype="Data"]').type("Data");
         cy.get("@table").find(".grid-body .rows .grid-row").should("have.length", 1);
         cy.get("@table").find('.grid-heading-row .search input[data-fieldtype="Data"]').clear();
 
         // Barcode Column
-        cy.get("@table")
-            .find('.grid-heading-row .search input[data-fieldtype="Barcode"]')
-            .type("092");
+        cy.get("@table").find('.grid-heading-row .search input[data-fieldtype="Barcode"]').type("092");
         cy.get("@table").find(".grid-body .rows .grid-row").should("have.length", 4);
         cy.get("@table").find('.grid-heading-row .search input[data-fieldtype="Barcode"]').clear();
 
@@ -82,25 +75,17 @@ context("Grid Search", () => {
         cy.get("@table").find('.grid-heading-row .search input[data-fieldtype="Check"]').clear();
 
         // Rating Column
-        cy.get("@table")
-            .find('.grid-heading-row .search input[data-fieldtype="Rating"]')
-            .type("3");
+        cy.get("@table").find('.grid-heading-row .search input[data-fieldtype="Rating"]').type("3");
         cy.get("@table").find(".grid-body .rows .grid-row").should("have.length", 3);
         cy.get("@table").find('.grid-heading-row .search input[data-fieldtype="Rating"]').clear();
 
         // Duration Column
-        cy.get("@table")
-            .find('.grid-heading-row .search input[data-fieldtype="Duration"]')
-            .type("3d");
+        cy.get("@table").find('.grid-heading-row .search input[data-fieldtype="Duration"]').type("3d");
         cy.get("@table").find(".grid-body .rows .grid-row").should("have.length", 3);
-        cy.get("@table")
-            .find('.grid-heading-row .search input[data-fieldtype="Duration"]')
-            .clear();
+        cy.get("@table").find('.grid-heading-row .search input[data-fieldtype="Duration"]').clear();
 
         // Date Column
-        cy.get("@table")
-            .find('.grid-heading-row .search input[data-fieldtype="Date"]')
-            .type("2022");
+        cy.get("@table").find('.grid-heading-row .search input[data-fieldtype="Date"]').type("2022");
         cy.get("@table").find(".grid-body .rows .grid-row").should("have.length", 4);
         cy.get("@table").find('.grid-heading-row .search input[data-fieldtype="Date"]').clear();
     });
@@ -113,21 +98,15 @@ context("Grid Search", () => {
         cy.get("@table").find(".grid-body .rows .grid-row").should("have.length", 10);
 
         // Barcode Column
-        cy.get("@table")
-            .find('.grid-heading-row .search input[data-fieldtype="Barcode"]')
-            .type("0");
+        cy.get("@table").find('.grid-heading-row .search input[data-fieldtype="Barcode"]').type("0");
         cy.get("@table").find(".grid-body .rows .grid-row").should("have.length", 8);
 
         // Duration Column
-        cy.get("@table")
-            .find('.grid-heading-row .search input[data-fieldtype="Duration"]')
-            .type("d");
+        cy.get("@table").find('.grid-heading-row .search input[data-fieldtype="Duration"]').type("d");
         cy.get("@table").find(".grid-body .rows .grid-row").should("have.length", 5);
 
         // Date Column
-        cy.get("@table")
-            .find('.grid-heading-row .search input[data-fieldtype="Date"]')
-            .type("02-");
+        cy.get("@table").find('.grid-heading-row .search input[data-fieldtype="Date"]').type("02-");
         cy.get("@table").find(".grid-body .rows .grid-row").should("have.length", 2);
     });
 });

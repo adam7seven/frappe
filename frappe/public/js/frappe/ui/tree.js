@@ -17,7 +17,7 @@ frappe.ui.Tree = class {
         method,
         get_label,
         on_render,
-        on_click,
+        on_click
     }) {
         $.extend(this, arguments[0]);
         if (root_value == null) {
@@ -32,7 +32,7 @@ frappe.ui.Tree = class {
             this.icon_set = {
                 open: frappe.utils.icon("folder-open", "md"),
                 closed: frappe.utils.icon("folder-normal", "md"),
-                leaf: frappe.utils.icon("primitive-dot", "xs"),
+                leaf: frappe.utils.icon("primitive-dot", "xs")
             };
         }
 
@@ -44,14 +44,14 @@ frappe.ui.Tree = class {
         args.parent = value;
         args.is_root = is_root;
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             frappe.call({
                 method: this.method,
                 args: args,
-                callback: (r) => {
+                callback: r => {
                     this.on_get_node && this.on_get_node(r.message);
                     resolve(r.message);
-                },
+                }
             });
         });
     }
@@ -64,14 +64,14 @@ frappe.ui.Tree = class {
 
         args.tree_method = this.method;
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             frappe.call({
                 method: "frappe.desk.treeview.get_all_nodes",
                 args: args,
-                callback: (r) => {
+                callback: r => {
                     this.on_get_node && this.on_get_node(r.message, true);
                     resolve(r.message);
-                },
+                }
             });
         });
     }
@@ -102,8 +102,8 @@ frappe.ui.Tree = class {
             expandable: true,
             is_root: true,
             data: {
-                value: this.root_value,
-            },
+                value: this.root_value
+            }
         });
         this.expand_node(this.root_node, false);
     }
@@ -135,7 +135,7 @@ frappe.ui.Tree = class {
             label: data.value,
             title: data.title,
             expandable: data.expandable,
-            data: data,
+            data: data
         });
     }
 
@@ -162,18 +162,18 @@ frappe.ui.Tree = class {
         return deep
             ? frappe.run_serially([
                   () => this.get_all_nodes(value, is_root, node.label),
-                  (data_list) => this.render_children_of_all_nodes(data_list),
-                  () => this.set_selected_node(node),
+                  data_list => this.render_children_of_all_nodes(data_list),
+                  () => this.set_selected_node(node)
               ])
             : frappe.run_serially([
                   () => this.get_nodes(value, is_root),
-                  (data_set) => this.render_node_children(node, data_set),
-                  () => this.set_selected_node(node),
+                  data_set => this.render_node_children(node, data_set),
+                  () => this.set_selected_node(node)
               ]);
     }
 
     render_children_of_all_nodes(data_list) {
-        data_list.map((d) => this.render_node_children(this.nodes[d.parent], d.data));
+        data_list.map(d => this.render_node_children(this.nodes[d.parent], d.data));
     }
 
     render_node_children(node, data_set) {
@@ -230,11 +230,7 @@ frappe.ui.Tree = class {
                 if (!node.expanded) {
                     node.$tree_link.find(".icon").parent().html(this.icon_set.open);
                 } else {
-                    node.$tree_link
-                        .find(".icon")
-                        .parent()
-                        .addClass("node-parent")
-                        .html(this.icon_set.closed);
+                    node.$tree_link.find(".icon").parent().addClass("node-parent").html(this.icon_set.closed);
                 }
             }
         }
@@ -287,14 +283,14 @@ frappe.ui.Tree = class {
             },
             function () {
                 $(this).parent().removeClass("hover-active");
-            },
+            }
         );
     }
 
     get_toolbar(node) {
         let $toolbar = $('<span class="tree-node-toolbar btn-group"></span>').hide();
 
-        Object.keys(this.toolbar).map((key) => {
+        Object.keys(this.toolbar).map(key => {
             let obj = this.toolbar[key];
             if (!obj.label) return;
             if (obj.condition && !obj.condition(node)) return;

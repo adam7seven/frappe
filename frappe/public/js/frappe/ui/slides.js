@@ -38,8 +38,7 @@ frappe.ui.Slide = class Slide {
         this.$primary_btn = this.slides_footer.find(".primary");
         this.$form_wrapper = this.$body.find(".form-wrapper");
 
-        if (this.image_src)
-            this.$content.append($(`<img src="${this.image_src}" style="margin: 20px;">`));
+        if (this.image_src) this.$content.append($(`<img src="${this.image_src}" style="margin: 20px;">`));
         if (this.help) this.$content.append($(`<p class="slide-help">${__(this.help)}</p>`));
 
         this.reqd_fields = [];
@@ -61,7 +60,7 @@ frappe.ui.Slide = class Slide {
         this.form = new frappe.ui.FieldGroup({
             fields: this.get_atomic_fields(),
             body: this.$form[0],
-            no_submit_on_enter: true,
+            no_submit_on_enter: true
         });
         this.form.make();
         if (this.add_more) this.bind_more_button();
@@ -98,7 +97,7 @@ frappe.ui.Slide = class Slide {
     set_reqd_fields() {
         var dict = this.form.fields_dict;
         this.reqd_fields = [];
-        Object.keys(dict).map((key) => {
+        Object.keys(dict).map(key => {
             if (dict[key].df.reqd) {
                 this.reqd_fields.push(dict[key]);
             }
@@ -123,14 +122,14 @@ frappe.ui.Slide = class Slide {
             var fields = JSON.parse(JSON.stringify(this.fields));
 
             this.form.add_fields(
-                fields.map((field) => {
+                fields.map(field => {
                     if (field.fieldname) field.fieldname += "_" + this.count;
                     if (!field.static) {
                         if (field.label) field.label;
                     }
                     field.reqd = 0;
                     return field;
-                }),
+                })
             );
 
             if (this.count === this.max_count) {
@@ -149,11 +148,11 @@ frappe.ui.Slide = class Slide {
 
     bind_fields_to_action_btn() {
         var me = this;
-        this.reqd_fields.map((field) => {
+        this.reqd_fields.map(field => {
             field.$wrapper.on("change input click", () => {
                 me.reset_action_button_state();
             });
-            field.$wrapper.on("keydown", "input", (e) => {
+            field.$wrapper.on("keydown", "input", e => {
                 if (e.key == "Enter") {
                     me.reset_action_button_state();
                 }
@@ -162,7 +161,7 @@ frappe.ui.Slide = class Slide {
     }
 
     reset_action_button_state() {
-        var empty_fields = this.reqd_fields.filter((field) => {
+        var empty_fields = this.reqd_fields.filter(field => {
             return !field.get_value();
         });
         if (empty_fields.length) {
@@ -234,7 +233,7 @@ frappe.ui.Slides = class Slides {
         unidirectional = 0,
         done_state = 0,
         before_load = null,
-        on_update = null,
+        on_update = null
     }) {
         this.parent = parent;
         this.slides = slides;
@@ -257,10 +256,7 @@ frappe.ui.Slides = class Slides {
         this.$slide_progress = $(`<div>`)
             .addClass(`slides-progress text-center text-extra-muted`)
             .appendTo(this.parent);
-        this.container = $("<div>")
-            .addClass("slides-wrapper")
-            .attr({ tabindex: -1 })
-            .appendTo(this.parent);
+        this.container = $("<div>").addClass("slides-wrapper").attr({ tabindex: -1 }).appendTo(this.parent);
         this.$body = $(`<div>`).addClass(`slide-container`).appendTo(this.container);
         this.$footer = $(`<div>`).addClass(`slide-footer`).appendTo(this.container);
 
@@ -283,8 +279,8 @@ frappe.ui.Slides = class Slides {
                         parent: this.$body,
                         slides_footer: this.$footer,
                         render_parent_dots: this.render_progress_dots.bind(this),
-                        id: id,
-                    }),
+                        id: id
+                    })
                 );
                 if (!this.unidirectional) {
                     this.slide_dict[id].make();
@@ -319,10 +315,7 @@ frappe.ui.Slides = class Slides {
 				<div class="slide-step-complete">${frappe.utils.icon("tick", "xs")}</div>
 			</div>`).attr({ "data-step-id": id });
 
-            if (
-                this.done_state &&
-                ((this.slide_dict[id] && this.slide_dict[id].done) || slide.done)
-            ) {
+            if (this.done_state && ((this.slide_dict[id] && this.slide_dict[id].done) || slide.done)) {
                 $dot.addClass("step-success");
             }
             if (this.unidirectional && id === this.current_id) {
@@ -350,23 +343,11 @@ frappe.ui.Slides = class Slides {
 
         $(`<div class="row">
 			<div class="col-sm-4 text-left prev-div">
-				<button class="prev-btn btn btn-secondary btn-sm" tabindex="0">${__(
-                    "Previous",
-                    null,
-                    "Go to previous slide",
-                )}</button>
+				<button class="prev-btn btn btn-secondary btn-sm" tabindex="0">${__("Previous", null, "Go to previous slide")}</button>
 			</div>
 			<div class="col-sm-8 text-right next-div">
-				<button class="complete-btn btn btn-sm primary">${__(
-                    "Complete Setup",
-                    null,
-                    "Finish the setup wizard",
-                )}</button>
-				<button class="next-btn btn btn-default btn-sm" tabindex="0">${__(
-                    "Next",
-                    null,
-                    "Go to next slide",
-                )}</button>
+				<button class="complete-btn btn btn-sm primary">${__("Complete Setup", null, "Finish the setup wizard")}</button>
+				<button class="next-btn btn btn-default btn-sm" tabindex="0">${__("Next", null, "Go to next slide")}</button>
 			</div>
 		</div>`).appendTo(this.$footer);
 
@@ -383,10 +364,7 @@ frappe.ui.Slides = class Slides {
                     if (this.slide) this.slide.done = true;
                     if (this.current_slide) this.current_slide.done = true;
                 }
-                if (
-                    !this.unidirectional ||
-                    (this.unidirectional && this.current_slide.set_values())
-                ) {
+                if (!this.unidirectional || (this.unidirectional && this.current_slide.set_values())) {
                     this.show_slide(this.current_id + 1);
                 }
             });

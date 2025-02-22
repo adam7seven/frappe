@@ -29,7 +29,7 @@ frappe.views.ListFactory = class ListFactory extends frappe.views.Factory {
 
         frappe.views.list_view[me.page_id] = new view_class({
             doctype: doctype,
-            parent: me.make_page(true, me.page_id),
+            parent: me.make_page(true, me.page_id)
         });
 
         me.set_cur_list();

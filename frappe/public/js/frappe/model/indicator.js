@@ -9,15 +9,9 @@ frappe.has_indicator = function (doctype) {
         frappe.workflow.get_state_fieldname(doctype)
     ) {
         return true;
-    } else if (
-        frappe.meta.has_field(doctype, "enabled") ||
-        frappe.meta.has_field(doctype, "disabled")
-    ) {
+    } else if (frappe.meta.has_field(doctype, "enabled") || frappe.meta.has_field(doctype, "disabled")) {
         return true;
-    } else if (
-        frappe.meta.has_field(doctype, "status") &&
-        frappe.get_meta(doctype).states.length
-    ) {
+    } else if (frappe.meta.has_field(doctype, "status") && frappe.get_meta(doctype).states.length) {
         return true;
     }
     return false;
@@ -40,14 +34,10 @@ frappe.get_indicator = function (doc, doctype, show_workflow_state) {
     let workflow_fieldname = frappe.workflow.get_state_fieldname(doctype);
 
     let avoid_status_override = (frappe.workflow.avoid_status_override[doctype] || []).includes(
-        doc[workflow_fieldname],
+        doc[workflow_fieldname]
     );
     // workflow
-    if (
-        workflow_fieldname &&
-        (!without_workflow || show_workflow_state) &&
-        !avoid_status_override
-    ) {
+    if (workflow_fieldname && (!without_workflow || show_workflow_state) && !avoid_status_override) {
         var value = doc[workflow_fieldname];
         if (value) {
             let colour = "";
@@ -59,7 +49,7 @@ frappe.get_indicator = function (doc, doctype, show_workflow_state) {
                     Danger: "red",
                     Primary: "blue",
                     Inverse: "black",
-                    Info: "light-blue",
+                    Info: "light-blue"
                 }[locals["Workflow State"][value].style];
             }
             if (!colour) colour = "gray";
@@ -79,10 +69,10 @@ frappe.get_indicator = function (doc, doctype, show_workflow_state) {
     }
 
     // based on document state
-    if (doc.status && meta && meta.states && meta.states.find((d) => d.title === doc.status)) {
-        let state = meta.states.find((d) => d.title === doc.status);
+    if (doc.status && meta && meta.states && meta.states.find(d => d.title === doc.status)) {
+        let state = meta.states.find(d => d.title === doc.status);
         let color_class = frappe.scrub(state.color, "-");
-        let df = meta.fields.find((x) => x.fieldname === "status");
+        let df = meta.fields.find(x => x.fieldname === "status");
         let status_txt = doc.status;
         if (df && df.fieldtype === "Select" && df.options_has_label && df.options) {
             let options = df.options.split("\n");

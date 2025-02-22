@@ -23,7 +23,7 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
         if (this.static) {
             this.$wrapper.modal({
                 backdrop: "static",
-                keyboard: false,
+                keyboard: false
             });
             this.get_close_btn().hide();
         }
@@ -58,7 +58,7 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
                 this.primary_action_label ||
                     this.action.primary.label ||
                     __("Submit", null, "Primary action in dialog"),
-                this.primary_action || this.action.primary.onsubmit,
+                this.primary_action || this.action.primary.onsubmit
             );
         }
 
@@ -66,19 +66,12 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
             this.set_secondary_action(this.secondary_action);
         }
 
-        if (
-            this.secondary_action_label ||
-            (this.action.secondary && this.action.secondary.label)
-        ) {
-            this.set_secondary_action_label(
-                this.secondary_action_label || this.action.secondary.label,
-            );
+        if (this.secondary_action_label || (this.action.secondary && this.action.secondary.label)) {
+            this.set_secondary_action_label(this.secondary_action_label || this.action.secondary.label);
         }
 
         if (this.minimizable) {
-            this.header
-                .find(".title-section")
-                .click(() => this.is_minimized && this.toggle_minimize());
+            this.header.find(".title-section").click(() => this.is_minimized && this.toggle_minimize());
             this.get_minimize_btn()
                 .removeClass("hide")
                 .on("click", () => this.toggle_minimize());
@@ -96,8 +89,7 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
                 if (frappe.ui.open_dialogs[frappe.ui.open_dialogs.length - 1] === me) {
                     frappe.ui.open_dialogs.pop();
                     if (frappe.ui.open_dialogs.length) {
-                        window.cur_dialog =
-                            frappe.ui.open_dialogs[frappe.ui.open_dialogs.length - 1];
+                        window.cur_dialog = frappe.ui.open_dialogs[frappe.ui.open_dialogs.length - 1];
                     } else {
                         window.cur_dialog = null;
                     }
@@ -118,10 +110,7 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
             })
             .on("scroll", function () {
                 var $input = $("input:focus");
-                if (
-                    $input.length &&
-                    ["Date", "Datetime", "Time"].includes($input.attr("data-fieldtype"))
-                ) {
+                if ($input.length && ["Date", "Datetime", "Time"].includes($input.attr("data-fieldtype"))) {
                     $input.blur();
                 }
             });
@@ -137,7 +126,7 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
         let cur_col_brk = 0;
 
         // if fields have more than 2 Column Breaks before encountering Section Break, make it large
-        this.fields.forEach((field) => {
+        this.fields.forEach(field => {
             if (field.fieldtype == "Column Break") {
                 cur_col_brk++;
 

@@ -11,5 +11,5 @@ frappe.ui.form.on("Website Route Meta", {
             }
             window.open(route, "_blank");
         });
-    },
+    }
 });

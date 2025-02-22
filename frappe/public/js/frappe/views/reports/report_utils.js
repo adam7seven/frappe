@@ -1,24 +1,20 @@
 frappe.provide("frappe.report_utils");
 
 frappe.report_utils = {
-    make_chart_options: function (
-        columns,
-        raw_data,
-        { y_fields, x_field, chart_type, colors, height },
-    ) {
+    make_chart_options: function (columns, raw_data, { y_fields, x_field, chart_type, colors, height }) {
         const type = chart_type.toLowerCase();
 
-        let rows = raw_data.result.filter((value) => Object.keys(value).length);
+        let rows = raw_data.result.filter(value => Object.keys(value).length);
 
         let labels = get_column_values(x_field);
-        let datasets = y_fields.map((y_field) => ({
+        let datasets = y_fields.map(y_field => ({
             name: frappe.model.unscrub(y_field),
-            values: get_column_values(y_field).map((d) => Number(d)),
+            values: get_column_values(y_field).map(d => Number(d))
         }));
 
         if (raw_data.add_total_row) {
             labels = labels.slice(0, -1);
-            datasets.forEach((dataset) => {
+            datasets.forEach(dataset => {
                 dataset.values = dataset.values.slice(0, -1);
             });
         }
@@ -26,7 +22,7 @@ frappe.report_utils = {
         return {
             data: {
                 labels: labels.length ? labels : null,
-                datasets: datasets,
+                datasets: datasets
             },
             truncateLegends: 1,
             type: type,
@@ -35,25 +31,23 @@ frappe.report_utils = {
             axisOptions: {
                 shortenYAxisNumbers: 1,
                 xAxisMode: "tick",
-                numberFormatter: frappe.utils.format_chart_axis_number,
-            },
+                numberFormatter: frappe.utils.format_chart_axis_number
+            }
         };
 
         function get_column_values(column_name) {
             if (Array.isArray(rows[0])) {
-                let column_index = columns.findIndex((column) => column.fieldname == column_name);
-                return rows.map((row) => row[column_index]);
+                let column_index = columns.findIndex(column => column.fieldname == column_name);
+                return rows.map(row => row[column_index]);
             } else {
-                return rows.map((row) => row[column_name]);
+                return rows.map(row => row[column_name]);
             }
         }
     },
 
     get_field_options_from_report: function (columns, data) {
-        const rows = data.result.filter((value) => Object.keys(value).length);
-        const first_row = Array.isArray(rows[0])
-            ? rows[0]
-            : columns.map((col) => rows[0][col.fieldname]);
+        const rows = data.result.filter(value => Object.keys(value).length);
+        const first_row = Array.isArray(rows[0]) ? rows[0] : columns.map(col => rows[0][col.fieldname]);
 
         const indices = first_row.reduce((accumulator, current_value, current_index) => {
             if (Number.isFinite(current_value)) {
@@ -63,7 +57,7 @@ frappe.report_utils = {
         }, []);
 
         function get_options(fields) {
-            return fields.map((field) => {
+            return fields.map(field => {
                 if (field.fieldname) {
                     return { label: field.label, value: field.fieldname };
                 } else {
@@ -81,7 +75,7 @@ frappe.report_utils = {
 
         return {
             numeric_fields: numeric_field_options,
-            non_numeric_fields: non_numeric_field_options,
+            non_numeric_fields: non_numeric_field_options
         };
     },
 
@@ -100,13 +94,13 @@ frappe.report_utils = {
                     fieldname: label,
                     fieldtype,
                     width,
-                    options,
+                    options
                 };
             } else {
                 column = {
                     label: column,
                     fieldname: column,
-                    fieldtype: "Data",
+                    fieldtype: "Data"
                 };
             }
         }
@@ -121,31 +115,25 @@ frappe.report_utils = {
 
         return frappe
             .xcall("frappe.desk.query_report.get_script", {
-                report_id: report_id,
+                report_id: report_id
             })
-            .then((r) => {
+            .then(r => {
                 frappe.dom.eval(r.script || "");
                 return frappe.after_ajax(() => {
-                    if (
-                        frappe.query_reports[report_id] &&
-                        !frappe.query_reports[report_id].filters &&
-                        r.filters
-                    ) {
+                    if (frappe.query_reports[report_id] && !frappe.query_reports[report_id].filters && r.filters) {
                         return (frappe.query_reports[report_id].filters = r.filters);
                     }
-                    return (
-                        frappe.query_reports[report_id] && frappe.query_reports[report_id].filters
-                    );
+                    return frappe.query_reports[report_id] && frappe.query_reports[report_id].filters;
                 });
             });
     },
 
     get_filter_values(filters) {
         return filters
-            .map((f) => {
+            .map(f => {
                 var v = f.default;
                 return {
-                    [f.fieldname]: v,
+                    [f.fieldname]: v
                 };
             })
             .reduce((acc, f) => {
@@ -156,10 +144,10 @@ frappe.report_utils = {
 
     get_result_of_fn(fn, values) {
         const get_result = {
-            Minimum: (values) => values.reduce((min, val) => Math.min(min, val), values[0]),
-            Maximum: (values) => values.reduce((min, val) => Math.max(min, val), values[0]),
-            Average: (values) => values.reduce((a, b) => a + b, 0) / values.length,
-            Sum: (values) => values.reduce((a, b) => a + b, 0),
+            Minimum: values => values.reduce((min, val) => Math.min(min, val), values[0]),
+            Maximum: values => values.reduce((min, val) => Math.max(min, val), values[0]),
+            Average: values => values.reduce((a, b) => a + b, 0) / values.length,
+            Sum: values => values.reduce((a, b) => a + b, 0)
         };
         return get_result[fn](values);
     },
@@ -172,14 +160,14 @@ frappe.report_utils = {
                 fieldtype: "Select",
                 options: ["Excel", "CSV"],
                 default: "Excel",
-                reqd: 1,
+                reqd: 1
             },
             {
                 fieldtype: "Section Break",
                 fieldname: "csv_settings",
                 label: "Settings",
                 collapsible: 1,
-                depends_on: "eval:doc.file_format=='CSV'",
+                depends_on: "eval:doc.file_format=='CSV'"
             },
             {
                 fieldtype: "Data",
@@ -187,7 +175,7 @@ frappe.report_utils = {
                 fieldname: "csv_delimiter",
                 default: ",",
                 length: 1,
-                depends_on: "eval:doc.file_format=='CSV'",
+                depends_on: "eval:doc.file_format=='CSV'"
             },
             {
                 fieldtype: "Select",
@@ -197,18 +185,18 @@ frappe.report_utils = {
                     { value: 0, label: "Minimal" },
                     { value: 1, label: "All" },
                     { value: 2, label: "Non-numeric" },
-                    { value: 3, label: "None" },
+                    { value: 3, label: "None" }
                 ],
                 default: 2,
-                depends_on: "eval:doc.file_format=='CSV'",
+                depends_on: "eval:doc.file_format=='CSV'"
             },
             {
                 fieldtype: "Small Text",
                 label: "CSV Preview",
                 fieldname: "csv_preview",
                 read_only: 1,
-                depends_on: "eval:doc.file_format=='CSV'",
-            },
+                depends_on: "eval:doc.file_format=='CSV'"
+            }
         ];
 
         if (extra_fields) {
@@ -216,9 +204,9 @@ frappe.report_utils = {
                 {
                     fieldtype: "Section Break",
                     fieldname: "extra_fields",
-                    collapsible: 0,
+                    collapsible: 0
                 },
-                ...extra_fields,
+                ...extra_fields
             );
         }
 
@@ -226,20 +214,18 @@ frappe.report_utils = {
             title: __("Export Report: {0}", [report_id], "Export report"),
             fields: fields,
             primary_action_label: __("Download", null, "Export report"),
-            primary_action: callback,
+            primary_action: callback
         });
 
         function update_csv_preview(dialog) {
             const is_query_report = frappe.get_route()[0] === "query-report";
             const report = is_query_report ? frappe.query_report : cur_list;
-            const columns = report.columns.filter((col) => col.hidden !== 1);
+            const columns = report.columns.filter(col => col.hidden !== 1);
             let PREVIEW_DATA = [
-                columns.map((col) => __(is_query_report ? col.label : col.name)),
+                columns.map(col => __(is_query_report ? col.label : col.name)),
                 ...report.data
                     .slice(0, 3)
-                    .map((row) =>
-                        columns.map((col) => row[is_query_report ? col.fieldname : col.field]),
-                    ),
+                    .map(row => columns.map(col => row[is_query_report ? col.fieldname : col.field]))
             ];
 
             dialog.set_value(
@@ -247,8 +233,8 @@ frappe.report_utils = {
                 frappe.report_utils.get_csv_preview(
                     PREVIEW_DATA,
                     dialog.get_value("csv_quoting"),
-                    dialog.get_value("csv_delimiter"),
-                ),
+                    dialog.get_value("csv_delimiter")
+                )
             );
         }
 
@@ -274,7 +260,7 @@ frappe.report_utils = {
             Minimal: 0,
             All: 1,
             NonNumeric: 2,
-            None: 3,
+            None: 3
         };
 
         if (delimiter.length > 1) {
@@ -286,9 +272,9 @@ frappe.report_utils = {
         }
 
         return data
-            .map((row) => {
+            .map(row => {
                 return row
-                    .map((col) => {
+                    .map(col => {
                         if (col === null) {
                             return "";
                         }
@@ -299,9 +285,7 @@ frappe.report_utils = {
 
                         switch (quoting) {
                             case QUOTING.Minimal:
-                                return typeof col === "string" && col.includes(delimiter)
-                                    ? `"${col}"`
-                                    : `${col}`;
+                                return typeof col === "string" && col.includes(delimiter) ? `"${col}"` : `${col}`;
                             case QUOTING.All:
                                 return `"${col}"`;
                             case QUOTING.NonNumeric:
@@ -313,5 +297,5 @@ frappe.report_utils = {
                     .join(delimiter);
             })
             .join("\n");
-    },
+    }
 };

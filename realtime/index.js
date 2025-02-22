@@ -10,9 +10,9 @@ let io = new Server(server, {
     cors: {
         // Should be fine since we are ensuring whether hostname and origin are same before adding setting listeners for s socket
         origin: true,
-        credentials: true,
+        credentials: true
     },
-    cleanupEmptyChildNamespaces: true,
+    cleanupEmptyChildNamespaces: true
 });
 
 // Multitenancy implementation.
@@ -31,7 +31,7 @@ function on_connection(socket) {
     frappe_handlers(realtime, socket);
 
     // ESBUild "open in editor" on error
-    socket.on("open_in_editor", async (data) => {
+    socket.on("open_in_editor", async data => {
         await subscriber.connect();
         subscriber.publish("open_in_editor", JSON.stringify(data));
     });
@@ -45,7 +45,7 @@ const subscriber = get_redis_subscriber();
 
 (async () => {
     await subscriber.connect();
-    subscriber.subscribe("events", (message) => {
+    subscriber.subscribe("events", message => {
         message = JSON.parse(message);
         let namespace = "/" + message.namespace;
         if (message.room) {

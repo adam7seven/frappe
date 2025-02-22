@@ -1,6 +1,4 @@
-frappe.ui.form.ControlMultiSelectList = class ControlMultiSelectList extends (
-    frappe.ui.form.ControlData
-) {
+frappe.ui.form.ControlMultiSelectList = class ControlMultiSelectList extends frappe.ui.form.ControlData {
     static trigger_change_on_input_event = false;
     make_input() {
         let template = `
@@ -29,23 +27,23 @@ frappe.ui.form.ControlMultiSelectList = class ControlMultiSelectList extends (
         this.has_input = true;
         this.$list_wrapper.prependTo(this.input_area);
         this.$filter_input = this.$list_wrapper.find("input");
-        this.$list_wrapper.on("click", ".dropdown-menu", (e) => {
+        this.$list_wrapper.on("click", ".dropdown-menu", e => {
             e.stopPropagation();
         });
-        this.$list_wrapper.on("click", ".clear-selections", (e) => {
+        this.$list_wrapper.on("click", ".clear-selections", e => {
             this.clear_all_selections();
         });
-        this.$list_wrapper.on("click", ".selectable-item", (e) => {
+        this.$list_wrapper.on("click", ".selectable-item", e => {
             let $target = $(e.currentTarget);
             this.toggle_select_item($target);
         });
         this.$list_wrapper.on(
             "input",
             "input",
-            frappe.utils.debounce((e) => {
+            frappe.utils.debounce(e => {
                 this.set_options().then(() => {
                     let txt = e.target.value;
-                    let filtered_options = this._options.filter((opt) => {
+                    let filtered_options = this._options.filter(opt => {
                         let match = false;
                         if (this.values.includes(opt.value)) {
                             return true;
@@ -57,14 +55,12 @@ frappe.ui.form.ControlMultiSelectList = class ControlMultiSelectList extends (
 
                         return match;
                     });
-                    let options = this._selected_values
-                        .concat(filtered_options)
-                        .uniqBy((opt) => opt.value);
+                    let options = this._selected_values.concat(filtered_options).uniqBy(opt => opt.value);
                     this.set_selectable_items(options);
                 });
-            }, 300),
+            }, 300)
         );
-        this.$list_wrapper.on("keydown", "input", (e) => {
+        this.$list_wrapper.on("keydown", "input", e => {
             if (e.key === "ArrowDown") {
                 this.highlight_item(1);
             } else if (e.key === "ArrowUp") {
@@ -77,7 +73,7 @@ frappe.ui.form.ControlMultiSelectList = class ControlMultiSelectList extends (
             }
         });
 
-        this.$list_wrapper.on("keydown", (e) => {
+        this.$list_wrapper.on("keydown", e => {
             if ($(e.target).is("input")) {
                 return;
             }
@@ -100,9 +96,7 @@ frappe.ui.form.ControlMultiSelectList = class ControlMultiSelectList extends (
     }
 
     set_input_attributes() {
-        this.$list_wrapper
-            .attr("data-fieldtype", this.df.fieldtype)
-            .attr("data-fieldname", this.df.fieldname);
+        this.$list_wrapper.attr("data-fieldtype", this.df.fieldtype).attr("data-fieldname", this.df.fieldname);
 
         this.set_status(this.get_placeholder_text());
 
@@ -133,7 +127,7 @@ frappe.ui.form.ControlMultiSelectList = class ControlMultiSelectList extends (
             this.values = this.values.slice();
             this.values.push(value);
         } else {
-            this.values = this.values.filter((val) => val !== value);
+            this.values = this.values.filter(val => val !== value);
         }
         this.update_selected_values(value);
         this.parse_validate_and_set_in_model("");
@@ -146,7 +140,7 @@ frappe.ui.form.ControlMultiSelectList = class ControlMultiSelectList extends (
             value = [value];
         }
         this.values = value;
-        this.values.forEach((value) => {
+        this.values.forEach(value => {
             this.update_selected_values(value);
         });
         this.parse_validate_and_set_in_model("");
@@ -156,12 +150,12 @@ frappe.ui.form.ControlMultiSelectList = class ControlMultiSelectList extends (
 
     update_selected_values(value) {
         this._selected_values = this._selected_values || [];
-        let option = this._options.find((opt) => opt.value === value);
+        let option = this._options.find(opt => opt.value === value);
         if (option) {
             if (this.values.includes(value)) {
                 this._selected_values.push(option);
             } else {
-                this._selected_values = this._selected_values.filter((opt) => opt.value !== value);
+                this._selected_values = this._selected_values.filter(opt => opt.value !== value);
             }
         }
     }
@@ -172,7 +166,7 @@ frappe.ui.form.ControlMultiSelectList = class ControlMultiSelectList extends (
             text = this.get_placeholder_text();
         } else if (this.values.length === 1) {
             let val = this.values[0];
-            let option = this._options.find((opt) => opt.value === val);
+            let option = this._options.find(opt => opt.value === val);
             text = option ? option.label : val;
         } else {
             text = __("{0} values selected", [this.values.length]);
@@ -192,11 +186,11 @@ frappe.ui.form.ControlMultiSelectList = class ControlMultiSelectList extends (
         let promise = Promise.resolve();
 
         function process_options(options) {
-            return options.map((option) => {
+            return options.map(option => {
                 if (typeof option === "string") {
                     return {
                         label: option,
-                        value: option,
+                        value: option
                     };
                 }
                 if (!option.label) {
@@ -212,7 +206,7 @@ frappe.ui.form.ControlMultiSelectList = class ControlMultiSelectList extends (
             if (!value) {
                 this._options = [];
             } else if (value.then) {
-                promise = value.then((options) => {
+                promise = value.then(options => {
                     this._options = process_options(options);
                 });
             } else {
@@ -226,7 +220,7 @@ frappe.ui.form.ControlMultiSelectList = class ControlMultiSelectList extends (
 
     set_selectable_items(options) {
         let html = options
-            .map((option) => {
+            .map(option => {
                 let encoded_value = encodeURIComponent(option.value);
                 let selected = this.values.includes(option.value) ? "selected" : "";
                 return `<li class="selectable-item ${selected}" data-value="${encoded_value}">

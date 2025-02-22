@@ -5,15 +5,11 @@ frappe.ui.form.on("Address", {
     refresh: function (frm) {
         if (frm.doc.__islocal) {
             const last_doc = frappe.contacts.get_last_doc(frm);
-            if (
-                frappe.dynamic_link &&
-                frappe.dynamic_link.doc &&
-                frappe.dynamic_link.doc.id == last_doc.docid
-            ) {
+            if (frappe.dynamic_link && frappe.dynamic_link.doc && frappe.dynamic_link.doc.id == last_doc.docid) {
                 frm.set_value("links", "");
                 frm.add_child("links", {
                     link_doctype: frappe.dynamic_link.doctype,
-                    link_id: frappe.dynamic_link.doc[frappe.dynamic_link.fieldname],
+                    link_id: frappe.dynamic_link.doc[frappe.dynamic_link.fieldname]
                 });
             }
         }
@@ -22,8 +18,8 @@ frappe.ui.form.on("Address", {
                 query: "frappe.contacts.address_and_contact.filter_dynamic_link_doctypes",
                 filters: {
                     fieldtype: "HTML",
-                    fieldname: "address_html",
-                },
+                    fieldname: "address_html"
+                }
             };
         });
         frm.refresh_field("links");
@@ -36,7 +32,7 @@ frappe.ui.form.on("Address", {
                     function () {
                         frappe.set_route("Form", link.link_doctype, link.link_id);
                     },
-                    __("Links"),
+                    __("Links")
                 );
             }
         }
@@ -54,22 +50,15 @@ frappe.ui.form.on("Address", {
             () => frappe.timeout(1),
             () => {
                 const last_doc = frappe.contacts.get_last_doc(frm);
-                if (
-                    frappe.dynamic_link &&
-                    frappe.dynamic_link.doc &&
-                    frappe.dynamic_link.doc.id == last_doc.docid
-                ) {
+                if (frappe.dynamic_link && frappe.dynamic_link.doc && frappe.dynamic_link.doc.id == last_doc.docid) {
                     for (let i in frm.doc.links) {
                         let link = frm.doc.links[i];
-                        if (
-                            last_doc.doctype == link.link_doctype &&
-                            last_doc.docid == link.link_id
-                        ) {
+                        if (last_doc.doctype == link.link_doctype && last_doc.docid == link.link_id) {
                             frappe.set_route("Form", last_doc.doctype, last_doc.docid);
                         }
                     }
                 }
-            },
+            }
         ]);
-    },
+    }
 });

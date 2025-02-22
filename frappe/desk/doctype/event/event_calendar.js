@@ -6,11 +6,11 @@ frappe.views.calendar["Event"] = {
         allDay: "all_day",
         title: "subject",
         status: "event_type",
-        color: "color",
+        color: "color"
     },
     style_map: {
         Public: "success",
-        Private: "info",
+        Private: "info"
     },
-    get_events_method: "frappe.desk.doctype.event.event.get_events",
+    get_events_method: "frappe.desk.doctype.event.event.get_events"
 };

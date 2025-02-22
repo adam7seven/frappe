@@ -94,10 +94,7 @@ frappe.views.Container = class Container {
         // so check the dom directly
         if (!flag) {
             var page_route = route_str.split("/").slice(0, 2).join("/");
-            flag = $(`.page-container[data-page-route="${page_route}"] .layout-side-section`)
-                .length
-                ? 1
-                : 0;
+            flag = $(`.page-container[data-page-route="${page_route}"] .layout-side-section`).length ? 1 : 0;
         }
 
         return flag;

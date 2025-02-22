@@ -27,9 +27,7 @@ frappe.ui.form.ControlDate = class ControlDate extends frappe.ui.form.ControlDat
         if (!should_refresh) {
             if (this.datepicker.selectedDates.length > 0) {
                 // if date is selected but different from value, refresh
-                const selected_date = moment(this.datepicker.selectedDates[0]).format(
-                    this.date_format,
-                );
+                const selected_date = moment(this.datepicker.selectedDates[0]).format(this.date_format);
 
                 should_refresh = selected_date !== value;
             } else {
@@ -52,8 +50,7 @@ frappe.ui.form.ControlDate = class ControlDate extends frappe.ui.form.ControlDat
             lang = "en";
         }
 
-        let date_format =
-            sysdefaults && sysdefaults.date_format ? sysdefaults.date_format : "yyyy-mm-dd";
+        let date_format = sysdefaults && sysdefaults.date_format ? sysdefaults.date_format : "yyyy-mm-dd";
 
         this.today_text = __("Today");
         this.date_format = frappe.defaultDateFormat;
@@ -71,13 +68,11 @@ frappe.ui.form.ControlDate = class ControlDate extends frappe.ui.form.ControlDat
                 this.$input.trigger("change");
             },
             onShow: () => {
-                this.datepicker.$datepicker
-                    .find(".datepicker--button:visible")
-                    .text(this.today_text);
+                this.datepicker.$datepicker.find(".datepicker--button:visible").text(this.today_text);
 
                 this.update_datepicker_position();
             },
-            ...this.get_df_options(),
+            ...this.get_df_options()
         };
     }
 
@@ -120,9 +115,7 @@ frappe.ui.form.ControlDate = class ControlDate extends frappe.ui.form.ControlDat
         this.datepicker.update("position", position);
     }
     get_now_date() {
-        return frappe.datetime
-            .convert_to_system_tz(frappe.datetime.now_date(true), false)
-            .toDate();
+        return frappe.datetime.convert_to_system_tz(frappe.datetime.now_date(true), false).toDate();
     }
     set_t_for_today() {
         var me = this;
@@ -159,8 +152,7 @@ frappe.ui.form.ControlDate = class ControlDate extends frappe.ui.form.ControlDat
     validate(value) {
         if (value && !frappe.datetime.validate(value)) {
             let sysdefaults = frappe.sys_defaults;
-            let date_format =
-                sysdefaults && sysdefaults.date_format ? sysdefaults.date_format : "yyyy-mm-dd";
+            let date_format = sysdefaults && sysdefaults.date_format ? sysdefaults.date_format : "yyyy-mm-dd";
             frappe.msgprint(__("Date {0} must be in format: {1}", [value, date_format]));
             return "";
         }

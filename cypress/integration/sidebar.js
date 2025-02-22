@@ -4,11 +4,9 @@ const verify_attachment_visibility = (document, is_private) => {
     const assertion = is_private ? "be.checked" : "not.be.checked";
     cy.get(".add-attachment-btn").click();
 
-    cy.get_open_dialog()
-        .find(".file-upload-area")
-        .selectFile("cypress/fixtures/sample_image.jpg", {
-            action: "drag-drop",
-        });
+    cy.get_open_dialog().find(".file-upload-area").selectFile("cypress/fixtures/sample_image.jpg", {
+        action: "drag-drop"
+    });
 
     cy.get_open_dialog().findByRole("checkbox", { name: "Private" }).should(assertion);
 };
@@ -20,16 +18,13 @@ const attach_file = (file, no_of_files = 1) => {
     } else if (no_of_files > 1) {
         // attach n files
         files = [...Array(no_of_files)].map(
-            (el, idx) =>
-                "cypress/fixtures/sample_attachments/attachment-" +
-                (idx + 1) +
-                (idx == 0 ? ".jpg" : ".txt"),
+            (el, idx) => "cypress/fixtures/sample_attachments/attachment-" + (idx + 1) + (idx == 0 ? ".jpg" : ".txt")
         );
     }
 
     cy.get(".add-attachment-btn").click();
     cy.get_open_dialog().find(".file-upload-area").selectFile(files, {
-        action: "drag-drop",
+        action: "drag-drop"
     });
     cy.get_open_dialog().findByRole("button", { name: "Upload" }).click();
 };
@@ -42,15 +37,15 @@ context("Sidebar", () => {
         return cy
             .window()
             .its("frappe")
-            .then((frappe) => {
+            .then(frappe => {
                 return frappe.call("frappe.tests.ui_test_helpers.create_blog_post");
             });
     });
 
     it("Verify attachment visibility config", () => {
         cy.call("frappe.tests.ui_test_helpers.create_todo", {
-            description: "Sidebar Attachment ToDo",
-        }).then((todo) => {
+            description: "Sidebar Attachment ToDo"
+        }).then(todo => {
             verify_attachment_visibility(`todo/${todo.message.id}`, true);
         });
         verify_attachment_visibility("blog-post/test-blog-attachment-post", false);
@@ -58,8 +53,8 @@ context("Sidebar", () => {
 
     it("Verify attachment accessibility UX", () => {
         cy.call("frappe.tests.ui_test_helpers.create_todo_with_attachment_limit", {
-            description: "Sidebar Attachment Access Test ToDo",
-        }).then((todo) => {
+            description: "Sidebar Attachment Access Test ToDo"
+        }).then(todo => {
             cy.visit(`/app/todo/${todo.message.id}`);
 
             attach_file("cypress/fixtures/sample_image.jpg");
@@ -84,8 +79,8 @@ context("Sidebar", () => {
 
     it('Test for checking "Assigned To" counter value, adding filter and adding & removing an assignment', () => {
         cy.call("frappe.tests.ui_test_helpers.create_todo", {
-            description: "Sidebar Attachment ToDo",
-        }).then((todo) => {
+            description: "Sidebar Attachment ToDo"
+        }).then(todo => {
             let todo_id = todo.message.id;
             cy.visit("/app/todo");
             cy.click_sidebar_button("Assigned To");
@@ -103,28 +98,21 @@ context("Sidebar", () => {
             cy.click_sidebar_button("Assigned To");
 
             //To check if filter is added in "Assigned To" dropdown after assignment
-            cy.get(
-                ".group-by-field.show > .dropdown-menu > .group-by-item > .dropdown-item",
-            ).should("contain", "1");
+            cy.get(".group-by-field.show > .dropdown-menu > .group-by-item > .dropdown-item").should("contain", "1");
 
             //To check if there is no filter added to the listview
             cy.get(".filter-button").should("contain", "Filter");
 
             //To add a filter to display data into the listview
-            cy.get(
-                ".group-by-field.show > .dropdown-menu > .group-by-item > .dropdown-item",
-            ).click();
+            cy.get(".group-by-field.show > .dropdown-menu > .group-by-item > .dropdown-item").click();
 
             //To check if filter is applied
             cy.click_filter_button().get(".filter-label").should("contain", "1");
-            cy.get(".fieldname-select-area > .awesomplete > .form-control").should(
-                "have.value",
-                "Assigned To",
-            );
+            cy.get(".fieldname-select-area > .awesomplete > .form-control").should("have.value", "Assigned To");
             cy.get(".condition").should("have.value", "like");
             cy.get(".filter-field > .form-group > .input-with-feedback").should(
                 "have.value",
-                `%${cy.config("testUser")}%`,
+                `%${cy.config("testUser")}%`
             );
             cy.click_filter_button();
 

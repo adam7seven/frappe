@@ -26,9 +26,7 @@ frappe.ui.form.on("Note", {
                 frm.set_df_property(
                     field.fieldname,
                     "hidden",
-                    frm.is_note_editable && !field.hidden && frm.get_perm(field.permlevel, "write")
-                        ? 0
-                        : 1,
+                    frm.is_note_editable && !field.hidden && frm.get_perm(field.permlevel, "write") ? 0 : 1
                 );
             }
         }
@@ -36,19 +34,19 @@ frappe.ui.form.on("Note", {
         // no label, description for content either
         frm.get_field("content").toggle_label(frm.is_note_editable);
         frm.get_field("content").toggle_description(frm.is_note_editable);
-    },
+    }
 });
 
 frappe.tour["Note"] = [
     {
         fieldname: "title",
         title: "Title of the Note",
-        description: "This is the id by which the note will be saved, you can change this later",
+        description: "This is the id by which the note will be saved, you can change this later"
     },
     {
         fieldname: "public",
         title: "Sets the Note to Public",
         description:
-            "You can change the visibility of the note with this, setting it to public will allow other users to view it.",
-    },
+            "You can change the visibility of the note with this, setting it to public will allow other users to view it."
+    }
 ];

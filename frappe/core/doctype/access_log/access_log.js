@@ -13,5 +13,5 @@ frappe.ui.form.on("Access Log", {
             let filters = frm.doc.filters ? JSON.parse(frm.doc.filters) : {};
             frappe.set_route("query-report", frm.doc.report_id, filters);
         }
-    },
+    }
 });

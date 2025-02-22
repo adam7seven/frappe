@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Blog Post", {
     refresh: function (frm) {
-        frappe.db.get_single_value("Blog Settings", "show_cta_in_blog").then((value) => {
+        frappe.db.get_single_value("Blog Settings", "show_cta_in_blog").then(value => {
             frm.set_df_property("hide_cta", "hidden", !value);
         });
 
@@ -27,7 +27,7 @@ frappe.ui.form.on("Blog Post", {
     set_route(frm) {
         if (frm.doc.route) return;
         if (frm.doc.title && frm.doc.blog_category) {
-            frm.call("make_route").then((r) => {
+            frm.call("make_route").then(r => {
                 frm.set_value("route", r.message);
             });
         }
@@ -37,7 +37,7 @@ frappe.ui.form.on("Blog Post", {
             frm.set_value("published", !frm.doc.published);
             frm.save();
         });
-    },
+    }
 });
 
 function generate_google_search_preview(frm) {

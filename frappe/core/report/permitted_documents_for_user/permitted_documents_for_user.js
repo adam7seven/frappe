@@ -8,7 +8,7 @@ frappe.query_reports["Permitted Documents For User"] = {
             label: __("User"),
             fieldtype: "Link",
             options: "User",
-            reqd: 1,
+            reqd: 1
         },
         {
             fieldname: "doctype",
@@ -20,15 +20,15 @@ frappe.query_reports["Permitted Documents For User"] = {
                 return {
                     query: "frappe.core.report.permitted_documents_for_user.permitted_documents_for_user.query_doctypes",
                     filters: {
-                        user: frappe.query_report.get_filter_value("user"),
-                    },
+                        user: frappe.query_report.get_filter_value("user")
+                    }
                 };
-            },
+            }
         },
         {
             fieldname: "show_permissions",
             label: __("Show Permissions"),
-            fieldtype: "Check",
-        },
-    ],
+            fieldtype: "Check"
+        }
+    ]
 };

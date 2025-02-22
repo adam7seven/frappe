@@ -7,8 +7,8 @@ frappe.ui.form.on("Portal Settings", {
             return {
                 filters: {
                     desk_access: 0,
-                    disabled: 0,
-                },
+                    disabled: 0
+                }
             };
         };
     },
@@ -21,5 +21,5 @@ frappe.ui.form.on("Portal Settings", {
                 frm.call("reset");
             });
         });
-    },
+    }
 });

@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Connected App", {
-    refresh: (frm) => {
+    refresh: frm => {
         frm.add_custom_button(__("Get OpenID Configuration"), async () => {
             if (!frm.doc.openid_configuration) {
                 frappe.msgprint(__("Please enter OpenID Configuration URL"));
@@ -28,11 +28,11 @@ frappe.ui.form.on("Connected App", {
                     doc: frm.doc,
                     callback: function (r) {
                         window.open(r.message, "_blank");
-                    },
+                    }
                 });
             });
         }
 
         frm.toggle_display("sb_client_credentials_section", !frm.is_new());
-    },
+    }
 });

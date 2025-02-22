@@ -16,7 +16,7 @@ frappe.ui.form.Sidebar = class {
         var sidebar_content = frappe.render_template("form_sidebar", {
             doctype: this.frm.doctype,
             frm: this.frm,
-            can_write: frappe.model.can_write(this.frm.doctype, this.frm.docid),
+            can_write: frappe.model.can_write(this.frm.doctype, this.frm.docid)
         });
 
         this.sidebar = $('<div class="form-sidebar overlay-sidebar hidden-xs hidden-sm"></div>')
@@ -80,10 +80,8 @@ frappe.ui.form.Sidebar = class {
 
             if (this.frm.doc.route && cint(frappe.boot.website_tracking_enabled)) {
                 let route = this.frm.doc.route;
-                frappe.utils.get_page_view_count(route).then((res) => {
-                    this.sidebar
-                        .find(".pageview-count")
-                        .html(__("{0} Web page views", [String(res.message).bold()]));
+                frappe.utils.get_page_view_count(route).then(res => {
+                    this.sidebar.find(".pageview-count").html(__("{0} Web page views", [String(res.message).bold()]));
                 });
             }
 
@@ -93,10 +91,10 @@ frappe.ui.form.Sidebar = class {
                     get_user_message(
                         this.frm.doc.modified_by,
                         __("You last edited this", null),
-                        __("{0} last edited this", [get_user_link(this.frm.doc.modified_by)]),
+                        __("{0} last edited this", [get_user_link(this.frm.doc.modified_by)])
                     ) +
                         " · " +
-                        comment_when(this.frm.doc.modified),
+                        comment_when(this.frm.doc.modified)
                 );
             this.sidebar
                 .find(".created-by")
@@ -104,10 +102,10 @@ frappe.ui.form.Sidebar = class {
                     get_user_message(
                         this.frm.doc.owner,
                         __("You created this", null),
-                        __("{0} created this", [get_user_link(this.frm.doc.owner)]),
+                        __("{0} created this", [get_user_link(this.frm.doc.owner)])
                     ) +
                         " · " +
-                        comment_when(this.frm.doc.creation),
+                        comment_when(this.frm.doc.creation)
                 );
 
             this.refresh_like();
@@ -125,18 +123,16 @@ frappe.ui.form.Sidebar = class {
                 args: {
                     doctype: "Auto Repeat",
                     filters: {
-                        id: this.frm.doc.auto_repeat,
+                        id: this.frm.doc.auto_repeat
                     },
-                    fieldname: ["frequency"],
+                    fieldname: ["frequency"]
                 },
                 callback: function (res) {
-                    me.sidebar
-                        .find(".auto-repeat-status")
-                        .html(__("Repeats {0}", [__(res.message.frequency)]));
+                    me.sidebar.find(".auto-repeat-status").html(__("Repeats {0}", [__(res.message.frequency)]));
                     me.sidebar.find(".auto-repeat-status").on("click", function () {
                         frappe.set_route("Form", "Auto Repeat", me.frm.doc.auto_repeat);
                     });
-                },
+                }
             });
         }
     }
@@ -155,7 +151,7 @@ frappe.ui.form.Sidebar = class {
             frm: this.frm,
             on_change: function (user_tags) {
                 this.frm.tags && this.frm.tags.refresh(user_tags);
-            },
+            }
         });
     }
 
@@ -163,32 +159,28 @@ frappe.ui.form.Sidebar = class {
         var me = this;
         this.frm.attachments = new frappe.ui.form.Attachments({
             parent: me.sidebar.find(".form-attachments"),
-            frm: me.frm,
+            frm: me.frm
         });
     }
 
     make_assignments() {
         this.frm.assign_to = new frappe.ui.form.AssignTo({
             parent: this.sidebar.find(".form-assignments"),
-            frm: this.frm,
+            frm: this.frm
         });
     }
 
     make_shared() {
         this.frm.shared = new frappe.ui.form.Share({
             frm: this.frm,
-            parent: this.sidebar.find(".form-shared"),
+            parent: this.sidebar.find(".form-shared")
         });
     }
 
     add_user_action(label, click) {
         return $("<a>")
             .html(label)
-            .appendTo(
-                $('<li class="user-action-row">').appendTo(
-                    this.user_actions.removeClass("hidden"),
-                ),
-            )
+            .appendTo($('<li class="user-action-row">').appendTo(this.user_actions.removeClass("hidden")))
             .on("click", click);
     }
 
@@ -213,15 +205,10 @@ frappe.ui.form.Sidebar = class {
                 .call("frappe.desk.form.document_follow.update_follow", {
                     doctype: this.frm.doctype,
                     doc_id: this.frm.doc.id,
-                    following: !is_followed,
+                    following: !is_followed
                 })
                 .then(() => {
-                    frappe.model.set_docinfo(
-                        this.frm.doctype,
-                        this.frm.doc.id,
-                        "is_document_followed",
-                        !is_followed,
-                    );
+                    frappe.model.set_docinfo(this.frm.doctype, this.frm.doc.id, "is_document_followed", !is_followed);
                     this.refresh_follow(!is_followed);
                 });
         });
@@ -262,7 +249,7 @@ frappe.ui.form.Sidebar = class {
         if (frappe.boot.energy_points_enabled && !this.frm.is_new()) {
             this.frm.reviews = new frappe.ui.form.Review({
                 parent: review_wrapper,
-                frm: this.frm,
+                frm: this.frm
             });
         } else {
             review_wrapper.remove();
@@ -274,15 +261,15 @@ frappe.ui.form.Sidebar = class {
             method: "frappe.desk.form.load.get_docinfo",
             args: {
                 doctype: this.frm.doctype,
-                id: this.frm.docid,
+                id: this.frm.docid
             },
-            callback: (r) => {
+            callback: r => {
                 // docinfo will be synced
                 if (callback) callback(r.docinfo);
                 this.frm.timeline && this.frm.timeline.refresh();
                 this.frm.assign_to.refresh();
                 this.frm.attachments.refresh();
-            },
+            }
         });
     }
 };

@@ -1,14 +1,7 @@
 // common file between desk and website
 import md5 from "md5";
 
-frappe.avatar = function (
-    user,
-    css_class,
-    title,
-    image_url = null,
-    remove_color = false,
-    filterable = false,
-) {
+frappe.avatar = function (user, css_class, title, image_url = null, remove_color = false, filterable = false) {
     let user_info;
     if (user) {
         // desk
@@ -20,7 +13,7 @@ frappe.avatar = function (
             image: image_url === null ? frappe.get_cookie("user_image") : image_url,
             fullname: full_name,
             abbr: frappe.get_abbr(full_name),
-            color: frappe.get_palette(full_name),
+            color: frappe.get_palette(full_name)
         };
     }
 
@@ -34,13 +27,7 @@ frappe.avatar = function (
         data_attr = `data-filter="_assign,like,%${user}%"`;
     }
 
-    return frappe.get_avatar(
-        css_class,
-        title,
-        image_url || user_info.image,
-        remove_color,
-        data_attr,
-    );
+    return frappe.get_avatar(css_class, title, image_url || user_info.image, remove_color, data_attr);
 };
 
 frappe.get_avatar = function (css_class, title, image_url = null, remove_color, data_attributes) {
@@ -87,32 +74,16 @@ frappe.avatar_group = function (users, limit = 4, options = {}) {
     const css_class = options.css_class || "";
 
     let html = display_users
-        .map((user) =>
-            frappe.avatar(
-                user,
-                "avatar-small " + css_class,
-                null,
-                null,
-                false,
-                options.filterable,
-            ),
-        )
+        .map(user => frappe.avatar(user, "avatar-small " + css_class, null, null, false, options.filterable))
         .join("");
     if (extra_users.length === 1) {
-        html += frappe.avatar(
-            extra_users[0],
-            "avatar-small " + css_class,
-            null,
-            null,
-            false,
-            options.filterable,
-        );
+        html += frappe.avatar(extra_users[0], "avatar-small " + css_class, null, null, false, options.filterable);
     } else if (extra_users.length > 1) {
         html = `
 			${html}
 			<span class="avatar avatar-small ${css_class}">
 				<div class="avatar-frame standard-image avatar-extra-count"
-					title="${extra_users.map((u) => frappe.user_info(u).fullname).join(", ")}">
+					title="${extra_users.map(u => frappe.user_info(u).fullname).join(", ")}">
 					+${extra_users.length}
 				</div>
 			</span>
@@ -159,7 +130,7 @@ frappe.palette = [
     ["--red-avatar-bg", "--red-avatar-color"],
     ["--yellow-avatar-bg", "--yellow-avatar-color"],
     ["--purple-avatar-bg", "--purple-avatar-color"],
-    ["--gray-avatar-bg", "--gray-avatar-color0"],
+    ["--gray-avatar-bg", "--gray-avatar-color0"]
 ];
 
 frappe.get_palette = function (txt) {
@@ -190,8 +161,7 @@ frappe.get_gravatar = function (email_id, size = 0) {
     var param = size ? "s=" + size : "d=retro";
     if (!frappe.gravatars[email_id]) {
         // TODO: check if gravatar exists
-        frappe.gravatars[email_id] =
-            "https://secure.gravatar.com/avatar/" + md5(email_id) + "?" + param;
+        frappe.gravatars[email_id] = "https://secure.gravatar.com/avatar/" + md5(email_id) + "?" + param;
     }
     return frappe.gravatars[email_id];
 };
@@ -267,7 +237,7 @@ frappe.get_cookies = function getCookies() {
         });
     } else {
         c.match(
-            /(?:^|\s+)([!#$%&'*+\-.0-9A-Z^`a-z|~]+)=([!#$%&'*+\-.0-9A-Z^`a-z|~]*|"(?:[\x20-\x7E\x80\xFF]|\\[\x00-\x7F])*")(?=\s*[,;]|$)/g,
+            /(?:^|\s+)([!#$%&'*+\-.0-9A-Z^`a-z|~]+)=([!#$%&'*+\-.0-9A-Z^`a-z|~]*|"(?:[\x20-\x7E\x80\xFF]|\\[\x00-\x7F])*")(?=\s*[,;]|$)/g
         ).map(function ($0, $1) {
             var name = $0,
                 value = $1.charAt(0) === '"' ? $1.substr(1, -1).replace(/\\(.)/g, "$1") : $1;
@@ -289,14 +259,14 @@ frappe.utils.xss_sanitise = function (string, options) {
     // Reference - https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet
     let sanitised = string; // un-sanitised string.
     const DEFAULT_OPTIONS = {
-        strategies: ["html", "js"], // use all strategies.
+        strategies: ["html", "js"] // use all strategies.
     };
     const HTML_ESCAPE_MAP = {
         "<": "&lt;",
         ">": "&gt;",
         '"': "&quot;",
         "'": "&#x27;",
-        "/": "&#x2F;",
+        "/": "&#x2F;"
     };
     const REGEX_SCRIPT = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi; // used in jQuery 1.7.2 src/ajax.js Line 14
     const REGEX_ALERT = /confirm\(.*\)|alert\(.*\)|prompt\(.*\)/gi; // captures alert, confirm, prompt
@@ -321,13 +291,11 @@ frappe.utils.xss_sanitise = function (string, options) {
     return sanitised;
 };
 
-frappe.utils.sanitise_redirect = (url) => {
+frappe.utils.sanitise_redirect = url => {
     const is_external = (() => {
-        return (url) => {
+        return url => {
             function domain(url) {
-                let base_domain = /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:/\n?]+)/gim.exec(
-                    url,
-                );
+                let base_domain = /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:/\n?]+)/gim.exec(url);
                 return base_domain == null ? "" : base_domain[1];
             }
 
@@ -346,7 +314,7 @@ frappe.utils.sanitise_redirect = (url) => {
     /*
      * Strips out url containing the text `javascript` with or without any HTML Entities in it
      **/
-    const sanitise_javascript = (url) => {
+    const sanitise_javascript = url => {
         /*
          * Written below split into parts, but actual is in one line regardless of whitespaces
          * /
@@ -372,22 +340,17 @@ frappe.utils.sanitise_redirect = (url) => {
          * /gi
          * */
         const REGEX_ESC_UNIT = /\s*(&#x.{1,7})?/;
-        const REGEX_SCRIPT = new RegExp(
-            Array.from("javascript").join(REGEX_ESC_UNIT.source),
-            "gi",
-        );
+        const REGEX_SCRIPT = new RegExp(Array.from("javascript").join(REGEX_ESC_UNIT.source), "gi");
 
         return url.replace(REGEX_SCRIPT, "");
     };
 
     url = frappe.utils.strip_url(url);
 
-    return is_external(url)
-        ? ""
-        : sanitise_javascript(frappe.utils.xss_sanitise(url, { strategies: ["js"] }));
+    return is_external(url) ? "" : sanitise_javascript(frappe.utils.xss_sanitise(url, { strategies: ["js"] }));
 };
 
-frappe.utils.strip_url = (url) => {
+frappe.utils.strip_url = url => {
     // strips invalid characters from the beginning of the URL
     // in our case, the url can start with either a protocol, //, or even #
     // so anything except those characters can be considered invalid
@@ -407,21 +370,21 @@ frappe.utils.new_auto_repeat_prompt = function (frm) {
                 { label: __("Monthly"), value: "Monthly" },
                 { label: __("Quarterly"), value: "Quarterly" },
                 { label: __("Half-yearly"), value: "Half-yearly" },
-                { label: __("Yearly"), value: "Yearly" },
-            ],
+                { label: __("Yearly"), value: "Yearly" }
+            ]
         },
         {
             fieldname: "start_date",
             fieldtype: "Date",
             label: __("Start Date"),
             reqd: 1,
-            default: frappe.datetime.nowdate(),
+            default: frappe.datetime.nowdate()
         },
         {
             fieldname: "end_date",
             fieldtype: "Date",
-            label: __("End Date"),
-        },
+            label: __("End Date")
+        }
     ];
     frappe.prompt(
         fields,
@@ -433,26 +396,26 @@ frappe.utils.new_auto_repeat_prompt = function (frm) {
                     docid: frm.doc.id,
                     frequency: values["frequency"],
                     start_date: values["start_date"],
-                    end_date: values["end_date"],
+                    end_date: values["end_date"]
                 },
                 callback: function (r) {
                     if (r.message) {
                         frappe.show_alert({
                             message: __("Auto Repeat created for this document"),
-                            indicator: "green",
+                            indicator: "green"
                         });
                         frm.reload_doc();
                     }
-                },
+                }
             });
         },
         __("Auto Repeat"),
-        __("Save"),
+        __("Save")
     );
 };
 
 frappe.utils.get_page_view_count = function (route) {
     return frappe.call("frappe.website.doctype.web_page_view.web_page_view.get_page_view_count", {
-        path: route,
+        path: route
     });
 };

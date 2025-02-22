@@ -17,28 +17,24 @@ frappe.notification = {
 
                 return {
                     value: select_value,
-                    label: df.fieldname + " (" + __(df.label, null, df.parent) + ")",
+                    label: df.fieldname + " (" + __(df.label, null, df.parent) + ")"
                 };
             };
 
             let get_date_change_options = function () {
                 let date_options = $.map(fields, function (d) {
-                    return d.fieldtype == "Date" || d.fieldtype == "Datetime"
-                        ? get_select_options(d)
-                        : null;
+                    return d.fieldtype == "Date" || d.fieldtype == "Datetime" ? get_select_options(d) : null;
                 });
                 // append creation and modified date to Date Change field
                 return date_options.concat([
                     { value: "creation", label: `creation (${__("Created On")})` },
-                    { value: "modified", label: `modified (${__("Last Modified Date")})` },
+                    { value: "modified", label: `modified (${__("Last Modified Date")})` }
                 ]);
             };
 
             let fields = frappe.get_doc("DocType", frm.doc.document_type).fields;
             let options = $.map(fields, function (d) {
-                return frappe.model.no_value_type.includes(d.fieldtype)
-                    ? null
-                    : get_select_options(d);
+                return frappe.model.no_value_type.includes(d.fieldtype) ? null : get_select_options(d);
             });
 
             // set value changed options
@@ -55,15 +51,13 @@ frappe.notification = {
                     if (frappe.model.table_fields.includes(d.fieldtype)) {
                         let child_fields = frappe.get_doc("DocType", d.options).fields;
                         return $.map(child_fields, function (df) {
-                            return df.options == "Email" ||
-                                (df.options == "User" && df.fieldtype == "Link")
+                            return df.options == "Email" || (df.options == "User" && df.fieldtype == "Link")
                                 ? get_select_options(df, d.fieldname)
                                 : null;
                         });
                         // Add User and Email fields from parent into select dropdown
                     } else {
-                        return d.options == "Email" ||
-                            (d.options == "User" && d.fieldtype == "Link")
+                        return d.options == "Email" || (d.options == "User" && d.fieldtype == "Link")
                             ? get_select_options(d)
                             : null;
                     }
@@ -78,7 +72,7 @@ frappe.notification = {
             frm.fields_dict.recipients.grid.update_docfield_property(
                 "receiver_by_document_field",
                 "options",
-                [""].concat(["owner"]).concat(receiver_fields),
+                [""].concat(["owner"]).concat(receiver_fields)
             );
         });
     },
@@ -125,7 +119,7 @@ Last comment: {{ comments[-1].comment }} by {{ comments[-1].by }}
         if (template) {
             frm.set_df_property("message_examples", "options", template);
         }
-    },
+    }
 };
 
 frappe.ui.form.on("Notification", {
@@ -135,15 +129,15 @@ frappe.ui.form.on("Notification", {
 
             return {
                 filters: {
-                    istable: 0,
-                },
+                    istable: 0
+                }
             };
         });
         frm.set_query("print_format", function () {
             return {
                 filters: {
-                    doc_type: frm.doc.document_type,
-                },
+                    doc_type: frm.doc.document_type
+                }
             };
         });
     },
@@ -155,8 +149,8 @@ frappe.ui.form.on("Notification", {
         frm.set_query("sender", () => {
             return {
                 filters: {
-                    enable_outgoing: 1,
-                },
+                    enable_outgoing: 1
+                }
             };
         });
         frm.get_field("is_standard").toggle(frappe.boot.developer_mode);
@@ -176,7 +170,7 @@ frappe.ui.form.on("Notification", {
             frappe.call({
                 method: "frappe.email.doctype.notification.notification.get_documents_for_today",
                 args: {
-                    notification: frm.doc.id,
+                    notification: frm.doc.id
                 },
                 callback: function (r) {
                     if (r.message && r.message.length > 0) {
@@ -184,7 +178,7 @@ frappe.ui.form.on("Notification", {
                     } else {
                         frappe.msgprint(__("No alerts for today"));
                     }
-                },
+                }
             });
         });
     },
@@ -196,10 +190,10 @@ frappe.ui.form.on("Notification", {
             frm.set_df_property(
                 "channel",
                 "description",
-                `To use SMS Channel, initialize <a href="/app/sms-settings">SMS Settings</a>.`,
+                `To use SMS Channel, initialize <a href="/app/sms-settings">SMS Settings</a>.`
             );
         } else {
             frm.set_df_property("channel", "description", ` `);
         }
-    },
+    }
 });

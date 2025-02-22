@@ -2,7 +2,7 @@
 // MIT License. See license.txt
 
 frappe.ui.form.on("Website Slideshow", {
-    refresh: (frm) => {
+    refresh: frm => {
         let intro = frm.doc.__islocal
             ? __("First set the id and save the record.")
             : __("Attach files / urls and add in table.");
@@ -19,15 +19,15 @@ frappe.ui.form.on("Website Slideshow", {
                         fieldtype: "Link",
                         fieldname: "reference_doctype",
                         options: "DocType",
-                        reqd: 1,
+                        reqd: 1
                     },
                     {
                         label: __("ID"),
                         fieldtype: "Dynamic Link",
                         fieldname: "reference_id",
                         options: "reference_doctype",
-                        reqd: 1,
-                    },
+                        reqd: 1
+                    }
                 ],
                 primary_action_label: __("Add to table"),
                 primary_action: ({ reference_doctype, reference_id }) => {
@@ -36,24 +36,24 @@ frappe.ui.form.on("Website Slideshow", {
                             fields: ["file_url"],
                             filters: {
                                 attached_to_doctype: reference_doctype,
-                                attached_to_id: reference_id,
-                            },
+                                attached_to_id: reference_id
+                            }
                         })
-                        .then((images) => {
+                        .then(images => {
                             frm.doc.slideshow_items = frm.doc.slideshow_items || [];
-                            images.forEach((image) => {
+                            images.forEach(image => {
                                 frm.doc.slideshow_items.push({
-                                    image: image.file_url,
+                                    image: image.file_url
                                 });
                             });
 
                             frm.refresh_field("slideshow_items");
                             d.hide();
                         });
-                },
+                }
             });
 
             d.show();
         });
-    },
+    }
 });

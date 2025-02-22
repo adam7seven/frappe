@@ -46,11 +46,11 @@ export default class GridPagination {
             this.go_to_page(this.total_pages);
         });
 
-        this.$page_number.on("keyup", (e) => {
+        this.$page_number.on("keyup", e => {
             e.currentTarget.style.width = (e.currentTarget.value.length + 1) * 8 + "px";
         });
 
-        this.$page_number.on("keydown", (e) => {
+        this.$page_number.on("keydown", e => {
             e = e ? e : window.event;
             var charCode = e.which ? e.which : e.keyCode;
             let arrow = { up: 38, down: 40 };
@@ -65,17 +65,13 @@ export default class GridPagination {
             }
 
             // only allow numbers from 0-9 and up, down, left, right arrow keys
-            if (
-                charCode > 31 &&
-                (charCode < 48 || charCode > 57) &&
-                ![37, 38, 39, 40].includes(charCode)
-            ) {
+            if (charCode > 31 && (charCode < 48 || charCode > 57) && ![37, 38, 39, 40].includes(charCode)) {
                 return false;
             }
             return true;
         });
 
-        this.$page_number.on("focusout", (e) => {
+        this.$page_number.on("focusout", e => {
             if (this.page_index == e.currentTarget.value) return;
             this.page_index = e.currentTarget.value;
 

@@ -37,14 +37,14 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
         return [
             {
                 fieldtype: "HTML",
-                fieldname: "results_area",
+                fieldname: "results_area"
             },
             {
                 fieldtype: "Button",
                 fieldname: "more_btn",
                 label: __("More"),
-                click: show_next_page.bind(this),
-            },
+                click: show_next_page.bind(this)
+            }
         ];
     }
 
@@ -70,7 +70,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
                 fieldname: "more_child_btn",
                 hidden: 1,
                 label: __("More"),
-                click: show_more_child_results.bind(this),
+                click: show_more_child_results.bind(this)
             });
         }
         return fields;
@@ -89,18 +89,15 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
                 let filters_data = this.get_custom_filters();
                 const data_values = cur_dialog.get_values(); // to pass values of data fields
                 const filtered_children = this.get_selected_child_names();
-                const selected_documents = [
-                    ...this.get_checked_values(),
-                    ...this.get_parent_id_of_selected_children(),
-                ];
+                const selected_documents = [...this.get_checked_values(), ...this.get_parent_id_of_selected_children()];
                 this.action(selected_documents, {
                     ...this.args,
                     ...data_values,
                     ...filters_data,
-                    filtered_children,
+                    filtered_children
                 });
             },
-            secondary_action: this.make_new_document.bind(this),
+            secondary_action: this.make_new_document.bind(this)
         });
 
         if (this.add_filters_group) {
@@ -128,21 +125,18 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
         frappe.route_options = {};
         if (Array.isArray(this.setters)) {
             for (let df of this.setters) {
-                frappe.route_options[df.fieldname] =
-                    this.dialog.fields_dict[df.fieldname].get_value() || undefined;
+                frappe.route_options[df.fieldname] = this.dialog.fields_dict[df.fieldname].get_value() || undefined;
             }
         } else {
-            Object.keys(this.setters).forEach((setter) => {
-                frappe.route_options[setter] =
-                    this.dialog.fields_dict[setter].get_value() || undefined;
+            Object.keys(this.setters).forEach(setter => {
+                frappe.route_options[setter] = this.dialog.fields_dict[setter].get_value() || undefined;
             });
         }
     }
 
     setup_results() {
         this.$parent = $(this.dialog.body);
-        this.$wrapper = this.dialog.fields_dict.results_area.$wrapper
-            .append(`<div class="results my-3"
+        this.$wrapper = this.dialog.fields_dict.results_area.$wrapper.append(`<div class="results my-3"
 			style="border: 1px solid #d1d8dd; border-radius: 3px; height: 300px; overflow: auto;"></div>`);
 
         this.$results = this.$wrapper.find(".results");
@@ -150,7 +144,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
     }
 
     show_child_results() {
-        this.get_child_result().then((r) => {
+        this.get_child_result().then(r => {
             this.child_results = r.message || [];
             this.render_child_datatable();
 
@@ -190,9 +184,9 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 
     get_child_datatable_columns() {
         const parent = this.doctype;
-        return [parent, ...this.child_columns].map((d) => ({
+        return [parent, ...this.child_columns].map(d => ({
             name: frappe.unscrub(d),
-            editable: false,
+            editable: false
         }));
     }
 
@@ -202,9 +196,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
         } else {
             this.dialog.fields_dict.more_child_btn.toggle(false);
         }
-        return this.child_results
-            .slice(0, this.child_page_length)
-            .map((d) => Object.values(d).slice(1)); // slice name field
+        return this.child_results.slice(0, this.child_page_length).map(d => Object.values(d).slice(1)); // slice name field
     }
 
     setup_child_datatable() {
@@ -222,7 +214,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
             checkboxColumn: true,
             cellHeight: 35,
             noDataMessage: __("No Data"),
-            disableReorderColumn: true,
+            disableReorderColumn: true
         });
         this.$child_wrapper.find(".dt-scrollable").css("height", "300px");
     }
@@ -238,8 +230,8 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
             {
                 fieldtype: "Data",
                 label: __("ID"),
-                fieldname: "search_term",
-            },
+                fieldname: "search_term"
+            }
         ];
         columns[1] = [];
         columns[2] = [];
@@ -259,9 +251,8 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
                     label: df_prop.label,
                     fieldname: setter,
                     options: df_prop.options,
-                    read_only:
-                        (this?.read_only_setters && this.read_only_setters.includes(setter)) || 0,
-                    default: this.setters[setter],
+                    read_only: (this?.read_only_setters && this.read_only_setters.includes(setter)) || 0,
+                    default: this.setters[setter]
                 });
             });
         }
@@ -273,15 +264,12 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
         }
 
         if (this.allow_child_item_selection) {
-            this.child_doctype = frappe.meta.get_docfield(
-                this.doctype,
-                this.child_fieldname,
-            ).options;
+            this.child_doctype = frappe.meta.get_docfield(this.doctype, this.child_fieldname).options;
             columns[0].push({
                 fieldtype: "Check",
                 label: __("Select {0}", [__(this.child_doctype)]),
                 fieldname: "allow_child_item_selection",
-                onchange: this.toggle_child_selection.bind(this),
+                onchange: this.toggle_child_selection.bind(this)
             });
         }
 
@@ -291,13 +279,13 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
             ...columns[1],
             { fieldtype: "Column Break" },
             ...columns[2],
-            { fieldtype: "Section Break", fieldname: "primary_filters_sb" },
+            { fieldtype: "Section Break", fieldname: "primary_filters_sb" }
         ];
 
         if (this.add_filters_group) {
             fields.push({
                 fieldtype: "HTML",
-                fieldname: "filter_area",
+                fieldname: "filter_area"
             });
         }
 
@@ -314,7 +302,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
                 } else {
                     this.get_results();
                 }
-            },
+            }
         });
         // 'Apply Filter' breaks since the filers are not in a popover
         // Hence keeping it hidden
@@ -325,7 +313,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
         if (this.add_filters_group && this.filter_group) {
             return this.filter_group.get_filters().reduce((acc, filter) => {
                 return Object.assign(acc, {
-                    [filter[1]]: [filter[2], filter[3]],
+                    [filter[1]]: [filter[2], filter[3]]
                 });
             }, {});
         } else {
@@ -348,7 +336,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
             }
         });
 
-        this.$results.on("click", ".list-item--head :checkbox", (e) => {
+        this.$results.on("click", ".list-item--head :checkbox", e => {
             let checked = $(e.target).is(":checked");
             this.$results.find(".list-item-container .list-row-check").each(function () {
                 $(this).prop("checked", checked);
@@ -383,7 +371,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
                         me.empty_list();
                         me.get_results();
                     }
-                }, 300),
+                }, 300)
             );
         });
     }
@@ -391,18 +379,15 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
     get_parent_id_of_selected_children() {
         if (!this.child_datatable || !this.child_datatable.datamanager.rows.length) return [];
 
-        let parent_ids = this.child_datatable.rowmanager.checkMap.reduce(
-            (parent_ids, checked, index) => {
-                if (checked == 1) {
-                    const parent_id = this.child_results[index].parent;
-                    if (!parent_ids.includes(parent_id)) {
-                        parent_ids.push(parent_id);
-                    }
+        let parent_ids = this.child_datatable.rowmanager.checkMap.reduce((parent_ids, checked, index) => {
+            if (checked == 1) {
+                const parent_id = this.child_results[index].parent;
+                if (!parent_ids.includes(parent_id)) {
+                    parent_ids.push(parent_id);
                 }
-                return parent_ids;
-            },
-            [],
-        );
+            }
+            return parent_ids;
+        }, []);
 
         return parent_ids;
     }
@@ -410,16 +395,13 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
     get_selected_child_ids() {
         if (!this.child_datatable || !this.child_datatable.datamanager.rows.length) return [];
 
-        let checked_ids = this.child_datatable.rowmanager.checkMap.reduce(
-            (checked_ids, checked, index) => {
-                if (checked == 1) {
-                    const child_row_id = this.child_results[index].id;
-                    checked_ids.push(child_row_id);
-                }
-                return checked_ids;
-            },
-            [],
-        );
+        let checked_ids = this.child_datatable.rowmanager.checkMap.reduce((checked_ids, checked, index) => {
+            if (checked == 1) {
+                const child_row_id = this.child_results[index].id;
+                checked_ids.push(child_row_id);
+            }
+            return checked_ids;
+        }, []);
 
         return checked_ids;
     }
@@ -439,13 +421,13 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
     get_checked_items() {
         // Return checked items with all the column values.
         let checked_values = this.get_checked_values();
-        return this.results.filter((res) => checked_values.includes(res.id));
+        return this.results.filter(res => checked_values.includes(res.id));
     }
 
     get_datatable_columns() {
         if (this.get_query && this.get_query().query && this.columns) return this.columns;
 
-        if (Array.isArray(this.setters)) return ["id", ...this.setters.map((df) => df.fieldname)];
+        if (Array.isArray(this.setters)) return ["id", ...this.setters.map(df => df.fieldname)];
 
         return ["id", ...Object.keys(this.setters)];
     }
@@ -461,15 +443,14 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 				${
                     head
                         ? `<span class="ellipsis text-muted" title="${__(
-                              frappe.model.unscrub(column),
+                              frappe.model.unscrub(column)
                           )}">${__(frappe.model.unscrub(column))}</span>`
                         : column !== "id"
                           ? `<span class="ellipsis result-row" title="${__(
-                                result[column] || "",
+                                result[column] || ""
                             )}">${__(result[column] || "")}</span>`
                           : `<a href="${
-                                "/app/" + frappe.router.slug(me.doctype) + "/" + result[column] ||
-                                ""
+                                "/app/" + frappe.router.slug(me.doctype) + "/" + result[column] || ""
                             }" class="list-id ellipsis" title="${__(result[column] || "")}">
 							${__(result[column] || "")}</a>`
                 }
@@ -478,18 +459,14 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 
         let $row = $(`<div class="list-item">
 			<div class="list-item__content" style="flex: 0 0 10px;">
-				<input type="checkbox" class="list-row-check" data-item-name="${result.id}" ${
-                    result.checked ? "checked" : ""
-                }>
+				<input type="checkbox" class="list-row-check" data-item-name="${result.id}" ${result.checked ? "checked" : ""}>
 			</div>
 			${contents}
 		</div>`);
 
         head
             ? $row.addClass("list-item--head")
-            : ($row = $(
-                  `<div class="list-item-container" data-item-name="${result.id}"></div>`,
-              ).append($row));
+            : ($row = $(`<div class="list-item-container" data-item-name="${result.id}"></div>`).append($row));
 
         return $row;
     }
@@ -511,8 +488,8 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
         let checked = this.get_checked_values();
 
         results
-            .filter((result) => !checked.includes(result.id))
-            .forEach((result) => {
+            .filter(result => !checked.includes(result.id))
+            .forEach(result => {
                 me.$results.append(me.make_list_row(result));
             });
 
@@ -526,10 +503,10 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
     empty_list() {
         // Store all checked items
         let checked = this.results
-            .filter((result) => this.selected_fields.has(result.id))
-            .map((item) => ({
+            .filter(result => this.selected_fields.has(result.id))
+            .map(item => ({
                 ...item,
-                checked: true,
+                checked: true
             }));
 
         // Remove **all** items
@@ -546,8 +523,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 
         if ($.isArray(this.setters)) {
             for (let df of this.setters) {
-                filters[df.fieldname] =
-                    me.dialog.fields_dict[df.fieldname].get_value() || undefined;
+                filters[df.fieldname] = me.dialog.fields_dict[df.fieldname].get_value() || undefined;
                 me.args[df.fieldname] = filters[df.fieldname];
                 filter_fields.push(df.fieldname);
             }
@@ -580,7 +556,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
             filter_fields: filter_fields,
             page_length: this.page_length + 5,
             query: this.get_query ? this.get_query().query : "",
-            as_dict: 1,
+            as_dict: 1
         };
     }
 
@@ -589,7 +565,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
             type: "GET",
             method: "frappe.desk.search.search_widget",
             no_spinner: true,
-            args: args,
+            args: args
         });
         const more = res.message.length && res.message.length > this.page_length ? 1 : 0;
 
@@ -606,7 +582,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 
         this.results = [];
         if (results.length) {
-            results.forEach((result) => {
+            results.forEach(result => {
                 result.checked = 0;
                 this.results.push(result);
             });
@@ -621,7 +597,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 
         let parent_ids = [];
         if (results.length) {
-            parent_ids = results.map((v) => v.id);
+            parent_ids = results.map(v => v.id);
         }
         return parent_ids;
     }
@@ -635,7 +611,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 
     add_custom_child_filters(filters) {
         if (this.add_filters_group && this.filter_group) {
-            this.filter_group.get_filters().forEach((filter) => {
+            this.filter_group.get_filters().forEach(filter => {
                 if (filter[0] == this.child_doctype) {
                     filters.push([filter[1], filter[2], filter[3]]);
                 }
@@ -657,8 +633,8 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
                 fields: ["id", "parent", ...this.child_columns],
                 parent: this.doctype,
                 limit_page_length: this.child_page_length + 5,
-                order_by: "parent",
-            },
+                order_by: "parent"
+            }
         });
     }
 };

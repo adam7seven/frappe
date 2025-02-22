@@ -9,9 +9,9 @@ frappe.require = function (items, callback) {
     if (typeof items === "string") {
         items = [items];
     }
-    items = items.map((item) => frappe.assets.bundled_asset(item));
+    items = items.map(item => frappe.assets.bundled_asset(item));
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
         frappe.assets.execute(items, () => {
             resolve();
             callback && callback();
@@ -28,7 +28,7 @@ class AssetManager {
             },
             css: function (txt) {
                 frappe.dom.set_style(txt);
-            },
+            }
         };
     }
     check() {
@@ -60,17 +60,13 @@ class AssetManager {
     }
 
     clear_local_storage() {
-        ["_last_load", "_version_number", "metadata_version", "page_info", "last_visited"].forEach(
-            (key) => localStorage.removeItem(key),
+        ["_last_load", "_version_number", "metadata_version", "page_info", "last_visited"].forEach(key =>
+            localStorage.removeItem(key)
         );
 
         // clear assets
         for (let key in localStorage) {
-            if (
-                key.startsWith("_page:") ||
-                key.startsWith("_doctype:") ||
-                key.startsWith("preferred_breadcrumbs:")
-            ) {
+            if (key.startsWith("_page:") || key.startsWith("_doctype:") || key.startsWith("preferred_breadcrumbs:")) {
                 localStorage.removeItem(key);
             }
         }
@@ -88,8 +84,7 @@ class AssetManager {
         // this is virtual page load, only get the the source
         let me = this;
 
-        const version_string =
-            frappe.boot.developer_mode || window.dev_server ? Date.now() : window._version_number;
+        const version_string = frappe.boot.developer_mode || window.dev_server ? Date.now() : window._version_number;
 
         let fetched_assets = {};
         async function fetch_item(path) {
@@ -106,7 +101,7 @@ class AssetManager {
         frappe.dom.freeze();
         const fetch_promises = items.map(fetch_item);
         Promise.all(fetch_promises).then(() => {
-            items.forEach((path) => {
+            items.forEach(path => {
                 let body = fetched_assets[path];
                 me.eval_assets(path, body);
             });
@@ -138,7 +133,7 @@ function is_reload() {
     try {
         return window.performance
             ?.getEntriesByType("navigation")
-            .map((nav) => nav.type)
+            .map(nav => nav.type)
             .includes("reload");
     } catch (e) {
         // Safari probably

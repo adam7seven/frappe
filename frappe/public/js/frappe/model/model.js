@@ -43,7 +43,7 @@ $.extend(frappe.model, {
         "Table MultiSelect",
         "Text",
         "Text Editor",
-        "Time",
+        "Time"
     ],
 
     no_value_type: [
@@ -56,7 +56,7 @@ $.extend(frappe.model, {
         "Button",
         "Image",
         "Fold",
-        "Heading",
+        "Heading"
     ],
 
     layout_fields: ["Section Break", "Column Break", "Tab Break", "Fold"],
@@ -72,7 +72,7 @@ $.extend(frappe.model, {
         "_assign",
         "_liked_by",
         "docstatus",
-        "idx",
+        "idx"
     ],
 
     child_table_field_list: ["parent", "parenttype", "parentfield"],
@@ -92,7 +92,7 @@ $.extend(frappe.model, {
         "Customize Form Field",
         "Property Setter",
         "Custom Field",
-        "Client Script",
+        "Client Script"
     ],
 
     restricted_fields: [
@@ -105,18 +105,10 @@ $.extend(frappe.model, {
         "parenttype",
         "file_list",
         "flags",
-        "docstatus",
+        "docstatus"
     ],
 
-    html_fieldtypes: [
-        "Text Editor",
-        "Text",
-        "Small Text",
-        "Long Text",
-        "HTML Editor",
-        "Markdown Editor",
-        "Code",
-    ],
+    html_fieldtypes: ["Text Editor", "Text", "Small Text", "Long Text", "HTML Editor", "Markdown Editor", "Code"],
 
     std_fields: [
         { fieldname: "id", fieldtype: "Link", label: __("ID") },
@@ -128,13 +120,13 @@ $.extend(frappe.model, {
             fieldname: "modified_by",
             fieldtype: "Link",
             label: __("Last Updated By"),
-            options: "User",
+            options: "User"
         },
         { fieldname: "_user_tags", fieldtype: "Data", label: __("Tags") },
         { fieldname: "_liked_by", fieldtype: "Data", label: __("Liked By") },
         { fieldname: "_comments", fieldtype: "Text", label: __("Comments") },
         { fieldname: "_assign", fieldtype: "Text", label: __("Assigned To") },
-        { fieldname: "docstatus", fieldtype: "Int", label: __("Document Status") },
+        { fieldname: "docstatus", fieldtype: "Int", label: __("Document Status") }
     ],
 
     numeric_fieldtypes: ["Int", "Float", "Currency", "Percent", "Duration"],
@@ -189,18 +181,13 @@ $.extend(frappe.model, {
     },
 
     is_non_std_field: function (fieldname) {
-        return ![...frappe.model.std_fields_list, ...frappe.model.child_table_field_list].includes(
-            fieldname,
-        );
+        return ![...frappe.model.std_fields_list, ...frappe.model.child_table_field_list].includes(fieldname);
     },
 
     get_std_field: function (fieldname, ignore = false) {
-        var docfield = $.map(
-            [].concat(frappe.model.std_fields).concat(frappe.model.std_fields_table),
-            function (d) {
-                if (d.fieldname == fieldname) return d;
-            },
-        );
+        var docfield = $.map([].concat(frappe.model.std_fields).concat(frappe.model.std_fields_table), function (d) {
+            if (d.fieldname == fieldname) return d;
+        });
         if (!docfield.length) {
             //Standard fields are ignored in case of adding columns as a result of groupby
             if (ignore) {
@@ -248,7 +235,7 @@ $.extend(frappe.model, {
             let cached_docs = frappe.model.get_from_localstorage(doctype);
 
             if (cached_docs) {
-                cached_doc = cached_docs.filter((doc) => doc.id === doctype)[0];
+                cached_doc = cached_docs.filter(doc => doc.id === doctype)[0];
                 if (cached_doc) {
                     cached_timestamp = cached_doc.modified;
                 }
@@ -260,7 +247,7 @@ $.extend(frappe.model, {
                 args: {
                     doctype: doctype,
                     with_parent: 1,
-                    cached_timestamp: cached_timestamp,
+                    cached_timestamp: cached_timestamp
                 },
                 async: async,
                 callback: function (r) {
@@ -281,20 +268,14 @@ $.extend(frappe.model, {
                         frappe.model.user_settings[doctype].updated_on = moment().toString();
                     }
                     callback && callback(r);
-                },
+                }
             });
         }
     },
 
     init_doctype: function (doctype) {
         var meta = locals.DocType[doctype];
-        for (const asset_key of [
-            "__list_js",
-            "__custom_list_js",
-            "__calendar_js",
-            "__map_js",
-            "__tree_js",
-        ]) {
+        for (const asset_key of ["__list_js", "__custom_list_js", "__calendar_js", "__map_js", "__tree_js"]) {
             if (meta[asset_key]) {
                 new Function(meta[asset_key])();
             }
@@ -306,7 +287,7 @@ $.extend(frappe.model, {
     },
 
     with_doc: function (doctype, id, callback) {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             if (!id) id = doctype; // single type
             if (locals[doctype] && locals[doctype][id] && frappe.model.get_docinfo(doctype, id)) {
                 callback && callback(id);
@@ -317,12 +298,12 @@ $.extend(frappe.model, {
                     type: "GET",
                     args: {
                         doctype: doctype,
-                        id: id,
+                        id: id
                     },
                     callback: function (r) {
                         callback && callback(id, r);
                         resolve(frappe.get_doc(doctype, id));
-                    },
+                    }
                 });
             }
         });
@@ -501,20 +482,16 @@ $.extend(frappe.model, {
                 args: {
                     doctype: doctype,
                     fieldname: fieldname,
-                    filters: filters,
+                    filters: filters
                 },
                 callback: function (r) {
                     if (!r.exc) {
                         callback(r.message);
                     }
-                },
+                }
             });
         } else {
-            if (
-                ["number", "string"].includes(typeof filters) &&
-                locals[doctype] &&
-                locals[doctype][filters]
-            ) {
+            if (["number", "string"].includes(typeof filters) && locals[doctype] && locals[doctype][filters]) {
                 return locals[doctype][filters][fieldname];
             } else {
                 var l = frappe.get_list(doctype, filters);
@@ -704,7 +681,7 @@ $.extend(frappe.model, {
                 method: "frappe.client.delete",
                 args: {
                     doctype: doctype,
-                    id: docid,
+                    id: docid
                 },
                 freeze: true,
                 freeze_message: __("Deleting {0}...", [title]),
@@ -714,7 +691,7 @@ $.extend(frappe.model, {
                         frappe.model.clear_doc(doctype, docid);
                         if (callback) callback(r, rt);
                     }
-                },
+                }
             });
         });
     },
@@ -732,10 +709,10 @@ $.extend(frappe.model, {
                     fieldname: "new_id",
                     fieldtype: "Data",
                     reqd: 1,
-                    default: docid,
+                    default: docid
                 },
-                { label: merge_label, fieldtype: "Check", fieldname: "merge" },
-            ],
+                { label: merge_label, fieldtype: "Check", fieldname: "merge" }
+            ]
         });
 
         d.set_primary_action(__("Reid"), function () {
@@ -750,18 +727,17 @@ $.extend(frappe.model, {
                     doctype: doctype,
                     old: docid,
                     new: args.new_id,
-                    merge: args.merge,
+                    merge: args.merge
                 },
                 btn: d.get_primary_btn(),
                 callback: function (r, rt) {
                     if (!r.exc) {
                         $(document).trigger("reid", [doctype, docid, r.message || args.new_id]);
-                        if (locals[doctype] && locals[doctype][docid])
-                            delete locals[doctype][docid];
+                        if (locals[doctype] && locals[doctype][docid]) delete locals[doctype][docid];
                         d.hide();
                         if (callback) callback(r.message);
                     }
-                },
+                }
             });
         });
         d.show();
@@ -773,7 +749,7 @@ $.extend(frappe.model, {
         }
         if (!fieldnames) {
             fieldnames = frappe.meta.get_fieldnames(doc.doctype, doc.parent, {
-                fieldtype: ["in", ["Currency", "Float"]],
+                fieldtype: ["in", ["Currency", "Float"]]
             });
         }
         for (var i = 0, j = fieldnames.length; i < j; i++) {
@@ -785,9 +761,7 @@ $.extend(frappe.model, {
     validate_missing: function (doc, fieldname) {
         if (!doc[fieldname]) {
             frappe.throw(
-                __("Please specify") +
-                    ": " +
-                    __(frappe.meta.get_label(doc.doctype, fieldname, doc.parent || doc.id)),
+                __("Please specify") + ": " + __(frappe.meta.get_label(doc.doctype, fieldname, doc.parent || doc.id))
             );
         }
     },
@@ -841,18 +815,16 @@ $.extend(frappe.model, {
             }
 
             if (
-                (frm.doc.fields?.find((i) => i.fieldname === "latitude") &&
-                    frm.doc.fields?.find((i) => i.fieldname === "longitude")) ||
-                frm.doc.fields?.find(
-                    (i) => i.fieldname === "location" && i.fieldtype == "Geolocation",
-                )
+                (frm.doc.fields?.find(i => i.fieldname === "latitude") &&
+                    frm.doc.fields?.find(i => i.fieldname === "longitude")) ||
+                frm.doc.fields?.find(i => i.fieldname === "location" && i.fieldtype == "Geolocation")
             ) {
                 default_views.push("Map");
             }
 
             frm.set_df_property("default_view", "options", default_views);
         });
-    },
+    }
 });
 
 // legacy

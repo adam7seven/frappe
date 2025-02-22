@@ -18,8 +18,7 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
                 this.sort_by = this.calendar_settings.order_by;
                 this.sort_order = "asc";
             } else {
-                this.sort_by =
-                    this.view_user_settings.sort_by || this.calendar_settings.field_map.start;
+                this.sort_by = this.view_user_settings.sort_by || this.calendar_settings.field_map.start;
                 this.sort_order = this.view_user_settings.sort_order || "asc";
             }
         });
@@ -63,7 +62,7 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
                 id: item[field_map.id || "id"],
                 doctype: me.doctype,
                 progress: progress,
-                dependencies: item.depends_on_tasks || "",
+                dependencies: item.depends_on_tasks || ""
             };
 
             if (item.color && frappe.ui.color.validate_hex(item.color)) {
@@ -104,14 +103,14 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
             resize_handle_offset: 4,
             view_mode: gantt_view_mode,
             date_format: "YYYY-MM-DD",
-            on_click: (task) => {
+            on_click: task => {
                 frappe.set_route("Form", task.doctype, task.id);
             },
             on_date_change: (task, start, end) => {
                 if (!me.can_write) return;
                 frappe.db.set_value(task.doctype, task.id, {
                     [field_map.start]: moment(start).format(date_format),
-                    [field_map.end]: moment(end).format(date_format),
+                    [field_map.end]: moment(end).format(date_format)
                 });
             },
             on_progress_change: (task, progress) => {
@@ -126,23 +125,21 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
 
                 if (progress_fieldname) {
                     frappe.db.set_value(task.doctype, task.id, {
-                        [progress_fieldname]: parseInt(progress),
+                        [progress_fieldname]: parseInt(progress)
                     });
                 }
             },
-            on_view_change: (mode) => {
+            on_view_change: mode => {
                 // save view mode
                 me.save_view_user_settings({
-                    gantt_view_mode: mode,
+                    gantt_view_mode: mode
                 });
             },
-            custom_popup_html: (task) => {
+            custom_popup_html: task => {
                 var item = me.get_item(task.id);
 
                 var html = `<div class="title">${task.id}</div>
-					<div class="subtitle">${moment(task._start).format("MMM D")} - ${moment(task._end).format(
-                        "MMM D",
-                    )}</div>`;
+					<div class="subtitle">${moment(task._start).format("MMM D")} - ${moment(task._end).format("MMM D")}</div>`;
 
                 // custom html in doctype settings
                 var custom = me.settings.gantt_custom_popup_html;
@@ -151,7 +148,7 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
                     html = custom(ganttobj, item);
                 }
                 return '<div class="details-container">' + html + "</div>";
-            },
+            }
         });
         this.setup_view_mode_buttons();
         this.set_colors();
@@ -165,15 +162,15 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
         if ($btn_group.length > 0) return;
 
         const view_modes = this.gantt.options.view_modes || [];
-        const active_class = (view_mode) => (this.gantt.view_is(view_mode) ? "btn-info" : "");
+        const active_class = view_mode => (this.gantt.view_is(view_mode) ? "btn-info" : "");
         const html = `<div class="btn-group gantt-view-mode">
 				${view_modes
                     .map(
-                        (value) => `<button type="button"
+                        value => `<button type="button"
 						class="btn btn-default btn-sm btn-view-mode ${active_class(value)}"
 						data-value="${value}">
 						${__(value)}
-					</button>`,
+					</button>`
                     )
                     .join("")}
 			</div>`;
@@ -181,10 +178,9 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
         this.$paging_area.find(".level-left").append(html);
 
         // change view mode asynchronously
-        const change_view_mode = (value) =>
-            setTimeout(() => this.gantt.change_view_mode(value), 0);
+        const change_view_mode = value => setTimeout(() => this.gantt.change_view_mode(value), 0);
 
-        this.$paging_area.on("click", ".btn-view-mode", (e) => {
+        this.$paging_area.on("click", ".btn-view-mode", e => {
             const $btn = $(e.currentTarget);
             this.$paging_area.find(".btn-view-mode").removeClass("btn-info");
             $btn.addClass("btn-info");
@@ -195,12 +191,10 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
     }
 
     set_colors() {
-        const classes = this.tasks
-            .map((t) => t.custom_class)
-            .filter((c) => c && c.startsWith("color-"));
+        const classes = this.tasks.map(t => t.custom_class).filter(c => c && c.startsWith("color-"));
 
         let style = classes
-            .map((c) => {
+            .map(c => {
                 const class_name = c.replace("#", "");
                 const bar_color = "#" + c.substr(6);
                 const progress_color = frappe.ui.color.get_contrast_color(bar_color);
@@ -220,13 +214,13 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
     }
 
     get_item(id) {
-        return this.data.find((item) => item.id === id);
+        return this.data.find(item => item.id === id);
     }
 
     get required_libs() {
         return [
             "assets/frappe/node_modules/frappe-gantt/dist/frappe-gantt.css",
-            "assets/frappe/node_modules/frappe-gantt/dist/frappe-gantt.min.js",
+            "assets/frappe/node_modules/frappe-gantt/dist/frappe-gantt.min.js"
         ];
     }
 };

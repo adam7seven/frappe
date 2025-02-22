@@ -16,7 +16,7 @@ frappe.ready(function () {
             primary_action_label: __("Login"),
             primary_action: () => {
                 window.location.replace("/login?redirect-to=" + window.location.pathname);
-            },
+            }
         });
         login_required.show();
         login_required.set_message(__("You are not permitted to access this page without login."));
@@ -29,14 +29,14 @@ frappe.ready(function () {
             list_columns: web_form_doc.list_columns,
             condition_json: web_form_doc.condition_json,
             settings: {
-                allow_delete: web_form_doc.allow_delete,
-            },
+                allow_delete: web_form_doc.allow_delete
+            }
         });
     }
 
     function show_form() {
         let web_form = new WebForm({
-            parent: $(".web-form-wrapper"),
+            parent: $(".web-form-wrapper")
         });
         let doc = reference_doc || {};
         setup_fields(web_form_doc, doc);
@@ -54,7 +54,7 @@ frappe.ready(function () {
     }
 
     function setup_fields(web_form_doc, doc_data) {
-        web_form_doc.web_form_fields.forEach((df) => {
+        web_form_doc.web_form_fields.forEach(df => {
             df.is_web_form = true;
             df.read_only = df.read_only || (!web_form_doc.is_new && !web_form_doc.in_edit_mode);
             if (df.fieldtype === "Table") {

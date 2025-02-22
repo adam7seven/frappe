@@ -1,11 +1,7 @@
 // Copyright (c) 2020, Frappe Technologies Pvt. Ltd. and Contributors
 // MIT License. See license.txt
 import BaseTimeline from "./base_timeline";
-import {
-    get_version_timeline_content,
-    get_user_link,
-    get_user_message,
-} from "./version_timeline_content_builder";
+import { get_version_timeline_content, get_user_link, get_user_message } from "./version_timeline_content_builder";
 
 class FormTimeline extends BaseTimeline {
     make() {
@@ -23,12 +19,7 @@ class FormTimeline extends BaseTimeline {
 
     setup_timeline_actions() {
         if (frappe.model.can_email(null, this.frm)) {
-            this.add_action_button(
-                __("New Email"),
-                () => this.compose_mail(),
-                "es-line-add",
-                "btn-secondary",
-            );
+            this.add_action_button(__("New Email"), () => this.compose_mail(), "es-line-add", "btn-secondary");
         }
         this.setup_new_event_button();
     }
@@ -40,7 +31,7 @@ class FormTimeline extends BaseTimeline {
                     doc: this.frm.doc,
                     frm: this.frm,
                     recipients: this.get_recipient(),
-                    txt: frappe.markdown(this.frm.comment_box.get_value()),
+                    txt: frappe.markdown(this.frm.comment_box.get_value())
                 };
                 return new frappe.views.InteractionComposer(args);
             };
@@ -74,7 +65,7 @@ class FormTimeline extends BaseTimeline {
 							<span class="slider round"></span>
 						</label>
 					</div>
-				`,
+				`
                 )
                 .find("input[type=checkbox]")
                 .prop("checked", !me.only_communication)
@@ -84,9 +75,7 @@ class FormTimeline extends BaseTimeline {
                     $(this).tab("show");
                 });
         }
-        this.timeline_wrapper
-            .find(".timeline-item.activity-title")
-            .append(this.timeline_actions_wrapper);
+        this.timeline_wrapper.find(".timeline-item.activity-title").append(this.timeline_actions_wrapper);
     }
 
     setup_document_email_link() {
@@ -108,7 +97,7 @@ class FormTimeline extends BaseTimeline {
 			`);
             this.timeline_items_wrapper.before(this.document_email_link_wrapper);
 
-            this.document_email_link_wrapper.find(".document-email-link").on("click", (e) => {
+            this.document_email_link_wrapper.find(".document-email-link").on("click", e => {
                 let text = $(e.target).text();
                 frappe.utils.copy_to_clipboard(text);
             });
@@ -123,10 +112,10 @@ class FormTimeline extends BaseTimeline {
 
     add_web_page_view_count() {
         if (this.frm.doc.route && cint(frappe.boot.website_tracking_enabled)) {
-            frappe.utils.get_page_view_count(this.frm.doc.route).then((res) => {
+            frappe.utils.get_page_view_count(this.frm.doc.route).then(res => {
                 this.add_timeline_item({
                     content: __("{0} Web page views", [res.message]),
-                    hide_timestamp: true,
+                    hide_timestamp: true
                 });
             });
         }
@@ -138,8 +127,8 @@ class FormTimeline extends BaseTimeline {
             content: get_user_message(
                 this.frm.doc.owner,
                 __("You created this"),
-                __("{0} created this", [get_user_link(this.frm.doc.owner)]),
-            ),
+                __("{0} created this", [get_user_link(this.frm.doc.owner)])
+            )
         };
     }
 
@@ -149,8 +138,8 @@ class FormTimeline extends BaseTimeline {
             content: get_user_message(
                 this.frm.doc.modified_by,
                 __("You last edited this"),
-                __("{0} last edited this", [get_user_link(this.frm.doc.modified_by)]),
-            ),
+                __("{0} last edited this", [get_user_link(this.frm.doc.modified_by)])
+            )
         };
     }
 
@@ -176,14 +165,14 @@ class FormTimeline extends BaseTimeline {
 
     get_view_timeline_contents() {
         let view_timeline_contents = [];
-        (this.doc_info.views || []).forEach((view) => {
+        (this.doc_info.views || []).forEach(view => {
             view_timeline_contents.push({
                 creation: view.creation,
                 content: get_user_message(
                     view.owner,
                     __("You viewed this"),
-                    __("{0} viewed this", [get_user_link(view.owner)]),
-                ),
+                    __("{0} viewed this", [get_user_link(view.owner)])
+                )
             });
         });
 
@@ -191,8 +180,7 @@ class FormTimeline extends BaseTimeline {
     }
 
     get_communication_timeline_contents(more_communications, more_automated_messages) {
-        let email_communications =
-            this.get_email_communication_timeline_contents(more_communications);
+        let email_communications = this.get_email_communication_timeline_contents(more_communications);
         let automated_messages = this.get_auto_messages_timeline_contents(more_automated_messages);
         let all_communications = email_communications.concat(automated_messages);
 
@@ -200,7 +188,7 @@ class FormTimeline extends BaseTimeline {
             all_communications.pop();
 
             if (more_communications || more_automated_messages) {
-                all_communications.forEach((message) => {
+                all_communications.forEach(message => {
                     if (message.communication_type == "Automated Message") {
                         this.doc_info.automated_messages.push(message);
                     } else {
@@ -209,12 +197,11 @@ class FormTimeline extends BaseTimeline {
                 });
             }
 
-            let last_communication_time =
-                all_communications[all_communications.length - 1].creation;
+            let last_communication_time = all_communications[all_communications.length - 1].creation;
             let load_more_button = {
                 creation: last_communication_time,
                 content: __("Load More Communications", null, "Form timeline"),
-                name: "load-more",
+                name: "load-more"
             };
             all_communications.push(load_more_button);
         }
@@ -228,10 +215,10 @@ class FormTimeline extends BaseTimeline {
             Email: "mail",
             Phone: "call",
             Meeting: "calendar",
-            Other: "dot-horizontal",
+            Other: "dot-horizontal"
         };
         let items = more_items ? more_items : this.doc_info.communications || [];
-        items.forEach((communication) => {
+        items.forEach(communication => {
             let medium = communication.communication_medium;
             communication_timeline_contents.push({
                 icon: icon_set[medium],
@@ -241,7 +228,7 @@ class FormTimeline extends BaseTimeline {
                 content: this.get_communication_timeline_content(communication),
                 doctype: "Communication",
                 id: `communication-${communication.id}`,
-                name: communication.id,
+                name: communication.id
             });
         });
 
@@ -250,31 +237,27 @@ class FormTimeline extends BaseTimeline {
 
     async get_more_communication_timeline_contents() {
         let more_items = [];
-        let start =
-            this.doc_info.communications.length + this.doc_info.automated_messages.length - 1;
+        let start = this.doc_info.communications.length + this.doc_info.automated_messages.length - 1;
         let response = await frappe.call({
             method: "frappe.desk.form.load.get_communications",
             args: {
                 doctype: this.doc_info.doctype,
                 id: this.doc_info.id,
                 start: start,
-                limit: 21,
-            },
+                limit: 21
+            }
         });
         if (response.message) {
             let email_communications = [];
             let automated_messages = [];
-            response.message.forEach((message) => {
+            response.message.forEach(message => {
                 if (message.communication_type == "Automated Message") {
                     automated_messages.push(message);
                 } else {
                     email_communications.push(message);
                 }
             });
-            more_items = this.get_communication_timeline_contents(
-                email_communications,
-                automated_messages,
-            );
+            more_items = this.get_communication_timeline_contents(email_communications, automated_messages);
         }
         return more_items;
     }
@@ -313,7 +296,7 @@ class FormTimeline extends BaseTimeline {
     get_auto_messages_timeline_contents(more_items) {
         let auto_messages_timeline_contents = [];
         let items = more_items ? more_items : this.doc_info.automated_messages || [];
-        items.forEach((message) => {
+        items.forEach(message => {
             auto_messages_timeline_contents.push({
                 icon: "notification",
                 icon_size: "sm",
@@ -321,7 +304,7 @@ class FormTimeline extends BaseTimeline {
                 is_card: true,
                 content: this.get_communication_timeline_content(message, false),
                 doctype: "Communication",
-                id: message.id,
+                id: message.id
             });
         });
         return auto_messages_timeline_contents;
@@ -329,7 +312,7 @@ class FormTimeline extends BaseTimeline {
 
     get_comment_timeline_contents() {
         let comment_timeline_contents = [];
-        (this.doc_info.comments || []).forEach((comment) => {
+        (this.doc_info.comments || []).forEach(comment => {
             comment_timeline_contents.push(this.get_comment_timeline_item(comment));
         });
         return comment_timeline_contents;
@@ -344,7 +327,7 @@ class FormTimeline extends BaseTimeline {
             doctype: "Comment",
             id: `comment-${comment.id}`,
             name: comment.id,
-            content: this.get_comment_timeline_content(comment),
+            content: this.get_comment_timeline_content(comment)
         };
     }
 
@@ -357,12 +340,12 @@ class FormTimeline extends BaseTimeline {
 
     get_version_timeline_contents() {
         let version_timeline_contents = [];
-        (this.doc_info.versions || []).forEach((version) => {
+        (this.doc_info.versions || []).forEach(version => {
             const contents = get_version_timeline_content(version, this.frm);
-            contents.forEach((content) => {
+            contents.forEach(content => {
                 version_timeline_contents.push({
                     creation: version.creation,
-                    content: content,
+                    content: content
                 });
             });
         });
@@ -371,10 +354,10 @@ class FormTimeline extends BaseTimeline {
 
     get_share_timeline_contents() {
         let share_timeline_contents = [];
-        (this.doc_info.share_logs || []).forEach((share_log) => {
+        (this.doc_info.share_logs || []).forEach(share_log => {
             share_timeline_contents.push({
                 creation: share_log.creation,
-                content: share_log.content,
+                content: share_log.content
             });
         });
         return share_timeline_contents;
@@ -382,10 +365,10 @@ class FormTimeline extends BaseTimeline {
 
     get_assignment_timeline_contents() {
         let assignment_timeline_contents = [];
-        (this.doc_info.assignment_logs || []).forEach((assignment_log) => {
+        (this.doc_info.assignment_logs || []).forEach(assignment_log => {
             assignment_timeline_contents.push({
                 creation: assignment_log.creation,
-                content: assignment_log.content,
+                content: assignment_log.content
             });
         });
         return assignment_timeline_contents;
@@ -393,10 +376,10 @@ class FormTimeline extends BaseTimeline {
 
     get_info_timeline_contents() {
         let info_timeline_contents = [];
-        (this.doc_info.info_logs || []).forEach((info_log) => {
+        (this.doc_info.info_logs || []).forEach(info_log => {
             info_timeline_contents.push({
                 creation: info_log.creation,
-                content: `${get_user_link(info_log.owner)} ${info_log.content}`,
+                content: `${get_user_link(info_log.owner)} ${info_log.content}`
             });
         });
         return info_timeline_contents;
@@ -405,7 +388,7 @@ class FormTimeline extends BaseTimeline {
     get_attachment_timeline_contents() {
         let attachment_timeline_contents = [];
 
-        (this.doc_info.attachment_logs || []).forEach((attachment_log) => {
+        (this.doc_info.attachment_logs || []).forEach(attachment_log => {
             const is_file_upload = attachment_log.comment_type == "Attachment";
             const user_link = get_user_link(attachment_log.owner);
             const filename = attachment_log.content;
@@ -413,19 +396,19 @@ class FormTimeline extends BaseTimeline {
                 ? get_user_message(
                       attachment_log.owner,
                       __("You attached {0}", [filename], "Form timeline"),
-                      __("{0} attached {1}", [user_link, filename], "Form timeline"),
+                      __("{0} attached {1}", [user_link, filename], "Form timeline")
                   )
                 : get_user_message(
                       attachment_log.owner,
                       __("You removed attachment {0}", [filename], "Form timeline"),
-                      __("{0} removed attachment {1}", [user_link, filename], "Form timeline"),
+                      __("{0} removed attachment {1}", [user_link, filename], "Form timeline")
                   );
 
             attachment_timeline_contents.push({
                 icon: is_file_upload ? "es-line-attachment" : "es-line-delete",
                 icon_size: "sm",
                 creation: attachment_log.creation,
-                content: timeline_content,
+                content: timeline_content
             });
         });
 
@@ -435,20 +418,20 @@ class FormTimeline extends BaseTimeline {
     get_milestone_timeline_contents() {
         let milestone_timeline_contents = [];
 
-        (this.doc_info.milestones || []).forEach((milestone_log) => {
+        (this.doc_info.milestones || []).forEach(milestone_log => {
             const field = frappe.meta.get_label(this.frm.doctype, milestone_log.track_field);
             const value = milestone_log.value.bold();
             const user_link = get_user_link(milestone_log.owner);
             const timeline_content = get_user_message(
                 milestone_log.owner,
                 __("You changed {0} to {1}", [field, value], "Form timeline"),
-                __("{0} changed {1} to {2}", [user_link, field, value], "Form timeline"),
+                __("{0} changed {1} to {2}", [user_link, field, value], "Form timeline")
             );
 
             milestone_timeline_contents.push({
                 icon: "milestone",
                 creation: milestone_log.creation,
-                content: timeline_content,
+                content: timeline_content
             });
         });
 
@@ -458,11 +441,11 @@ class FormTimeline extends BaseTimeline {
     get_like_timeline_contents() {
         let like_timeline_contents = [];
 
-        (this.doc_info.like_logs || []).forEach((like_log) => {
+        (this.doc_info.like_logs || []).forEach(like_log => {
             const timeline_content = get_user_message(
                 like_log.owner,
                 __("You Liked"),
-                __("{0} Liked", [get_user_link(like_log.owner)]),
+                __("{0} Liked", [get_user_link(like_log.owner)])
             );
 
             like_timeline_contents.push({
@@ -470,7 +453,7 @@ class FormTimeline extends BaseTimeline {
                 icon_size: "sm",
                 creation: like_log.creation,
                 content: timeline_content,
-                title: "Like",
+                title: "Like"
             });
         });
 
@@ -479,13 +462,13 @@ class FormTimeline extends BaseTimeline {
 
     get_workflow_timeline_contents() {
         let workflow_timeline_contents = [];
-        (this.doc_info.workflow_logs || []).forEach((workflow_log) => {
+        (this.doc_info.workflow_logs || []).forEach(workflow_log => {
             workflow_timeline_contents.push({
                 icon: "branch",
                 icon_size: "sm",
                 creation: workflow_log.creation,
                 content: `${get_user_link(workflow_log.owner)} ${__(workflow_log.content)}`,
-                title: "Workflow",
+                title: "Workflow"
             });
         });
         return workflow_timeline_contents;
@@ -493,15 +476,13 @@ class FormTimeline extends BaseTimeline {
 
     get_custom_timeline_contents() {
         let custom_timeline_contents = [];
-        (this.doc_info.additional_timeline_content || []).forEach((custom_item) => {
+        (this.doc_info.additional_timeline_content || []).forEach(custom_item => {
             custom_timeline_contents.push({
                 icon: custom_item.icon,
                 icon_size: "sm",
                 is_card: custom_item.is_card,
                 creation: custom_item.creation,
-                content:
-                    custom_item.content ||
-                    frappe.render_template(custom_item.template, custom_item.template_data),
+                content: custom_item.content || frappe.render_template(custom_item.template, custom_item.template_data)
             });
         });
         return custom_timeline_contents;
@@ -509,7 +490,7 @@ class FormTimeline extends BaseTimeline {
 
     get_energy_point_timeline_contents() {
         let energy_point_timeline_contents = [];
-        (this.doc_info.energy_point_logs || []).forEach((log) => {
+        (this.doc_info.energy_point_logs || []).forEach(log => {
             let timeline_badge = `
 			<div class="timeline-badge ${log.points > 0 ? "appreciation" : "criticism"} bold">
 				${log.points}
@@ -518,7 +499,7 @@ class FormTimeline extends BaseTimeline {
             energy_point_timeline_contents.push({
                 timeline_badge: timeline_badge,
                 creation: log.creation,
-                content: frappe.energy_points.format_form_log(log),
+                content: frappe.energy_points.format_form_log(log)
             });
         });
         return energy_point_timeline_contents;
@@ -526,14 +507,10 @@ class FormTimeline extends BaseTimeline {
 
     setup_reply(communication_box, communication_doc) {
         let actions = communication_box.find(".custom-actions");
-        let reply = $(`<a class="action-btn reply">${frappe.utils.icon("reply", "md")}</a>`).click(
-            () => {
-                this.compose_mail(communication_doc);
-            },
-        );
-        let reply_all = $(
-            `<a class="action-btn reply-all">${frappe.utils.icon("reply-all", "md")}</a>`,
-        ).click(() => {
+        let reply = $(`<a class="action-btn reply">${frappe.utils.icon("reply", "md")}</a>`).click(() => {
+            this.compose_mail(communication_doc);
+        });
+        let reply_all = $(`<a class="action-btn reply-all">${frappe.utils.icon("reply-all", "md")}</a>`).click(() => {
             this.compose_mail(communication_doc, true);
         });
         actions.append(reply);
@@ -552,17 +529,17 @@ class FormTimeline extends BaseTimeline {
             title: communication_doc ? __("Reply") : null,
             last_email: communication_doc,
             subject: communication_doc && communication_doc.subject,
-            reply_all: reply_all,
+            reply_all: reply_all
         };
 
         const email_accounts = frappe.boot.email_accounts
-            .filter((account) => {
+            .filter(account => {
                 return (
                     !["All Accounts", "Sent", "Spam", "Trash"].includes(account.email_account) &&
                     account.enable_outgoing
                 );
             })
-            .map((e) => e.email_id);
+            .map(e => e.email_id);
 
         if (communication_doc && args.is_a_reply) {
             args.cc = "";
@@ -571,9 +548,8 @@ class FormTimeline extends BaseTimeline {
                 communication_doc.sender != frappe.session.user_email
             ) {
                 // add recipients to cc if replying sender is different from last email
-                const recipients = communication_doc.recipients.split(",").map((r) => r.trim());
-                args.cc =
-                    recipients.filter((r) => r != frappe.session.user_email).join(", ") + ", ";
+                const recipients = communication_doc.recipients.split(",").map(r => r.trim());
+                args.cc = recipients.filter(r => r != frappe.session.user_email).join(", ") + ", ";
             }
             if (reply_all) {
                 // if reply_all then add cc and bcc as well.
@@ -631,7 +607,7 @@ class FormTimeline extends BaseTimeline {
 
         edit_box.set_value(doc.content);
 
-        edit_box.on_submit = (value) => {
+        edit_box.on_submit = value => {
             content_wrapper.empty();
             content_wrapper.append(value);
             edit_button.prop("disabled", true);
@@ -651,11 +627,9 @@ class FormTimeline extends BaseTimeline {
         let edit_button = $();
         let current_user = frappe.session.user;
         if (["Administrator", doc.owner].includes(current_user)) {
-            edit_button = $(`<button class="btn btn-link action-btn">${__("Edit")}</a>`).click(
-                () => {
-                    edit_button.edit_mode ? edit_box.submit() : edit_button.toggle_edit_mode();
-                },
-            );
+            edit_button = $(`<button class="btn btn-link action-btn">${__("Edit")}</a>`).click(() => {
+                edit_button.edit_mode ? edit_box.submit() : edit_button.toggle_edit_mode();
+            });
         }
 
         edit_button.toggle_edit_mode = () => {
@@ -677,12 +651,12 @@ class FormTimeline extends BaseTimeline {
             df: {
                 fieldtype: "Comment",
                 fieldname: "comment",
-                label: "Comment",
+                label: "Comment"
             },
             enable_mentions: true,
             render_input: true,
             only_input: true,
-            no_wrapper: true,
+            no_wrapper: true
         });
     }
 
@@ -705,10 +679,10 @@ class FormTimeline extends BaseTimeline {
 
         const filtered_records = communications
             .filter(
-                (record) =>
+                record =>
                     record.communication_type === "Communication" &&
                     record.communication_medium === "Email" &&
-                    (!from_recipient || record.sender === recipient),
+                    (!from_recipient || record.sender === recipient)
             )
             .sort((a, b) => b.creation - a.creation);
 
@@ -720,7 +694,7 @@ class FormTimeline extends BaseTimeline {
             return frappe
                 .xcall("frappe.client.delete", {
                     doctype: "Comment",
-                    id: comment_id,
+                    id: comment_id
                 })
                 .then(() => {
                     frappe.utils.play_sound("delete");
@@ -729,9 +703,7 @@ class FormTimeline extends BaseTimeline {
     }
 
     copy_link(ev) {
-        let doc_link = frappe.urllib.get_full_url(
-            frappe.utils.get_form_link(this.frm.doctype, this.frm.docid),
-        );
+        let doc_link = frappe.urllib.get_full_url(frappe.utils.get_form_link(this.frm.doctype, this.frm.docid));
         let element_id = $(ev.currentTarget).closest(".timeline-content").attr("id");
         frappe.utils.copy_to_clipboard(`${doc_link}#${element_id}`);
     }

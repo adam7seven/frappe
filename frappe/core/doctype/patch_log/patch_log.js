@@ -4,5 +4,5 @@
 frappe.ui.form.on("Patch Log", {
     refresh: function (frm) {
         frm.disable_save();
-    },
+    }
 });

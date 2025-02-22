@@ -9,10 +9,8 @@ context("Grid Pagination", () => {
         return cy
             .window()
             .its("frappe")
-            .then((frappe) => {
-                return frappe.call(
-                    "frappe.tests.ui_test_helpers.create_contact_phone_nos_records",
-                );
+            .then(frappe => {
+                return frappe.call("frappe.tests.ui_test_helpers.create_contact_phone_nos_records");
             });
     });
     it("creates pages for child table", () => {
@@ -27,10 +25,7 @@ context("Grid Pagination", () => {
         cy.get('.frappe-control[data-fieldname="phone_nos"]').as("table");
         cy.get("@table").find(".next-page").click();
         cy.get("@table").find(".current-page-number").should("have.value", "2");
-        cy.get("@table")
-            .find(".grid-body .grid-row")
-            .first()
-            .should("have.attr", "data-idx", "51");
+        cy.get("@table").find(".grid-body .grid-row").first().should("have.attr", "data-idx", "51");
         cy.get("@table").find(".prev-page").click();
         cy.get("@table").find(".current-page-number").should("have.value", "1");
         cy.get("@table").find(".grid-body .grid-row").first().should("have.attr", "data-idx", "1");

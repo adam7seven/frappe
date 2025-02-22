@@ -12,13 +12,13 @@ export default {
             fieldname: "title",
             fieldtype: "Data",
             label: "title",
-            unique: 1,
+            unique: 1
         },
         {
             fieldname: "phone",
             fieldtype: "Phone",
-            label: "Phone",
-        },
+            label: "Phone"
+        }
     ],
     links: [],
     modified: "2019-03-30 14:40:53.127615",
@@ -37,10 +37,10 @@ export default {
             share: 1,
             write: 1,
             submit: 1,
-            cancel: 1,
-        },
+            cancel: 1
+        }
     ],
     sort_field: "modified",
     sort_order: "ASC",
-    track_changes: 1,
+    track_changes: 1
 };

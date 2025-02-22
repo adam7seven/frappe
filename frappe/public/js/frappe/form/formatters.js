@@ -24,9 +24,7 @@ frappe.form.formatters = {
 		*/
 
         if (df) {
-            const std_df =
-                frappe.meta.docfield_map[df.parent] &&
-                frappe.meta.docfield_map[df.parent][df.fieldname];
+            const std_df = frappe.meta.docfield_map[df.parent] && frappe.meta.docfield_map[df.parent][df.fieldname];
             if (std_df && std_df.formatter && typeof std_df.formatter === "function") {
                 value = std_df.formatter(value, df);
             }
@@ -55,9 +53,7 @@ frappe.form.formatters = {
 
         // don't allow 0 precision for Floats, hence or'ing with null
         var precision =
-            docfield.precision ||
-            cint(frappe.boot.sysdefaults && frappe.boot.sysdefaults.float_precision) ||
-            null;
+            docfield.precision || cint(frappe.boot.sysdefaults && frappe.boot.sysdefaults.float_precision) || null;
         if (docfield.options && docfield.options.trim()) {
             // options points to a currency field, but expects precision of float!
             docfield.precision = precision;
@@ -92,9 +88,7 @@ frappe.form.formatters = {
         }
 
         const precision =
-            docfield.precision ||
-            cint(frappe.boot.sysdefaults && frappe.boot.sysdefaults.float_precision) ||
-            2;
+            docfield.precision || cint(frappe.boot.sysdefaults && frappe.boot.sysdefaults.float_precision) || 2;
         return frappe.form.formatters._right(flt(value, precision) + "%", options);
     },
     Rating: function (value, docfield) {
@@ -102,7 +96,7 @@ frappe.form.formatters = {
         let number_of_stars = docfield.options || 5;
         value = value * number_of_stars;
         value = Math.round(value * 2) / 2; // roundoff number to nearest 0.5
-        Array.from({ length: cint(number_of_stars) }, (_, i) => i + 1).forEach((i) => {
+        Array.from({ length: cint(number_of_stars) }, (_, i) => i + 1).forEach(i => {
             rating_html += `<svg class="icon icon-md" data-rating=${i} viewBox="0 0 24 24" fill="none">
 				<path class="right-half ${
                     i <= (value || 0) ? "star-click" : ""
@@ -127,9 +121,7 @@ frappe.form.formatters = {
         if (typeof docfield.precision == "number") {
             precision = docfield.precision;
         } else {
-            precision = cint(
-                docfield.precision || frappe.boot.sysdefaults.currency_precision || 2,
-            );
+            precision = cint(docfield.precision || frappe.boot.sysdefaults.currency_precision || 2);
         }
 
         // If you change anything below, it's going to hurt a company in UAE, a bit.
@@ -138,8 +130,7 @@ frappe.form.formatters = {
             var decimals = parts.length > 1 ? parts[1] : ""; // parts.length == 2 ???
 
             if (decimals.length < 3 || decimals.length < precision) {
-                const fraction =
-                    frappe.model.get_value(":Currency", currency, "fraction_units") || 100; // if not set, minimum 2.
+                const fraction = frappe.model.get_value(":Currency", currency, "fraction_units") || 100; // if not set, minimum 2.
 
                 if (decimals.length < cstr(fraction).length) {
                     precision = cstr(fraction).length - 1;
@@ -193,13 +184,13 @@ frappe.form.formatters = {
         if (docfield && docfield.link_onclick) {
             return repl('<a onclick="%(onclick)s" href="#">%(value)s</a>', {
                 onclick: docfield.link_onclick.replace(/"/g, "&quot;") + "; return false;",
-                value: value,
+                value: value
             });
         } else if (docfield && doctype) {
             if (frappe.model.can_read(doctype)) {
                 const a = document.createElement("a");
                 a.href = `/app/${encodeURIComponent(
-                    frappe.router.slug(doctype),
+                    frappe.router.slug(doctype)
                 )}/${encodeURIComponent(original_value)}`;
                 a.dataset.doctype = doctype;
                 a.dataset.name = original_value;
@@ -229,10 +220,7 @@ frappe.form.formatters = {
     },
     DateRange: function (value) {
         if (Array.isArray(value)) {
-            return __("{0} to {1}", [
-                frappe.datetime.str_to_user(value[0]),
-                frappe.datetime.str_to_user(value[1]),
-            ]);
+            return __("{0} to {1}", [frappe.datetime.str_to_user(value[0]), frappe.datetime.str_to_user(value[1])]);
         } else {
             return value || "";
         }
@@ -242,7 +230,7 @@ frappe.form.formatters = {
             return moment(frappe.datetime.convert_to_user_tz(value)).format(
                 frappe.boot.sysdefaults.date_format.toUpperCase() +
                     " " +
-                    (frappe.boot.sysdefaults.time_format || "HH:mm:ss"),
+                    (frappe.boot.sysdefaults.time_format || "HH:mm:ss")
             );
         } else {
             return "";
@@ -326,10 +314,7 @@ frappe.form.formatters = {
         let formatted_value = frappe.form.formatters.Text(value);
         // to use ql-editor styles
         try {
-            if (
-                !$(formatted_value).find(".ql-editor").length &&
-                !$(formatted_value).hasClass("ql-editor")
-            ) {
+            if (!$(formatted_value).find(".ql-editor").length && !$(formatted_value).hasClass("ql-editor")) {
                 formatted_value = `<div class="ql-editor read-mode">${formatted_value}</div>`;
             }
         } catch (e) {
@@ -352,8 +337,8 @@ frappe.form.formatters = {
                 {
                     value: value,
                     style: workflow_state.style.toLowerCase(),
-                    icon: workflow_state.icon,
-                },
+                    icon: workflow_state.icon
+                }
             );
         } else {
             return "<span class='label'>" + value + "</span>";
@@ -374,8 +359,8 @@ frappe.form.formatters = {
     TableMultiSelect: function (rows, df, options) {
         rows = rows || [];
         const meta = frappe.get_meta(df.options);
-        const link_field = meta.fields.find((df) => df.fieldtype === "Link");
-        const formatted_values = rows.map((row) => {
+        const link_field = meta.fields.find(df => df.fieldtype === "Link");
+        const formatted_values = rows.map(row => {
             const value = row[link_field.fieldname];
             return `<span class="text-nowrap">
 				${frappe.format(value, link_field, options, row)}
@@ -383,7 +368,7 @@ frappe.form.formatters = {
         });
         return formatted_values.join(", ");
     },
-    Color: (value) => {
+    Color: value => {
         return value
             ? `<div>
 			<div class="selected-color" style="background-color: ${value}"></div>
@@ -391,7 +376,7 @@ frappe.form.formatters = {
 		</div>`
             : "";
     },
-    Icon: (value) => {
+    Icon: value => {
         return value
             ? `<div>
 			<div class="selected-icon">${frappe.utils.icon(value, "md")}</div>
@@ -400,7 +385,7 @@ frappe.form.formatters = {
             : "";
     },
     Attach: format_attachment_url,
-    AttachImage: format_attachment_url,
+    AttachImage: format_attachment_url
 };
 
 function format_attachment_url(url) {
@@ -440,7 +425,7 @@ frappe.get_format_helper = function (doc) {
                 console.log("fieldname not found: " + fieldname);
             }
             return frappe.format(doc[fieldname], df, { inline: 1 }, doc);
-        },
+        }
     };
     $.extend(helper, doc);
     return helper;

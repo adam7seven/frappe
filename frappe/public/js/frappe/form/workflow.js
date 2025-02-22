@@ -25,19 +25,17 @@ frappe.ui.form.States = class FormStates {
                 frappe.workflow.setup(me.frm.doctype);
                 var state = me.get_state();
                 var d = new frappe.ui.Dialog({
-                    title: "Workflow: " + frappe.workflow.workflows[me.frm.doctype].id,
+                    title: "Workflow: " + frappe.workflow.workflows[me.frm.doctype].id
                 });
 
-                frappe.workflow.get_transitions(me.frm.doc).then((transitions) => {
+                frappe.workflow.get_transitions(me.frm.doc).then(transitions => {
                     const next_actions =
-                        $.map(
-                            transitions,
-                            (d) => `${d.action.bold()} ${__("by Role")} ${d.allowed}`,
-                        ).join(", ") || __("None: End of Workflow").bold();
+                        $.map(transitions, d => `${d.action.bold()} ${__("by Role")} ${d.allowed}`).join(", ") ||
+                        __("None: End of Workflow").bold();
 
                     const document_editable_by = frappe.workflow
                         .get_document_state_roles(me.frm.doctype, state)
-                        .map((role) => role.bold())
+                        .map(role => role.bold())
                         .join(", ");
 
                     $(d.body)
@@ -47,14 +45,14 @@ frappe.ui.form.States = class FormStates {
 					<p>${__("Document is only editable by users with role")}: ${document_editable_by}</p>
 					<p>${__("Next actions")}: ${next_actions}</p>
 					<p>${__("{0}: Other permission rules may also apply", [__("Note").bold()])}</p>
-				`,
+				`
                         )
                         .css({ padding: "15px" });
 
                     d.show();
                 });
             },
-            true,
+            true
         );
     }
 
@@ -86,19 +84,15 @@ frappe.ui.form.States = class FormStates {
         function has_approval_access(transition) {
             let approval_access = false;
             const user = frappe.session.user;
-            if (
-                user === "Administrator" ||
-                transition.allow_self_approval ||
-                user !== me.frm.doc.owner
-            ) {
+            if (user === "Administrator" || transition.allow_self_approval || user !== me.frm.doc.owner) {
                 approval_access = true;
             }
             return approval_access;
         }
 
-        frappe.workflow.get_transitions(this.frm.doc).then((transitions) => {
+        frappe.workflow.get_transitions(this.frm.doc).then(transitions => {
             this.frm.page.clear_actions_menu();
-            transitions.forEach((d) => {
+            transitions.forEach(d => {
                 if (frappe.user_roles.includes(d.allowed) && has_approval_access(d)) {
                     added = true;
                     me.frm.page.add_action_item(__(d.action), function () {
@@ -109,9 +103,9 @@ frappe.ui.form.States = class FormStates {
                             frappe
                                 .xcall("frappe.model.workflow.apply_workflow", {
                                     doc: me.frm.doc,
-                                    action: d.action,
+                                    action: d.action
                                 })
-                                .then((doc) => {
+                                .then(doc => {
                                     frappe.model.sync(doc);
                                     me.frm.refresh();
                                     me.frm.selected_workflow_action = null;
@@ -139,10 +133,7 @@ frappe.ui.form.States = class FormStates {
     }
 
     set_default_state() {
-        var default_state = frappe.workflow.get_default_state(
-            this.frm.doctype,
-            this.frm.doc.docstatus,
-        );
+        var default_state = frappe.workflow.get_default_state(this.frm.doctype, this.frm.doc.docstatus);
         if (default_state) {
             this.frm.set_value(this.state_fieldname, default_state);
         }

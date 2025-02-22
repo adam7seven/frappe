@@ -2,21 +2,21 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Notification Settings", {
-    onload: (frm) => {
+    onload: frm => {
         frm.set_query("subscribed_documents", () => {
             return {
                 filters: {
-                    istable: 0,
-                },
+                    istable: 0
+                }
             };
         });
     },
 
-    refresh: (frm) => {
+    refresh: frm => {
         if (frappe.user.has_role("System Manager")) {
             frm.add_custom_button(__("Go to Notification Settings List"), () => {
                 frappe.set_route("List", "Notification Settings");
             });
         }
-    },
+    }
 });

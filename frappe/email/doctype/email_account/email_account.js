@@ -7,7 +7,7 @@ frappe.email_defaults = {
         smtp_server: "smtp.gmail.com",
         smtp_port: 587,
         use_tls: 1,
-        use_imap: 1,
+        use_imap: 1
     },
     "Outlook.com": {
         email_server: "imap-mail.outlook.com",
@@ -16,20 +16,20 @@ frappe.email_defaults = {
         smtp_server: "smtp-mail.outlook.com",
         smtp_port: 587,
         use_tls: 1,
-        use_imap: 1,
+        use_imap: 1
     },
     Sendgrid: {
         enable_outgoing: 1,
         smtp_server: "smtp.sendgrid.net",
         smtp_port: 587,
-        use_tls: 1,
+        use_tls: 1
     },
     SparkPost: {
         enable_incoming: 0,
         enable_outgoing: 1,
         smtp_server: "smtp.sparkpostmail.com",
         smtp_port: 587,
-        use_tls: 1,
+        use_tls: 1
     },
     "Yahoo Mail": {
         email_server: "imap.mail.yahoo.com",
@@ -38,7 +38,7 @@ frappe.email_defaults = {
         smtp_server: "smtp.mail.yahoo.com",
         smtp_port: 587,
         use_tls: 1,
-        use_imap: 1,
+        use_imap: 1
     },
     "Yandex.Mail": {
         email_server: "imap.yandex.com",
@@ -47,23 +47,23 @@ frappe.email_defaults = {
         smtp_server: "smtp.yandex.com",
         smtp_port: 587,
         use_tls: 1,
-        use_imap: 1,
-    },
+        use_imap: 1
+    }
 };
 
 frappe.email_defaults_pop = {
     GMail: {
-        email_server: "pop.gmail.com",
+        email_server: "pop.gmail.com"
     },
     "Outlook.com": {
-        email_server: "pop3-mail.outlook.com",
+        email_server: "pop3-mail.outlook.com"
     },
     "Yahoo Mail": {
-        email_server: "pop.mail.yahoo.com",
+        email_server: "pop.mail.yahoo.com"
     },
     "Yandex.Mail": {
-        email_server: "pop.yandex.com",
-    },
+        email_server: "pop.yandex.com"
+    }
 };
 
 function oauth_access(frm) {
@@ -74,11 +74,11 @@ function oauth_access(frm) {
             method: "initiate_web_application_flow",
             args: {
                 success_uri: window.location.pathname,
-                user: frm.doc.connected_user,
+                user: frm.doc.connected_user
             },
             callback: function (r) {
                 window.open(r.message, "_self");
-            },
+            }
         });
     });
 }
@@ -91,7 +91,7 @@ function set_default_max_attachment_size(frm) {
                 if (!r.exc) {
                     frm.set_value("attachment_limit", Number(r.message) / (1024 * 1024));
                 }
-            },
+            }
         });
     }
 }
@@ -134,13 +134,10 @@ frappe.ui.form.on("Email Account", {
 
     onload: function (frm) {
         frm.set_df_property("append_to", "only_select", true);
-        frm.set_query(
-            "append_to",
-            "frappe.email.doctype.email_account.email_account.get_append_to",
-        );
+        frm.set_query("append_to", "frappe.email.doctype.email_account.email_account.get_append_to");
         frm.set_query("append_to", "imap_folder", function () {
             return {
-                query: "frappe.email.doctype.email_account.email_account.get_append_to",
+                query: "frappe.email.doctype.email_account.email_account.get_append_to"
             };
         });
         if (frm.doc.__islocal) {
@@ -166,37 +163,33 @@ frappe.ui.form.on("Email Account", {
     },
 
     show_oauth_authorization_message(frm) {
-        if (
-            frm.doc.auth_method === "OAuth" &&
-            frm.doc.connected_app &&
-            !frm.doc.backend_app_flow
-        ) {
+        if (frm.doc.auth_method === "OAuth" && frm.doc.connected_app && !frm.doc.backend_app_flow) {
             frappe.call({
                 method: "frappe.integrations.doctype.connected_app.connected_app.has_token",
                 args: {
                     connected_app: frm.doc.connected_app,
-                    connected_user: frm.doc.connected_user,
+                    connected_user: frm.doc.connected_user
                 },
-                callback: (r) => {
+                callback: r => {
                     if (!r.message) {
                         let msg = __(
-                            'OAuth has been enabled but not authorised. Please use "Authorise API Access" button to do the same.',
+                            'OAuth has been enabled but not authorised. Please use "Authorise API Access" button to do the same.'
                         );
                         frm.dashboard.clear_headline();
                         frm.dashboard.set_headline_alert(msg, "yellow");
                     }
-                },
+                }
             });
         }
     },
 
-    domain: frappe.utils.debounce((frm) => {
+    domain: frappe.utils.debounce(frm => {
         if (frm.doc.domain) {
             frappe.call({
                 method: "get_domain_values",
                 doc: frm.doc,
                 args: {
-                    domain: frm.doc.domain,
+                    domain: frm.doc.domain
                 },
                 callback: function (r) {
                     if (!r.exc) {
@@ -204,7 +197,7 @@ frappe.ui.form.on("Email Account", {
                             frm.set_value(field, r.message[field]);
                         }
                     }
-                },
+                }
             });
         }
     }),
@@ -214,7 +207,7 @@ frappe.ui.form.on("Email Account", {
 
         if (frm.doc.email_sync_option == "ALL") {
             var msg = __(
-                "You are selecting Sync Option as ALL, It will resync all read as well as unread message from server. This may also cause the duplication of Communication (emails).",
+                "You are selecting Sync Option as ALL, It will resync all read as well as unread message from server. This may also cause the duplication of Communication (emails)."
             );
             frappe.confirm(msg, null, function () {
                 frm.set_value("email_sync_option", "UNSEEN");
@@ -225,12 +218,12 @@ frappe.ui.form.on("Email Account", {
     warn_autoreply_on_incoming: function (frm) {
         if (frm.doc.enable_incoming && frm.doc.enable_auto_reply && frm.doc.__islocal) {
             var msg = __(
-                "Enabling auto reply on an incoming email account will send automated replies to all the synchronized emails. Do you wish to continue?",
+                "Enabling auto reply on an incoming email account will send automated replies to all the synchronized emails. Do you wish to continue?"
             );
             frappe.confirm(msg, null, function () {
                 frm.set_value("enable_auto_reply", 0);
                 frappe.show_alert({ message: __("Disabled Auto Reply"), indicator: "blue" });
             });
         }
-    },
+    }
 });

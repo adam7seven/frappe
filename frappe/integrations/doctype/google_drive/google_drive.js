@@ -5,20 +5,14 @@ frappe.ui.form.on("Google Drive", {
     refresh: function (frm) {
         if (!frm.doc.enable) {
             frm.dashboard.set_headline(
-                __("To use Google Drive, enable {0}.", [
-                    `<a href='/app/google-settings'>${__("Google Settings")}</a>`,
-                ]),
+                __("To use Google Drive, enable {0}.", [`<a href='/app/google-settings'>${__("Google Settings")}</a>`])
             );
         }
 
-        frappe.realtime.on("upload_to_google_drive", (data) => {
+        frappe.realtime.on("upload_to_google_drive", data => {
             if (data.progress) {
                 const progress_title = __("Uploading to Google Drive");
-                frm.dashboard.show_progress(
-                    progress_title,
-                    (data.progress / data.total) * 100,
-                    data.message,
-                );
+                frm.dashboard.show_progress(progress_title, (data.progress / data.total) * 100, data.message);
                 if (data.progress === data.total) {
                     frm.dashboard.hide_progress(progress_title);
                 }
@@ -29,14 +23,14 @@ frappe.ui.form.on("Google Drive", {
             let sync_button = frm.add_custom_button(__("Take Backup"), function () {
                 frappe.show_alert({
                     indicator: "green",
-                    message: __("Backing up to Google Drive."),
+                    message: __("Backing up to Google Drive.")
                 });
                 frappe
                     .call({
                         method: "frappe.integrations.doctype.google_drive.google_drive.take_backup",
-                        btn: sync_button,
+                        btn: sync_button
                     })
-                    .then((r) => {
+                    .then(r => {
                         frappe.msgprint(r.message);
                     });
             });
@@ -44,9 +38,7 @@ frappe.ui.form.on("Google Drive", {
 
         if (frm.doc.enable && frm.doc.backup_folder_name && !frm.doc.refresh_token) {
             frm.dashboard.set_headline(
-                __(
-                    "Click on <b>Authorize Google Drive Access</b> to authorize Google Drive Access.",
-                ),
+                __("Click on <b>Authorize Google Drive Access</b> to authorize Google Drive Access.")
             );
         }
 
@@ -58,14 +50,14 @@ frappe.ui.form.on("Google Drive", {
         frappe.call({
             method: "frappe.integrations.doctype.google_drive.google_drive.authorize_access",
             args: {
-                reauthorize: frm.doc.authorization_code ? 1 : 0,
+                reauthorize: frm.doc.authorization_code ? 1 : 0
             },
             callback: function (r) {
                 if (!r.exc) {
                     frm.save();
                     window.open(r.message.url);
                 }
-            },
+            }
         });
-    },
+    }
 });

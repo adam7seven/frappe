@@ -11,7 +11,7 @@ frappe.listview_settings["RQ Job"] = {
                     frappe.xcall("frappe.core.doctype.rq_job.rq_job.remove_failed_jobs");
                 });
             },
-            __("Actions"),
+            __("Actions")
         );
 
         frappe.xcall("frappe.utils.scheduler.get_scheduler_status").then(({ status }) => {
@@ -28,15 +28,15 @@ frappe.listview_settings["RQ Job"] = {
                                 .then(() => {
                                     frappe.show_alert(__("Enabled Scheduler"));
                                 })
-                                .catch((e) => {
+                                .catch(e => {
                                     frappe.show_alert({
                                         message: __("Failed to enable scheduler: {0}", e),
-                                        indicator: "error",
+                                        indicator: "error"
                                     });
                                 });
                         });
                     },
-                    __("Actions"),
+                    __("Actions")
                 );
             }
         });
@@ -53,5 +53,5 @@ frappe.listview_settings["RQ Job"] = {
 
             listview.refresh();
         }, 15000);
-    },
+    }
 };

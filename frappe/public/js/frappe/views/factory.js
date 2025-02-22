@@ -43,7 +43,7 @@ frappe.make_page = function (double_column, page_id) {
 
     frappe.ui.make_app_page({
         parent: page,
-        single_column: !double_column,
+        single_column: !double_column
     });
 
     frappe.container.change_to(page_id);

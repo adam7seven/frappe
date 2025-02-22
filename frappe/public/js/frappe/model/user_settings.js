@@ -4,7 +4,7 @@ $.extend(frappe.model.user_settings, {
     get: function (doctype) {
         return frappe
             .call("frappe.model.utils.user_settings.get", { doctype })
-            .then((r) => JSON.parse(r.message || "{}"));
+            .then(r => JSON.parse(r.message || "{}"));
     },
     save: function (doctype, key, value) {
         if (frappe.session.user === "Guest") return Promise.resolve();
@@ -39,13 +39,13 @@ $.extend(frappe.model.user_settings, {
             method: "frappe.model.utils.user_settings.save",
             args: {
                 doctype: doctype,
-                user_settings: user_settings,
+                user_settings: user_settings
             },
             callback: function (r) {
                 frappe.model.user_settings[doctype] = r.message;
-            },
+            }
         });
-    },
+    }
 });
 
 frappe.get_user_settings = function (doctype, key) {

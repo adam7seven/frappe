@@ -20,8 +20,8 @@ frappe.ui.DiffView = class DiffView {
                 docid: this.docid,
                 ref_doctype: this.doctype,
                 fieldname: this.fieldname,
-                page_len: 100,
-            },
+                page_len: 100
+            }
         });
         const onchange = () => this.compute_diff();
         return new frappe.ui.Dialog({
@@ -34,11 +34,11 @@ frappe.ui.DiffView = class DiffView {
                     options: "Version",
                     reqd: 1,
                     get_query,
-                    onchange,
+                    onchange
                 },
                 {
                     fieldtype: "Column Break",
-                    fieldname: "cb",
+                    fieldname: "cb"
                 },
                 {
                     label: __("To version"),
@@ -47,19 +47,19 @@ frappe.ui.DiffView = class DiffView {
                     options: "Version",
                     reqd: 1,
                     get_query,
-                    onchange,
+                    onchange
                 },
                 {
                     fieldtype: "Section Break",
-                    fieldname: "sb",
+                    fieldname: "sb"
                 },
                 {
                     label: __("Diff"),
                     fieldtype: "HTML",
-                    fieldname: "diff",
-                },
+                    fieldname: "diff"
+                }
             ],
-            size: "extra-large",
+            size: "extra-large"
         });
     }
 
@@ -73,9 +73,9 @@ frappe.ui.DiffView = class DiffView {
                 .xcall("frappe.utils.diff.get_version_diff", {
                     from_version,
                     to_version,
-                    fieldname,
+                    fieldname
                 })
-                .then((data) => {
+                .then(data => {
                     this.dialog.set_value("diff", this.prettify_diff(data));
                 });
         } else {
@@ -86,7 +86,7 @@ frappe.ui.DiffView = class DiffView {
     prettify_diff(diff) {
         let html = ``;
 
-        diff.forEach((line) => {
+        diff.forEach(line => {
             let line_class = "";
             if (line.startsWith("+")) {
                 line_class = "insert";

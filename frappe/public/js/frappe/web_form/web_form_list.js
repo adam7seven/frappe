@@ -21,7 +21,7 @@ export default class WebFormList {
             () => this.get_data(),
             () => this.remove_more(),
             () => this.make_table(),
-            () => this.create_more(),
+            () => this.create_more()
         ]);
     }
 
@@ -36,12 +36,12 @@ export default class WebFormList {
 
         frappe
             .call("frappe.website.doctype.web_form.web_form.get_web_form_filters", {
-                web_form_id: this.web_form_id,
+                web_form_id: this.web_form_id
             })
-            .then((response) => {
+            .then(response => {
                 let fields = response.message;
                 fields.length && filter_area.removeClass("hide");
-                fields.forEach((field) => {
+                fields.forEach(field => {
                     if (["Text Editor", "Text", "Small Text"].includes(field.fieldtype)) {
                         field.fieldtype = "Data";
                     }
@@ -58,14 +58,14 @@ export default class WebFormList {
                             input_class: "input-xs",
                             only_select: true,
                             label: __(field.label, null, field.parent),
-                            onchange: (event) => {
+                            onchange: event => {
                                 this.add_filter(field.fieldname, input.value, field.fieldtype);
                                 this.refresh();
-                            },
+                            }
                         },
                         parent: filter_area,
                         render_input: 1,
-                        only_input: field.fieldtype == "Check" ? false : true,
+                        only_input: field.fieldtype == "Check" ? false : true
                     });
 
                     $(input.wrapper)
@@ -73,7 +73,7 @@ export default class WebFormList {
                         .attr("title", __(field.label, null, field.parent))
                         .tooltip({
                             delay: { show: 600, hide: 100 },
-                            trigger: "hover",
+                            trigger: "hover"
                         });
 
                     input.$input.attr("placeholder", __(field.label, null, field.parent));
@@ -98,11 +98,11 @@ export default class WebFormList {
         if (this.columns) return this.columns;
 
         if (this.list_columns) {
-            this.columns = this.list_columns.map((df) => {
+            this.columns = this.list_columns.map(df => {
                 return {
                     label: df.label,
                     fieldname: df.fieldname,
-                    fieldtype: df.fieldtype,
+                    fieldtype: df.fieldtype
                 };
             });
         }
@@ -122,8 +122,8 @@ export default class WebFormList {
                 limit_start: this.web_list_start,
                 limit: this.page_length,
                 web_form_id: this.web_form_id,
-                ...this.filters,
-            },
+                ...this.filters
+            }
         };
 
         if (this.no_change(args)) {
@@ -156,7 +156,7 @@ export default class WebFormList {
 
     more() {
         this.web_list_start += this.page_length;
-        this.fetch_data().then((res) => {
+        this.fetch_data().then(res => {
             if (res.message.length === 0) {
                 frappe.msgprint(__("No more items to display"));
             }
@@ -184,11 +184,11 @@ export default class WebFormList {
 		`);
 
         this.check_all = $thead.find("input.select-all");
-        this.check_all.on("click", (event) => {
+        this.check_all.on("click", event => {
             this.toggle_select_all(event.target.checked);
         });
 
-        this.columns.forEach((col) => {
+        this.columns.forEach(col => {
             let $tr = $thead.find("tr");
             let $th = $(`<th>${__(col.label)}</th>`);
             $th.appendTo($tr);
@@ -256,7 +256,7 @@ export default class WebFormList {
             $tbody.appendTo(this.table);
         }
 
-        row_data.forEach((data_item) => {
+        row_data.forEach(data_item => {
             let $row_element = $(`<tr id="${data_item.id}"></tr>`);
 
             let row = new frappe.ui.WebFormListRow({
@@ -269,8 +269,8 @@ export default class WebFormList {
                     on_select: () => {
                         this.toggle_new();
                         this.toggle_delete();
-                    },
-                },
+                    }
+                }
             });
 
             this.rows.push(row);
@@ -282,9 +282,7 @@ export default class WebFormList {
         const actions = $(".web-list-actions");
 
         frappe.has_permission(this.doctype, "", "delete", () => {
-            this.add_button(actions, "delete-rows", "danger", true, "Delete", () =>
-                this.delete_rows(),
-            );
+            this.add_button(actions, "delete-rows", "danger", true, "Delete", () => this.delete_rows());
         });
     }
 
@@ -310,7 +308,7 @@ export default class WebFormList {
     }
 
     toggle_select_all(checked) {
-        this.rows.forEach((row) => row.toggle_select(checked));
+        this.rows.forEach(row => row.toggle_select(checked));
     }
 
     open_form(id) {
@@ -323,7 +321,7 @@ export default class WebFormList {
     }
 
     get_selected() {
-        return this.rows.filter((row) => row.is_selected());
+        return this.rows.filter(row => row.is_selected());
     }
 
     toggle_delete() {
@@ -346,8 +344,8 @@ export default class WebFormList {
                 method: "frappe.website.doctype.web_form.web_form.delete_multiple",
                 args: {
                     web_form_id: this.web_form_id,
-                    docids: this.get_selected().map((row) => row.doc.id),
-                },
+                    docids: this.get_selected().map(row => row.doc.id)
+                }
             })
             .then(() => {
                 this.refresh();
@@ -368,7 +366,7 @@ frappe.ui.WebFormListRow = class WebFormListRow {
         let $cell = $(`<td class="list-col-checkbox"></td>`);
 
         this.checkbox = $(`<input type="checkbox">`);
-        this.checkbox.on("click", (event) => {
+        this.checkbox.on("click", event => {
             this.toggle_select(event.target.checked);
             event.stopImmediatePropagation();
         });
@@ -379,13 +377,11 @@ frappe.ui.WebFormListRow = class WebFormListRow {
         let serialNo = $(`<td class="list-col-serial">${__(this.serial_number)}</td>`);
         serialNo.appendTo(this.row);
 
-        this.columns.forEach((field) => {
+        this.columns.forEach(field => {
             let formatter = frappe.form.get_formatter(field.fieldtype);
             let value =
                 (this.doc[field.fieldname] &&
-                    __(
-                        formatter(this.doc[field.fieldname], field, { only_value: 1 }, this.doc),
-                    )) ||
+                    __(formatter(this.doc[field.fieldname], field, { only_value: 1 }, this.doc))) ||
                 "";
             let cell = $(`<td><p class="ellipsis">${value}</p></td>`);
             if (field.fieldtype === "Text Editor") {

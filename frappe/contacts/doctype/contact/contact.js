@@ -8,34 +8,25 @@ frappe.ui.form.on("Contact", {
     refresh: function (frm) {
         if (frm.doc.__islocal) {
             const last_doc = frappe.contacts.get_last_doc(frm);
-            if (
-                frappe.dynamic_link &&
-                frappe.dynamic_link.doc &&
-                frappe.dynamic_link.doc.id == last_doc.docid
-            ) {
+            if (frappe.dynamic_link && frappe.dynamic_link.doc && frappe.dynamic_link.doc.id == last_doc.docid) {
                 frm.set_value("links", "");
                 frm.add_child("links", {
                     link_doctype: frappe.dynamic_link.doctype,
-                    link_id: frappe.dynamic_link.doc[frappe.dynamic_link.fieldname],
+                    link_id: frappe.dynamic_link.doc[frappe.dynamic_link.fieldname]
                 });
             }
         }
 
-        if (
-            !frm.doc.user &&
-            !frm.is_new() &&
-            frm.perm[0].write &&
-            frappe.boot.user.can_create.includes("User")
-        ) {
+        if (!frm.doc.user && !frm.is_new() && frm.perm[0].write && frappe.boot.user.can_create.includes("User")) {
             frm.add_custom_button(__("Invite as User"), function () {
                 return frappe.call({
                     method: "frappe.contacts.doctype.contact.contact.invite_user",
                     args: {
-                        contact: frm.doc.id,
+                        contact: frm.doc.id
                     },
                     callback: function (r) {
                         frm.set_value("user", r.message);
-                    },
+                    }
                 });
             });
         }
@@ -44,8 +35,8 @@ frappe.ui.form.on("Contact", {
                 query: "frappe.contacts.address_and_contact.filter_dynamic_link_doctypes",
                 filters: {
                     fieldtype: "HTML",
-                    fieldname: "contact_html",
-                },
+                    fieldname: "contact_html"
+                }
             };
         });
         frm.refresh_field("links");
@@ -55,15 +46,13 @@ frappe.ui.form.on("Contact", {
             frm.add_custom_button(__("Call"), () => {
                 numbers = frm.doc.phone_nos
                     .sort((prev, next) => next.is_primary_mobile_no - prev.is_primary_mobile_no)
-                    .map((d) => d.phone);
+                    .map(d => d.phone);
                 frappe.phone_call.handler(numbers);
             });
         }
 
         if (frm.doc.links && frm.doc.links.length > 0) {
-            const filtered_links = frm.doc.links.filter(
-                (link) => link.link_doctype && link.link_id,
-            );
+            const filtered_links = frm.doc.links.filter(link => link.link_doctype && link.link_id);
 
             if (filtered_links.length > 0) {
                 frappe.call({
@@ -74,12 +63,12 @@ frappe.ui.form.on("Contact", {
                             frm.set_query("address", function () {
                                 return {
                                     filters: {
-                                        id: ["in", r.message],
-                                    },
+                                        id: ["in", r.message]
+                                    }
                                 };
                             });
                         }
-                    },
+                    }
                 });
             }
 
@@ -89,7 +78,7 @@ frappe.ui.form.on("Contact", {
                     function () {
                         frappe.set_route("Form", link.link_doctype, link.link_name);
                     },
-                    __("Links"),
+                    __("Links")
                 );
             }
 
@@ -97,9 +86,9 @@ frappe.ui.form.on("Contact", {
                 frm.page.add_menu_item(__("Download vCard"), function () {
                     window.open(
                         `/api/method/frappe.contacts.doctype.contact.contact.download_vcard?contact=${encodeURIComponent(
-                            frm.doc.name,
+                            frm.doc.name
                         )}`,
-                        "_blank",
+                        "_blank"
                     );
                 });
             }
@@ -125,31 +114,23 @@ frappe.ui.form.on("Contact", {
                 ) {
                     for (let i in frm.doc.links) {
                         let link = frm.doc.links[i];
-                        if (
-                            last_doc.doctype == link.link_doctype &&
-                            last_doc.docname == link.link_name
-                        ) {
+                        if (last_doc.doctype == link.link_doctype && last_doc.docname == link.link_name) {
                             frappe.set_route("Form", last_doc.doctype, last_doc.docname);
                         }
                     }
                 }
-            },
+            }
         ]);
     },
     sync_with_google_contacts: function (frm) {
         if (frm.doc.sync_with_google_contacts) {
-            frappe.db.get_value(
-                "Google Contacts",
-                { email_id: frappe.session.user },
-                "name",
-                (r) => {
-                    if (r && r.name) {
-                        frm.set_value("google_contacts", r.name);
-                    }
-                },
-            );
+            frappe.db.get_value("Google Contacts", { email_id: frappe.session.user }, "name", r => {
+                if (r && r.name) {
+                    frm.set_value("google_contacts", r.name);
+                }
+            });
         }
-    },
+    }
 });
 
 frappe.ui.form.on("Dynamic Link", {
@@ -158,15 +139,10 @@ frappe.ui.form.on("Dynamic Link", {
         if (child.link_id) {
             frappe.model.with_doctype(child.link_doctype, function () {
                 var title_field = frappe.get_meta(child.link_doctype).title_field || "id";
-                frappe.model.get_value(
-                    child.link_doctype,
-                    child.link_id,
-                    title_field,
-                    function (r) {
-                        frappe.model.set_value(cdt, cdn, "link_title", r[title_field]);
-                    },
-                );
+                frappe.model.get_value(child.link_doctype, child.link_id, title_field, function (r) {
+                    frappe.model.set_value(cdt, cdn, "link_title", r[title_field]);
+                });
             });
         }
-    },
+    }
 });

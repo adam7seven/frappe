@@ -31,7 +31,7 @@ import "air-datepicker/dist/js/i18n/datepicker.zh.js";
             "سبتمبر",
             "اكتوبر",
             "نوفمبر",
-            "ديسمبر",
+            "ديسمبر"
         ],
         monthsShort: [
             "يناير",
@@ -45,13 +45,13 @@ import "air-datepicker/dist/js/i18n/datepicker.zh.js";
             "سبتمبر",
             "اكتوبر",
             "نوفمبر",
-            "ديسمبر",
+            "ديسمبر"
         ],
         today: "اليوم",
         clear: "حذف",
         dateFormat: "dd/mm/yyyy",
         timeFormat: "hh:ii aa",
-        firstDay: 6,
+        firstDay: 6
     };
 })(jQuery);
 
@@ -72,27 +72,14 @@ import "air-datepicker/dist/js/i18n/datepicker.zh.js";
             "Σεπτέμβριος",
             "Οκτώβριος",
             "Νοέμβριος",
-            "Δεκέμβριος",
+            "Δεκέμβριος"
         ],
-        monthsShort: [
-            "Ιαν",
-            "Φεβ",
-            "Μαρ",
-            "Απρ",
-            "Μάι",
-            "Ι/ν",
-            "Ι/λ",
-            "Αυγ",
-            "Σεπ",
-            "Οκτ",
-            "Νοε",
-            "Δεκ",
-        ],
+        monthsShort: ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μάι", "Ι/ν", "Ι/λ", "Αυγ", "Σεπ", "Οκτ", "Νοε", "Δεκ"],
         today: "Σήμερα",
         clear: "Καθαρισμός",
         dateFormat: "dd/mm/yyyy",
         timeFormat: "hh:ii aa",
-        firstDay: 0,
+        firstDay: 0
     };
 })(jQuery);
 
@@ -113,27 +100,14 @@ import "air-datepicker/dist/js/i18n/datepicker.zh.js";
             "Settembre",
             "Ottobre",
             "Novembre",
-            "Dicembre",
+            "Dicembre"
         ],
-        monthsShort: [
-            "Gen",
-            "Feb",
-            "Mar",
-            "Apr",
-            "Mag",
-            "Giu",
-            "Lug",
-            "Ago",
-            "Set",
-            "Ott",
-            "Nov",
-            "Dic",
-        ],
+        monthsShort: ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"],
         today: "Oggi",
         clear: "Reset",
         dateFormat: "dd/mm/yyyy",
         timeFormat: "hh:ii",
-        firstDay: 1,
+        firstDay: 1
     };
 })(jQuery);
 
@@ -154,27 +128,14 @@ import "air-datepicker/dist/js/i18n/datepicker.zh.js";
             "Eylül",
             "Ekim",
             "Kasım",
-            "Aralık",
+            "Aralık"
         ],
-        monthsShort: [
-            "Oca",
-            "Şub",
-            "Mar",
-            "Nis",
-            "May",
-            "Haz",
-            "Tem",
-            "Ağu",
-            "Eyl",
-            "Eki",
-            "Kas",
-            "Ara",
-        ],
+        monthsShort: ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"],
         today: "Bugün",
         clear: "Temizle",
         dateFormat: "dd.mm.yyyy",
         timeFormat: "hh:ii",
-        firstDay: 1,
+        firstDay: 1
     };
 })(jQuery);
 
@@ -195,27 +156,14 @@ import "air-datepicker/dist/js/i18n/datepicker.zh.js";
             "September",
             "Oktober",
             "November",
-            "December",
+            "December"
         ],
-        monthsShort: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "Maj",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Okt",
-            "Nov",
-            "Dec",
-        ],
+        monthsShort: ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"],
         today: "Idag",
         clear: "Återställ",
         dateFormat: "yyyy-mm-dd",
         timeFormat: "hh:ii",
-        firstDay: 1,
+        firstDay: 1
     };
 })(jQuery);
 
@@ -236,27 +184,14 @@ import "air-datepicker/dist/js/i18n/datepicker.zh.js";
             "Septembar",
             "Oktobar",
             "Novembar",
-            "Decembar",
+            "Decembar"
         ],
-        monthsShort: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "Maj",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Okt",
-            "Nov",
-            "Dec",
-        ],
+        monthsShort: ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"],
         today: "Danas",
         clear: "Resetiraj",
         dateFormat: "dd/mm/yyyy",
         timeFormat: "hh:ii",
-        firstDay: 1,
+        firstDay: 1
     };
 })(jQuery);
 
@@ -277,27 +212,14 @@ import "air-datepicker/dist/js/i18n/datepicker.zh.js";
             "Rujan",
             "Listopad",
             "Studeni",
-            "Prosinac",
+            "Prosinac"
         ],
-        monthsShort: [
-            "Sje",
-            "Velj",
-            "Ožu",
-            "Tra",
-            "Svi",
-            "Lip",
-            "Srp",
-            "Kol",
-            "Ruj",
-            "Lis",
-            "Stu",
-            "Pro",
-        ],
+        monthsShort: ["Sje", "Velj", "Ožu", "Tra", "Svi", "Lip", "Srp", "Kol", "Ruj", "Lis", "Stu", "Pro"],
         today: "Danas",
         clear: "Resetiraj",
         dateFormat: "dd/mm/yyyy",
         timeFormat: "hh:ii",
-        firstDay: 1,
+        firstDay: 1
     };
 })(jQuery);
 
@@ -318,7 +240,7 @@ import "air-datepicker/dist/js/i18n/datepicker.zh.js";
             "กันยายน",
             "ตุลาคม",
             "พฤศจิกายน",
-            "ธันวาคม",
+            "ธันวาคม"
         ],
         monthsShort: [
             "ม.ค.",
@@ -332,12 +254,12 @@ import "air-datepicker/dist/js/i18n/datepicker.zh.js";
             "ก.ย.",
             "ต.ค.",
             "พ.ย.",
-            "ธ.ค.",
+            "ธ.ค."
         ],
         today: "ในวันนี้",
         clear: "เคลียร์",
         dateFormat: "dd/mm/yyyy",
         timeFormat: "hh:ii aa",
-        firstDay: 0,
+        firstDay: 0
     };
 })(jQuery);

@@ -9,20 +9,17 @@ export default class Paragraph extends Block {
 
         this._CSS = {
             block: this.api.styles.block,
-            wrapper: "ce-paragraph",
+            wrapper: "ce-paragraph"
         };
 
         if (!this.readOnly) {
             this.onKeyUp = this.onKeyUp.bind(this);
         }
 
-        this._placeholder = this.config.placeholder
-            ? this.config.placeholder
-            : Paragraph.DEFAULT_PLACEHOLDER;
+        this._placeholder = this.config.placeholder ? this.config.placeholder : Paragraph.DEFAULT_PLACEHOLDER;
         this._data = {};
         this._element = this.drawView();
-        this._preserveBlank =
-            this.config.preserveBlank !== undefined ? this.config.preserveBlank : false;
+        this._preserveBlank = this.config.preserveBlank !== undefined ? this.config.preserveBlank : false;
 
         this.data = data;
         this.col = this.data.col ? this.data.col : "12";
@@ -44,9 +41,7 @@ export default class Paragraph extends Block {
     }
 
     show_hide_block_list(hide) {
-        let $wrapper = $(this.wrapper).hasClass("ce-paragraph")
-            ? $(this.wrapper.parentElement)
-            : $(this.wrapper);
+        let $wrapper = $(this.wrapper).hasClass("ce-paragraph") ? $(this.wrapper.parentElement) : $(this.wrapper);
         let $block_list_container = $wrapper.find(".block-list-container.dropdown-list");
         $block_list_container.removeClass("hidden");
         hide && $block_list_container.addClass("hidden");
@@ -83,7 +78,7 @@ export default class Paragraph extends Block {
 		`);
 
         let all_blocks = frappe.workspace_block.blocks;
-        Object.keys(all_blocks).forEach((key) => {
+        Object.keys(all_blocks).forEach(key => {
             let $block_list_item = $(`
 				<div class="block-list-item dropdown-item">
 					<span class="dropdown-item-icon">${all_blocks[key].toolbox.icon}</span>
@@ -91,7 +86,7 @@ export default class Paragraph extends Block {
 				</div>
 			`);
 
-            $block_list_item.click((event) => {
+            $block_list_item.click(event => {
                 event.stopPropagation();
                 const index = this.api.blocks.getCurrentBlockIndex();
                 this.api.blocks.delete();
@@ -135,7 +130,7 @@ export default class Paragraph extends Block {
                 "drag-handle",
                 __("Drag"),
                 null,
-                $para_control,
+                $para_control
             );
 
             return this.wrapper;
@@ -145,7 +140,7 @@ export default class Paragraph extends Block {
 
     merge(data) {
         let newData = {
-            text: this.data.text + data.text,
+            text: this.data.text + data.text
         };
 
         this.data = newData;
@@ -163,7 +158,7 @@ export default class Paragraph extends Block {
         this.wrapper = this._element;
         return {
             text: this.wrapper.innerHTML,
-            col: this.get_col(),
+            col: this.get_col()
         };
     }
 
@@ -173,7 +168,7 @@ export default class Paragraph extends Block {
 
     onPaste(event) {
         const data = {
-            text: event.detail.data.innerHTML,
+            text: event.detail.data.innerHTML
         };
 
         this.data = data;
@@ -186,8 +181,8 @@ export default class Paragraph extends Block {
                 b: true,
                 i: true,
                 a: true,
-                span: true,
-            },
+                span: true
+            }
         };
     }
 
@@ -211,14 +206,14 @@ export default class Paragraph extends Block {
 
     static get pasteConfig() {
         return {
-            tags: ["P"],
+            tags: ["P"]
         };
     }
 
     static get toolbox() {
         return {
             title: "Text",
-            icon: frappe.utils.icon("text", "sm"),
+            icon: frappe.utils.icon("text", "sm")
         };
     }
 }

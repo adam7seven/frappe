@@ -6,5 +6,5 @@ frappe.listview_settings["Web Page"] = {
         } else {
             return [__("Not Published"), "gray", "published,=,Yes"];
         }
-    },
+    }
 };

@@ -3,8 +3,8 @@ frappe.ready(() => {
         frappe
             .call({
                 method: "frappe.www.third_party_apps.delete_client",
-                args: { client_id: $(this).data("client_id") },
+                args: { client_id: $(this).data("client_id") }
             })
-            .done((r) => (location.href = "/third_party_apps"));
+            .done(r => (location.href = "/third_party_apps"));
     });
 });

@@ -11,7 +11,7 @@ Object.assign(window, {
     DELETE: "delete",
     SUBMIT: "submit",
     CANCEL: "cancel",
-    AMEND: "amend",
+    AMEND: "amend"
 });
 
 $.extend(frappe.perm, {
@@ -29,7 +29,7 @@ $.extend(frappe.perm, {
         "export",
         "print",
         "email",
-        "share",
+        "share"
     ],
 
     doctype_perm: {},
@@ -69,7 +69,7 @@ $.extend(frappe.perm, {
             // apply user permissions via docinfo (which is processed server-side)
             let docinfo = frappe.model.get_docinfo(doctype, doc.id);
             if (docinfo && docinfo.permissions) {
-                Object.keys(docinfo.permissions).forEach((ptype) => {
+                Object.keys(docinfo.permissions).forEach(ptype => {
                     base_perm[ptype] = docinfo.permissions[ptype];
                 });
             }
@@ -95,10 +95,8 @@ $.extend(frappe.perm, {
                     if (s.read) {
                         // also give print, email permissions if read
                         // and these permissions exist at level [0]
-                        base_perm.email =
-                            frappe.boot.user.can_email.indexOf(doctype) !== -1 ? 1 : 0;
-                        base_perm.print =
-                            frappe.boot.user.can_print.indexOf(doctype) !== -1 ? 1 : 0;
+                        base_perm.email = frappe.boot.user.can_email.indexOf(doctype) !== -1 ? 1 : 0;
+                        base_perm.print = frappe.boot.user.can_print.indexOf(doctype) !== -1 ? 1 : 0;
                     }
                 }
             }
@@ -112,7 +110,7 @@ $.extend(frappe.perm, {
         return perm;
     },
 
-    get_role_permissions: (meta) => {
+    get_role_permissions: meta => {
         /** Returns a `dict` of evaluated Role Permissions like:
 		{
 			"read": 1,
@@ -123,7 +121,7 @@ $.extend(frappe.perm, {
 
         let perm = [{ read: 0, permlevel: 0 }];
 
-        (meta.permissions || []).forEach((p) => {
+        (meta.permissions || []).forEach(p => {
             const permlevel = cint(p.permlevel);
             const current_perm = (perm[permlevel] ??= { permlevel });
 
@@ -133,7 +131,7 @@ $.extend(frappe.perm, {
 
             // if user has this role
             if (frappe.user_roles.includes(p.role)) {
-                frappe.perm.rights.forEach((right) => {
+                frappe.perm.rights.forEach(right => {
                     if (!p[right]) return;
 
                     current_perm[right] = 1;
@@ -146,7 +144,7 @@ $.extend(frappe.perm, {
         });
 
         // fill gaps with empty object
-        perm = perm.map((p) => p || {});
+        perm = perm.map(p => p || {});
         return perm;
     },
 
@@ -164,10 +162,7 @@ $.extend(frappe.perm, {
             let fields_to_check = frappe.meta.get_fields_to_check_permissions(doctype);
             $.each(fields_to_check, (i, df) => {
                 const user_permissions_for_doctype = user_permissions[df.options] || [];
-                const allowed_records = frappe.perm.get_allowed_docs_for_doctype(
-                    user_permissions_for_doctype,
-                    doctype,
-                );
+                const allowed_records = frappe.perm.get_allowed_docs_for_doctype(user_permissions_for_doctype, doctype);
                 if (allowed_records.length) {
                     rules[df.label] = allowed_records;
                 }
@@ -281,23 +276,21 @@ $.extend(frappe.perm, {
     filter_allowed_docs_for_doctype: (user_permissions, doctype, with_default_doc = true) => {
         // returns docs from the list of user permissions that are allowed under provided doctype
         // also returns default doc when with_default_doc is set
-        const filtered_perms = (user_permissions || []).filter((perm) => {
+        const filtered_perms = (user_permissions || []).filter(perm => {
             return perm.applicable_for === doctype || !perm.applicable_for;
         });
 
-        const allowed_docs = filtered_perms.map((perm) => perm.doc);
+        const allowed_docs = filtered_perms.map(perm => perm.doc);
 
         if (with_default_doc) {
-            const default_doc = filtered_perms
-                .filter((perm) => perm.is_default)
-                .map((record) => record.doc);
+            const default_doc = filtered_perms.filter(perm => perm.is_default).map(record => record.doc);
 
             return {
                 allowed_records: allowed_docs,
-                default_doc: default_doc[0],
+                default_doc: default_doc[0]
             };
         } else {
             return allowed_docs;
         }
-    },
+    }
 });

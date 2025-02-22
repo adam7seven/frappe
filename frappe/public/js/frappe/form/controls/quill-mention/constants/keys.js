@@ -3,7 +3,7 @@ const Keys = {
     ENTER: "Enter",
     ESCAPE: 27,
     UP: "ArrowUp",
-    DOWN: "ArrowDown",
+    DOWN: "ArrowDown"
 };
 
 export default Keys;

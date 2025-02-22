@@ -19,5 +19,5 @@ function frappe_request(path, socket) {
 
 module.exports = {
     get_url,
-    frappe_request,
+    frappe_request
 };

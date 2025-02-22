@@ -25,9 +25,9 @@ frappe.workspace_block.blocks = {
     onboarding: Onboarding,
     quick_list: QuickList,
     number_card: NumberCard,
-    custom_block: CustomBlock,
+    custom_block: CustomBlock
 };
 
 frappe.workspace_block.tunes = {
-    header_size: HeaderSize,
+    header_size: HeaderSize
 };

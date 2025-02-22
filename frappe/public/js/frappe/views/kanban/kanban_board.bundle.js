@@ -18,17 +18,17 @@ frappe.provide("frappe.views");
             columns: [],
             filters_modified: false,
             cur_list: {},
-            empty_state: true,
+            empty_state: true
         },
         mutations: {
             update_state(state, obj) {
                 Object.assign(state, obj);
-            },
+            }
         },
         actions: {
             init: function (context, opts) {
                 context.commit("update_state", {
-                    empty_state: true,
+                    empty_state: true
                 });
                 var board = opts.board;
                 var card_meta = opts.card_meta;
@@ -46,17 +46,15 @@ frappe.provide("frappe.views");
                     columns: columns,
                     cur_list: opts.cur_list,
                     empty_state: false,
-                    wrapper: opts.wrapper,
+                    wrapper: opts.wrapper
                 });
             },
             update_cards: function (context, cards) {
                 var state = context.state;
-                var _cards = cards
-                    .map((card) => prepare_card(card, state))
-                    .uniqBy((card) => card.id);
+                var _cards = cards.map(card => prepare_card(card, state)).uniqBy(card => card.id);
 
                 context.commit("update_state", {
-                    cards: _cards,
+                    cards: _cards
                 });
             },
             add_column: function (context, col) {
@@ -66,7 +64,7 @@ frappe.provide("frappe.views");
                     frappe.msgprint({
                         title: __("Not permitted"),
                         message: __("You are not allowed to create columns"),
-                        indicator: "red",
+                        indicator: "red"
                     });
                 }
             },
@@ -91,12 +89,12 @@ frappe.provide("frappe.views");
                         function (r) {
                             var cols = r.message;
                             context.commit("update_state", {
-                                columns: prepare_columns(cols),
+                                columns: prepare_columns(cols)
                             });
                         },
                         function (err) {
                             console.error(err);
-                        },
+                        }
                     );
             },
             add_card: function (context, { card_title, column_title }) {
@@ -128,7 +126,7 @@ frappe.provide("frappe.views");
                     return insert_doc(doc).then(function (r) {
                         // update the card in place with the updated doc
                         const updated_doc = r.message;
-                        const index = state.cards.findIndex((card) => card.id === old_id);
+                        const index = state.cards.findIndex(card => card.id === old_id);
                         const card = prepare_card(updated_doc, state);
                         const new_cards = state.cards.slice();
                         new_cards[index] = card;
@@ -136,7 +134,7 @@ frappe.provide("frappe.views");
                         const args = {
                             new: 1,
                             id: card.id,
-                            colname: updated_doc[state.board.field_name],
+                            colname: updated_doc[state.board.field_name]
                         };
                         store.dispatch("update_order_for_single_card", args);
                     });
@@ -169,7 +167,7 @@ frappe.provide("frappe.views");
                     args = {
                         board_id: context.state.board.id,
                         docid: card.id,
-                        colname: card.colname,
+                        colname: card.colname
                     };
                 } else {
                     method_name = "update_order_for_single_card";
@@ -179,7 +177,7 @@ frappe.provide("frappe.views");
                         from_colname: card.from_colname,
                         to_colname: card.to_colname,
                         old_index: card.old_index,
-                        new_index: card.new_index,
+                        new_index: card.new_index
                     };
                 }
                 frappe.dom.freeze();
@@ -187,25 +185,23 @@ frappe.provide("frappe.views");
                     .call({
                         method: method_prefix + method_name,
                         args: args,
-                        callback: (r) => {
+                        callback: r => {
                             let board = r.message;
-                            let updated_cards = [
-                                { id: card.id, column: card.to_colname || card.colname },
-                            ];
+                            let updated_cards = [{ id: card.id, column: card.to_colname || card.colname }];
                             let cards = update_cards_column(updated_cards);
                             let columns = prepare_columns(board.columns);
                             context.commit("update_state", {
                                 cards: cards,
-                                columns: columns,
+                                columns: columns
                             });
                             frappe.dom.unfreeze();
-                        },
+                        }
                     })
                     .fail(function () {
                         // revert original order
                         context.commit("update_state", {
                             cards: _cards,
-                            columns: _columns,
+                            columns: _columns
                         });
                         frappe.dom.unfreeze();
                     });
@@ -232,24 +228,24 @@ frappe.provide("frappe.views");
                         method: method_prefix + "update_order",
                         args: {
                             board_id: context.state.board.id,
-                            order: order,
+                            order: order
                         },
-                        callback: (r) => {
+                        callback: r => {
                             var board = r.message[0];
                             var updated_cards = r.message[1];
                             var cards = update_cards_column(updated_cards);
                             var columns = prepare_columns(board.columns);
                             context.commit("update_state", {
                                 cards: cards,
-                                columns: columns,
+                                columns: columns
                             });
-                        },
+                        }
                     })
                     .fail(function () {
                         // revert original order
                         context.commit("update_state", {
                             cards: _cards,
-                            columns: _columns,
+                            columns: _columns
                         });
                     });
             },
@@ -259,14 +255,14 @@ frappe.provide("frappe.views");
                         method: method_prefix + "update_column_order",
                         args: {
                             board_id: context.state.board.id,
-                            order: order,
-                        },
+                            order: order
+                        }
                     })
                     .then(function (r) {
                         var board = r.message;
                         var columns = prepare_columns(board.columns);
                         context.commit("update_state", {
-                            columns: columns,
+                            columns: columns
                         });
                     });
             },
@@ -277,18 +273,18 @@ frappe.provide("frappe.views");
                         args: {
                             board_id: context.state.board.id,
                             column_name: column.title,
-                            indicator: color,
-                        },
+                            indicator: color
+                        }
                     })
                     .then(function (r) {
                         var board = r.message;
                         var columns = prepare_columns(board.columns);
                         context.commit("update_state", {
-                            columns: columns,
+                            columns: columns
                         });
                     });
-            },
-        },
+            }
+        }
     });
 
     frappe.views.KanbanBoard = function (opts) {
@@ -371,7 +367,7 @@ frappe.provide("frappe.views");
                     var order = sortable.toArray();
                     order = order.slice(1);
                     store.dispatch("update_column_order", order);
-                },
+                }
             });
         }
 
@@ -400,7 +396,7 @@ frappe.provide("frappe.views");
                         // not already working -- double entry
                         var title = $compose_column_form.serializeArray()[0].value;
                         var col = {
-                            title: title.trim(),
+                            title: title.trim()
                         };
                         store.dispatch("add_column", col);
                         $compose_column_form.find("input").val("");
@@ -424,16 +420,16 @@ frappe.provide("frappe.views");
             let scrollLeft;
             let draggable = self.$kanban_board[0];
 
-            draggable.addEventListener("mousedown", (e) => {
+            draggable.addEventListener("mousedown", e => {
                 // don't trigger scroll if one of the ancestors of the
                 // clicked element matches any of these selectors
                 let ignoreEl = [
                     ".kanban-column .kanban-column-header",
                     ".kanban-column .add-card",
                     ".kanban-column .kanban-card.new-card-area",
-                    ".kanban-card-wrapper",
+                    ".kanban-card-wrapper"
                 ];
-                if (ignoreEl.some((el) => e.target.closest(el))) return;
+                if (ignoreEl.some(el => e.target.closest(el))) return;
 
                 isDown = true;
                 draggable.classList.add("clickdrag-active");
@@ -448,7 +444,7 @@ frappe.provide("frappe.views");
                 isDown = false;
                 draggable.classList.remove("clickdrag-active");
             });
-            draggable.addEventListener("mousemove", (e) => {
+            draggable.addEventListener("mousemove", e => {
                 if (!isDown) return;
                 e.preventDefault();
                 const x = e.pageX - draggable.offsetLeft;
@@ -491,7 +487,7 @@ frappe.provide("frappe.views");
                     "<ul class='dropdown-menu'>" +
                     options +
                     "</ul>" +
-                    "</div>",
+                    "</div>"
             );
 
             list_row_right.html($dropdown);
@@ -500,7 +496,7 @@ frappe.provide("frappe.views");
                 var column_title = $(this).data().column;
                 var col = {
                     title: column_title,
-                    status: "Archived",
+                    status: "Archived"
                 };
                 store.dispatch("restore_column", col);
             });
@@ -543,8 +539,8 @@ frappe.provide("frappe.views");
                 frappe.render_template("kanban_column", {
                     title: column.title,
                     doctype: store.state.doctype,
-                    indicator: frappe.scrub(column.indicator, "-"),
-                }),
+                    indicator: frappe.scrub(column.indicator, "-")
+                })
             ).appendTo(wrapper);
             // add task, archive
             self.$kanban_cards = self.$kanban_column.find(".kanban-cards");
@@ -554,7 +550,7 @@ frappe.provide("frappe.views");
             self.$kanban_cards.empty();
             var cards = store.state.cards;
             filtered_cards = get_cards_for_column(cards, column);
-            var filtered_cards_ids = filtered_cards.map((card) => card.id);
+            var filtered_cards_ids = filtered_cards.map(card => card.id);
 
             var order = column.order;
             if (order) {
@@ -596,16 +592,14 @@ frappe.provide("frappe.views");
                     // update order
                     const args = {
                         id: decodeURIComponent($(e.item).attr("data-name")),
-                        from_colname: $(e.from)
-                            .parents(".kanban-column")
-                            .attr("data-column-value"),
+                        from_colname: $(e.from).parents(".kanban-column").attr("data-column-value"),
                         to_colname: $(e.to).parents(".kanban-column").attr("data-column-value"),
                         old_index: e.oldIndex,
-                        new_index: e.newIndex,
+                        new_index: e.newIndex
                     };
                     store.dispatch("update_order_for_single_card", args);
                 },
-                onAdd: function () {},
+                onAdd: function () {}
             });
         }
 
@@ -644,7 +638,7 @@ frappe.provide("frappe.views");
                         store
                             .dispatch("add_card", {
                                 card_title,
-                                column_title: column.title,
+                                column_title: column.title
                             })
                             .then(() => {
                                 $btn_add.show();
@@ -668,23 +662,21 @@ frappe.provide("frappe.views");
                 return;
             }
 
-            self.$kanban_column
-                .find(".column-options .dropdown-menu")
-                .on("click", "[data-action]", function () {
-                    var $btn = $(this);
-                    var action = $btn.data().action;
+            self.$kanban_column.find(".column-options .dropdown-menu").on("click", "[data-action]", function () {
+                var $btn = $(this);
+                var action = $btn.data().action;
 
-                    if (action === "archive") {
-                        store.dispatch("archive_column", column);
-                    } else if (action === "indicator") {
-                        var color = $btn.data().indicator;
-                        store.dispatch("set_indicator", { column, color });
-                    }
-                });
+                if (action === "archive") {
+                    store.dispatch("archive_column", column);
+                } else if (action === "indicator") {
+                    var color = $btn.data().indicator;
+                    store.dispatch("set_indicator", { column, color });
+                }
+            });
 
             get_column_indicators(function (indicators) {
                 let html = `<li class="button-group">${indicators
-                    .map((indicator) => {
+                    .map(indicator => {
                         let classname = frappe.scrub(indicator, "-");
                         return `<div data-action="indicator" data-indicator="${indicator}" class="btn btn-default btn-xs indicator-pill ${classname}"></div>`;
                     })
@@ -713,7 +705,7 @@ frappe.provide("frappe.views");
                 creation: card.creation,
                 doc_content: get_doc_content(card),
                 image_url: cur_list.get_image_url(card),
-                form_link: frappe.utils.get_form_link(card.doctype, card.id),
+                form_link: frappe.utils.get_form_link(card.doctype, card.id)
             };
 
             self.$card = $(frappe.render_template("kanban_card", opts)).appendTo(wrapper);
@@ -728,11 +720,8 @@ frappe.provide("frappe.views");
             let fields = [];
             for (let field_name of cur_list.board.fields) {
                 let field =
-                    frappe.meta.docfield_map[card.doctype]?.[field_name] ||
-                    frappe.model.get_std_field(field_name);
-                let label = cur_list.board.show_labels
-                    ? `<span>${__(field.label, null, field.parent)}: </span>`
-                    : "";
+                    frappe.meta.docfield_map[card.doctype]?.[field_name] || frappe.model.get_std_field(field_name);
+                let label = cur_list.board.show_labels ? `<span>${__(field.label, null, field.parent)}: </span>` : "";
                 let value = frappe.format(card.doc[field_name], field);
                 fields.push(`
 					<div class="text-muted text-truncate">
@@ -777,7 +766,7 @@ frappe.provide("frappe.views");
                         height: "4px",
                         borderRadius: "2px",
                         marginBottom: "8px",
-                        backgroundColor: card.color,
+                        backgroundColor: card.color
                     })
                     .appendTo($div);
 
@@ -796,7 +785,7 @@ frappe.provide("frappe.views");
             return frappe.avatar_group(card.assigned_list, 3, {
                 css_class: "avatar avatar-small",
                 action_icon: "add",
-                action: show_assign_to_dialog,
+                action: show_assign_to_dialog
             });
         }
 
@@ -812,7 +801,7 @@ frappe.provide("frappe.views");
                     const users = self.assign_to_dialog.get_values().assign_to;
                     card.assigned_list = [...new Set(card.assigned_list.concat(users))];
                     store.dispatch("update_card", card);
-                },
+                }
             });
             self.assign_to_dialog = self.assign_to.dialog;
             self.assign_to_dialog.show();
@@ -841,7 +830,7 @@ frappe.provide("frappe.views");
             assigned_list: card.assigned_list || assigned_list,
             comment_count: card.comment_count || comment_count,
             color: card.color || null,
-            doc: doc || card,
+            doc: doc || card
         };
     }
 
@@ -851,7 +840,7 @@ frappe.provide("frappe.views");
                 title: col.column_name,
                 status: col.status,
                 order: col.order,
-                indicator: col.indicator || "gray",
+                indicator: col.indicator || "gray"
             };
         });
     }
@@ -885,7 +874,7 @@ frappe.provide("frappe.views");
                     method: "fetch_to_customize",
                     callback: function (r) {
                         resolve(r.docs[0]);
-                    },
+                    }
                 });
             });
         });
@@ -896,7 +885,7 @@ frappe.provide("frappe.views");
         doc.hide_success = true;
         return frappe.call({
             doc: doc,
-            method: "save_customization",
+            method: "save_customization"
         });
     }
 
@@ -904,12 +893,12 @@ frappe.provide("frappe.views");
         return frappe.call({
             method: "frappe.client.insert",
             args: {
-                doc: doc,
+                doc: doc
             },
             callback: function () {
                 frappe.model.clear_doc(doc.doctype, doc.id);
                 frappe.show_alert({ message: __("Saved"), indicator: "green" }, 1);
-            },
+            }
         });
     }
 
@@ -917,7 +906,7 @@ frappe.provide("frappe.views");
         var method;
         var args = {
             board_id: board_id,
-            column_title: column_title,
+            column_title: column_title
         };
         if (action === "add") {
             method = "add_column";
@@ -927,7 +916,7 @@ frappe.provide("frappe.views");
         }
         return frappe.call({
             method: method_prefix + method,
-            args: args,
+            args: args
         });
     }
 

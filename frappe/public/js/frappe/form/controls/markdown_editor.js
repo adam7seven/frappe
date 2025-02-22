@@ -1,6 +1,4 @@
-frappe.ui.form.ControlMarkdownEditor = class ControlMarkdownEditor extends (
-    frappe.ui.form.ControlCode
-) {
+frappe.ui.form.ControlMarkdownEditor = class ControlMarkdownEditor extends frappe.ui.form.ControlCode {
     static editor_class = "markdown";
     make_ace_editor() {
         super.make_ace_editor();
@@ -14,10 +12,8 @@ frappe.ui.form.ControlMarkdownEditor = class ControlMarkdownEditor extends (
 
         this.showing_preview = false;
         this.preview_toggle_btn = $(
-            `<button class="btn btn-default btn-xs ${editor_class}-toggle">${__(
-                "Preview",
-            )}</button>`,
-        ).click((e) => {
+            `<button class="btn btn-default btn-xs ${editor_class}-toggle">${__("Preview")}</button>`
+        ).click(e => {
             if (!this.showing_preview) {
                 this.update_preview();
             }
@@ -62,7 +58,7 @@ frappe.ui.form.ControlMarkdownEditor = class ControlMarkdownEditor extends (
     }
 
     setup_image_drop() {
-        this.ace_editor_target.on("drop", (e) => {
+        this.ace_editor_target.on("drop", e => {
             e.stopPropagation();
             e.preventDefault();
             let { dataTransfer } = e.originalEvent;
@@ -73,7 +69,7 @@ frappe.ui.form.ControlMarkdownEditor = class ControlMarkdownEditor extends (
             if (!files[0].type.includes("image")) {
                 frappe.show_alert({
                     message: __("You can only insert images in Markdown fields", [files[0].id]),
-                    indicator: "orange",
+                    indicator: "orange"
                 });
                 return;
             }
@@ -87,17 +83,14 @@ frappe.ui.form.ControlMarkdownEditor = class ControlMarkdownEditor extends (
                 folder: "Home/Attachments",
                 allow_multiple: false,
                 restrictions: {
-                    allowed_file_types: ["image/*"],
+                    allowed_file_types: ["image/*"]
                 },
-                on_success: (file_doc) => {
+                on_success: file_doc => {
                     if (this.frm && !this.frm.is_new()) {
                         this.frm.attachments.attachment_uploaded(file_doc);
                     }
-                    this.editor.session.insert(
-                        this.editor.getCursorPosition(),
-                        `![](${encodeURI(file_doc.file_url)})`,
-                    );
-                },
+                    this.editor.session.insert(this.editor.getCursorPosition(), `![](${encodeURI(file_doc.file_url)})`);
+                }
             });
         });
     }

@@ -5,5 +5,5 @@ frappe.ui.form.on("RQ Worker", {
     refresh: function (frm) {
         // Nothing in this form is supposed to be editable.
         frm.disable_form();
-    },
+    }
 });

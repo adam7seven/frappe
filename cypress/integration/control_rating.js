@@ -11,22 +11,17 @@ context("Control Rating", () => {
                 {
                     fieldname: "rate",
                     fieldtype: "Rating",
-                    options: 7,
-                },
-            ],
+                    options: 7
+                }
+            ]
         });
     }
 
     it("click on the star rating to record value", () => {
         get_dialog_with_rating().as("dialog");
 
-        cy.get("div.rating")
-            .children("svg")
-            .find(".right-half")
-            .first()
-            .click()
-            .should("have.class", "star-click");
-        cy.get("@dialog").then((dialog) => {
+        cy.get("div.rating").children("svg").find(".right-half").first().click().should("have.class", "star-click");
+        cy.get("@dialog").then(dialog => {
             var value = dialog.get_value("rate");
             expect(value).to.equal(1 / 7);
             dialog.hide();

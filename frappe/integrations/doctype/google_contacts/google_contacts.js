@@ -6,17 +6,17 @@ frappe.ui.form.on("Google Contacts", {
         if (!frm.doc.enable) {
             frm.dashboard.set_headline(
                 __("To use Google Contacts, enable {0}.", [
-                    `<a href='/app/google-settings'>${__("Google Settings")}</a>`,
-                ]),
+                    `<a href='/app/google-settings'>${__("Google Settings")}</a>`
+                ])
             );
         }
 
-        frappe.realtime.on("import_google_contacts", (data) => {
+        frappe.realtime.on("import_google_contacts", data => {
             if (data.progress) {
                 frm.dashboard.show_progress(
                     "Import Google Contacts",
                     (data.progress / data.total) * 100,
-                    __("Importing {0} of {1}", [data.progress, data.total]),
+                    __("Importing {0} of {1}", [data.progress, data.total])
                 );
                 if (data.progress === data.total) {
                     frm.dashboard.hide_progress("Import Google Contacts");
@@ -28,17 +28,17 @@ frappe.ui.form.on("Google Contacts", {
             let sync_button = frm.add_custom_button(__("Sync Contacts"), function () {
                 frappe.show_alert({
                     indicator: "green",
-                    message: __("Syncing"),
+                    message: __("Syncing")
                 });
                 frappe
                     .call({
                         method: "frappe.integrations.doctype.google_contacts.google_contacts.sync",
                         args: {
-                            g_contact: frm.doc.id,
+                            g_contact: frm.doc.id
                         },
-                        btn: sync_button,
+                        btn: sync_button
                     })
-                    .then((r) => {
+                    .then(r => {
                         frappe.hide_progress();
                         frappe.msgprint(r.message);
                     });
@@ -50,14 +50,14 @@ frappe.ui.form.on("Google Contacts", {
             method: "frappe.integrations.doctype.google_contacts.google_contacts.authorize_access",
             args: {
                 g_contact: frm.doc.id,
-                reauthorize: frm.doc.authorization_code ? 1 : 0,
+                reauthorize: frm.doc.authorization_code ? 1 : 0
             },
             callback: function (r) {
                 if (!r.exc) {
                     frm.save();
                     window.open(r.message.url);
                 }
-            },
+            }
         });
-    },
+    }
 });

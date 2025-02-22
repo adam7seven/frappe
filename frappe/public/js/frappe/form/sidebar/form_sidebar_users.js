@@ -9,10 +9,7 @@ frappe.ui.form.SidebarUsers = class {
     }
 
     refresh(data_updated, type) {
-        this.parent =
-            type == "viewers"
-                ? this.$wrapper.find(".form-viewers")
-                : this.$wrapper.find(".form-typers");
+        this.parent = type == "viewers" ? this.$wrapper.find(".form-viewers") : this.$wrapper.find(".form-typers");
         this.parent.empty();
 
         const users = this.get_users(type);
@@ -26,7 +23,7 @@ frappe.ui.form.SidebarUsers = class {
 
         const message = type == "viewers" ? "viewing this document" : "composing an email";
 
-        users.current.forEach((username) => {
+        users.current.forEach(username => {
             if (username === frappe.session.user) {
                 // current user
                 return;
@@ -38,7 +35,7 @@ frappe.ui.form.SidebarUsers = class {
                 fullname: user_info.fullname,
                 abbr: user_info.abbr,
                 color: user_info.color,
-                title: __("{0} is currently {1}", [user_info.fullname, message]),
+                title: __("{0} is currently {1}", [user_info.fullname, message])
             });
 
             if (users.new.indexOf(username) !== -1) {
@@ -50,9 +47,7 @@ frappe.ui.form.SidebarUsers = class {
 
         if (sidebar_users.length) {
             this.parent.parent().removeClass("hidden");
-            this.parent.append(
-                frappe.render_template("users_in_sidebar", { users: sidebar_users }),
-            );
+            this.parent.append(frappe.render_template("users_in_sidebar", { users: sidebar_users }));
         } else {
             this.parent.parent().addClass("hidden");
         }
@@ -68,9 +63,7 @@ frappe.ui.form.SidebarUsers = class {
             if (users.length === 1) {
                 frappe.show_alert(__("{0} is currently {1}", [users[0], message]));
             } else {
-                frappe.show_alert(
-                    __("{0} are currently {1}", [frappe.utils.comma_and(users), message]),
-                );
+                frappe.show_alert(__("{0} are currently {1}", [frappe.utils.comma_and(users), message]));
             }
         }
     }

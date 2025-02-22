@@ -6,5 +6,5 @@ frappe.ui.form.on("Personal Data Download Request", {
         if (frm.is_new()) {
             frm.doc.user = frappe.session.user;
         }
-    },
+    }
 });

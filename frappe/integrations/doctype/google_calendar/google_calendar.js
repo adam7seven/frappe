@@ -6,17 +6,17 @@ frappe.ui.form.on("Google Calendar", {
         if (frm.is_new()) {
             frm.dashboard.set_headline(
                 __("To use Google Calendar, enable {0}.", [
-                    `<a href='/app/google-settings'>${__("Google Settings")}</a>`,
-                ]),
+                    `<a href='/app/google-settings'>${__("Google Settings")}</a>`
+                ])
             );
         }
 
-        frappe.realtime.on("import_google_calendar", (data) => {
+        frappe.realtime.on("import_google_calendar", data => {
             if (data.progress) {
                 frm.dashboard.show_progress(
                     "Syncing Google Calendar",
                     (data.progress / data.total) * 100,
-                    __("Syncing {0} of {1}", [data.progress, data.total]),
+                    __("Syncing {0} of {1}", [data.progress, data.total])
                 );
                 if (data.progress === data.total) {
                     frm.dashboard.hide_progress("Syncing Google Calendar");
@@ -28,16 +28,16 @@ frappe.ui.form.on("Google Calendar", {
             frm.add_custom_button(__("Sync Calendar"), function () {
                 frappe.show_alert({
                     indicator: "green",
-                    message: __("Syncing"),
+                    message: __("Syncing")
                 });
                 frappe
                     .call({
                         method: "frappe.integrations.doctype.google_calendar.google_calendar.sync",
                         args: {
-                            g_calendar: frm.doc.id,
-                        },
+                            g_calendar: frm.doc.id
+                        }
                     })
-                    .then((r) => {
+                    .then(r => {
                         frappe.hide_progress();
                         frappe.msgprint(r.message);
                     });
@@ -54,14 +54,14 @@ frappe.ui.form.on("Google Calendar", {
             method: "frappe.integrations.doctype.google_calendar.google_calendar.authorize_access",
             args: {
                 g_calendar: frm.doc.id,
-                reauthorize: reauthorize,
+                reauthorize: reauthorize
             },
             callback: function (r) {
                 if (!r.exc) {
                     frm.save();
                     window.open(r.message.url);
                 }
-            },
+            }
         });
-    },
+    }
 });

@@ -9,7 +9,7 @@ sass.render(
     {
         data: scss_content,
         outputStyle: "compressed",
-        ...sass_options,
+        ...sass_options
     },
     function (err, result) {
         if (err) {
@@ -24,5 +24,5 @@ sass.render(
                 console.error(err);
             }
         });
-    },
+    }
 );

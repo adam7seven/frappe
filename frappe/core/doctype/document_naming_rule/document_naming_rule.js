@@ -8,8 +8,7 @@ frappe.ui.form.on("Document Naming Rule", {
         frm.skip_before_save = false;
     },
     before_save: function (frm) {
-        if (frm.is_new() || frm.skip_before_save || frm.last_counter_value === frm.doc.counter)
-            return;
+        if (frm.is_new() || frm.skip_before_save || frm.last_counter_value === frm.doc.counter) return;
 
         frappe.validated = false;
         frappe.warn(
@@ -20,27 +19,23 @@ frappe.ui.form.on("Document Naming Rule", {
                 frm.save();
             },
             __("Proceed"),
-            false,
+            false
         );
     },
-    document_type: (frm) => {
+    document_type: frm => {
         // update the select field options with fieldnames
         if (frm.doc.document_type) {
             frappe.model.with_doctype(frm.doc.document_type, () => {
                 let fieldnames = frappe
                     .get_meta(frm.doc.document_type)
-                    .fields.filter((d) => {
+                    .fields.filter(d => {
                         return frappe.model.no_value_type.indexOf(d.fieldtype) === -1;
                     })
-                    .map((d) => {
+                    .map(d => {
                         return { label: `${d.label} (${d.fieldname})`, value: d.fieldname };
                     });
-                frm.fields_dict.conditions.grid.update_docfield_property(
-                    "field",
-                    "options",
-                    fieldnames,
-                );
+                frm.fields_dict.conditions.grid.update_docfield_property("field", "options", fieldnames);
             });
         }
-    },
+    }
 });

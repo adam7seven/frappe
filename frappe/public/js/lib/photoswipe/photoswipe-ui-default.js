@@ -72,26 +72,26 @@
                     {
                         id: "facebook",
                         label: "Share on Facebook",
-                        url: "https://www.facebook.com/sharer/sharer.php?u={{url}}",
+                        url: "https://www.facebook.com/sharer/sharer.php?u={{url}}"
                     },
                     {
                         id: "twitter",
                         label: "Tweet",
-                        url: "https://twitter.com/intent/tweet?text={{text}}&url={{url}}",
+                        url: "https://twitter.com/intent/tweet?text={{text}}&url={{url}}"
                     },
                     {
                         id: "pinterest",
                         label: "Pin it",
                         url:
                             "http://www.pinterest.com/pin/create/button/" +
-                            "?url={{url}}&media={{image_url}}&description={{text}}",
+                            "?url={{url}}&media={{image_url}}&description={{text}}"
                     },
                     {
                         id: "download",
                         label: "Download image",
                         url: "{{raw_image_url}}",
-                        download: true,
-                    },
+                        download: true
+                    }
                 ],
                 getImageURLForShare: function (/* shareButtonData */) {
                     return pswp.currItem.src || "";
@@ -104,7 +104,7 @@
                 },
 
                 indexIndicatorSep: " / ",
-                fitControlsWidth: 1200,
+                fitControlsWidth: 1200
             },
             _blockControlsTap,
             _blockControlsTapTimeout;
@@ -153,11 +153,7 @@
                 }
             },
             _fitControlsInViewport = function () {
-                return (
-                    !pswp.likelyTouchDevice ||
-                    _options.mouseUsed ||
-                    screen.width > _options.fitControlsWidth
-                );
+                return !pswp.likelyTouchDevice || _options.mouseUsed || screen.width > _options.fitControlsWidth;
             },
             _togglePswpClass = function (el, cName, add) {
                 framework[(add ? "add" : "remove") + "Class"](el, "pswp__" + cName);
@@ -218,7 +214,7 @@
                     "pswp_share",
                     "scrollbars=yes,resizable=yes,toolbar=no," +
                         "location=yes,width=550,height=420,top=100,left=" +
-                        (window.screen ? Math.round(screen.width / 2 - 275) : 100),
+                        (window.screen ? Math.round(screen.width / 2 - 275) : 100)
                 );
 
                 if (!_shareModalHidden) {
@@ -261,10 +257,7 @@
                         "</a>";
 
                     if (_options.parseShareButtonOut) {
-                        shareButtonOut = _options.parseShareButtonOut(
-                            shareButtonData,
-                            shareButtonOut,
-                        );
+                        shareButtonOut = _options.parseShareButtonOut(shareButtonData, shareButtonOut);
                     }
                 }
                 _shareModal.children[0].innerHTML = shareButtonOut;
@@ -356,12 +349,8 @@
                     var bars = _options.barsSize;
                     if (_options.captionEl && bars.bottom === "auto") {
                         if (!_fakeCaptionContainer) {
-                            _fakeCaptionContainer = framework.createEl(
-                                "pswp__caption pswp__caption--fake",
-                            );
-                            _fakeCaptionContainer.appendChild(
-                                framework.createEl("pswp__caption__center"),
-                            );
+                            _fakeCaptionContainer = framework.createEl("pswp__caption pswp__caption--fake");
+                            _fakeCaptionContainer.appendChild(framework.createEl("pswp__caption__center"));
                             _controls.insertBefore(_fakeCaptionContainer, _captionContainer);
                             framework.addClass(_controls, "pswp__ui--fit");
                         }
@@ -432,7 +421,7 @@
                 option: "captionEl",
                 onInit: function (el) {
                     _captionContainer = el;
-                },
+                }
             },
             {
                 name: "share-modal",
@@ -442,7 +431,7 @@
                 },
                 onTap: function () {
                     _toggleShareModal();
-                },
+                }
             },
             {
                 name: "button--share",
@@ -452,34 +441,34 @@
                 },
                 onTap: function () {
                     _toggleShareModal();
-                },
+                }
             },
             {
                 name: "button--zoom",
                 option: "zoomEl",
-                onTap: pswp.toggleDesktopZoom,
+                onTap: pswp.toggleDesktopZoom
             },
             {
                 name: "counter",
                 option: "counterEl",
                 onInit: function (el) {
                     _indexIndicator = el;
-                },
+                }
             },
             {
                 name: "button--close",
                 option: "closeEl",
-                onTap: pswp.close,
+                onTap: pswp.close
             },
             {
                 name: "button--arrow--left",
                 option: "arrowEl",
-                onTap: pswp.prev,
+                onTap: pswp.prev
             },
             {
                 name: "button--arrow--right",
                 option: "arrowEl",
-                onTap: pswp.next,
+                onTap: pswp.next
             },
             {
                 name: "button--fs",
@@ -490,15 +479,15 @@
                     } else {
                         _fullscrenAPI.enter();
                     }
-                },
+                }
             },
             {
                 name: "preloader",
                 option: "preloaderEl",
                 onInit: function (el) {
                     _loadingIndicator = el;
-                },
-            },
+                }
+            }
         ];
 
         var _setupUIElements = function () {
@@ -578,8 +567,7 @@
                     t &&
                     t.getAttribute("class") &&
                     e.type.indexOf("mouse") > -1 &&
-                    (t.getAttribute("class").indexOf("__caption") > 0 ||
-                        /(SMALL|STRONG|EM)/i.test(t.tagName))
+                    (t.getAttribute("class").indexOf("__caption") > 0 || /(SMALL|STRONG|EM)/i.test(t.tagName))
                 ) {
                     preventObj.prevent = false;
                 }
@@ -704,19 +692,13 @@
             }
 
             // toogle pswp--fs class on root element
-            framework[(_fullscrenAPI.isFullscreen() ? "add" : "remove") + "Class"](
-                pswp.template,
-                "pswp--fs",
-            );
+            framework[(_fullscrenAPI.isFullscreen() ? "add" : "remove") + "Class"](pswp.template, "pswp--fs");
         };
 
         ui.updateIndexIndicator = function () {
             if (_options.counterEl) {
                 _indexIndicator.innerHTML =
-                    pswp.getCurrentIndex() +
-                    1 +
-                    _options.indexIndicatorSep +
-                    _options.getNumItemsFn();
+                    pswp.getCurrentIndex() + 1 + _options.indexIndicatorSep + _options.getNumItemsFn();
             }
         };
 
@@ -736,10 +718,7 @@
                 }
 
                 if (framework.hasClass(target, "pswp__img")) {
-                    if (
-                        pswp.getZoomLevel() === 1 &&
-                        pswp.getZoomLevel() <= pswp.currItem.fitRatio
-                    ) {
+                    if (pswp.getZoomLevel() === 1 && pswp.getZoomLevel() <= pswp.currItem.fitRatio) {
                         if (_options.clickToCloseNonZoomable) {
                             pswp.close();
                         }
@@ -758,10 +737,7 @@
                 }
 
                 // tap to close gallery
-                if (
-                    _options.tapToClose &&
-                    (framework.hasClass(target, "pswp__img") || _hasCloseClass(target))
-                ) {
+                if (_options.tapToClose && (framework.hasClass(target, "pswp__img") || _hasCloseClass(target))) {
                     pswp.close();
                     return;
                 }
@@ -790,12 +766,7 @@
 
         ui.supportsFullscreen = function () {
             var d = document;
-            return !!(
-                d.exitFullscreen ||
-                d.mozCancelFullScreen ||
-                d.webkitExitFullscreen ||
-                d.msExitFullscreen
-            );
+            return !!(d.exitFullscreen || d.mozCancelFullScreen || d.webkitExitFullscreen || d.msExitFullscreen);
         };
 
         ui.getFullscreenAPI = function () {
@@ -808,28 +779,28 @@
                     enterK: "requestFullscreen",
                     exitK: "exitFullscreen",
                     elementK: "fullscreenElement",
-                    eventK: tF,
+                    eventK: tF
                 };
             } else if (dE.mozRequestFullScreen) {
                 api = {
                     enterK: "mozRequestFullScreen",
                     exitK: "mozCancelFullScreen",
                     elementK: "mozFullScreenElement",
-                    eventK: "moz" + tF,
+                    eventK: "moz" + tF
                 };
             } else if (dE.webkitRequestFullscreen) {
                 api = {
                     enterK: "webkitRequestFullscreen",
                     exitK: "webkitExitFullscreen",
                     elementK: "webkitFullscreenElement",
-                    eventK: "webkit" + tF,
+                    eventK: "webkit" + tF
                 };
             } else if (dE.msRequestFullscreen) {
                 api = {
                     enterK: "msRequestFullscreen",
                     exitK: "msExitFullscreen",
                     elementK: "msFullscreenElement",
-                    eventK: "MSFullscreenChange",
+                    eventK: "MSFullscreenChange"
                 };
             }
 

@@ -20,7 +20,7 @@ frappe.ui.toggle_like = function ($btn, doctype, id, callback) {
         args: {
             doctype: doctype,
             id: id,
-            add: add,
+            add: add
         },
         callback: function (r) {
             // renable click
@@ -43,7 +43,7 @@ frappe.ui.toggle_like = function ($btn, doctype, id, callback) {
                 }
 
                 if (add === "No" && liked_by.includes(frappe.session.user)) {
-                    liked_by = liked_by.filter((user) => user !== frappe.session.user);
+                    liked_by = liked_by.filter(user => user !== frappe.session.user);
                 }
 
                 doc._liked_by = JSON.stringify(liked_by);
@@ -52,7 +52,7 @@ frappe.ui.toggle_like = function ($btn, doctype, id, callback) {
             if (callback) {
                 callback();
             }
-        },
+        }
     });
 };
 
@@ -89,7 +89,7 @@ frappe.ui.setup_like_popover = ($parent, selector) => {
                 // to show social profile of the user
                 let link_base = "/app/user-profile/";
 
-                liked_by.forEach((user) => {
+                liked_by.forEach(user => {
                     // append user list item
                     liked_by_list.append(`
 						<li data-user=${user}>${frappe.avatar(user, "avatar-xs")}
@@ -98,7 +98,7 @@ frappe.ui.setup_like_popover = ($parent, selector) => {
 					`);
                 });
 
-                liked_by_list.children("li").click((ev) => {
+                liked_by_list.children("li").click(ev => {
                     let user = ev.currentTarget.dataset.user;
                     target_element.popover("hide");
                     frappe.set_route(link_base + user);
@@ -107,7 +107,7 @@ frappe.ui.setup_like_popover = ($parent, selector) => {
                 return liked_by_list;
             },
             html: true,
-            container: "body",
+            container: "body"
         });
 
         target_element.popover("show");

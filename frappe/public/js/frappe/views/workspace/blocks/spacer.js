@@ -3,7 +3,7 @@ export default class Spacer extends Block {
     static get toolbox() {
         return {
             title: "Spacer",
-            icon: frappe.utils.icon("spacer", "sm"),
+            icon: frappe.utils.icon("spacer", "sm")
         };
     }
 
@@ -43,7 +43,7 @@ export default class Spacer extends Block {
                 "drag-handle",
                 __("Drag"),
                 null,
-                $widget_control,
+                $widget_control
             );
         }
         return this.wrapper;
@@ -51,7 +51,7 @@ export default class Spacer extends Block {
 
     save() {
         return {
-            col: this.get_col(),
+            col: this.get_col()
         };
     }
 }

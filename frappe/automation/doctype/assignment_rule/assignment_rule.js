@@ -13,8 +13,8 @@ frappe.ui.form.on("Assignment Rule", {
         frm.set_query("document_type", () => {
             return {
                 filters: {
-                    id: ["!=", "ToDo"],
-                },
+                    id: ["!=", "ToDo"]
+                }
             };
         });
     },
@@ -25,33 +25,31 @@ frappe.ui.form.on("Assignment Rule", {
 
     setup_assignment_days_buttons: function (frm) {
         const labels = ["Weekends", "Weekdays", "All Days"];
-        let get_days = (label) => {
+        let get_days = label => {
             const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
             const weekends = ["Saturday", "Sunday"];
             return {
                 "All Days": weekdays.concat(weekends),
                 Weekdays: weekdays,
-                Weekends: weekends,
+                Weekends: weekends
             }[label];
         };
 
-        let set_days = (e) => {
+        let set_days = e => {
             frm.clear_table("assignment_days");
             const label = $(e.currentTarget).text();
-            get_days(label).forEach((day) => frm.add_child("assignment_days", { day: day }));
+            get_days(label).forEach(day => frm.add_child("assignment_days", { day: day }));
             frm.refresh_field("assignment_days");
         };
 
-        labels.forEach((label) =>
-            frm.fields_dict["assignment_days"].grid.add_custom_button(label, set_days, "top"),
-        );
+        labels.forEach(label => frm.fields_dict["assignment_days"].grid.add_custom_button(label, set_days, "top"));
     },
 
     rule: function (frm) {
         const description_map = {
             "Round Robin": __("Assign one by one, in sequence"),
             "Load Balancing": __("Assign to the one who has the least assignments"),
-            "Based on Field": __("Assign to the user set in this field"),
+            "Based on Field": __("Assign to the user set in this field")
         };
         frm.get_field("rule").set_description(description_map[frm.doc.rule]);
     },
@@ -61,17 +59,13 @@ frappe.ui.form.on("Assignment Rule", {
         frm.set_fields_as_options(
             "field",
             doctype,
-            (df) =>
-                ["Dynamic Link", "Data"].includes(df.fieldtype) ||
-                (df.fieldtype == "Link" && df.options == "User"),
-            [{ label: "Owner", value: "owner" }],
+            df => ["Dynamic Link", "Data"].includes(df.fieldtype) || (df.fieldtype == "Link" && df.options == "User"),
+            [{ label: "Owner", value: "owner" }]
         );
         if (doctype) {
-            frm.set_fields_as_options("due_date_based_on", doctype, (df) =>
-                ["Date", "Datetime"].includes(df.fieldtype),
-            ).then((options) =>
-                frm.set_df_property("due_date_based_on", "hidden", !options.length),
-            );
+            frm.set_fields_as_options("due_date_based_on", doctype, df =>
+                ["Date", "Datetime"].includes(df.fieldtype)
+            ).then(options => frm.set_df_property("due_date_based_on", "hidden", !options.length));
         }
-    },
+    }
 });

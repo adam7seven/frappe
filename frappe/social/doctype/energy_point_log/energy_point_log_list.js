@@ -7,7 +7,7 @@ frappe.listview_settings["Energy Point Log"] = {
             Criticism: "red",
             Auto: "blue",
             Revert: "orange",
-            Review: "grey",
+            Review: "grey"
         };
         return [__(doc.type), colors[doc.type], "type,=," + doc.type];
     },
@@ -24,6 +24,6 @@ frappe.listview_settings["Energy Point Log"] = {
         },
         action: function (doc) {
             frappe.set_route("Form", doc.reference_doctype, doc.reference_id);
-        },
-    },
+        }
+    }
 };

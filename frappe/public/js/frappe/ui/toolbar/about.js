@@ -27,8 +27,8 @@ frappe.ui.misc.about = function () {
 					<hr>
 					<p class='text-muted'>${__("&copy; Frappe Technologies Pvt. Ltd. and contributors")} </p>
 					</div>`,
-                frappe.app,
-            ),
+                frappe.app
+            )
         );
 
         frappe.ui.misc.about_dialog = d;
@@ -39,7 +39,7 @@ frappe.ui.misc.about = function () {
                     method: "frappe.utils.change_log.get_versions",
                     callback: function (r) {
                         show_versions(r.message);
-                    },
+                    }
                 });
             } else {
                 show_versions(frappe.versions);
@@ -55,7 +55,7 @@ frappe.ui.misc.about = function () {
                     text = $.format("<p><b>{0}:</b> v{1} ({2})<br></p>", [
                         v.title,
                         v.branch_version || v.version,
-                        v.branch,
+                        v.branch
                     ]);
                 } else {
                     text = $.format("<p><b>{0}:</b> v{1}<br></p>", [v.title, v.version]);

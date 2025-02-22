@@ -14,9 +14,9 @@ context("Date Control", () => {
                     fieldname: "date",
                     fieldtype: "Date",
                     in_list_view: 1,
-                    ...date_field_options,
-                },
-            ],
+                    ...date_field_options
+                }
+            ]
         });
     }
 
@@ -30,12 +30,8 @@ context("Date Control", () => {
         cy.get(".datepicker--nav-title").click({ force: true });
 
         //Inputing values in the date field
-        cy.get(
-            ".datepicker--years > .datepicker--cells > .datepicker--cell[data-year=2020]",
-        ).click();
-        cy.get(
-            ".datepicker--months > .datepicker--cells > .datepicker--cell[data-month=0]",
-        ).click();
+        cy.get(".datepicker--years > .datepicker--cells > .datepicker--cell[data-year=2020]").click();
+        cy.get(".datepicker--months > .datepicker--cells > .datepicker--cell[data-month=0]").click();
         cy.get(".datepicker--days > .datepicker--cells > .datepicker--cell[data-date=15]").click();
 
         // Verify if the selected date is set the date field
@@ -75,12 +71,10 @@ context("Date Control", () => {
         cy.get(".datepicker--button").click();
 
         //Verifying if clicking on "Today" button matches today's date
-        cy.window().then((win) => {
+        cy.window().then(win => {
             // `expect` can not wait like `should`
             cy.wait(500);
-            expect(win.cur_dialog.fields_dict.date.value).to.be.equal(
-                win.frappe.datetime.get_today(),
-            );
+            expect(win.cur_dialog.fields_dict.date.value).to.be.equal(win.frappe.datetime.get_today());
         });
     });
 });

@@ -26,33 +26,31 @@ frappe.ui.form.on("Installed Applications", {
                             fieldname: "app_name",
                             label: __("App Name"),
                             in_list_view: 1,
-                            read_only: 1,
-                        },
-                    ],
-                },
+                            read_only: 1
+                        }
+                    ]
+                }
             ],
             primary_action: function () {
-                const new_order = this.get_values()["apps"].map((row) => row.app_name);
+                const new_order = this.get_values()["apps"].map(row => row.app_name);
                 frappe.call({
                     method: "frappe.core.doctype.installed_applications.installed_applications.update_installed_apps_order",
                     freeze: true,
                     args: {
-                        new_order: new_order,
-                    },
+                        new_order: new_order
+                    }
                 });
                 this.hide();
             },
-            primary_action_label: __("Update Order"),
+            primary_action_label: __("Update Order")
         });
 
         frappe
-            .xcall(
-                "frappe.core.doctype.installed_applications.installed_applications.get_installed_app_order",
-            )
-            .then((data) => {
-                data.forEach((app) => {
+            .xcall("frappe.core.doctype.installed_applications.installed_applications.get_installed_app_order")
+            .then(data => {
+                data.forEach(app => {
                     dialog.fields_dict.apps.df.data.push({
-                        app_name: app,
+                        app_name: app
                     });
                 });
 
@@ -63,5 +61,5 @@ frappe.ui.form.on("Installed Applications", {
                     grid.find(".grid-row-check").replaceWith(frappe.utils.icon("menu"));
                 dialog.show();
             });
-    },
+    }
 });

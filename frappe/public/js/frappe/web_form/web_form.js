@@ -51,7 +51,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 
     setup_listeners() {
         // setup change event for all fields if not already set through client script
-        this.fields.forEach((field) => {
+        this.fields.forEach(field => {
             if (!field.change) {
                 field.change = () => {
                     this.refresh_dependency();
@@ -115,8 +115,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
             /* eslint-disable for-direction */
             for (let idx = me.current_section; idx < me.sections.length; idx--) {
                 let is_empty = me.is_previous_section_empty(idx);
-                me.current_section =
-                    me.current_section > 0 ? me.current_section - 1 : me.current_section;
+                me.current_section = me.current_section > 0 ? me.current_section - 1 : me.current_section;
 
                 if (!is_empty) {
                     break;
@@ -135,9 +134,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
             for (let idx = me.current_section; idx < me.sections.length; idx++) {
                 let is_empty = me.is_next_section_empty(idx);
                 me.current_section =
-                    me.current_section < me.sections.length
-                        ? me.current_section + 1
-                        : me.current_section;
+                    me.current_section < me.sections.length ? me.current_section + 1 : me.current_section;
 
                 if (!is_empty) {
                     break;
@@ -184,7 +181,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
                 __("Discard?"),
                 __("Are you sure you want to discard the changes?"),
                 () => (window.location.href = path),
-                __("Discard"),
+                __("Discard")
             );
         } else {
             window.location.href = path;
@@ -207,17 +204,10 @@ export default class WebForm extends frappe.ui.FieldGroup {
 
             if (field && field.get_value) {
                 let value = field.get_value();
-                if (
-                    field.df.reqd &&
-                    is_null(typeof value === "string" ? strip_html(value) : value)
-                )
+                if (field.df.reqd && is_null(typeof value === "string" ? strip_html(value) : value))
                     errors.push(__(field.df.label));
 
-                if (
-                    field.df.reqd &&
-                    field.df.fieldtype === "Text Editor" &&
-                    is_null(strip_html(cstr(value)))
-                )
+                if (field.df.reqd && field.df.fieldtype === "Text Editor" && is_null(strip_html(cstr(value))))
                     errors.push(__(field.df.label));
 
                 if (field.df.invalid) invalid_values.push(__(field.df.label));
@@ -239,7 +229,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
             frappe.msgprint({
                 title: __("Error", null, "Title of error message in web form"),
                 message: message,
-                indicator: "orange",
+                indicator: "orange"
             });
         }
 
@@ -261,17 +251,12 @@ export default class WebForm extends frappe.ui.FieldGroup {
         $(".center-area.paging").empty();
 
         if (this.in_view_mode) {
-            let paging_text = __("Page {0} of {1}", [
-                this.current_section + 1,
-                this.page_breaks.length + 1,
-            ]);
+            let paging_text = __("Page {0} of {1}", [this.current_section + 1, this.page_breaks.length + 1]);
             $(".center-area.paging").append(`<div>${paging_text}</div>`);
             return;
         }
 
-        this.$slide_progress = $(`<div class="slides-progress"></div>`).appendTo(
-            $(".center-area.paging"),
-        );
+        this.$slide_progress = $(`<div class="slides-progress"></div>`).appendTo($(".center-area.paging"));
         this.$slide_progress.empty();
 
         if (this.page_breaks.length < 1) return;
@@ -355,10 +340,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
         let is_new = this.is_new;
         let valid = this.validate && this.validate();
         if (!valid && valid !== undefined) {
-            frappe.msgprint(
-                __("Couldn't save, please check the data you have entered"),
-                __("Validation Error"),
-            );
+            frappe.msgprint(__("Couldn't save, please check the data you have entered"), __("Validation Error"));
             return false;
         }
 
@@ -385,11 +367,11 @@ export default class WebForm extends frappe.ui.FieldGroup {
             args: {
                 data: this.doc,
                 web_form: this.id,
-                for_payment,
+                for_payment
             },
             btn: $("btn-primary"),
             freeze: true,
-            callback: (response) => {
+            callback: response => {
                 // Check for any exception in response
                 if (!response.exc) {
                     // Success
@@ -404,15 +386,15 @@ export default class WebForm extends frappe.ui.FieldGroup {
                             args: {
                                 file_url: response.message.attachment || response.message.file,
                                 doctype: response.message.doctype,
-                                docid: response.message.id,
-                            },
+                                docid: response.message.id
+                            }
                         });
                     }
                 }
             },
             always: function () {
                 window.saving = false;
-            },
+            }
         });
         return false;
     }

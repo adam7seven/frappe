@@ -14,7 +14,7 @@ export default class NumberCardWidget extends Widget {
             number_card_id: this.number_card_id,
             label: this.label,
             color: this.color,
-            hidden: this.hidden,
+            hidden: this.hidden
         };
     }
 
@@ -28,13 +28,10 @@ export default class NumberCardWidget extends Widget {
     }
 
     make_card() {
-        frappe.model.with_doc("Number Card", this.number_card_id || this.id).then((card) => {
+        frappe.model.with_doc("Number Card", this.number_card_id || this.id).then(card => {
             if (!card) {
                 if (this.document_type) {
-                    frappe.run_serially([
-                        () => this.create_number_card(),
-                        () => this.render_card(),
-                    ]);
+                    frappe.run_serially([() => this.create_number_card(), () => this.render_card()]);
                 } else {
                     // widget doesn't exist so delete
                     this.delete(false);
@@ -53,9 +50,9 @@ export default class NumberCardWidget extends Widget {
         this.set_doc_args();
         return frappe
             .xcall("frappe.desk.doctype.number_card.number_card.create_number_card", {
-                args: this.card_doc,
+                args: this.card_doc
             })
-            .then((doc) => {
+            .then(doc => {
                 this.id = doc.id;
                 this.card_doc = doc;
                 this.widget.attr("data-widget-name", this.id);
@@ -80,14 +77,14 @@ export default class NumberCardWidget extends Widget {
         const route = frappe.utils.generate_route({
             id: id,
             type: is_document_type ? "doctype" : "report",
-            is_query_report: !is_document_type,
+            is_query_report: !is_document_type
         });
 
         if (is_document_type) {
             const filters = JSON.parse(this.card_doc.filters_json);
             frappe.route_options = filters.reduce((acc, filter) => {
                 return Object.assign(acc, {
-                    [`${filter[0]}.${filter[1]}`]: [filter[2], filter[3]],
+                    [`${filter[0]}.${filter[1]}`]: [filter[2], filter[3]]
                 });
             }, {});
         }
@@ -114,8 +111,8 @@ export default class NumberCardWidget extends Widget {
                 function: this.function,
                 aggregate_function_based_on: this.aggregate_function_based_on,
                 color: this.color,
-                filters_json: this.stats_filter,
-            },
+                filters_json: this.stats_filter
+            }
         );
     }
 
@@ -125,27 +122,27 @@ export default class NumberCardWidget extends Widget {
             Custom: {
                 method: this.card_doc.method,
                 args: {
-                    filters: this.filters,
+                    filters: this.filters
                 },
-                get_number: (res) => this.get_number_for_custom_card(res),
+                get_number: res => this.get_number_for_custom_card(res)
             },
             Report: {
                 method: "frappe.desk.query_report.run",
                 args: {
                     report_id: this.card_doc.report_id,
                     filters: this.filters,
-                    ignore_prepared_report: 1,
+                    ignore_prepared_report: 1
                 },
-                get_number: (res) => this.get_number_for_report_card(res),
+                get_number: res => this.get_number_for_report_card(res)
             },
             "Document Type": {
                 method: "frappe.desk.doctype.number_card.number_card.get_result",
                 args: {
                     doc: this.card_doc,
-                    filters: this.filters,
+                    filters: this.filters
                 },
-                get_number: (res) => this.get_number_for_doctype_card(res),
-            },
+                get_number: res => this.get_number_for_doctype_card(res)
+            }
         };
         return settings_map[type];
     }
@@ -196,7 +193,7 @@ export default class NumberCardWidget extends Widget {
             return frappe.model.with_doctype(this.card_doc.document_type, () => {
                 const based_on_df = frappe.meta.get_docfield(
                     this.card_doc.document_type,
-                    this.card_doc.aggregate_function_based_on,
+                    this.card_doc.aggregate_function_based_on
                 );
                 this.set_formatted_number(based_on_df);
             });
@@ -211,7 +208,7 @@ export default class NumberCardWidget extends Widget {
             col[field] && acc.push(col[field]);
             return acc;
         }, []);
-        const col = res.columns.find((col) => col.fieldname == field);
+        const col = res.columns.find(col => col.fieldname == field);
         this.number = frappe.report_utils.get_result_of_fn(this.card_doc.report_function, vals);
         this.set_formatted_number(col, this._generate_common_doc(res.result));
     }
@@ -224,8 +221,7 @@ export default class NumberCardWidget extends Widget {
         const symbol = number_parts[1] || "";
         number_parts[0] = window.convert_old_to_new_number_format(number_parts[0]);
         const formatted_number = frappe.format(number_parts[0], df, null, doc);
-        this.formatted_number =
-            ($(formatted_number).text() || formatted_number) + " " + __(symbol);
+        this.formatted_number = ($(formatted_number).text() || formatted_number) + " " + __(symbol);
     }
 
     _generate_common_doc(rows) {
@@ -233,7 +229,7 @@ export default class NumberCardWidget extends Widget {
         // init with first doc, for each other doc if values are common then keep else discard
         // Whatever is left should be same in all objects
         const common_doc = Object.assign({}, rows[0]);
-        rows.forEach((row) => {
+        rows.forEach(row => {
             if (Array.isArray(row)) return; // totals row
 
             for (const [key, value] of Object.entries(common_doc)) {
@@ -280,7 +276,7 @@ export default class NumberCardWidget extends Widget {
                 Daily: __("since yesterday"),
                 Weekly: __("since last week"),
                 Monthly: __("since last month"),
-                Yearly: __("since last year"),
+                Yearly: __("since last year")
             };
             const stats_qualifier = stats_qualifier_map[this.card_doc.stats_time_interval];
 
@@ -307,9 +303,9 @@ export default class NumberCardWidget extends Widget {
             .xcall("frappe.desk.doctype.number_card.number_card.get_percentage_difference", {
                 doc: this.card_doc,
                 filters: this.filters,
-                result: this.number,
+                result: this.number
             })
-            .then((res) => {
+            .then(res => {
                 if (res !== undefined) {
                     this.percentage_stat = frappe.utils.shorten_number(res);
                 }
@@ -325,7 +321,7 @@ export default class NumberCardWidget extends Widget {
                 action: "action-refresh",
                 handler: () => {
                     this.render_card();
-                },
+                }
             },
             {
                 label: __("Edit"),
@@ -333,8 +329,8 @@ export default class NumberCardWidget extends Widget {
                 handler: () => {
                     let number_card = this.number_card_id || this.id;
                     frappe.set_route("Form", "Number Card", number_card);
-                },
-            },
+                }
+            }
         ];
 
         this.set_card_actions(actions);
@@ -348,10 +344,10 @@ export default class NumberCardWidget extends Widget {
 				<ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
 					${actions
                         .map(
-                            (action) =>
+                            action =>
                                 `<li class="dropdown-item">
 									<a data-action="${action.action}">${action.label}</a>
-								</li>`,
+								</li>`
                         )
                         .join("")}
 				</ul>
@@ -359,7 +355,7 @@ export default class NumberCardWidget extends Widget {
 
         this.card_actions.find("a[data-action]").each((i, o) => {
             const action = o.dataset.action;
-            $(o).click(actions.find((a) => a.action === action));
+            $(o).click(actions.find(a => a.action === action));
         });
 
         this.action_area.html(this.card_actions);

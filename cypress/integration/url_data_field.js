@@ -34,9 +34,7 @@ context("URL Data Field Input", () => {
         });
 
         it("should inject anchor tag in read-only URL data field", () => {
-            cy.get('[data-fieldname="read_only_url"]')
-                .find("a")
-                .should("have.attr", "target", "_blank");
+            cy.get('[data-fieldname="read_only_url"]').find("a").should("have.attr", "target", "_blank");
         });
     });
 });

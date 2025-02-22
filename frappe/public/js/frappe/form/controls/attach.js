@@ -10,7 +10,7 @@ frappe.ui.form.ControlAttach = class ControlAttach extends frappe.ui.form.Contro
                 },
                 attach_doc_image: function () {
                     me.on_attach_doc_image();
-                },
+                }
             });
         this.$value = $(
             `<div class="attached-file flex justify-between align-center">
@@ -22,7 +22,7 @@ frappe.ui.form.ControlAttach = class ControlAttach extends frappe.ui.form.Contro
 					<a class="btn btn-xs btn-default" data-action="reload_attachment">${__("Reload File")}</a>
 					<a class="btn btn-xs btn-default" data-action="clear_attachment">${__("Clear")}</a>
 				</div>
-			</div>`,
+			</div>`
         )
             .prependTo(me.input_area)
             .toggle(false);
@@ -68,11 +68,11 @@ frappe.ui.form.ControlAttach = class ControlAttach extends frappe.ui.form.Contro
     set_upload_options() {
         let options = {
             allow_multiple: false,
-            on_success: (file) => {
+            on_success: file => {
                 this.on_upload_complete(file);
                 this.toggle_reload_button();
             },
-            restrictions: {},
+            restrictions: {}
         };
 
         if (this.frm) {

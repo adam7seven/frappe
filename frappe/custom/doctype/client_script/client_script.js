@@ -7,9 +7,7 @@ frappe.ui.form.on("Client Script", {
     },
     refresh(frm) {
         if (frm.doc.dt && frm.doc.script) {
-            frm.add_custom_button(__("Go to {0}", [frm.doc.dt]), () =>
-                frappe.set_route("List", frm.doc.dt, "List"),
-            );
+            frm.add_custom_button(__("Go to {0}", [frm.doc.dt]), () => frappe.set_route("List", frm.doc.dt, "List"));
         }
 
         if (frm.doc.view == "Form") {
@@ -17,9 +15,9 @@ frappe.ui.form.on("Client Script", {
                 frappe.model.with_doctype(frm.doc.dt, () => {
                     const child_tables = frappe.meta
                         .get_docfields(frm.doc.dt, null, {
-                            fieldtype: "Table",
+                            fieldtype: "Table"
                         })
-                        .map((df) => df.options);
+                        .map(df => df.options);
 
                     const d = new frappe.ui.Dialog({
                         title: __("Select Child Table"),
@@ -33,17 +31,17 @@ frappe.ui.form.on("Client Script", {
                                     return {
                                         filters: {
                                             istable: 1,
-                                            id: ["in", child_tables],
-                                        },
+                                            id: ["in", child_tables]
+                                        }
                                     };
-                                },
-                            },
+                                }
+                            }
                         ],
                         primary_action: ({ cdt }) => {
                             cdt = d.get_field("cdt").value;
                             frm.events.add_script_for_doctype(frm, cdt);
                             d.hide();
-                        },
+                        }
                     });
 
                     d.show();
@@ -59,8 +57,8 @@ frappe.ui.form.on("Client Script", {
 
         frm.set_query("dt", {
             filters: {
-                istable: 0,
-            },
+                istable: 0
+            }
         });
     },
 
@@ -101,7 +99,7 @@ frappe.ui.form.on('${doctype}', {
             script += "\n\n";
         }
         frm.set_value("script", script + boilerplate);
-    },
+    }
 });
 
 const SAMPLE_HTML = `<h3>Client Script Help</h3>

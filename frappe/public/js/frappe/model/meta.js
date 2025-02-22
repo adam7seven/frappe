@@ -75,15 +75,10 @@ $.extend(frappe.meta, {
     },
 
     set_indicator_formatter: function (doctype, fieldname, id, get_text, get_color) {
-        frappe.meta.get_docfield(doctype, fieldname, id).formatter = function (
-            value,
-            df,
-            options,
-            doc,
-        ) {
+        frappe.meta.get_docfield(doctype, fieldname, id).formatter = function (value, df, options, doc) {
             return repl('<span class="indicator %(color)s">%(name)s</span>', {
                 color: get_color(),
-                name: get_text(),
+                name: get_text()
             });
         };
     },
@@ -133,12 +128,9 @@ $.extend(frappe.meta, {
     },
 
     get_fieldnames: function (doctype, id, filters) {
-        return $.map(
-            frappe.utils.filter_dict(frappe.meta.docfield_map[doctype], filters),
-            function (df) {
-                return df.fieldname;
-            },
-        );
+        return $.map(frappe.utils.filter_dict(frappe.meta.docfield_map[doctype], filters), function (df) {
+            return df.fieldname;
+        });
     },
 
     has_field: function (dt, fn) {
@@ -162,10 +154,7 @@ $.extend(frappe.meta, {
             out = doctype;
         } else {
             frappe.meta.get_table_fields(doctype).every(function (d) {
-                if (
-                    frappe.meta.has_field(d.options, key) ||
-                    frappe.model.child_table_field_list.includes(key)
-                ) {
+                if (frappe.meta.has_field(d.options, key) || frappe.model.child_table_field_list.includes(key)) {
                     out = d.options;
                     return false;
                 }
@@ -173,12 +162,7 @@ $.extend(frappe.meta, {
             });
 
             if (!out) {
-                console.log(
-                    __("Warning: Unable to find {0} in any table related to {1}", [
-                        key,
-                        __(doctype),
-                    ]),
-                );
+                console.log(__("Warning: Unable to find {0} in any table related to {1}", [key, __(doctype)]));
             }
         }
         return out;
@@ -186,7 +170,7 @@ $.extend(frappe.meta, {
 
     get_parentfield: function (parent_dt, child_dt) {
         var df = (frappe.get_doc("DocType", parent_dt).fields || []).filter(
-            (df) => frappe.model.table_fields.includes(df.fieldtype) && df.options === child_dt,
+            df => frappe.model.table_fields.includes(df.fieldtype) && df.options === child_dt
         );
         if (!df.length) throw "parentfield not found for " + parent_dt + ", " + child_dt;
         return df[0].fieldname;
@@ -204,7 +188,7 @@ $.extend(frappe.meta, {
             _user_tags: __("Tags"),
             _liked_by: __("Liked By"),
             _comments: __("Comments"),
-            _assign: __("Assigned To"),
+            _assign: __("Assigned To")
         };
         if (standard[fn]) {
             return standard[fn];
@@ -246,22 +230,17 @@ $.extend(frappe.meta, {
             "Legal",
             "Letter",
             "Tabloid",
-            "Custom",
+            "Custom"
         ];
     },
 
     get_print_formats: function (doctype) {
         var print_format_list = ["Standard"];
         var default_print_format = locals.DocType[doctype].default_print_format;
-        let enable_raw_printing = frappe.model.get_doc(
-            ":Print Settings",
-            "Print Settings",
-        ).enable_raw_printing;
-        var print_formats = frappe
-            .get_list("Print Format", { doc_type: doctype })
-            .sort(function (a, b) {
-                return a > b ? 1 : -1;
-            });
+        let enable_raw_printing = frappe.model.get_doc(":Print Settings", "Print Settings").enable_raw_printing;
+        var print_formats = frappe.get_list("Print Format", { doc_type: doctype }).sort(function (a, b) {
+            return a > b ? 1 : -1;
+        });
         $.each(print_formats, function (i, d) {
             if (
                 !print_format_list.includes(d.id) &&
@@ -335,5 +314,5 @@ $.extend(frappe.meta, {
             precision = cint(frappe.defaults.get_default("float_precision")) || 3;
         }
         return precision;
-    },
+    }
 });

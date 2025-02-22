@@ -16,9 +16,9 @@ context("Table MultiSelect", () => {
         cy.get("@input").type("test@erpnext", { delay: 100 });
         cy.wait(500);
         cy.get("@input").type("{enter}");
-        cy.get(
-            '.frappe-control[data-fieldname="users"] .form-control .tb-selected-value .btn-link-to-form',
-        ).as("selected-value");
+        cy.get('.frappe-control[data-fieldname="users"] .form-control .tb-selected-value .btn-link-to-form').as(
+            "selected-value"
+        );
         cy.get("@selected-value").should("contain", "test@erpnext.com");
 
         cy.intercept("POST", "/api/method/frappe.desk.form.save.savedocs").as("save_form");
@@ -32,17 +32,13 @@ context("Table MultiSelect", () => {
         cy.go_to_list("Assignment Rule");
         cy.get(`.list-subject:contains("table multiselect")`).last().find("a").click();
         cy.get('input[data-fieldname="users"]').focus().type("{backspace}");
-        cy.get('.frappe-control[data-fieldname="users"] .form-control .tb-selected-value').should(
-            "not.exist",
-        );
+        cy.get('.frappe-control[data-fieldname="users"] .form-control .tb-selected-value').should("not.exist");
     });
 
     it("delete value using x", () => {
         cy.go_to_list("Assignment Rule");
         cy.get(`.list-subject:contains("table multiselect")`).last().find("a").click();
-        cy.get('.frappe-control[data-fieldname="users"] .form-control .tb-selected-value').as(
-            "existing_value",
-        );
+        cy.get('.frappe-control[data-fieldname="users"] .form-control .tb-selected-value').as("existing_value");
         cy.get("@existing_value").find(".btn-remove").click();
         cy.get("@existing_value").should("not.exist");
     });
@@ -50,9 +46,7 @@ context("Table MultiSelect", () => {
     it("navigate to selected value", () => {
         cy.go_to_list("Assignment Rule");
         cy.get(`.list-subject:contains("table multiselect")`).last().find("a").click();
-        cy.get('.frappe-control[data-fieldname="users"] .form-control .tb-selected-value').as(
-            "existing_value",
-        );
+        cy.get('.frappe-control[data-fieldname="users"] .form-control .tb-selected-value').as("existing_value");
         cy.get("@existing_value").find(".btn-link-to-form").click();
         cy.location("pathname").should("contain", "/user/test%40erpnext.com");
     });

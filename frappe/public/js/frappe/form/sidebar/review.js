@@ -13,9 +13,9 @@ frappe.ui.form.Review = class Review {
     update_points() {
         return frappe
             .xcall("frappe.social.doctype.energy_point_log.energy_point_log.get_energy_points", {
-                user: frappe.session.user,
+                user: frappe.session.user
             })
-            .then((data) => {
+            .then(data => {
                 frappe.boot.points = data;
                 this.points = data;
             });
@@ -32,7 +32,7 @@ frappe.ui.form.Review = class Review {
 						${__("You do not have enough review points")}
 					</div>`;
                 },
-                html: true,
+                html: true
             });
         } else {
             review_button.click(() => this.show_review_dialog());
@@ -51,7 +51,7 @@ frappe.ui.form.Review = class Review {
                     reqd: 1,
                     options: user_options,
                     ignore_validation: 1,
-                    description: __("Only users involved in the document are listed"),
+                    description: __("Only users involved in the document are listed")
                 },
                 {
                     fieldname: "review_type",
@@ -60,32 +60,30 @@ frappe.ui.form.Review = class Review {
                     options: [
                         {
                             label: __("Appreciate"),
-                            value: "Appreciation",
+                            value: "Appreciation"
                         },
                         {
                             label: __("Criticize"),
-                            value: "Criticism",
-                        },
+                            value: "Criticism"
+                        }
                     ],
-                    default: "Appreciation",
+                    default: "Appreciation"
                 },
                 {
                     fieldname: "points",
                     fieldtype: "Int",
                     label: __("Points"),
                     reqd: 1,
-                    description: __("Currently you have {0} review points", [
-                        this.points.review_points,
-                    ]),
+                    description: __("Currently you have {0} review points", [this.points.review_points])
                 },
                 {
                     fieldtype: "Small Text",
                     fieldname: "reason",
                     reqd: 1,
-                    label: __("Reason"),
-                },
+                    label: __("Reason")
+                }
             ],
-            primary_action: (values) => {
+            primary_action: values => {
                 review_dialog.disable_primary_action();
                 if (values.points > this.points.review_points) {
                     return frappe.msgprint(__("You do not have enough points"));
@@ -94,14 +92,14 @@ frappe.ui.form.Review = class Review {
                     .xcall("frappe.social.doctype.energy_point_log.energy_point_log.review", {
                         doc: {
                             doctype: this.frm.doc.doctype,
-                            id: this.frm.doc.id,
+                            id: this.frm.doc.id
                         },
                         to_user: values.to_user,
                         points: values.points,
                         review_type: values.review_type,
-                        reason: values.reason,
+                        reason: values.reason
                     })
-                    .then((review) => {
+                    .then(review => {
                         review_dialog.hide();
                         review_dialog.clear();
                         this.frm.get_docinfo().energy_point_logs.unshift(review);
@@ -113,17 +111,17 @@ frappe.ui.form.Review = class Review {
                         review_dialog.enable_primary_action();
                     });
             },
-            primary_action_label: __("Submit"),
+            primary_action_label: __("Submit")
         });
         review_dialog.show();
     }
     update_reviewers() {
         const review_logs = this.frm
             .get_docinfo()
-            .energy_point_logs.filter((log) => ["Appreciation", "Criticism"].includes(log.type));
+            .energy_point_logs.filter(log => ["Appreciation", "Criticism"].includes(log.type));
 
         this.reviews.find(".review").remove();
-        review_logs.forEach((log) => {
+        review_logs.forEach(log => {
             let review_pill = $(`
 				<div class="review ${log.points < 0 ? "criticism" : "appreciation"} cursor-pointer">
 					${frappe.avatar(log.owner)}
@@ -139,9 +137,7 @@ frappe.ui.form.Review = class Review {
     setup_detail_popover(el, data) {
         let subject = "";
         let fullname = frappe.user.full_name(data.user);
-        let timestamp = `<span class="text-muted">${frappe.datetime.comment_when(
-            data.creation,
-        )}</span>`;
+        let timestamp = `<span class="text-muted">${frappe.datetime.comment_when(data.creation)}</span>`;
         let message_parts = [Math.abs(data.points), fullname, timestamp];
         if (data.type === "Appreciation") {
             if (data.points == 1) {
@@ -190,7 +186,7 @@ frappe.ui.form.Review = class Review {
 				`;
             },
             html: true,
-            container: "body",
+            container: "body"
         });
 
         return el;

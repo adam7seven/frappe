@@ -30,11 +30,7 @@ export default class Grid {
         this.fields_map = {};
         this.template = null;
         this.multiple_set = false;
-        if (
-            this.frm &&
-            this.frm.meta.__form_grid_templates &&
-            this.frm.meta.__form_grid_templates[this.df.fieldname]
-        ) {
+        if (this.frm && this.frm.meta.__form_grid_templates && this.frm.meta.__form_grid_templates[this.df.fieldname]) {
             this.template = this.frm.meta.__form_grid_templates[this.df.fieldname];
         }
         this.filter = {};
@@ -164,15 +160,10 @@ export default class Grid {
 
     set_doc_url() {
         let unsupported_fieldtypes = frappe.model.no_value_type.filter(
-            (x) => frappe.model.table_fields.indexOf(x) === -1,
+            x => frappe.model.table_fields.indexOf(x) === -1
         );
 
-        if (
-            !this.df.label ||
-            !this.df?.documentation_url ||
-            unsupported_fieldtypes.includes(this.df.fieldtype)
-        )
-            return;
+        if (!this.df.label || !this.df?.documentation_url || unsupported_fieldtypes.includes(this.df.fieldtype)) return;
 
         let $help = $(this.parent).find("span.help");
         $help.empty();
@@ -184,12 +175,12 @@ export default class Grid {
     setup_grid_pagination() {
         this.grid_pagination = new GridPagination({
             grid: this,
-            wrapper: this.wrapper,
+            wrapper: this.wrapper
         });
     }
 
     setup_check() {
-        this.wrapper.on("click", ".grid-row-check", (e) => {
+        this.wrapper.on("click", ".grid-row-check", e => {
             const $check = $(e.currentTarget);
             const checked = $check.prop("checked");
             const is_select_all = $check.parents(".grid-heading-row:first").length !== 0;
@@ -242,11 +233,11 @@ export default class Grid {
 
         let tasks = [];
         let selected_children = this.get_selected_children();
-        selected_children.forEach((doc) => {
+        selected_children.forEach(doc => {
             tasks.push(() => {
                 if (!this.frm) {
                     this.df.data = this.get_data();
-                    this.df.data = this.df.data.filter((row) => row.idx != doc.idx);
+                    this.df.data = this.df.data.filter(row => row.idx != doc.idx);
                 }
                 this.grid_rows_by_docid[doc.id]?.remove();
                 dirty = true;
@@ -264,8 +255,7 @@ export default class Grid {
         tasks.push(() => {
             if (dirty) {
                 this.refresh();
-                this.frm &&
-                    this.frm.script_manager.trigger(this.df.fieldname + "_delete", this.doctype);
+                this.frm && this.frm.script_manager.trigger(this.df.fieldname + "_delete", this.doctype);
             }
         });
 
@@ -283,8 +273,7 @@ export default class Grid {
             $(this.parent).find(".rows").empty();
             this.grid_rows = [];
             this.refresh();
-            this.frm &&
-                this.frm.script_manager.trigger(this.df.fieldname + "_delete", this.doctype);
+            this.frm && this.frm.script_manager.trigger(this.df.fieldname + "_delete", this.doctype);
             this.frm && this.frm.dirty();
             this.scroll_to_top();
         });
@@ -311,33 +300,30 @@ export default class Grid {
 
         this.remove_rows_button.toggleClass(
             "hidden",
-            this.wrapper.find(".grid-body .grid-row-check:checked:first").length ? false : true,
+            this.wrapper.find(".grid-body .grid-row-check:checked:first").length ? false : true
         );
 
-        let select_all_checkbox_checked = this.wrapper.find(
-            ".grid-heading-row .grid-row-check:checked:first",
-        ).length;
-        let show_delete_all_btn =
-            select_all_checkbox_checked && this.data.length > this.get_selected_children().length;
+        let select_all_checkbox_checked = this.wrapper.find(".grid-heading-row .grid-row-check:checked:first").length;
+        let show_delete_all_btn = select_all_checkbox_checked && this.data.length > this.get_selected_children().length;
         this.remove_all_rows_button.toggleClass("hidden", !show_delete_all_btn);
     }
 
     get_selected() {
         return (this.grid_rows || [])
-            .map((row) => {
+            .map(row => {
                 return row.doc.__checked ? row.doc.id : null;
             })
-            .filter((d) => {
+            .filter(d => {
                 return d;
             });
     }
 
     get_selected_children() {
         return (this.data || [])
-            .map((row) => {
+            .map(row => {
                 return row.__checked ? row : 0;
             })
-            .filter((d) => {
+            .filter(d => {
                 return d;
             });
     }
@@ -363,7 +349,7 @@ export default class Grid {
             docfields: this.docfields,
             frm: this.frm,
             grid: this,
-            configure_columns: true,
+            configure_columns: true
         });
 
         this.header_search = new GridRow({
@@ -372,7 +358,7 @@ export default class Grid {
             docfields: this.docfields,
             frm: this.frm,
             grid: this,
-            show_search: true,
+            show_search: true
         });
         this.header_search.row.addClass("filter-row");
         if (this.header_search.show_search || this.header_search.show_search_row()) {
@@ -414,11 +400,7 @@ export default class Grid {
         this.setup_fields();
 
         if (this.frm) {
-            this.display_status = frappe.perm.get_field_display_status(
-                this.df,
-                this.frm.doc,
-                this.perm,
-            );
+            this.display_status = frappe.perm.get_field_display_status(this.df, this.frm.doc, this.perm);
         } else if (this.df.is_web_form && this.control) {
             this.display_status = this.control.get_status();
         } else {
@@ -496,7 +478,7 @@ export default class Grid {
                     docfields: this.docfields,
                     doc: d,
                     frm: this.frm,
-                    grid: this,
+                    grid: this
                 });
                 this.grid_rows[ri] = grid_row;
             }
@@ -521,16 +503,11 @@ export default class Grid {
                     this.wrapper.find(".grid-add-multiple-rows").removeClass("hidden");
                 }
             }
-        } else if (
-            this.grid_rows.length < this.grid_pagination.page_length &&
-            !this.df.allow_bulk_edit
-        ) {
+        } else if (this.grid_rows.length < this.grid_pagination.page_length && !this.df.allow_bulk_edit) {
             this.wrapper.find(".grid-footer").toggle(false);
         }
 
-        this.wrapper
-            .find(".grid-add-row, .grid-add-multiple-rows, .grid-upload")
-            .toggle(this.is_editable());
+        this.wrapper.find(".grid-add-row, .grid-add-multiple-rows, .grid-upload").toggle(this.is_editable());
     }
 
     truncate_rows() {
@@ -548,18 +525,11 @@ export default class Grid {
         // reset docfield
         if (this.frm && this.frm.docid) {
             // use doc specific docfield object
-            this.df = frappe.meta.get_docfield(
-                this.frm.doctype,
-                this.df.fieldname,
-                this.frm.docid,
-            );
+            this.df = frappe.meta.get_docfield(this.frm.doctype, this.df.fieldname, this.frm.docid);
         } else {
             // use non-doc specific docfield
             if (this.df.options) {
-                this.df =
-                    frappe.meta.get_docfield(this.df.options, this.df.fieldname) ||
-                    this.df ||
-                    null;
+                this.df = frappe.meta.get_docfield(this.df.options, this.df.fieldname) || this.df || null;
             }
         }
 
@@ -570,7 +540,7 @@ export default class Grid {
             this.docfields = this.df.fields;
         }
 
-        this.docfields.forEach((df) => {
+        this.docfields.forEach(df => {
             this.fields_map[df.fieldname] = df;
         });
     }
@@ -586,7 +556,7 @@ export default class Grid {
             draggable: ".grid-row",
             animation: 100,
             filter: "li, a",
-            onMove: (event) => {
+            onMove: event => {
                 // don't move if editable
                 if (!this.is_editable()) {
                     return false;
@@ -598,19 +568,14 @@ export default class Grid {
                     return false;
                 }
             },
-            onUpdate: (event) => {
+            onUpdate: event => {
                 let idx = $(event.item).closest(".grid-row").attr("data-idx") - 1;
                 let doc = this.data[idx % this.grid_pagination.page_length];
                 this.renumber_based_on_dom();
-                this.frm &&
-                    this.frm.script_manager.trigger(
-                        this.df.fieldname + "_move",
-                        this.df.options,
-                        doc.id,
-                    );
+                this.frm && this.frm.script_manager.trigger(this.df.fieldname + "_move", this.df.options, doc.id);
                 this.refresh();
                 this.frm && this.frm.dirty();
-            },
+            }
         });
 
         this.frm && $(this.frm.wrapper).trigger("grid-make-sortable", [this.frm]);
@@ -621,9 +586,7 @@ export default class Grid {
         if (filter_field) {
             data = this.get_filtered_data();
         } else {
-            data = this.frm
-                ? this.frm.doc[this.df.fieldname] || []
-                : this.df.data || this.get_modal_data();
+            data = this.frm ? this.frm.doc[this.df.fieldname] || [] : this.df.data || this.get_modal_data();
         }
         return data;
     }
@@ -634,7 +597,7 @@ export default class Grid {
         if (!all_data) return;
 
         for (const field in this.filter) {
-            all_data = all_data.filter((data) => {
+            all_data = all_data.filter(data => {
                 let { df, value } = this.filter[field];
                 return this.get_data_based_on_fieldtype(df, data, value.toLowerCase());
             });
@@ -660,9 +623,7 @@ export default class Grid {
                 return data;
             }
         } else if (fieldtype === "Barcode" && fieldvalue) {
-            let barcode = fieldvalue.startsWith("<svg")
-                ? $(fieldvalue).attr("data-barcode-value")
-                : fieldvalue;
+            let barcode = fieldvalue.startsWith("<svg") ? $(fieldvalue).attr("data-barcode-value") : fieldvalue;
 
             if (barcode.toLowerCase().includes(value)) {
                 return data;
@@ -691,7 +652,7 @@ export default class Grid {
 
     get_modal_data() {
         return this.df.get_data
-            ? this.df.get_data().filter((data) => {
+            ? this.df.get_data().filter(data => {
                   if (!this.deleted_docs || !this.deleted_docs.includes(data.id)) {
                       return data;
                   }
@@ -716,8 +677,8 @@ export default class Grid {
     set_editable_grid_column_disp(fieldname, show) {
         //Hide columns for editable grids
         if (this.meta.editable_grid && this.grid_rows) {
-            this.grid_rows.forEach((row) => {
-                row.columns_list.forEach((column) => {
+            this.grid_rows.forEach(row => {
+                row.columns_list.forEach(column => {
                     //Hide the column specified
                     if (column.df.fieldname == fieldname) {
                         if (show) {
@@ -736,8 +697,7 @@ export default class Grid {
                                 //Format the editable column appropriately if it is now visible
                                 if (column.field) {
                                     column.field.refresh();
-                                    if (column.field.$input)
-                                        column.field.$input.toggleClass("input-sm", true);
+                                    if (column.field.$input) column.field.$input.toggleClass("input-sm", true);
                                 }
                             }
                         } else {
@@ -821,12 +781,7 @@ export default class Grid {
             }
 
             if (this.frm) {
-                var d = frappe.model.add_child(
-                    this.frm.doc,
-                    this.df.options,
-                    this.df.fieldname,
-                    idx,
-                );
+                var d = frappe.model.add_child(this.frm.doc, this.df.options, this.df.fieldname, idx);
                 if (copy_doc) {
                     d = this.duplicate_row(d, copy_doc);
                 }
@@ -858,10 +813,7 @@ export default class Grid {
                 } else {
                     if (!this.allow_on_grid_editing()) {
                         // open last row only if on-grid-editing is disabled
-                        this.wrapper
-                            .find(".grid-row:last")
-                            .data("grid_row")
-                            .toggle_view(true, callback);
+                        this.wrapper.find(".grid-row:last").data("grid_row").toggle_view(true, callback);
                     }
                 }
             }
@@ -876,8 +828,7 @@ export default class Grid {
 
         $rows.find(".grid-row").each((i, item) => {
             let $item = $(item);
-            let index =
-                (this.grid_pagination.page_index - 1) * this.grid_pagination.page_length + i;
+            let index = (this.grid_pagination.page_index - 1) * this.grid_pagination.page_length + i;
             let d = this.grid_rows_by_docid[$item.attr("data-name")].doc;
             d.idx = index + 1;
             $item.attr("data-idx", d.idx);
@@ -898,7 +849,7 @@ export default class Grid {
             "parent",
             "doctype",
             "id",
-            "parentfield",
+            "parentfield"
         ]);
 
         const docfields = frappe.get_meta(this.doctype).fields || [];
@@ -921,10 +872,7 @@ export default class Grid {
         }
 
         setTimeout(() => {
-            this.grid_rows[idx].row
-                .find('input[type="Text"],textarea,select')
-                .filter(":visible:first")
-                .focus();
+            this.grid_rows[idx].row.find('input[type="Text"],textarea,select').filter(":visible:first").focus();
         }, 100);
     }
 
@@ -968,12 +916,7 @@ export default class Grid {
                 }
 
                 // attach formatter on refresh
-                if (
-                    df.fieldtype == "Link" &&
-                    !df.formatter &&
-                    df.parent &&
-                    frappe.meta.docfield_map[df.parent]
-                ) {
+                if (df.fieldtype == "Link" && !df.formatter && df.parent && frappe.meta.docfield_map[df.parent]) {
                     const docfield = frappe.meta.docfield_map[df.parent][df.fieldname];
                     if (docfield && docfield.formatter) {
                         df.formatter = docfield.formatter;
@@ -993,11 +936,7 @@ export default class Grid {
                 var df = this.visible_columns[i][0];
                 var colsize = this.visible_columns[i][1];
                 if (colsize > 1 && colsize < 11 && frappe.model.is_non_std_field(df.fieldname)) {
-                    if (
-                        passes < 3 &&
-                        ["Int", "Currency", "Float", "Check", "Percent"].indexOf(df.fieldtype) !==
-                            -1
-                    ) {
+                    if (passes < 3 && ["Int", "Currency", "Float", "Check", "Percent"].indexOf(df.fieldtype) !== -1) {
                         // don't increase col size of these fields in first 3 passes
                         continue;
                     }
@@ -1032,7 +971,7 @@ export default class Grid {
         let user_settings = frappe.get_user_settings(this.frm.doctype, "GridView");
         if (user_settings && user_settings[this.doctype] && user_settings[this.doctype].length) {
             this.user_defined_columns = user_settings[this.doctype]
-                .map((row) => {
+                .map(row => {
                     let column = frappe.meta.get_docfield(this.doctype, row.fieldname);
 
                     if (column) {
@@ -1077,7 +1016,7 @@ export default class Grid {
                 qty_fieldname: qty,
                 get_query: link_field.get_query,
                 target: this,
-                txt: "",
+                txt: ""
             });
             this.grid_pagination.go_to_last_page_to_add_row();
             return false;
@@ -1092,11 +1031,11 @@ export default class Grid {
             this.setup_download();
 
             const value_formatter_map = {
-                Date: (val) => (val ? frappe.datetime.user_to_str(val) : val),
-                Int: (val) => cint(val),
-                Check: (val) => cint(val),
-                Float: (val) => flt(val),
-                Currency: (val) => flt(val),
+                Date: val => (val ? frappe.datetime.user_to_str(val) : val),
+                Int: val => cint(val),
+                Check: val => cint(val),
+                Float: val => flt(val),
+                Currency: val => flt(val)
             };
 
             // upload
@@ -1109,12 +1048,10 @@ export default class Grid {
                         as_dataurl: true,
                         allow_multiple: false,
                         restrictions: {
-                            allowed_file_types: [".csv"],
+                            allowed_file_types: [".csv"]
                         },
                         on_success(file) {
-                            var data = frappe.utils.csv_to_array(
-                                frappe.utils.get_decoded_string(file.dataurl),
-                            );
+                            var data = frappe.utils.csv_to_array(frappe.utils.get_decoded_string(file.dataurl));
                             // row #2 contains fieldnames;
                             var fieldnames = data[2];
                             me.frm.clear_table(me.df.fieldname);
@@ -1132,14 +1069,9 @@ export default class Grid {
                                         var d = me.frm.add_child(me.df.fieldname);
                                         $.each(row, (ci, value) => {
                                             var fieldname = fieldnames[ci];
-                                            var df = frappe.meta.get_docfield(
-                                                me.df.options,
-                                                fieldname,
-                                            );
+                                            var df = frappe.meta.get_docfield(me.df.options, fieldname);
                                             if (df) {
-                                                d[fieldnames[ci]] = value_formatter_map[
-                                                    df.fieldtype
-                                                ]
+                                                d[fieldnames[ci]] = value_formatter_map[df.fieldtype]
                                                     ? value_formatter_map[df.fieldtype](value)
                                                     : value;
                                             }
@@ -1152,9 +1084,9 @@ export default class Grid {
                             frappe.msgprint({
                                 message: __("Table updated"),
                                 title: __("Success"),
-                                indicator: "green",
+                                indicator: "green"
                             });
-                        },
+                        }
                     });
                     return false;
                 });
@@ -1239,7 +1171,7 @@ export default class Grid {
         }
 
         for (let row of this.grid_rows) {
-            let docfield = row?.docfields?.find((d) => d.fieldname === fieldname);
+            let docfield = row?.docfields?.find(d => d.fieldname === fieldname);
             if (docfield) {
                 docfield[property] = value;
             } else {
@@ -1248,10 +1180,10 @@ export default class Grid {
         }
 
         // update the parent too (for new rows)
-        this.docfields.find((d) => d.fieldname === fieldname)[property] = value;
+        this.docfields.find(d => d.fieldname === fieldname)[property] = value;
 
         if (this.user_defined_columns && this.user_defined_columns.length > 0) {
-            let field = this.user_defined_columns.find((d) => d.fieldname === fieldname);
+            let field = this.user_defined_columns.find(d => d.fieldname === fieldname);
             if (field && Object.keys(field).includes(property)) {
                 field[property] = value;
             }

@@ -20,7 +20,7 @@ frappe.ui.form.Attachments = class Attachments {
             frappe.open_in_new_tab = true;
             frappe.set_route("List", "File", {
                 attached_to_doctype: this.frm.doctype,
-                attached_to_id: this.frm.docid,
+                attached_to_id: this.frm.docid
             });
         });
 
@@ -34,9 +34,7 @@ frappe.ui.form.Attachments = class Attachments {
             if (raise_exception) {
                 frappe.throw({
                     title: __("Attachment Limit Reached"),
-                    message: __("Maximum attachment limit of {0} has been reached.", [
-                        cstr(attachment_limit).bold(),
-                    ]),
+                    message: __("Maximum attachment limit of {0} has been reached.", [cstr(attachment_limit).bold()])
                 });
             }
             return true;
@@ -96,12 +94,12 @@ frappe.ui.form.Attachments = class Attachments {
 
         if (attachments_to_render.length) {
             let exists = {};
-            let unique_attachments = attachments_to_render.filter((attachment) => {
+            let unique_attachments = attachments_to_render.filter(attachment => {
                 return Object.prototype.hasOwnProperty.call(exists, attachment.file_name)
                     ? false
                     : (exists[attachment.file_name] = true);
             });
-            unique_attachments.forEach((attachment) => {
+            unique_attachments.forEach(attachment => {
                 me.add_attachment(attachment);
             });
         }
@@ -133,15 +131,11 @@ frappe.ui.form.Attachments = class Attachments {
         if (frappe.model.can_write(this.frm.doctype, this.frm.id)) {
             remove_action = function (target_id) {
                 frappe.confirm(__("Are you sure you want to delete the attachment?"), function () {
-                    let target_attachment = me
-                        .get_attachments()
-                        .find((attachment) => attachment.id === target_id);
+                    let target_attachment = me.get_attachments().find(attachment => attachment.id === target_id);
                     let to_be_removed = me
                         .get_attachments()
-                        .filter(
-                            (attachment) => attachment.file_name === target_attachment.file_name,
-                        );
-                    to_be_removed.forEach((attachment) => me.remove_attachment(attachment.id));
+                        .filter(attachment => attachment.file_name === target_attachment.file_name);
+                    to_be_removed.forEach(attachment => me.remove_attachment(attachment.id));
                 });
                 return false;
             };
@@ -194,7 +188,7 @@ frappe.ui.form.Attachments = class Attachments {
             args: {
                 fid: fileid,
                 dt: me.frm.doctype,
-                dn: me.frm.docid,
+                dn: me.frm.docid
             },
             callback: function (r, rt) {
                 if (r.exc) {
@@ -204,7 +198,7 @@ frappe.ui.form.Attachments = class Attachments {
                 me.remove_fileid(fileid);
                 me.frm.sidebar.reload_docinfo();
                 if (callback) callback();
-            },
+            }
         });
     }
     new_attachment(fieldname) {
@@ -224,18 +218,18 @@ frappe.ui.form.Attachments = class Attachments {
             docid: this.frm.docid,
             frm: this.frm,
             folder: "Home/Attachments",
-            on_success: (file_doc) => {
+            on_success: file_doc => {
                 this.attachment_uploaded(file_doc);
             },
             restrictions,
-            make_attachments_public: this.frm.meta.make_attachments_public,
+            make_attachments_public: this.frm.meta.make_attachments_public
         });
     }
     get_args() {
         return {
             from_form: 1,
             doctype: this.frm.doctype,
-            docid: this.frm.docid,
+            docid: this.frm.docid
         };
     }
     attachment_uploaded(attachment) {

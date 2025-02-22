@@ -11,13 +11,13 @@ frappe.ui.form.on("Custom Field", {
                 ["DocType", "issingle", "=", 0],
                 ["DocType", "custom", "=", 0],
                 ["DocType", "id", "not in", frappe.model.core_doctypes_list],
-                ["DocType", "restrict_to_domain", "in", frappe.boot.active_domains],
+                ["DocType", "restrict_to_domain", "in", frappe.boot.active_domains]
             ];
             if (frappe.session.user !== "Administrator") {
                 filters.push(["DocType", "module", "not in", ["Core", "Custom"]]);
             }
             return {
-                filters: filters,
+                filters: filters
             };
         });
     },
@@ -32,19 +32,13 @@ frappe.ui.form.on("Custom Field", {
                 __(
                     "<strong>Warning:</strong> This field is system generated and may be overwritten by a future update. Modify it using {0} instead.",
                     [
-                        frappe.utils.get_form_link(
-                            "Customize Form",
-                            "Customize Form",
-                            true,
-                            __("Customize Form"),
-                            {
-                                doc_type: frm.doc.dt,
-                            },
-                        ),
-                    ],
+                        frappe.utils.get_form_link("Customize Form", "Customize Form", true, __("Customize Form"), {
+                            doc_type: frm.doc.dt
+                        })
+                    ]
                 ),
                 "yellow",
-                true,
+                true
             );
         }
     },
@@ -74,7 +68,7 @@ frappe.ui.form.on("Custom Field", {
                         frm.set_value("insert_after", insert_after);
                     }
                 }
-            },
+            }
         });
     },
     label: function (frm) {
@@ -89,7 +83,7 @@ frappe.ui.form.on("Custom Field", {
     fieldtype: function (frm) {
         if (frm.doc.fieldtype == "Link") {
             frm.fields_dict["options_help"].disp_area.innerHTML = __(
-                "Name of the Document Type (DocType) you want this field to be linked to. e.g. Customer",
+                "Name of the Document Type (DocType) you want this field to be linked to. e.g. Customer"
             );
         } else if (frm.doc.fieldtype == "Select") {
             frm.fields_dict["options_help"].disp_area.innerHTML =
@@ -105,7 +99,7 @@ frappe.ui.form.on("Custom Field", {
                 "<br>";
         } else if (frm.doc.fieldtype == "Dynamic Link") {
             frm.fields_dict["options_help"].disp_area.innerHTML = __(
-                "Fieldname which will be the DocType for this link field.",
+                "Fieldname which will be the DocType for this link field."
             );
         } else {
             frm.fields_dict["options_help"].disp_area.innerHTML = "";
@@ -120,25 +114,22 @@ frappe.ui.form.on("Custom Field", {
                         label: __("Fieldname"),
                         fieldname: "fieldname",
                         reqd: 1,
-                        default: frm.doc.fieldname,
+                        default: frm.doc.fieldname
                     },
                     function (data) {
                         frappe
-                            .xcall(
-                                "frappe.custom.doctype.custom_field.custom_field.reid_fieldname",
-                                {
-                                    custom_field: frm.doc.id,
-                                    fieldname: data.fieldname,
-                                },
-                            )
+                            .xcall("frappe.custom.doctype.custom_field.custom_field.reid_fieldname", {
+                                custom_field: frm.doc.id,
+                                fieldname: data.fieldname
+                            })
                             .then(() => frm.reload());
                     },
                     __("Reid Fieldname"),
-                    __("Reid"),
+                    __("Reid")
                 );
             });
         }
-    },
+    }
 });
 
 frappe.utils.has_special_chars = function (t) {

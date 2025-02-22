@@ -24,7 +24,7 @@ $(window).on("hashchange", function (e) {
     }
 });
 
-window.addEventListener("popstate", (e) => {
+window.addEventListener("popstate", e => {
     // forward-back button, just re-render based on current route
     frappe.router.route();
     e.preventDefault();
@@ -41,7 +41,7 @@ $("body").on("click", "a", function (e) {
         return;
     }
 
-    const override = (route) => {
+    const override = route => {
         e.preventDefault();
         frappe.set_route(route);
         return false;
@@ -83,18 +83,7 @@ frappe.router = {
     current_route: null,
     routes: {},
     factory_views: ["form", "list", "report", "tree", "print", "dashboard"],
-    list_views: [
-        "list",
-        "kanban",
-        "report",
-        "calendar",
-        "tree",
-        "gantt",
-        "dashboard",
-        "image",
-        "inbox",
-        "map",
-    ],
+    list_views: ["list", "kanban", "report", "calendar", "tree", "gantt", "dashboard", "image", "inbox", "map"],
     list_views_route: {
         list: "List",
         kanban: "Kanban",
@@ -106,7 +95,7 @@ frappe.router = {
         image: "Image",
         inbox: "Inbox",
         file: "Home",
-        map: "Map",
+        map: "Map"
     },
     layout_mapped: {},
 
@@ -129,7 +118,7 @@ frappe.router = {
             for (let doctype_layout of frappe.boot.doctype_layouts) {
                 this.routes[this.slug(doctype_layout.id)] = {
                     doctype: doctype_layout.document_type,
-                    doctype_layout: doctype_layout.id,
+                    doctype_layout: doctype_layout.id
                 };
             }
         }
@@ -218,9 +207,7 @@ frappe.router = {
                 route = this.get_standard_route_for_list(
                     route,
                     doctype_route,
-                    meta.force_re_route_to_default_view && meta.default_view
-                        ? meta.default_view
-                        : null,
+                    meta.force_re_route_to_default_view && meta.default_view ? meta.default_view : null
                 );
             } else if (route[1] && route[1] !== "view") {
                 let docid = route[1];
@@ -234,11 +221,7 @@ frappe.router = {
                 if (meta.default_view === "Tree") {
                     route = ["Tree", doctype_route.doctype];
                 } else {
-                    route = [
-                        "List",
-                        doctype_route.doctype,
-                        this.list_views_route[meta.default_view.toLowerCase()],
-                    ];
+                    route = ["List", doctype_route.doctype, this.list_views_route[meta.default_view.toLowerCase()]];
                 }
             } else {
                 route = ["List", doctype_route.doctype, "List"];
@@ -282,11 +265,7 @@ frappe.router = {
                 this.set_route(route);
             }
 
-            standard_route = [
-                "List",
-                doctype_route.doctype,
-                this.list_views_route[_route.toLowerCase()],
-            ];
+            standard_route = ["List", doctype_route.doctype, this.list_views_route[_route.toLowerCase()]];
 
             // calendar / kanban / dashboard / folder
             if (route[3]) standard_route.push(...route.slice(3, route.length));
@@ -365,7 +344,7 @@ frappe.router = {
         // example 3: frappe.set_route('a/b/c');
         let route = Array.from(arguments);
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             route = this.get_route_from_arguments(route);
             route = this.convert_from_standard_route(route);
             let sub_path = this.make_url(route);
@@ -482,11 +461,7 @@ frappe.router = {
             Object.values(frappe.workspaces)[0];
 
         if (workspace) {
-            return (
-                "/app/" +
-                (workspace.public ? "" : "private/") +
-                frappe.router.slug(workspace.title)
-            );
+            return "/app/" + (workspace.public ? "" : "private/") + frappe.router.slug(workspace.title);
         }
 
         return "/app";
@@ -569,7 +544,7 @@ frappe.router = {
 
     slug(id) {
         return id.toLowerCase().replace(/ /g, "-");
-    },
+    }
 };
 
 // global functions for backward compatibility

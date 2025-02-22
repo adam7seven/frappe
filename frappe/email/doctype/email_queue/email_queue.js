@@ -8,19 +8,17 @@ frappe.ui.form.on("Email Queue", {
                 frappe.call({
                     method: "frappe.email.doctype.email_queue.email_queue.send_now",
                     args: {
-                        id: frm.doc.id,
+                        id: frm.doc.id
                     },
                     btn: button,
                     callback: function () {
                         frm.reload_doc();
                         if (cint(frappe.sys_defaults.suspend_email_queue)) {
                             frappe.show_alert(
-                                __(
-                                    "Email queue is currently suspended. Resume to automatically send emails.",
-                                ),
+                                __("Email queue is currently suspended. Resume to automatically send emails.")
                             );
                         }
-                    },
+                    }
                 });
             });
         } else if (frm.doc.status == "Error") {
@@ -29,13 +27,13 @@ frappe.ui.form.on("Email Queue", {
                     method: "retry_sending",
                     doc: frm.doc,
                     args: {
-                        id: frm.doc.id,
+                        id: frm.doc.id
                     },
                     callback: function () {
                         frm.reload_doc();
-                    },
+                    }
                 });
             });
         }
-    },
+    }
 });

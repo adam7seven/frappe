@@ -18,6 +18,6 @@ frappe.listview_settings["ToDo"] = {
         },
         action: function (doc) {
             frappe.set_route("Form", doc.reference_type, doc.reference_id);
-        },
-    },
+        }
+    }
 };

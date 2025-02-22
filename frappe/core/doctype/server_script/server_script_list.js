@@ -1,7 +1,7 @@
 frappe.listview_settings["Server Script"] = {
     onload: function (listview) {
         add_github_star_cta(listview);
-    },
+    }
 };
 
 function add_github_star_cta(listview) {

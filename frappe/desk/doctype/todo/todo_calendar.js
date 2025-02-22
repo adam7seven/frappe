@@ -8,7 +8,7 @@ frappe.views.calendar["ToDo"] = {
         id: "id",
         title: "description",
         allDay: "allDay",
-        progress: "progress",
+        progress: "progress"
     },
     gantt: true,
     filters: [
@@ -16,14 +16,14 @@ frappe.views.calendar["ToDo"] = {
             fieldtype: "Link",
             fieldname: "reference_type",
             options: "Task",
-            label: __("Task"),
+            label: __("Task")
         },
         {
             fieldtype: "Dynamic Link",
             fieldname: "reference_id",
             options: "reference_type",
-            label: __("Task"),
-        },
+            label: __("Task")
+        }
     ],
-    get_events_method: "frappe.desk.calendar.get_events",
+    get_events_method: "frappe.desk.calendar.get_events"
 };

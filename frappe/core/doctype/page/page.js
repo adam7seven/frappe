@@ -12,5 +12,5 @@ frappe.ui.form.on("Page", {
                 frappe.set_route(frm.doc.id);
             });
         }
-    },
+    }
 });

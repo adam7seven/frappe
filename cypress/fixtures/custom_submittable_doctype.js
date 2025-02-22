@@ -13,19 +13,19 @@ export default {
             fieldtype: "Check",
             label: "Enabled",
             allow_on_submit: 1,
-            reqd: 1,
+            reqd: 1
         },
         {
             fieldname: "title",
             fieldtype: "Data",
             label: "title",
-            reqd: 1,
+            reqd: 1
         },
         {
             fieldname: "description",
             fieldtype: "Text Editor",
-            label: "Description",
-        },
+            label: "Description"
+        }
     ],
     links: [],
     modified: "2019-12-10 14:40:53.127615",
@@ -43,11 +43,11 @@ export default {
             share: 1,
             write: 1,
             submit: 1,
-            cancel: 1,
-        },
+            cancel: 1
+        }
     ],
     quick_entry: 1,
     sort_field: "modified",
     sort_order: "ASC",
-    track_changes: 1,
+    track_changes: 1
 };

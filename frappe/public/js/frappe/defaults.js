@@ -24,13 +24,13 @@ frappe.defaults = {
         let permissions = this.get_user_permissions();
         let user_default = null;
         if (permissions[key]) {
-            permissions[key].forEach((item) => {
+            permissions[key].forEach(item => {
                 if (defaults[key] == item.doc) {
                     user_default = item.doc;
                 }
             });
 
-            permissions[key].forEach((item) => {
+            permissions[key].forEach(item => {
                 if (item.is_default) {
                     user_default = item.doc;
                 }
@@ -55,7 +55,7 @@ frappe.defaults = {
         if (!$.isArray(d)) d = [d];
 
         // filter out values which are not permitted to the user
-        d.filter((item) => {
+        d.filter(item => {
             if (frappe.defaults.in_user_permission(key, item)) {
                 return item;
             }
@@ -107,7 +107,7 @@ frappe.defaults = {
         let user_permission = this.get_user_permissions()[frappe.model.unscrub(key)];
 
         if (user_permission && user_permission.length) {
-            return user_permission.some((perm) => {
+            return user_permission.some(perm => {
                 return perm.doc === value;
             });
         } else {
@@ -123,7 +123,7 @@ frappe.defaults = {
 
     update_user_permissions: function () {
         const method = "frappe.core.doctype.user_permission.user_permission.get_user_permissions";
-        frappe.call(method).then((r) => {
+        frappe.call(method).then(r => {
             if (r.message) {
                 this._user_permissions = Object.assign({}, r.message);
             }
@@ -136,5 +136,5 @@ frappe.defaults = {
         } else {
             frappe.defaults.update_user_permissions();
         }
-    },
+    }
 };

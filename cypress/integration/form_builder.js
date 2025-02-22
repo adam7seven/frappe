@@ -49,9 +49,7 @@ context("Form Builder", () => {
         cy.get(".modal-body .clear-filters").click();
         cy.get(".modal-body .filter-action-buttons .add-filter").click();
         cy.wait(100);
-        cy.get(".modal-body .filter-box .list_filter .filter-field .link-field input").type(
-            "Male",
-        );
+        cy.get(".modal-body .filter-box .list_filter .filter-field .link-field input").type("Male");
         cy.get(".btn-modal-primary").click();
 
         // Save the document
@@ -63,7 +61,7 @@ context("Form Builder", () => {
         cy.get_field("gender").clear().click();
 
         cy.intercept("POST", "/api/method/frappe.desk.search.search_link").as("search_link");
-        cy.wait("@search_link").then((data) => {
+        cy.wait("@search_link").then(data => {
             expect(data.response.body.message.length).to.eq(1);
             expect(data.response.body.message[0].value).to.eq("Male");
         });
@@ -112,19 +110,14 @@ context("Form Builder", () => {
 
         cy.get(last_field).click({ force: true });
 
-        cy.get(".sidebar-container .frappe-control[data-fieldname='options'] input")
-            .click()
-            .as("input");
+        cy.get(".sidebar-container .frappe-control[data-fieldname='options'] input").click().as("input");
         cy.get("@input").clear({ force: true }).type("Web Form Field", { delay: 200 });
         cy.wait("@search_link");
 
         cy.get(last_field).click({ force: true });
 
         cy.get(last_field).find(".table-controls .table-column").contains("Field").should("exist");
-        cy.get(last_field)
-            .find(".table-controls .table-column")
-            .contains("Fieldtype")
-            .should("exist");
+        cy.get(last_field).find(".table-controls .table-column").contains("Fieldtype").should("exist");
 
         // validate In List View
         cy.get(".sidebar-container .field label .label-area").contains("In List View").click();
@@ -159,7 +152,7 @@ context("Form Builder", () => {
         // drag first tab to second position
         cy.get(".tab-header .tabs .tab:first").drag(".tab-header .tabs .tab:nth-child(2)", {
             target: { x: 10, y: 10 },
-            force: true,
+            force: true
         });
         cy.get(".tab-header .tabs .tab:first").find(label).should("have.text", "Tab 2");
 
@@ -168,19 +161,16 @@ context("Form Builder", () => {
 
         // drag check field to first column
         cy.get(".fields-container .field[title='Check']").drag(first_field, {
-            target: { x: 100, y: 10 },
+            target: { x: 100, y: 10 }
         });
         cy.get(first_column).find(".field").should("have.length", 3);
 
-        cy.get(first_field)
-            .find("div[title='Double click to edit label']")
-            .dblclick()
-            .type("Test Check");
+        cy.get(first_field).find("div[title='Double click to edit label']").dblclick().type("Test Check");
         cy.get(first_field).find(label).should("have.text", "Test Check");
 
         // drag the first field to second position
         cy.get(first_field).drag(first_column + " .field:nth-child(2)", {
-            target: { x: 100, y: 10 },
+            target: { x: 100, y: 10 }
         });
         cy.get(first_field).find(label).should("have.text", "Data");
 
@@ -190,7 +180,7 @@ context("Form Builder", () => {
             .find(".column-actions")
             .drag(".section-columns-container:first .column:last", {
                 target: { x: 100, y: 10 },
-                force: true,
+                force: true
             });
         cy.get(first_field).find(label).should("have.text", "Data 1");
 
@@ -202,7 +192,7 @@ context("Form Builder", () => {
             .find(".section-header")
             .drag(".form-section-container:nth-child(2)", {
                 target: { x: 100, y: 10 },
-                force: true,
+                force: true
             });
         cy.get(first_field).find(label).should("have.text", "Data 2");
     });
@@ -254,13 +244,9 @@ context("Form Builder", () => {
         cy.visit(`/app/doctype/${doctype_id}`);
         cy.findByRole("tab", { name: "Form" }).click();
 
-        let first_field =
-            ".tab-content.active .section-columns-container:first .column:first .field:first";
+        let first_field = ".tab-content.active .section-columns-container:first .column:first .field:first";
 
-        cy.get(first_field)
-            .find("div[title='Double click to edit label']")
-            .dblclick()
-            .type("{selectall}New Title");
+        cy.get(first_field).find("div[title='Double click to edit label']").dblclick().type("{selectall}New Title");
 
         cy.findByRole("button", { name: "Save" }).click({ force: true });
 
@@ -287,9 +273,7 @@ context("Form Builder", () => {
         cy.get(last_field).click();
 
         // validate duplicate id
-        cy.get(".sidebar-container .frappe-control[data-fieldname='fieldname'] input")
-            .click()
-            .as("input");
+        cy.get(".sidebar-container .frappe-control[data-fieldname='fieldname'] input").click().as("input");
         cy.get(".sidebar-container .frappe-control[data-fieldname='fieldname'] input")
             .clear({ force: true })
             .type("data3");
@@ -299,7 +283,7 @@ context("Form Builder", () => {
         cy.hide_dialog();
         cy.get(last_field).click();
         cy.get(".sidebar-container .frappe-control[data-fieldname='fieldname'] input").clear({
-            force: true,
+            force: true
         });
 
         // validate reqd + hidden without default

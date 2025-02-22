@@ -17,10 +17,7 @@ $.extend(frappe.datetime, {
         // system time zone and then convert the string to user time zone(from User doctype).
         let date_obj = null;
         if (frappe.boot.time_zone && frappe.boot.time_zone.system && frappe.boot.time_zone.user) {
-            date_obj = moment
-                .tz(date, frappe.boot.time_zone.system)
-                .clone()
-                .tz(frappe.boot.time_zone.user);
+            date_obj = moment.tz(date, frappe.boot.time_zone.system).clone().tz(frappe.boot.time_zone.user);
         } else {
             date_obj = moment(date);
         }
@@ -36,10 +33,7 @@ $.extend(frappe.datetime, {
         // as per the location of user.
         let date_obj = null;
         if (frappe.boot.time_zone && frappe.boot.time_zone.system && frappe.boot.time_zone.user) {
-            date_obj = moment
-                .tz(date, frappe.boot.time_zone.user)
-                .clone()
-                .tz(frappe.boot.time_zone.system);
+            date_obj = moment.tz(date, frappe.boot.time_zone.user).clone().tz(frappe.boot.time_zone.system);
         } else {
             date_obj = moment(date);
         }
@@ -169,11 +163,7 @@ $.extend(frappe.datetime, {
             let date_obj = moment(val, frappe.defaultDateFormat);
             return date_obj.format(user_date_fmt);
         } else {
-            const system_datetime = moment.tz(
-                val,
-                frappe.defaultDatetimeFormat,
-                frappe.boot.time_zone.system,
-            );
+            const system_datetime = moment.tz(val, frappe.defaultDatetimeFormat, frappe.boot.time_zone.system);
             const user_datetime = system_datetime.clone().tz(frappe.boot.time_zone.user);
 
             return user_datetime.format(user_date_fmt + " " + user_time_fmt);
@@ -270,7 +260,7 @@ $.extend(frappe.datetime, {
         return frappe.datetime.now_date();
     },
 
-    get_time: (timestamp) => {
+    get_time: timestamp => {
         // return time with AM/PM
         return moment(timestamp).format("hh:mm A");
     },
@@ -279,12 +269,12 @@ $.extend(frappe.datetime, {
         return moment(
             d,
             [frappe.defaultDateFormat, frappe.defaultDatetimeFormat, frappe.defaultTimeFormat],
-            true,
+            true
         ).isValid();
     },
 
     get_first_day_of_the_week_index() {
         const first_day_of_the_week = frappe.sys_defaults.first_day_of_the_week || "Sunday";
         return moment.weekdays().indexOf(first_day_of_the_week);
-    },
+    }
 });

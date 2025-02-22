@@ -5,7 +5,7 @@ context("Workspace Blocks", () => {
         return cy
             .window()
             .its("frappe")
-            .then((frappe) => {
+            .then(frappe => {
                 return frappe.xcall("frappe.tests.ui_test_helpers.setup_workflow");
             });
     });
@@ -13,7 +13,7 @@ context("Workspace Blocks", () => {
     it("Create Test Page", () => {
         cy.intercept({
             method: "POST",
-            url: "api/method/frappe.desk.doctype.workspace.workspace.new_page",
+            url: "api/method/frappe.desk.doctype.workspace.workspace.new_page"
         }).as("new_page");
 
         cy.visit("/app/website");
@@ -24,19 +24,11 @@ context("Workspace Blocks", () => {
         cy.get_open_dialog().find(".btn-primary").click();
 
         // check if sidebar item is added in private section
-        cy.get('.sidebar-item-container[item-name="Test Block Page"]').should(
-            "have.attr",
-            "item-public",
-            "0",
-        );
+        cy.get('.sidebar-item-container[item-name="Test Block Page"]').should("have.attr", "item-public", "0");
 
         cy.get('.standard-actions .btn-primary[data-label="Save"]').click();
         cy.wait(300);
-        cy.get('.sidebar-item-container[item-name="Test Block Page"]').should(
-            "have.attr",
-            "item-public",
-            "0",
-        );
+        cy.get('.sidebar-item-container[item-name="Test Block Page"]').should("have.attr", "item-public", "0");
 
         cy.wait("@new_page");
     });
@@ -46,28 +38,28 @@ context("Workspace Blocks", () => {
             {
                 doctype: "ToDo",
                 description: "Quick List ToDo 1",
-                status: "Open",
+                status: "Open"
             },
             {
                 doctype: "ToDo",
                 description: "Quick List ToDo 2",
-                status: "Open",
+                status: "Open"
             },
             {
                 doctype: "ToDo",
                 description: "Quick List ToDo 3",
-                status: "Open",
+                status: "Open"
             },
             {
                 doctype: "ToDo",
                 description: "Quick List ToDo 4",
-                status: "Open",
-            },
+                status: "Open"
+            }
         ]);
 
         cy.intercept({
             method: "GET",
-            url: "api/method/frappe.desk.form.load.getdoctype?**",
+            url: "api/method/frappe.desk.form.load.getdoctype?**"
         }).as("get_doctype");
 
         cy.get(".codex-editor__redactor .ce-block");
@@ -84,10 +76,7 @@ context("Workspace Blocks", () => {
         cy.get_open_dialog().find(".filter-edit-area").should("contain", "No filters selected");
         cy.get_open_dialog().find(".filter-area .add-filter").click();
 
-        cy.get_open_dialog()
-            .find(".fieldname-select-area input")
-            .type("Workflow State{enter}")
-            .blur();
+        cy.get_open_dialog().find(".fieldname-select-area input").type("Workflow State{enter}").blur();
         cy.get_open_dialog().find(".filter-field .input-with-feedback").type("Pending");
 
         cy.get_open_dialog().find(".modal-header").click();
@@ -106,7 +95,7 @@ context("Workspace Blocks", () => {
             .find(".quick-list-item .title")
             .first()
             .invoke("attr", "title")
-            .then((title) => {
+            .then(title => {
                 cy.get("@todo-quick-list").find(".quick-list-item").contains(title).click();
                 cy.get_field("description", "Text Editor").should("contain", title);
                 cy.click_action_button("Approve");
@@ -116,10 +105,7 @@ context("Workspace Blocks", () => {
         // test filter-list
         cy.get("@todo-quick-list").realHover().find(".widget-control .filter-list").click();
 
-        cy.get_open_dialog()
-            .find(".filter-field .input-with-feedback")
-            .focus()
-            .type("{selectall}Approved");
+        cy.get_open_dialog().find(".filter-field .input-with-feedback").focus().type("{selectall}Approved");
         cy.get_open_dialog().find(".modal-header").click();
         cy.get_open_dialog().find(".btn-primary").click();
 
@@ -128,7 +114,7 @@ context("Workspace Blocks", () => {
         // test refresh-list
         cy.intercept({
             method: "POST",
-            url: "api/method/frappe.desk.reportview.get",
+            url: "api/method/frappe.desk.reportview.get"
         }).as("refresh-list");
 
         cy.get("@todo-quick-list").realHover().find(".widget-control .refresh-list").click();
@@ -142,9 +128,7 @@ context("Workspace Blocks", () => {
         // test see-all
         cy.get("@todo-quick-list").find(".widget-footer .see-all").click();
         cy.open_list_filter();
-        cy.get('.filter-field input[data-fieldname="workflow_state"]')
-            .invoke("val")
-            .should("eq", "Pending");
+        cy.get('.filter-field input[data-fieldname="workflow_state"]').invoke("val").should("eq", "Pending");
         cy.go("back");
     });
 
@@ -154,8 +138,8 @@ context("Workspace Blocks", () => {
                 doctype: "Number Card",
                 label: "Test Number Card",
                 document_type: "ToDo",
-                color: "#f74343",
-            },
+                color: "#f74343"
+            }
         ]);
 
         cy.get(".codex-editor__redactor .ce-block");

@@ -19,5 +19,5 @@ frappe.ui.form.on("Help Article", {
 				</div>
 			</div>
 		`);
-    },
+    }
 });

@@ -19,7 +19,7 @@ frappe.ui.form.ControlAutocomplete = class ControlAutoComplete extends frappe.ui
         if (value == null) {
             return "";
         } else if (this._data && this._data.length) {
-            const item = this._data.find((i) => i.value == value);
+            const item = this._data.find(i => i.value == value);
             return item ? item.label : value;
         } else {
             return value;
@@ -29,7 +29,7 @@ frappe.ui.form.ControlAutocomplete = class ControlAutoComplete extends frappe.ui
     get_input_value() {
         if (this.$input) {
             const label = this.$input.val();
-            const item = this._data?.find((i) => i.label == label);
+            const item = this._data?.find(i => i.label == label);
             return item ? item.value : label;
         }
     }
@@ -50,7 +50,7 @@ frappe.ui.form.ControlAutocomplete = class ControlAutoComplete extends frappe.ui
 
                 return {
                     label: item.label || item.value,
-                    value: item.value,
+                    value: item.value
                 };
             },
             filter: function (item, input) {
@@ -81,7 +81,7 @@ frappe.ui.form.ControlAutocomplete = class ControlAutoComplete extends frappe.ui
             },
             sort: () => {
                 return 0;
-            },
+            }
         };
     }
 
@@ -90,7 +90,7 @@ frappe.ui.form.ControlAutocomplete = class ControlAutoComplete extends frappe.ui
 
         $(this.input_area).find(".awesomplete ul").css("min-width", "100%");
 
-        this.$input.on("input", (e) => {
+        this.$input.on("input", e => {
             if (this.get_query || this.df.get_query) {
                 this.execute_query_if_exists(e.target.value);
             } else {
@@ -133,7 +133,7 @@ frappe.ui.form.ControlAutocomplete = class ControlAutoComplete extends frappe.ui
         if (this.df.ignore_validation) {
             return value || "";
         }
-        let valid_values = this.awesomplete._list.map((d) => d.value);
+        let valid_values = this.awesomplete._list.map(d => d.value);
         if (!valid_values.length) {
             return value;
         }
@@ -152,10 +152,10 @@ frappe.ui.form.ControlAutocomplete = class ControlAutoComplete extends frappe.ui
             options = options.split("\n");
         }
         if (typeof options[0] === "string") {
-            options = options.map((o) => ({ label: o, value: o }));
+            options = options.map(o => ({ label: o, value: o }));
         }
 
-        options = options.map((o) => {
+        options = options.map(o => {
             if (typeof o !== "string") {
                 o.label = __(cstr(o.label));
                 o.value = cstr(o.value);
@@ -225,7 +225,7 @@ frappe.ui.form.ControlAutocomplete = class ControlAutoComplete extends frappe.ui
                         return;
                     }
                     this.set_data(message);
-                },
+                }
             });
         }
     }

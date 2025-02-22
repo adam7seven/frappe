@@ -8,7 +8,7 @@ frappe.pages["dashboard-view"].on_page_load = function (wrapper) {
     frappe.ui.make_app_page({
         parent: wrapper,
         title: __("Dashboard"),
-        single_column: true,
+        single_column: true
     });
 
     frappe.dashboard = new Dashboard(wrapper);
@@ -39,12 +39,12 @@ class Dashboard {
                 frappe.set_re_route("dashboard-view", frappe.last_dashboard);
             } else {
                 // default dashboard
-                frappe.db.get_list("Dashboard", { filters: { is_default: 1 } }).then((data) => {
+                frappe.db.get_list("Dashboard", { filters: { is_default: 1 } }).then(data => {
                     if (data && data.length) {
                         frappe.set_re_route("dashboard-view", data[0].id);
                     } else {
                         // no default, get the latest one
-                        frappe.db.get_list("Dashboard", { limit: 1 }).then((data) => {
+                        frappe.db.get_list("Dashboard", { limit: 1 }).then(data => {
                             if (data && data.length) {
                                 frappe.set_re_route("dashboard-view", data[0].id);
                             } else {
@@ -84,24 +84,19 @@ class Dashboard {
     }
 
     render_charts() {
-        return this.get_permitted_items(
-            "frappe.desk.doctype.dashboard.dashboard.get_permitted_charts",
-        ).then((charts) => {
+        return this.get_permitted_items("frappe.desk.doctype.dashboard.dashboard.get_permitted_charts").then(charts => {
             if (!charts.length) {
-                frappe.msgprint(
-                    __("No Permitted Charts on this Dashboard"),
-                    __("No Permitted Charts"),
-                );
+                frappe.msgprint(__("No Permitted Charts on this Dashboard"), __("No Permitted Charts"));
             }
 
-            frappe.dashboard_utils.get_dashboard_settings().then((settings) => {
+            frappe.dashboard_utils.get_dashboard_settings().then(settings => {
                 let chart_config = settings.chart_config ? JSON.parse(settings.chart_config) : {};
-                this.charts = charts.map((chart) => {
+                this.charts = charts.map(chart => {
                     return {
                         chart_id: chart.chart,
                         label: chart.chart,
                         chart_settings: chart_config[chart.chart] || {},
-                        ...chart,
+                        ...chart
                     };
                 });
 
@@ -115,25 +110,23 @@ class Dashboard {
                         allow_create: false,
                         allow_delete: false,
                         allow_hiding: false,
-                        allow_edit: false,
+                        allow_edit: false
                     },
-                    widgets: this.charts,
+                    widgets: this.charts
                 });
             });
         });
     }
 
     render_cards() {
-        return this.get_permitted_items(
-            "frappe.desk.doctype.dashboard.dashboard.get_permitted_cards",
-        ).then((cards) => {
+        return this.get_permitted_items("frappe.desk.doctype.dashboard.dashboard.get_permitted_cards").then(cards => {
             if (!cards.length) {
                 return;
             }
 
-            this.number_cards = cards.map((card) => {
+            this.number_cards = cards.map(card => {
                 return {
-                    id: card.card,
+                    id: card.card
                 };
             });
 
@@ -146,9 +139,9 @@ class Dashboard {
                     allow_create: false,
                     allow_delete: false,
                     allow_hiding: false,
-                    allow_edit: false,
+                    allow_edit: false
                 },
-                widgets: this.number_cards,
+                widgets: this.number_cards
             });
         });
     }
@@ -156,9 +149,9 @@ class Dashboard {
     get_permitted_items(method) {
         return frappe
             .xcall(method, {
-                dashboard_id: this.dashboard_id,
+                dashboard_id: this.dashboard_id
             })
-            .then((items) => {
+            .then(items => {
                 return items;
             });
     }
@@ -175,13 +168,12 @@ class Dashboard {
         });
 
         this.page.add_menu_item(__("Refresh All"), () => {
-            this.chart_group && this.chart_group.widgets_list.forEach((chart) => chart.refresh());
-            this.number_card_group &&
-                this.number_card_group.widgets_list.forEach((card) => card.render_card());
+            this.chart_group && this.chart_group.widgets_list.forEach(chart => chart.refresh());
+            this.number_card_group && this.number_card_group.widgets_list.forEach(card => card.render_card());
         });
 
-        frappe.db.get_list("Dashboard").then((dashboards) => {
-            dashboards.map((dashboard) => {
+        frappe.db.get_list("Dashboard").then(dashboards => {
+            dashboards.map(dashboard => {
                 let id = dashboard.id;
                 if (id != this.dashboard_id) {
                     this.page.add_menu_item(id, () => frappe.set_route("dashboard-view", id), 1);

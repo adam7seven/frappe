@@ -2,17 +2,17 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Success Action", {
-    on_load: (frm) => {
+    on_load: frm => {
         if (!frm.action_multicheck) {
             frm.trigger("set_next_action_multicheck");
         }
     },
-    refresh: (frm) => {
+    refresh: frm => {
         if (!frm.action_multicheck) {
             frm.trigger("set_next_action_multicheck");
         }
     },
-    validate: (frm) => {
+    validate: frm => {
         const checked_actions = frm.action_multicheck.get_checked_options();
         if (checked_actions.length < 2) {
             frappe.msgprint(__("Select atleast 2 actions"));
@@ -20,22 +20,22 @@ frappe.ui.form.on("Success Action", {
             return true;
         }
     },
-    before_save: (frm) => {
+    before_save: frm => {
         const checked_actions = frm.action_multicheck.get_checked_options();
         frm.doc.next_actions = checked_actions.join("\n");
     },
-    after_save: (frm) => {
+    after_save: frm => {
         frappe.boot.success_action.push(frm.doc);
         //TODO: update success action cache on record update and delete
     },
-    set_next_action_multicheck: (frm) => {
+    set_next_action_multicheck: frm => {
         const next_actions_wrapper = frm.fields_dict.next_actions_html.$wrapper;
         const checked_actions = frm.doc.next_actions ? frm.doc.next_actions.split("\n") : [];
-        const action_multicheck_options = get_default_next_actions().map((action) => {
+        const action_multicheck_options = get_default_next_actions().map(action => {
             return {
                 label: action.label,
                 value: action.value,
-                checked: checked_actions.length ? checked_actions.includes(action.value) : 1,
+                checked: checked_actions.length ? checked_actions.includes(action.value) : 1
             };
         });
         frm.action_multicheck = frappe.ui.form.make_control({
@@ -45,11 +45,11 @@ frappe.ui.form.on("Success Action", {
                 fieldname: "next_actions_multicheck",
                 fieldtype: "MultiCheck",
                 options: action_multicheck_options,
-                select_all: true,
+                select_all: true
             },
-            render_input: true,
+            render_input: true
         });
-    },
+    }
 });
 
 const get_default_next_actions = () => {
@@ -57,6 +57,6 @@ const get_default_next_actions = () => {
         { label: __("New"), value: "new" },
         { label: __("Print"), value: "print" },
         { label: __("Email"), value: "email" },
-        { label: __("View All"), value: "list" },
+        { label: __("View All"), value: "list" }
     ];
 };

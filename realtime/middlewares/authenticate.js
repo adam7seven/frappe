@@ -40,14 +40,14 @@ function authenticate_with_frappe(socket, next) {
 
     auth_req
         .type("form")
-        .then((res) => {
+        .then(res => {
             socket.user = res.body.message.user;
             socket.user_type = res.body.message.user_type;
             socket.sid = cookies.sid;
             socket.authorization_header = authorization_header;
             next();
         })
-        .catch((e) => {
+        .catch(e => {
             next(new Error(`Unauthorized: ${e}`));
         });
 }

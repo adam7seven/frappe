@@ -10,31 +10,29 @@ context("MultiSelectDialog", () => {
                 {
                     doctype: "Contact Email",
                     email_id: "test@example.com",
-                    is_primary: 0,
-                },
-            ],
+                    is_primary: 0
+                }
+            ]
         };
-        const promises = Array.from({ length: 25 }).map(() =>
-            cy.insert_doc("Contact", contact_template, true),
-        );
+        const promises = Array.from({ length: 25 }).map(() => cy.insert_doc("Contact", contact_template, true));
         Promise.all(promises);
     });
 
     function open_multi_select_dialog() {
         cy.window()
             .its("frappe")
-            .then((frappe) => {
+            .then(frappe => {
                 new frappe.ui.form.MultiSelectDialog({
                     doctype: "Contact",
                     target: {},
                     setters: {
                         status: null,
-                        gender: null,
+                        gender: null
                     },
                     add_filters_group: 1,
                     allow_child_item_selection: 1,
                     child_fieldname: "email_ids",
-                    child_columns: ["email_id", "is_primary"],
+                    child_columns: ["email_id", "is_primary"]
                 });
             });
     }
@@ -45,10 +43,8 @@ context("MultiSelectDialog", () => {
     });
 
     it("checks for filters", () => {
-        ["search_term", "status", "gender"].forEach((fieldname) => {
-            cy.get_open_dialog()
-                .get(`.frappe-control[data-fieldname="${fieldname}"]`)
-                .should("exist");
+        ["search_term", "status", "gender"].forEach(fieldname => {
+            cy.get_open_dialog().get(`.frappe-control[data-fieldname="${fieldname}"]`).should("exist");
         });
 
         // add_filters_group: 1 should add a filter group
@@ -64,9 +60,7 @@ context("MultiSelectDialog", () => {
             .should("exist")
             .click({ force: true });
 
-        cy.get_open_dialog()
-            .get(`.frappe-control[data-fieldname="child_selection_area"]`)
-            .should("exist");
+        cy.get_open_dialog().get(`.frappe-control[data-fieldname="child_selection_area"]`).should("exist");
 
         cy.get_open_dialog().get(`.dt-row-header`).should("contain", "Contact");
 
@@ -81,14 +75,11 @@ context("MultiSelectDialog", () => {
             .find('input[data-fieldname="search_term"]')
             .should("exist")
             .type("Test", { delay: 200 });
-        cy.get_open_dialog()
-            .get(`.frappe-control[data-fieldname="more_child_btn"]`)
-            .should("exist")
-            .as("more-btn");
+        cy.get_open_dialog().get(`.frappe-control[data-fieldname="more_child_btn"]`).should("exist").as("more-btn");
 
         cy.get_open_dialog()
             .get(".datatable .dt-scrollable .dt-row")
-            .should(($rows) => {
+            .should($rows => {
                 expect($rows).to.have.length(20);
             });
 
@@ -98,7 +89,7 @@ context("MultiSelectDialog", () => {
 
         cy.get_open_dialog()
             .get(".datatable .dt-scrollable .dt-row")
-            .should(($rows) => {
+            .should($rows => {
                 if ($rows.length <= 20) {
                     throw new Error("More button doesn't work");
                 }

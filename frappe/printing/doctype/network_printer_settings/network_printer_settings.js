@@ -18,12 +18,12 @@ frappe.ui.form.on("Network Printer Settings", {
                 method: "get_printers_list",
                 args: {
                     ip: frm.doc.server_ip,
-                    port: frm.doc.port,
+                    port: frm.doc.port
                 },
                 callback: function (data) {
                     frm.set_df_property("printer_name", "options", [""].concat(data.message));
-                },
+                }
             });
         }
-    },
+    }
 });

@@ -11,9 +11,9 @@ context("Control Barcode", () => {
                 {
                     label: "Barcode",
                     fieldname: "barcode",
-                    fieldtype: "Barcode",
-                },
-            ],
+                    fieldtype: "Barcode"
+                }
+            ]
         });
     }
 
@@ -21,15 +21,10 @@ context("Control Barcode", () => {
         get_dialog_with_barcode().as("dialog");
 
         cy.focused().blur();
-        cy.get(".frappe-control[data-fieldname=barcode]")
-            .findByRole("textbox")
-            .type("123456789")
-            .blur();
-        cy.get(
-            '.frappe-control[data-fieldname=barcode] svg[data-barcode-value="123456789"]',
-        ).should("exist");
+        cy.get(".frappe-control[data-fieldname=barcode]").findByRole("textbox").type("123456789").blur();
+        cy.get('.frappe-control[data-fieldname=barcode] svg[data-barcode-value="123456789"]').should("exist");
 
-        cy.get("@dialog").then((dialog) => {
+        cy.get("@dialog").then(dialog => {
             let value = dialog.get_value("barcode");
             expect(value).to.contain("<svg");
             expect(value).to.contain('data-barcode-value="123456789"');
@@ -40,16 +35,11 @@ context("Control Barcode", () => {
         get_dialog_with_barcode().as("dialog");
 
         cy.focused().blur();
-        cy.get(".frappe-control[data-fieldname=barcode]")
-            .findByRole("textbox")
-            .type("123456789")
-            .blur();
+        cy.get(".frappe-control[data-fieldname=barcode]").findByRole("textbox").type("123456789").blur();
         cy.get(".frappe-control[data-fieldname=barcode]").findByRole("textbox").clear().blur();
-        cy.get(
-            '.frappe-control[data-fieldname=barcode] svg[data-barcode-value="123456789"]',
-        ).should("not.exist");
+        cy.get('.frappe-control[data-fieldname=barcode] svg[data-barcode-value="123456789"]').should("not.exist");
 
-        cy.get("@dialog").then((dialog) => {
+        cy.get("@dialog").then(dialog => {
             let value = dialog.get_value("barcode");
             expect(value).to.equal("");
         });

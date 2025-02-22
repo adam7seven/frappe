@@ -27,7 +27,7 @@ frappe.ui.form.on("Report", {
                             break;
                     }
                 },
-                "fa fa-table",
+                "fa fa-table"
             );
         }
 
@@ -36,20 +36,20 @@ frappe.ui.form.on("Report", {
                 doc.disabled ? __("Enable Report") : __("Disable Report"),
                 function () {
                     frm.call("toggle_disable", {
-                        disable: doc.disabled ? 0 : 1,
+                        disable: doc.disabled ? 0 : 1
                     }).then(() => {
                         frm.reload_doc();
                     });
                 },
-                doc.disabled ? "fa fa-check" : "fa fa-off",
+                doc.disabled ? "fa fa-check" : "fa fa-off"
             );
         }
 
         frm.set_query("ref_doctype", () => {
             return {
                 filters: {
-                    istable: 0,
-                },
+                    istable: 0
+                }
             };
         });
     },
@@ -64,5 +64,5 @@ frappe.ui.form.on("Report", {
         return frm.call("set_doctype_roles").then(() => {
             frm.refresh_field("roles");
         });
-    },
+    }
 });

@@ -46,15 +46,13 @@ context("Login", () => {
             uuid: "6fed1519-cfd8-4a2d-84a6-9a1799c7c741",
             encoded_string: "hello all",
             encoded_url: "http://test.localhost/callback",
-            base64_string: "aGVsbG8gYWxs",
+            base64_string: "aGVsbG8gYWxs"
         });
 
         cy.call("logout");
 
         // redirect-to /me page with params to mock OAuth 2.0 like request
-        cy.visit(
-            "/login?redirect-to=/me?" + encodeURIComponent(payload.toString().replace("+", " ")),
-        );
+        cy.visit("/login?redirect-to=/me?" + encodeURIComponent(payload.toString().replace("+", " ")));
 
         cy.get("#login_email").type("Administrator");
         cy.get("#login_password").type(Cypress.env("adminPassword"));

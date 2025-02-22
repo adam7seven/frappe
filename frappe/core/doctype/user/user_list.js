@@ -13,7 +13,7 @@ frappe.listview_settings["User"] = {
         } else {
             return [__("Disabled"), "grey", "enabled,=,0"];
         }
-    },
+    }
 };
 
 frappe.help.youtube_id["User"] = "8Slw1hsTmUI";

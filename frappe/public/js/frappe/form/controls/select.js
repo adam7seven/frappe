@@ -18,16 +18,11 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
         if (this.only_input) {
             this.$wrapper.append(select_icon_html);
         } else {
-            this.$wrapper
-                .find(".control-input")
-                .addClass("flex align-center")
-                .append(select_icon_html);
+            this.$wrapper.find(".control-input").addClass("flex align-center").append(select_icon_html);
         }
     }
     set_placeholder(is_xs_input) {
-        const placeholder_html = `<div class="placeholder ellipsis text-extra-muted ${
-            is_xs_input ? "xs" : ""
-        }">
+        const placeholder_html = `<div class="placeholder ellipsis text-extra-muted ${is_xs_input ? "xs" : ""}">
 				<span>${this.df.placeholder}</span>
 			</div>`;
         if (this.only_input) {
@@ -63,10 +58,7 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
         var options = this.df.options || [];
 
         if (typeof this.df.options === "string") {
-            options = this.get_select_options_value_label(
-                this.df.options,
-                this.df.options_has_label,
-            );
+            options = this.get_select_options_value_label(this.df.options, this.df.options_has_label);
         }
 
         // nothing changed
@@ -82,7 +74,7 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
                 this.$input,
                 options || [],
                 this.df.sort_options,
-                this.df.context || this.df.parent || this.doctype,
+                this.df.context || this.df.parent || this.doctype
             );
 
             if (value === undefined && selected) {
@@ -119,12 +111,12 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
 
         let option_list = options.split("\n");
         if (remove_empty) {
-            option_list = option_list.filter((x) => x);
+            option_list = option_list.filter(x => x);
         }
 
         let result = [];
         if (!options_has_label) {
-            result = option_list.map((item) => ({ label: __(item), value: item }));
+            result = option_list.map(item => ({ label: __(item), value: item }));
             return result;
         }
 
@@ -137,7 +129,7 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
             } else if (comma_index > 0) {
                 result.push({
                     label: __(opt.substring(comma_index + 1)),
-                    value: opt.substring(0, comma_index),
+                    value: opt.substring(0, comma_index)
                 });
             }
         }
@@ -151,20 +143,20 @@ frappe.ui.form.add_options = function (input, options_list, sort, doctype) {
         return $select;
     }
 
-    let options = options_list.map((raw_option) => parse_option(raw_option, doctype));
+    let options = options_list.map(raw_option => parse_option(raw_option, doctype));
     if (sort) {
         options = options.sort((a, b) => cstr(a.label).localeCompare(cstr(b.label)));
     }
 
     options
-        .map((option) =>
+        .map(option =>
             $("<option>")
                 .html(cstr(option.label))
                 .attr("value", option.value)
                 .prop("disabled", option.is_disabled)
-                .prop("selected", option.is_selected),
+                .prop("selected", option.is_selected)
         )
-        .forEach(($option) => $option.appendTo($select.get(0)));
+        .forEach($option => $option.appendTo($select.get(0)));
 
     // select the first option
     $select.get(0).selectedIndex = 0;
@@ -217,6 +209,6 @@ function parse_option(v, doctype) {
         value,
         label,
         is_disabled,
-        is_selected,
+        is_selected
     };
 }

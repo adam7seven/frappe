@@ -12,7 +12,7 @@ export default class QuickListWidget extends Widget {
         return {
             document_type: this.document_type,
             label: this.label,
-            quick_list_filter: this.quick_list_filter,
+            quick_list_filter: this.quick_list_filter
         };
     }
 
@@ -32,7 +32,7 @@ export default class QuickListWidget extends Widget {
 			title="${__("Add New")} ${__(this.document_type)}
 			">
 				${frappe.utils.icon("add", "sm")}
-			</div>`,
+			</div>`
         );
 
         this.add_new_button.appendTo(this.action_area);
@@ -41,8 +41,8 @@ export default class QuickListWidget extends Widget {
                 frappe.utils.generate_route({
                     type: "doctype",
                     id: this.document_type,
-                    doc_view: "New",
-                }),
+                    doc_view: "New"
+                })
             );
         });
     }
@@ -51,7 +51,7 @@ export default class QuickListWidget extends Widget {
         this.refresh_list = $(
             `<div class="refresh-list btn btn-xs pull-right" title="${__("Refresh List")}">
 				${frappe.utils.icon("es-line-reload", "sm")}
-			</div>`,
+			</div>`
         );
 
         this.refresh_list.appendTo(this.action_area);
@@ -65,7 +65,7 @@ export default class QuickListWidget extends Widget {
         this.filter_list = $(
             `<div class="filter-list btn btn-xs pull-right" title="${__("Add/Update Filter")}">
 				${frappe.utils.icon("filter", "sm")}
-			</div>`,
+			</div>`
         );
 
         this.filter_list.appendTo(this.action_area);
@@ -83,7 +83,7 @@ export default class QuickListWidget extends Widget {
         this.filter_group = new frappe.ui.FilterGroup({
             parent: this.dialog.get_field("filter_area").$wrapper,
             doctype: doctype,
-            on_change: () => {},
+            on_change: () => {}
         });
 
         frappe.model.with_doctype(doctype, () => {
@@ -96,8 +96,8 @@ export default class QuickListWidget extends Widget {
         let fields = [
             {
                 fieldtype: "HTML",
-                fieldname: "filter_area",
-            },
+                fieldname: "filter_area"
+            }
         ];
         let me = this;
         this.dialog = new frappe.ui.Dialog({
@@ -116,7 +116,7 @@ export default class QuickListWidget extends Widget {
                     me.set_body();
                 }
             },
-            primary_action_label: __("Save"),
+            primary_action_label: __("Save")
         });
 
         this.dialog.show();
@@ -159,11 +159,9 @@ export default class QuickListWidget extends Widget {
 			`).appendTo($quick_list_item);
         }
 
-        $(`<div class="right-arrow">${frappe.utils.icon("right", "xs")}</div>`).appendTo(
-            $quick_list_item,
-        );
+        $(`<div class="right-arrow">${frappe.utils.icon("right", "xs")}</div>`).appendTo($quick_list_item);
 
-        $quick_list_item.click((e) => {
+        $quick_list_item.click(e => {
             if (e.ctrlKey || e.metaKey) {
                 frappe.open_in_new_tab = true;
             }
@@ -219,11 +217,11 @@ export default class QuickListWidget extends Widget {
                     filters: quick_list_filter,
                     order_by: "modified desc",
                     start: 0,
-                    page_length: 4,
-                },
+                    page_length: 4
+                }
             };
 
-            frappe.call(args).then((r) => {
+            frappe.call(args).then(r => {
                 if (!r.message) return;
                 let data = r.message;
 
@@ -235,10 +233,8 @@ export default class QuickListWidget extends Widget {
                     return;
                 }
 
-                this.quick_list = data.map((doc) => this.setup_quick_list_item(doc));
-                this.quick_list.forEach(($quick_list_item) =>
-                    $quick_list_item.appendTo(this.body),
-                );
+                this.quick_list = data.map(doc => this.setup_quick_list_item(doc));
+                this.quick_list.forEach($quick_list_item => $quick_list_item.appendTo(this.body));
             });
         });
     }
@@ -252,7 +248,7 @@ export default class QuickListWidget extends Widget {
 			<div class="see-all btn btn-xs">${__("View List")}</div>
 		`).appendTo(this.footer);
 
-        this.see_all_button.click((e) => {
+        this.see_all_button.click(e => {
             if (e.ctrlKey || e.metaKey) {
                 frappe.open_in_new_tab = true;
             }

@@ -14,8 +14,8 @@ frappe.ui.form.on("Form Tour", {
             if (frm.doc.reference_doctype) {
                 return {
                     filters: {
-                        ref_doctype: frm.doc.reference_doctype,
-                    },
+                        ref_doctype: frm.doc.reference_doctype
+                    }
                 };
             }
             return {};
@@ -34,17 +34,15 @@ frappe.ui.form.on("Form Tour", {
             frm.doc.dashboard_id &&
             frm.doc.reference_doctype
         ) {
-            frappe.throw(
-                __("Referance Doctype and Dashboard ID both can't be used at the same time."),
-            );
+            frappe.throw(__("Referance Doctype and Dashboard ID both can't be used at the same time."));
         }
         frm.doc.ui_tour && (frm.doc.page_route = JSON.stringify(await get_path(frm)));
     },
     disable_form: function (frm) {
         frm.set_read_only();
         frm.fields
-            .filter((field) => field.has_input)
-            .forEach((field) => {
+            .filter(field => field.has_input)
+            .forEach(field => {
                 frm.set_df_property(field.df.fieldname, "read_only", "1");
             });
         frm.disable_save();
@@ -53,26 +51,16 @@ frappe.ui.form.on("Form Tour", {
     reference_doctype(frm) {
         if (!frm.doc.reference_doctype) return;
 
-        frm.set_fields_as_options("fieldname", frm.doc.reference_doctype, (df) => !df.hidden).then(
-            (options) => {
-                frm.fields_dict.steps.grid.update_docfield_property(
-                    "fieldname",
-                    "options",
-                    [""].concat(options),
-                );
-            },
-        );
+        frm.set_fields_as_options("fieldname", frm.doc.reference_doctype, df => !df.hidden).then(options => {
+            frm.fields_dict.steps.grid.update_docfield_property("fieldname", "options", [""].concat(options));
+        });
 
         frm.set_fields_as_options(
             "parent_fieldname",
             frm.doc.reference_doctype,
-            (df) => df.fieldtype == "Table" && !df.hidden,
-        ).then((options) => {
-            frm.fields_dict.steps.grid.update_docfield_property(
-                "parent_fieldname",
-                "options",
-                [""].concat(options),
-            );
+            df => df.fieldtype == "Table" && !df.hidden
+        ).then(options => {
+            frm.fields_dict.steps.grid.update_docfield_property("parent_fieldname", "options", [""].concat(options));
         });
         if (!frm.doc.ui_tour) {
             // remove report id if reference doctype is changed and report id is not valid.
@@ -81,36 +69,33 @@ frappe.ui.form.on("Form Tour", {
                     "Report",
                     {
                         filters: {
-                            ref_doctype: frm.doc.reference_doctype,
-                        },
+                            ref_doctype: frm.doc.reference_doctype
+                        }
                     },
-                    { fields: ["id"] },
+                    { fields: ["id"] }
                 )
-                .then((reports) => {
-                    if (reports.findIndex((r) => r.id == frm.doc.report_id) == -1) {
+                .then(reports => {
+                    if (reports.findIndex(r => r.id == frm.doc.report_id) == -1) {
                         frm.set_value("report_id", "");
                         frm.refresh_field("report_id");
                     }
                 });
         }
-    },
+    }
 });
 
-let add_custom_button = (frm) => {
+let add_custom_button = frm => {
     if (frm.doc.ui_tour) {
         frm.add_custom_button(__("Reset"), function () {
-            frappe.confirm(
-                __("This will reset this tour and show it to all users. Are you sure?"),
-                function () {
-                    frappe.call({
-                        method: "frappe.desk.doctype.form_tour.form_tour.reset_tour",
-                        args: {
-                            tour_id: frm.doc.id,
-                        },
-                    });
-                    delete frappe.boot.user.onboarding_status[frm.doc.id];
-                },
-            );
+            frappe.confirm(__("This will reset this tour and show it to all users. Are you sure?"), function () {
+                frappe.call({
+                    method: "frappe.desk.doctype.form_tour.form_tour.reset_tour",
+                    args: {
+                        tour_id: frm.doc.id
+                    }
+                });
+                delete frappe.boot.user.onboarding_status[frm.doc.id];
+            });
         });
     } else {
         frm.add_custom_button(__("Show Tour"), async () => {
@@ -144,23 +129,15 @@ frappe.ui.form.on("Form Tour Step", {
 
         const parent_fieldname_df = frappe
             .get_meta(frm.doc.reference_doctype)
-            .fields.find((df) => df.fieldname == child_row.parent_fieldname);
+            .fields.find(df => df.fieldname == child_row.parent_fieldname);
 
-        frm.set_fields_as_options(
-            "fieldname",
-            parent_fieldname_df.options,
-            (df) => !df.hidden,
-        ).then((options) => {
-            frm.fields_dict.steps.grid.update_docfield_property(
-                "fieldname",
-                "options",
-                [""].concat(options),
-            );
+        frm.set_fields_as_options("fieldname", parent_fieldname_df.options, df => !df.hidden).then(options => {
+            frm.fields_dict.steps.grid.update_docfield_property("fieldname", "options", [""].concat(options));
             if (child_row.fieldname) {
                 frappe.model.set_value(cdt, cdn, "fieldname", child_row.fieldname);
             }
         });
-    },
+    }
 });
 
 async function check_if_single(doctype) {
@@ -175,7 +152,7 @@ async function check_if_private_workspace(id) {
 async function get_first_document(doctype) {
     let docid;
 
-    await frappe.db.get_list(doctype, { order_by: "creation" }).then((res) => {
+    await frappe.db.get_list(doctype, { order_by: "creation" }).then(res => {
         if (Array.isArray(res) && res.length) docid = res[0].id;
     });
 
@@ -209,8 +186,7 @@ async function get_path(frm) {
             frm.doc.page_id = "";
             if (frm.doc.list_name == "File") return ["List", "File"];
             if (!frm.doc.reference_doctype) {
-                if (frm.doc.list_name == "Dashboard")
-                    return ["dashboard-view", frm.doc.dashboard_id || "*"];
+                if (frm.doc.list_name == "Dashboard") return ["dashboard-view", frm.doc.dashboard_id || "*"];
                 route.push("*");
             } else {
                 route.push(frm.doc.reference_doctype);

@@ -1,8 +1,6 @@
 import Awesomplete from "awesomplete";
 
-frappe.ui.form.ControlMultiSelect = class ControlMultiSelect extends (
-    frappe.ui.form.ControlAutocomplete
-) {
+frappe.ui.form.ControlMultiSelect = class ControlMultiSelect extends frappe.ui.form.ControlAutocomplete {
     get_awesomplete_settings() {
         const settings = super.get_awesomplete_settings();
 
@@ -13,8 +11,7 @@ frappe.ui.form.ControlMultiSelect = class ControlMultiSelect extends (
                     return Awesomplete.FILTER_CONTAINS(text, input.match(/[^,]*$/)[0]);
                 }
 
-                let getMatch = (value) =>
-                    Awesomplete.FILTER_CONTAINS(value, input.match(/[^,]*$/)[0]);
+                let getMatch = value => Awesomplete.FILTER_CONTAINS(value, input.match(/[^,]*$/)[0]);
 
                 // match typed input with label or value or description
                 let v = getMatch(d.label);
@@ -31,7 +28,7 @@ frappe.ui.form.ControlMultiSelect = class ControlMultiSelect extends (
             replace: function (text) {
                 const before = this.input.value.match(/^.+,\s*|/)[0];
                 this.input.value = before + text + ", ";
-            },
+            }
         });
     }
 
@@ -39,13 +36,13 @@ frappe.ui.form.ControlMultiSelect = class ControlMultiSelect extends (
         let data = super.get_value();
         // find value of label from option list and return actual value string
         if (this.df.options && this.df.options.length && this.df.options[0].label) {
-            data = data.split(",").map((op) => op.trim());
+            data = data.split(",").map(op => op.trim());
             data = data
-                .map((val) => {
-                    let option = this.df.options.find((op) => op.label === val);
+                .map(val => {
+                    let option = this.df.options.find(op => op.label === val);
                     return option ? option.value : null;
                 })
-                .filter((n) => n != null)
+                .filter(n => n != null)
                 .join(", ");
         }
         return data;
@@ -57,12 +54,12 @@ frappe.ui.form.ControlMultiSelect = class ControlMultiSelect extends (
         if (this.df.options && this.df.options.length && this.df.options[0].label) {
             value = value
                 .split(",")
-                .map((d) => d.trim())
-                .map((val) => {
-                    let option = this.df.options.find((op) => op.value === val);
+                .map(d => d.trim())
+                .map(val => {
+                    let option = this.df.options.find(op => op.value === val);
                     return option ? option.label : val;
                 })
-                .filter((n) => n != null)
+                .filter(n => n != null)
                 .join(", ");
         }
         super.set_formatted_input(value);
@@ -70,7 +67,7 @@ frappe.ui.form.ControlMultiSelect = class ControlMultiSelect extends (
 
     get_values() {
         const value = this.get_value() || "";
-        return value.split(/\s*,\s*/).filter((d) => d);
+        return value.split(/\s*,\s*/).filter(d => d);
     }
 
     get_data() {
@@ -84,7 +81,7 @@ frappe.ui.form.ControlMultiSelect = class ControlMultiSelect extends (
         const values = this.get_values() || [];
 
         // return values which are not already selected
-        if (data) data.filter((d) => !values.includes(d));
+        if (data) data.filter(d => !values.includes(d));
         return data;
     }
 
@@ -93,7 +90,7 @@ frappe.ui.form.ControlMultiSelect = class ControlMultiSelect extends (
             return value || "";
         }
 
-        let valid_values = this.awesomplete._list.map((d) => d.value);
+        let valid_values = this.awesomplete._list.map(d => d.value);
 
         if (!valid_values.length) {
             return value;
@@ -101,7 +98,7 @@ frappe.ui.form.ControlMultiSelect = class ControlMultiSelect extends (
 
         // remove last comma and convert into array
         let value_arr = value.replace(/,\s*$/, "").split(",");
-        let include_all_values = value_arr.every((val) => valid_values.includes(val));
+        let include_all_values = value_arr.every(val => valid_values.includes(val));
 
         if (include_all_values) {
             return value;

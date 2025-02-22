@@ -13,15 +13,15 @@ export default {
             fieldname: "title",
             fieldtype: "Data",
             label: "Title",
-            unique: 1,
-        },
+            unique: 1
+        }
     ],
     links: [
         {
             group: "Child Doctype",
             link_doctype: "Doctype With Child Table",
-            link_fieldname: "title",
-        },
+            link_fieldname: "title"
+        }
     ],
     modified: "2022-02-10 12:03:12.603763",
     modified_by: "Administrator",
@@ -36,10 +36,10 @@ export default {
             read: 1,
             role: "System Manager",
             share: 1,
-            write: 1,
-        },
+            write: 1
+        }
     ],
     sort_field: "modified",
     sort_order: "ASC",
-    track_changes: 1,
+    track_changes: 1
 };

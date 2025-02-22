@@ -11,9 +11,9 @@ context("Control Color", () => {
                 {
                     label: "Color",
                     fieldname: "color",
-                    fieldtype: "Color",
-                },
-            ],
+                    fieldtype: "Color"
+                }
+            ]
         });
     }
 
@@ -29,7 +29,7 @@ context("Control Color", () => {
         cy.get(".hue-map").should("have.css", "color", "rgb(0, 145, 255)");
 
         //Checking if the correct color is being selected
-        cy.get("@dialog").then((dialog) => {
+        cy.get("@dialog").then(dialog => {
             let value = dialog.get_value("color");
             expect(value).to.equal("#4F9DD9");
         });
@@ -42,7 +42,7 @@ context("Control Color", () => {
         cy.get(".hue-map").should("have.css", "color", "rgb(255, 0, 0)");
 
         //Checking if the correct color is being selected
-        cy.get("@dialog").then((dialog) => {
+        cy.get("@dialog").then(dialog => {
             let value = dialog.get_value("color");
             expect(value).to.equal("#CB2929");
         });
@@ -52,7 +52,7 @@ context("Control Color", () => {
         cy.get(".color-map").should("have.css", "color", "rgb(56, 0, 0)");
 
         //Checking if the expected color is selected and getting displayed
-        cy.get("@dialog").then((dialog) => {
+        cy.get("@dialog").then(dialog => {
             let value = dialog.get_value("color");
             expect(value).to.equal("#380000");
         });
@@ -65,7 +65,7 @@ context("Control Color", () => {
         cy.get(".color-map").should("have.css", "color", "rgb(46, 37, 0)");
 
         //Checking if the correct color is being displayed
-        cy.get("@dialog").then((dialog) => {
+        cy.get("@dialog").then(dialog => {
             let value = dialog.get_value("color");
             expect(value).to.equal("#2e2500");
         });
@@ -73,8 +73,6 @@ context("Control Color", () => {
         //Clearing the field and checking if the field contains the placeholder "Choose a color"
         cy.get(".input-with-feedback").click({ force: true });
         cy.get_field("color", "Color").type("{selectall}").clear();
-        cy.get_field("color", "Color")
-            .invoke("attr", "placeholder")
-            .should("contain", "Choose a color");
+        cy.get_field("color", "Color").invoke("attr", "placeholder").should("contain", "Choose a color");
     });
 });

@@ -7,7 +7,7 @@ export function get_workflow_elements(workflow, workflow_data) {
     let x = 150;
     let y = 100;
 
-    workflow_data.forEach((node) => {
+    workflow_data.forEach(node => {
         if (node.type == "state") {
             states[node.id] = node;
         } else if (node.type == "action") {
@@ -43,7 +43,7 @@ export function get_workflow_elements(workflow, workflow_data) {
                 id: id.toString(),
                 type: "state",
                 position: { x, y },
-                data,
+                data
             };
         }
 
@@ -51,7 +51,7 @@ export function get_workflow_elements(workflow, workflow_data) {
             initialized: true,
             selected: false,
             dragging: false,
-            resizing: false,
+            resizing: false
         });
         return (states[id] = state);
     }
@@ -67,7 +67,7 @@ export function get_workflow_elements(workflow, workflow_data) {
                 id,
                 type: "action",
                 position,
-                data,
+                data
             };
         }
 
@@ -75,7 +75,7 @@ export function get_workflow_elements(workflow, workflow_data) {
             initialized: true,
             selected: false,
             dragging: false,
-            resizing: false,
+            resizing: false
         });
         return (actions[id] = action);
     }
@@ -92,7 +92,7 @@ export function get_workflow_elements(workflow, workflow_data) {
                 sourceHandle: "right",
                 targetHandle: "left",
                 updatable: true,
-                animated: true,
+                animated: true
             };
         }
 
@@ -100,34 +100,32 @@ export function get_workflow_elements(workflow, workflow_data) {
             initialized: true,
             selected: false,
             dragging: false,
-            resizing: false,
+            resizing: false
         });
         return (transitions[id] = transition);
     }
 
-    let state_id = Math.max(...workflow.states.map((state) => state.workflow_builder_id || 0));
+    let state_id = Math.max(...workflow.states.map(state => state.workflow_builder_id || 0));
 
     workflow.states.forEach((state, i) => {
         x += 400;
         let doc_status_map = {
             0: "Draft",
             1: "Submitted",
-            2: "Cancelled",
+            2: "Cancelled"
         };
 
         const id = state.workflow_builder_id || ++state_id;
         elements.push(
             state_obj(id, {
                 ...state,
-                doc_status: doc_status_map[state.doc_status],
-            }),
+                doc_status: doc_status_map[state.doc_status]
+            })
         );
     });
 
     let action_id = Math.max(
-        ...workflow.transitions.map(
-            (transition) => transition.workflow_builder_id?.replace("action-", "") || 0,
-        ),
+        ...workflow.transitions.map(transition => transition.workflow_builder_id?.replace("action-", "") || 0)
     );
 
     workflow.transitions.forEach((transition, i) => {
@@ -139,12 +137,8 @@ export function get_workflow_elements(workflow, workflow_data) {
             source = states[action.data.from_id];
             target = states[action.data.to_id];
         } else {
-            source = Object.values(states).filter(
-                (state) => state.data?.state == transition.state,
-            )[0];
-            target = Object.values(states).filter(
-                (state) => state.data?.state == transition.next_state,
-            )[0];
+            source = Object.values(states).filter(state => state.data?.state == transition.state)[0];
+            target = Object.values(states).filter(state => state.data?.state == transition.next_state)[0];
         }
 
         let position = { x: source.position.x + 250, y: y + 20 };
@@ -153,7 +147,7 @@ export function get_workflow_elements(workflow, workflow_data) {
             from_id: source.id,
             to_id: target.id,
             from: transition.state,
-            to: transition.next_state,
+            to: transition.next_state
         };
 
         elements.push(action_obj(id, data, position));
@@ -167,23 +161,21 @@ export function get_workflow_elements(workflow, workflow_data) {
 export function validate_transitions(state, next_state) {
     let message;
     if (state.doc_status == "Cancelled") {
-        message = __("Cannot change state of Cancelled Document <b>({0} State)</b>", [
-            state.state,
-        ]);
+        message = __("Cannot change state of Cancelled Document <b>({0} State)</b>", [state.state]);
     }
 
     if (state.doc_status == "Submitted" && next_state.doc_status == "Draft") {
         message = __(
             "Submitted document cannot be converted back to draft while transitioning from <b>{0} State</b> to <b>{1} State</b>",
-            [state.state, next_state.state],
+            [state.state, next_state.state]
         );
     }
 
     if (state.doc_status == "Draft" && next_state.doc_status == "Cancelled") {
-        message = __(
-            "Cannot cancel before submitting while transitioning from <b>{0} State</b> to <b>{1} State</b>",
-            [state.state, next_state.state],
-        );
+        message = __("Cannot cancel before submitting while transitioning from <b>{0} State</b> to <b>{1} State</b>", [
+            state.state,
+            next_state.state
+        ]);
     }
     return message;
 }

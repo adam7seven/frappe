@@ -8,5 +8,5 @@ frappe.listview_settings["Newsletter"] = {
         } else {
             return [__("Not Sent"), "gray", "email_sent,=,No"];
         }
-    },
+    }
 };

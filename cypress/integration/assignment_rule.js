@@ -9,7 +9,7 @@ context("Assignment Rule", () => {
         cy.wait(2000);
         cy.window()
             .its("cur_frm")
-            .then((frm) => {
+            .then(frm => {
                 expect(frm.doc.assignment_days.length).to.equal(7);
             });
     });

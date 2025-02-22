@@ -5,7 +5,7 @@ context("Dynamic Link", () => {
         return cy
             .window()
             .its("frappe")
-            .then((frappe) => {
+            .then(frappe => {
                 return frappe.xcall("frappe.tests.ui_test_helpers.create_doctype", {
                     name: "Test Dynamic Link",
                     fields: [
@@ -15,7 +15,7 @@ context("Dynamic Link", () => {
                             fieldtype: "Link",
                             options: "DocType",
                             in_list_view: 1,
-                            in_standard_filter: 1,
+                            in_standard_filter: 1
                         },
                         {
                             label: "Document ID",
@@ -23,9 +23,9 @@ context("Dynamic Link", () => {
                             fieldtype: "Dynamic Link",
                             options: "doc_type",
                             in_list_view: 1,
-                            in_standard_filter: 1,
-                        },
-                    ],
+                            in_standard_filter: 1
+                        }
+                    ]
                 });
             });
     });
@@ -39,16 +39,16 @@ context("Dynamic Link", () => {
                     fieldname: "doc_type",
                     fieldtype: "Link",
                     options: "DocType",
-                    in_list_view: 1,
+                    in_list_view: 1
                 },
                 {
                     label: "Document ID",
                     fieldname: "doc_id",
                     fieldtype: "Dynamic Link",
                     options: "doc_type",
-                    in_list_view: 1,
-                },
-            ],
+                    in_list_view: 1
+                }
+            ]
         });
     }
 
@@ -61,7 +61,7 @@ context("Dynamic Link", () => {
                     fieldname: "doc_type",
                     fieldtype: "Link",
                     options: "DocType",
-                    in_list_view: 1,
+                    in_list_view: 1
                 },
                 {
                     label: "Document ID",
@@ -70,9 +70,9 @@ context("Dynamic Link", () => {
                     get_options: () => {
                         return "User";
                     },
-                    in_list_view: 1,
-                },
-            ],
+                    in_list_view: 1
+                }
+            ]
         });
     }
 
@@ -83,11 +83,7 @@ context("Dynamic Link", () => {
         cy.get_field("doc_id").click();
 
         //Checking if the listbox have length greater than 0
-        cy.get('[data-fieldname="doc_id"]')
-            .find(".awesomplete")
-            .find("div")
-            .its("length")
-            .should("be.gte", 0);
+        cy.get('[data-fieldname="doc_id"]').find(".awesomplete").find("div").its("length").should("be.gte", 0);
         cy.get(".btn-modal-close").click({ force: true });
     });
 
@@ -98,11 +94,7 @@ context("Dynamic Link", () => {
         cy.get_field("doc_id").click();
 
         //Checking if the listbox have length greater than 0
-        cy.get('[data-fieldname="doc_id"]')
-            .find(".awesomplete")
-            .find("div")
-            .its("length")
-            .should("be.gte", 0);
+        cy.get('[data-fieldname="doc_id"]').find(".awesomplete").find("div").its("length").should("be.gte", 0);
         cy.get(".btn-modal-close").click({ force: true, multiple: true });
     });
 
@@ -117,11 +109,7 @@ context("Dynamic Link", () => {
         cy.get_field("doc_id").click();
 
         //Checking if the listbox have length greater than 0
-        cy.get('[data-fieldname="doc_id"]')
-            .find(".awesomplete")
-            .find("div")
-            .its("length")
-            .should("be.gte", 0);
+        cy.get('[data-fieldname="doc_id"]').find(".awesomplete").find("div").its("length").should("be.gte", 0);
 
         //Opening a new form for dynamic link doctype
         cy.new_form("Test Dynamic Link");
@@ -132,11 +120,7 @@ context("Dynamic Link", () => {
         cy.get_field("doc_id").click();
 
         //Checking if the listbox have length greater than 0
-        cy.get('[data-fieldname="doc_id"]')
-            .find(".awesomplete")
-            .find("div")
-            .its("length")
-            .should("be.gte", 0);
+        cy.get('[data-fieldname="doc_id"]').find(".awesomplete").find("div").its("length").should("be.gte", 0);
         cy.get_field("doc_type").clear();
 
         //Entering System Settings in the Doctype field
@@ -144,16 +128,13 @@ context("Dynamic Link", () => {
         cy.fill_field("doc_type", "System Settings", "Link", { delay: 500 });
         cy.wait("@search_query");
         cy.get(`[data-fieldname="doc_type"] ul:visible div:first-child`).click({
-            scrollBehavior: false,
+            scrollBehavior: false
         });
 
         cy.get_field("doc_id").click();
 
         //Checking if the system throws error
         cy.get(".modal-title").should("have.text", "Error");
-        cy.get(".msgprint").should(
-            "have.text",
-            "System Settings is not a valid DocType for Dynamic Link",
-        );
+        cy.get(".msgprint").should("have.text", "System Settings is not a valid DocType for Dynamic Link");
     });
 });

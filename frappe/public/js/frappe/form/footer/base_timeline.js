@@ -50,15 +50,11 @@ class BaseTimeline {
         let response = this.prepare_timeline_contents();
         if (response instanceof Promise) {
             response.then(() => {
-                this.timeline_items.sort(
-                    (item1, item2) => new Date(item2.creation) - new Date(item1.creation),
-                );
+                this.timeline_items.sort((item1, item2) => new Date(item2.creation) - new Date(item1.creation));
                 this.timeline_items.forEach(this.add_timeline_item.bind(this));
             });
         } else {
-            this.timeline_items.sort(
-                (item1, item2) => new Date(item2.creation) - new Date(item1.creation),
-            );
+            this.timeline_items.sort((item1, item2) => new Date(item2.creation) - new Date(item1.creation));
             this.timeline_items.forEach(this.add_timeline_item.bind(this));
         }
     }
@@ -78,11 +74,11 @@ class BaseTimeline {
     }
 
     add_timeline_items(items, append_at_the_end = false) {
-        items.forEach((item) => this.add_timeline_item(item, append_at_the_end));
+        items.forEach(item => this.add_timeline_item(item, append_at_the_end));
     }
 
     add_timeline_items_based_on_creation(items) {
-        items.forEach((item) => {
+        items.forEach(item => {
             this.timeline_items_wrapper.find(".timeline-item").each((i, el) => {
                 let creation = $(el).attr("data-timestamp");
                 if (creation && new Date(creation) < new Date(item.creation)) {
@@ -105,7 +101,7 @@ class BaseTimeline {
 					<button class="btn btn-default btn-sm btn-load-more">
 						<span>${item.content}</span>
 					</button>
-				</div>`,
+				</div>`
             );
             timeline_item.find(".btn-load-more").on("click", async () => {
                 let more_items = await this.get_more_communication_timeline_contents();
@@ -118,7 +114,7 @@ class BaseTimeline {
         timeline_item.attr({
             "data-doctype": item.doctype,
             "data-name": item.name,
-            "data-timestamp": item.creation,
+            "data-timestamp": item.creation
         });
         if (item.icon) {
             timeline_item.append(`
@@ -132,9 +128,7 @@ class BaseTimeline {
             timeline_item.append(`<div class="timeline-dot">`);
         }
 
-        timeline_item.append(
-            `<div class="timeline-content ${item.is_card ? "frappe-card" : ""}">`,
-        );
+        timeline_item.append(`<div class="timeline-content ${item.is_card ? "frappe-card" : ""}">`);
         let timeline_content = timeline_item.find(".timeline-content");
         timeline_content.append(item.content);
         if (!item.hide_timestamp && !item.is_card) {

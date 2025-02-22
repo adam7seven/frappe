@@ -7,9 +7,9 @@ frappe.ui.form.on("Session Default Settings", {
             return {
                 filters: {
                     issingle: 0,
-                    istable: 0,
-                },
+                    istable: 0
+                }
             };
         });
-    },
+    }
 });

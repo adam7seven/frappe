@@ -18,8 +18,8 @@ frappe.ui.form.on("Web Page", {
         frm.set_query("web_template", "page_blocks", function () {
             return {
                 filters: {
-                    type: ["in", ["Section", "Component"]],
-                },
+                    type: ["in", ["Section", "Component"]]
+                }
             };
         });
     },
@@ -51,40 +51,36 @@ frappe.ui.form.on("Web Page", {
     },
     set_meta_tags(frm) {
         frappe.utils.set_meta_tag(frm.doc.route);
-    },
+    }
 });
 
 frappe.ui.form.on("Web Page Block", {
     edit_values(frm, cdt, cdn) {
         let row = frm.selected_doc;
         let values = JSON.parse(row.web_template_values || "{}");
-        open_web_template_values_editor(row.web_template, values).then((new_values) => {
+        open_web_template_values_editor(row.web_template, values).then(new_values => {
             frappe.model.set_value(cdt, cdn, "web_template_values", JSON.stringify(new_values));
         });
-    },
+    }
 });
 
 frappe.tour["Web Page"] = [
     {
         fieldname: "title",
         title: __("Title of the page"),
-        description: __(
-            "This title will be used as the title of the webpage as well as in meta tags",
-        ),
+        description: __("This title will be used as the title of the webpage as well as in meta tags")
     },
     {
         fieldname: "published",
         title: __("Makes the page public"),
-        description: __(
-            "Checking this will publish the page on your website and it'll be visible to everyone.",
-        ),
+        description: __("Checking this will publish the page on your website and it'll be visible to everyone.")
     },
     {
         fieldname: "route",
         title: __("URL of the page"),
         description: __(
-            "This will be automatically generated when you publish the page, you can also enter a route yourself if you wish",
-        ),
+            "This will be automatically generated when you publish the page, you can also enter a route yourself if you wish"
+        )
     },
     {
         fieldname: "content_type",
@@ -96,41 +92,37 @@ frappe.tour["Web Page"] = [
 						<li><b>${__("HTML")}</b>: ${__("HTML with jinja support")}</li>
 						<li><b>${__("Page Builder")}</b>: ${__("Frappe page builder using components")}</li>
 					</ul>
-					`,
+					`
     },
     {
         fieldname: "insert_code",
         title: __("Client Script"),
         description: __(
-            "Checking this will show a text area where you can write custom javascript that will run on this page.",
-        ),
+            "Checking this will show a text area where you can write custom javascript that will run on this page."
+        )
     },
     {
         fieldname: "meta_title",
         title: __("Meta title for SEO"),
-        description: __(
-            "By default the title is used as meta title, adding a value here will override it.",
-        ),
+        description: __("By default the title is used as meta title, adding a value here will override it.")
     },
     {
         fieldname: "meta_title",
         title: __("Meta Title"),
-        description: __(
-            "By default the title is used as meta title, adding a value here will override it.",
-        ),
+        description: __("By default the title is used as meta title, adding a value here will override it.")
     },
     {
         fieldname: "meta_description",
         title: __("Meta Description"),
         description: __(
-            "The meta description is an HTML attribute that provides a brief summary of a web page. Search engines such as Google often display the meta description in search results, which can influence click-through rates.",
-        ),
+            "The meta description is an HTML attribute that provides a brief summary of a web page. Search engines such as Google often display the meta description in search results, which can influence click-through rates."
+        )
     },
     {
         fieldname: "meta_image",
         title: __("Meta Image"),
         description: __(
-            "The meta image is unique image representing the content of the page. Images for this Card should be at least 280px in width, and at least 150px in height.",
-        ),
-    },
+            "The meta image is unique image representing the content of the page. Images for this Card should be at least 280px in width, and at least 150px in height."
+        )
+    }
 ];

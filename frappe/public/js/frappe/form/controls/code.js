@@ -26,12 +26,10 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
 					<svg class="es-icon es-line  icon-sm" style="" aria-hidden="true">
 						<use class="" href="#es-line-copy-light"></use>
 					</svg>
-				</button>`,
+				</button>`
             );
             this.button.on("click", () => {
-                frappe.utils.copy_to_clipboard(
-                    frappe.model.get_value(this.doctype, this.docid, this.df.fieldname),
-                );
+                frappe.utils.copy_to_clipboard(frappe.model.get_value(this.doctype, this.docid, this.df.fieldname));
             });
             this.button.appendTo(this.$wrapper);
         }
@@ -39,9 +37,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
 
     make_ace_editor() {
         if (this.editor) return;
-        this.ace_editor_target = $('<div class="ace-editor-target"></div>').appendTo(
-            this.input_area,
-        );
+        this.ace_editor_target = $('<div class="ace-editor-target"></div>').appendTo(this.input_area);
 
         // styling
         this.ace_editor_target.addClass("border rounded");
@@ -60,9 +56,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
             if (this.df.min_lines) this.editor.setOption("minLines", this.df.min_lines);
         } else {
             this.expanded = false;
-            this.$expand_button = $(
-                `<button class="btn btn-xs btn-default">${this.get_button_label()}</button>`,
-            )
+            this.$expand_button = $(`<button class="btn btn-xs btn-default">${this.get_button_label()}</button>`)
                 .click(() => {
                     this.expanded = !this.expanded;
                     this.refresh_height();
@@ -99,7 +93,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
             get() {
                 return this._autocompletions || [];
             },
-            set: (value) => {
+            set: value => {
                 let getter = value;
                 if (typeof getter !== "function") {
                     getter = () => value;
@@ -109,7 +103,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
                 }
                 this._autocompletions.push(getter);
                 this.setup_autocompletion();
-            },
+            }
         });
     }
 
@@ -136,7 +130,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
             if (autocompletions.length) {
                 callback(
                     null,
-                    autocompletions.map((a) => {
+                    autocompletions.map(a => {
                         if (typeof a === "string") {
                             a = { value: a };
                         }
@@ -145,21 +139,21 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
                             value: a.value,
                             score: a.score,
                             meta: a.meta,
-                            caption: a.caption,
+                            caption: a.caption
                         };
-                    }),
+                    })
                 );
             }
         };
 
-        ace.config.loadModule("ace/ext/language_tools", (langTools) => {
+        ace.config.loadModule("ace/ext/language_tools", langTools => {
             this.editor.setOptions({
                 enableBasicAutocompletion: true,
-                enableLiveAutocompletion: true,
+                enableLiveAutocompletion: true
             });
 
             langTools.addCompleter({
-                getCompletions: customGetCompletions || getCompletions,
+                getCompletions: customGetCompletions || getCompletions
             });
         });
         this._autocompletion_setup = true;
@@ -175,9 +169,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
     }
 
     get_button_label() {
-        return this.expanded
-            ? __("Collapse", null, "Shrink code field.")
-            : __("Expand", null, "Enlarge code field.");
+        return this.expanded ? __("Collapse", null, "Shrink code field.") : __("Expand", null, "Enlarge code field.");
     }
 
     set_language() {
@@ -194,7 +186,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
             JSON: "ace/mode/json",
             Golang: "ace/mode/golang",
             Go: "ace/mode/golang",
-            Jinja: "ace/mode/django",
+            Jinja: "ace/mode/django"
         };
         const language = this.df.options;
 
@@ -203,7 +195,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
             console.warn(
                 `Invalid language option provided for field "${
                     this.df.label
-                }". Valid options are ${valid_languages.join(", ")}.`,
+                }". Valid options are ${valid_languages.join(", ")}.`
             );
         }
 
@@ -243,7 +235,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
             this.root_lib_path = "/assets/frappe/node_modules/ace-builds/src-min-noconflict/";
         }
 
-        this.library_loaded = new Promise((resolve) => {
+        this.library_loaded = new Promise(resolve => {
             frappe.require(this.root_lib_path + "ace.js", () => {
                 window.ace.config.set("basePath", this.root_lib_path);
                 resolve();

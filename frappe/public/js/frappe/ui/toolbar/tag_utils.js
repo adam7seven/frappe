@@ -26,7 +26,7 @@ frappe.tags.utils = {
                     onclick() {
                         // Use Global Search Dialog for tag search too.
                         frappe.searchdialog.search.init_search("#".concat(tag), "tags");
-                    },
+                    }
                 });
             }
         }
@@ -41,7 +41,7 @@ frappe.tags.utils = {
                 if (r && r.message) {
                     frappe.tags.tags = $.extend([], r.message);
                 }
-            },
+            }
         });
     },
 
@@ -78,7 +78,7 @@ frappe.tags.utils = {
                     label: d.id,
                     value: d.id,
                     description: description,
-                    route: ["Form", d.doctype, d.id],
+                    route: ["Form", d.doctype, d.id]
                 };
                 set = get_existing_set(d.doctype);
                 if (set) {
@@ -87,7 +87,7 @@ frappe.tags.utils = {
                     set = {
                         title: d.doctype,
                         results: [result],
-                        fetch_type: "Global",
+                        fetch_type: "Global"
                     };
                     results_sets.push(set);
                 }
@@ -98,7 +98,7 @@ frappe.tags.utils = {
             frappe.call({
                 method: "frappe.desk.doctype.tag.tag.get_documents_for_tag",
                 args: {
-                    tag: tag,
+                    tag: tag
                 },
                 callback: function (r) {
                     if (r.message) {
@@ -106,8 +106,8 @@ frappe.tags.utils = {
                     } else {
                         resolve([]);
                     }
-                },
+                }
             });
         });
-    },
+    }
 };

@@ -22,9 +22,9 @@ describe("Dashboard view", { scrollBehavior: false }, () => {
                 time_interval: "Yearly",
                 timeseries: 1,
                 type: "Line",
-                filters_json: "[]",
+                filters_json: "[]"
             },
-            true,
+            true
         );
 
         cy.insert_doc(
@@ -34,11 +34,11 @@ describe("Dashboard view", { scrollBehavior: false }, () => {
                 is_standard: 0,
                 charts: [
                     {
-                        chart: chart,
-                    },
-                ],
+                        chart: chart
+                    }
+                ]
             },
-            true,
+            true
         );
 
         cy.visit(`/app/dashboard-view/${dashboard}`);

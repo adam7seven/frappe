@@ -24,7 +24,7 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
     }
 
     show() {
-        frappe.views.KanbanView.get_kanbans(this.doctype).then((kanbans) => {
+        frappe.views.KanbanView.get_kanbans(this.doctype).then(kanbans => {
             if (!kanbans.length) {
                 return frappe.views.KanbanView.show_kanban_dialog(this.doctype, true);
             } else if (kanbans.length && frappe.get_route().length !== 4) {
@@ -39,7 +39,7 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
                     () => this.check_permissions(),
                     () => this.init(),
                     () => this.before_refresh(),
-                    () => this.refresh(),
+                    () => this.refresh()
                 ]);
             }
         });
@@ -66,10 +66,7 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
             this.card_meta = this.get_card_meta();
             this.page_length = 0;
 
-            return frappe.run_serially([
-                () => this.set_board_perms_and_push_menu_items(),
-                () => this.get_board(),
-            ]);
+            return frappe.run_serially([() => this.set_board_perms_and_push_menu_items(), () => this.get_board()]);
         });
     }
 
@@ -79,12 +76,12 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
             method: "frappe.client.get_doc_permissions",
             args: {
                 doctype: "Kanban Board",
-                docid: this.board_id,
+                docid: this.board_id
             },
-            callback: (result) => {
+            callback: result => {
                 this.board_perms = result.message.permissions || {};
                 this.push_menu_items();
-            },
+            }
         });
     }
 
@@ -94,7 +91,7 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
                 label: __("Save filters"),
                 action: () => {
                     this.save_kanban_board_filters();
-                },
+                }
             });
         }
 
@@ -108,7 +105,7 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
                             frappe.set_route("List", this.doctype, "List");
                         });
                     });
-                },
+                }
             });
         }
     }
@@ -122,7 +119,7 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
     }
 
     get_board() {
-        return frappe.db.get_doc("Kanban Board", this.board_id).then((board) => {
+        return frappe.db.get_doc("Kanban Board", this.board_id).then(board => {
             this.board = board;
             this.board.filters_array = JSON.parse(this.board.filters || "[]");
             this.board.fields = JSON.parse(this.board.fields || "[]");
@@ -142,7 +139,7 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
     }
 
     setup_view() {
-        if (this.board.columns.filter((col) => col.status !== "Archived").length > 5) {
+        if (this.board.columns.filter(col => col.status !== "Archived").length > 5) {
             this.page.container.addClass("full-width");
         }
         this.setup_realtime_updates();
@@ -157,7 +154,7 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
     before_render() {
         frappe.model.user_settings.save(this.doctype, "last_view", this.view_name);
         this.save_view_user_settings({
-            last_kanban_board: this.board_id,
+            last_kanban_board: this.board_id
         });
     }
 
@@ -176,17 +173,17 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
     save_kanban_board_filters() {
         const filters = this.filter_area.get();
 
-        frappe.db.set_value("Kanban Board", this.board_id, "filters", filters).then((r) => {
+        frappe.db.set_value("Kanban Board", this.board_id, "filters", filters).then(r => {
             if (r.exc) {
                 frappe.show_alert({
                     indicator: "red",
-                    message: __("There was an error saving filters"),
+                    message: __("There was an error saving filters")
                 });
                 return;
             }
             frappe.show_alert({
                 indicator: "green",
-                message: __("Filters saved"),
+                message: __("Filters saved")
             });
 
             this.board.filters_array = filters;
@@ -210,7 +207,7 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
                 card_meta: this.card_meta,
                 wrapper: this.$result,
                 cur_list: this,
-                user_settings: this.view_user_settings,
+                user_settings: this.view_user_settings
             });
         } else if (board_id === this.kanban.board_id) {
             this.kanban.update(this.data);
@@ -230,9 +227,8 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
             title_field = frappe.meta.get_field(this.doctype, this.meta.title_field);
         }
 
-        this.meta.fields.forEach((df) => {
-            const is_valid_field =
-                ["Data", "Text", "Small Text", "Text Editor"].includes(df.fieldtype) && !df.hidden;
+        this.meta.fields.forEach(df => {
+            const is_valid_field = ["Data", "Text", "Small Text", "Text Editor"].includes(df.fieldtype) && !df.hidden;
 
             if (is_valid_field && !title_field) {
                 // can be mapped to textarea
@@ -241,12 +237,9 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
         });
 
         // quick entry
-        var mandatory = meta.fields.filter((df) => df.reqd && !doc[df.fieldname]);
+        var mandatory = meta.fields.filter(df => df.reqd && !doc[df.fieldname]);
 
-        if (
-            mandatory.some((df) => frappe.model.table_fields.includes(df.fieldtype)) ||
-            mandatory.length > 1
-        ) {
+        if (mandatory.some(df => frappe.model.table_fields.includes(df.fieldtype)) || mandatory.length > 1) {
             quick_entry = true;
         }
 
@@ -256,7 +249,7 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
 
         return {
             quick_entry: quick_entry,
-            title_field: title_field,
+            title_field: title_field
         };
     }
 
@@ -264,7 +257,7 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
         return {
             label: __("Kanban Settings", null, "Button in kanban view menu"),
             action: () => this.show_kanban_settings(),
-            standard: true,
+            standard: true
         };
     }
 
@@ -274,7 +267,7 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
                 kanbanview: this,
                 doctype: this.doctype,
                 settings: this.board,
-                meta: frappe.get_meta(this.doctype),
+                meta: frappe.get_meta(this.doctype)
             });
         });
     }
@@ -287,12 +280,10 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
 frappe.views.KanbanView.get_kanbans = function (doctype) {
     let kanbans = [];
 
-    return get_kanban_boards().then((kanban_boards) => {
+    return get_kanban_boards().then(kanban_boards => {
         if (kanban_boards) {
-            kanban_boards.forEach((board) => {
-                let route = `/app/${frappe.router.slug(board.reference_doctype)}/view/kanban/${
-                    board.id
-                }`;
+            kanban_boards.forEach(board => {
+                let route = `/app/${frappe.router.slug(board.reference_doctype)}/view/kanban/${board.id}`;
                 kanbans.push({ id: board.id, route: route });
             });
         }
@@ -303,7 +294,7 @@ frappe.views.KanbanView.get_kanbans = function (doctype) {
     function get_kanban_boards() {
         return frappe
             .call("frappe.desk.doctype.kanban_board.kanban_board.get_kanban_boards", { doctype })
-            .then((r) => r.message);
+            .then(r => r.message);
     }
 };
 
@@ -318,7 +309,7 @@ frappe.views.KanbanView.show_kanban_dialog = function (doctype) {
                 doctype,
                 board_id,
                 field_name,
-                project,
+                project
             },
             callback: function (r) {
                 var kb = r.message;
@@ -327,7 +318,7 @@ frappe.views.KanbanView.show_kanban_dialog = function (doctype) {
                     frappe.kanban_filters[kb.kanban_board_id] = kb.filters;
                 }
                 frappe.set_route("List", doctype, "Kanban", kb.kanban_board_id);
-            },
+            }
         });
     }
 
@@ -335,7 +326,7 @@ frappe.views.KanbanView.show_kanban_dialog = function (doctype) {
         /* Kanban dialog can show either "Save" or "Customize Form" option depending if any Select fields exist in the DocType for Kanban creation
          */
 
-        const select_fields = frappe.get_meta(doctype).fields.filter((df) => {
+        const select_fields = frappe.get_meta(doctype).fields.filter(df => {
             return df.fieldtype === "Select" && df.fieldname !== "kanban_column";
         });
         const dialog_fields = get_fields_for_dialog(select_fields);
@@ -348,7 +339,7 @@ frappe.views.KanbanView.show_kanban_dialog = function (doctype) {
                 const values = dialog.get_values();
                 make_kanban_board(values.board_id, values.field_name, values.project).then(
                     () => dialog.hide(),
-                    (err) => frappe.msgprint(err),
+                    err => frappe.msgprint(err)
                 );
             } else {
                 frappe.set_route("Form", "Customize Form", { doc_type: doctype });
@@ -359,7 +350,7 @@ frappe.views.KanbanView.show_kanban_dialog = function (doctype) {
             title: dialog_title,
             fields: dialog_fields,
             primary_action_label,
-            primary_action,
+            primary_action
         });
     }
 
@@ -372,12 +363,12 @@ frappe.views.KanbanView.show_kanban_dialog = function (doctype) {
 					<div>
 						<p class="text-medium">
 						${__(
-                            'No fields found that can be used as a Kanban Column. Use the Customize Form to add a Custom Field of type "Select".',
+                            'No fields found that can be used as a Kanban Column. Use the Customize Form to add a Custom Field of type "Select".'
                         )}
 						</p>
 					</div>
-				`,
-                },
+				`
+                }
             ];
         }
 
@@ -387,18 +378,16 @@ frappe.views.KanbanView.show_kanban_dialog = function (doctype) {
                 fieldname: "board_id",
                 label: __("Kanban Board Name"),
                 reqd: 1,
-                description: ["Note", "ToDo"].includes(doctype)
-                    ? __("This Kanban Board will be private")
-                    : "",
+                description: ["Note", "ToDo"].includes(doctype) ? __("This Kanban Board will be private") : ""
             },
             {
                 fieldtype: "Select",
                 fieldname: "field_name",
                 label: __("Columns based on"),
-                options: select_fields.map((df) => ({ label: df.label, value: df.fieldname })),
+                options: select_fields.map(df => ({ label: df.label, value: df.fieldname })),
                 default: select_fields[0],
-                reqd: 1,
-            },
+                reqd: 1
+            }
         ];
 
         if (doctype === "Task") {
@@ -406,7 +395,7 @@ frappe.views.KanbanView.show_kanban_dialog = function (doctype) {
                 fieldtype: "Link",
                 fieldname: "project",
                 label: __("Project"),
-                options: "Project",
+                options: "Project"
             });
         }
 

@@ -2,13 +2,13 @@ let imports_in_progress = [];
 
 frappe.listview_settings["Data Import"] = {
     onload(listview) {
-        frappe.realtime.on("data_import_progress", (data) => {
+        frappe.realtime.on("data_import_progress", data => {
             if (!imports_in_progress.includes(data.data_import)) {
                 imports_in_progress.push(data.data_import);
             }
         });
-        frappe.realtime.on("data_import_refresh", (data) => {
-            imports_in_progress = imports_in_progress.filter((d) => d !== data.data_import);
+        frappe.realtime.on("data_import_refresh", data => {
+            imports_in_progress = imports_in_progress.filter(d => d !== data.data_import);
             listview.refresh();
         });
     },
@@ -20,7 +20,7 @@ frappe.listview_settings["Data Import"] = {
             Success: "green",
             "In Progress": "orange",
             Error: "red",
-            "Timed Out": "orange",
+            "Timed Out": "orange"
         };
         let status = doc.status;
 
@@ -33,9 +33,9 @@ frappe.listview_settings["Data Import"] = {
         import_type(value) {
             return {
                 "Insert New Records": __("Insert"),
-                "Update Existing Records": __("Update"),
+                "Update Existing Records": __("Update")
             }[value];
-        },
+        }
     },
-    hide_id_column: true,
+    hide_id_column: true
 };

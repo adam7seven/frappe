@@ -8,8 +8,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
     setup_defaults() {
         return super.setup_defaults().then(() => {
             this.page_title = __("{0} Dashboard", [__(this.doctype)]);
-            this.dashboard_settings =
-                frappe.get_user_settings(this.doctype)["dashboard_settings"] || null;
+            this.dashboard_settings = frappe.get_user_settings(this.doctype)["dashboard_settings"] || null;
         });
     }
 
@@ -35,9 +34,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 
     setup_dashboard_customization() {
         this.page.add_menu_item(__("Customize Dashboard"), () => this.customize());
-        this.page.add_menu_item(__("Reset Dashboard Customizations"), () =>
-            this.reset_dashboard_customization(),
-        );
+        this.page.add_menu_item(__("Reset Dashboard Customizations"), () => this.reset_dashboard_customization());
         this.add_customization_buttons();
     }
 
@@ -46,9 +43,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 
         this.$frappe_list.html(chart_wrapper_html);
         this.page.clear_secondary_action();
-        this.$dashboard_page = this.$page
-            .find(".layout-main-section-wrapper")
-            .addClass("dashboard-page");
+        this.$dashboard_page = this.$page.find(".layout-main-section-wrapper").addClass("dashboard-page");
         this.page.main.removeClass("frappe-card");
 
         this.$dashboard_wrapper = this.$page.find(".dashboard-view");
@@ -64,7 +59,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
                 this.save_dashboard_customization();
                 this.page.standard_actions.show();
             },
-            { btn_class: "btn-primary" },
+            { btn_class: "btn-primary" }
         );
 
         this.discard_customizations_button = this.page.add_button(__("Discard"), () => {
@@ -97,20 +92,20 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
                         {
                             chart_type: ["in", ["Count", "Sum", "Group By"]],
                             document_type: this.doctype,
-                            is_public: 1,
+                            is_public: 1
                         },
-                        "charts",
+                        "charts"
                     ),
                 () =>
                     this.fetch_dashboard_items(
                         "Number Card",
                         {
                             document_type: this.doctype,
-                            is_public: 1,
+                            is_public: 1
                         },
-                        "number_cards",
+                        "number_cards"
                     ),
-                () => this.render_dashboard(),
+                () => this.render_dashboard()
             ]);
         }
     }
@@ -118,11 +113,9 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
     render_dashboard() {
         this.$dashboard_wrapper.empty();
 
-        frappe.dashboard_utils.get_dashboard_settings().then((settings) => {
-            this.dashboard_chart_settings = settings.chart_config
-                ? JSON.parse(settings.chart_config)
-                : {};
-            this.charts.map((chart) => {
+        frappe.dashboard_utils.get_dashboard_settings().then(settings => {
+            this.dashboard_chart_settings = settings.chart_config ? JSON.parse(settings.chart_config) : {};
+            this.charts.map(chart => {
                 chart.label = chart.chart_id;
                 chart.chart_settings = this.dashboard_chart_settings[chart.chart_id] || {};
             });
@@ -139,9 +132,9 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
         return frappe.db
             .get_list(doctype, {
                 filters: filters,
-                fields: ["*"],
+                fields: ["*"]
             })
-            .then((items) => {
+            .then(items => {
                 this[obj_id] = items;
             });
     }
@@ -155,11 +148,11 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
                 allow_sorting: true,
                 allow_create: true,
                 allow_delete: true,
-                allow_hiding: true,
+                allow_hiding: true
             },
             default_values: { doctype: this.doctype },
             widgets: this.number_cards || [],
-            in_customize_mode: this.in_customize_mode || false,
+            in_customize_mode: this.in_customize_mode || false
         });
 
         this.in_customize_mode && this.number_card_group.customize();
@@ -176,11 +169,11 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
                 allow_create: true,
                 allow_delete: true,
                 allow_hiding: true,
-                allow_resize: true,
+                allow_resize: true
             },
             custom_dialog: () => this.show_add_chart_dialog(),
             widgets: this.charts,
-            in_customize_mode: this.in_customize_mode || false,
+            in_customize_mode: this.in_customize_mode || false
         });
 
         this.in_customize_mode && this.chart_group.customize();
@@ -188,9 +181,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
     }
 
     render_empty_state() {
-        const no_result_message_html = `<p>${__(
-            "You haven't added any Dashboard Charts or Number Cards yet.",
-        )}
+        const no_result_message_html = `<p>${__("You haven't added any Dashboard Charts or Number Cards yet.")}
 			<br>${__("Click On Customize to add your first widget")}</p>`;
 
         const customize_button = `<p><button class="btn btn-primary btn-sm" data-action="customize">
@@ -231,7 +222,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
     get_widgets_to_save(widget_group) {
         const config = widget_group.get_widget_config();
         let widgets = [];
-        config.order.map((widget_id) => {
+        config.order.map(widget_id => {
             widgets.push(config.widgets[widget_id]);
         });
         return this.remove_duplicates(widgets);
@@ -245,20 +236,15 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 
         this.dashboard_settings = {
             charts: charts,
-            number_cards: number_cards,
+            number_cards: number_cards
         };
 
-        frappe.model.user_settings.save(
-            this.doctype,
-            "dashboard_settings",
-            this.dashboard_settings,
-        );
+        frappe.model.user_settings.save(this.doctype, "dashboard_settings", this.dashboard_settings);
         this.make_dashboard();
     }
 
     discard_dashboard_customization() {
-        this.dashboard_settings =
-            frappe.get_user_settings(this.doctype)["dashboard_settings"] || null;
+        this.dashboard_settings = frappe.get_user_settings(this.doctype)["dashboard_settings"] || null;
         this.toggle_customize(false);
         this.render_dashboard();
     }
@@ -289,7 +275,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
                     fieldtype: "Select",
                     label: "Choose an existing chart or create a new chart",
                     options: ["New Chart", "Existing Chart"],
-                    reqd: 1,
+                    reqd: 1
                 },
                 {
                     label: "Chart",
@@ -299,48 +285,47 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
                         return {
                             query: "frappe.desk.doctype.dashboard_chart.dashboard_chart.get_charts_for_user",
                             filters: {
-                                document_type: this.doctype,
-                            },
+                                document_type: this.doctype
+                            }
                         };
                     },
                     options: "Dashboard Chart",
-                    depends_on: 'eval: doc.new_or_existing == "Existing Chart"',
+                    depends_on: 'eval: doc.new_or_existing == "Existing Chart"'
                 },
                 {
                     fieldname: "sb_2",
                     fieldtype: "Section Break",
-                    depends_on: 'eval: doc.new_or_existing == "New Chart"',
+                    depends_on: 'eval: doc.new_or_existing == "New Chart"'
                 },
                 {
                     label: "Chart Label",
                     fieldname: "label",
                     fieldtype: "Data",
-                    mandatory_depends_on: 'eval: doc.new_or_existing == "New Chart"',
+                    mandatory_depends_on: 'eval: doc.new_or_existing == "New Chart"'
                 },
                 {
                     fieldname: "cb_1",
-                    fieldtype: "Column Break",
+                    fieldtype: "Column Break"
                 },
                 {
                     label: "Chart Type",
                     fieldname: "chart_type",
                     fieldtype: "Select",
                     options: ["Time Series", "Group By"],
-                    mandatory_depends_on: 'eval: doc.new_or_existing == "New Chart"',
+                    mandatory_depends_on: 'eval: doc.new_or_existing == "New Chart"'
                 },
                 {
                     fieldname: "sb_2",
                     fieldtype: "Section Break",
                     label: "Chart Config",
-                    depends_on:
-                        'eval: doc.chart_type == "Time Series" && doc.new_or_existing == "New Chart"',
+                    depends_on: 'eval: doc.chart_type == "Time Series" && doc.new_or_existing == "New Chart"'
                 },
                 {
                     label: "Function",
                     fieldname: "chart_function",
                     fieldtype: "Select",
                     options: ["Count", "Sum", "Average"],
-                    default: "Count",
+                    default: "Count"
                 },
                 {
                     label: "Timespan",
@@ -348,25 +333,25 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
                     fieldname: "timespan",
                     depends_on: 'eval: doc.chart_type == "Time Series"',
                     options: ["Last Year", "Last Quarter", "Last Month", "Last Week"],
-                    default: "Last Year",
+                    default: "Last Year"
                 },
                 {
                     fieldname: "cb_2",
-                    fieldtype: "Column Break",
+                    fieldtype: "Column Break"
                 },
                 {
                     label: "Value Based On",
                     fieldtype: "Select",
                     fieldname: "based_on",
                     options: fields.value_fields,
-                    depends_on: 'eval: doc.chart_function=="Sum"',
+                    depends_on: 'eval: doc.chart_function=="Sum"'
                 },
                 {
                     label: "Time Series Based On",
                     fieldtype: "Select",
                     fieldname: "based_on",
                     options: fields.date_fields,
-                    mandatory_depends_on: 'eval: doc.chart_type == "Time Series"',
+                    mandatory_depends_on: 'eval: doc.chart_type == "Time Series"'
                 },
                 {
                     label: "Time Interval",
@@ -374,101 +359,96 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
                     fieldtype: "Select",
                     depends_on: 'eval: doc.chart_type == "Time Series"',
                     options: ["Yearly", "Quarterly", "Monthly", "Weekly", "Daily"],
-                    default: "Monthly",
+                    default: "Monthly"
                 },
                 {
                     fieldname: "sb_2",
                     fieldtype: "Section Break",
                     label: "Chart Config",
-                    depends_on:
-                        'eval: doc.chart_type == "Group By" && doc.new_or_existing == "New Chart"',
+                    depends_on: 'eval: doc.chart_type == "Group By" && doc.new_or_existing == "New Chart"'
                 },
                 {
                     label: "Group By Type",
                     fieldname: "group_by_type",
                     fieldtype: "Select",
                     options: ["Count", "Sum", "Average"],
-                    default: "Count",
+                    default: "Count"
                 },
                 {
                     label: "Aggregate Function Based On",
                     fieldtype: "Select",
                     fieldname: "aggregate_function_based_on",
                     options: fields.aggregate_function_fields,
-                    depends_on: 'eval: ["Sum", "Average"].includes(doc.group_by_type)',
+                    depends_on: 'eval: ["Sum", "Average"].includes(doc.group_by_type)'
                 },
                 {
                     fieldname: "cb_2",
-                    fieldtype: "Column Break",
+                    fieldtype: "Column Break"
                 },
                 {
                     label: "Group By Based On",
                     fieldtype: "Select",
                     fieldname: "group_by_based_on",
                     options: fields.group_by_fields,
-                    default: "Last Year",
+                    default: "Last Year"
                 },
                 {
                     label: "Number of Groups",
                     fieldtype: "Int",
                     fieldname: "number_of_groups",
-                    default: 0,
+                    default: 0
                 },
                 {
                     fieldname: "sb_3",
                     fieldtype: "Section Break",
-                    depends_on: 'eval: doc.new_or_existing == "New Chart"',
+                    depends_on: 'eval: doc.new_or_existing == "New Chart"'
                 },
                 {
                     label: "Chart Type",
                     fieldname: "type",
                     fieldtype: "Select",
                     options: ["Line", "Bar", "Percentage", "Pie"],
-                    depends_on: 'eval: doc.new_or_existing == "New Chart"',
+                    depends_on: 'eval: doc.new_or_existing == "New Chart"'
                 },
                 {
                     fieldname: "cb_1",
-                    fieldtype: "Column Break",
+                    fieldtype: "Column Break"
                 },
                 {
                     label: "Chart Color",
                     fieldname: "color",
                     fieldtype: "Color",
-                    depends_on: 'eval: doc.new_or_existing == "New Chart"',
-                },
+                    depends_on: 'eval: doc.new_or_existing == "New Chart"'
+                }
             ],
             primary_action_label: __("Add"),
-            primary_action: (values) => {
+            primary_action: values => {
                 let chart = values;
                 if (chart.new_or_existing == "New Chart") {
                     chart.chart_id = chart.label;
-                    chart.chart_type =
-                        chart.chart_type == "Time Series"
-                            ? chart.chart_function
-                            : chart.chart_type;
+                    chart.chart_type = chart.chart_type == "Time Series" ? chart.chart_function : chart.chart_type;
                     chart.document_type = this.doctype;
                     chart.filters_json = "[]";
                     frappe
-                        .xcall(
-                            "frappe.desk.doctype.dashboard_chart.dashboard_chart.create_dashboard_chart",
-                            { args: chart },
-                        )
-                        .then((doc) => {
+                        .xcall("frappe.desk.doctype.dashboard_chart.dashboard_chart.create_dashboard_chart", {
+                            args: chart
+                        })
+                        .then(doc => {
                             this.chart_group.new_widget.on_create({
                                 chart_id: doc.chart_id,
                                 id: doc.chart_id,
-                                label: chart.label,
+                                label: chart.label
                             });
                         });
                 } else {
                     this.chart_group.new_widget.on_create({
                         chart_id: chart.chart,
                         label: chart.chart,
-                        id: chart.chart,
+                        id: chart.chart
                     });
                 }
                 dialog.hide();
-            },
+            }
         });
         dialog.show();
     }
@@ -476,13 +456,13 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
     get_field_options() {
         let date_fields = [
             { label: __("Created On"), value: "creation" },
-            { label: __("Last Modified On"), value: "modified" },
+            { label: __("Last Modified On"), value: "modified" }
         ];
         let value_fields = [];
         let group_by_fields = [];
         let aggregate_function_fields = [];
 
-        frappe.get_meta(this.doctype).fields.map((df) => {
+        frappe.get_meta(this.doctype).fields.map(df => {
             if (["Date", "Datetime"].includes(df.fieldtype)) {
                 date_fields.push({ label: df.label, value: df.fieldname });
             }
@@ -504,7 +484,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
             date_fields: date_fields,
             value_fields: value_fields,
             group_by_fields: group_by_fields,
-            aggregate_function_fields: aggregate_function_fields,
+            aggregate_function_fields: aggregate_function_fields
         };
     }
 

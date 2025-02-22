@@ -20,7 +20,7 @@ class FileUploader {
         dialog_title,
         attach_doc_image,
         frm,
-        make_attachments_public,
+        make_attachments_public
     } = {}) {
         frm && frm.attachments.max_reached(true);
 
@@ -34,9 +34,7 @@ class FileUploader {
             // apply global allow list if present
             let allowed_extensions = frappe.sys_defaults?.allowed_file_extensions;
             if (allowed_extensions) {
-                restrictions.allowed_file_types = allowed_extensions
-                    .split("\n")
-                    .map((ext) => `.${ext}`);
+                restrictions.allowed_file_types = allowed_extensions.split("\n").map(ext => `.${ext}`);
             }
         }
 
@@ -54,7 +52,7 @@ class FileUploader {
             as_dataurl,
             disable_file_browser,
             attach_doc_image,
-            make_attachments_public,
+            make_attachments_public
         });
         SetVueGlobals(app);
         this.uploader = app.mount(this.wrapper);
@@ -65,38 +63,36 @@ class FileUploader {
 
         watch(
             () => this.uploader.files,
-            (files) => {
-                let all_private = files.every((file) => file.private);
+            files => {
+                let all_private = files.every(file => file.private);
                 if (this.dialog) {
-                    this.dialog.set_secondary_action_label(
-                        all_private ? __("Set all public") : __("Set all private"),
-                    );
+                    this.dialog.set_secondary_action_label(all_private ? __("Set all public") : __("Set all private"));
                 }
             },
-            { deep: true },
+            { deep: true }
         );
 
         watch(
             () => this.uploader.trigger_upload,
-            (trigger_upload) => {
+            trigger_upload => {
                 if (trigger_upload) {
                     this.upload_files();
                 }
-            },
+            }
         );
 
         watch(
             () => this.uploader.close_dialog,
-            (close_dialog) => {
+            close_dialog => {
                 if (close_dialog) {
                     this.dialog && this.dialog.hide();
                 }
-            },
+            }
         );
 
         watch(
             () => this.uploader.hide_dialog_footer,
-            (hide_dialog_footer) => {
+            hide_dialog_footer => {
                 if (hide_dialog_footer) {
                     this.dialog && this.dialog.footer.addClass("hide");
                     this.dialog.$wrapper.data("bs.modal")._config.backdrop = "static";
@@ -104,7 +100,7 @@ class FileUploader {
                     this.dialog && this.dialog.footer.removeClass("hide");
                     this.dialog.$wrapper.data("bs.modal")._config.backdrop = true;
                 }
-            },
+            }
         );
 
         if (files && files.length) {
@@ -127,7 +123,7 @@ class FileUploader {
             },
             on_page_show: () => {
                 this.uploader.wrapper_ready = true;
-            },
+            }
         });
 
         this.wrapper = this.dialog.body;

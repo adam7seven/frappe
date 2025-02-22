@@ -46,10 +46,7 @@ frappe.search.utils = {
         frappe.route_history.forEach(function (route, i) {
             if (route[0] === "Form") {
                 values.push([route[2], route]);
-            } else if (
-                ["List", "Tree", "Workspaces", "query-report"].includes(route[0]) ||
-                route[2] === "Report"
-            ) {
+            } else if (["List", "Tree", "Workspaces", "query-report"].includes(route[0]) || route[2] === "Report") {
                 if (route[1]) {
                     values.push([route[1], route]);
                 }
@@ -72,10 +69,7 @@ frappe.search.utils = {
                     out.label = __(doctype).bold();
                     out.value = __(doctype);
                 }
-            } else if (
-                ["List", "Tree", "Workspaces", "query-report"].includes(route[0]) &&
-                route.length > 1
-            ) {
+            } else if (["List", "Tree", "Workspaces", "query-report"].includes(route[0]) && route.length > 1) {
                 const view_type = route[0];
                 const view_name = route[1];
                 switch (view_type) {
@@ -111,13 +105,13 @@ frappe.search.utils = {
 
     get_frequent_links() {
         let options = [];
-        frappe.boot.frequently_visited_links.forEach((link) => {
+        frappe.boot.frequently_visited_links.forEach(link => {
             const label = frappe.utils.get_route_label(link.route);
             options.push({
                 route: link.route,
                 label: label,
                 value: label,
-                index: link.count,
+                index: link.count
             });
         });
         if (!options.length) {
@@ -137,14 +131,11 @@ frappe.search.utils = {
                     if (search_result.score) {
                         out.push({
                             type: "In List",
-                            label: __("Find {0} in {1}", [
-                                __(parts[0]),
-                                search_result.marked_string,
-                            ]),
+                            label: __("Find {0} in {1}", [__(parts[0]), search_result.marked_string]),
                             value: __("Find {0} in {1}", [__(parts[0]), __(item)]),
                             route_options: { id: ["like", "%" + parts[0] + "%"] },
                             index: 1 + search_result.score,
-                            route: ["List", item],
+                            route: ["List", item]
                         });
                     }
                 }
@@ -170,7 +161,7 @@ frappe.search.utils = {
                         match: item,
                         onclick: function () {
                             frappe.new_doc(item, true);
-                        },
+                        }
                     });
                 }
             });
@@ -198,7 +189,7 @@ frappe.search.utils = {
                 value: __(`{0} ${type}`, [target]),
                 index: score + order,
                 match: target,
-                route: route,
+                route: route
             };
         };
         frappe.boot.user.can_read.forEach(function (item) {
@@ -220,7 +211,7 @@ frappe.search.utils = {
                             match: item,
                             onclick: function () {
                                 frappe.new_doc(match, true);
-                            },
+                            }
                         });
                     }
 
@@ -243,15 +234,14 @@ frappe.search.utils = {
             var level = search_result.score;
             if (level > 0) {
                 var report = frappe.boot.user.all_reports[item];
-                if (report.report_type == "Report Builder")
-                    route = ["List", report.ref_doctype, "Report", item];
+                if (report.report_type == "Report Builder") route = ["List", report.ref_doctype, "Report", item];
                 else route = ["query-report", item];
                 out.push({
                     type: "Report",
                     label: __("Report {0}", [search_result.marked_string || __(item)]),
                     value: __("Report {0}", [__(item)]),
                     index: level,
-                    route: route,
+                    route: route
                 });
             }
         });
@@ -278,7 +268,7 @@ frappe.search.utils = {
                     value: __("Open {0}", [__(item)]),
                     match: item,
                     index: level,
-                    route: [page.route || page.id],
+                    route: [page.route || page.id]
                 });
             }
         });
@@ -289,7 +279,7 @@ frappe.search.utils = {
                 value: __("Open {0}", [__(target)]),
                 index: me.fuzzy_search(keywords, "Calendar"),
                 match: target,
-                route: ["List", "Event", target],
+                route: ["List", "Event", target]
             });
         }
         target = "Hub";
@@ -299,7 +289,7 @@ frappe.search.utils = {
                 value: __("Open {0}", [__(target)]),
                 index: me.fuzzy_search(keywords, "Hub"),
                 match: target,
-                route: [target, "Item"],
+                route: [target, "Item"]
             });
         }
         if (__("email inbox").indexOf(keywords.toLowerCase()) === 0) {
@@ -308,7 +298,7 @@ frappe.search.utils = {
                 value: __("Open {0}", [__("Email Inbox")]),
                 index: me.fuzzy_search(keywords, "email inbox"),
                 match: target,
-                route: ["List", "Communication", "Inbox"],
+                route: ["List", "Communication", "Inbox"]
             });
         }
         return out;
@@ -326,7 +316,7 @@ frappe.search.utils = {
                     label: __("Open {0}", [search_result.marked_string || __(item.id)]),
                     value: __("Open {0}", [__(item.id)]),
                     index: level,
-                    route: [frappe.router.slug(item.id)],
+                    route: [frappe.router.slug(item.id)]
                 };
 
                 out.push(ret);
@@ -347,7 +337,7 @@ frappe.search.utils = {
                     label: __("{0} Dashboard", [search_result.marked_string || __(item.id)]),
                     value: __("{0} Dashboard", [__(item.id)]),
                     index: level,
-                    route: ["dashboard-view", item.id],
+                    route: ["dashboard-view", item.id]
                 };
 
                 out.push(ret);
@@ -398,8 +388,7 @@ frappe.search.utils = {
                                     ? field_value.slice(0, index)
                                     : "..." + field_value.slice(index - field_length / 2, index);
                             field_data += field_value.slice(index, index + field_length / 2);
-                            field_data +=
-                                index + field_length / 2 < field_value.length ? "..." : "";
+                            field_data += index + field_length / 2 < field_value.length ? "..." : "";
                             field_value = field_data;
                         }
                         var field_name = part.slice(0, colon_index);
@@ -429,8 +418,7 @@ frappe.search.utils = {
                                     search_result_name.marked_string +
                                     ": </span> ";
                                 field_value = field_value.slice(0, remaining_length);
-                                field_value =
-                                    field_value.slice(0, field_value.lastIndexOf(" ")) + " ...";
+                                field_value = field_value.slice(0, field_value.lastIndexOf(" ")) + " ...";
                                 field_text += search_result_value.marked_string;
                                 fields.push(field_text);
                             } else {
@@ -450,7 +438,7 @@ frappe.search.utils = {
                     label: d.id,
                     value: d.id,
                     description: make_description(d.content, d.id),
-                    route: ["Form", d.doctype, d.id],
+                    route: ["Form", d.doctype, d.id]
                 };
                 if (d.image || d.image === null) {
                     result.image = d.image;
@@ -462,7 +450,7 @@ frappe.search.utils = {
                     set = {
                         title: d.doctype,
                         results: [result],
-                        fetch_type: "Global",
+                        fetch_type: "Global"
                     };
                     results_sets.push(set);
                 }
@@ -476,7 +464,7 @@ frappe.search.utils = {
                     text: keywords,
                     start: start,
                     limit: limit,
-                    doctype: doctype,
+                    doctype: doctype
                 },
                 callback: function (r) {
                     if (r.message) {
@@ -484,7 +472,7 @@ frappe.search.utils = {
                     } else {
                         resolve([]);
                     }
-                },
+                }
             });
         });
     },
@@ -531,48 +519,48 @@ frappe.search.utils = {
             {
                 title: __("Recents"),
                 fetch_type: "Nav",
-                results: sort_uniques(this.get_recent_pages(keywords)),
+                results: sort_uniques(this.get_recent_pages(keywords))
             },
             {
                 title: __("Create a new ..."),
                 fetch_type: "Nav",
-                results: sort_uniques(this.get_creatables(keywords)),
+                results: sort_uniques(this.get_creatables(keywords))
             },
             {
                 title: __("Lists"),
                 fetch_type: "Nav",
-                results: lists,
+                results: lists
             },
             {
                 title: __("Reports"),
                 fetch_type: "Nav",
-                results: sort_uniques(this.get_reports(keywords)),
+                results: sort_uniques(this.get_reports(keywords))
             },
             {
                 title: __("Administration"),
                 fetch_type: "Nav",
-                results: sort_uniques(this.get_pages(keywords)),
+                results: sort_uniques(this.get_pages(keywords))
             },
             {
                 title: __("Workspace"),
                 fetch_type: "Nav",
-                results: sort_uniques(this.get_workspaces(keywords)),
+                results: sort_uniques(this.get_workspaces(keywords))
             },
             {
                 title: __("Dashboard"),
                 fetch_type: "Nav",
-                results: sort_uniques(this.get_dashboards(keywords)),
+                results: sort_uniques(this.get_dashboards(keywords))
             },
             {
                 title: __("Setup"),
                 fetch_type: "Nav",
-                results: setup,
+                results: setup
             },
             {
                 title: __("Find '{0}' in ...", [in_keyword]),
                 fetch_type: "Nav",
-                results: sort_uniques(this.get_search_in_list(keywords)),
-            },
+                results: sort_uniques(this.get_search_in_list(keywords))
+            }
         ];
     },
 
@@ -590,7 +578,7 @@ frappe.search.utils = {
 
         // Create Boolean mask to mark matching indices in the item string
         const matchArray = Array(item.length).fill(0);
-        matches.forEach((index) => (matchArray[index] = 1));
+        matches.forEach(index => (matchArray[index] = 1));
 
         let marked_string = "";
         let buffer = "";
@@ -654,7 +642,7 @@ frappe.search.utils = {
 
     get_executables(keywords) {
         let results = [];
-        this.searchable_functions.forEach((item) => {
+        this.searchable_functions.forEach(item => {
             const target = item.label.toLowerCase();
             const txt = keywords.toLowerCase();
             if (txt === target || target.indexOf(txt) === 0) {
@@ -664,7 +652,7 @@ frappe.search.utils = {
                     value: search_result.marked_string,
                     index: search_result.score,
                     match: item.label,
-                    onclick: () => item.action.apply(this, item.args),
+                    onclick: () => item.action.apply(this, item.args)
                 });
             }
         });
@@ -678,7 +666,7 @@ frappe.search.utils = {
         this.searchable_functions.push({
             label: label || _function.name,
             action: _function,
-            args: args,
+            args: args
         });
     },
     get_marketplace_apps: function (keywords) {
@@ -691,10 +679,7 @@ frappe.search.utils = {
                     label: __("Install {0} from Marketplace", [search_result.marked_string]),
                     value: __("Install {0} from Marketplace", [__(item.title)]),
                     index: search_result.score * 0.8,
-                    route: [
-                        `https://frappecloud.com/${item.route}?utm_source=awesomebar`,
-                        item.id,
-                    ],
+                    route: [`https://frappecloud.com/${item.route}?utm_source=awesomebar`, item.id]
                 };
 
                 out.push(ret);
@@ -702,5 +687,5 @@ frappe.search.utils = {
         });
         return out;
     },
-    searchable_functions: [],
+    searchable_functions: []
 };

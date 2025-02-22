@@ -26,9 +26,9 @@ frappe.ui.form.Footer = class FormFooter {
             enable_mentions: true,
             df: {
                 fieldtype: "Comment",
-                fieldname: "comment",
+                fieldname: "comment"
             },
-            on_submit: (comment) => {
+            on_submit: comment => {
                 if (strip_html(comment).trim() != "" || comment.includes("img")) {
                     this.frm.comment_box.disable();
                     frappe
@@ -37,28 +37,26 @@ frappe.ui.form.Footer = class FormFooter {
                             reference_id: this.frm.docid,
                             content: comment,
                             comment_email: frappe.session.user,
-                            comment_by: frappe.session.user_fullname,
+                            comment_by: frappe.session.user_fullname
                         })
-                        .then((comment) => {
-                            let comment_item =
-                                this.frm.timeline.get_comment_timeline_item(comment);
+                        .then(comment => {
+                            let comment_item = this.frm.timeline.get_comment_timeline_item(comment);
                             this.frm.comment_box.set_value("");
                             frappe.utils.play_sound("click");
                             this.frm.timeline.add_timeline_item(comment_item);
-                            this.frm.sidebar.refresh_comments_count &&
-                                this.frm.sidebar.refresh_comments_count();
+                            this.frm.sidebar.refresh_comments_count && this.frm.sidebar.refresh_comments_count();
                         })
                         .finally(() => {
                             this.frm.comment_box.enable();
                         });
                 }
-            },
+            }
         });
     }
     make_timeline() {
         this.frm.timeline = new FormTimeline({
             parent: this.wrapper.find(".timeline"),
-            frm: this.frm,
+            frm: this.frm
         });
     }
     refresh() {

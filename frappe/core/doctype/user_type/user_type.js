@@ -8,24 +8,24 @@ frappe.ui.form.on("User Type", {
         frm.set_query("document_type", "user_doctypes", function () {
             return {
                 filters: {
-                    istable: 0,
-                },
+                    istable: 0
+                }
             };
         });
 
         frm.set_query("document_type", "select_doctypes", function () {
             return {
                 filters: {
-                    istable: 0,
-                },
+                    istable: 0
+                }
             };
         });
 
         frm.set_query("document_type", "custom_select_doctypes", function () {
             return {
                 filters: {
-                    istable: 0,
-                },
+                    istable: 0
+                }
             };
         });
 
@@ -34,14 +34,14 @@ frappe.ui.form.on("User Type", {
                 filters: {
                     is_custom: 1,
                     disabled: 0,
-                    desk_access: 1,
-                },
+                    desk_access: 1
+                }
             };
         });
 
         frm.set_query("apply_user_permission_on", function () {
             return {
-                query: "frappe.core.doctype.user_type.user_type.get_user_linked_doctypes",
+                query: "frappe.core.doctype.user_type.user_type.get_user_linked_doctypes"
             };
         });
     },
@@ -60,12 +60,12 @@ frappe.ui.form.on("User Type", {
             frappe.call({
                 method: "frappe.core.doctype.user_type.user_type.get_user_id",
                 args: {
-                    parent: frm.doc.apply_user_permission_on,
+                    parent: frm.doc.apply_user_permission_on
                 },
                 callback: function (r) {
                     set_field_options("user_id_field", [""].concat(r.message));
-                },
+                }
             });
         }
-    },
+    }
 });

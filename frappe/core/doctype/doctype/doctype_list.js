@@ -10,7 +10,7 @@ frappe.listview_settings["DocType"] = {
                 label: __("ID"),
                 fieldname: "id",
                 fieldtype: "Data",
-                reqd: 1,
+                reqd: 1
             },
             { fieldtype: "Column Break" },
             {
@@ -18,7 +18,7 @@ frappe.listview_settings["DocType"] = {
                 fieldname: "module",
                 fieldtype: "Link",
                 options: "Module Def",
-                reqd: 1,
+                reqd: 1
             },
             { fieldtype: "Section Break" },
             {
@@ -26,32 +26,32 @@ frappe.listview_settings["DocType"] = {
                 fieldname: "is_submittable",
                 fieldtype: "Check",
                 description: __(
-                    "Once submitted, submittable documents cannot be changed. They can only be Cancelled and Amended.",
+                    "Once submitted, submittable documents cannot be changed. They can only be Cancelled and Amended."
                 ),
-                depends_on: "eval:!doc.istable && !doc.issingle",
+                depends_on: "eval:!doc.istable && !doc.issingle"
             },
             {
                 label: __("Is Child Table"),
                 fieldname: "istable",
                 fieldtype: "Check",
                 description: __("Child Tables are shown as a Grid in other DocTypes"),
-                depends_on: "eval:!doc.is_submittable && !doc.issingle",
+                depends_on: "eval:!doc.is_submittable && !doc.issingle"
             },
             {
                 label: __("Editable Grid"),
                 fieldname: "editable_grid",
                 fieldtype: "Check",
                 depends_on: "istable",
-                default: 1,
+                default: 1
             },
             {
                 label: __("Is Single"),
                 fieldname: "issingle",
                 fieldtype: "Check",
                 description: __(
-                    "Single Types have only one record no tables associated. Values are stored in tabSingles",
+                    "Single Types have only one record no tables associated. Values are stored in tabSingles"
                 ),
-                depends_on: "eval:!doc.istable && !doc.is_submittable",
+                depends_on: "eval:!doc.istable && !doc.is_submittable"
             },
             {
                 label: "Is Tree",
@@ -59,15 +59,15 @@ frappe.listview_settings["DocType"] = {
                 fieldtype: "Check",
                 default: "0",
                 depends_on: "eval:!doc.istable",
-                description: "Tree structures are implemented using Nested Set",
+                description: "Tree structures are implemented using Nested Set"
             },
             {
                 label: __("Custom?"),
                 fieldname: "custom",
                 fieldtype: "Check",
                 default: non_developer,
-                read_only: non_developer,
-            },
+                read_only: non_developer
+            }
         ];
 
         if (!non_developer) {
@@ -75,7 +75,7 @@ frappe.listview_settings["DocType"] = {
                 label: "Is Virtual",
                 fieldname: "is_virtual",
                 fieldtype: "Check",
-                default: "0",
+                default: "0"
             });
         }
 
@@ -101,12 +101,12 @@ frappe.listview_settings["DocType"] = {
                                 role: "System Manager",
                                 share: 1,
                                 write: 1,
-                                submit: values.is_submittable ? 1 : 0,
-                            },
+                                submit: values.is_submittable ? 1 : 0
+                            }
                         ],
-                        fields: [{ fieldtype: "Section Break" }],
+                        fields: [{ fieldtype: "Section Break" }]
                     })
-                    .then((doc) => {
+                    .then(doc => {
                         frappe.set_route("Form", "DocType", doc.id);
                     });
             },
@@ -116,8 +116,8 @@ frappe.listview_settings["DocType"] = {
                 if (frappe.get_route()[0] === "Form") {
                     frappe.set_route("List", "DocType");
                 }
-            },
+            }
         });
         new_d.show();
-    },
+    }
 };

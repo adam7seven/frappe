@@ -35,7 +35,7 @@ if (!Array.prototype.includes) {
                 k++;
             }
             return false;
-        },
+        }
     });
 }
 
@@ -80,6 +80,6 @@ if (typeof Object.assign != "function") {
             return to;
         },
         writable: true,
-        configurable: true,
+        configurable: true
     });
 }

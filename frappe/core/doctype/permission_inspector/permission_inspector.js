@@ -1,7 +1,7 @@
 // Copyright (c) 2024, Frappe Technologies and contributors
 // For license information, please see license.txt
 
-const call_debug = (frm) => {
+const call_debug = frm => {
     frm.trigger("debug");
 };
 
@@ -20,5 +20,5 @@ frappe.ui.form.on("Permission Inspector", {
         if (frm.doc.ref_doctype && frm.doc.user) {
             frm.call("debug");
         }
-    },
+    }
 });

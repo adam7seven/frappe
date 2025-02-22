@@ -22,7 +22,7 @@ function frappe_handlers(realtime, socket) {
             doctype,
             callback: () => {
                 socket.join(doctype_room(doctype));
-            },
+            }
         });
     });
 
@@ -53,7 +53,7 @@ function frappe_handlers(realtime, socket) {
             callback: () => {
                 let room = doc_room(doctype, docid);
                 socket.join(room);
-            },
+            }
         });
     });
 
@@ -77,9 +77,9 @@ function frappe_handlers(realtime, socket) {
                 notify_subscribed_doc_users({
                     socket: socket,
                     doctype: doctype,
-                    docid: docid,
+                    docid: docid
                 });
-            },
+            }
         });
     });
 
@@ -97,7 +97,7 @@ function frappe_handlers(realtime, socket) {
         notify_subscribed_doc_users({
             socket: socket,
             doctype: doctype,
-            docid: docid,
+            docid: docid
         });
     });
 
@@ -120,7 +120,7 @@ function can_subscribe_doctype(args) {
     frappe_request("/api/method/frappe.realtime.can_subscribe_doctype", args.socket)
         .type("form")
         .query({
-            doctype: args.doctype,
+            doctype: args.doctype
         })
         .end(function (err, res) {
             if (!res || res.status == 403 || err) {
@@ -147,7 +147,7 @@ function notify_subscribed_doc_users(args) {
 
     let users = [];
 
-    socket.nsp.sockets.forEach((sock) => {
+    socket.nsp.sockets.forEach(sock => {
         if (clients.includes(sock.id)) {
             users.push(sock.user);
         }
@@ -160,7 +160,7 @@ function notify_subscribed_doc_users(args) {
     socket.nsp.to(room).emit("doc_viewers", {
         doctype: args.doctype,
         docid: args.docid,
-        users: Array.from(new Set(users)),
+        users: Array.from(new Set(users))
     });
 }
 
@@ -171,7 +171,7 @@ function can_subscribe_doc(args) {
         .type("form")
         .query({
             doctype: args.doctype,
-            docid: args.docid,
+            docid: args.docid
         })
         .end(function (err, res) {
             if (!res) {
@@ -190,8 +190,8 @@ function can_subscribe_doc(args) {
 
 const doc_room = (doctype, docid) => "doc:" + doctype + "/" + docid;
 const open_doc_room = (doctype, docid) => "open_doc:" + doctype + "/" + docid;
-const user_room = (user) => "user:" + user;
-const doctype_room = (doctype) => "doctype:" + doctype;
-const task_room = (task_id) => "task_progress:" + task_id;
+const user_room = user => "user:" + user;
+const doctype_room = doctype => "doctype:" + doctype;
+const task_room = task_id => "task_progress:" + task_id;
 
 module.exports = frappe_handlers;

@@ -3,7 +3,7 @@ export default class CustomBlock extends Block {
     static get toolbox() {
         return {
             title: "Custom Block",
-            icon: frappe.utils.icon("edit", "sm"),
+            icon: frappe.utils.icon("edit", "sm")
         };
     }
 
@@ -22,7 +22,7 @@ export default class CustomBlock extends Block {
             allow_hiding: false,
             allow_edit: true,
             allow_resize: true,
-            min_width: 2,
+            min_width: 2
         };
     }
 
@@ -56,7 +56,7 @@ export default class CustomBlock extends Block {
         return {
             custom_block_id: this.wrapper.getAttribute("custom_block_id"),
             col: this.get_col(),
-            new: this.new_block_widget,
+            new: this.new_block_widget
         };
     }
 }

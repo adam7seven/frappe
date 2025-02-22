@@ -37,8 +37,8 @@ frappe.ui.form.on("Role Permission for Page and Report", {
         frm.set_query("page", function () {
             return {
                 filters: {
-                    system_page: 0,
-                },
+                    system_page: 0
+                }
             };
         });
     },
@@ -81,7 +81,7 @@ frappe.ui.form.on("Role Permission for Page and Report", {
             callback: function (r) {
                 refresh_field("roles");
                 frm.roles_editor.show();
-            },
+            }
         });
     },
 
@@ -98,7 +98,7 @@ frappe.ui.form.on("Role Permission for Page and Report", {
                 refresh_field("roles");
                 frm.roles_editor.show();
                 frappe.msgprint(__("Successfully Updated"));
-            },
+            }
         });
     },
 
@@ -111,7 +111,7 @@ frappe.ui.form.on("Role Permission for Page and Report", {
                 refresh_field("roles");
                 frm.roles_editor.show();
                 frappe.msgprint(__("Successfully Updated"));
-            },
+            }
         });
     },
 
@@ -123,5 +123,5 @@ frappe.ui.form.on("Role Permission for Page and Report", {
         if (frm.doc.set_role_for && !frm.doc[frm.doc.set_role_for.toLocaleLowerCase()]) {
             frappe.throw(__("Mandatory field: {0}", [frm.doc.set_role_for]));
         }
-    },
+    }
 });

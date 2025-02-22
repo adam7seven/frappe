@@ -17,10 +17,10 @@ frappe.query_reports["Database Storage Usage By Tables"] = {
                             options: "DocType",
                             get_query: function () {
                                 return {
-                                    filters: { issingle: ["=", false], is_virtual: ["=", false] },
+                                    filters: { issingle: ["=", false], is_virtual: ["=", false] }
                                 };
-                            },
-                        },
+                            }
+                        }
                     ],
                     size: "small",
                     primary_action_label: "Optimize",
@@ -28,24 +28,22 @@ frappe.query_reports["Database Storage Usage By Tables"] = {
                         frappe.call({
                             method: "frappe.core.report.database_storage_usage_by_tables.database_storage_usage_by_tables.optimize_doctype",
                             args: {
-                                doctype_id: values.doctype_id,
+                                doctype_id: values.doctype_id
                             },
                             callback: function (r) {
                                 if (!r.exec) {
                                     frappe.show_alert(
-                                        __(
-                                            `${values.doctype_id} has been added to queue for optimization`,
-                                        ),
+                                        __(`${values.doctype_id} has been added to queue for optimization`)
                                     );
                                 }
-                            },
+                            }
                         });
                         d.hide();
-                    },
+                    }
                 });
                 d.show();
             },
-            __("Actions"),
+            __("Actions")
         );
-    },
+    }
 };

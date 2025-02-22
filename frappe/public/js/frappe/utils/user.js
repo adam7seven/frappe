@@ -30,11 +30,7 @@ $.extend(frappe.user, {
     id: "Guest",
     full_name: function (uid) {
         return uid === frappe.session.user
-            ? __(
-                  "You",
-                  null,
-                  "Name of the current user. For example: You edited this 5 hours ago.",
-              )
+            ? __("You", null, "Name of the current user. For example: You edited this 5 hours ago.")
             : frappe.user_info(uid).fullname;
     },
     image: function (uid) {
@@ -46,8 +42,7 @@ $.extend(frappe.user, {
     has_role: function (rl) {
         if (typeof rl == "string") rl = [rl];
         for (var i in rl) {
-            if ((frappe.boot ? frappe.boot.user.roles : ["Guest"]).indexOf(rl[i]) != -1)
-                return true;
+            if ((frappe.boot ? frappe.boot.user.roles : ["Guest"]).indexOf(rl[i]) != -1) return true;
         }
     },
     get_desktop_items: function () {
@@ -60,8 +55,7 @@ $.extend(frappe.user, {
 
             var ret = null;
             if (type === "module") {
-                if (frappe.boot.user.allow_modules.indexOf(m) != -1 || frappe.modules[m].is_help)
-                    ret = m;
+                if (frappe.boot.user.allow_modules.indexOf(m) != -1 || frappe.modules[m].is_help) ret = m;
             } else if (type === "page") {
                 if (frappe.boot.allowed_pages.indexOf(frappe.modules[m].link) != -1) ret = m;
             } else if (type === "list") {
@@ -69,11 +63,7 @@ $.extend(frappe.user, {
             } else if (type === "view") {
                 ret = m;
             } else if (type === "setup") {
-                if (
-                    frappe.user.has_role("System Manager") ||
-                    frappe.user.has_role("Administrator")
-                )
-                    ret = m;
+                if (frappe.user.has_role("System Manager") || frappe.user.has_role("Administrator")) ret = m;
             } else {
                 ret = m;
             }
@@ -106,13 +96,13 @@ $.extend(frappe.user, {
             return repl("%(quote)s%(fullname)s%(quote)s <%(email)s>", {
                 fullname: fullname,
                 email: email,
-                quote: quote,
+                quote: quote
             });
         }
     },
 
     get_emails: () => {
-        return Object.keys(frappe.boot.user_info).map((key) => frappe.boot.user_info[key].email);
+        return Object.keys(frappe.boot.user_info).map(key => frappe.boot.user_info[key].email);
     },
 
     /* Normally frappe.user is an object
@@ -126,7 +116,7 @@ $.extend(frappe.user, {
      */
     toString: function () {
         return this.id;
-    },
+    }
 });
 
 frappe.session_alive = true;

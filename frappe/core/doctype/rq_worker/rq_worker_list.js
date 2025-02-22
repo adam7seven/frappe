@@ -5,5 +5,5 @@ frappe.listview_settings["RQ Worker"] = {
 			${__("No RQ Workers connected. Try restarting the bench.")}
 			</div>
 		`);
-    },
+    }
 };

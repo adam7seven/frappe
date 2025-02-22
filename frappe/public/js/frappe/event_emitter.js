@@ -25,7 +25,7 @@ const EventEmitterMixin = {
     off(evt, handler) {
         !this.jq && this.init();
         this.jq.unbind(evt, (e, data) => handler(data));
-    },
+    }
 };
 
 frappe.utils.make_event_emitter = function (object) {

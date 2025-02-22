@@ -27,7 +27,7 @@ class MentionBlot extends Embed {
             value: domNode.dataset.value,
             link: domNode.dataset.link || null,
             denotationChar: domNode.dataset.denotationChar,
-            isGroup: domNode.dataset.isGroup,
+            isGroup: domNode.dataset.isGroup
         };
     }
 }

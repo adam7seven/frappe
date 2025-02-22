@@ -33,38 +33,26 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
         this.$result.html(`<div id="${this.map_id}" class="map-view-container"></div>`);
 
         L.Icon.Default.imagePath = frappe.utils.map_defaults.image_path;
-        this.map = L.map(this.map_id).setView(
-            frappe.utils.map_defaults.center,
-            frappe.utils.map_defaults.zoom,
-        );
+        this.map = L.map(this.map_id).setView(frappe.utils.map_defaults.center, frappe.utils.map_defaults.zoom);
 
-        L.tileLayer(frappe.utils.map_defaults.tiles, frappe.utils.map_defaults.options).addTo(
-            this.map,
-        );
+        L.tileLayer(frappe.utils.map_defaults.tiles, frappe.utils.map_defaults.options).addTo(this.map);
 
         L.control.scale().addTo(this.map);
         if (this.coords.features && this.coords.features.length) {
-            this.coords.features.forEach((coords) =>
-                L.geoJSON(coords).bindPopup(coords.properties.id).addTo(this.map),
-            );
+            this.coords.features.forEach(coords => L.geoJSON(coords).bindPopup(coords.properties.id).addTo(this.map));
             let lastCoords = this.coords.features[0].geometry.coordinates.reverse();
             this.map.panTo(lastCoords, 8);
         }
     }
 
     get_coords() {
-        let get_coords_method =
-            (this.settings && this.settings.get_coords_method) || "frappe.geo.utils.get_coords";
+        let get_coords_method = (this.settings && this.settings.get_coords_method) || "frappe.geo.utils.get_coords";
 
-        if (
-            cur_list.meta.fields.find(
-                (i) => i.fieldname === "location" && i.fieldtype === "Geolocation",
-            )
-        ) {
+        if (cur_list.meta.fields.find(i => i.fieldname === "location" && i.fieldtype === "Geolocation")) {
             this.type = "location_field";
         } else if (
-            cur_list.meta.fields.find((i) => i.fieldname === "latitude") &&
-            cur_list.meta.fields.find((i) => i.fieldname === "longitude")
+            cur_list.meta.fields.find(i => i.fieldname === "latitude") &&
+            cur_list.meta.fields.find(i => i.fieldname === "longitude")
         ) {
             this.type = "coordinates";
         }
@@ -74,18 +62,15 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
                 args: {
                     doctype: this.doctype,
                     filters: cur_list.filter_area.get(),
-                    type: this.type,
-                },
+                    type: this.type
+                }
             })
-            .then((r) => {
+            .then(r => {
                 this.coords = r.message;
             });
     }
 
     get required_libs() {
-        return [
-            "assets/frappe/js/lib/leaflet/leaflet.css",
-            "assets/frappe/js/lib/leaflet/leaflet.js",
-        ];
+        return ["assets/frappe/js/lib/leaflet/leaflet.css", "assets/frappe/js/lib/leaflet/leaflet.js"];
     }
 };

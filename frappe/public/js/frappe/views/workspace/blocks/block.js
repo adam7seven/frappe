@@ -6,10 +6,8 @@ export default class Block {
     }
 
     make(block, block_id, widget_type = block) {
-        let block_data = this.config.page_data[block + "s"].items.find((obj) => {
-            return (
-                frappe.utils.unescape_html(obj.label) == frappe.utils.unescape_html(__(block_id))
-            );
+        let block_data = this.config.page_data[block + "s"].items.find(obj => {
+            return frappe.utils.unescape_html(obj.label) == frappe.utils.unescape_html(__(block_id));
         });
         if (!block_data) return false;
         this.wrapper.innerHTML = "";
@@ -21,7 +19,7 @@ export default class Block {
             options: this.options,
             widgets: block_data,
             api: this.api,
-            block: this.block,
+            block: this.block
         });
         this.wrapper.setAttribute(block + "_id", block_id);
         if (!this.readOnly) {
@@ -56,9 +54,7 @@ export default class Block {
         function do_drag(e) {
             $(this).css("cursor", "col-resize");
             $(".widget").css("pointer-events", "none");
-            $(me.wrapper.parentElement)
-                .find(".resizer")
-                .css("border-right", "3px solid var(--gray-400)");
+            $(me.wrapper.parentElement).find(".resizer").css("border-right", "3px solid var(--gray-400)");
             un_focus();
             if (startWidth + e.clientX - startX - startWidth > 60) {
                 startX = e.clientX;
@@ -81,9 +77,7 @@ export default class Block {
         function stop_drag() {
             $(this).css("cursor", "default");
             $(".widget").css("pointer-events", "auto");
-            $(me.wrapper.parentElement)
-                .find(".resizer")
-                .css("border-right", "0px solid transparent");
+            $(me.wrapper.parentElement).find(".resizer").css("border-right", "0px solid transparent");
 
             document.documentElement.removeEventListener("mousemove", do_drag, false);
             document.documentElement.removeEventListener("mouseup", stop_drag, false);
@@ -98,7 +92,7 @@ export default class Block {
             for_workspace: true,
             label: this.label,
             type: widget_type,
-            primary_action: (widget) => {
+            primary_action: widget => {
                 widget.in_customize_mode = 1;
                 this.block_widget = frappe.widget.make_widget({
                     ...widget,
@@ -107,15 +101,15 @@ export default class Block {
                     options: {
                         ...this.options,
                         on_delete: () => this.api.blocks.delete(),
-                        on_edit: () => this.on_edit(this.block_widget),
-                    },
+                        on_edit: () => this.on_edit(this.block_widget)
+                    }
                 });
                 this.block_widget.customize(this.options);
                 this.wrapper.setAttribute(block_id, this.block_widget.label);
                 $(this.wrapper).find(".widget").addClass(`${widget_type}`);
                 this.new_block_widget = this.block_widget.get_config();
                 this.add_settings_button();
-            },
+            }
         });
 
         if (!this.readOnly && this.data && !this.data[block_id]) {
@@ -145,7 +139,7 @@ export default class Block {
 
         $new_button.appendTo(this.wrapper);
 
-        $new_button.click((event) => {
+        $new_button.click(event => {
             event.stopPropagation();
             let index = this.api.blocks.getCurrentBlockIndex() + 1;
             this.api.blocks.insert("paragraph", {}, {}, index);
@@ -160,32 +154,32 @@ export default class Block {
                 label: "Delete",
                 title: "Delete Block",
                 icon: frappe.utils.icon("delete-active", "sm"),
-                action: () => this.api.blocks.delete(),
+                action: () => this.api.blocks.delete()
             },
             {
                 label: "Expand",
                 title: "Expand Block",
                 icon: frappe.utils.icon("expand-alt", "sm"),
-                action: () => this.increase_width(),
+                action: () => this.increase_width()
             },
             {
                 label: "Shrink",
                 title: "Shrink Block",
                 icon: frappe.utils.icon("shrink", "sm"),
-                action: () => this.decrease_width(),
+                action: () => this.decrease_width()
             },
             {
                 label: "Move Up",
                 title: "Move Up",
                 icon: frappe.utils.icon("up-arrow", "sm"),
-                action: () => this.move_block("up"),
+                action: () => this.move_block("up")
             },
             {
                 label: "Move Down",
                 title: "Move Down",
                 icon: frappe.utils.icon("down-arrow", "sm"),
-                action: () => this.move_block("down"),
-            },
+                action: () => this.move_block("down")
+            }
         ];
 
         let $widget_control = $(this.wrapper).find(".widget-control");
@@ -207,7 +201,7 @@ export default class Block {
 				</div>
 			`);
 
-            html.click((event) => {
+            html.click(event => {
                 event.stopPropagation();
                 action && action();
             });
@@ -215,24 +209,18 @@ export default class Block {
             return html;
         };
 
-        $button.click((event) => {
+        $button.click(event => {
             event.stopPropagation();
             $button.find(".dropdown-list").toggleClass("hidden");
         });
 
         $widget_control.prepend($button);
 
-        this.dropdown_list.forEach((item) => {
-            if (
-                (item.label == "Expand" || item.label == "Shrink") &&
-                me.options &&
-                !me.options.allow_resize
-            ) {
+        this.dropdown_list.forEach(item => {
+            if ((item.label == "Expand" || item.label == "Shrink") && me.options && !me.options.allow_resize) {
                 return;
             }
-            $button
-                .find(".dropdown-list")
-                .append(dropdown_item(item.label, item.title, item.icon, item.action));
+            $button.find(".dropdown-list").append(dropdown_item(item.label, item.title, item.icon, item.action));
         });
     }
 
@@ -278,7 +266,7 @@ export default class Block {
         let className = "col-xs-12";
         const colClass = new RegExp(/\bcol-.+?\b/, "g");
         if (current_block_element.className.match(colClass)) {
-            current_block_element.classList.forEach((cn) => {
+            current_block_element.classList.forEach(cn => {
                 if (cn.match(colClass)) {
                     className = cn;
                 }
@@ -309,7 +297,7 @@ export default class Block {
 
         node.classList = "";
 
-        classes.forEach((cl) => {
+        classes.forEach(cl => {
             node.classList.add(cl);
         });
 

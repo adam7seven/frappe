@@ -37,7 +37,7 @@ frappe.ui.form.on("Number Card", {
             const dialog = frappe.dashboard_utils.get_add_to_dashboard_dialog(
                 frm.doc.id,
                 "Number Card",
-                "frappe.desk.doctype.number_card.number_card.add_card_to_dashboard",
+                "frappe.desk.doctype.number_card.number_card.add_card_to_dashboard"
             );
 
             if (!frm.doc.id) {
@@ -51,10 +51,7 @@ frappe.ui.form.on("Number Card", {
     before_save: function (frm) {
         let dynamic_filters = JSON.parse(frm.doc.dynamic_filters_json || "null");
         let static_filters = JSON.parse(frm.doc.filters_json || "null");
-        static_filters = frappe.dashboard_utils.remove_common_static_filter_values(
-            static_filters,
-            dynamic_filters,
-        );
+        static_filters = frappe.dashboard_utils.remove_common_static_filter_values(static_filters, dynamic_filters);
 
         frm.set_value("filters_json", JSON.stringify(static_filters));
         frm.trigger("render_filters_table");
@@ -71,8 +68,8 @@ frappe.ui.form.on("Number Card", {
             frm.set_query("report_id", () => {
                 return {
                     filters: {
-                        report_type: ["!=", "Report Builder"],
-                    },
+                        report_type: ["!=", "Report Builder"]
+                    }
                 };
             });
         }
@@ -97,8 +94,8 @@ frappe.ui.form.on("Number Card", {
         frm.set_query("document_type", function () {
             return {
                 filters: {
-                    issingle: false,
-                },
+                    issingle: false
+                }
             };
         });
         frm.set_value("filters_json", "[]");
@@ -119,7 +116,7 @@ frappe.ui.form.on("Number Card", {
 
         if (doctype) {
             frappe.model.with_doctype(doctype, () => {
-                frappe.get_meta(doctype).fields.map((df) => {
+                frappe.get_meta(doctype).fields.map(df => {
                     if (frappe.model.numeric_fieldtypes.includes(df.fieldtype)) {
                         if (df.fieldtype == "Currency") {
                             if (!df.options || df.options !== "Company:company:default_currency") {
@@ -130,11 +127,7 @@ frappe.ui.form.on("Number Card", {
                     }
                 });
 
-                frm.set_df_property(
-                    "aggregate_function_based_on",
-                    "options",
-                    aggregate_based_on_fields,
-                );
+                frm.set_df_property("aggregate_function_based_on", "options", aggregate_based_on_fields);
             });
             frm.trigger("render_filters_table");
             frm.trigger("render_dynamic_filters_table");
@@ -144,7 +137,7 @@ frappe.ui.form.on("Number Card", {
     set_report_filters: function (frm) {
         const report_id = frm.doc.report_id;
         if (report_id) {
-            frappe.report_utils.get_report_filters(report_id).then((filters) => {
+            frappe.report_utils.get_report_filters(report_id).then(filters => {
                 if (filters) {
                     frm.filters = filters;
                     const filter_values = frappe.report_utils.get_filter_values(filters);
@@ -168,30 +161,17 @@ frappe.ui.form.on("Number Card", {
             .xcall("frappe.desk.query_report.run", {
                 report_id: frm.doc.report_id,
                 filters: filters,
-                ignore_prepared_report: 1,
+                ignore_prepared_report: 1
             })
-            .then((data) => {
+            .then(data => {
                 if (data.result.length) {
-                    frm.field_options = frappe.report_utils.get_field_options_from_report(
-                        data.columns,
-                        data,
-                    );
-                    frm.set_df_property(
-                        "report_field",
-                        "options",
-                        frm.field_options.numeric_fields,
-                    );
+                    frm.field_options = frappe.report_utils.get_field_options_from_report(data.columns, data);
+                    frm.set_df_property("report_field", "options", frm.field_options.numeric_fields);
                     if (!frm.field_options.numeric_fields.length) {
-                        frappe.msgprint(
-                            __("Report has no numeric fields, please change the Report ID"),
-                        );
+                        frappe.msgprint(__("Report has no numeric fields, please change the Report ID"));
                     }
                 } else {
-                    frappe.msgprint(
-                        __(
-                            "Report has no data, please modify the filters or change the Report ID",
-                        ),
-                    );
+                    frappe.msgprint(__("Report has no data, please modify the filters or change the Report ID"));
                 }
             });
     },
@@ -199,7 +179,7 @@ frappe.ui.form.on("Number Card", {
     render_filters_table: function (frm) {
         frm.set_df_property("filters_section", "hidden", 0);
         let is_document_type = frm.doc.type == "Document Type";
-        let is_dynamic_filter = (f) => ["Date", "DateRange"].includes(f.fieldtype) && f.default;
+        let is_dynamic_filter = f => ["Date", "DateRange"].includes(f.fieldtype) && f.default;
 
         let wrapper = $(frm.get_field("filters_json").wrapper).empty();
         let table = $(`<table class="table table-bordered" style="cursor:pointer; margin:0px;">
@@ -220,7 +200,7 @@ frappe.ui.form.on("Number Card", {
         // Set dynamic filters for reports
         if (frm.doc.type == "Report") {
             let set_filters = false;
-            frm.filters.forEach((f) => {
+            frm.filters.forEach(f => {
                 if (is_dynamic_filter(f)) {
                     filters[f.fieldname] = f.default;
                     set_filters = true;
@@ -234,12 +214,12 @@ frappe.ui.form.on("Number Card", {
             fields = [
                 {
                     fieldtype: "HTML",
-                    fieldname: "filter_area",
-                },
+                    fieldname: "filter_area"
+                }
             ];
 
             if (filters.length) {
-                filters.forEach((filter) => {
+                filters.forEach(filter => {
                     const filter_row = $(`<tr>
 							<td>${filter[1]}</td>
 							<td>${filter[2] || ""}</td>
@@ -251,8 +231,8 @@ frappe.ui.form.on("Number Card", {
                 filters_set = true;
             }
         } else if (frm.filters.length) {
-            fields = frm.filters.filter((f) => f.fieldname);
-            fields.map((f) => {
+            fields = frm.filters.filter(f => f.fieldname);
+            fields.map(f => {
                 if (filters[f.fieldname]) {
                     let condition = "=";
                     const filter_row = $(`<tr>
@@ -278,7 +258,7 @@ frappe.ui.form.on("Number Card", {
             }
             let dialog = new frappe.ui.Dialog({
                 title: __("Set Filters"),
-                fields: fields.filter((f) => !is_dynamic_filter(f)),
+                fields: fields.filter(f => !is_dynamic_filter(f)),
                 primary_action: function () {
                     let values = this.get_values();
                     if (values) {
@@ -292,7 +272,7 @@ frappe.ui.form.on("Number Card", {
                         frm.trigger("render_filters_table");
                     }
                 },
-                primary_action_label: __("Set"),
+                primary_action_label: __("Set")
             });
 
             if (is_document_type) {
@@ -300,7 +280,7 @@ frappe.ui.form.on("Number Card", {
                     parent: dialog.get_field("filter_area").$wrapper,
                     doctype: frm.doc.document_type,
                     parent_doctype: frm.doc.parent_document_type,
-                    on_change: () => {},
+                    on_change: () => {}
                 });
                 filters && frm.filter_group.add_filters_to_filter_group(filters);
             }
@@ -310,7 +290,7 @@ frappe.ui.form.on("Number Card", {
             if (frm.doc.type == "Report") {
                 //Set query report object so that it can be used while fetching filter values in the report
                 frappe.query_report = new frappe.views.QueryReport({
-                    filters: dialog.fields_list,
+                    filters: dialog.fields_list
                 });
                 frappe.query_reports[frm.doc.report_id] &&
                     frappe.query_reports[frm.doc.report_id].onload &&
@@ -332,8 +312,7 @@ frappe.ui.form.on("Number Card", {
 
         let wrapper = $(frm.get_field("dynamic_filters_json").wrapper).empty();
 
-        frm.dynamic_filter_table =
-            $(`<table class="table table-bordered" style="cursor:pointer; margin:0px;">
+        frm.dynamic_filter_table = $(`<table class="table table-bordered" style="cursor:pointer; margin:0px;">
 			<thead>
 				<tr>
 					<th style="width: 20%">${__("Filter")}</th>
@@ -356,7 +335,7 @@ frappe.ui.form.on("Number Card", {
         let fields = frappe.dashboard_utils.get_fields_for_dynamic_filter_dialog(
             is_document_type,
             filters,
-            frm.dynamic_filters,
+            frm.dynamic_filters
         );
 
         frm.dynamic_filter_table.on("click", () => {
@@ -384,7 +363,7 @@ frappe.ui.form.on("Number Card", {
                     }
                     frm.trigger("set_dynamic_filters_in_table");
                 },
-                primary_action_label: __("Set"),
+                primary_action_label: __("Set")
             });
 
             dialog.show();
@@ -405,7 +384,7 @@ frappe.ui.form.on("Number Card", {
         } else {
             let filter_rows = "";
             if ($.isArray(frm.dynamic_filters)) {
-                frm.dynamic_filters.forEach((filter) => {
+                frm.dynamic_filters.forEach(filter => {
                     filter_rows += `<tr>
 							<td>${filter[1]}</td>
 							<td>${filter[2] || ""}</td>
@@ -430,22 +409,21 @@ frappe.ui.form.on("Number Card", {
     set_parent_document_type: async function (frm) {
         let document_type = frm.doc.document_type;
         let doc_is_table =
-            document_type &&
-            (await frappe.db.get_value("DocType", document_type, "istable")).message.istable;
+            document_type && (await frappe.db.get_value("DocType", document_type, "istable")).message.istable;
 
         frm.set_df_property("parent_document_type", "hidden", !doc_is_table);
 
         if (document_type && doc_is_table) {
             let parents = await frappe.xcall(
                 "frappe.desk.doctype.dashboard_chart.dashboard_chart.get_parent_doctypes",
-                { child_type: document_type },
+                { child_type: document_type }
             );
 
             frm.set_query("parent_document_type", function () {
                 return {
                     filters: {
-                        id: ["in", parents],
-                    },
+                        id: ["in", parents]
+                    }
                 };
             });
 
@@ -453,5 +431,5 @@ frappe.ui.form.on("Number Card", {
                 frm.set_value("parent_document_type", parents[0]);
             }
         }
-    },
+    }
 });

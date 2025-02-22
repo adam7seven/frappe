@@ -9,8 +9,7 @@ export default class ListSettings {
         this.meta = meta;
         this.settings = settings;
         this.dialog = null;
-        this.fields =
-            this.settings && this.settings.fields ? JSON.parse(this.settings.fields) : [];
+        this.fields = this.settings && this.settings.fields ? JSON.parse(this.settings.fields) : [];
         this.subject_field = null;
 
         frappe.model.with_doctype("List View Settings", () => {
@@ -30,7 +29,7 @@ export default class ListSettings {
 
         me.dialog = new frappe.ui.Dialog({
             title: __("{0} Settings", [__(me.doctype)]),
-            fields: list_view_settings.fields,
+            fields: list_view_settings.fields
         });
         me.dialog.set_values(me.settings);
         me.dialog.set_primary_action(__("Save"), () => {
@@ -38,7 +37,7 @@ export default class ListSettings {
 
             frappe.show_alert({
                 message: __("Saving"),
-                indicator: "green",
+                indicator: "green"
             });
 
             frappe.call({
@@ -46,12 +45,12 @@ export default class ListSettings {
                 args: {
                     doctype: me.doctype,
                     listview_settings: values,
-                    removed_listview_fields: me.removed_fields || [],
+                    removed_listview_fields: me.removed_fields || []
                 },
                 callback: function (r) {
                     me.listview.refresh_columns(r.message.meta, r.message.listview_settings);
                     me.dialog.hide();
-                },
+                }
             });
         });
 
@@ -154,7 +153,7 @@ export default class ListSettings {
             onUpdate: () => {
                 me.update_fields();
                 me.refresh();
-            },
+            }
         });
     }
 
@@ -180,7 +179,7 @@ export default class ListSettings {
 
     remove_fields(fieldname) {
         let me = this;
-        let existing_fields = me.fields.map((f) => f.fieldname);
+        let existing_fields = me.fields.map(f => f.fieldname);
 
         for (let idx in me.fields) {
             let field = me.fields[idx];
@@ -192,9 +191,9 @@ export default class ListSettings {
         }
         me.set_removed_fields(
             me.get_removed_listview_fields(
-                me.fields.map((f) => f.fieldname),
-                existing_fields,
-            ),
+                me.fields.map(f => f.fieldname),
+                existing_fields
+            )
         );
         me.refresh();
         me.update_fields();
@@ -212,7 +211,7 @@ export default class ListSettings {
         for (let idx = 0; idx < fields_order.length; idx++) {
             me.fields.push({
                 fieldname: fields_order.item(idx).getAttribute("data-fieldname"),
-                label: __(fields_order.item(idx).getAttribute("data-label")),
+                label: __(fields_order.item(idx).getAttribute("data-label"))
             });
         }
 
@@ -230,7 +229,7 @@ export default class ListSettings {
                     label: __("Reset Fields"),
                     fieldtype: "Button",
                     fieldname: "reset_fields",
-                    click: () => me.reset_listview_fields(d),
+                    click: () => me.reset_listview_fields(d)
                 },
                 {
                     label: __("Select Fields"),
@@ -238,11 +237,11 @@ export default class ListSettings {
                     fieldname: "fields",
                     options: me.get_doctype_fields(
                         me.meta,
-                        me.fields.map((f) => f.fieldname),
+                        me.fields.map(f => f.fieldname)
                     ),
-                    columns: 2,
-                },
-            ],
+                    columns: 2
+                }
+            ]
         });
         d.set_primary_action(__("Save"), () => {
             let values = d.get_values().fields;
@@ -250,8 +249,8 @@ export default class ListSettings {
             me.set_removed_fields(
                 me.get_removed_listview_fields(
                     values,
-                    me.fields.map((f) => f.fieldname),
-                ),
+                    me.fields.map(f => f.fieldname)
+                )
             );
 
             me.fields = [];
@@ -268,7 +267,7 @@ export default class ListSettings {
                     if (field) {
                         me.fields.push({
                             label: __(field.label, null, me.doctype),
-                            fieldname: field.fieldname,
+                            fieldname: field.fieldname
                         });
                     }
                 }
@@ -285,13 +284,10 @@ export default class ListSettings {
         let me = this;
 
         frappe
-            .xcall(
-                "frappe.desk.doctype.list_view_settings.list_view_settings.get_default_listview_fields",
-                {
-                    doctype: me.doctype,
-                },
-            )
-            .then((fields) => {
+            .xcall("frappe.desk.doctype.list_view_settings.list_view_settings.get_default_listview_fields", {
+                doctype: me.doctype
+            })
+            .then(fields => {
                 let field = dialog.get_field("fields");
                 field.df.options = me.get_doctype_fields(me.meta, fields);
                 dialog.refresh();
@@ -307,7 +303,7 @@ export default class ListSettings {
             me.fields = JSON.parse(this.settings.fields);
         }
 
-        me.fields.uniqBy((f) => f.fieldname);
+        me.fields.uniqBy(f => f.fieldname);
     }
 
     set_list_view_fields(meta) {
@@ -316,7 +312,7 @@ export default class ListSettings {
         me.set_subject_field(meta);
         me.set_status_field();
 
-        meta.fields.forEach((field) => {
+        meta.fields.forEach(field => {
             if (
                 field.in_list_view &&
                 !frappe.model.no_value_type.includes(field.fieldtype) &&
@@ -324,7 +320,7 @@ export default class ListSettings {
             ) {
                 me.fields.push({
                     label: __(field.label, null, me.doctype),
-                    fieldname: field.fieldname,
+                    fieldname: field.fieldname
                 });
             }
         });
@@ -335,7 +331,7 @@ export default class ListSettings {
 
         me.subject_field = {
             label: __("ID"),
-            fieldname: "id",
+            fieldname: "id"
         };
 
         if (meta.title_field) {
@@ -343,7 +339,7 @@ export default class ListSettings {
 
             me.subject_field = {
                 label: __(field.label, null, me.doctype),
-                fieldname: field.fieldname,
+                fieldname: field.fieldname
             };
         }
 
@@ -357,7 +353,7 @@ export default class ListSettings {
             me.fields.push({
                 type: "Status",
                 label: __("Status"),
-                fieldname: "status_field",
+                fieldname: "status_field"
             });
         }
     }
@@ -365,12 +361,12 @@ export default class ListSettings {
     get_doctype_fields(meta, fields) {
         let multiselect_fields = [];
 
-        meta.fields.forEach((field) => {
+        meta.fields.forEach(field => {
             if (!frappe.model.no_value_type.includes(field.fieldtype)) {
                 multiselect_fields.push({
                     label: __(field.label, null, field.doctype),
                     value: field.fieldname,
-                    checked: fields.includes(field.fieldname),
+                    checked: fields.includes(field.fieldname)
                 });
             }
         });
@@ -386,7 +382,7 @@ export default class ListSettings {
             new_fields.push("status_field");
         }
 
-        existing_fields.forEach((column) => {
+        existing_fields.forEach(column => {
             if (!new_fields.includes(column)) {
                 removed_fields.push(column);
             }

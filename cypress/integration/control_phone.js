@@ -16,9 +16,9 @@ context("Control Phone", () => {
             fields: [
                 {
                     fieldname: "phone",
-                    fieldtype: "Phone",
-                },
-            ],
+                    fieldtype: "Phone"
+                }
+            ]
         });
     }
 
@@ -42,15 +42,12 @@ context("Control Phone", () => {
         let phone_number = "9312672712";
         cy.get(".selected-phone > img").click().first();
         cy.get_field("phone").first().click();
-        cy.get(".frappe-control[data-fieldname=phone]")
-            .findByRole("textbox")
-            .first()
-            .type(phone_number);
+        cy.get(".frappe-control[data-fieldname=phone]").findByRole("textbox").first().type(phone_number);
 
         cy.get_field("phone").first().should("have.value", phone_number);
         cy.get_field("phone").first().blur();
         cy.wait(100);
-        cy.get("@dialog").then((dialog) => {
+        cy.get("@dialog").then(dialog => {
             let value = dialog.get_value("phone");
             expect(value).to.equal("+91-" + phone_number);
         });
@@ -58,12 +55,10 @@ context("Control Phone", () => {
         let search_text = "india";
         cy.get(".selected-phone").click().first();
         cy.get(".phone-picker").get(".search-phones").click().type(search_text);
-        cy.get(".phone-section .phone-wrapper:not(.hidden)").then((i) => {
-            cy.get(`.phone-section .phone-wrapper[id*="${search_text.toLowerCase()}"]`).then(
-                (countries) => {
-                    expect(i.length).to.equal(countries.length);
-                },
-            );
+        cy.get(".phone-section .phone-wrapper:not(.hidden)").then(i => {
+            cy.get(`.phone-section .phone-wrapper[id*="${search_text.toLowerCase()}"]`).then(countries => {
+                expect(i.length).to.equal(countries.length);
+            });
         });
     });
 
@@ -82,7 +77,7 @@ context("Control Phone", () => {
         cy.fill_field("phone", "+91-9823341234");
         cy.get_field("phone").should("have.value", "9823341234");
         cy.click_doc_primary_button("Save");
-        cy.get_doc("Doctype With Phone", "Test Phone 1").then((doc) => {
+        cy.get_doc("Doctype With Phone", "Test Phone 1").then(doc => {
             let value = doc.data.phone;
             expect(value).to.equal("+91-9823341234");
         });

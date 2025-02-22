@@ -14,10 +14,7 @@ context("Data Field Input Validation in New Form", () => {
         cy.get(`.frappe-control[data-fieldname="${fieldname}"]`).should("have.class", "has-error");
         // Valid value, should not have has-error class
         cy.get_field(fieldname).clear().type(valid_value);
-        cy.get(`.frappe-control[data-fieldname="${fieldname}"]`).should(
-            "not.have.class",
-            "has-error",
-        );
+        cy.get(`.frappe-control[data-fieldname="${fieldname}"]`).should("not.have.class", "has-error");
     }
 
     describe("Data Field Options", () => {

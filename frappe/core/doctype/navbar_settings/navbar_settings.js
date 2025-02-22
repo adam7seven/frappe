@@ -4,5 +4,5 @@
 frappe.ui.form.on("Navbar Settings", {
     after_save: function (frm) {
         frappe.ui.toolbar.clear_cache();
-    },
+    }
 });

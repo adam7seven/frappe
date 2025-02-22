@@ -15,9 +15,9 @@ context("Control Currency", () => {
                     fieldname: fieldname,
                     fieldtype: "Currency",
                     Label: "Currency",
-                    ...df_options,
-                },
-            ],
+                    ...df_options
+                }
+            ]
         });
     }
 
@@ -26,51 +26,51 @@ context("Control Currency", () => {
             {
                 input: "10.101",
                 df_options: { precision: 1 },
-                blur_expected: "10.1",
+                blur_expected: "10.1"
             },
             {
                 input: "10.101",
                 df_options: { precision: "3" },
-                blur_expected: "10.101",
+                blur_expected: "10.101"
             },
             {
                 input: "10.101",
                 df_options: { precision: "" }, // default assumed to be 2;
-                blur_expected: "10.10",
+                blur_expected: "10.10"
             },
             {
                 input: "10.101",
                 df_options: { precision: "0" },
-                blur_expected: "10",
+                blur_expected: "10"
             },
             {
                 input: "10.101",
                 df_options: { precision: 0 },
-                blur_expected: "10",
+                blur_expected: "10"
             },
             {
                 input: "10.000",
                 number_format: "#.###,##",
                 df_options: { precision: 0 },
-                blur_expected: "10.000",
+                blur_expected: "10.000"
             },
             {
                 input: "10.000",
                 number_format: "#.###,##",
-                blur_expected: "10.000,00",
+                blur_expected: "10.000,00"
             },
             {
                 input: "10.101",
                 df_options: { precision: "" },
                 blur_expected: "10.1",
-                default_precision: 1,
-            },
+                default_precision: 1
+            }
         ];
 
-        TEST_CASES.forEach((test_case) => {
+        TEST_CASES.forEach(test_case => {
             cy.window()
                 .its("frappe")
-                .then((frappe) => {
+                .then(frappe => {
                     frappe.boot.sysdefaults.currency = test_case.currency;
                     frappe.boot.sysdefaults.currency_precision = test_case.default_precision ?? 2;
                     frappe.boot.sysdefaults.number_format = test_case.number_format ?? "#,###.##";

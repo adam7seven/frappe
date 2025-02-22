@@ -75,5 +75,5 @@ Object.assign(frappe.utils, {
     get_url_arg,
     get_query_string,
     get_query_params,
-    make_query_string,
+    make_query_string
 });

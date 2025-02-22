@@ -9,7 +9,7 @@ frappe.ui.form.on("Workflow", {
         let title, note;
         let workflow_builder_url = "/app/workflow-builder";
         let msg = __(
-            "Workflow Builder allows you to create workflows visually. You can drag and drop states and link them to create transitions. Also you can update thieir properties from the sidebar.",
+            "Workflow Builder allows you to create workflows visually. You can drag and drop states and link them to create transitions. Also you can update thieir properties from the sidebar."
         );
 
         if (frm.is_new()) {
@@ -17,7 +17,7 @@ frappe.ui.form.on("Workflow", {
         } else {
             title = __("Edit your workflow visually using the Workflow Builder.");
             note = __(
-                "NOTE: If you add states or transitions in the table, it will be reflected in the Workflow Builder but you will have to position them manually. Also Workflow Builder is currently in <b>BETA</b>.",
+                "NOTE: If you add states or transitions in the table, it will be reflected in the Workflow Builder but you will have to position them manually. Also Workflow Builder is currently in <b>BETA</b>."
             );
             workflow_builder_url += "/" + frm.doc.id;
         }
@@ -53,7 +53,7 @@ frappe.ui.form.on("Workflow", {
         if (frm.is_new()) {
             return;
         }
-        frm.doc.states.forEach((row) => {
+        frm.doc.states.forEach(row => {
             frm.state_status_mapping[row.state] = row.doc_status;
         });
 
@@ -63,13 +63,13 @@ frappe.ui.form.on("Workflow", {
             frm.trigger("render_state_table");
         });
     },
-    validate: async (frm) => {
+    validate: async frm => {
         if (frm.doc.is_active && (!frm.doc.states.length || !frm.doc.transitions.length)) {
             let message = "Workflow must have atleast one state and transition";
             frappe.throw({
                 message: __(message),
                 title: __("Missing Values Required"),
-                indicator: "orange",
+                indicator: "orange"
             });
         }
 
@@ -78,18 +78,14 @@ frappe.ui.form.on("Workflow", {
         }
 
         let updated_states = [];
-        frm.doc.states.forEach((row) => {
-            if (
-                frm.state_status_mapping[row.state] &&
-                frm.state_status_mapping[row.state] !== row.doc_status
-            ) {
+        frm.doc.states.forEach(row => {
+            if (frm.state_status_mapping[row.state] && frm.state_status_mapping[row.state] !== row.doc_status) {
                 updated_states.push(row.state);
             }
         });
 
         if (updated_states.length) {
-            frm.doc._update_state_docstatus =
-                await create_docstatus_change_warning(updated_states);
+            frm.doc._update_state_docstatus = await create_docstatus_change_warning(updated_states);
         }
 
         return frm.trigger("get_orphaned_states_and_count").then(() => {
@@ -110,14 +106,10 @@ frappe.ui.form.on("Workflow", {
         frappe.model.with_doctype(doc.document_type, () => {
             const fieldnames = frappe
                 .get_meta(doc.document_type)
-                .fields.filter((field) => !frappe.model.no_value_type.includes(field.fieldtype))
-                .map((field) => field.fieldname);
+                .fields.filter(field => !frappe.model.no_value_type.includes(field.fieldtype))
+                .map(field => field.fieldname);
 
-            frm.fields_dict.states.grid.update_docfield_property(
-                "update_field",
-                "options",
-                [""].concat(fieldnames),
-            );
+            frm.fields_dict.states.grid.update_docfield_property("update_field", "options", [""].concat(fieldnames));
         });
     },
     create_warning_dialog: function (frm) {
@@ -126,7 +118,7 @@ frappe.ui.form.on("Workflow", {
 			</p>
 			<p>
 				${__(
-                    "There are documents which have workflow states that do not exist in this Workflow. It is recommended that you add these states to the Workflow and change their states before removing these states.",
+                    "There are documents which have workflow states that do not exist in this Workflow. It is recommended that you add these states to the Workflow and change their states before removing these states."
                 )}
 			</p>`;
         const message_html = warning_html + frm.state_table_html;
@@ -135,17 +127,12 @@ frappe.ui.form.on("Workflow", {
             frm.save();
         };
 
-        frappe.warn(
-            __("Worflow States Don't Exist"),
-            message_html,
-            proceed_action,
-            __("Save Anyway"),
-        );
+        frappe.warn(__("Worflow States Don't Exist"), message_html, proceed_action, __("Save Anyway"));
     },
     set_table_html: function (frm) {
-        const promises = frm.states.map((r) => {
+        const promises = frm.states.map(r => {
             const state = r[frm.doc.workflow_state_field];
-            return frappe.utils.get_indicator_color(state).then((color) => {
+            return frappe.utils.get_indicator_color(state).then(color => {
                 return `<tr>
 				<td>
 					<div class="indicator ${color}">
@@ -156,7 +143,7 @@ frappe.ui.form.on("Workflow", {
             });
         });
 
-        Promise.all(promises).then((rows) => {
+        Promise.all(promises).then(rows => {
             const rows_html = rows.join("");
             frm.state_table_html = `<table class="table state-table table-bordered" style="margin:0px; width: 65%">
 				<thead style="font-size: 12px">
@@ -174,14 +161,14 @@ frappe.ui.form.on("Workflow", {
     get_orphaned_states_and_count: function (frm) {
         if (frm.is_new()) return;
         let states_list = [];
-        frm.doc.states.map((state) => states_list.push(state.state));
+        frm.doc.states.map(state => states_list.push(state.state));
         return frappe
             .xcall("frappe.workflow.doctype.workflow.workflow.get_workflow_state_count", {
                 doctype: frm.doc.document_type,
                 workflow_state_field: frm.doc.workflow_state_field,
-                states: states_list,
+                states: states_list
             })
-            .then((result) => {
+            .then(result => {
                 if (result && result.length) {
                     frm.states = result;
                     return frm.trigger("set_table_html");
@@ -206,14 +193,14 @@ frappe.ui.form.on("Workflow", {
 
             $(frm.state_table)
                 .find("a.orphaned-state")
-                .on("click", (e) => {
+                .on("click", e => {
                     const state = $(e.currentTarget).text();
                     let filters = {};
                     filters[frm.doc.workflow_state_field] = state;
                     frappe.set_route("List", frm.doc.document_type, filters);
                 });
         }
-    },
+    }
 });
 
 frappe.ui.form.on("Workflow Document State", {
@@ -226,7 +213,7 @@ frappe.ui.form.on("Workflow Document State", {
         frm.trigger("get_orphaned_states_and_count").then(() => {
             frm.trigger("render_state_table");
         });
-    },
+    }
 });
 
 frappe.ui.form.on("Workflow Transition", {
@@ -249,21 +236,21 @@ frappe.ui.form.on("Workflow Transition", {
         frm.trigger("get_orphaned_states_and_count").then(() => {
             frm.trigger("render_state_table");
         });
-    },
+    }
 });
 
 async function create_docstatus_change_warning(updated_states) {
-    return await new Promise((resolve) => {
+    return await new Promise(resolve => {
         frappe.confirm(
             __(
                 `DocStatus of the following states have changed:<br><strong>{0}</strong><br>
 				Do you want to update the docstatus of existing documents in those states?<br>
 				This does not undo any effect bought in by the document's existing docstatus.
 				`,
-                [updated_states.join(", ")],
+                [updated_states.join(", ")]
             ),
             () => resolve(true),
-            () => resolve(false),
+            () => resolve(false)
         );
     });
 }

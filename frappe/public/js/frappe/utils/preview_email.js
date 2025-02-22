@@ -1,10 +1,4 @@
-frappe.preview_email = function (
-    template,
-    args,
-    header,
-    with_container = false,
-    only_html = false,
-) {
+frappe.preview_email = function (template, args, header, with_container = false, only_html = false) {
     return frappe
         .call({
             method: "frappe.email.email_body.get_email_html",
@@ -13,10 +7,10 @@ frappe.preview_email = function (
                 template,
                 args,
                 header,
-                with_container,
-            },
+                with_container
+            }
         })
-        .then((r) => {
+        .then(r => {
             var html = r.message;
             html = html.replace(/embed=/, "src=");
             if (only_html) {
@@ -24,7 +18,7 @@ frappe.preview_email = function (
             }
             var d = frappe.msgprint({
                 message: '<iframe width="100%" height="600px" style="border: none;"></iframe>',
-                wide: true,
+                wide: true
             });
 
             setTimeout(() => {

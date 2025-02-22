@@ -6,5 +6,5 @@ frappe.ui.form.on("Print Style", {
         frm.add_custom_button(__("Print Settings"), () => {
             frappe.set_route("Form", "Print Settings");
         });
-    },
+    }
 });

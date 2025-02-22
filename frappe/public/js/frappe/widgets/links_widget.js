@@ -15,7 +15,7 @@ export default class LinksWidget extends Widget {
             link_count: this.links.length,
             label: this.label,
             hidden: this.hidden,
-            description: this.description,
+            description: this.description
         };
     }
 
@@ -37,18 +37,18 @@ export default class LinksWidget extends Widget {
                 trigger: "hover",
                 placement: "top",
                 content: () => `<div class="card-description small">${__(this.description)}</div>`,
-                html: true,
+                html: true
             });
         }
 
-        const is_link_disabled = (item) => {
+        const is_link_disabled = item => {
             return item.dependencies && item.incomplete_dependencies;
         };
-        const disabled_dependent = (item) => {
+        const disabled_dependent = item => {
             return is_link_disabled(item) ? "disabled-link" : "";
         };
 
-        const get_indicator_color = (item) => {
+        const get_indicator_color = item => {
             if (item.open_count) {
                 return "red";
             }
@@ -58,7 +58,7 @@ export default class LinksWidget extends Widget {
             return "gray";
         };
 
-        const get_link_for_item = (item) => {
+        const get_link_for_item = item => {
             if (is_link_disabled(item)) {
                 return `<span class="link-content ellipsis disabled-link">${item.link_title}</span>
 					<div class="module-link-popover popover fade top in" role="tooltip" style="display: none;">
@@ -86,13 +86,13 @@ export default class LinksWidget extends Widget {
 			`;
         };
 
-        this.link_list = this.links.map((item) => {
+        this.link_list = this.links.map(item => {
             const opts = {
                 id: item.link_to,
                 type: item.link_type,
                 doctype: item.doctype,
                 is_query_report: item.is_query_report,
-                report_ref_doctype: item.report_ref_doctype,
+                report_ref_doctype: item.report_ref_doctype
             };
 
             if (item.link_type.toLowerCase() == "report" && !item.is_query_report) {
@@ -116,10 +116,9 @@ export default class LinksWidget extends Widget {
                     trigger: "hover",
                     placement: "top",
                     title: item.link_title,
-                    content: () =>
-                        `<div class="link-description small">${__(item.description)}</div>`,
+                    content: () => `<div class="link-description small">${__(item.description)}</div>`,
                     html: true,
-                    delay: { show: 600, hide: 100 },
+                    delay: { show: 600, hide: 100 }
                 });
             }
 
@@ -128,11 +127,11 @@ export default class LinksWidget extends Widget {
         if (this.in_customize_mode) {
             this.body.empty();
         }
-        this.link_list.forEach((link) => link.appendTo(this.body));
+        this.link_list.forEach(link => link.appendTo(this.body));
     }
 
     setup_events() {
-        this.link_list.forEach((link) => {
+        this.link_list.forEach(link => {
             // Bind Popver Event
             const link_label = link.find(".link-content");
 
@@ -145,7 +144,7 @@ export default class LinksWidget extends Widget {
                 });
                 link_label.mouseout(() => popover.hide());
             } else {
-                link_label.click((event) => {
+                link_label.click(event => {
                     if (this.in_customize_mode) return;
 
                     if (link_label.hasClass("help-video-link")) {

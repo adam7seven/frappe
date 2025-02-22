@@ -18,15 +18,13 @@ frappe.views.InboxView = class InboxView extends frappe.views.ListView {
             return true;
         } else if (!route[3] || (route[3] !== "All Accounts" && !is_valid(route[3]))) {
             frappe.throw(
-                __(
-                    "No email account associated with the User. Please add an account under User > Email Inbox.",
-                ),
+                __("No email account associated with the User. Please add an account under User > Email Inbox.")
             );
         }
         return false;
 
         function is_valid(email_account) {
-            return frappe.boot.email_accounts.find((d) => d.email_account === email_account);
+            return frappe.boot.email_accounts.find(d => d.email_account === email_account);
         }
     }
 
@@ -38,7 +36,7 @@ frappe.views.InboxView = class InboxView extends frappe.views.ListView {
         super.show();
         // save email account in user_settings
         this.save_view_user_settings({
-            last_email_account: this.current_email_account,
+            last_email_account: this.current_email_account
         });
     }
 
@@ -61,26 +59,24 @@ frappe.views.InboxView = class InboxView extends frappe.views.ListView {
             type: "Subject",
             df: {
                 label: __("Subject"),
-                fieldname: "subject",
-            },
+                fieldname: "subject"
+            }
         });
         this.columns.push({
             type: "Field",
             df: {
                 label: this.is_sent_emails ? __("To") : __("From"),
-                fieldname: this.is_sent_emails ? "recipients" : "sender",
-            },
+                fieldname: this.is_sent_emails ? "recipients" : "sender"
+            }
         });
     }
 
     get_seen_class(doc) {
-        return Boolean(doc.seen) || JSON.parse(doc._seen || "[]").includes(frappe.session.user)
-            ? ""
-            : "bold";
+        return Boolean(doc.seen) || JSON.parse(doc._seen || "[]").includes(frappe.session.user) ? "" : "bold";
     }
 
     get is_sent_emails() {
-        const f = this.filter_area.get().find((filter) => filter[1] === "sent_or_received");
+        const f = this.filter_area.get().find(filter => filter[1] === "sent_or_received");
         return f && f[3] === "Sent";
     }
 
@@ -133,18 +129,18 @@ frappe.views.InboxView = class InboxView extends frappe.views.ListView {
         var email_account = this.email_account;
         var default_filters = [
             ["Communication", "communication_type", "=", "Communication", true],
-            ["Communication", "communication_medium", "=", "Email", true],
+            ["Communication", "communication_medium", "=", "Email", true]
         ];
         var filters = [];
         if (email_account === "Sent") {
             filters = default_filters.concat([
                 ["Communication", "sent_or_received", "=", "Sent", true],
-                ["Communication", "email_status", "not in", "Spam,Trash", true],
+                ["Communication", "email_status", "not in", "Spam,Trash", true]
             ]);
         } else if (["Spam", "Trash"].includes(email_account)) {
             filters = default_filters.concat([
                 ["Communication", "email_status", "=", email_account, true],
-                ["Communication", "email_account", "in", frappe.boot.all_accounts, true],
+                ["Communication", "email_account", "in", frappe.boot.all_accounts, true]
             ]);
         } else {
             var op = "=";
@@ -157,7 +153,7 @@ frappe.views.InboxView = class InboxView extends frappe.views.ListView {
                 ["Communication", "sent_or_received", "=", "Received", true],
                 ["Communication", "status", "=", "Open", true],
                 ["Communication", "email_account", op, email_account, true],
-                ["Communication", "email_status", "not in", "Spam,Trash", true],
+                ["Communication", "email_status", "not in", "Spam,Trash", true]
             ]);
         }
 
@@ -174,14 +170,14 @@ frappe.views.InboxView = class InboxView extends frappe.views.ListView {
             args = {
                 doctype: "Email Account",
                 msg: __("No Email Account"),
-                label: __("New Email Account"),
+                label: __("New Email Account")
             };
         } else {
             // no sent mail
             args = {
                 doctype: "Communication",
                 msg: __("No Emails"),
-                label: __("Compose Email"),
+                label: __("Compose Email")
             };
         }
 
@@ -205,7 +201,7 @@ frappe.views.InboxView = class InboxView extends frappe.views.ListView {
     make_new_doc() {
         if (!this.email_account && !frappe.boot.email_accounts.length) {
             frappe.route_options = {
-                email_id: frappe.session.user_email,
+                email_id: frappe.session.user_email
             };
             frappe.new_doc("Email Account");
         } else {

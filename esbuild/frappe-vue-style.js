@@ -6,7 +6,7 @@ module.exports = {
     name: "frappe-vue-style",
     setup(build) {
         build.initialOptions.write = false;
-        build.onEnd((result) => {
+        build.onEnd(result => {
             let files = get_files(result.metafile.outputs);
             let keys = Object.keys(files);
             for (let out of result.outputFiles) {
@@ -16,7 +16,7 @@ module.exports = {
                     let name = out.path.split(".bundle.")[0];
                     name = path.basename(name);
 
-                    let index = result.outputFiles.findIndex((f) => {
+                    let index = result.outputFiles.findIndex(f => {
                         return f.path.endsWith(".css") && f.path.includes(`/${name}.bundle.`);
                     });
 
@@ -32,12 +32,12 @@ module.exports = {
                 if (!fs.existsSync(dir)) {
                     fs.mkdirSync(dir, { recursive: true });
                 }
-                fs.writeFile(out.path, out.contents, (err) => {
+                fs.writeFile(out.path, out.contents, err => {
                     err && console.error(err);
                 });
             }
         });
-    },
+    }
 };
 
 function get_files(files) {

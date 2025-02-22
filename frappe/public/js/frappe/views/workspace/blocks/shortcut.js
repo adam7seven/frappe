@@ -3,7 +3,7 @@ export default class Shortcut extends Block {
     static get toolbox() {
         return {
             title: "Shortcut",
-            icon: frappe.utils.icon("shortcut", "sm"),
+            icon: frappe.utils.icon("shortcut", "sm")
         };
     }
 
@@ -21,7 +21,7 @@ export default class Shortcut extends Block {
             allow_delete: this.allow_customization,
             allow_hiding: false,
             allow_edit: true,
-            allow_resize: true,
+            allow_resize: true
         };
     }
 
@@ -75,7 +75,7 @@ export default class Shortcut extends Block {
         return {
             shortcut_id: this.wrapper.getAttribute("shortcut_id"),
             col: this.get_col(),
-            new: this.new_block_widget,
+            new: this.new_block_widget
         };
     }
 }

@@ -3,7 +3,7 @@ export default class Chart extends Block {
     static get toolbox() {
         return {
             title: "Chart",
-            icon: frappe.utils.icon("chart", "sm"),
+            icon: frappe.utils.icon("chart", "sm")
         };
     }
 
@@ -23,7 +23,7 @@ export default class Chart extends Block {
             allow_edit: true,
             allow_resize: true,
             min_width: 6,
-            max_widget_count: 2,
+            max_widget_count: 2
         };
     }
 
@@ -57,7 +57,7 @@ export default class Chart extends Block {
         return {
             chart_id: this.wrapper.getAttribute("chart_id"),
             col: this.get_col(),
-            new: this.new_block_widget,
+            new: this.new_block_widget
         };
     }
 }

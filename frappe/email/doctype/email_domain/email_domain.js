@@ -2,9 +2,7 @@ frappe.ui.form.on("Email Domain", {
     onload: function (frm) {
         if (!frm.doc.__islocal) {
             frm.dashboard.clear_headline();
-            let msg = __(
-                "Changing any setting will reflect on all the email accounts associated with this domain.",
-            );
+            let msg = __("Changing any setting will reflect on all the email accounts associated with this domain.");
             frm.dashboard.set_headline_alert(msg);
         } else {
             if (!frm.doc.attachment_limit) {
@@ -14,9 +12,9 @@ frappe.ui.form.on("Email Domain", {
                         if (!r.exc) {
                             frm.set_value("attachment_limit", Number(r.message) / (1024 * 1024));
                         }
-                    },
+                    }
                 });
             }
         }
-    },
+    }
 });

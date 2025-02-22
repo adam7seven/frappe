@@ -18,10 +18,10 @@ frappe.widget.widget_factory = {
     onboarding: OnboardingWidget,
     number_card: NumberCardWidget,
     quick_list: QuickListWidget,
-    custom_block: CustomBlock,
+    custom_block: CustomBlock
 };
 
-frappe.widget.make_widget = (opts) => {
+frappe.widget.make_widget = opts => {
     const widget_class = frappe.widget.widget_factory[opts.widget_type];
     if (widget_class) {
         return new widget_class(opts);
@@ -73,7 +73,7 @@ export default class WidgetGroup {
 
     make_widgets() {
         this.body.empty();
-        this.widgets.forEach((widget) => {
+        this.widgets.forEach(widget => {
             this.add_widget(widget);
         });
     }
@@ -86,8 +86,8 @@ export default class WidgetGroup {
             height: this.height || null,
             options: {
                 ...this.options,
-                on_delete: (id) => this.on_delete(id),
-            },
+                on_delete: id => this.on_delete(id)
+            }
         });
 
         this.widgets_list.push(widget_object);
@@ -98,7 +98,7 @@ export default class WidgetGroup {
 
     remove_widget(widget_obj) {
         widget_obj.widget.remove();
-        this.widgets_list.filter((widget) => {
+        this.widgets_list.filter(widget => {
             if (widget.id == widget_obj.id) return false;
         });
         delete this.widgets_dict[widget_obj.id];
@@ -106,7 +106,7 @@ export default class WidgetGroup {
 
     customize() {
         if (!this.hidden) this.widget_area.show();
-        this.widgets_list.forEach((wid) => {
+        this.widgets_list.forEach(wid => {
             wid.customize(this.options);
         });
 
@@ -115,9 +115,7 @@ export default class WidgetGroup {
     }
 
     setup_new_widget() {
-        const max = this.options
-            ? this.options.max_widget_count || Number.POSITIVE_INFINITY
-            : Number.POSITIVE_INFINITY;
+        const max = this.options ? this.options.max_widget_count || Number.POSITIVE_INFINITY : Number.POSITIVE_INFINITY;
 
         if (this.widgets_list.length < max) {
             this.new_widget = new NewWidget({
@@ -125,7 +123,7 @@ export default class WidgetGroup {
                 type: this.type,
                 custom_dialog: this.custom_dialog,
                 default_values: this.default_values,
-                on_create: (config) => {
+                on_create: config => {
                     // Remove new widget
                     this.new_widget.delete();
                     delete this.new_widget;
@@ -140,13 +138,13 @@ export default class WidgetGroup {
                     if (this.widgets_list.length < max) {
                         this.setup_new_widget();
                     }
-                },
+                }
             });
         }
     }
 
     on_delete(id, setup_new) {
-        this.widgets_list = this.widgets_list.filter((wid) => id != wid.id);
+        this.widgets_list = this.widgets_list.filter(wid => id != wid.id);
         delete this.widgets_dict[id];
         this.update_widget_order();
 
@@ -168,7 +166,7 @@ export default class WidgetGroup {
         this.sortable = new Sortable(container, {
             animation: 150,
             handle: ".drag-handle",
-            onEnd: () => this.update_widget_order(),
+            onEnd: () => this.update_widget_order()
         });
     }
 
@@ -176,7 +174,7 @@ export default class WidgetGroup {
         this.update_widget_order();
         let prepared_dict = {};
 
-        this.widgets_list.forEach((wid) => {
+        this.widgets_list.forEach(wid => {
             let config = wid.get_config();
             let id = config.docid ? config.docid : config.id;
             prepared_dict[id] = config;
@@ -184,7 +182,7 @@ export default class WidgetGroup {
 
         return {
             order: this.widget_order,
-            widgets: prepared_dict,
+            widgets: prepared_dict
         };
     }
 }
@@ -210,8 +208,8 @@ export class SingleWidgetGroup {
             options: {
                 ...this.options,
                 on_delete: () => this.on_delete(),
-                on_edit: () => this.on_edit(widget_object),
-            },
+                on_edit: () => this.on_edit(widget_object)
+            }
         });
         this.widgets_list.push(widget_object);
         this.widgets_dict[widget.id] = widget_object;
@@ -228,7 +226,7 @@ export class SingleWidgetGroup {
     }
 
     customize() {
-        this.widgets_list.forEach((wid) => {
+        this.widgets_list.forEach(wid => {
             wid.customize(this.options);
         });
     }

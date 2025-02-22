@@ -9,8 +9,8 @@ frappe.ui.form.on("Address Template", {
                 method: "frappe.contacts.doctype.address_template.address_template.get_default_address_template",
                 callback: function (r) {
                     frm.set_value("template", r.message);
-                },
+                }
             });
         }
-    },
+    }
 });

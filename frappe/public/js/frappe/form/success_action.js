@@ -8,9 +8,7 @@ frappe.ui.form.SuccessAction = class SuccessAction {
     }
 
     load_setting() {
-        this.setting = frappe.boot.success_action.find(
-            (setting) => setting.ref_doctype === this.form.doctype,
-        );
+        this.setting = frappe.boot.success_action.find(setting => setting.ref_doctype === this.form.doctype);
     }
 
     show() {
@@ -29,15 +27,13 @@ frappe.ui.form.SuccessAction = class SuccessAction {
     }
 
     show_alert() {
-        frappe.db.get_list(this.form.doctype, { limit: 2 }).then((result) => {
+        frappe.db.get_list(this.form.doctype, { limit: 2 }).then(result => {
             const count = result.length;
             const setting = this.setting;
             let message = count === 1 ? setting.first_success_message : setting.message;
 
-            const $buttons = this.get_actions().map((action) => {
-                const $btn = $(
-                    `<button class="next-action"><span>${__(action.label)}</span></button>`,
-                );
+            const $buttons = this.get_actions().map(action => {
+                const $btn = $(`<button class="next-action"><span>${__(action.label)}</span></button>`);
                 $btn.click(() => action.action(this.form));
                 return $btn;
             });
@@ -50,9 +46,9 @@ frappe.ui.form.SuccessAction = class SuccessAction {
                 {
                     message: message,
                     body: html,
-                    indicator: "green",
+                    indicator: "green"
                 },
-                setting.action_timeout || 7,
+                setting.action_timeout || 7
             );
         });
     }
@@ -60,7 +56,7 @@ frappe.ui.form.SuccessAction = class SuccessAction {
     get_actions() {
         const actions = [];
         const checked_actions = this.setting.next_actions.split("\n");
-        checked_actions.forEach((action) => {
+        checked_actions.forEach(action => {
             if (typeof action === "string" && this.default_actions[action]) {
                 actions.push(this.default_actions[action]);
             } else if (typeof action === "object") {
@@ -75,22 +71,22 @@ frappe.ui.form.SuccessAction = class SuccessAction {
         return {
             new: {
                 label: __("New"),
-                action: (frm) => frappe.new_doc(frm.doctype),
+                action: frm => frappe.new_doc(frm.doctype)
             },
             print: {
                 label: __("Print"),
-                action: (frm) => frm.print_doc(),
+                action: frm => frm.print_doc()
             },
             email: {
                 label: __("Email"),
-                action: (frm) => frm.email_doc(),
+                action: frm => frm.email_doc()
             },
             list: {
                 label: __("View All"),
-                action: (frm) => {
+                action: frm => {
                     frappe.set_route("List", frm.doctype);
-                },
-            },
+                }
+            }
         };
     }
 

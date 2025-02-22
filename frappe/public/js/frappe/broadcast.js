@@ -5,12 +5,12 @@ class BroadcastManager {
     constructor() {
         this.channel = new BroadcastChannel("frappe");
         this._event_handlers = {};
-        this.channel.onmessage = (message) => {
+        this.channel.onmessage = message => {
             let { data, event } = message.data;
             if (!event) return; // not created by this wrapper
 
             let handlers = this._event_handlers[event] || [];
-            handlers.forEach((handler) => {
+            handlers.forEach(handler => {
                 handler(data);
             });
         };
@@ -31,7 +31,7 @@ class BroadcastManager {
         if (callback) {
             let handlers = this._event_handlers[event];
             if (!handlers) return;
-            this._event_handlers[event] = handlers.filter((h) => h !== callback);
+            this._event_handlers[event] = handlers.filter(h => h !== callback);
         } else {
             this._event_handlers[event] = [];
         }

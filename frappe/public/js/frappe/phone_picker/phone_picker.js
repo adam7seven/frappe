@@ -54,14 +54,14 @@ class PhonePicker {
             $country.hover(() => {
                 $country.toggleClass("bg-gray-100");
             });
-            this.search_input.keydown((e) => {
+            this.search_input.keydown(e => {
                 const key_code = e.keyCode;
                 if ([13].includes(key_code)) {
                     e.preventDefault();
                     set_values();
                 }
             });
-            this.search_input.keyup((e) => {
+            this.search_input.keyup(e => {
                 e.preventDefault();
                 this.filter_icons(country, info.isd);
             });
@@ -78,13 +78,9 @@ class PhonePicker {
             this.phone_wrapper.find(".phone-wrapper").removeClass("hidden");
         } else {
             if (!isd.includes(value) && !country.toLowerCase().includes(value.toLowerCase())) {
-                this.phone_wrapper
-                    .find(`.phone-wrapper[id='${country.toLowerCase()}']`)
-                    .addClass("hidden");
+                this.phone_wrapper.find(`.phone-wrapper[id='${country.toLowerCase()}']`).addClass("hidden");
             } else {
-                this.phone_wrapper
-                    .find(`.phone-wrapper[id='${country.toLowerCase()}']`)
-                    .removeClass("hidden");
+                this.phone_wrapper.find(`.phone-wrapper[id='${country.toLowerCase()}']`).removeClass("hidden");
             }
         }
     }

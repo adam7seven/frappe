@@ -1,8 +1,8 @@
 let path = require("path");
 let { apps_path, app_list } = require("./utils");
 
-let app_paths = app_list.map((app) => path.resolve(apps_path, app));
-let node_modules_path = app_paths.map((app_path) => path.resolve(app_path, "node_modules"));
+let app_paths = app_list.map(app => path.resolve(apps_path, app));
+let node_modules_path = app_paths.map(app_path => path.resolve(app_path, "node_modules"));
 
 module.exports = {
     includePaths: [...node_modules_path, ...app_paths],
@@ -18,7 +18,7 @@ module.exports = {
         }
         // normal file, let it go
         return {
-            file: url,
+            file: url
         };
-    },
+    }
 };

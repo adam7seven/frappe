@@ -6,10 +6,7 @@ frappe.ui.form.on("File", {
         }
 
         if (!frm.doc.is_private) {
-            frm.dashboard.set_headline(
-                __("This file is public. It can be accessed without authentication."),
-                "orange",
-            );
+            frm.dashboard.set_headline(__("This file is public. It can be accessed without authentication."), "orange");
         }
 
         frm.toggle_display("preview", false);
@@ -96,11 +93,11 @@ frappe.ui.form.on("File", {
         frappe.call({
             method: "frappe.core.api.file.unzip_file",
             args: {
-                id: frm.doc.id,
+                id: frm.doc.id
             },
             callback: function () {
                 frappe.set_route("List", "File");
-            },
+            }
         });
-    },
+    }
 });

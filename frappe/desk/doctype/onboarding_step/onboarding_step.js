@@ -6,8 +6,8 @@ frappe.ui.form.on("Onboarding Step", {
         frm.set_query("form_tour", function () {
             return {
                 filters: {
-                    reference_doctype: frm.doc.reference_document,
-                },
+                    reference_doctype: frm.doc.reference_document
+                }
             };
         });
     },
@@ -15,10 +15,8 @@ frappe.ui.form.on("Onboarding Step", {
     refresh: function (frm) {
         frappe.boot.developer_mode &&
             frm.set_intro(
-                __(
-                    "To export this step as JSON, link it in a Onboarding document and save the document.",
-                ),
-                true,
+                __("To export this step as JSON, link it in a Onboarding document and save the document."),
+                true
             );
         if (frm.doc.reference_document && frm.doc.action == "Update Settings") {
             setup_fields(frm);
@@ -57,12 +55,12 @@ frappe.tour['Note'] = [
     disable_form: function (frm) {
         frm.set_read_only();
         frm.fields
-            .filter((field) => field.has_input)
-            .forEach((field) => {
+            .filter(field => field.has_input)
+            .forEach(field => {
                 frm.set_df_property(field.df.fieldname, "read_only", "1");
             });
         frm.disable_save();
-    },
+    }
 });
 
 function setup_fields(frm) {
@@ -70,13 +68,13 @@ function setup_fields(frm) {
         frappe.model.with_doctype(frm.doc.reference_document, () => {
             let fields = frappe
                 .get_meta(frm.doc.reference_document)
-                .fields.filter((df) => {
+                .fields.filter(df => {
                     return ["Data", "Check", "Int", "Link", "Select"].includes(df.fieldtype);
                 })
-                .map((df) => {
+                .map(df => {
                     return {
                         label: `${__(df.label, null, df.parent)} (${df.fieldname})`,
-                        value: df.fieldname,
+                        value: df.fieldname
                     };
                 });
 

@@ -3,18 +3,12 @@
 
 frappe.ui.form.on("Dropbox Settings", {
     refresh: function (frm) {
-        frm.toggle_display(
-            ["app_access_key", "app_secret_key"],
-            !frm.doc.__onload?.dropbox_setup_via_site_config,
-        );
+        frm.toggle_display(["app_access_key", "app_secret_key"], !frm.doc.__onload?.dropbox_setup_via_site_config);
         frm.events.take_backup(frm);
     },
 
     are_keys_present: function (frm) {
-        return (
-            (frm.doc.app_access_key && frm.doc.app_secret_key) ||
-            frm.doc.__onload?.dropbox_setup_via_site_config
-        );
+        return (frm.doc.app_access_key && frm.doc.app_secret_key) || frm.doc.__onload?.dropbox_setup_via_site_config;
     },
 
     allow_dropbox_access: function (frm) {
@@ -30,7 +24,7 @@ frappe.ui.form.on("Dropbox Settings", {
                 if (!r.exc) {
                     window.open(r.message.auth_url);
                 }
-            },
+            }
         });
     },
 
@@ -39,9 +33,9 @@ frappe.ui.form.on("Dropbox Settings", {
             frm.add_custom_button(__("Take Backup Now"), function () {
                 frappe.call({
                     method: "frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backup",
-                    freeze: true,
+                    freeze: true
                 });
             });
         }
-    },
+    }
 });

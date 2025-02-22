@@ -11,25 +11,25 @@ export default {
             fieldname: "email",
             fieldtype: "Data",
             label: "Email",
-            options: "Email",
+            options: "Email"
         },
         {
             fieldname: "URL",
             fieldtype: "Data",
             label: "URL",
-            options: "URL",
+            options: "URL"
         },
         {
             fieldname: "Phone",
             fieldtype: "Data",
             label: "Phone",
-            options: "Phone",
+            options: "Phone"
         },
         {
             fieldname: "person_name",
             fieldtype: "Data",
             label: "Person Name",
-            options: "Name",
+            options: "Name"
         },
         {
             fieldname: "read_only_url",
@@ -37,8 +37,8 @@ export default {
             label: "Read Only URL",
             options: "URL",
             read_only: "1",
-            default: "https://frappe.io",
-        },
+            default: "https://frappe.io"
+        }
     ],
     issingle: 1,
     links: [],
@@ -55,11 +55,11 @@ export default {
             read: 1,
             role: "System Manager",
             share: 1,
-            write: 1,
-        },
+            write: 1
+        }
     ],
     quick_entry: 1,
     sort_field: "modified",
     sort_order: "ASC",
-    track_changes: 1,
+    track_changes: 1
 };

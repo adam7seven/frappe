@@ -7,13 +7,13 @@ frappe.query_reports["Website Analytics"] = {
             fieldname: "from_date",
             label: __("From Date"),
             fieldtype: "Date",
-            default: frappe.datetime.add_days(frappe.datetime.now_date(true), -100),
+            default: frappe.datetime.add_days(frappe.datetime.now_date(true), -100)
         },
         {
             fieldname: "to_date",
             label: __("To Date"),
             fieldtype: "Date",
-            default: frappe.datetime.now_date(true),
+            default: frappe.datetime.now_date(true)
         },
         {
             fieldname: "range",
@@ -22,10 +22,10 @@ frappe.query_reports["Website Analytics"] = {
             options: [
                 { value: "Daily", label: __("Daily") },
                 { value: "Weekly", label: __("Weekly") },
-                { value: "Monthly", label: __("Monthly") },
+                { value: "Monthly", label: __("Monthly") }
             ],
             default: "Daily",
-            reqd: 1,
+            reqd: 1
         },
         {
             fieldname: "group_by",
@@ -37,16 +37,13 @@ frappe.query_reports["Website Analytics"] = {
                 { value: "referrer", label: __("Referrer") },
                 { value: "source", label: __("Source") },
                 { value: "campaign", label: __("Campaign") },
-                { value: "medium", label: __("Medium") },
+                { value: "medium", label: __("Medium") }
             ],
-            default: "path",
-        },
+            default: "path"
+        }
     ],
     formatter: function (value, row, column, data, default_formatter) {
-        if (
-            frappe.query_report.get_filter_value("group_by") === "source" &&
-            column.id === "source"
-        ) {
+        if (frappe.query_report.get_filter_value("group_by") === "source" && column.id === "source") {
             if (value) {
                 try {
                     let doctype = value.split(">")[0].trim();
@@ -60,5 +57,5 @@ frappe.query_reports["Website Analytics"] = {
             }
         }
         return default_formatter(value, row, column, data);
-    },
+    }
 };

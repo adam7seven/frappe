@@ -5,7 +5,7 @@ context("Web Form", () => {
         return cy
             .window()
             .its("frappe")
-            .then((frappe) => {
+            .then(frappe => {
                 return frappe.xcall("frappe.tests.ui_test_helpers.prepare_webform_test");
             });
     });
@@ -63,9 +63,7 @@ context("Web Form", () => {
         cy.call("logout");
 
         cy.visit("/note");
-        cy.get_open_dialog()
-            .get(".modal-message")
-            .contains("You are not permitted to access this page without login.");
+        cy.get_open_dialog().get(".modal-message").contains("You are not permitted to access this page without login.");
     });
 
     it("Show List", () => {
@@ -111,28 +109,20 @@ context("Web Form", () => {
 
         cy.findByRole("tab", { name: "Settings" }).click();
 
-        cy.get('[data-fieldname="list_columns"] .grid-footer button')
-            .contains("Add Row")
-            .as("add-row");
+        cy.get('[data-fieldname="list_columns"] .grid-footer button').contains("Add Row").as("add-row");
 
         cy.get("@add-row").click();
         cy.get('[data-fieldname="list_columns"] .grid-body .rows').as("grid-rows");
         cy.get("@grid-rows").find('.grid-row:first [data-fieldname="fieldname"]').click();
-        cy.get("@grid-rows")
-            .find('.grid-row:first select[data-fieldname="fieldname"]')
-            .select("Title");
+        cy.get("@grid-rows").find('.grid-row:first select[data-fieldname="fieldname"]').select("Title");
 
         cy.get("@add-row").click();
         cy.get("@grid-rows").find('.grid-row[data-idx="2"] [data-fieldname="fieldname"]').click();
-        cy.get("@grid-rows")
-            .find('.grid-row[data-idx="2"] select[data-fieldname="fieldname"]')
-            .select("Public");
+        cy.get("@grid-rows").find('.grid-row[data-idx="2"] select[data-fieldname="fieldname"]').select("Public");
 
         cy.get("@add-row").click();
         cy.get("@grid-rows").find('.grid-row:last [data-fieldname="fieldname"]').click();
-        cy.get("@grid-rows")
-            .find('.grid-row:last select[data-fieldname="fieldname"]')
-            .select("Content");
+        cy.get("@grid-rows").find('.grid-row:last select[data-fieldname="fieldname"]').select("Content");
 
         cy.save();
 
@@ -149,9 +139,7 @@ context("Web Form", () => {
         cy.url().should("include", "/note/list");
         cy.get(".web-list-table tbody tr:last").click();
 
-        cy.get(".breadcrumb-container .breadcrumb .breadcrumb-item:first a")
-            .should("contain.text", "Note")
-            .click();
+        cy.get(".breadcrumb-container .breadcrumb .breadcrumb-item:first a").should("contain.text", "Note").click();
         cy.url().should("include", "/note/list");
     });
 
@@ -167,10 +155,7 @@ context("Web Form", () => {
         cy.visit("/note");
         cy.url().should("include", "/note/list");
         cy.get(".web-list-table tbody tr:last").click();
-        cy.get(".breadcrumb-container .breadcrumb .breadcrumb-item:first a").should(
-            "contain.text",
-            "Notes",
-        );
+        cy.get(".breadcrumb-container .breadcrumb .breadcrumb-item:first a").should("contain.text", "Notes");
     });
 
     it("Read Only", () => {
@@ -180,11 +165,7 @@ context("Web Form", () => {
 
         // Read Only Field
         cy.get(".web-list-table tbody tr:last").click();
-        cy.get('.frappe-control[data-fieldname="title"] .control-input').should(
-            "have.css",
-            "display",
-            "none",
-        );
+        cy.get('.frappe-control[data-fieldname="title"] .control-input').should("have.css", "display", "none");
     });
 
     it("Edit Mode", () => {

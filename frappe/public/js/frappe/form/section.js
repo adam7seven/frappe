@@ -10,16 +10,12 @@ export default class Section {
 
         this.make();
 
-        if (
-            this.df.label &&
-            this.df.collapsible &&
-            localStorage.getItem(df.css_class + "-closed")
-        ) {
+        if (this.df.label && this.df.collapsible && localStorage.getItem(df.css_class + "-closed")) {
             this.collapse();
         }
 
         this.row = {
-            wrapper: this.wrapper,
+            wrapper: this.wrapper
         };
 
         this.refresh();
@@ -40,7 +36,7 @@ export default class Section {
                 this.description_wrapper = $(
                     `<div class="col-sm-12 form-section-description">
 						${__(this.df.description)}
-					</div>`,
+					</div>`
                 );
 
                 this.wrapper.append(this.description_wrapper);
@@ -86,7 +82,7 @@ export default class Section {
     replace_field(fieldname, fieldobj) {
         if (this.fields_dict[fieldname]?.df) {
             const olfldobj = this.fields_dict[fieldname];
-            const idx = this.fields_list.findIndex((e) => e == olfldobj);
+            const idx = this.fields_list.findIndex(e => e == olfldobj);
             this.fields_list.splice(idx, 1, fieldobj);
             this.fields_dict[fieldname] = fieldobj;
             fieldobj.section = this;
@@ -121,11 +117,10 @@ export default class Section {
 
         this.set_icon(hide);
 
-        this.fields_list.forEach((f) => f.on_section_collapse && f.on_section_collapse(hide));
+        this.fields_list.forEach(f => f.on_section_collapse && f.on_section_collapse(hide));
 
         // save state for next reload ('' is falsy)
-        if (this.df.css_class)
-            localStorage.setItem(this.df.css_class + "-closed", hide ? "1" : "");
+        if (this.df.css_class) localStorage.setItem(this.df.css_class + "-closed", hide ? "1" : "");
     }
 
     set_icon(hide) {

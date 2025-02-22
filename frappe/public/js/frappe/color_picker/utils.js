@@ -18,7 +18,7 @@ export default {
         return rgb_string
             .replace(/[()rgb\s]/g, "")
             .split(",")
-            .map((s) => parseInt(s));
+            .map(s => parseInt(s));
     },
 
     rgb_to_hsv(r, g, b) {
@@ -61,9 +61,7 @@ export default {
     },
 
     rgb_to_hex(r, g, b) {
-        return (
-            "#" + this.component_to_hex(r) + this.component_to_hex(g) + this.component_to_hex(b)
-        );
+        return "#" + this.component_to_hex(r) + this.component_to_hex(g) + this.component_to_hex(b);
     },
 
     hex_to_rgb_values(hex) {
@@ -111,5 +109,5 @@ export default {
 
     clamp(min, val, max) {
         return val > max ? max : val < min ? min : val;
-    },
+    }
 };

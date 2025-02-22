@@ -4,7 +4,7 @@ export default class Onboarding extends Block {
     static get toolbox() {
         return {
             title: "Onboarding",
-            icon: frappe.utils.icon("onboarding", "sm"),
+            icon: frappe.utils.icon("onboarding", "sm")
         };
     }
 
@@ -22,7 +22,7 @@ export default class Onboarding extends Block {
             allow_delete: this.allow_customization,
             allow_hiding: false,
             allow_edit: true,
-            allow_resize: false,
+            allow_resize: false
         };
     }
 
@@ -41,7 +41,7 @@ export default class Onboarding extends Block {
         this.dialog = new dialog_class({
             label: this.label,
             type: widget_type,
-            primary_action: (widget) => {
+            primary_action: widget => {
                 widget.in_customize_mode = 1;
                 this.block_widget = frappe.widget.make_widget({
                     ...widget,
@@ -50,19 +50,16 @@ export default class Onboarding extends Block {
                     options: {
                         ...this.options,
                         on_delete: () => this.api.blocks.delete(),
-                        on_edit: () => this.on_edit(this.block_widget),
+                        on_edit: () => this.on_edit(this.block_widget)
                     },
-                    new: true,
+                    new: true
                 });
                 this.block_widget.customize(this.options);
-                this.wrapper.setAttribute(
-                    block_id,
-                    this.block_widget.label || this.block_widget.onboarding_id,
-                );
+                this.wrapper.setAttribute(block_id, this.block_widget.label || this.block_widget.onboarding_id);
                 $(this.wrapper).find(".widget").addClass(`${widget_type} edit-mode`);
                 this.new_block_widget = this.block_widget.get_config();
                 this.add_settings_button();
-            },
+            }
         });
 
         if (!this.readOnly && this.data && !this.data[block_id]) {
@@ -75,7 +72,7 @@ export default class Onboarding extends Block {
     }
 
     make(block, block_id) {
-        let block_data = this.config.page_data["onboardings"].items.find((obj) => {
+        let block_data = this.config.page_data["onboardings"].items.find(obj => {
             return obj.label == __(block_id);
         });
         if (!block_data) return false;
@@ -88,7 +85,7 @@ export default class Onboarding extends Block {
             options: {
                 ...this.options,
                 on_delete: () => this.api.blocks.delete(),
-                on_edit: () => this.on_edit(this.block_widget),
+                on_edit: () => this.on_edit(this.block_widget)
             },
             label: block_data.label,
             title: block_data.title || __("Let's Get Started"),
@@ -96,7 +93,7 @@ export default class Onboarding extends Block {
             steps: block_data.items,
             success: block_data.success,
             docs_url: block_data.docs_url,
-            user_can_dismiss: block_data.user_can_dismiss,
+            user_can_dismiss: block_data.user_can_dismiss
         });
         this.wrapper.setAttribute(block + "_id", block_id);
         if (!this.readOnly) {
@@ -137,7 +134,7 @@ export default class Onboarding extends Block {
         return {
             onboarding_id: this.wrapper.getAttribute("onboarding_id"),
             col: this.get_col(),
-            new: this.new_block_widget,
+            new: this.new_block_widget
         };
     }
 }

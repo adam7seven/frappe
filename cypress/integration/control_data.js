@@ -5,7 +5,7 @@ context("Data Control", () => {
         return cy
             .window()
             .its("frappe")
-            .then((frappe) => {
+            .then(frappe => {
                 return frappe.xcall("frappe.tests.ui_test_helpers.create_doctype", {
                     id: "Test Data Control",
                     fields: [
@@ -15,7 +15,7 @@ context("Data Control", () => {
                             fieldtype: "Data",
                             options: "Name",
                             in_list_view: 1,
-                            reqd: 1,
+                            reqd: 1
                         },
                         {
                             label: "Email-ID",
@@ -23,7 +23,7 @@ context("Data Control", () => {
                             fieldtype: "Data",
                             options: "Email",
                             in_list_view: 1,
-                            reqd: 1,
+                            reqd: 1
                         },
                         {
                             label: "Phone No.",
@@ -31,18 +31,19 @@ context("Data Control", () => {
                             fieldtype: "Data",
                             options: "Phone",
                             in_list_view: 1,
-                            reqd: 1,
-                        },
-                    ],
+                            reqd: 1
+                        }
+                    ]
                 });
             });
     });
 
     it("check custom formatters", () => {
         cy.visit(`/app/doctype/User`);
-        cy.get(
-            '[data-fieldname="fields"] .grid-row[data-idx="3"] [data-fieldname="fieldtype"] .static-area',
-        ).should("have.text", "Section Break");
+        cy.get('[data-fieldname="fields"] .grid-row[data-idx="3"] [data-fieldname="fieldtype"] .static-area').should(
+            "have.text",
+            "Section Break"
+        );
     });
 
     it('Verifying data control by inputting different patterns for "Name" field', () => {
@@ -51,15 +52,9 @@ context("Data Control", () => {
         //Checking the URL for the new form of the doctype
         cy.location("pathname").should("contains", "/app/test-data-control/new-test-data-control");
         cy.get(".title-text").should("have.text", "New Test Data Control");
-        cy.get('.frappe-control[data-fieldname="name1"]')
-            .find("label")
-            .should("have.class", "reqd");
-        cy.get('.frappe-control[data-fieldname="email"]')
-            .find("label")
-            .should("have.class", "reqd");
-        cy.get('.frappe-control[data-fieldname="phone"]')
-            .find("label")
-            .should("have.class", "reqd");
+        cy.get('.frappe-control[data-fieldname="name1"]').find("label").should("have.class", "reqd");
+        cy.get('.frappe-control[data-fieldname="email"]').find("label").should("have.class", "reqd");
+        cy.get('.frappe-control[data-fieldname="phone"]').find("label").should("have.class", "reqd");
 
         //Checking if the status is "Not Saved" initially
         cy.get(".indicator-pill").should("have.text", "Not Saved");
@@ -128,10 +123,7 @@ context("Data Control", () => {
         cy.fill_field("phone", "9432380001", "Data");
         cy.findByRole("button", { name: "Save" }).click({ force: true });
         //Checking if the fields contains the data which has been filled in
-        cy.location("pathname").should(
-            "not.contains",
-            "/app/test-data-control/new-test-data-control",
-        );
+        cy.location("pathname").should("not.contains", "/app/test-data-control/new-test-data-control");
         cy.get_field("name1").should("have.value", "Komal");
         cy.get_field("email").should("have.value", "komal@test.com");
         cy.get_field("phone").should("have.value", "9432380001");

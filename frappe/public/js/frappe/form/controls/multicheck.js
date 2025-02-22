@@ -6,9 +6,7 @@ frappe.ui.form.ControlMultiCheck = class ControlMultiCheck extends frappe.ui.for
     make() {
         super.make();
         if (this.df.label) {
-            this.$label = $(`<label class="control-label">${this.df.label}</label>`).appendTo(
-                this.wrapper,
-            );
+            this.$label = $(`<label class="control-label">${this.df.label}</label>`).appendTo(this.wrapper);
         }
         this.$load_state = $(`<div class="load-state text-muted small">${__("Loading")}...</div>`);
         this.$select_buttons = this.get_select_buttons().appendTo(this.wrapper);
@@ -40,7 +38,7 @@ frappe.ui.form.ControlMultiCheck = class ControlMultiCheck extends frappe.ui.for
 
         if (this.df.get_data) {
             if (typeof this.df.get_data().then == "function") {
-                this.df.get_data().then((results) => {
+                this.df.get_data().then(results => {
                     this.options = results;
                     this.make_checkboxes();
                 });
@@ -56,11 +54,7 @@ frappe.ui.form.ControlMultiCheck = class ControlMultiCheck extends frappe.ui.for
     parse_df_options() {
         if (Array.isArray(this.df.options)) {
             this.options = this.df.options;
-        } else if (
-            this.df.options &&
-            this.df.options.length > 0 &&
-            frappe.utils.is_json(this.df.options)
-        ) {
+        } else if (this.df.options && this.df.options.length > 0 && frappe.utils.is_json(this.df.options)) {
             let args = JSON.parse(this.df.options);
             if (Array.isArray(args)) {
                 this.options = args;
@@ -79,7 +73,7 @@ frappe.ui.form.ControlMultiCheck = class ControlMultiCheck extends frappe.ui.for
             // Sort if sort_options is undefined, null or truthy.
             this.options.sort((a, b) => cstr(a.label).localeCompare(cstr(b.label)));
         }
-        this.options.forEach((option) => {
+        this.options.forEach(option => {
             let checkbox = this.get_checkbox_element(option).appendTo(this.$checkbox_area);
             if (option.danger) {
                 checkbox.find(".label-area").addClass("text-danger");
@@ -93,7 +87,7 @@ frappe.ui.form.ControlMultiCheck = class ControlMultiCheck extends frappe.ui.for
     }
 
     bind_checkboxes() {
-        $(this.wrapper).on("change", ":checkbox", (e) => {
+        $(this.wrapper).on("change", ":checkbox", e => {
             const $checkbox = $(e.target);
             const option_name = $checkbox.attr("data-unit");
             if ($checkbox.is(":checked")) {
@@ -110,7 +104,7 @@ frappe.ui.form.ControlMultiCheck = class ControlMultiCheck extends frappe.ui.for
     }
 
     set_checked_options() {
-        this.selected_options = this.options.filter((o) => o.checked).map((o) => o.value);
+        this.selected_options = this.options.filter(o => o.checked).map(o => o.value);
         this.select_options(this.selected_options);
     }
 
@@ -130,8 +124,8 @@ frappe.ui.form.ControlMultiCheck = class ControlMultiCheck extends frappe.ui.for
 
     select_options(selected_options) {
         this.options
-            .map((option) => option.value)
-            .forEach((value) => {
+            .map(option => option.value)
+            .forEach(value => {
                 let $checkbox = $(this.wrapper).find(`:checkbox[data-unit="${value}"]`)[0];
                 if ($checkbox) $checkbox.checked = selected_options.includes(value);
             });
@@ -146,9 +140,7 @@ frappe.ui.form.ControlMultiCheck = class ControlMultiCheck extends frappe.ui.for
     }
 
     get_unchecked_options() {
-        return this.options
-            .map((o) => o.value)
-            .filter((value) => !this.selected_options.includes(value));
+        return this.options.map(o => o.value).filter(value => !this.selected_options.includes(value));
     }
 
     get_checkbox_element(option) {

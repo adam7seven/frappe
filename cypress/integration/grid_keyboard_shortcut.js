@@ -11,7 +11,7 @@ context("Grid Keyboard Shortcut", () => {
         // as new ids uses hash instead of numbers get row's data-name dynamically.
         cy.get('.frappe-control[data-fieldname="email_ids"]')
             .find(".grid-body .grid-row")
-            .should(($row) => {
+            .should($row => {
                 contact_email_id = $row.attr("data-name");
             });
     });
@@ -19,27 +19,23 @@ context("Grid Keyboard Shortcut", () => {
         cy.add_new_row_in_grid(
             "{ctrl}{shift}{downarrow}",
             (cy, total_count) => {
-                cy.get(`[data-name="${contact_email_id}"]`).should(
-                    "have.attr",
-                    "data-idx",
-                    `${total_count + 1}`,
-                );
+                cy.get(`[data-name="${contact_email_id}"]`).should("have.attr", "data-idx", `${total_count + 1}`);
             },
-            total_count,
+            total_count
         );
     });
     it("Insert new row at the top", () => {
-        cy.add_new_row_in_grid("{ctrl}{shift}{uparrow}", (cy) => {
+        cy.add_new_row_in_grid("{ctrl}{shift}{uparrow}", cy => {
             cy.get(`[data-name="${contact_email_id}"]`).should("have.attr", "data-idx", "2");
         });
     });
     it("Insert new row below", () => {
-        cy.add_new_row_in_grid("{ctrl}{downarrow}", (cy) => {
+        cy.add_new_row_in_grid("{ctrl}{downarrow}", cy => {
             cy.get(`[data-name^="${contact_email_id}"]`).should("have.attr", "data-idx", "1");
         });
     });
     it("Insert new row above", () => {
-        cy.add_new_row_in_grid("{ctrl}{uparrow}", (cy) => {
+        cy.add_new_row_in_grid("{ctrl}{uparrow}", cy => {
             cy.get(`[data-name^="${contact_email_id}"]`).should("have.attr", "data-idx", "2");
         });
     });

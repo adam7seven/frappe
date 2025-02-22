@@ -14,7 +14,7 @@ export function getStore(print_format_id) {
 
     // methods
     function fetch() {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             frappe.model.clear_doc("Print Format", print_format_id);
             frappe.model.with_doc("Print Format", print_format_id, () => {
                 let _print_format = frappe.get_doc("Print Format", print_format_id);
@@ -36,21 +36,21 @@ export function getStore(print_format_id) {
         frappe.dom.freeze(__("Saving..."));
 
         layout.value.sections = layout.value.sections
-            .filter((section) => !section.remove)
-            .map((section) => {
-                section.columns = section.columns.map((column) => {
+            .filter(section => !section.remove)
+            .map(section => {
+                section.columns = section.columns.map(column => {
                     column.fields = column.fields
-                        .filter((df) => !df.remove)
-                        .map((df) => {
+                        .filter(df => !df.remove)
+                        .map(df => {
                             if (df.table_columns) {
-                                df.table_columns = df.table_columns.map((tf) => {
+                                df.table_columns = df.table_columns.map(tf => {
                                     return pluck(tf, [
                                         "label",
                                         "fieldname",
                                         "fieldtype",
                                         "options",
                                         "width",
-                                        "field_template",
+                                        "field_template"
                                     ]);
                                 });
                             }
@@ -61,7 +61,7 @@ export function getStore(print_format_id) {
                                 "options",
                                 "table_columns",
                                 "html",
-                                "field_template",
+                                "field_template"
                             ]);
                         });
                     return column;
@@ -73,15 +73,15 @@ export function getStore(print_format_id) {
 
         frappe
             .call("frappe.client.save", {
-                doc: print_format.value,
+                doc: print_format.value
             })
             .then(() => {
                 if (letterhead.value && letterhead.value._dirty) {
                     return frappe
                         .call("frappe.client.save", {
-                            doc: letterhead.value,
+                            doc: letterhead.value
                         })
-                        .then((r) => (letterhead.value = r.message));
+                        .then(r => (letterhead.value = r.message));
                 }
             })
             .then(() => fetch())
@@ -105,7 +105,7 @@ export function getStore(print_format_id) {
         return create_default_layout(meta.value, print_format.value);
     }
     function change_letterhead(_letterhead) {
-        return frappe.db.get_doc("Letter Head", _letterhead).then((doc) => {
+        return frappe.db.get_doc("Letter Head", _letterhead).then(doc => {
             letterhead.value = doc;
         });
     }
@@ -133,7 +133,7 @@ export function getStore(print_format_id) {
         reset_changes,
         get_layout,
         get_default_layout,
-        change_letterhead,
+        change_letterhead
     };
 }
 

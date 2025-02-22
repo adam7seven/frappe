@@ -20,14 +20,14 @@ frappe.setup = {
     },
 
     remove_slide: function (slide_id) {
-        frappe.setup.slides = frappe.setup.slides.filter((slide) => slide.id !== slide_id);
+        frappe.setup.slides = frappe.setup.slides.filter(slide => slide.id !== slide_id);
     },
 
     run_event: function (event) {
         $.each(frappe.setup.events[event] || [], function (i, fn) {
             fn();
         });
-    },
+    }
 };
 
 frappe.pages["setup-wizard"].on_page_load = function (wrapper) {
@@ -48,12 +48,12 @@ frappe.pages["setup-wizard"].on_page_load = function (wrapper) {
                     slides: frappe.setup.slides,
                     slide_class: frappe.setup.SetupWizardSlide,
                     unidirectional: 1,
-                    done_state: 1,
+                    done_state: 1
                 };
                 frappe.wizard = new frappe.setup.SetupWizard(wizard_settings);
                 frappe.setup.run_event("after_load");
                 frappe.wizard.show_slide(cint(frappe.get_route()[1]));
-            },
+            }
         });
     });
 };
@@ -64,7 +64,7 @@ frappe.pages["setup-wizard"].on_page_show = function () {
 
 frappe.setup.on("before_load", function () {
     // load slides
-    frappe.setup.slides_settings.forEach((s) => {
+    frappe.setup.slides_settings.forEach(s => {
         if (!(s.id === "user" && frappe.boot.developer_mode)) {
             // if not user slide with developer mode
             frappe.setup.add_slide(s);
@@ -187,7 +187,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
         return frappe.call({
             method: "frappe.desk.page.setup_wizard.setup_wizard.setup_complete",
             args: { args: this.values },
-            callback: (r) => {
+            callback: r => {
                 if (r.message.status === "ok") {
                     this.post_setup_success();
                 } else if (r.message.status === "registered") {
@@ -196,7 +196,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
                     this.abort_setup(r.message.fail);
                 }
             },
-            error: () => this.abort_setup(),
+            error: () => this.abort_setup()
         });
     }
 
@@ -227,7 +227,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
     }
 
     listen_for_setup_stages() {
-        frappe.realtime.on("setup_task", (data) => {
+        frappe.realtime.on("setup_task", data => {
             // console.log('data', data);
             if (data.stage_status) {
                 // .html('Process '+ data.progress[0] + ' of ' + data.progress[1] + ': ' + data.stage_status);
@@ -252,10 +252,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
         frappe.setup.slides.forEach(function (slide) {
             if (frappe.setup.domains) {
                 let active_domains = frappe.setup.domains;
-                if (
-                    !slide.domains ||
-                    slide.domains.filter((d) => active_domains.includes(d)).length > 0
-                ) {
+                if (!slide.domains || slide.domains.filter(d => active_domains.includes(d)).length > 0) {
                     filtered_slides.push(slide);
                 }
             } else {
@@ -269,10 +266,9 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
         this.container.hide();
         frappe.set_route(this.page_id);
 
-        this.$working_state = this.get_message(
-            __("Setting up your system"),
-            __("Starting Frappe ..."),
-        ).appendTo(this.parent);
+        this.$working_state = this.get_message(__("Setting up your system"), __("Starting Frappe ...")).appendTo(
+            this.parent
+        );
 
         this.attach_abort_button();
 
@@ -281,9 +277,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
     }
 
     attach_abort_button() {
-        this.$abort_btn = $(
-            `<button class='btn btn-secondary btn-xs btn-abort text-muted'>${__("Retry")}</button>`,
-        );
+        this.$abort_btn = $(`<button class='btn btn-secondary btn-xs btn-abort text-muted'>${__("Retry")}</button>`);
         this.$working_state.find(".content").append(this.$abort_btn);
 
         this.$abort_btn.on("click", () => {
@@ -348,14 +342,11 @@ frappe.setup.SetupWizardSlide = class SetupWizardSlide extends frappe.ui.Slide {
 
     setup_telemetry_events() {
         let me = this;
-        this.fields.filter(frappe.model.is_value_type).forEach((field) => {
+        this.fields.filter(frappe.model.is_value_type).forEach(field => {
             field.fieldname &&
                 me.get_input(field.fieldname)?.on?.("change", function () {
                     frappe.telemetry.capture(`${field.fieldname}_set`, "setup");
-                    if (
-                        field.fieldname == "enable_telemetry" &&
-                        !me.get_value("enable_telemetry")
-                    ) {
+                    if (field.fieldname == "enable_telemetry" && !me.get_value("enable_telemetry")) {
                         frappe.telemetry.disable();
                     }
                 });
@@ -378,24 +369,24 @@ frappe.setup.slides_settings = [
                 fieldtype: "Autocomplete",
                 placeholder: __("Select Language"),
                 default: "English",
-                reqd: 1,
+                reqd: 1
             },
             {
                 fieldname: "country",
                 label: __("Your Country"),
                 fieldtype: "Autocomplete",
                 placeholder: __("Select Country"),
-                reqd: 1,
+                reqd: 1
             },
             {
-                fieldtype: "Section Break",
+                fieldtype: "Section Break"
             },
             {
                 fieldname: "timezone",
                 label: __("Time Zone"),
                 placeholder: __("Select Time Zone"),
                 fieldtype: "Select",
-                reqd: 1,
+                reqd: 1
             },
             { fieldtype: "Column Break" },
             {
@@ -403,18 +394,18 @@ frappe.setup.slides_settings = [
                 label: __("Currency"),
                 placeholder: __("Select Currency"),
                 fieldtype: "Select",
-                reqd: 1,
+                reqd: 1
             },
             {
-                fieldtype: "Section Break",
+                fieldtype: "Section Break"
             },
             {
                 fieldname: "enable_telemetry",
                 label: __("Allow sending usage data for improving applications"),
                 fieldtype: "Check",
                 default: cint(frappe.telemetry.can_enable()),
-                depends_on: "eval:frappe.telemetry.can_enable()",
-            },
+                depends_on: "eval:frappe.telemetry.can_enable()"
+            }
         ],
 
         onload: function (slide) {
@@ -425,9 +416,7 @@ frappe.setup.slides_settings = [
             }
             if (!slide.get_value("language")) {
                 let session_language =
-                    frappe.setup.utils.get_language_name_from_code(
-                        frappe.boot.lang || navigator.language,
-                    ) || "English";
+                    frappe.setup.utils.get_language_name_from_code(frappe.boot.lang || navigator.language) || "English";
                 let language_field = slide.get_field("language");
 
                 language_field.set_input(session_language);
@@ -444,7 +433,7 @@ frappe.setup.slides_settings = [
         setup_fields: function (slide) {
             frappe.setup.utils.setup_region_fields(slide);
             frappe.setup.utils.setup_language_field(slide);
-        },
+        }
     },
     {
         // Profile slide
@@ -456,32 +445,27 @@ frappe.setup.slides_settings = [
                 fieldname: "full_name",
                 label: __("Full Name"),
                 fieldtype: "Data",
-                reqd: 1,
+                reqd: 1
             },
             {
                 fieldname: "email",
                 label: __("Email Address") + " (" + __("Will be your login ID") + ")",
                 fieldtype: "Data",
-                options: "Email",
+                options: "Email"
             },
             {
                 fieldname: "password",
-                label:
-                    frappe.session.user === "Administrator"
-                        ? __("Password")
-                        : __("Update Password"),
+                label: frappe.session.user === "Administrator" ? __("Password") : __("Update Password"),
                 fieldtype: "Password",
-                length: 512,
-            },
+                length: 512
+            }
         ],
 
         onload: function (slide) {
             if (frappe.session.user !== "Administrator") {
                 const { first_name, last_name, email } = frappe.boot.user;
                 if (first_name || last_name) {
-                    slide.form.fields_dict.full_name.set_input(
-                        [first_name, last_name].join(" ").trim(),
-                    );
+                    slide.form.fields_dict.full_name.set_input([first_name, last_name].join(" ").trim());
                 }
                 slide.form.fields_dict.email.set_input(email);
                 slide.form.fields_dict.email.df.read_only = 1;
@@ -504,8 +488,8 @@ frappe.setup.slides_settings = [
                 let email = frappe.setup.data.email;
                 slide.form.fields_dict.email.set_input(email);
             }
-        },
-    },
+        }
+    }
 ];
 
 frappe.setup.utils = {
@@ -515,7 +499,7 @@ frappe.setup.utils = {
             callback: function (data) {
                 frappe.setup.data.regional_data = data.message;
                 callback(slide);
-            },
+            }
         });
     },
 
@@ -527,7 +511,7 @@ frappe.setup.utils = {
                 frappe.setup.data.full_name = r.message.full_name;
                 frappe.setup.data.email = r.message.email;
                 callback(slide);
-            },
+            }
         });
     },
 
@@ -547,10 +531,10 @@ frappe.setup.utils = {
 
         Object.keys(data.country_info)
             .sort()
-            .forEach((country) => {
+            .forEach(country => {
                 translated_countries.push({
                     label: __(country),
-                    value: country,
+                    value: country
                 });
             });
 
@@ -559,9 +543,7 @@ frappe.setup.utils = {
         slide
             .get_input("currency")
             .empty()
-            .add_options(
-                frappe.utils.unique($.map(data.country_info, (opts) => opts.currency).sort()),
-            );
+            .add_options(frappe.utils.unique($.map(data.country_info, opts => opts.currency).sort()));
 
         slide.get_input("timezone").empty().add_options(data.all_timezones);
 
@@ -593,12 +575,12 @@ frappe.setup.utils = {
                         method: "frappe.desk.page.setup_wizard.setup_wizard.load_messages",
                         freeze: true,
                         args: {
-                            language: lang,
+                            language: lang
                         },
                         callback: function () {
                             frappe.setup._from_load_messages = true;
                             frappe.wizard.refresh_slides();
-                        },
+                        }
                     });
                 }, 500);
             });
@@ -633,8 +615,7 @@ frappe.setup.utils = {
             slide.get_field("timezone").set_input($timezone.val());
 
             // temporarily set date format
-            frappe.boot.sysdefaults.date_format =
-                data.country_info[country].date_format || "dd-mm-yyyy";
+            frappe.boot.sysdefaults.date_format = data.country_info[country].date_format || "dd-mm-yyyy";
         });
 
         slide.get_input("currency").on("change", function () {
@@ -654,12 +635,12 @@ frappe.setup.utils = {
                 locals[":Currency"][currency] = $.extend({}, currency_doc);
             });
         });
-    },
+    }
 };
 
 // https://github.com/eggert/tz/blob/main/backward add more if required.
 const TZ_BACKWARD_COMPATBILITY_MAP = {
-    "Asia/Calcutta": "Asia/Kolkata",
+    "Asia/Calcutta": "Asia/Kolkata"
 };
 
 function guess_country(country_info) {
@@ -668,7 +649,7 @@ function guess_country(country_info) {
         system_timezone = TZ_BACKWARD_COMPATBILITY_MAP[system_timezone] || system_timezone;
 
         for (let [country, info] of Object.entries(country_info)) {
-            let possible_timezones = (info.timezones || []).filter((t) => t == system_timezone);
+            let possible_timezones = (info.timezones || []).filter(t => t == system_timezone);
             if (possible_timezones.length) return country;
         }
     } catch (e) {

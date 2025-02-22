@@ -5,7 +5,7 @@ context("Attach Control", () => {
         return cy
             .window()
             .its("frappe")
-            .then((frappe) => {
+            .then(frappe => {
                 return frappe.xcall("frappe.tests.ui_test_helpers.create_doctype", {
                     id: "Test Attach Control",
                     fields: [
@@ -13,9 +13,9 @@ context("Attach Control", () => {
                             label: "Attach File or Image",
                             fieldname: "attach",
                             fieldtype: "Attach",
-                            in_list_view: 1,
-                        },
-                    ],
+                            in_list_view: 1
+                        }
+                    ]
                 });
             });
     });
@@ -28,10 +28,9 @@ context("Attach Control", () => {
 
         //Clicking on "Link" button to attach a file using the "Link" button
         cy.findByRole("button", { name: "Link" }).click();
-        cy.findByPlaceholderText("Attach a web link").type(
-            "https://wallpaperplay.com/walls/full/8/2/b/72402.jpg",
-            { force: true },
-        );
+        cy.findByPlaceholderText("Attach a web link").type("https://wallpaperplay.com/walls/full/8/2/b/72402.jpg", {
+            force: true
+        });
 
         //Clicking on the Upload button to upload the file
         cy.intercept("POST", "/api/method/upload_file").as("upload_image");
@@ -67,10 +66,9 @@ context("Attach Control", () => {
 
         //Clicking on "Link" button to attach a file using the "Link" button
         cy.findByRole("button", { name: "Link" }).click();
-        cy.findByPlaceholderText("Attach a web link").type(
-            "https://wallpaperplay.com/walls/full/8/2/b/72402.jpg",
-            { force: true },
-        );
+        cy.findByPlaceholderText("Attach a web link").type("https://wallpaperplay.com/walls/full/8/2/b/72402.jpg", {
+            force: true
+        });
 
         //Clicking on the Upload button to upload the file
         cy.intercept("POST", "/api/method/upload_file").as("upload_image");
@@ -123,11 +121,11 @@ context("Attach Control", () => {
                 // Mock "window.navigator.mediaDevices" property
                 // to return mock mediaDevices object
                 win.navigator.mediaDevices = {
-                    ondevicechange: null,
+                    ondevicechange: null
                 };
-            },
+            }
         });
-        cy.get("body").should(($body) => {
+        cy.get("body").should($body => {
             const dataRoute = $body.attr("data-route");
             expect(dataRoute).to.match(new RegExp(`^Form/${doctype}/new-${dt_in_route}-`));
         });
@@ -148,9 +146,9 @@ context("Attach Control", () => {
             onBeforeLoad(win) {
                 // Delete "window.navigator.mediaDevices" property
                 delete win.navigator.mediaDevices;
-            },
+            }
         });
-        cy.get("body").should(($body) => {
+        cy.get("body").should($body => {
             const dataRoute = $body.attr("data-route");
             expect(dataRoute).to.match(new RegExp(`^Form/${doctype}/new-${dt_in_route}-`));
         });
@@ -170,7 +168,7 @@ context("Attach Control with Failed Document Save", () => {
         return cy
             .window()
             .its("frappe")
-            .then((frappe) => {
+            .then(frappe => {
                 return frappe.xcall("frappe.tests.ui_test_helpers.create_doctype", {
                     id: "Test Mandatory Attach Control",
                     fields: [
@@ -178,16 +176,16 @@ context("Attach Control with Failed Document Save", () => {
                             label: "Attach File or Image",
                             fieldname: "attach",
                             fieldtype: "Attach",
-                            in_list_view: 1,
+                            in_list_view: 1
                         },
                         {
                             label: "Mandatory Text Field",
                             fieldname: "text_field",
                             fieldtype: "Text Editor",
                             in_list_view: 1,
-                            reqd: 1,
-                        },
-                    ],
+                            reqd: 1
+                        }
+                    ]
                 });
             });
     });
@@ -196,7 +194,7 @@ context("Attach Control with Failed Document Save", () => {
     it("Attaching a file on an unsaved document", () => {
         //Navigating to the new form for the newly created doctype
         cy.new_form("Test Mandatory Attach Control");
-        cy.get("body").should(($body) => {
+        cy.get("body").should($body => {
             temp_id = $body.attr("data-route").split("/")[2];
         });
 
@@ -205,10 +203,9 @@ context("Attach Control with Failed Document Save", () => {
 
         //Clicking on "Link" button to attach a file using the "Link" button
         cy.findByRole("button", { name: "Link" }).click();
-        cy.findByPlaceholderText("Attach a web link").type(
-            "https://wallpaperplay.com/walls/full/8/2/b/72402.jpg",
-            { force: true },
-        );
+        cy.findByPlaceholderText("Attach a web link").type("https://wallpaperplay.com/walls/full/8/2/b/72402.jpg", {
+            force: true
+        });
 
         //Clicking on the Upload button to upload the file
         cy.intercept("POST", "/api/method/upload_file").as("upload_image");
@@ -224,7 +221,7 @@ context("Attach Control with Failed Document Save", () => {
             .should("have.attr", "href")
             .and("equal", "https://wallpaperplay.com/walls/full/8/2/b/72402.jpg");
 
-        cy.get(".title-text").then(($value) => {
+        cy.get(".title-text").then($value => {
             docid = $value.text();
         });
     });
@@ -232,11 +229,7 @@ context("Attach Control with Failed Document Save", () => {
     it("Check if file was uploaded correctly", () => {
         cy.go_to_list("File");
         cy.open_list_filter();
-        cy.get(".fieldname-select-area .form-control")
-            .click()
-            .type("Attached To ID{enter}")
-            .blur()
-            .wait(500);
+        cy.get(".fieldname-select-area .form-control").click().type("Attached To ID{enter}").blur().wait(500);
         cy.get('input[data-fieldname="attached_to_id"]').click().type(docid).blur();
         cy.get(".filter-popover .apply-filters").click({ force: true });
         cy.get("header .level-right .list-count").should("contain.text", "1 of 1");

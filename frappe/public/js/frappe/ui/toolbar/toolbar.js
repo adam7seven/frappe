@@ -9,8 +9,8 @@ frappe.ui.toolbar.Toolbar = class {
         $("header").replaceWith(
             frappe.render_template("navbar", {
                 avatar: frappe.avatar(frappe.session.user, "avatar-medium"),
-                navbar_settings: frappe.boot.navbar_settings,
-            }),
+                navbar_settings: frappe.boot.navbar_settings
+            })
         );
         $(".dropdown-toggle").dropdown();
         $("#toolbar-user a[href]").click(function () {
@@ -66,7 +66,7 @@ frappe.ui.toolbar.Toolbar = class {
                 "click",
                 () =>
                     localStorage.setItem("dismissed_announcement_widget", true) ||
-                    announcement_widget.addClass("hidden"),
+                    announcement_widget.addClass("hidden")
             );
         }
     }
@@ -127,7 +127,7 @@ frappe.ui.toolbar.Toolbar = class {
                     href: url,
                     class: "dropdown-item",
                     text: __(link.label),
-                    target: "_blank",
+                    target: "_blank"
                 }).appendTo($help_links);
             }
 
@@ -159,7 +159,7 @@ frappe.ui.toolbar.Toolbar = class {
 
             frappe.search.utils.make_function_searchable(
                 frappe.utils.generate_tracking_url,
-                __("Generate Tracking URL"),
+                __("Generate Tracking URL")
             );
 
             if (frappe.model.can_read("RQ Job")) {
@@ -184,9 +184,7 @@ $.extend(frappe.ui.toolbar, {
             frappe.ui.toolbar.add_menu_divider(menu);
         }
 
-        return $(
-            '<li class="custom-menu"><a><i class="fa-fw ' + icon + '"></i> ' + label + "</a></li>",
-        )
+        return $('<li class="custom-menu"><a><i class="fa-fw ' + icon + '"></i> ' + label + "</a></li>")
             .insertBefore(menu.find(".divider"))
             .find("a")
             .click(function () {
@@ -206,7 +204,7 @@ $.extend(frappe.ui.toolbar, {
         let new_element = $(`<li class="${class_name}">
 			<a class="btn" href="${route}" title="${frappe.utils.to_title_case(
                 class_name,
-                true,
+                true
             )}" aria-haspopup="true" aria-expanded="true">
 				<div>
 					<i class="octicon ${icon}"></i>
@@ -231,15 +229,15 @@ $.extend(frappe.ui.toolbar, {
         e.preventDefault();
         frappe.ui.keys.show_keyboard_shortcut_dialog();
         return false;
-    },
+    }
 });
 
 frappe.ui.toolbar.clear_cache = frappe.utils.throttle(function () {
     frappe.assets.clear_local_storage();
-    frappe.xcall("frappe.sessions.clear").then((message) => {
+    frappe.xcall("frappe.sessions.clear").then(message => {
         frappe.show_alert({
             message: message,
-            indicator: "info",
+            indicator: "info"
         });
         location.reload(true);
     });
@@ -278,12 +276,8 @@ frappe.ui.toolbar.setup_session_defaults = function () {
                     fieldtype: "Button",
                     label: __("Settings"),
                     click: () => {
-                        frappe.set_route(
-                            "Form",
-                            "Session Default Settings",
-                            "Session Default Settings",
-                        );
-                    },
+                        frappe.set_route("Form", "Session Default Settings", "Session Default Settings");
+                    }
                 };
             }
             frappe.prompt(
@@ -298,29 +292,27 @@ frappe.ui.toolbar.setup_session_defaults = function () {
                     frappe.call({
                         method: "frappe.core.doctype.session_default_settings.session_default_settings.set_session_default_values",
                         args: {
-                            default_values: values,
+                            default_values: values
                         },
                         callback: function (data) {
                             if (data.message == "success") {
                                 frappe.show_alert({
                                     message: __("Session Defaults Saved"),
-                                    indicator: "green",
+                                    indicator: "green"
                                 });
                                 frappe.ui.toolbar.clear_cache();
                             } else {
                                 frappe.show_alert({
-                                    message: __(
-                                        "An error occurred while setting Session Defaults",
-                                    ),
-                                    indicator: "red",
+                                    message: __("An error occurred while setting Session Defaults"),
+                                    indicator: "red"
                                 });
                             }
-                        },
+                        }
                     });
                 },
                 __("Session Defaults"),
-                __("Save"),
+                __("Save")
             );
-        },
+        }
     });
 };

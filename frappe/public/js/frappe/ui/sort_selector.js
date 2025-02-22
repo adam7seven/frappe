@@ -122,7 +122,7 @@ frappe.ui.SortSelector = class SortSelector {
                 { fieldname: "modified" },
                 { fieldname: "id" },
                 { fieldname: "creation" },
-                { fieldname: "idx" },
+                { fieldname: "idx" }
             ];
 
             // title field
@@ -147,14 +147,14 @@ frappe.ui.SortSelector = class SortSelector {
             });
 
             // add missing labels
-            _options.forEach((option) => {
+            _options.forEach(option => {
                 if (!option.label) {
                     option.label = me.get_label(option.fieldname);
                 }
             });
 
             // de-duplicate
-            this.args.options = _options.uniqBy((obj) => {
+            this.args.options = _options.uniqBy(obj => {
                 return obj.fieldname;
             });
         }
@@ -169,7 +169,7 @@ frappe.ui.SortSelector = class SortSelector {
         if (!meta) {
             return {
                 meta_sort_field: null,
-                meta_sort_order: null,
+                meta_sort_order: null
             };
         }
 
@@ -177,12 +177,12 @@ frappe.ui.SortSelector = class SortSelector {
             var parts = meta.sort_field.split(",")[0].split(" ");
             return {
                 meta_sort_field: parts[0],
-                meta_sort_order: meta.sort_order ? meta.sort_order.toLowerCase() : "",
+                meta_sort_order: meta.sort_order ? meta.sort_order.toLowerCase() : ""
             };
         } else {
             return {
                 meta_sort_field: meta.sort_field || "modified",
-                meta_sort_order: meta.sort_order ? meta.sort_order.toLowerCase() : "",
+                meta_sort_order: meta.sort_order ? meta.sort_order.toLowerCase() : ""
             };
         }
     }

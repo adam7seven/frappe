@@ -14,7 +14,7 @@ frappe.ui.form.ControlAttachImage = class ControlAttachImage extends frappe.ui.f
 					/>
 				</div>`;
             },
-            html: true,
+            html: true
         });
     }
     set_upload_options() {

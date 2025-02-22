@@ -12,10 +12,7 @@ frappe.ui.form.on("Dashboard Chart", {
     before_save: function (frm) {
         let dynamic_filters = JSON.parse(frm.doc.dynamic_filters_json || "null");
         let static_filters = JSON.parse(frm.doc.filters_json || "null");
-        static_filters = frappe.dashboard_utils.remove_common_static_filter_values(
-            static_filters,
-            dynamic_filters,
-        );
+        static_filters = frappe.dashboard_utils.remove_common_static_filter_values(static_filters, dynamic_filters);
 
         frm.set_value("filters_json", JSON.stringify(static_filters));
         frm.trigger("show_filters");
@@ -35,7 +32,7 @@ frappe.ui.form.on("Dashboard Chart", {
                 const dialog = frappe.dashboard_utils.get_add_to_dashboard_dialog(
                     frm.doc.id,
                     "Dashboard Chart",
-                    "frappe.desk.doctype.dashboard_chart.dashboard_chart.add_chart_to_dashboard",
+                    "frappe.desk.doctype.dashboard_chart.dashboard_chart.add_chart_to_dashboard"
                 );
 
                 if (!frm.doc.id) {
@@ -54,8 +51,8 @@ frappe.ui.form.on("Dashboard Chart", {
         frm.set_query("document_type", function () {
             return {
                 filters: {
-                    issingle: false,
-                },
+                    issingle: false
+                }
             };
         });
         frm.trigger("update_options");
@@ -79,12 +76,12 @@ frappe.ui.form.on("Dashboard Chart", {
 
     set_heatmap_year_options: function (frm) {
         if (frm.doc.type == "Heatmap") {
-            frappe.db.get_doc("System Settings").then((doc) => {
+            frappe.db.get_doc("System Settings").then(doc => {
                 const creation_date = doc.creation;
                 frm.set_df_property(
                     "heatmap_year",
                     "options",
-                    frappe.dashboard_utils.get_years_since_creation(creation_date),
+                    frappe.dashboard_utils.get_years_since_creation(creation_date)
                 );
             });
         }
@@ -96,8 +93,8 @@ frappe.ui.form.on("Dashboard Chart", {
             frm.set_query("report_id", () => {
                 return {
                     filters: {
-                        report_type: ["!=", "Report Builder"],
-                    },
+                        report_type: ["!=", "Report Builder"]
+                    }
                 };
             });
         } else {
@@ -146,7 +143,7 @@ frappe.ui.form.on("Dashboard Chart", {
                 frm.trigger("show_filters");
                 frm.trigger("set_chart_field_options");
             } else {
-                frappe.report_utils.get_report_filters(report_id).then((filters) => {
+                frappe.report_utils.get_report_filters(report_id).then(filters => {
                     if (filters) {
                         frm.chart_filters = filters;
                         let filter_values = frappe.report_utils.get_filter_values(filters);
@@ -172,9 +169,9 @@ frappe.ui.form.on("Dashboard Chart", {
             .xcall("frappe.desk.query_report.run", {
                 report_id: frm.doc.report_id,
                 filters: filters,
-                ignore_prepared_report: 1,
+                ignore_prepared_report: 1
             })
-            .then((data) => {
+            .then(data => {
                 frm.report_data = data;
                 let report_has_chart = Boolean(data.chart);
 
@@ -182,33 +179,16 @@ frappe.ui.form.on("Dashboard Chart", {
 
                 if (!frm.doc.use_report_chart) {
                     if (data.result.length) {
-                        frm.field_options = frappe.report_utils.get_field_options_from_report(
-                            data.columns,
-                            data,
-                        );
-                        frm.set_df_property(
-                            "x_field",
-                            "options",
-                            frm.field_options.non_numeric_fields,
-                        );
+                        frm.field_options = frappe.report_utils.get_field_options_from_report(data.columns, data);
+                        frm.set_df_property("x_field", "options", frm.field_options.non_numeric_fields);
                         if (!frm.field_options.numeric_fields.length) {
-                            frappe.msgprint(
-                                __("Report has no numeric fields, please change the Report Name"),
-                            );
+                            frappe.msgprint(__("Report has no numeric fields, please change the Report Name"));
                         } else {
-                            let y_field_df = frappe.meta.get_docfield(
-                                "Dashboard Chart Field",
-                                "y_field",
-                                frm.doc.id,
-                            );
+                            let y_field_df = frappe.meta.get_docfield("Dashboard Chart Field", "y_field", frm.doc.id);
                             y_field_df.options = frm.field_options.numeric_fields;
                         }
                     } else {
-                        frappe.msgprint(
-                            __(
-                                "Report has no data, please modify the filters or change the Report Name",
-                            ),
-                        );
+                        frappe.msgprint(__("Report has no data, please modify the filters or change the Report Name"));
                     }
                 } else {
                     frm.set_value("use_report_chart", 1);
@@ -224,14 +204,10 @@ frappe.ui.form.on("Dashboard Chart", {
             "Last Year": ["Quarterly", "Monthly", "Weekly", "Daily"],
             "Last Quarter": ["Monthly", "Weekly", "Daily"],
             "Last Month": ["Weekly", "Daily"],
-            "Last Week": ["Daily"],
+            "Last Week": ["Daily"]
         };
         if (frm.doc.timespan) {
-            frm.set_df_property(
-                "time_interval",
-                "options",
-                time_interval_options[frm.doc.timespan],
-            );
+            frm.set_df_property("time_interval", "options", time_interval_options[frm.doc.timespan]);
         }
     },
 
@@ -239,7 +215,7 @@ frappe.ui.form.on("Dashboard Chart", {
         let doctype = frm.doc.document_type;
         let date_fields = [
             { label: __("Created On"), value: "creation" },
-            { label: __("Last Modified On"), value: "modified" },
+            { label: __("Last Modified On"), value: "modified" }
         ];
         let value_fields = [];
         let group_by_fields = [{ label: "Created By", value: "owner" }];
@@ -249,24 +225,18 @@ frappe.ui.form.on("Dashboard Chart", {
             frm.set_df_property("based_on", "options", date_fields);
             frm.set_df_property("value_based_on", "options", value_fields);
             frm.set_df_property("group_by_based_on", "options", group_by_fields);
-            frm.set_df_property(
-                "aggregate_function_based_on",
-                "options",
-                aggregate_function_fields,
-            );
+            frm.set_df_property("aggregate_function_based_on", "options", aggregate_function_fields);
             frm.trigger("show_filters");
         };
 
         if (doctype) {
             frappe.model.with_doctype(doctype, () => {
                 // get all date and datetime fields
-                frappe.get_meta(doctype).fields.map((df) => {
+                frappe.get_meta(doctype).fields.map(df => {
                     if (["Date", "Datetime"].includes(df.fieldtype)) {
                         date_fields.push({ label: df.label, value: df.fieldname });
                     }
-                    if (
-                        ["Int", "Float", "Currency", "Percent", "Duration"].includes(df.fieldtype)
-                    ) {
+                    if (["Int", "Float", "Currency", "Percent", "Duration"].includes(df.fieldtype)) {
                         value_fields.push({ label: df.label, value: df.fieldname });
                         aggregate_function_fields.push({ label: df.label, value: df.fieldname });
                     }
@@ -284,7 +254,7 @@ frappe.ui.form.on("Dashboard Chart", {
 
     show_filters: function (frm) {
         frm.chart_filters = [];
-        frappe.dashboard_utils.get_filters_for_chart_type(frm.doc).then((filters) => {
+        frappe.dashboard_utils.get_filters_for_chart_type(frm.doc).then(filters => {
             if (filters) {
                 frm.chart_filters = filters;
             }
@@ -299,7 +269,7 @@ frappe.ui.form.on("Dashboard Chart", {
     render_filters_table: function (frm) {
         frm.set_df_property("filters_section", "hidden", 0);
         let is_document_type = frm.doc.chart_type !== "Report" && frm.doc.chart_type !== "Custom";
-        let is_dynamic_filter = (f) => ["Date", "DateRange"].includes(f.fieldtype) && f.default;
+        let is_dynamic_filter = f => ["Date", "DateRange"].includes(f.fieldtype) && f.default;
 
         let wrapper = $(frm.get_field("filters_json").wrapper).empty();
         let table = $(`<table class="table table-bordered" style="cursor:pointer; margin:0px;">
@@ -320,7 +290,7 @@ frappe.ui.form.on("Dashboard Chart", {
         // Set dynamic filters for reports
         if (frm.doc.chart_type == "Report") {
             let set_filters = false;
-            frm.chart_filters.forEach((f) => {
+            frm.chart_filters.forEach(f => {
                 if (is_dynamic_filter(f)) {
                     filters[f.fieldname] = f.default;
                     set_filters = true;
@@ -334,12 +304,12 @@ frappe.ui.form.on("Dashboard Chart", {
             fields = [
                 {
                     fieldtype: "HTML",
-                    fieldname: "filter_area",
-                },
+                    fieldname: "filter_area"
+                }
             ];
 
             if (filters.length > 0) {
-                filters.forEach((filter) => {
+                filters.forEach(filter => {
                     const filter_row = $(`<tr>
 							<td>${filter[1]}</td>
 							<td>${filter[2] || ""}</td>
@@ -351,9 +321,9 @@ frappe.ui.form.on("Dashboard Chart", {
                 });
             }
         } else if (frm.chart_filters.length) {
-            fields = frm.chart_filters.filter((f) => f.fieldname);
+            fields = frm.chart_filters.filter(f => f.fieldname);
 
-            fields.map((f) => {
+            fields.map(f => {
                 if (filters[f.fieldname]) {
                     let condition = "=";
                     const filter_row = $(`<tr>
@@ -379,7 +349,7 @@ frappe.ui.form.on("Dashboard Chart", {
 
             let dialog = new frappe.ui.Dialog({
                 title: __("Set Filters"),
-                fields: fields.filter((f) => !is_dynamic_filter(f)),
+                fields: fields.filter(f => !is_dynamic_filter(f)),
                 primary_action: function () {
                     let values = this.get_values();
                     if (values) {
@@ -397,7 +367,7 @@ frappe.ui.form.on("Dashboard Chart", {
                         }
                     }
                 },
-                primary_action_label: __("Set"),
+                primary_action_label: __("Set")
             });
             frappe.dashboards.filters_dialog = dialog;
 
@@ -406,7 +376,7 @@ frappe.ui.form.on("Dashboard Chart", {
                     parent: dialog.get_field("filter_area").$wrapper,
                     doctype: frm.doc.document_type,
                     parent_doctype: frm.doc.parent_document_type,
-                    on_change: () => {},
+                    on_change: () => {}
                 });
 
                 frm.filter_group.add_filters_to_filter_group(filters);
@@ -417,7 +387,7 @@ frappe.ui.form.on("Dashboard Chart", {
             if (frm.doc.chart_type == "Report") {
                 //Set query report object so that it can be used while fetching filter values in the report
                 frappe.query_report = new frappe.views.QueryReport({
-                    filters: dialog.fields_list,
+                    filters: dialog.fields_list
                 });
                 frappe.query_reports[frm.doc.report_id] &&
                     frappe.query_reports[frm.doc.report_id].onload &&
@@ -435,8 +405,7 @@ frappe.ui.form.on("Dashboard Chart", {
 
         let wrapper = $(frm.get_field("dynamic_filters_json").wrapper).empty();
 
-        frm.dynamic_filter_table =
-            $(`<table class="table table-bordered" style="cursor:pointer; margin:0px;">
+        frm.dynamic_filter_table = $(`<table class="table table-bordered" style="cursor:pointer; margin:0px;">
 			<thead>
 				<tr>
 					<th style="width: 20%">${__("Filter")}</th>
@@ -459,7 +428,7 @@ frappe.ui.form.on("Dashboard Chart", {
         let fields = frappe.dashboard_utils.get_fields_for_dynamic_filter_dialog(
             is_document_type,
             filters,
-            frm.dynamic_filters,
+            frm.dynamic_filters
         );
 
         frm.dynamic_filter_table.on("click", () => {
@@ -484,7 +453,7 @@ frappe.ui.form.on("Dashboard Chart", {
                     }
                     frm.trigger("set_dynamic_filters_in_table");
                 },
-                primary_action_label: __("Set"),
+                primary_action_label: __("Set")
             });
 
             dialog.show();
@@ -505,7 +474,7 @@ frappe.ui.form.on("Dashboard Chart", {
         } else {
             let filter_rows = "";
             if ($.isArray(frm.dynamic_filters)) {
-                frm.dynamic_filters.forEach((filter) => {
+                frm.dynamic_filters.forEach(filter => {
                     filter_rows += `<tr>
 							<td>${filter[1]}</td>
 							<td>${filter[2] || ""}</td>
@@ -540,14 +509,14 @@ frappe.ui.form.on("Dashboard Chart", {
             if (doc_is_table) {
                 let parents = await frappe.xcall(
                     "frappe.desk.doctype.dashboard_chart.dashboard_chart.get_parent_doctypes",
-                    { child_type: document_type },
+                    { child_type: document_type }
                 );
 
                 frm.set_query("parent_document_type", function () {
                     return {
                         filters: {
-                            id: ["in", parents],
-                        },
+                            id: ["in", parents]
+                        }
                     };
                 });
 
@@ -556,5 +525,5 @@ frappe.ui.form.on("Dashboard Chart", {
                 }
             }
         });
-    },
+    }
 });

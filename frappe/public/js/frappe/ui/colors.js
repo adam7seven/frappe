@@ -18,24 +18,12 @@ frappe.ui.color = {
         }
     },
     get_color_map() {
-        const colors = [
-            "red",
-            "green",
-            "blue",
-            "dark-green",
-            "yellow",
-            "gray",
-            "purple",
-            "pink",
-            "orange",
-        ];
+        const colors = ["red", "green", "blue", "dark-green", "yellow", "gray", "purple", "pink", "orange"];
         const shades = ["100", "300", "500", "700"];
         const style = getComputedStyle(document.body);
         let color_map = {};
-        colors.forEach((color) => {
-            color_map[color] = shades.map((shade) =>
-                style.getPropertyValue(`--${color}-${shade}`).trim(),
-            );
+        colors.forEach(color => {
+            color_map[color] = shades.map(shade => style.getPropertyValue(`--${color}-${shade}`).trim());
         });
         return color_map;
     },
@@ -44,7 +32,7 @@ frappe.ui.color = {
             default: 2,
             light: 1,
             "extra-light": 0,
-            dark: 3,
+            dark: 3
         };
 
         if (Object.keys(shades).includes(shade)) {
@@ -136,7 +124,7 @@ frappe.ui.color = {
         // 255 - brightest (#fff)
         // 0 - darkest (#000)
         return (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
-    },
+    }
 };
 
 frappe.ui.color_map = frappe.ui.color.get_color_map();

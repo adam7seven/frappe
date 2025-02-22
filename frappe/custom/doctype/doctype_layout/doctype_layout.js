@@ -65,13 +65,11 @@ frappe.ui.form.on("DocType Layout", {
             const addedFields = response.message.added;
             const removedFields = response.message.removed;
 
-            const getChangedMessage = (fields) => {
+            const getChangedMessage = fields => {
                 let changes = "";
                 for (const field of fields) {
                     if (field.label) {
-                        changes += `<li>Row #${field.idx}: ${field.fieldname.bold()} (${
-                            field.label
-                        })</li>`;
+                        changes += `<li>Row #${field.idx}: ${field.fieldname.bold()} (${field.label})</li>`;
                     } else {
                         changes += `<li>Row #${field.idx}: ${field.fieldname.bold()}</li>`;
                     }
@@ -82,14 +80,12 @@ frappe.ui.form.on("DocType Layout", {
             let message = "";
 
             if (addedFields.length) {
-                message += `The following fields have been added:<br><br><ul>${getChangedMessage(
-                    addedFields,
-                )}</ul>`;
+                message += `The following fields have been added:<br><br><ul>${getChangedMessage(addedFields)}</ul>`;
             }
 
             if (removedFields.length) {
                 message += `The following fields have been removed:<br><br><ul>${getChangedMessage(
-                    removedFields,
+                    removedFields
                 )}</ul>`;
             }
 
@@ -97,9 +93,9 @@ frappe.ui.form.on("DocType Layout", {
                 frappe.msgprint({
                     message: __(message),
                     indicator: "green",
-                    title: __("Synced Fields"),
+                    title: __("Synced Fields")
                 });
             }
         }
-    },
+    }
 });

@@ -10,8 +10,8 @@ frappe.ui.form.on("Auto Email Report", {
                     frappe.urllib.get_full_url(
                         "/api/method/frappe.email.doctype.auto_email_report.auto_email_report.download?" +
                             "id=" +
-                            encodeURIComponent(frm.doc.id),
-                    ),
+                            encodeURIComponent(frm.doc.id)
+                    )
                 );
                 if (!w) {
                     frappe.msgprint(__("Please enable pop-ups"));
@@ -24,7 +24,7 @@ frappe.ui.form.on("Auto Email Report", {
                     args: { id: frm.doc.id },
                     callback: function () {
                         frappe.msgprint(__("Scheduled to send"));
-                    },
+                    }
                 });
             });
         } else {
@@ -40,8 +40,8 @@ frappe.ui.form.on("Auto Email Report", {
             return {
                 filters: {
                     enable_outgoing: 1,
-                    awaiting_password: 0,
-                },
+                    awaiting_password: 0
+                }
             };
         });
     },
@@ -50,21 +50,17 @@ frappe.ui.form.on("Auto Email Report", {
         frm.trigger("fetch_report_filters");
     },
     fetch_report_filters(frm) {
-        if (
-            frm.doc.report &&
-            frm.doc.report_type !== "Report Builder" &&
-            frm.script_setup_for !== frm.doc.report
-        ) {
+        if (frm.doc.report && frm.doc.report_type !== "Report Builder" && frm.script_setup_for !== frm.doc.report) {
             frappe.call({
                 method: "frappe.desk.query_report.get_script",
                 args: {
-                    report_id: frm.doc.report,
+                    report_id: frm.doc.report
                 },
                 callback: function (r) {
                     frappe.dom.eval(r.message.script || "");
                     frm.script_setup_for = frm.doc.report;
                     frm.trigger("show_filters");
-                },
+                }
             });
         } else {
             frm.trigger("show_filters");
@@ -82,9 +78,7 @@ frappe.ui.form.on("Auto Email Report", {
         }
         if (
             frm.doc.report_type === "Custom Report" ||
-            (frm.doc.report_type !== "Report Builder" &&
-                reference_report &&
-                reference_report.filters)
+            (frm.doc.report_type !== "Report Builder" && reference_report && reference_report.filters)
         ) {
             // make a table to show filters
             var table = $(
@@ -94,25 +88,19 @@ frappe.ui.form.on("Auto Email Report", {
                     "</th><th>" +
                     __("Value") +
                     "</th></tr>\
-				</thead><tbody></tbody></table>",
+				</thead><tbody></tbody></table>"
             ).appendTo(wrapper);
-            $('<p class="text-muted small">' + __("Click table to edit") + "</p>").appendTo(
-                wrapper,
-            );
+            $('<p class="text-muted small">' + __("Click table to edit") + "</p>").appendTo(wrapper);
 
             var filters = {};
 
             let report_filters;
 
-            if (
-                frm.doc.report_type === "Custom Report" &&
-                reference_report &&
-                reference_report.filters
-            ) {
+            if (frm.doc.report_type === "Custom Report" && reference_report && reference_report.filters) {
                 if (frm.doc.filters) {
                     filters = JSON.parse(frm.doc.filters);
                 } else {
-                    frappe.db.get_value("Report", frm.doc.report, "json", (r) => {
+                    frappe.db.get_value("Report", frm.doc.report, "json", r => {
                         if (r && r.json) {
                             filters = JSON.parse(r.json).filters || {};
                         }
@@ -143,10 +131,10 @@ frappe.ui.form.on("Auto Email Report", {
 
             const mandatory_css = {
                 "background-color": "var(--error-bg)",
-                "font-weight": "bold",
+                "font-weight": "bold"
             };
 
-            report_filters.forEach((f) => {
+            report_filters.forEach(f => {
                 const css = f.reqd ? mandatory_css : {};
                 const row = $("<tr></tr>").appendTo(table.find("tbody"));
                 $("<td>" + f.label + "</td>").appendTo(row);
@@ -165,7 +153,7 @@ frappe.ui.form.on("Auto Email Report", {
                             frm.set_value("filters", JSON.stringify(values));
                             frm.trigger("show_filters");
                         }
-                    },
+                    }
                 });
                 dialog.show();
                 dialog.set_values(filters);
@@ -173,11 +161,11 @@ frappe.ui.form.on("Auto Email Report", {
 
             // populate dynamic date field selection
             let date_fields = report_filters
-                .filter((df) => df.fieldtype === "Date")
-                .map((df) => ({ label: df.label, value: df.fieldname }));
+                .filter(df => df.fieldtype === "Date")
+                .map(df => ({ label: df.label, value: df.fieldname }));
             frm.set_df_property("from_date_field", "options", date_fields);
             frm.set_df_property("to_date_field", "options", date_fields);
             frm.toggle_display("dynamic_report_filters_section", date_fields.length > 0);
         }
-    },
+    }
 });

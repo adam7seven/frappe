@@ -12,10 +12,10 @@ frappe.query_reports["Addresses And Contacts"] = {
             get_query: function () {
                 return {
                     filters: {
-                        id: ["in", "Contact, Address"],
-                    },
+                        id: ["in", "Contact, Address"]
+                    }
                 };
-            },
+            }
         },
         {
             fieldname: "reference_id",
@@ -27,7 +27,7 @@ frappe.query_reports["Addresses And Contacts"] = {
                     frappe.throw(__("Please select Entity Type first"));
                 }
                 return reference_doctype;
-            },
-        },
-    ],
+            }
+        }
+    ]
 };

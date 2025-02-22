@@ -16,7 +16,7 @@ export default class GridRowForm {
             frm: this.row.frm,
             grid: this.row.grid,
             grid_row: this.row,
-            grid_row_form: this,
+            grid_row_form: this
         });
         this.layout.make();
 
@@ -134,10 +134,7 @@ export default class GridRowForm {
         setTimeout(function () {
             if ((me.row.frm && me.row.frm.doc.docstatus === 0) || !me.row.frm) {
                 var first = me.form_area.find("input:first");
-                if (
-                    first.length &&
-                    !["Date", "Datetime", "Time"].includes(first.attr("data-fieldtype"))
-                ) {
+                if (first.length && !["Date", "Datetime", "Time"].includes(first.attr("data-fieldtype"))) {
                     try {
                         first.get(0).focus();
                     } catch (e) {

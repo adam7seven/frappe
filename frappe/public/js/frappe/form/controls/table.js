@@ -9,14 +9,14 @@ frappe.ui.form.ControlTable = class ControlTable extends frappe.ui.form.Control 
             frm: this.frm,
             df: this.df,
             parent: this.wrapper,
-            control: this,
+            control: this
         });
 
         if (this.frm) {
             this.frm.grids[this.frm.grids.length] = this;
         }
 
-        this.$wrapper.on("paste", ":text", (e) => {
+        this.$wrapper.on("paste", ":text", e => {
             const table_field = this.df.fieldname;
             const grid = this.grid;
             const grid_pagination = grid.grid_pagination;
@@ -25,11 +25,11 @@ frappe.ui.form.ControlTable = class ControlTable extends frappe.ui.form.Control 
             const row_docid = $(e.target).closest(".grid-row").data("id");
             const in_grid_form = $(e.target).closest(".form-in-grid").length;
             const value_formatter_map = {
-                Date: (val) => (val ? frappe.datetime.user_to_str(val) : val),
-                Int: (val) => cint(val),
-                Check: (val) => cint(val),
-                Float: (val) => flt(val),
-                Currency: (val) => flt(val),
+                Date: val => (val ? frappe.datetime.user_to_str(val) : val),
+                Int: val => cint(val),
+                Check: val => cint(val),
+                Float: val => flt(val),
+                Currency: val => flt(val)
             };
 
             let pasted_data = frappe.utils.get_clipboard_data(e);
@@ -44,7 +44,7 @@ frappe.ui.form.ControlTable = class ControlTable extends frappe.ui.form.Control 
             let fieldtypes = [];
             // for raw data with column header
             if (this.get_field(data[0][0])) {
-                data[0].forEach((column) => {
+                data[0].forEach(column => {
                     fieldnames.push(this.get_field(column));
                     const df = frappe.meta.get_docfield(doctype, this.get_field(column));
                     fieldtypes.push(df ? df.fieldtype : "");
@@ -54,12 +54,9 @@ frappe.ui.form.ControlTable = class ControlTable extends frappe.ui.form.Control 
                 // no column header, map to the existing visible columns
                 const visible_columns = grid_rows[0].get_visible_columns();
                 let target_column_matched = false;
-                visible_columns.forEach((column) => {
+                visible_columns.forEach(column => {
                     // consider all columns after the target column.
-                    if (
-                        target_column_matched ||
-                        column.fieldname === $(e.target).data("fieldname")
-                    ) {
+                    if (target_column_matched || column.fieldname === $(e.target).data("fieldname")) {
                         fieldnames.push(column.fieldname);
                         const df = frappe.meta.get_docfield(doctype, column.fieldname);
                         fieldtypes.push(df ? df.fieldtype : "");
@@ -89,24 +86,13 @@ frappe.ui.form.ControlTable = class ControlTable extends frappe.ui.form.Control 
                                 value = value_formatter_map[fieldtypes[data_index]]
                                     ? value_formatter_map[fieldtypes[data_index]](value)
                                     : value;
-                                frappe.model.set_value(
-                                    doctype,
-                                    row_id,
-                                    fieldnames[data_index],
-                                    value,
-                                );
+                                frappe.model.set_value(doctype, row_id, fieldnames[data_index], value);
                             }
                         });
                         row_idx++;
                         if (data_length >= 10) {
                             let progress = i + 1;
-                            frappe.show_progress(
-                                __("Processing"),
-                                progress,
-                                data_length,
-                                null,
-                                true,
-                            );
+                            frappe.show_progress(__("Processing"), progress, data_length, null, true);
                         }
                     }
                 }, 0);
@@ -117,7 +103,7 @@ frappe.ui.form.ControlTable = class ControlTable extends frappe.ui.form.Control 
     get_field(field_name) {
         let fieldname;
         field_name = field_name.toLowerCase();
-        this.grid?.meta?.fields.some((field) => {
+        this.grid?.meta?.fields.some(field => {
             if (frappe.model.no_value_type.includes(field.fieldtype)) {
                 return false;
             }

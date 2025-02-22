@@ -8,13 +8,13 @@ context("Query Report", () => {
                 id: "Test ToDo Report",
                 ref_doctype: "ToDo",
                 report_type: "Query Report",
-                query: "select * from tabToDo",
+                query: "select * from tabToDo"
             },
-            true,
+            true
         ).as("doc");
         cy.create_records({
             doctype: "ToDo",
-            description: "this is a test todo for query report",
+            description: "this is a test todo for query report"
         }).as("todos");
     });
 
@@ -32,7 +32,7 @@ context("Query Report", () => {
 
                 cy.get(".datatable").should("exist");
                 cy.get("#page-query-report .page-actions .menu-btn-group button").click({
-                    force: true,
+                    force: true
                 });
                 cy.get("#page-query-report .menu-btn-group .dropdown-menu")
                     .contains("Add Column")
@@ -41,11 +41,9 @@ context("Query Report", () => {
                 cy.get('select[data-fieldname="doctype"]').select("Role", { force: true });
                 cy.get('select[data-fieldname="field"]').select("Role Name", { force: true });
                 cy.get('select[data-fieldname="insert_after"]').select("Name", { force: true });
-                cy.get_open_dialog()
-                    .findByRole("button", { name: "Submit" })
-                    .click({ force: true });
+                cy.get_open_dialog().findByRole("button", { name: "Submit" }).click({ force: true });
                 cy.get("#page-query-report .page-actions .menu-btn-group button").click({
-                    force: true,
+                    force: true
                 });
                 cy.get("#page-query-report .menu-btn-group .dropdown-menu")
                     .contains("Save")
@@ -54,11 +52,9 @@ context("Query Report", () => {
 
                 cy.get('input[data-fieldname="report_id"]').type("Test Report", {
                     delay: 100,
-                    force: true,
+                    force: true
                 });
-                cy.get_open_dialog()
-                    .findByRole("button", { name: "Submit" })
-                    .click({ timeout: 1000, force: true });
+                cy.get_open_dialog().findByRole("button", { name: "Submit" }).click({ timeout: 1000, force: true });
             });
     });
 
@@ -71,11 +67,9 @@ context("Query Report", () => {
 
         cy.get('input[data-fieldname="report_id"]').type(update_name, {
             delay: 100,
-            force: true,
+            force: true
         });
-        cy.get_open_dialog()
-            .findByRole("button", { name: "Submit" })
-            .click({ timeout: 1000, force: true });
+        cy.get_open_dialog().findByRole("button", { name: "Submit" }).click({ timeout: 1000, force: true });
 
         cy.visit("/app/query-report/" + report);
         cy.get(".datatable").should("exist");

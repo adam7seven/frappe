@@ -39,10 +39,8 @@ frappe.urllib = {
         if (url.indexOf("http://") === 0 || url.indexOf("https://") === 0) {
             return url;
         }
-        return url.substr(0, 1) === "/"
-            ? frappe.urllib.get_base_url() + url
-            : frappe.urllib.get_base_url() + "/" + url;
-    },
+        return url.substr(0, 1) === "/" ? frappe.urllib.get_base_url() + url : frappe.urllib.get_base_url() + "/" + url;
+    }
 };
 
 window.open_url_post = function open_url_post(URL, PARAMS, new_window) {

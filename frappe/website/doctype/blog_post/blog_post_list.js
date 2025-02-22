@@ -6,5 +6,5 @@ frappe.listview_settings["Blog Post"] = {
         } else {
             return [__("Not Published"), "gray", "published,=,0"];
         }
-    },
+    }
 };

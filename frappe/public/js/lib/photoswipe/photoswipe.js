@@ -61,10 +61,7 @@
                 }
             },
             hasClass: function (el, className) {
-                return (
-                    el.className &&
-                    new RegExp("(^|\\s)" + className + "(\\s|$)").test(el.className)
-                );
+                return el.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(el.className);
             },
             getChildByClass: function (parentEl, childClassName) {
                 var node = parentEl.firstChild;
@@ -101,13 +98,13 @@
                     },
                     inOut: function (k) {
                         return -(Math.cos(Math.PI * k) - 1) / 2;
-                    },
+                    }
                 },
                 cubic: {
                     out: function (k) {
                         return --k * k * k + 1;
-                    },
-                },
+                    }
+                }
                 /*
 			elastic: {
 				out: function ( k ) {
@@ -262,7 +259,7 @@
                 framework.features = features;
 
                 return features;
-            },
+            }
         };
 
         framework.detectFeatures();
@@ -347,7 +344,7 @@
             modal: true,
 
             // not fully implemented yet
-            scaleMode: "fit", // TODO
+            scaleMode: "fit" // TODO
         };
         framework.extend(_options, options);
 
@@ -449,15 +446,7 @@
                 }
 
                 styleObj[_transformKey] =
-                    _translatePrefix +
-                    x +
-                    "px, " +
-                    y +
-                    "px" +
-                    _translateSufix +
-                    " scale(" +
-                    zoom +
-                    ")";
+                    _translatePrefix + x + "px, " + y + "px" + _translateSufix + " scale(" + zoom + ")";
             },
             _applyCurrentZoomPan = function (allowRenderResolution) {
                 if (_currZoomElementStyle) {
@@ -475,12 +464,7 @@
                         }
                     }
 
-                    _applyZoomTransform(
-                        _currZoomElementStyle,
-                        _panOffset.x,
-                        _panOffset.y,
-                        _currZoomLevel,
-                    );
+                    _applyZoomTransform(_currZoomElementStyle, _panOffset.x, _panOffset.y, _currZoomLevel);
                 }
             },
             _applyZoomPanToItem = function (item) {
@@ -490,7 +474,7 @@
                         item.initialPosition.x,
                         item.initialPosition.y,
                         item.initialZoomLevel,
-                        item,
+                        item
                     );
                 }
             },
@@ -500,8 +484,7 @@
             _moveMainScroll = function (x, dragging) {
                 if (!_options.loop && dragging) {
                     var newSlideIndexOffset =
-                            _currentItemIndex +
-                            (_slideSize.x * _currPositionIndex - x) / _slideSize.x,
+                            _currentItemIndex + (_slideSize.x * _currPositionIndex - x) / _slideSize.x,
                         delta = Math.round(x - _mainScrollPos.x);
 
                     if (
@@ -517,12 +500,7 @@
             },
             _calculatePanOffset = function (axis, zoomLevel) {
                 var m = _midZoomPoint[axis] - _offset[axis];
-                return (
-                    _startPanOffset[axis] +
-                    _currPanDist[axis] +
-                    m -
-                    m * (zoomLevel / _startZoomLevel)
-                );
+                return _startPanOffset[axis] + _currPanDist[axis] + m - m * (zoomLevel / _startZoomLevel);
             },
             _equalizePoints = function (p1, p2) {
                 p1.x = p2.x;
@@ -821,7 +799,7 @@
                 self.itemHolders = _itemHolders = [
                     { el: self.container.children[0], wrap: 0, index: -1 },
                     { el: self.container.children[1], wrap: 0, index: -1 },
-                    { el: self.container.children[2], wrap: 0, index: -1 },
+                    { el: self.container.children[2], wrap: 0, index: -1 }
                 ];
 
                 // hide nearby item holders until initial zoom animation finishes (to avoid extra Paints)
@@ -834,13 +812,12 @@
                     resize: self.updateSize,
                     scroll: _updatePageScrollOffset,
                     keydown: _onKeyDown,
-                    click: _onGlobalClick,
+                    click: _onGlobalClick
                 };
 
                 // disable show/hide effects on old browsers that don't support CSS animations or transforms,
                 // old IOS, Android and Opera mobile. Blackberry seems to work fine, even older models.
-                var oldPhone =
-                    _features.isOldIOSPhone || _features.isOldAndroid || _features.isMobileOpera;
+                var oldPhone = _features.isOldIOSPhone || _features.isOldAndroid || _features.isMobileOpera;
                 if (!_features.animationName || !_features.transform || oldPhone) {
                     _options.showAnimationDuration = _options.hideAnimationDuration = 0;
                 }
@@ -859,11 +836,7 @@
                 _shout("firstUpdate");
                 _currentItemIndex = _currentItemIndex || _options.index || 0;
                 // validate index
-                if (
-                    isNaN(_currentItemIndex) ||
-                    _currentItemIndex < 0 ||
-                    _currentItemIndex >= _getNumItems()
-                ) {
+                if (isNaN(_currentItemIndex) || _currentItemIndex < 0 || _currentItemIndex >= _getNumItems()) {
                     _currentItemIndex = 0;
                 }
                 self.currItem = _getItemAt(_currentItemIndex);
@@ -906,10 +879,7 @@
                 _containerShiftIndex = -1;
                 _indexDiff = null;
                 for (i = 0; i < NUM_HOLDERS; i++) {
-                    _setTranslateX(
-                        (i + _containerShiftIndex) * _slideSize.x,
-                        _itemHolders[i].el.style,
-                    );
+                    _setTranslateX((i + _containerShiftIndex) * _slideSize.x, _itemHolders[i].el.style);
                 }
 
                 if (!_oldIE) {
@@ -1118,8 +1088,7 @@
                 _shout("beforeChange", _indexDiff);
 
                 if (diffAbs >= NUM_HOLDERS) {
-                    _containerShiftIndex +=
-                        _indexDiff + (_indexDiff > 0 ? -NUM_HOLDERS : NUM_HOLDERS);
+                    _containerShiftIndex += _indexDiff + (_indexDiff > 0 ? -NUM_HOLDERS : NUM_HOLDERS);
                     diffAbs = NUM_HOLDERS;
                 }
                 for (var i = 0; i < diffAbs; i++) {
@@ -1128,10 +1097,7 @@
                         _itemHolders[NUM_HOLDERS - 1] = tempHolder; // move first to last
 
                         _containerShiftIndex++;
-                        _setTranslateX(
-                            (_containerShiftIndex + 2) * _slideSize.x,
-                            tempHolder.el.style,
-                        );
+                        _setTranslateX((_containerShiftIndex + 2) * _slideSize.x, tempHolder.el.style);
                         self.setContent(tempHolder, _currentItemIndex - diffAbs + i + 1 + 1);
                     } else {
                         tempHolder = _itemHolders.pop();
@@ -1278,7 +1244,7 @@
                 var initialZoomLevel = _currZoomLevel;
                 var initialPanOffset = {
                     x: _panOffset.x,
-                    y: _panOffset.y,
+                    y: _panOffset.y
                 };
 
                 _roundPoint(destPanOffset);
@@ -1289,12 +1255,9 @@
                         _panOffset.x = destPanOffset.x;
                         _panOffset.y = destPanOffset.y;
                     } else {
-                        _currZoomLevel =
-                            (destZoomLevel - initialZoomLevel) * now + initialZoomLevel;
-                        _panOffset.x =
-                            (destPanOffset.x - initialPanOffset.x) * now + initialPanOffset.x;
-                        _panOffset.y =
-                            (destPanOffset.y - initialPanOffset.y) * now + initialPanOffset.y;
+                        _currZoomLevel = (destZoomLevel - initialZoomLevel) * now + initialZoomLevel;
+                        _panOffset.x = (destPanOffset.x - initialPanOffset.x) * now + initialPanOffset.x;
+                        _panOffset.y = (destPanOffset.y - initialPanOffset.y) * now + initialPanOffset.y;
                     }
 
                     if (updateFn) {
@@ -1305,18 +1268,11 @@
                 };
 
                 if (speed) {
-                    _animateProp(
-                        "customZoomTo",
-                        0,
-                        1,
-                        speed,
-                        easingFn || framework.easing.sine.inOut,
-                        onUpdate,
-                    );
+                    _animateProp("customZoomTo", 0, 1, speed, easingFn || framework.easing.sine.inOut, onUpdate);
                 } else {
                     onUpdate(1);
                 }
-            },
+            }
         };
 
         /*>>core*/
@@ -1398,10 +1354,7 @@
                 }
             },
             _canPan = function () {
-                return !(
-                    _options.scaleMode === "fit" &&
-                    _currZoomLevel === self.currItem.initialZoomLevel
-                );
+                return !(_options.scaleMode === "fit" && _currZoomLevel === self.currItem.initialZoomLevel);
             },
             // find the closest parent DOM element
             _closestElement = function (el, fn) {
@@ -1410,10 +1363,7 @@
                 }
 
                 // don't search elements above pswp__scroll-wrap
-                if (
-                    el.getAttribute("class") &&
-                    el.getAttribute("class").indexOf("pswp__scroll-wrap") > -1
-                ) {
+                if (el.getAttribute("class") && el.getAttribute("class").indexOf("pswp__scroll-wrap") > -1) {
                     return false;
                 }
 
@@ -1530,10 +1480,7 @@
                             // drag right
                             if ((startOverDiff <= 0 || mainScrollDiff < 0) && _getNumItems() > 1) {
                                 newMainScrollPos = newMainScrollPosition;
-                                if (
-                                    mainScrollDiff < 0 &&
-                                    newMainScrollPosition > _startMainScrollPos.x
-                                ) {
+                                if (mainScrollDiff < 0 && newMainScrollPosition > _startMainScrollPos.x) {
                                     newMainScrollPos = _startMainScrollPos.x;
                                 }
                             } else {
@@ -1551,10 +1498,7 @@
                             if ((startOverDiff <= 0 || mainScrollDiff > 0) && _getNumItems() > 1) {
                                 newMainScrollPos = newMainScrollPosition;
 
-                                if (
-                                    mainScrollDiff > 0 &&
-                                    newMainScrollPosition < _startMainScrollPos.x
-                                ) {
+                                if (mainScrollDiff > 0 && newMainScrollPosition < _startMainScrollPos.x) {
                                     newMainScrollPos = _startMainScrollPos.x;
                                 }
                             } else {
@@ -1669,8 +1613,8 @@
                     _posPoints = [
                         {
                             x: _currPoint.x,
-                            y: _currPoint.y,
-                        },
+                            y: _currPoint.y
+                        }
                     ];
 
                     _gestureCheckSpeedTime = _gestureStartTime = _getCurrentTime();
@@ -1724,8 +1668,7 @@
                             _direction = "h";
                         } else {
                             var diff =
-                                Math.abs(touchesList[0].x - _currPoint.x) -
-                                Math.abs(touchesList[0].y - _currPoint.y);
+                                Math.abs(touchesList[0].x - _currPoint.x) - Math.abs(touchesList[0].y - _currPoint.y);
                             // check the direction of movement
                             if (Math.abs(diff) >= DIRECTION_CHECK_OFFSET) {
                                 _direction = diff > 0 ? "h" : "v";
@@ -1778,10 +1721,7 @@
                     var zoomLevel = _calculateZoomLevel(pointsDistance);
 
                     // slightly over the of initial zoom level
-                    if (
-                        zoomLevel >
-                        self.currItem.initialZoomLevel + self.currItem.initialZoomLevel / 15
-                    ) {
+                    if (zoomLevel > self.currItem.initialZoomLevel + self.currItem.initialZoomLevel / 15) {
                         _wasOverInitialZoom = true;
                     }
 
@@ -1938,7 +1878,7 @@
                             var MSPOINTER_TYPES = {
                                 4: "mouse", // event.MSPOINTER_TYPE_MOUSE
                                 2: "touch", // event.MSPOINTER_TYPE_TOUCH
-                                3: "pen", // event.MSPOINTER_TYPE_PEN
+                                3: "pen" // event.MSPOINTER_TYPE_PEN
                             };
                             releasePoint.type = MSPOINTER_TYPES[e.pointerType];
 
@@ -1977,7 +1917,7 @@
                             releasePoint = {
                                 x: e.changedTouches[0].pageX,
                                 y: e.changedTouches[0].pageY,
-                                type: "touch",
+                                type: "touch"
                             };
                         }
                     }
@@ -2043,21 +1983,12 @@
                         var initalPanY = _panOffset.y,
                             initialBgOpacity = _bgOpacity;
 
-                        _animateProp(
-                            "verticalDrag",
-                            0,
-                            1,
-                            300,
-                            framework.easing.cubic.out,
-                            function (now) {
-                                _panOffset.y =
-                                    (self.currItem.initialPosition.y - initalPanY) * now +
-                                    initalPanY;
+                        _animateProp("verticalDrag", 0, 1, 300, framework.easing.cubic.out, function (now) {
+                            _panOffset.y = (self.currItem.initialPosition.y - initalPanY) * now + initalPanY;
 
-                                _applyBgOpacity((1 - initialBgOpacity) * now + initialBgOpacity);
-                                _applyCurrentZoomPan();
-                            },
-                        );
+                            _applyBgOpacity((1 - initialBgOpacity) * now + initialBgOpacity);
+                            _applyCurrentZoomPan();
+                        });
 
                         _shout("onVerticalDrag", 1);
                     }
@@ -2156,7 +2087,7 @@
                                         function (pos) {
                                             _panOffset[axis] = pos;
                                             _applyCurrentZoomPan();
-                                        },
+                                        }
                                     );
                                 }
                             }
@@ -2173,12 +2104,10 @@
                                     (s.slowDownRatioReverse[axis] * s.timeDiff) / 10);
 
                             s.speedDecelerationRatioAbs[axis] = Math.abs(
-                                s.lastFlickSpeed[axis] * s.speedDecelerationRatio[axis],
+                                s.lastFlickSpeed[axis] * s.speedDecelerationRatio[axis]
                             );
                             s.distanceOffset[axis] =
-                                s.lastFlickSpeed[axis] *
-                                s.speedDecelerationRatio[axis] *
-                                s.timeDiff;
+                                s.lastFlickSpeed[axis] * s.speedDecelerationRatio[axis] * s.timeDiff;
                             _panOffset[axis] += s.distanceOffset[axis];
                         }
                     },
@@ -2199,10 +2128,7 @@
                             s.calculateOverBoundsAnimOffset("x");
                             s.calculateOverBoundsAnimOffset("y");
 
-                            if (
-                                s.speedDecelerationRatioAbs.x < 0.05 &&
-                                s.speedDecelerationRatioAbs.y < 0.05
-                            ) {
+                            if (s.speedDecelerationRatioAbs.x < 0.05 && s.speedDecelerationRatioAbs.y < 0.05) {
                                 // round pan position
                                 _panOffset.x = Math.round(_panOffset.x);
                                 _panOffset.y = Math.round(_panOffset.y);
@@ -2212,7 +2138,7 @@
                                 return;
                             }
                         }
-                    },
+                    }
                 };
                 return s;
             },
@@ -2226,12 +2152,8 @@
                 animData.backAnimStarted = {};
 
                 // Avoid acceleration animation if speed is too low
-                if (
-                    Math.abs(animData.lastFlickSpeed.x) <= 0.05 &&
-                    Math.abs(animData.lastFlickSpeed.y) <= 0.05
-                ) {
-                    animData.speedDecelerationRatioAbs.x =
-                        animData.speedDecelerationRatioAbs.y = 0;
+                if (Math.abs(animData.lastFlickSpeed.x) <= 0.05 && Math.abs(animData.lastFlickSpeed.y) <= 0.05) {
+                    animData.speedDecelerationRatioAbs.x = animData.speedDecelerationRatioAbs.y = 0;
 
                     // Run pan drag release animation. E.g. if you drag image and release finger without momentum.
                     animData.calculateOverBoundsAnimOffset("x");
@@ -2297,10 +2219,7 @@
                 var animateToDist = Math.abs(animateToX - _mainScrollPos.x);
                 var finishAnimDuration;
 
-                if (
-                    !itemChanged &&
-                    animateToX > _mainScrollPos.x !== _releaseAnimData.lastFlickSpeed.x > 0
-                ) {
+                if (!itemChanged && animateToX > _mainScrollPos.x !== _releaseAnimData.lastFlickSpeed.x > 0) {
                     // "return to current" duration, e.g. when dragging from slide 0 to -1
                     finishAnimDuration = 333;
                 } else {
@@ -2338,7 +2257,7 @@
                         }
 
                         _shout("mainScrollAnimComplete");
-                    },
+                    }
                 );
 
                 if (itemChanged) {
@@ -2366,12 +2285,7 @@
                     onUpdate,
                     initialOpacity = _bgOpacity;
 
-                if (
-                    _opacityChanged &&
-                    !_isZoomingIn &&
-                    !_wasOverInitialZoom &&
-                    _currZoomLevel < minZoomLevel
-                ) {
+                if (_opacityChanged && !_isZoomingIn && !_wasOverInitialZoom && _currZoomLevel < minZoomLevel) {
                     //_closedByScroll = true;
                     self.close();
                     return true;
@@ -2426,8 +2340,7 @@
                     _downEvents = _dragStartEvent;
 
                     if (_pointerEventEnabled && !_likelyTouchDevice) {
-                        _likelyTouchDevice =
-                            navigator.maxTouchPoints > 1 || navigator.msMaxTouchPoints > 1;
+                        _likelyTouchDevice = navigator.maxTouchPoints > 1 || navigator.msMaxTouchPoints > 1;
                     }
                     // make variable public
                     self.likelyTouchDevice = _likelyTouchDevice;
@@ -2437,8 +2350,7 @@
                     _globalEventHandlers[_dragEndEvent] = _onDragRelease; // the Kraken
 
                     if (_dragCancelEvent) {
-                        _globalEventHandlers[_dragCancelEvent] =
-                            _globalEventHandlers[_dragEndEvent];
+                        _globalEventHandlers[_dragCancelEvent] = _globalEventHandlers[_dragEndEvent];
                     }
 
                     // Bind mouse events on device with detected hardware touch support, in case it supports multiple types of input.
@@ -2454,8 +2366,8 @@
                         // don't allow pan to next slide from zoomed state on Desktop
                         _options.allowPanToNext = false;
                     }
-                },
-            },
+                }
+            }
         });
 
         /*>>gestures*/
@@ -2488,13 +2400,10 @@
                     thumbBounds = item.initialLayout;
                     item.initialLayout = null;
                 } else {
-                    thumbBounds =
-                        _options.getThumbBoundsFn && _options.getThumbBoundsFn(_currentItemIndex);
+                    thumbBounds = _options.getThumbBoundsFn && _options.getThumbBoundsFn(_currentItemIndex);
                 }
 
-                var duration = out
-                    ? _options.hideAnimationDuration
-                    : _options.showAnimationDuration;
+                var duration = out ? _options.hideAnimationDuration : _options.showAnimationDuration;
 
                 var onComplete = function () {
                     _stopAnimation("initialZoom");
@@ -2540,10 +2449,7 @@
 
                 var startAnimation = function () {
                     var closeWithRaf = _closedByScroll,
-                        fadeEverything =
-                            !self.currItem.src ||
-                            self.currItem.loadError ||
-                            _options.showHideOpacity;
+                        fadeEverything = !self.currItem.src || self.currItem.loadError || _options.showHideOpacity;
 
                     // apply hw-acceleration to image
                     if (item.miniImg) {
@@ -2567,10 +2473,7 @@
 
                     if (fadeEverything) {
                         if (out) {
-                            framework[(closeWithRaf ? "remove" : "add") + "Class"](
-                                template,
-                                "pswp--animate_opacity",
-                            );
+                            framework[(closeWithRaf ? "remove" : "add") + "Class"](template, "pswp--animate_opacity");
                         } else {
                             setTimeout(function () {
                                 framework.addClass(template, "pswp--animate_opacity");
@@ -2605,7 +2508,7 @@
                                 var destZoomLevel = thumbBounds.w / item.w,
                                     initialPanOffset = {
                                         x: _panOffset.x,
-                                        y: _panOffset.y,
+                                        y: _panOffset.y
                                     },
                                     initialZoomLevel = _currZoomLevel,
                                     initalBgOpacity = _bgOpacity,
@@ -2616,16 +2519,11 @@
                                             _panOffset.y = thumbBounds.y - _currentWindowScrollY;
                                         } else {
                                             _currZoomLevel =
-                                                (destZoomLevel - initialZoomLevel) * now +
-                                                initialZoomLevel;
+                                                (destZoomLevel - initialZoomLevel) * now + initialZoomLevel;
                                             _panOffset.x =
-                                                (thumbBounds.x - initialPanOffset.x) * now +
-                                                initialPanOffset.x;
+                                                (thumbBounds.x - initialPanOffset.x) * now + initialPanOffset.x;
                                             _panOffset.y =
-                                                (thumbBounds.y -
-                                                    _currentWindowScrollY -
-                                                    initialPanOffset.y) *
-                                                    now +
+                                                (thumbBounds.y - _currentWindowScrollY - initialPanOffset.y) * now +
                                                 initialPanOffset.y;
                                         }
 
@@ -2633,9 +2531,7 @@
                                         if (fadeEverything) {
                                             template.style.opacity = 1 - now;
                                         } else {
-                                            _applyBgOpacity(
-                                                initalBgOpacity - now * initalBgOpacity,
-                                            );
+                                            _applyBgOpacity(initalBgOpacity - now * initalBgOpacity);
                                         }
                                     };
 
@@ -2647,7 +2543,7 @@
                                         duration,
                                         framework.easing.cubic.out,
                                         onUpdate,
-                                        onComplete,
+                                        onComplete
                                     );
                                 } else {
                                     onUpdate(1);
@@ -2655,7 +2551,7 @@
                                 }
                             }
                         },
-                        out ? 25 : 90,
+                        out ? 25 : 90
                     ); // Main purpose of this delay is to give browser time to paint and
                     // create composite layers of PhotoSwipe UI parts (background, controls, caption, arrows).
                     // Which avoids lag at the beginning of scale transition.
@@ -2685,7 +2581,7 @@
                 preload: [1, 1],
                 getNumItemsFn: function () {
                     return _items.length;
-                },
+                }
             };
 
         var _getItemAt,
@@ -2695,7 +2591,7 @@
                 return {
                     center: { x: 0, y: 0 },
                     max: { x: 0, y: 0 },
-                    min: { x: 0, y: 0 },
+                    min: { x: 0, y: 0 }
                 };
             },
             _calculateSingleItemPanBounds = function (item, realPanElementW, realPanElementH) {
@@ -2703,8 +2599,7 @@
 
                 // position of element when it's centered
                 bounds.center.x = Math.round((_tempPanAreaSize.x - realPanElementW) / 2);
-                bounds.center.y =
-                    Math.round((_tempPanAreaSize.y - realPanElementH) / 2) + item.vGap.top;
+                bounds.center.y = Math.round((_tempPanAreaSize.y - realPanElementH) / 2) + item.vGap.top;
 
                 // maximum pan position
                 bounds.max.x =
@@ -2719,8 +2614,7 @@
 
                 // minimum pan position
                 bounds.min.x = realPanElementW > _tempPanAreaSize.x ? 0 : bounds.center.x;
-                bounds.min.y =
-                    realPanElementH > _tempPanAreaSize.y ? item.vGap.top : bounds.center.y;
+                bounds.min.y = realPanElementH > _tempPanAreaSize.y ? item.vGap.top : bounds.center.y;
             },
             _calculateItemSize = function (item, viewportSize, zoomLevel) {
                 if (item.src && !item.loadError) {
@@ -2785,14 +2679,7 @@
                     return item.bounds;
                 }
             },
-            _appendImage = function (
-                index,
-                item,
-                baseDiv,
-                img,
-                preventAnimation,
-                keepPlaceholder,
-            ) {
+            _appendImage = function (index, item, baseDiv, img, preventAnimation, keepPlaceholder) {
                 if (item.loadError) {
                     return;
                 }
@@ -2882,7 +2769,7 @@
                                 poolItem.baseDiv,
                                 poolItem.img,
                                 false,
-                                poolItem.clearPlaceholder,
+                                poolItem.clearPlaceholder
                             );
                         }
                     }
@@ -2936,8 +2823,7 @@
 
                     _listen("initialLayout", function () {
                         self.currItem.initialLayout =
-                            _options.getThumbBoundsFn &&
-                            _options.getThumbBoundsFn(_currentItemIndex);
+                            _options.getThumbBoundsFn && _options.getThumbBoundsFn(_currentItemIndex);
                     });
 
                     _listen("mainScrollAnimComplete", _appendImagesPool);
@@ -3055,17 +2941,14 @@
                                     return;
                                 }
                                 if (!item.imageAppended) {
-                                    if (
-                                        _features.transform &&
-                                        (_mainScrollAnimating || _initialZoomRunning)
-                                    ) {
+                                    if (_features.transform && (_mainScrollAnimating || _initialZoomRunning)) {
                                         _imagesToAppendPool.push({
                                             item: item,
                                             baseDiv: baseDiv,
                                             img: item.img,
                                             index: index,
                                             holder: holder,
-                                            clearPlaceholder: true,
+                                            clearPlaceholder: true
                                         });
                                     } else {
                                         _appendImage(
@@ -3074,7 +2957,7 @@
                                             baseDiv,
                                             item.img,
                                             _mainScrollAnimating || _initialZoomRunning,
-                                            true,
+                                            true
                                         );
                                     }
                                 } else {
@@ -3094,14 +2977,9 @@
 
                         if (framework.features.transform) {
                             var placeholderClassName = "pswp__img pswp__img--placeholder";
-                            placeholderClassName += item.msrc
-                                ? ""
-                                : " pswp__img--placeholder--blank";
+                            placeholderClassName += item.msrc ? "" : " pswp__img--placeholder--blank";
 
-                            var placeholder = framework.createEl(
-                                placeholderClassName,
-                                item.msrc ? "img" : "",
-                            );
+                            var placeholder = framework.createEl(placeholderClassName, item.msrc ? "img" : "");
                             if (item.msrc) {
                                 placeholder.src = item.msrc;
                             }
@@ -3124,7 +3002,7 @@
                                     baseDiv: baseDiv,
                                     img: item.img,
                                     index: index,
-                                    holder: holder,
+                                    holder: holder
                                 });
                             } else {
                                 _appendImage(index, item, baseDiv, item.img, true, true);
@@ -3155,8 +3033,8 @@
                         item.img.onload = item.img.onerror = null;
                     }
                     item.loaded = item.loading = item.img = item.imageAppended = false;
-                },
-            },
+                }
+            }
         });
 
         /*>>items-controller*/
@@ -3177,7 +3055,7 @@
                         origEvent: origEvent,
                         target: origEvent.target,
                         releasePoint: releasePoint,
-                        pointerType: pointerType || "touch",
+                        pointerType: pointerType || "touch"
                     };
 
                 e.initCustomEvent("pswpTap", true, true, eDetail);
@@ -3225,10 +3103,7 @@
 
                         var clickedTagName = e.target.tagName.toUpperCase();
                         // avoid double tap delay on buttons and elements that have class pswp__single-tap
-                        if (
-                            clickedTagName === "BUTTON" ||
-                            framework.hasClass(e.target, "pswp__single-tap")
-                        ) {
+                        if (clickedTagName === "BUTTON" || framework.hasClass(e.target, "pswp__single-tap")) {
                             _dispatchTapEvent(e, releasePoint);
                             return;
                         }
@@ -3240,8 +3115,8 @@
                             tapTimer = null;
                         }, 300);
                     }
-                },
-            },
+                }
+            }
         });
 
         /*>>tap*/
@@ -3399,7 +3274,7 @@
                 toggleDesktopZoom: function (centerPoint) {
                     centerPoint = centerPoint || {
                         x: _viewportSize.x / 2 + _offset.x,
-                        y: _viewportSize.y / 2 + _offset.y,
+                        y: _viewportSize.y / 2 + _offset.y
                     };
 
                     var doubleTapZoomLevel = _options.getDoubleTapZoom(true, self.currItem);
@@ -3407,17 +3282,10 @@
 
                     self.mouseZoomedIn = !zoomOut;
 
-                    self.zoomTo(
-                        zoomOut ? self.currItem.initialZoomLevel : doubleTapZoomLevel,
-                        centerPoint,
-                        333,
-                    );
-                    framework[(!zoomOut ? "add" : "remove") + "Class"](
-                        template,
-                        "pswp--zoomed-in",
-                    );
-                },
-            },
+                    self.zoomTo(zoomOut ? self.currItem.initialZoomLevel : doubleTapZoomLevel, centerPoint, 333);
+                    framework[(!zoomOut ? "add" : "remove") + "Class"](template, "pswp--zoomed-in");
+                }
+            }
         });
 
         /*>>desktop-zoom*/
@@ -3438,7 +3306,7 @@
 
         var _historyDefaultOptions = {
             history: true,
-            galleryUID: 1,
+            galleryUID: 1
         };
 
         var _historyUpdateTimeout,
@@ -3530,8 +3398,7 @@
                     // carry forward any custom pid assigned to the item
                     pid = item.pid;
                 }
-                var newHash =
-                    _initialHash + "&" + "gid=" + _options.galleryUID + "&" + "pid=" + pid;
+                var newHash = _initialHash + "&" + "gid=" + _options.galleryUID + "&" + "pid=" + pid;
 
                 if (!_historyChanged) {
                     if (_windowLoc.hash.indexOf(newHash) === -1) {
@@ -3544,11 +3411,7 @@
 
                 if (_supportsPushState) {
                     if ("#" + newHash !== window.location.hash) {
-                        history[_historyChanged ? "replaceState" : "pushState"](
-                            "",
-                            document.title,
-                            newURL,
-                        );
+                        history[_historyChanged ? "replaceState" : "pushState"]("", document.title, newURL);
                     }
                 } else {
                     if (_historyChanged) {
@@ -3601,11 +3464,7 @@
                                 } else {
                                     if (_supportsPushState) {
                                         // remove hash from url without refreshing it or scrolling to top
-                                        history.pushState(
-                                            "",
-                                            document.title,
-                                            _windowLoc.pathname + _windowLoc.search,
-                                        );
+                                        history.pushState("", document.title, _windowLoc.pathname + _windowLoc.search);
                                     } else {
                                         _windowLoc.hash = "";
                                     }
@@ -3674,8 +3533,8 @@
                     } else {
                         _historyUpdateTimeout = setTimeout(_updateHash, 800);
                     }
-                },
-            },
+                }
+            }
         });
 
         /*>>history*/

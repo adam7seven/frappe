@@ -14,9 +14,9 @@ frappe.ui.form.on("Deleted Document", {
                     args: { id: frm.doc.id },
                     callback: function (r) {
                         frm.reload_doc();
-                    },
+                    }
                 });
             });
         }
-    },
+    }
 });

@@ -1,10 +1,10 @@
 frappe.ui.form.on("Web Form", {
     setup: function () {
-        frappe.meta.docfield_map["Web Form Field"].fieldtype.formatter = (value) => {
+        frappe.meta.docfield_map["Web Form Field"].fieldtype.formatter = value => {
             const prefix = {
                 "Page Break": "--red-600",
                 "Section Break": "--blue-600",
-                "Column Break": "--yellow-600",
+                "Column Break": "--yellow-600"
             };
             if (prefix[value]) {
                 value = `<span class="bold" style="color: var(${prefix[value]})">${value}</span>`;
@@ -12,12 +12,12 @@ frappe.ui.form.on("Web Form", {
             return value;
         };
 
-        frappe.meta.docfield_map["Web Form Field"].fieldname.formatter = (value) => {
+        frappe.meta.docfield_map["Web Form Field"].fieldname.formatter = value => {
             if (!value) return;
             return frappe.unscrub(value);
         };
 
-        frappe.meta.docfield_map["Web Form List Column"].fieldname.formatter = (value) => {
+        frappe.meta.docfield_map["Web Form List Column"].fieldname.formatter = value => {
             if (!value) return;
             return frappe.unscrub(value);
         };
@@ -36,9 +36,7 @@ frappe.ui.form.on("Web Form", {
 
         if (frm.doc.is_standard && !frappe.boot.developer_mode) {
             frm.disable_form();
-            frappe.show_alert(
-                __("Standard Web Forms can not be modified, duplicate the Web Form instead."),
-            );
+            frappe.show_alert(__("Standard Web Forms can not be modified, duplicate the Web Form instead."));
         }
         render_list_settings_message(frm);
 
@@ -73,9 +71,7 @@ frappe.ui.form.on("Web Form", {
             frappe.throw(__("Atleast one field is required in Web Form Fields Table"));
         }
 
-        let page_break_count = frm.doc.web_form_fields.filter(
-            (f) => f.fieldtype == "Page Break",
-        ).length;
+        let page_break_count = frm.doc.web_form_fields.filter(f => f.fieldtype == "Page Break").length;
 
         if (page_break_count >= 10) {
             frappe.throw(__("There can be only 9 Page Break fields in a Web Form"));
@@ -91,23 +87,17 @@ frappe.ui.form.on("Web Form", {
 
     add_get_fields_button(frm) {
         frm.add_custom_button(__("Get Fields"), () => {
-            let webform_fieldtypes = frappe.meta
-                .get_field("Web Form Field", "fieldtype")
-                .options.split("\n");
+            let webform_fieldtypes = frappe.meta.get_field("Web Form Field", "fieldtype").options.split("\n");
 
-            let added_fields = (frm.doc.web_form_fields || []).map((d) => d.fieldname);
+            let added_fields = (frm.doc.web_form_fields || []).map(d => d.fieldname);
 
-            get_fields_for_doctype(frm.doc.doc_type).then((fields) => {
+            get_fields_for_doctype(frm.doc.doc_type).then(fields => {
                 for (let df of fields) {
                     let fieldtype = df.fieldtype;
                     if (fieldtype == "Tab Break") {
                         fieldtype = "Page Break";
                     }
-                    if (
-                        webform_fieldtypes.includes(fieldtype) &&
-                        !added_fields.includes(df.fieldname) &&
-                        !df.hidden
-                    ) {
+                    if (webform_fieldtypes.includes(fieldtype) && !added_fields.includes(df.fieldname) && !df.hidden) {
                         frm.add_child("web_form_fields", {
                             fieldname: df.fieldname,
                             label: df.label,
@@ -119,7 +109,7 @@ frappe.ui.form.on("Web Form", {
                             precision: df.precision,
                             depends_on: df.depends_on,
                             mandatory_depends_on: df.mandatory_depends_on,
-                            read_only_depends_on: df.read_only_depends_on,
+                            read_only_depends_on: df.read_only_depends_on
                         });
                     }
                 }
@@ -132,12 +122,10 @@ frappe.ui.form.on("Web Form", {
     set_fields(frm) {
         let doc = frm.doc;
 
-        let update_options = (options) => {
-            [frm.fields_dict.web_form_fields.grid, frm.fields_dict.list_columns.grid].forEach(
-                (obj) => {
-                    obj.update_docfield_property("fieldname", "options", options);
-                },
-            );
+        let update_options = options => {
+            [frm.fields_dict.web_form_fields.grid, frm.fields_dict.list_columns.grid].forEach(obj => {
+                obj.update_docfield_property("fieldname", "options", options);
+            });
         };
 
         if (!doc.doc_type) {
@@ -148,23 +136,23 @@ frappe.ui.form.on("Web Form", {
 
         update_options([`Fetching fields from ${doc.doc_type}...`]);
 
-        get_fields_for_doctype(doc.doc_type).then((fields) => {
-            let as_select_option = (df) => ({
+        get_fields_for_doctype(doc.doc_type).then(fields => {
+            let as_select_option = df => ({
                 label: df.label,
-                value: df.fieldname,
+                value: df.fieldname
             });
             update_options(fields.map(as_select_option));
 
             let currency_fields = fields
-                .filter((df) => ["Currency", "Float"].includes(df.fieldtype))
+                .filter(df => ["Currency", "Float"].includes(df.fieldtype))
                 .map(as_select_option);
             if (!currency_fields.length) {
                 currency_fields = [
                     {
                         label: `No currency fields in ${doc.doc_type}`,
                         value: "",
-                        disabled: true,
-                    },
+                        disabled: true
+                    }
                 ];
             }
             frm.set_df_property("amount_field", "options", currency_fields);
@@ -241,12 +229,12 @@ frappe.ui.form.on("Web Form", {
         let fields = [
             {
                 fieldtype: "HTML",
-                fieldname: "filter_area",
-            },
+                fieldname: "filter_area"
+            }
         ];
 
         if (filters?.length) {
-            filters.forEach((filter) => {
+            filters.forEach(filter => {
                 const filter_row = $(`<tr>
 							<td>${filter[1]}</td>
 							<td>${filter[2] || ""}</td>
@@ -277,13 +265,13 @@ frappe.ui.form.on("Web Form", {
                         frm.trigger("render_condition_table");
                     }
                 },
-                primary_action_label: "Set",
+                primary_action_label: "Set"
             });
 
             frm.filter_group = new frappe.ui.FilterGroup({
                 parent: dialog.get_field("filter_area").$wrapper,
                 doctype: frm.doc.doc_type,
-                on_change: () => {},
+                on_change: () => {}
             });
             filters && frm.filter_group.add_filters_to_filter_group(filters);
 
@@ -291,7 +279,7 @@ frappe.ui.form.on("Web Form", {
 
             dialog.set_values(filters);
         });
-    },
+    }
 });
 
 frappe.ui.form.on("Web Form List Column", {
@@ -302,7 +290,7 @@ frappe.ui.form.on("Web Form List Column", {
         doc.fieldtype = df.fieldtype;
         doc.label = df.label;
         frm.refresh_field("list_columns");
-    },
+    }
 });
 
 frappe.ui.form.on("Web Form Field", {
@@ -310,11 +298,8 @@ frappe.ui.form.on("Web Form Field", {
         let doc = frappe.get_doc(doctype, id);
 
         if (doc.fieldtype == "Page Break") {
-            let page_break_count = frm.doc.web_form_fields.filter(
-                (f) => f.fieldtype == "Page Break",
-            ).length;
-            page_break_count >= 10 &&
-                frappe.throw(__("There can be only 9 Page Break fields in a Web Form"));
+            let page_break_count = frm.doc.web_form_fields.filter(f => f.fieldtype == "Page Break").length;
+            page_break_count >= 10 && frappe.throw(__("There can be only 9 Page Break fields in a Web Form"));
         }
 
         if (["Section Break", "Column Break", "Page Break"].includes(doc.fieldtype)) {
@@ -340,15 +325,14 @@ frappe.ui.form.on("Web Form Field", {
         doc.read_only_depends_on = df.read_only_depends_on;
 
         frm.refresh_field("web_form_fields");
-    },
+    }
 });
 
 function get_fields_for_doctype(doctype) {
-    return new Promise((resolve) => frappe.model.with_doctype(doctype, resolve)).then(() => {
-        return frappe.meta.get_docfields(doctype).filter((df) => {
+    return new Promise(resolve => frappe.model.with_doctype(doctype, resolve)).then(() => {
+        return frappe.meta.get_docfields(doctype).filter(df => {
             return (
-                (frappe.model.is_value_type(df.fieldtype) &&
-                    !["lft", "rgt"].includes(df.fieldname)) ||
+                (frappe.model.is_value_type(df.fieldtype) && !["lft", "rgt"].includes(df.fieldname)) ||
                 ["Table", "Table Multiselect"].includes(df.fieldtype) ||
                 frappe.model.layout_fields.includes(df.fieldtype)
             );
@@ -364,10 +348,9 @@ function render_list_settings_message(frm) {
 				${__("login_required")}
 			</code>
 		`;
-        let message = __(
-            "Login is required to see web form list view. Enable {0} to see list settings",
-            [go_to_login_required_field],
-        );
+        let message = __("Login is required to see web form list view. Enable {0} to see list settings", [
+            go_to_login_required_field
+        ]);
         $(frm.fields_dict["list_setting_message"].wrapper)
             .html($(`<div class="form-message blue">${message}</div>`))
             .find("code")

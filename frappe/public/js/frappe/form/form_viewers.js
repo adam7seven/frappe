@@ -38,7 +38,7 @@ frappe.ui.form.FormViewers = class FormViewers {
         }
         let avatar_group = frappe.avatar_group(this.active_users, 5, {
             align: "left",
-            overlap: true,
+            overlap: true
         });
         this.parent.empty().append(avatar_group);
     }
@@ -52,10 +52,10 @@ frappe.ui.form.FormViewers = class FormViewers {
     }
 
     async update_users({ doctype, docid, users = [] }) {
-        users = users.filter((u) => u != frappe.session.user);
+        users = users.filter(u => u != frappe.session.user);
 
-        const added_users = users.filter((user) => !this.past_users.includes(user));
-        const removed_users = this.past_users.filter((user) => !users.includes(user));
+        const added_users = users.filter(user => !this.past_users.includes(user));
+        const removed_users = this.past_users.filter(user => !users.includes(user));
         const changed_users = [...added_users, ...removed_users];
 
         if (changed_users.length === 0) return;
@@ -78,7 +78,7 @@ frappe.ui.form.FormViewers = class FormViewers {
         if (!unknown_users.length) return;
 
         const data = await frappe.xcall("frappe.desk.form.load.get_user_info_for_viewers", {
-            users: unknown_users,
+            users: unknown_users
         });
         Object.assign(frappe.boot.user_info, data);
     }

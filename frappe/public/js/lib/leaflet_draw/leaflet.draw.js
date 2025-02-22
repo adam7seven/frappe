@@ -17,15 +17,15 @@
                 toolbar: {
                     actions: {
                         title: "Cancel drawing",
-                        text: "Cancel",
+                        text: "Cancel"
                     },
                     finish: {
                         title: "Finish drawing",
-                        text: "Finish",
+                        text: "Finish"
                     },
                     undo: {
                         title: "Delete last point drawn",
-                        text: "Delete last point",
+                        text: "Delete last point"
                     },
                     buttons: {
                         polyline: "Draw a polyline",
@@ -33,90 +33,90 @@
                         rectangle: "Draw a rectangle",
                         circle: "Draw a circle",
                         marker: "Draw a marker",
-                        circlemarker: "Draw a circlemarker",
-                    },
+                        circlemarker: "Draw a circlemarker"
+                    }
                 },
                 handlers: {
                     circle: {
                         tooltip: {
-                            start: "Click and drag to draw circle.",
+                            start: "Click and drag to draw circle."
                         },
-                        radius: "Radius",
+                        radius: "Radius"
                     },
                     circlemarker: {
                         tooltip: {
-                            start: "Click map to place circle marker.",
-                        },
+                            start: "Click map to place circle marker."
+                        }
                     },
                     marker: {
                         tooltip: {
-                            start: "Click map to place marker.",
-                        },
+                            start: "Click map to place marker."
+                        }
                     },
                     polygon: {
                         tooltip: {
                             start: "Click to start drawing shape.",
                             cont: "Click to continue drawing shape.",
-                            end: "Click first point to close this shape.",
-                        },
+                            end: "Click first point to close this shape."
+                        }
                     },
                     polyline: {
                         error: "<strong>Error:</strong> shape edges cannot cross!",
                         tooltip: {
                             start: "Click to start drawing line.",
                             cont: "Click to continue drawing line.",
-                            end: "Click last point to finish line.",
-                        },
+                            end: "Click last point to finish line."
+                        }
                     },
                     rectangle: {
                         tooltip: {
-                            start: "Click and drag to draw rectangle.",
-                        },
+                            start: "Click and drag to draw rectangle."
+                        }
                     },
                     simpleshape: {
                         tooltip: {
-                            end: "Release mouse to finish drawing.",
-                        },
-                    },
-                },
+                            end: "Release mouse to finish drawing."
+                        }
+                    }
+                }
             },
             edit: {
                 toolbar: {
                     actions: {
                         save: {
                             title: "Save changes",
-                            text: "Save",
+                            text: "Save"
                         },
                         cancel: {
                             title: "Cancel editing, discards all changes",
-                            text: "Cancel",
+                            text: "Cancel"
                         },
                         clearAll: {
                             title: "Clear all layers",
-                            text: "Clear All",
-                        },
+                            text: "Clear All"
+                        }
                     },
                     buttons: {
                         edit: "Edit layers",
                         editDisabled: "No layers to edit",
                         remove: "Delete layers",
-                        removeDisabled: "No layers to delete",
-                    },
+                        removeDisabled: "No layers to delete"
+                    }
                 },
                 handlers: {
                     edit: {
                         tooltip: {
                             text: "Drag handles or markers to edit features.",
-                            subtext: "Click cancel to undo changes.",
-                        },
+                            subtext: "Click cancel to undo changes."
+                        }
                     },
                     remove: {
                         tooltip: {
-                            text: "Click on a feature to remove.",
-                        },
-                    },
-                },
-            },
+                            text: "Click on a feature to remove."
+                        }
+                    }
+                }
+            }
         }),
         (L.Draw.Event = {}),
         (L.Draw.Event.CREATED = "draw:created"),
@@ -141,11 +141,7 @@
                     (this._popupPane = t._panes.popupPane),
                     e &&
                         e.shapeOptions &&
-                        (e.shapeOptions = L.Util.extend(
-                            {},
-                            this.options.shapeOptions,
-                            e.shapeOptions,
-                        )),
+                        (e.shapeOptions = L.Util.extend({}, this.options.shapeOptions, e.shapeOptions)),
                     L.setOptions(this, e);
                 var version = L.version.split(".");
                 if (parseInt(version[0], 10) === 1 && parseInt(version[1], 10) >= 2) {
@@ -158,20 +154,20 @@
                 this._enabled ||
                     (L.Handler.prototype.enable.call(this),
                     this.fire("enabled", {
-                        handler: this.type,
+                        handler: this.type
                     }),
                     this._map.fire(L.Draw.Event.DRAWSTART, {
-                        layerType: this.type,
+                        layerType: this.type
                     }));
             },
             disable: function () {
                 this._enabled &&
                     (L.Handler.prototype.disable.call(this),
                     this._map.fire(L.Draw.Event.DRAWSTOP, {
-                        layerType: this.type,
+                        layerType: this.type
                     }),
                     this.fire("disabled", {
-                        handler: this.type,
+                        handler: this.type
                     }));
             },
             addHooks: function () {
@@ -195,20 +191,20 @@
             _fireCreatedEvent: function (t) {
                 this._map.fire(L.Draw.Event.CREATED, {
                     layer: t,
-                    layerType: this.type,
+                    layerType: this.type
                 });
             },
             _cancelDrawing: function (t) {
                 27 === t.keyCode &&
                     (this._map.fire("draw:canceled", {
-                        layerType: this.type,
+                        layerType: this.type
                     }),
                     this.disable());
-            },
+            }
         })),
         (L.Draw.Polyline = L.Draw.Feature.extend({
             statics: {
-                TYPE: "polyline",
+                TYPE: "polyline"
             },
             Poly: L.Polyline,
             options: {
@@ -216,15 +212,15 @@
                 repeatMode: !1,
                 drawError: {
                     color: "#b00b00",
-                    timeout: 2500,
+                    timeout: 2500
                 },
                 icon: new L.DivIcon({
                     iconSize: new L.Point(8, 8),
-                    className: "leaflet-div-icon leaflet-editing-icon",
+                    className: "leaflet-div-icon leaflet-editing-icon"
                 }),
                 touchIcon: new L.DivIcon({
                     iconSize: new L.Point(20, 20),
-                    className: "leaflet-div-icon leaflet-editing-icon leaflet-touch-icon",
+                    className: "leaflet-div-icon leaflet-editing-icon leaflet-touch-icon"
                 }),
                 guidelineDistance: 20,
                 maxGuideLineLength: 4e3,
@@ -234,21 +230,19 @@
                     weight: 4,
                     opacity: 0.5,
                     fill: !1,
-                    clickable: !0,
+                    clickable: !0
                 },
                 metric: !0,
                 feet: !0,
                 nautic: !1,
                 showLength: !0,
                 zIndexOffset: 2e3,
-                factor: 1,
+                factor: 1
             },
             initialize: function (t, e) {
                 L.Browser.touch && (this.options.icon = this.options.touchIcon),
                     (this.options.drawError.message = L.drawLocal.draw.handlers.polyline.error),
-                    e &&
-                        e.drawError &&
-                        (e.drawError = L.Util.extend({}, this.options.drawError, e.drawError)),
+                    e && e.drawError && (e.drawError = L.Util.extend({}, this.options.drawError, e.drawError)),
                     (this.type = L.Draw.Polyline.TYPE),
                     L.Draw.Feature.prototype.initialize.call(this, t, e);
             },
@@ -265,10 +259,10 @@
                                 icon: L.divIcon({
                                     className: "leaflet-mouse-marker",
                                     iconAnchor: [20, 20],
-                                    iconSize: [40, 40],
+                                    iconSize: [40, 40]
                                 }),
                                 opacity: 0,
-                                zIndexOffset: this.options.zIndexOffset,
+                                zIndexOffset: this.options.zIndexOffset
                             })),
                         this._mouseMarker
                             .on("mouseout", this._onMouseOut, this)
@@ -321,11 +315,7 @@
                 }
             },
             addVertex: function (t) {
-                if (
-                    this._markers.length >= 2 &&
-                    !this.options.allowIntersection &&
-                    this._poly.newLatLngIntersects(t)
-                )
+                if (this._markers.length >= 2 && !this.options.allowIntersection && this._poly.newLatLngIntersects(t))
                     return void this._showErrorTooltip();
                 this._errorShown && this._hideErrorTooltip(),
                     this._markers.push(this._createMarker(t)),
@@ -335,14 +325,10 @@
             },
             completeShape: function () {
                 this._markers.length <= 1 ||
-                    (this._fireCreatedEvent(),
-                    this.disable(),
-                    this.options.repeatMode && this.enable());
+                    (this._fireCreatedEvent(), this.disable(), this.options.repeatMode && this.enable());
             },
             _finishShape: function () {
-                var t = this._poly._defaultShape
-                        ? this._poly._defaultShape()
-                        : this._poly.getLatLngs(),
+                var t = this._poly._defaultShape ? this._poly._defaultShape() : this._poly.getLatLngs(),
                     e = this._poly.newLatLngIntersects(t[t.length - 1]);
                 if ((!this.options.allowIntersection && e) || !this._shapeIsValid())
                     return void this._showErrorTooltip();
@@ -365,7 +351,7 @@
             },
             _vertexChanged: function (t, e) {
                 this._map.fire(L.Draw.Event.DRAWVERTEX, {
-                    layers: this._markerGroup,
+                    layers: this._markerGroup
                 }),
                     this._updateFinishHandler(),
                     this._updateRunningMeasure(t, e),
@@ -425,8 +411,7 @@
                 var e;
                 if (this._markers.length > 0) {
                     var i;
-                    if (this.type === L.Draw.Polyline.TYPE)
-                        i = this._markers[this._markers.length - 1];
+                    if (this.type === L.Draw.Polyline.TYPE) i = this._markers[this._markers.length - 1];
                     else {
                         if (this.type !== L.Draw.Polygon.TYPE) return 1 / 0;
                         i = this._markers[0];
@@ -434,7 +419,7 @@
                     var o = this._map.latLngToContainerPoint(i.getLatLng()),
                         n = new L.Marker(t, {
                             icon: this.options.icon,
-                            zIndexOffset: 2 * this.options.zIndexOffset,
+                            zIndexOffset: 2 * this.options.zIndexOffset
                         }),
                         a = this._map.latLngToContainerPoint(n.getLatLng());
                     e = o.distanceTo(a);
@@ -449,7 +434,7 @@
             _createMarker: function (t) {
                 var e = new L.Marker(t, {
                     icon: this.options.icon,
-                    zIndexOffset: 2 * this.options.zIndexOffset,
+                    zIndexOffset: 2 * this.options.zIndexOffset
                 });
                 return this._markerGroup.addLayer(e), e;
             },
@@ -458,15 +443,11 @@
                 e > 0 &&
                     ((t = t || this._map.latLngToLayerPoint(this._currentLatLng)),
                     this._clearGuides(),
-                    this._drawGuide(
-                        this._map.latLngToLayerPoint(this._markers[e - 1].getLatLng()),
-                        t,
-                    ));
+                    this._drawGuide(this._map.latLngToLayerPoint(this._markers[e - 1].getLatLng()), t));
             },
             _updateTooltip: function (t) {
                 var e = this._getTooltipText();
-                t && this._tooltip.updatePosition(t),
-                    this._errorShown || this._tooltip.updateContent(e);
+                t && this._tooltip.updatePosition(t), this._errorShown || this._tooltip.updateContent(e);
             },
             _drawGuide: function (t, e) {
                 var i,
@@ -478,24 +459,16 @@
                     l = a > r ? a - r : s;
                 for (
                     this._guidesContainer ||
-                    (this._guidesContainer = L.DomUtil.create(
-                        "div",
-                        "leaflet-draw-guides",
-                        this._overlayPane,
-                    ));
+                    (this._guidesContainer = L.DomUtil.create("div", "leaflet-draw-guides", this._overlayPane));
                     l < a;
                     l += this.options.guidelineDistance
                 )
                     (i = l / a),
                         (o = {
                             x: Math.floor(t.x * (1 - i) + i * e.x),
-                            y: Math.floor(t.y * (1 - i) + i * e.y),
+                            y: Math.floor(t.y * (1 - i) + i * e.y)
                         }),
-                        (n = L.DomUtil.create(
-                            "div",
-                            "leaflet-draw-guide-dash",
-                            this._guidesContainer,
-                        )),
+                        (n = L.DomUtil.create("div", "leaflet-draw-guide-dash", this._guidesContainer)),
                         (n.style.backgroundColor = this._errorShown
                             ? this.options.drawError.color
                             : this.options.shapeOptions.color),
@@ -519,18 +492,18 @@
                     L.Browser.touch && (i = !1),
                     0 === this._markers.length
                         ? (t = {
-                              text: L.drawLocal.draw.handlers.polyline.tooltip.start,
+                              text: L.drawLocal.draw.handlers.polyline.tooltip.start
                           })
                         : ((e = i ? this._getMeasurementString() : ""),
                           (t =
                               1 === this._markers.length
                                   ? {
                                         text: L.drawLocal.draw.handlers.polyline.tooltip.cont,
-                                        subtext: e,
+                                        subtext: e
                                     }
                                   : {
                                         text: L.drawLocal.draw.handlers.polyline.tooltip.end,
-                                        subtext: e,
+                                        subtext: e
                                     })),
                     t
                 );
@@ -542,9 +515,7 @@
                 1 === this._markers.length
                     ? (this._measurementRunningTotal = 0)
                     : ((i = n - (e ? 2 : 1)),
-                      (o =
-                          this._map.distance(t, this._markers[i].getLatLng()) *
-                          (this.options.factor || 1)),
+                      (o = this._map.distance(t, this._markers[i].getLatLng()) * (this.options.factor || 1)),
                       (this._measurementRunningTotal += o * (e ? 1 : -1)));
             },
             _getMeasurementString: function () {
@@ -554,31 +525,30 @@
                 return (
                     (t =
                         i && e
-                            ? this._measurementRunningTotal +
-                              this._map.distance(e, i) * (this.options.factor || 1)
+                            ? this._measurementRunningTotal + this._map.distance(e, i) * (this.options.factor || 1)
                             : this._measurementRunningTotal || 0),
                     L.GeometryUtil.readableDistance(
                         t,
                         this.options.metric,
                         this.options.feet,
                         this.options.nautic,
-                        this.options.precision,
+                        this.options.precision
                     )
                 );
             },
             _showErrorTooltip: function () {
                 (this._errorShown = !0),
                     this._tooltip.showAsError().updateContent({
-                        text: this.options.drawError.message,
+                        text: this.options.drawError.message
                     }),
                     this._updateGuideColor(this.options.drawError.color),
                     this._poly.setStyle({
-                        color: this.options.drawError.color,
+                        color: this.options.drawError.color
                     }),
                     this._clearHideErrorTimeout(),
                     (this._hideErrorTimeout = setTimeout(
                         L.Util.bind(this._hideErrorTooltip, this),
-                        this.options.drawError.timeout,
+                        this.options.drawError.timeout
                     ));
             },
             _hideErrorTooltip: function () {
@@ -587,12 +557,11 @@
                     this._tooltip.removeError().updateContent(this._getTooltipText()),
                     this._updateGuideColor(this.options.shapeOptions.color),
                     this._poly.setStyle({
-                        color: this.options.shapeOptions.color,
+                        color: this.options.shapeOptions.color
                     });
             },
             _clearHideErrorTimeout: function () {
-                this._hideErrorTimeout &&
-                    (clearTimeout(this._hideErrorTimeout), (this._hideErrorTimeout = null));
+                this._hideErrorTimeout && (clearTimeout(this._hideErrorTimeout), (this._hideErrorTimeout = null));
             },
             _disableNewMarkers: function () {
                 this._disableMarkers = !0;
@@ -602,7 +571,7 @@
                     function () {
                         this._disableMarkers = !1;
                     }.bind(this),
-                    50,
+                    50
                 );
             },
             _cleanUpShape: function () {
@@ -612,11 +581,11 @@
             _fireCreatedEvent: function () {
                 var t = new this.Poly(this._poly.getLatLngs(), this.options.shapeOptions);
                 L.Draw.Feature.prototype._fireCreatedEvent.call(this, t);
-            },
+            }
         })),
         (L.Draw.Polygon = L.Draw.Polyline.extend({
             statics: {
-                TYPE: "polygon",
+                TYPE: "polygon"
             },
             Poly: L.Polygon,
             options: {
@@ -630,16 +599,15 @@
                     fill: !0,
                     fillColor: null,
                     fillOpacity: 0.2,
-                    clickable: !0,
+                    clickable: !0
                 },
                 metric: !0,
                 feet: !0,
                 nautic: !1,
-                precision: {},
+                precision: {}
             },
             initialize: function (t, e) {
-                L.Draw.Polyline.prototype.initialize.call(this, t, e),
-                    (this.type = L.Draw.Polygon.TYPE);
+                L.Draw.Polyline.prototype.initialize.call(this, t, e), (this.type = L.Draw.Polygon.TYPE);
             },
             _updateFinishHandler: function () {
                 var t = this._markers.length;
@@ -654,13 +622,11 @@
                     0 === this._markers.length
                         ? (t = L.drawLocal.draw.handlers.polygon.tooltip.start)
                         : this._markers.length < 3
-                          ? ((t = L.drawLocal.draw.handlers.polygon.tooltip.cont),
-                            (e = this._getMeasurementString()))
-                          : ((t = L.drawLocal.draw.handlers.polygon.tooltip.end),
-                            (e = this._getMeasurementString())),
+                          ? ((t = L.drawLocal.draw.handlers.polygon.tooltip.cont), (e = this._getMeasurementString()))
+                          : ((t = L.drawLocal.draw.handlers.polygon.tooltip.end), (e = this._getMeasurementString())),
                     {
                         text: t,
-                        subtext: e,
+                        subtext: e
                     }
                 );
             },
@@ -668,16 +634,8 @@
                 var t = this._area,
                     e = "";
                 return t || this.options.showLength
-                    ? (this.options.showLength &&
-                          (e = L.Draw.Polyline.prototype._getMeasurementString.call(this)),
-                      t &&
-                          (e +=
-                              "<br>" +
-                              L.GeometryUtil.readableArea(
-                                  t,
-                                  this.options.metric,
-                                  this.options.precision,
-                              )),
+                    ? (this.options.showLength && (e = L.Draw.Polyline.prototype._getMeasurementString.call(this)),
+                      t && (e += "<br>" + L.GeometryUtil.readableArea(t, this.options.metric, this.options.precision)),
                       e)
                     : null;
             },
@@ -696,12 +654,12 @@
                 t > 0 &&
                     (this._markers[0].off("click", this._finishShape, this),
                     t > 2 && this._markers[t - 1].off("dblclick", this._finishShape, this));
-            },
+            }
         })),
         (L.SimpleShape = {}),
         (L.Draw.SimpleShape = L.Draw.Feature.extend({
             options: {
-                repeatMode: !1,
+                repeatMode: !1
             },
             initialize: function (t, e) {
                 (this._endLabelText = L.drawLocal.draw.handlers.simpleshape.tooltip.end),
@@ -714,7 +672,7 @@
                         this._mapDraggable && this._map.dragging.disable(),
                         (this._container.style.cursor = "crosshair"),
                         this._tooltip.updateContent({
-                            text: this._initialLabelText,
+                            text: this._initialLabelText
                         }),
                         this._map
                             .on("mousedown", this._onMouseDown, this)
@@ -739,7 +697,7 @@
             },
             _getTooltipText: function () {
                 return {
-                    text: this._endLabelText,
+                    text: this._endLabelText
                 };
             },
             _onMouseDown: function (t) {
@@ -752,18 +710,15 @@
             _onMouseMove: function (t) {
                 var e = t.latlng;
                 this._tooltip.updatePosition(e),
-                    this._isDrawing &&
-                        (this._tooltip.updateContent(this._getTooltipText()), this._drawShape(e));
+                    this._isDrawing && (this._tooltip.updateContent(this._getTooltipText()), this._drawShape(e));
             },
             _onMouseUp: function () {
-                this._shape && this._fireCreatedEvent(),
-                    this.disable(),
-                    this.options.repeatMode && this.enable();
-            },
+                this._shape && this._fireCreatedEvent(), this.disable(), this.options.repeatMode && this.enable();
+            }
         })),
         (L.Draw.Rectangle = L.Draw.SimpleShape.extend({
             statics: {
-                TYPE: "rectangle",
+                TYPE: "rectangle"
             },
             options: {
                 shapeOptions: {
@@ -775,9 +730,9 @@
                     fillColor: null,
                     fillOpacity: 0.2,
                     showArea: !0,
-                    clickable: !0,
+                    clickable: !0
                 },
-                metric: !0,
+                metric: !0
             },
             initialize: function (t, e) {
                 (this.type = L.Draw.Rectangle.TYPE),
@@ -786,8 +741,7 @@
             },
             disable: function () {
                 this._enabled &&
-                    ((this._isCurrentlyTwoClickDrawing = !1),
-                    L.Draw.SimpleShape.prototype.disable.call(this));
+                    ((this._isCurrentlyTwoClickDrawing = !1), L.Draw.SimpleShape.prototype.disable.call(this));
             },
             _onMouseUp: function (t) {
                 if (!this._shape && !this._isCurrentlyTwoClickDrawing)
@@ -800,7 +754,7 @@
                     ? this._shape.setBounds(new L.LatLngBounds(this._startLatLng, t))
                     : ((this._shape = new L.Rectangle(
                           new L.LatLngBounds(this._startLatLng, t),
-                          this.options.shapeOptions,
+                          this.options.shapeOptions
                       )),
                       this._map.addLayer(this._shape));
             },
@@ -817,26 +771,24 @@
                     a = this.options.showArea;
                 return (
                     n &&
-                        ((t = this._shape._defaultShape
-                            ? this._shape._defaultShape()
-                            : this._shape.getLatLngs()),
+                        ((t = this._shape._defaultShape ? this._shape._defaultShape() : this._shape.getLatLngs()),
                         (e = L.GeometryUtil.geodesicArea(t)),
                         (i = a ? L.GeometryUtil.readableArea(e, this.options.metric) : "")),
                     {
                         text: o.text,
-                        subtext: i,
+                        subtext: i
                     }
                 );
-            },
+            }
         })),
         (L.Draw.Marker = L.Draw.Feature.extend({
             statics: {
-                TYPE: "marker",
+                TYPE: "marker"
             },
             options: {
                 icon: new L.Icon.Default(),
                 repeatMode: !1,
-                zIndexOffset: 2e3,
+                zIndexOffset: 2e3
             },
             initialize: function (t, e) {
                 (this.type = L.Draw.Marker.TYPE),
@@ -847,17 +799,17 @@
                 L.Draw.Feature.prototype.addHooks.call(this),
                     this._map &&
                         (this._tooltip.updateContent({
-                            text: this._initialLabelText,
+                            text: this._initialLabelText
                         }),
                         this._mouseMarker ||
                             (this._mouseMarker = L.marker(this._map.getCenter(), {
                                 icon: L.divIcon({
                                     className: "leaflet-mouse-marker",
                                     iconAnchor: [20, 20],
-                                    iconSize: [40, 40],
+                                    iconSize: [40, 40]
                                 }),
                                 opacity: 0,
-                                zIndexOffset: this.options.zIndexOffset,
+                                zIndexOffset: this.options.zIndexOffset
                             })),
                         this._mouseMarker.on("click", this._onClick, this).addTo(this._map),
                         this._map.on("mousemove", this._onMouseMove, this),
@@ -891,7 +843,7 @@
             _createMarker: function (t) {
                 return new L.Marker(t, {
                     icon: this.options.icon,
-                    zIndexOffset: this.options.zIndexOffset,
+                    zIndexOffset: this.options.zIndexOffset
                 });
             },
             _onClick: function () {
@@ -902,14 +854,14 @@
             },
             _fireCreatedEvent: function () {
                 var t = new L.Marker.Touch(this._marker.getLatLng(), {
-                    icon: this.options.icon,
+                    icon: this.options.icon
                 });
                 L.Draw.Feature.prototype._fireCreatedEvent.call(this, t);
-            },
+            }
         })),
         (L.Draw.CircleMarker = L.Draw.Marker.extend({
             statics: {
-                TYPE: "circlemarker",
+                TYPE: "circlemarker"
             },
             options: {
                 stroke: !0,
@@ -920,12 +872,11 @@
                 fillColor: null,
                 fillOpacity: 0.2,
                 clickable: !0,
-                zIndexOffset: 2e3,
+                zIndexOffset: 2e3
             },
             initialize: function (t, e) {
                 (this.type = L.Draw.CircleMarker.TYPE),
-                    (this._initialLabelText =
-                        L.drawLocal.draw.handlers.circlemarker.tooltip.start),
+                    (this._initialLabelText = L.drawLocal.draw.handlers.circlemarker.tooltip.start),
                     L.Draw.Feature.prototype.initialize.call(this, t, e);
             },
             _fireCreatedEvent: function () {
@@ -934,11 +885,11 @@
             },
             _createMarker: function (t) {
                 return new L.CircleMarker(t, this.options);
-            },
+            }
         })),
         (L.Draw.Circle = L.Draw.SimpleShape.extend({
             statics: {
-                TYPE: "circle",
+                TYPE: "circle"
             },
             options: {
                 shapeOptions: {
@@ -949,12 +900,12 @@
                     fill: !0,
                     fillColor: null,
                     fillOpacity: 0.2,
-                    clickable: !0,
+                    clickable: !0
                 },
                 showRadius: !0,
                 metric: !0,
                 feet: !0,
-                nautic: !1,
+                nautic: !1
             },
             initialize: function (t, e) {
                 (this.type = L.Draw.Circle.TYPE),
@@ -965,19 +916,11 @@
                 var e = this._map.distance(this._startLatLng, t);
                 this._shape
                     ? this._shape.setRadius(e)
-                    : ((this._shape = new L.Circle(
-                          this._startLatLng,
-                          e,
-                          this.options.shapeOptions,
-                      )),
+                    : ((this._shape = new L.Circle(this._startLatLng, e, this.options.shapeOptions)),
                       this._map.addLayer(this._shape));
             },
             _fireCreatedEvent: function () {
-                var t = new L.Circle(
-                    this._startLatLng,
-                    this._shape.getRadius(),
-                    this.options.shapeOptions,
-                );
+                var t = new L.Circle(this._startLatLng, this._shape.getRadius(), this.options.shapeOptions);
                 L.Draw.SimpleShape.prototype._fireCreatedEvent.call(this, t);
             },
             _onMouseMove: function (t) {
@@ -992,18 +935,13 @@
                         (a =
                             L.drawLocal.draw.handlers.circle.radius +
                             ": " +
-                            L.GeometryUtil.readableDistance(
-                                e,
-                                n,
-                                this.options.feet,
-                                this.options.nautic,
-                            )),
+                            L.GeometryUtil.readableDistance(e, n, this.options.feet, this.options.nautic)),
                         this._tooltip.updateContent({
                             text: this._endLabelText,
-                            subtext: a,
+                            subtext: a
                         });
                 }
-            },
+            }
         })),
         (L.Edit = L.Edit || {}),
         (L.Edit.Marker = L.Handler.extend({
@@ -1012,21 +950,17 @@
             },
             addHooks: function () {
                 var t = this._marker;
-                t.dragging.enable(),
-                    t.on("dragend", this._onDragEnd, t),
-                    this._toggleMarkerHighlight();
+                t.dragging.enable(), t.on("dragend", this._onDragEnd, t), this._toggleMarkerHighlight();
             },
             removeHooks: function () {
                 var t = this._marker;
-                t.dragging.disable(),
-                    t.off("dragend", this._onDragEnd, t),
-                    this._toggleMarkerHighlight();
+                t.dragging.disable(), t.off("dragend", this._onDragEnd, t), this._toggleMarkerHighlight();
             },
             _onDragEnd: function (t) {
                 var e = t.target;
                 (e.edited = !0),
                     this._map.fire(L.Draw.Event.EDITMOVE, {
-                        layer: e,
+                        layer: e
                     });
             },
             _toggleMarkerHighlight: function () {
@@ -1034,22 +968,18 @@
                 t &&
                     ((t.style.display = "none"),
                     L.DomUtil.hasClass(t, "leaflet-edit-marker-selected")
-                        ? (L.DomUtil.removeClass(t, "leaflet-edit-marker-selected"),
-                          this._offsetMarker(t, -4))
-                        : (L.DomUtil.addClass(t, "leaflet-edit-marker-selected"),
-                          this._offsetMarker(t, 4)),
+                        ? (L.DomUtil.removeClass(t, "leaflet-edit-marker-selected"), this._offsetMarker(t, -4))
+                        : (L.DomUtil.addClass(t, "leaflet-edit-marker-selected"), this._offsetMarker(t, 4)),
                     (t.style.display = ""));
             },
             _offsetMarker: function (t, e) {
                 var i = parseInt(t.style.marginTop, 10) - e,
                     o = parseInt(t.style.marginLeft, 10) - e;
                 (t.style.marginTop = i + "px"), (t.style.marginLeft = o + "px");
-            },
+            }
         })),
         L.Marker.addInitHook(function () {
-            L.Edit.Marker &&
-                ((this.editing = new L.Edit.Marker(this)),
-                this.options.editable && this.editing.enable());
+            L.Edit.Marker && ((this.editing = new L.Edit.Marker(this)), this.options.editable && this.editing.enable());
         }),
         (L.Edit = L.Edit || {}),
         (L.Edit.Poly = L.Handler.extend({
@@ -1069,8 +999,7 @@
                     : this._poly._latlngs;
             },
             _eachVertexHandler: function (t) {
-                for (var e = 0; e < this._verticesHandlers.length; e++)
-                    t(this._verticesHandlers[e]);
+                for (var e = 0; e < this._verticesHandlers.length; e++) t(this._verticesHandlers[e]);
             },
             addHooks: function () {
                 this._initHandlers(),
@@ -1091,36 +1020,32 @@
             _initHandlers: function () {
                 this._verticesHandlers = [];
                 for (var t = 0; t < this.latlngs.length; t++)
-                    this._verticesHandlers.push(
-                        new L.Edit.PolyVerticesEdit(this._poly, this.latlngs[t], this.options),
-                    );
+                    this._verticesHandlers.push(new L.Edit.PolyVerticesEdit(this._poly, this.latlngs[t], this.options));
             },
             _updateLatLngs: function (t) {
                 (this.latlngs = [t.layer._latlngs]),
                     t.layer._holes && (this.latlngs = this.latlngs.concat(t.layer._holes));
-            },
+            }
         })),
         (L.Edit.PolyVerticesEdit = L.Handler.extend({
             options: {
                 icon: new L.DivIcon({
                     iconSize: new L.Point(8, 8),
-                    className: "leaflet-div-icon leaflet-editing-icon",
+                    className: "leaflet-div-icon leaflet-editing-icon"
                 }),
                 touchIcon: new L.DivIcon({
                     iconSize: new L.Point(20, 20),
-                    className: "leaflet-div-icon leaflet-editing-icon leaflet-touch-icon",
+                    className: "leaflet-div-icon leaflet-editing-icon leaflet-touch-icon"
                 }),
                 drawError: {
                     color: "#b00b00",
-                    timeout: 1e3,
-                },
+                    timeout: 1e3
+                }
             },
             initialize: function (t, e, i) {
                 L.Browser.touch && (this.options.icon = this.options.touchIcon),
                     (this._poly = t),
-                    i &&
-                        i.drawError &&
-                        (i.drawError = L.Util.extend({}, this.options.drawError, i.drawError)),
+                    i && i.drawError && (i.drawError = L.Util.extend({}, this.options.drawError, i.drawError)),
                     (this._latlngs = e),
                     L.setOptions(this, i);
             },
@@ -1133,8 +1058,7 @@
             },
             addHooks: function () {
                 var t = this._poly;
-                t instanceof L.Polygon ||
-                    ((t.options.fill = !1), t.options.editing && (t.options.editing.fill = !1)),
+                t instanceof L.Polygon || ((t.options.fill = !1), t.options.editing && (t.options.editing.fill = !1)),
                     t.setStyle(t.options.editing),
                     this._poly._map &&
                         ((this._map = this._poly._map),
@@ -1144,26 +1068,20 @@
             removeHooks: function () {
                 var t = this._poly;
                 t.setStyle(t.options.original),
-                    t._map &&
-                        (t._map.removeLayer(this._markerGroup),
-                        delete this._markerGroup,
-                        delete this._markers);
+                    t._map && (t._map.removeLayer(this._markerGroup), delete this._markerGroup, delete this._markers);
             },
             updateMarkers: function () {
                 this._markerGroup.clearLayers(), this._initMarkers();
             },
             _initMarkers: function () {
-                this._markerGroup || (this._markerGroup = new L.LayerGroup()),
-                    (this._markers = []);
+                this._markerGroup || (this._markerGroup = new L.LayerGroup()), (this._markers = []);
                 var t,
                     e,
                     i,
                     o,
                     n = this._defaultShape();
                 for (t = 0, i = n.length; t < i; t++)
-                    (o = this._createMarker(n[t], t)),
-                        o.on("click", this._onMarkerClick, this),
-                        this._markers.push(o);
+                    (o = this._createMarker(n[t], t)), o.on("click", this._onMarkerClick, this), this._markers.push(o);
                 var a, s;
                 for (t = 0, e = i - 1; t < i; e = t++)
                     (0 !== t || (L.Polygon && this._poly instanceof L.Polygon)) &&
@@ -1175,7 +1093,7 @@
             _createMarker: function (t, e) {
                 var i = new L.Marker.Touch(t, {
                     draggable: !0,
-                    icon: this.options.icon,
+                    icon: this.options.icon
                 });
                 return (
                     (i._origLatLng = t),
@@ -1221,7 +1139,7 @@
                     this._poly.fire("edit"),
                     this._poly._map.fire(L.Draw.Event.EDITVERTEX, {
                         layers: this._markerGroup,
-                        poly: this._poly,
+                        poly: this._poly
                     });
             },
             _onMarkerDrag: function (t) {
@@ -1237,23 +1155,22 @@
                     if (!i.options.poly.allowIntersection && i.intersects()) {
                         var n = i.options.color;
                         i.setStyle({
-                            color: this.options.drawError.color,
+                            color: this.options.drawError.color
                         }),
                             0 !== L.version.indexOf("0.7") && e.dragging._draggable._onUp(t),
                             this._onMarkerClick(t),
                             o &&
                                 o.updateContent({
-                                    text: L.drawLocal.draw.handlers.polyline.error,
+                                    text: L.drawLocal.draw.handlers.polyline.error
                                 }),
                             setTimeout(function () {
                                 i.setStyle({
-                                    color: n,
+                                    color: n
                                 }),
                                     o &&
                                         o.updateContent({
                                             text: L.drawLocal.edit.handlers.edit.tooltip.text,
-                                            subtext:
-                                                L.drawLocal.edit.handlers.edit.tooltip.subtext,
+                                            subtext: L.drawLocal.edit.handlers.edit.tooltip.subtext
                                         });
                             }, 1e3);
                     }
@@ -1324,11 +1241,7 @@
                     (i = function () {
                         o.call(this), n.call(this), this._fireEdit();
                     }),
-                    s
-                        .on("click", i, this)
-                        .on("dragstart", o, this)
-                        .on("dragend", n, this)
-                        .on("touchmove", o, this),
+                    s.on("click", i, this).on("dragstart", o, this).on("dragend", n, this).on("touchmove", o, this),
                     this._markerGroup.addLayer(s);
             },
             _updatePrevNext: function (t, e) {
@@ -1339,7 +1252,7 @@
                     o = i.project(t.getLatLng()),
                     n = i.project(e.getLatLng());
                 return i.unproject(o._add(n)._divideBy(2));
-            },
+            }
         })),
         L.Polyline.addInitHook(function () {
             this.editing ||
@@ -1358,22 +1271,20 @@
             options: {
                 moveIcon: new L.DivIcon({
                     iconSize: new L.Point(8, 8),
-                    className: "leaflet-div-icon leaflet-editing-icon leaflet-edit-move",
+                    className: "leaflet-div-icon leaflet-editing-icon leaflet-edit-move"
                 }),
                 resizeIcon: new L.DivIcon({
                     iconSize: new L.Point(8, 8),
-                    className: "leaflet-div-icon leaflet-editing-icon leaflet-edit-resize",
+                    className: "leaflet-div-icon leaflet-editing-icon leaflet-edit-resize"
                 }),
                 touchMoveIcon: new L.DivIcon({
                     iconSize: new L.Point(20, 20),
-                    className:
-                        "leaflet-div-icon leaflet-editing-icon leaflet-edit-move leaflet-touch-icon",
+                    className: "leaflet-div-icon leaflet-editing-icon leaflet-edit-move leaflet-touch-icon"
                 }),
                 touchResizeIcon: new L.DivIcon({
                     iconSize: new L.Point(20, 20),
-                    className:
-                        "leaflet-div-icon leaflet-editing-icon leaflet-edit-resize leaflet-touch-icon",
-                }),
+                    className: "leaflet-div-icon leaflet-editing-icon leaflet-edit-resize leaflet-touch-icon"
+                })
             },
             initialize: function (t, e) {
                 L.Browser.touch &&
@@ -1398,9 +1309,7 @@
                     this._unbindMarker(this._moveMarker);
                     for (var e = 0, i = this._resizeMarkers.length; e < i; e++)
                         this._unbindMarker(this._resizeMarkers[e]);
-                    (this._resizeMarkers = null),
-                        this._map.removeLayer(this._markerGroup),
-                        delete this._markerGroup;
+                    (this._resizeMarkers = null), this._map.removeLayer(this._markerGroup), delete this._markerGroup;
                 }
                 this._map = null;
             },
@@ -1418,7 +1327,7 @@
                 var i = new L.Marker.Touch(t, {
                     draggable: !0,
                     icon: e,
-                    zIndexOffset: 10,
+                    zIndexOffset: 10
                 });
                 return this._bindMarker(i), this._markerGroup.addLayer(i), i;
             },
@@ -1466,26 +1375,20 @@
                     var e = this._getCorners(),
                         i = t.target,
                         o = i._cornerIndex;
-                    i.setOpacity(0),
-                        (this._oppositeCorner = e[(o + 2) % 4]),
-                        this._toggleCornerMarkers(0, o);
+                    i.setOpacity(0), (this._oppositeCorner = e[(o + 2) % 4]), this._toggleCornerMarkers(0, o);
                 }
                 this._shape.fire("editstart");
             },
             _onTouchMove: function (t) {
                 var e = this._map.mouseEventToLayerPoint(t.originalEvent.touches[0]),
                     i = this._map.layerPointToLatLng(e);
-                return (
-                    t.target === this._moveMarker ? this._move(i) : this._resize(i),
-                    this._shape.redraw(),
-                    !1
-                );
+                return t.target === this._moveMarker ? this._move(i) : this._resize(i), this._shape.redraw(), !1;
             },
             _onTouchEnd: function (t) {
                 t.target.setOpacity(1), this.updateMarkers(), this._fireEdit();
             },
             _move: function () {},
-            _resize: function () {},
+            _resize: function () {}
         })),
         (L.Edit = L.Edit || {}),
         (L.Edit.Rectangle = L.Edit.SimpleShape.extend({
@@ -1512,8 +1415,7 @@
                 var e,
                     i,
                     o = t.target;
-                o === this._moveMarker &&
-                    ((e = this._shape.getBounds()), (i = e.getCenter()), o.setLatLng(i)),
+                o === this._moveMarker && ((e = this._shape.getBounds()), (i = e.getCenter()), o.setLatLng(i)),
                     this._toggleCornerMarkers(1),
                     this._repositionCornerMarkers(),
                     L.Edit.SimpleShape.prototype._onMarkerDragEnd.call(this, t);
@@ -1521,9 +1423,7 @@
             _move: function (t) {
                 for (
                     var e,
-                        i = this._shape._defaultShape
-                            ? this._shape._defaultShape()
-                            : this._shape.getLatLngs(),
+                        i = this._shape._defaultShape ? this._shape._defaultShape() : this._shape.getLatLngs(),
                         o = this._shape.getBounds(),
                         n = o.getCenter(),
                         a = [],
@@ -1532,12 +1432,11 @@
                     s < r;
                     s++
                 )
-                    (e = [i[s].lat - n.lat, i[s].lng - n.lng]),
-                        a.push([t.lat + e[0], t.lng + e[1]]);
+                    (e = [i[s].lat - n.lat, i[s].lng - n.lng]), a.push([t.lat + e[0], t.lng + e[1]]);
                 this._shape.setLatLngs(a),
                     this._repositionCornerMarkers(),
                     this._map.fire(L.Draw.Event.EDITMOVE, {
-                        layer: this._shape,
+                        layer: this._shape
                     });
             },
             _resize: function (t) {
@@ -1546,7 +1445,7 @@
                     (e = this._shape.getBounds()),
                     this._moveMarker.setLatLng(e.getCenter()),
                     this._map.fire(L.Draw.Event.EDITRESIZE, {
-                        layer: this._shape,
+                        layer: this._shape
                     });
             },
             _getCorners: function () {
@@ -1554,18 +1453,16 @@
                 return [t.getNorthWest(), t.getNorthEast(), t.getSouthEast(), t.getSouthWest()];
             },
             _toggleCornerMarkers: function (t) {
-                for (var e = 0, i = this._resizeMarkers.length; e < i; e++)
-                    this._resizeMarkers[e].setOpacity(t);
+                for (var e = 0, i = this._resizeMarkers.length; e < i; e++) this._resizeMarkers[e].setOpacity(t);
             },
             _repositionCornerMarkers: function () {
                 for (var t = this._getCorners(), e = 0, i = this._resizeMarkers.length; e < i; e++)
                     this._resizeMarkers[e].setLatLng(t[e]);
-            },
+            }
         })),
         L.Rectangle.addInitHook(function () {
             L.Edit.Rectangle &&
-                ((this.editing = new L.Edit.Rectangle(this)),
-                this.options.editable && this.editing.enable());
+                ((this.editing = new L.Edit.Rectangle(this)), this.options.editable && this.editing.enable());
         }),
         (L.Edit = L.Edit || {}),
         (L.Edit.CircleMarker = L.Edit.SimpleShape.extend({
@@ -1583,14 +1480,13 @@
                 }
                 this._shape.setLatLng(t),
                     this._map.fire(L.Draw.Event.EDITMOVE, {
-                        layer: this._shape,
+                        layer: this._shape
                     });
-            },
+            }
         })),
         L.CircleMarker.addInitHook(function () {
             L.Edit.CircleMarker &&
-                ((this.editing = new L.Edit.CircleMarker(this)),
-                this.options.editable && this.editing.enable()),
+                ((this.editing = new L.Edit.CircleMarker(this)), this.options.editable && this.editing.enable()),
                 this.on("add", function () {
                     this.editing && this.editing.enabled() && this.editing.addHooks();
                 }),
@@ -1603,8 +1499,7 @@
             _createResizeMarker: function () {
                 var t = this._shape.getLatLng(),
                     e = this._getResizeMarkerPoint(t);
-                (this._resizeMarkers = []),
-                    this._resizeMarkers.push(this._createMarker(e, this.options.resizeIcon));
+                (this._resizeMarkers = []), this._resizeMarkers.push(this._createMarker(e, this.options.resizeIcon));
             },
             _getResizeMarkerPoint: function (t) {
                 var e = this._shape._radius * Math.cos(Math.PI / 4),
@@ -1616,14 +1511,12 @@
                     i = this._map.distance(e, t);
                 this._shape.setRadius(i),
                     this._map.fire(L.Draw.Event.EDITRESIZE, {
-                        layer: this._shape,
+                        layer: this._shape
                     });
-            },
+            }
         })),
         L.Circle.addInitHook(function () {
-            L.Edit.Circle &&
-                ((this.editing = new L.Edit.Circle(this)),
-                this.options.editable && this.editing.enable()),
+            L.Edit.Circle && ((this.editing = new L.Edit.Circle(this)), this.options.editable && this.editing.enable()),
                 this.on("add", function () {
                     this.editing && this.editing.enabled() && this.editing.addHooks();
                 }),
@@ -1632,39 +1525,22 @@
                 });
         }),
         L.Map.mergeOptions({
-            touchExtend: !0,
+            touchExtend: !0
         }),
         (L.Map.TouchExtend = L.Handler.extend({
             initialize: function (t) {
-                (this._map = t),
-                    (this._container = t._container),
-                    (this._pane = t._panes.overlayPane);
+                (this._map = t), (this._container = t._container), (this._pane = t._panes.overlayPane);
             },
             addHooks: function () {
                 L.DomEvent.on(this._container, "touchstart", this._onTouchStart, this),
                     L.DomEvent.on(this._container, "touchend", this._onTouchEnd, this),
                     L.DomEvent.on(this._container, "touchmove", this._onTouchMove, this),
                     this._detectIE()
-                        ? (L.DomEvent.on(
-                              this._container,
-                              "MSPointerDown",
-                              this._onTouchStart,
-                              this,
-                          ),
+                        ? (L.DomEvent.on(this._container, "MSPointerDown", this._onTouchStart, this),
                           L.DomEvent.on(this._container, "MSPointerUp", this._onTouchEnd, this),
                           L.DomEvent.on(this._container, "MSPointerMove", this._onTouchMove, this),
-                          L.DomEvent.on(
-                              this._container,
-                              "MSPointerCancel",
-                              this._onTouchCancel,
-                              this,
-                          ))
-                        : (L.DomEvent.on(
-                              this._container,
-                              "touchcancel",
-                              this._onTouchCancel,
-                              this,
-                          ),
+                          L.DomEvent.on(this._container, "MSPointerCancel", this._onTouchCancel, this))
+                        : (L.DomEvent.on(this._container, "touchcancel", this._onTouchCancel, this),
                           L.DomEvent.on(this._container, "touchleave", this._onTouchLeave, this));
             },
             removeHooks: function () {
@@ -1697,7 +1573,7 @@
                     containerPoint: o,
                     pageX: i.pageX,
                     pageY: i.pageY,
-                    originalEvent: t,
+                    originalEvent: t
                 });
             },
             _filterClick: function (t) {
@@ -1743,7 +1619,7 @@
                 }
                 var n = e.indexOf("Edge/");
                 return n > 0 && parseInt(e.substring(n + 5, e.indexOf(".", n)), 10);
-            },
+            }
         })),
         L.Map.addInitHook("addHandler", "touchExtend", L.Map.TouchExtend),
         (L.Marker.Touch = L.Marker.extend({
@@ -1763,21 +1639,15 @@
                             "contextmenu",
                             "touchstart",
                             "touchend",
-                            "touchmove",
+                            "touchmove"
                         ];
                     this._detectIE
-                        ? e.concat([
-                              "MSPointerDown",
-                              "MSPointerUp",
-                              "MSPointerMove",
-                              "MSPointerCancel",
-                          ])
+                        ? e.concat(["MSPointerDown", "MSPointerUp", "MSPointerMove", "MSPointerCancel"])
                         : e.concat(["touchcancel"]),
                         L.DomUtil.addClass(t, "leaflet-clickable"),
                         L.DomEvent.on(t, "click", this._onMouseClick, this),
                         L.DomEvent.on(t, "keypress", this._onKeyPress, this);
-                    for (var i = 0; i < e.length; i++)
-                        L.DomEvent.on(t, e[i], this._fireMouseEvent, this);
+                    for (var i = 0; i < e.length; i++) L.DomEvent.on(t, e[i], this._fireMouseEvent, this);
                     L.Handler.MarkerDrag &&
                         ((this.dragging = new L.Handler.MarkerDrag(this)),
                         this.options.draggable && this.dragging.enable());
@@ -1793,19 +1663,17 @@
                 }
                 var n = e.indexOf("Edge/");
                 return n > 0 && parseInt(e.substring(n + 5, e.indexOf(".", n)), 10);
-            },
+            }
         })),
         (L.LatLngUtil = {
             cloneLatLngs: function (t) {
                 for (var e = [], i = 0, o = t.length; i < o; i++)
-                    Array.isArray(t[i])
-                        ? e.push(L.LatLngUtil.cloneLatLngs(t[i]))
-                        : e.push(this.cloneLatLng(t[i]));
+                    Array.isArray(t[i]) ? e.push(L.LatLngUtil.cloneLatLngs(t[i])) : e.push(this.cloneLatLng(t[i]));
                 return e;
             },
             cloneLatLng: function (t) {
                 return L.latLng(t.lat, t.lng);
-            },
+            }
         }),
         (function () {
             var t = {
@@ -1816,7 +1684,7 @@
                 ac: 2,
                 yd: 0,
                 ft: 0,
-                nm: 2,
+                nm: 2
             };
             L.GeometryUtil = L.extend(L.GeometryUtil || {}, {
                 geodesicArea: function (t) {
@@ -1829,10 +1697,7 @@
                         for (var s = 0; s < o; s++)
                             (e = t[s]),
                                 (i = t[(s + 1) % o]),
-                                (n +=
-                                    (i.lng - e.lng) *
-                                    a *
-                                    (2 + Math.sin(e.lat * a) + Math.sin(i.lat * a)));
+                                (n += (i.lng - e.lng) * a * (2 + Math.sin(e.lat * a) + Math.sin(i.lat * a)));
                         n = (6378137 * n * 6378137) / 2;
                     }
                     return Math.abs(n);
@@ -1879,17 +1744,7 @@
                 readableDistance: function (e, i, o, n, a) {
                     var s,
                         a = L.Util.extend({}, t, a);
-                    switch (
-                        i
-                            ? "string" == typeof i
-                                ? i
-                                : "metric"
-                            : o
-                              ? "feet"
-                              : n
-                                ? "nauticalMile"
-                                : "yards"
-                    ) {
+                    switch (i ? ("string" == typeof i ? i : "metric") : o ? "feet" : n ? "nauticalMile" : "yards") {
                         case "metric":
                             s =
                                 e > 1e3
@@ -1900,8 +1755,7 @@
                             (e *= 3.28083), (s = L.GeometryUtil.formattedNumber(e, a.ft) + " ft");
                             break;
                         case "nauticalMile":
-                            (e *= 0.53996),
-                                (s = L.GeometryUtil.formattedNumber(e / 1e3, a.nm) + " nm");
+                            (e *= 0.53996), (s = L.GeometryUtil.formattedNumber(e / 1e3, a.nm) + " nm");
                             break;
                         case "yards":
                         default:
@@ -1912,20 +1766,19 @@
                                         : L.GeometryUtil.formattedNumber(e, a.yd) + " yd");
                     }
                     return s;
-                },
+                }
             });
         })(),
         L.Util.extend(L.LineUtil, {
             segmentsIntersect: function (t, e, i, o) {
                 return (
-                    this._checkCounterclockwise(t, i, o) !==
-                        this._checkCounterclockwise(e, i, o) &&
+                    this._checkCounterclockwise(t, i, o) !== this._checkCounterclockwise(e, i, o) &&
                     this._checkCounterclockwise(t, e, i) !== this._checkCounterclockwise(t, e, o)
                 );
             },
             _checkCounterclockwise: function (t, e, i) {
                 return (i.y - t.y) * (e.x - t.x) > (e.y - t.y) * (i.x - t.x);
-            },
+            }
         }),
         L.Polyline.include({
             intersects: function () {
@@ -1936,12 +1789,7 @@
                     n = o ? o.length : 0;
                 if (this._tooFewPointsForIntersection()) return !1;
                 for (t = n - 1; t >= 3; t--)
-                    if (
-                        ((e = o[t - 1]),
-                        (i = o[t]),
-                        this._lineSegmentsIntersectsRange(e, i, t - 2))
-                    )
-                        return !0;
+                    if (((e = o[t - 1]), (i = o[t]), this._lineSegmentsIntersectsRange(e, i, t - 2))) return !0;
                 return !1;
             },
             newLatLngIntersects: function (t, e) {
@@ -1952,10 +1800,7 @@
                     o = i ? i.length : 0,
                     n = i ? i[o - 1] : null,
                     a = o - 2;
-                return (
-                    !this._tooFewPointsForIntersection(1) &&
-                    this._lineSegmentsIntersectsRange(n, t, a, e ? 1 : 0)
-                );
+                return !this._tooFewPointsForIntersection(1) && this._lineSegmentsIntersectsRange(n, t, a, e ? 1 : 0);
             },
             _tooFewPointsForIntersection: function (t) {
                 var e = this._getProjectedPoints(),
@@ -1968,8 +1813,7 @@
                     s = this._getProjectedPoints();
                 o = o || 0;
                 for (var r = i; r > o; r--)
-                    if (((n = s[r - 1]), (a = s[r]), L.LineUtil.segmentsIntersect(t, e, n, a)))
-                        return !0;
+                    if (((n = s[r - 1]), (a = s[r]), L.LineUtil.segmentsIntersect(t, e, n, a))) return !0;
                 return !1;
             },
             _getProjectedPoints: function () {
@@ -1977,7 +1821,7 @@
                 for (var t = [], e = this._defaultShape(), i = 0; i < e.length; i++)
                     t.push(this._map.latLngToLayerPoint(e[i]));
                 return t;
-            },
+            }
         }),
         L.Polygon.include({
             intersects: function () {
@@ -1995,18 +1839,18 @@
                         (o = t - 2),
                         this._lineSegmentsIntersectsRange(i, e, o, 1)))
                 );
-            },
+            }
         }),
         (L.Control.Draw = L.Control.extend({
             options: {
                 position: "topleft",
                 draw: {},
-                edit: !1,
+                edit: !1
             },
             initialize: function (t) {
                 if (L.version < "0.7")
                     throw new Error(
-                        "Leaflet.draw 0.2.3+ requires Leaflet 0.7.0+. Download latest from https://github.com/Leaflet/Leaflet/",
+                        "Leaflet.draw 0.2.3+ requires Leaflet 0.7.0+. Download latest from https://github.com/Leaflet/Leaflet/"
                     );
                 L.Control.prototype.initialize.call(this, t);
                 var e;
@@ -2015,20 +1859,12 @@
                         this.options.draw &&
                         ((e = new L.DrawToolbar(this.options.draw)),
                         (this._toolbars[L.DrawToolbar.TYPE] = e),
-                        this._toolbars[L.DrawToolbar.TYPE].on(
-                            "enable",
-                            this._toolbarEnabled,
-                            this,
-                        )),
+                        this._toolbars[L.DrawToolbar.TYPE].on("enable", this._toolbarEnabled, this)),
                     L.EditToolbar &&
                         this.options.edit &&
                         ((e = new L.EditToolbar(this.options.edit)),
                         (this._toolbars[L.EditToolbar.TYPE] = e),
-                        this._toolbars[L.EditToolbar.TYPE].on(
-                            "enable",
-                            this._toolbarEnabled,
-                            this,
-                        )),
+                        this._toolbars[L.EditToolbar.TYPE].on("enable", this._toolbarEnabled, this)),
                     (L.toolbar = this);
             },
             onAdd: function (t) {
@@ -2046,8 +1882,7 @@
                 return i;
             },
             onRemove: function () {
-                for (var t in this._toolbars)
-                    this._toolbars.hasOwnProperty(t) && this._toolbars[t].removeToolbar();
+                for (var t in this._toolbars) this._toolbars.hasOwnProperty(t) && this._toolbars[t].removeToolbar();
             },
             setDrawingOptions: function (t) {
                 for (var e in this._toolbars)
@@ -2055,17 +1890,15 @@
             },
             _toolbarEnabled: function (t) {
                 var e = t.target;
-                for (var i in this._toolbars)
-                    this._toolbars[i] !== e && this._toolbars[i].disable();
-            },
+                for (var i in this._toolbars) this._toolbars[i] !== e && this._toolbars[i].disable();
+            }
         })),
         L.Map.mergeOptions({
             drawControlTooltips: !0,
-            drawControl: !1,
+            drawControl: !1
         }),
         L.Map.addInitHook(function () {
-            this.options.drawControl &&
-                ((this.drawControl = new L.Control.Draw()), this.addControl(this.drawControl));
+            this.options.drawControl && ((this.drawControl = new L.Control.Draw()), this.addControl(this.drawControl));
         }),
         (L.Toolbar = L.Class.extend({
             initialize: function (t) {
@@ -2093,23 +1926,13 @@
                     n = this._toolbarClass || "",
                     a = this.getModeHandlers(t);
                 for (
-                    this._toolbarContainer = L.DomUtil.create(
-                        "div",
-                        "leaflet-draw-toolbar leaflet-bar",
-                    ),
+                    this._toolbarContainer = L.DomUtil.create("div", "leaflet-draw-toolbar leaflet-bar"),
                         this._map = t,
                         e = 0;
                     e < a.length;
                     e++
                 )
-                    a[e].enabled &&
-                        this._initModeHandler(
-                            a[e].handler,
-                            this._toolbarContainer,
-                            o++,
-                            n,
-                            a[e].title,
-                        );
+                    a[e].enabled && this._initModeHandler(a[e].handler, this._toolbarContainer, o++, n, a[e].title);
                 if (o)
                     return (
                         (this._lastButtonIndex = --o),
@@ -2125,7 +1948,7 @@
                         (this._disposeButton(
                             this._modes[t].button,
                             this._modes[t].handler.enable,
-                            this._modes[t].handler,
+                            this._modes[t].handler
                         ),
                         this._modes[t].handler.disable(),
                         this._modes[t].handler
@@ -2133,11 +1956,7 @@
                             .off("disabled", this._handlerDeactivated, this));
                 this._modes = {};
                 for (var e = 0, i = this._actionButtons.length; e < i; e++)
-                    this._disposeButton(
-                        this._actionButtons[e].button,
-                        this._actionButtons[e].callback,
-                        this,
-                    );
+                    this._disposeButton(this._actionButtons[e].button, this._actionButtons[e].callback, this);
                 (this._actionButtons = []), (this._actionsContainer = null);
             },
             _initModeHandler: function (t, e, i, o, n) {
@@ -2150,7 +1969,7 @@
                         className: o + "-" + a,
                         container: e,
                         callback: this._modes[a].handler.enable,
-                        context: this._modes[a].handler,
+                        context: this._modes[a].handler
                     })),
                     (this._modes[a].buttonIndex = i),
                     this._modes[a].handler
@@ -2190,19 +2009,13 @@
             _handlerActivated: function (t) {
                 this.disable(),
                     (this._activeMode = this._modes[t.handler]),
-                    L.DomUtil.addClass(
-                        this._activeMode.button,
-                        "leaflet-draw-toolbar-button-enabled",
-                    ),
+                    L.DomUtil.addClass(this._activeMode.button, "leaflet-draw-toolbar-button-enabled"),
                     this._showActionsToolbar(),
                     this.fire("enable");
             },
             _handlerDeactivated: function () {
                 this._hideActionsToolbar(),
-                    L.DomUtil.removeClass(
-                        this._activeMode.button,
-                        "leaflet-draw-toolbar-button-enabled",
-                    ),
+                    L.DomUtil.removeClass(this._activeMode.button, "leaflet-draw-toolbar-button-enabled"),
                     (this._activeMode = null),
                     this.fire("disable");
             },
@@ -2215,10 +2028,7 @@
                     s = this.getActions(t),
                     r = s.length;
                 for (i = 0, o = this._actionButtons.length; i < o; i++)
-                    this._disposeButton(
-                        this._actionButtons[i].button,
-                        this._actionButtons[i].callback,
-                    );
+                    this._disposeButton(this._actionButtons[i].button, this._actionButtons[i].callback);
                 for (this._actionButtons = []; a.firstChild; ) a.removeChild(a.firstChild);
                 for (var l = 0; l < r; l++)
                     ("enabled" in s[l] && !s[l].enabled) ||
@@ -2228,11 +2038,11 @@
                             text: s[l].text,
                             container: e,
                             callback: s[l].callback,
-                            context: s[l].context,
+                            context: s[l].context
                         })),
                         this._actionButtons.push({
                             button: n,
-                            callback: s[l].callback,
+                            callback: s[l].callback
                         }));
             },
             _showActionsToolbar: function () {
@@ -2245,10 +2055,7 @@
                         (L.DomUtil.addClass(this._toolbarContainer, "leaflet-draw-toolbar-notop"),
                         L.DomUtil.addClass(this._actionsContainer, "leaflet-draw-actions-top")),
                     t === e &&
-                        (L.DomUtil.addClass(
-                            this._toolbarContainer,
-                            "leaflet-draw-toolbar-nobottom",
-                        ),
+                        (L.DomUtil.addClass(this._toolbarContainer, "leaflet-draw-toolbar-nobottom"),
                         L.DomUtil.addClass(this._actionsContainer, "leaflet-draw-actions-bottom")),
                     (this._actionsContainer.style.display = "block");
             },
@@ -2258,7 +2065,7 @@
                     L.DomUtil.removeClass(this._toolbarContainer, "leaflet-draw-toolbar-nobottom"),
                     L.DomUtil.removeClass(this._actionsContainer, "leaflet-draw-actions-top"),
                     L.DomUtil.removeClass(this._actionsContainer, "leaflet-draw-actions-bottom");
-            },
+            }
         })),
         (L.Draw = L.Draw || {}),
         (L.Draw.Tooltip = L.Class.extend({
@@ -2274,8 +2081,7 @@
             },
             dispose: function () {
                 this._map.off("mouseout", this._onMouseOut, this),
-                    this._container &&
-                        (this._popupPane.removeChild(this._container), (this._container = null));
+                    this._container && (this._popupPane.removeChild(this._container), (this._container = null));
             },
             updateContent: function (t) {
                 return this._container
@@ -2289,9 +2095,7 @@
                             (this._singleLineLabel = !0)),
                       (this._container.innerHTML =
                           (t.subtext.length > 0
-                              ? '<span class="leaflet-draw-tooltip-subtext">' +
-                                t.subtext +
-                                "</span><br />"
+                              ? '<span class="leaflet-draw-tooltip-subtext">' + t.subtext + "</span><br />"
                               : "") +
                           "<span>" +
                           t.text +
@@ -2306,33 +2110,23 @@
                 var e = this._map.latLngToLayerPoint(t),
                     i = this._container;
                 return (
-                    this._container &&
-                        (this._visible && (i.style.visibility = "inherit"),
-                        L.DomUtil.setPosition(i, e)),
+                    this._container && (this._visible && (i.style.visibility = "inherit"), L.DomUtil.setPosition(i, e)),
                     this
                 );
             },
             showAsError: function () {
-                return (
-                    this._container &&
-                        L.DomUtil.addClass(this._container, "leaflet-error-draw-tooltip"),
-                    this
-                );
+                return this._container && L.DomUtil.addClass(this._container, "leaflet-error-draw-tooltip"), this;
             },
             removeError: function () {
-                return (
-                    this._container &&
-                        L.DomUtil.removeClass(this._container, "leaflet-error-draw-tooltip"),
-                    this
-                );
+                return this._container && L.DomUtil.removeClass(this._container, "leaflet-error-draw-tooltip"), this;
             },
             _onMouseOut: function () {
                 this._container && (this._container.style.visibility = "hidden");
-            },
+            }
         })),
         (L.DrawToolbar = L.Toolbar.extend({
             statics: {
-                TYPE: "draw",
+                TYPE: "draw"
             },
             options: {
                 polyline: {},
@@ -2340,48 +2134,45 @@
                 rectangle: {},
                 circle: {},
                 marker: {},
-                circlemarker: {},
+                circlemarker: {}
             },
             initialize: function (t) {
                 for (var e in this.options)
-                    this.options.hasOwnProperty(e) &&
-                        t[e] &&
-                        (t[e] = L.extend({}, this.options[e], t[e]));
-                (this._toolbarClass = "leaflet-draw-draw"),
-                    L.Toolbar.prototype.initialize.call(this, t);
+                    this.options.hasOwnProperty(e) && t[e] && (t[e] = L.extend({}, this.options[e], t[e]));
+                (this._toolbarClass = "leaflet-draw-draw"), L.Toolbar.prototype.initialize.call(this, t);
             },
             getModeHandlers: function (t) {
                 return [
                     {
                         enabled: this.options.polyline,
                         handler: new L.Draw.Polyline(t, this.options.polyline),
-                        title: L.drawLocal.draw.toolbar.buttons.polyline,
+                        title: L.drawLocal.draw.toolbar.buttons.polyline
                     },
                     {
                         enabled: this.options.polygon,
                         handler: new L.Draw.Polygon(t, this.options.polygon),
-                        title: L.drawLocal.draw.toolbar.buttons.polygon,
+                        title: L.drawLocal.draw.toolbar.buttons.polygon
                     },
                     {
                         enabled: this.options.rectangle,
                         handler: new L.Draw.Rectangle(t, this.options.rectangle),
-                        title: L.drawLocal.draw.toolbar.buttons.rectangle,
+                        title: L.drawLocal.draw.toolbar.buttons.rectangle
                     },
                     {
                         enabled: this.options.circle,
                         handler: new L.Draw.Circle(t, this.options.circle),
-                        title: L.drawLocal.draw.toolbar.buttons.circle,
+                        title: L.drawLocal.draw.toolbar.buttons.circle
                     },
                     {
                         enabled: this.options.marker,
                         handler: new L.Draw.Marker(t, this.options.marker),
-                        title: L.drawLocal.draw.toolbar.buttons.marker,
+                        title: L.drawLocal.draw.toolbar.buttons.marker
                     },
                     {
                         enabled: this.options.circlemarker,
                         handler: new L.Draw.CircleMarker(t, this.options.circlemarker),
-                        title: L.drawLocal.draw.toolbar.buttons.circlemarker,
-                    },
+                        title: L.drawLocal.draw.toolbar.buttons.circlemarker
+                    }
                 ];
             },
             getActions: function (t) {
@@ -2391,34 +2182,32 @@
                         title: L.drawLocal.draw.toolbar.finish.title,
                         text: L.drawLocal.draw.toolbar.finish.text,
                         callback: t.completeShape,
-                        context: t,
+                        context: t
                     },
                     {
                         enabled: t.deleteLastVertex,
                         title: L.drawLocal.draw.toolbar.undo.title,
                         text: L.drawLocal.draw.toolbar.undo.text,
                         callback: t.deleteLastVertex,
-                        context: t,
+                        context: t
                     },
                     {
                         title: L.drawLocal.draw.toolbar.actions.title,
                         text: L.drawLocal.draw.toolbar.actions.text,
                         callback: this.disable,
-                        context: this,
-                    },
+                        context: this
+                    }
                 ];
             },
             setOptions: function (t) {
                 L.setOptions(this, t);
                 for (var e in this._modes)
-                    this._modes.hasOwnProperty(e) &&
-                        t.hasOwnProperty(e) &&
-                        this._modes[e].handler.setOptions(t[e]);
-            },
+                    this._modes.hasOwnProperty(e) && t.hasOwnProperty(e) && this._modes[e].handler.setOptions(t[e]);
+            }
         })),
         (L.EditToolbar = L.Toolbar.extend({
             statics: {
-                TYPE: "edit",
+                TYPE: "edit"
             },
             options: {
                 edit: {
@@ -2427,12 +2216,12 @@
                         fill: !0,
                         fillColor: "#fe57a1",
                         fillOpacity: 0.1,
-                        maintainColor: !1,
-                    },
+                        maintainColor: !1
+                    }
                 },
                 remove: {},
                 poly: null,
-                featureGroup: null,
+                featureGroup: null
             },
             initialize: function (t) {
                 t.edit &&
@@ -2441,7 +2230,7 @@
                     (t.edit.selectedPathOptions = L.extend(
                         {},
                         this.options.edit.selectedPathOptions,
-                        t.edit.selectedPathOptions,
+                        t.edit.selectedPathOptions
                     ))),
                     t.remove && (t.remove = L.extend({}, this.options.remove, t.remove)),
                     t.poly && (t.poly = L.extend({}, this.options.poly, t.poly)),
@@ -2457,17 +2246,17 @@
                         handler: new L.EditToolbar.Edit(t, {
                             featureGroup: e,
                             selectedPathOptions: this.options.edit.selectedPathOptions,
-                            poly: this.options.poly,
+                            poly: this.options.poly
                         }),
-                        title: L.drawLocal.edit.toolbar.buttons.edit,
+                        title: L.drawLocal.edit.toolbar.buttons.edit
                     },
                     {
                         enabled: this.options.remove,
                         handler: new L.EditToolbar.Delete(t, {
-                            featureGroup: e,
+                            featureGroup: e
                         }),
-                        title: L.drawLocal.edit.toolbar.buttons.remove,
-                    },
+                        title: L.drawLocal.edit.toolbar.buttons.remove
+                    }
                 ];
             },
             getActions: function (t) {
@@ -2476,14 +2265,14 @@
                         title: L.drawLocal.edit.toolbar.actions.save.title,
                         text: L.drawLocal.edit.toolbar.actions.save.text,
                         callback: this._save,
-                        context: this,
+                        context: this
                     },
                     {
                         title: L.drawLocal.edit.toolbar.actions.cancel.title,
                         text: L.drawLocal.edit.toolbar.actions.cancel.text,
                         callback: this.disable,
-                        context: this,
-                    },
+                        context: this
+                    }
                 ];
                 return (
                     t.removeAllLayers &&
@@ -2491,7 +2280,7 @@
                             title: L.drawLocal.edit.toolbar.actions.clearAll.title,
                             text: L.drawLocal.edit.toolbar.actions.clearAll.text,
                             callback: this._clearAllLayers,
-                            context: this,
+                            context: this
                         }),
                     e
                 );
@@ -2500,11 +2289,7 @@
                 var e = L.Toolbar.prototype.addToolbar.call(this, t);
                 return (
                     this._checkDisabled(),
-                    this.options.featureGroup.on(
-                        "layeradd layerremove",
-                        this._checkDisabled,
-                        this,
-                    ),
+                    this.options.featureGroup.on("layeradd layerremove", this._checkDisabled, this),
                     e
                 );
             },
@@ -2513,17 +2298,13 @@
                     L.Toolbar.prototype.removeToolbar.call(this);
             },
             disable: function () {
-                this.enabled() &&
-                    (this._activeMode.handler.revertLayers(),
-                    L.Toolbar.prototype.disable.call(this));
+                this.enabled() && (this._activeMode.handler.revertLayers(), L.Toolbar.prototype.disable.call(this));
             },
             _save: function () {
-                this._activeMode.handler.save(),
-                    this._activeMode && this._activeMode.handler.disable();
+                this._activeMode.handler.save(), this._activeMode && this._activeMode.handler.disable();
             },
             _clearAllLayers: function () {
-                this._activeMode.handler.removeAllLayers(),
-                    this._activeMode && this._activeMode.handler.disable();
+                this._activeMode.handler.removeAllLayers(), this._activeMode && this._activeMode.handler.disable();
             },
             _checkDisabled: function () {
                 var t,
@@ -2531,31 +2312,25 @@
                     i = 0 !== e.getLayers().length;
                 this.options.edit &&
                     ((t = this._modes[L.EditToolbar.Edit.TYPE].button),
-                    i
-                        ? L.DomUtil.removeClass(t, "leaflet-disabled")
-                        : L.DomUtil.addClass(t, "leaflet-disabled"),
+                    i ? L.DomUtil.removeClass(t, "leaflet-disabled") : L.DomUtil.addClass(t, "leaflet-disabled"),
                     t.setAttribute(
                         "title",
-                        i
-                            ? L.drawLocal.edit.toolbar.buttons.edit
-                            : L.drawLocal.edit.toolbar.buttons.editDisabled,
+                        i ? L.drawLocal.edit.toolbar.buttons.edit : L.drawLocal.edit.toolbar.buttons.editDisabled
                     )),
                     this.options.remove &&
                         ((t = this._modes[L.EditToolbar.Delete.TYPE].button),
-                        i
-                            ? L.DomUtil.removeClass(t, "leaflet-disabled")
-                            : L.DomUtil.addClass(t, "leaflet-disabled"),
+                        i ? L.DomUtil.removeClass(t, "leaflet-disabled") : L.DomUtil.addClass(t, "leaflet-disabled"),
                         t.setAttribute(
                             "title",
                             i
                                 ? L.drawLocal.edit.toolbar.buttons.remove
-                                : L.drawLocal.edit.toolbar.buttons.removeDisabled,
+                                : L.drawLocal.edit.toolbar.buttons.removeDisabled
                         ));
-            },
+            }
         })),
         (L.EditToolbar.Edit = L.Handler.extend({
             statics: {
-                TYPE: "edit",
+                TYPE: "edit"
             },
             initialize: function (t, e) {
                 if (
@@ -2577,10 +2352,10 @@
                 !this._enabled &&
                     this._hasAvailableLayers() &&
                     (this.fire("enabled", {
-                        handler: this.type,
+                        handler: this.type
                     }),
                     this._map.fire(L.Draw.Event.EDITSTART, {
-                        handler: this.type,
+                        handler: this.type
                     }),
                     L.Handler.prototype.enable.call(this),
                     this._featureGroup
@@ -2594,10 +2369,10 @@
                         .off("layerremove", this._disableLayerEdit, this),
                     L.Handler.prototype.disable.call(this),
                     this._map.fire(L.Draw.Event.EDITSTOP, {
-                        handler: this.type,
+                        handler: this.type
                     }),
                     this.fire("disabled", {
-                        handler: this.type,
+                        handler: this.type
                     }));
             },
             addHooks: function () {
@@ -2608,7 +2383,7 @@
                     (this._tooltip = new L.Draw.Tooltip(this._map)),
                     this._tooltip.updateContent({
                         text: L.drawLocal.edit.handlers.edit.tooltip.text,
-                        subtext: L.drawLocal.edit.handlers.edit.tooltip.subtext,
+                        subtext: L.drawLocal.edit.handlers.edit.tooltip.subtext
                     }),
                     (t._editTooltip = this._tooltip),
                     this._updateTooltip(),
@@ -2641,7 +2416,7 @@
                     e.edited && (t.addLayer(e), (e.edited = !1));
                 }),
                     this._map.fire(L.Draw.Event.EDITED, {
-                        layers: t,
+                        layers: t
                     });
             },
             _backupLayer: function (t) {
@@ -2649,22 +2424,22 @@
                 this._uneditedLayerProps[e] ||
                     (t instanceof L.Polyline || t instanceof L.Polygon || t instanceof L.Rectangle
                         ? (this._uneditedLayerProps[e] = {
-                              latlngs: L.LatLngUtil.cloneLatLngs(t.getLatLngs()),
+                              latlngs: L.LatLngUtil.cloneLatLngs(t.getLatLngs())
                           })
                         : t instanceof L.Circle
                           ? (this._uneditedLayerProps[e] = {
                                 latlng: L.LatLngUtil.cloneLatLng(t.getLatLng()),
-                                radius: t.getRadius(),
+                                radius: t.getRadius()
                             })
                           : (t instanceof L.Marker || t instanceof L.CircleMarker) &&
                             (this._uneditedLayerProps[e] = {
-                                latlng: L.LatLngUtil.cloneLatLng(t.getLatLng()),
+                                latlng: L.LatLngUtil.cloneLatLng(t.getLatLng())
                             }));
             },
             _getTooltipText: function () {
                 return {
                     text: L.drawLocal.edit.handlers.edit.tooltip.text,
-                    subtext: L.drawLocal.edit.handlers.edit.tooltip.subtext,
+                    subtext: L.drawLocal.edit.handlers.edit.tooltip.subtext
                 };
             },
             _updateTooltip: function () {
@@ -2674,9 +2449,7 @@
                 var e = L.Util.stamp(t);
                 (t.edited = !1),
                     this._uneditedLayerProps.hasOwnProperty(e) &&
-                        (t instanceof L.Polyline ||
-                        t instanceof L.Polygon ||
-                        t instanceof L.Rectangle
+                        (t instanceof L.Polyline || t instanceof L.Polygon || t instanceof L.Rectangle
                             ? t.setLatLngs(this._uneditedLayerProps[e].latlngs)
                             : t instanceof L.Circle
                               ? (t.setLatLng(this._uneditedLayerProps[e].latlng),
@@ -2684,7 +2457,7 @@
                               : (t instanceof L.Marker || t instanceof L.CircleMarker) &&
                                 t.setLatLng(this._uneditedLayerProps[e].latlng),
                         t.fire("revert-edited", {
-                            layer: t,
+                            layer: t
                         }));
             },
             _enableLayerEdit: function (t) {
@@ -2692,12 +2465,10 @@
                     i,
                     o = t.layer || t.target || t;
                 this._backupLayer(o),
-                    this.options.poly &&
-                        ((i = L.Util.extend({}, this.options.poly)), (o.options.poly = i)),
+                    this.options.poly && ((i = L.Util.extend({}, this.options.poly)), (o.options.poly = i)),
                     this.options.selectedPathOptions &&
                         ((e = L.Util.extend({}, this.options.selectedPathOptions)),
-                        e.maintainColor &&
-                            ((e.color = o.options.color), (e.fillColor = o.options.fillColor)),
+                        e.maintainColor && ((e.color = o.options.color), (e.fillColor = o.options.fillColor)),
                         (o.options.original = L.extend({}, o.options)),
                         (o.options.editing = e)),
                     o instanceof L.Marker
@@ -2720,8 +2491,7 @@
                     this._selectedPathOptions &&
                         (e instanceof L.Marker
                             ? this._toggleMarkerHighlight(e)
-                            : (e.setStyle(e.options.previousOptions),
-                              delete e.options.previousOptions)),
+                            : (e.setStyle(e.options.previousOptions), delete e.options.previousOptions)),
                     e instanceof L.Marker
                         ? (e.dragging.disable(),
                           e
@@ -2739,7 +2509,7 @@
                 var e = t.target;
                 (e.edited = !0),
                     this._map.fire(L.Draw.Event.EDITMOVE, {
-                        layer: e,
+                        layer: e
                     });
             },
             _onTouchMove: function (t) {
@@ -2750,11 +2520,11 @@
             },
             _hasAvailableLayers: function () {
                 return 0 !== this._featureGroup.getLayers().length;
-            },
+            }
         })),
         (L.EditToolbar.Delete = L.Handler.extend({
             statics: {
-                TYPE: "remove",
+                TYPE: "remove"
             },
             initialize: function (t, e) {
                 if (
@@ -2776,10 +2546,10 @@
                 !this._enabled &&
                     this._hasAvailableLayers() &&
                     (this.fire("enabled", {
-                        handler: this.type,
+                        handler: this.type
                     }),
                     this._map.fire(L.Draw.Event.DELETESTART, {
-                        handler: this.type,
+                        handler: this.type
                     }),
                     L.Handler.prototype.enable.call(this),
                     this._deletableLayers
@@ -2793,10 +2563,10 @@
                         .off("layerremove", this._disableLayerDelete, this),
                     L.Handler.prototype.disable.call(this),
                     this._map.fire(L.Draw.Event.DELETESTOP, {
-                        handler: this.type,
+                        handler: this.type
                     }),
                     this.fire("disabled", {
-                        handler: this.type,
+                        handler: this.type
                     }));
             },
             addHooks: function () {
@@ -2807,7 +2577,7 @@
                     (this._deletedLayers = new L.LayerGroup()),
                     (this._tooltip = new L.Draw.Tooltip(this._map)),
                     this._tooltip.updateContent({
-                        text: L.drawLocal.edit.handlers.remove.tooltip.text,
+                        text: L.drawLocal.edit.handlers.remove.tooltip.text
                     }),
                     this._map.on("mousemove", this._onMouseMove, this));
             },
@@ -2823,19 +2593,19 @@
                 this._deletedLayers.eachLayer(function (t) {
                     this._deletableLayers.addLayer(t),
                         t.fire("revert-deleted", {
-                            layer: t,
+                            layer: t
                         });
                 }, this);
             },
             save: function () {
                 this._map.fire(L.Draw.Event.DELETED, {
-                    layers: this._deletedLayers,
+                    layers: this._deletedLayers
                 });
             },
             removeAllLayers: function () {
                 this._deletableLayers.eachLayer(function (t) {
                     this._removeLayer({
-                        layer: t,
+                        layer: t
                     });
                 }, this),
                     this.save();
@@ -2849,15 +2619,13 @@
             },
             _removeLayer: function (t) {
                 var e = t.layer || t.target || t;
-                this._deletableLayers.removeLayer(e),
-                    this._deletedLayers.addLayer(e),
-                    e.fire("deleted");
+                this._deletableLayers.removeLayer(e), this._deletedLayers.addLayer(e), e.fire("deleted");
             },
             _onMouseMove: function (t) {
                 this._tooltip.updatePosition(t.latlng);
             },
             _hasAvailableLayers: function () {
                 return 0 !== this._deletableLayers.getLayers().length;
-            },
+            }
         }));
 })(window, document);

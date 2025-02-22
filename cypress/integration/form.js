@@ -1,4 +1,4 @@
-const jump_to_field = (field_label) => {
+const jump_to_field = field_label => {
     cy.get("body")
         .type("{esc}") // lose focus if any
         .type("{ctrl+j}") // jump to field
@@ -10,7 +10,7 @@ const jump_to_field = (field_label) => {
         .wait(500);
 };
 
-const type_value = (value) => {
+const type_value = value => {
     cy.focused().clear().type(value).type("{esc}");
 };
 
@@ -21,7 +21,7 @@ context("Form", () => {
         return cy
             .window()
             .its("frappe")
-            .then((frappe) => {
+            .then(frappe => {
                 return frappe.call("frappe.tests.ui_test_helpers.create_contact_records");
             });
     });
@@ -33,13 +33,11 @@ context("Form", () => {
 
     it("create a new form", () => {
         cy.visit("/app/todo/new");
-        cy.get_field("description", "Text Editor")
-            .type("this is a test todo", { force: true })
-            .wait(1000);
+        cy.get_field("description", "Text Editor").type("this is a test todo", { force: true }).wait(1000);
         cy.get(".page-title").should("contain", "Not Saved");
         cy.intercept({
             method: "POST",
-            url: "api/method/frappe.desk.form.save.savedocs",
+            url: "api/method/frappe.desk.form.save.savedocs"
         }).as("form_save");
         cy.get(".primary-action").click();
         cy.wait("@form_save").its("response.statusCode").should("eq", 200);
@@ -54,9 +52,7 @@ context("Form", () => {
         cy.visit("/app/contact");
 
         cy.clear_filters();
-        cy.get('.standard-filter-section [data-fieldname="id"] input')
-            .type("Test Form Contact 3")
-            .blur();
+        cy.get('.standard-filter-section [data-fieldname="id"] input').type("Test Form Contact 3").blur();
         cy.click_listview_row_item_with_text("Test Form Contact 3");
 
         cy.scrollTo(0);
@@ -120,29 +116,20 @@ context("Form", () => {
         cy.visit("/app/contact/Test Form Contact 1");
         cy.window()
             .its("cur_frm")
-            .then((frm) => {
+            .then(frm => {
                 cy.get('.frappe-control[data-fieldname="phone_nos"]').as("table");
 
                 // set property before form_render event of child table
                 cy.get("@table")
                     .find('[data-idx="1"]')
                     .invoke("attr", "data-name")
-                    .then((cdn) => {
-                        frm.set_df_property(
-                            "phone_nos",
-                            "hidden",
-                            1,
-                            "Contact Phone",
-                            "is_primary_phone",
-                            cdn,
-                        );
+                    .then(cdn => {
+                        frm.set_df_property("phone_nos", "hidden", 1, "Contact Phone", "is_primary_phone", cdn);
                     });
 
                 cy.get("@table").find('[data-idx="1"] .btn-open-row').click();
                 cy.get(".grid-row-open").as("table-form");
-                cy.get("@table-form")
-                    .find('.frappe-control[data-fieldname="is_primary_phone"]')
-                    .should("be.hidden");
+                cy.get("@table-form").find('.frappe-control[data-fieldname="is_primary_phone"]').should("be.hidden");
                 cy.get("@table-form").find(".grid-footer-toolbar").click();
 
                 // set property on form_render event of child table
@@ -150,21 +137,12 @@ context("Form", () => {
                 cy.get("@table")
                     .find('[data-idx="1"]')
                     .invoke("attr", "data-name")
-                    .then((cdn) => {
-                        frm.set_df_property(
-                            "phone_nos",
-                            "hidden",
-                            0,
-                            "Contact Phone",
-                            "is_primary_phone",
-                            cdn,
-                        );
+                    .then(cdn => {
+                        frm.set_df_property("phone_nos", "hidden", 0, "Contact Phone", "is_primary_phone", cdn);
                     });
 
                 cy.get(".grid-row-open").as("table-form");
-                cy.get("@table-form")
-                    .find('.frappe-control[data-fieldname="is_primary_phone"]')
-                    .should("be.visible");
+                cy.get("@table-form").find('.frappe-control[data-fieldname="is_primary_phone"]').should("be.visible");
                 cy.get("@table-form").find(".grid-footer-toolbar").click();
             });
     });

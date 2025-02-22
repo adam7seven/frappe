@@ -10,22 +10,20 @@ frappe.ui.form.on("Domain Settings", {
                     fieldname: "domains_multicheck",
                     fieldtype: "MultiCheck",
                     get_data: () => {
-                        let active_domains = (frm.doc.active_domains || []).map(
-                            (row) => row.domain,
-                        );
-                        return frappe.boot.all_domains.map((domain) => {
+                        let active_domains = (frm.doc.active_domains || []).map(row => row.domain);
+                        return frappe.boot.all_domains.map(domain => {
                             return {
                                 label: domain,
                                 value: domain,
-                                checked: active_domains.includes(domain),
+                                checked: active_domains.includes(domain)
                             };
                         });
                     },
                     on_change: () => {
                         frm.dirty();
-                    },
+                    }
                 },
-                render_input: true,
+                render_input: true
             });
             frm.domains_multicheck.refresh_input();
         }
@@ -38,25 +36,25 @@ frappe.ui.form.on("Domain Settings", {
     set_options_in_table: function (frm) {
         let selected_options = frm.domains_multicheck.get_value();
         let unselected_options = frm.domains_multicheck.options
-            .map((option) => option.value)
-            .filter((value) => {
+            .map(option => option.value)
+            .filter(value => {
                 return !selected_options.includes(value);
             });
 
         let map = {},
             list = [];
-        (frm.doc.active_domains || []).map((row) => {
+        (frm.doc.active_domains || []).map(row => {
             map[row.domain] = row.id;
             list.push(row.domain);
         });
 
-        unselected_options.map((option) => {
+        unselected_options.map(option => {
             if (list.includes(option)) {
                 frappe.model.clear_doc("Has Domain", map[option]);
             }
         });
 
-        selected_options.map((option) => {
+        selected_options.map(option => {
             if (!list.includes(option)) {
                 frappe.model.clear_doc("Has Domain", map[option]);
                 let row = frappe.model.add_child(frm.doc, "Has Domain", "active_domains");
@@ -65,5 +63,5 @@ frappe.ui.form.on("Domain Settings", {
         });
 
         refresh_field("active_domains");
-    },
+    }
 });

@@ -15,12 +15,12 @@ frappe.xcall = function (method, params) {
         frappe.call({
             method: method,
             args: params,
-            callback: (r) => {
+            callback: r => {
                 resolve(r.message);
             },
-            error: (r) => {
+            error: r => {
                 reject(r?.message);
-            },
+            }
         });
     });
 };
@@ -32,9 +32,9 @@ frappe.call = function (opts) {
             {
                 indicator: "orange",
                 message: __("Connection Lost"),
-                subtitle: __("You are not connected to Internet. Retry after sometime."),
+                subtitle: __("You are not connected to Internet. Retry after sometime.")
             },
-            3,
+            3
         );
         opts.always && opts.always();
         return $.ajax();
@@ -44,7 +44,7 @@ frappe.call = function (opts) {
             method: arguments[0],
             args: arguments[1],
             callback: arguments[2],
-            headers: arguments[3],
+            headers: arguments[3]
         };
     }
 
@@ -66,7 +66,7 @@ frappe.call = function (opts) {
             cmd: "run_doc_method",
             docs: frappe.get_doc(opts.doc.doctype, opts.doc.id),
             method: opts.method,
-            args: opts.args,
+            args: opts.args
         });
     } else if (opts.method) {
         args.cmd = opts.method;
@@ -121,7 +121,7 @@ frappe.call = function (opts) {
         async: opts.async,
         silent: opts.silent,
         api_version: opts.api_version,
-        url,
+        url
     });
 };
 
@@ -144,7 +144,7 @@ frappe.request.call = function (opts) {
             frappe.msgprint({
                 title: __("Not found"),
                 indicator: "red",
-                message: __("The resource you are looking for is not available"),
+                message: __("The resource you are looking for is not available")
             });
             opts.error_callback && opts.error_callback();
         },
@@ -156,7 +156,7 @@ frappe.request.call = function (opts) {
                 frappe.msgprint({
                     title: __("Not permitted"),
                     indicator: "red",
-                    message: xhr.responseJSON._error_message,
+                    message: xhr.responseJSON._error_message
                 });
 
                 xhr.responseJSON._server_messages = null;
@@ -172,8 +172,8 @@ frappe.request.call = function (opts) {
                     title: __("Not permitted"),
                     indicator: "red",
                     message: __(
-                        "You do not have enough permissions to access this resource. Please contact your manager to get access.",
-                    ),
+                        "You do not have enough permissions to access this resource. Please contact your manager to get access."
+                    )
                 });
             }
             opts.error_callback && opts.error_callback();
@@ -183,9 +183,7 @@ frappe.request.call = function (opts) {
             frappe.msgprint({
                 title: __("Please try again"),
                 indicator: "red",
-                message: __(
-                    "Another transaction is blocking this one. Please try again in a few seconds.",
-                ),
+                message: __("Another transaction is blocking this one. Please try again in a few seconds.")
             });
             opts.error_callback && opts.error_callback();
         },
@@ -194,8 +192,8 @@ frappe.request.call = function (opts) {
                 indicator: "red",
                 title: __("File too big"),
                 message: __("File size exceeded the maximum allowed size of {0} MB", [
-                    (frappe.boot.max_file_size || 5242880) / 1048576,
-                ]),
+                    (frappe.boot.max_file_size || 5242880) / 1048576
+                ])
             });
             opts.error_callback && opts.error_callback();
         },
@@ -231,7 +229,7 @@ frappe.request.call = function (opts) {
         502: function (xhr) {
             frappe.msgprint(__("Internal Server Error"));
             opts.error_callback && opts.error_callback();
-        },
+        }
     };
 
     var exception_handlers = {
@@ -240,7 +238,7 @@ frappe.request.call = function (opts) {
             frappe.msgprint({
                 title: __("Request Timeout"),
                 indicator: "red",
-                message: __("Server was too busy to process this request. Please try again."),
+                message: __("Server was too busy to process this request. Please try again.")
             });
         },
         QueryDeadlockError: function () {
@@ -248,9 +246,9 @@ frappe.request.call = function (opts) {
             frappe.msgprint({
                 title: __("Deadlock Occurred"),
                 indicator: "red",
-                message: __("Server was too busy to process this request. Please try again."),
+                message: __("Server was too busy to process this request. Please try again.")
             });
-        },
+        }
     };
 
     var ajax_args = {
@@ -263,11 +261,11 @@ frappe.request.call = function (opts) {
             {
                 "X-Frappe-CSRF-Token": frappe.csrf_token,
                 Accept: "application/json",
-                "X-Frappe-CMD": (opts.args && opts.args.cmd) || "" || "",
+                "X-Frappe-CMD": (opts.args && opts.args.cmd) || "" || ""
             },
-            opts.headers,
+            opts.headers
         ),
-        cache: false,
+        cache: false
     };
 
     if (opts.args && opts.args.doctype) {
@@ -329,10 +327,7 @@ frappe.request.call = function (opts) {
         })
         .fail(function (xhr, textStatus) {
             try {
-                if (
-                    xhr.getResponseHeader("content-type") == "application/json" &&
-                    xhr.responseText
-                ) {
+                if (xhr.getResponseHeader("content-type") == "application/json" && xhr.responseText) {
                     var data;
                     try {
                         data = JSON.parse(xhr.responseText);
@@ -373,10 +368,7 @@ frappe.request.is_fresh = function (args, threshold) {
 
     for (let past_request of frappe.request.logs[args.cmd]) {
         // check if request has same args and was made recently
-        if (
-            new Date() - past_request.timestamp < threshold &&
-            frappe.utils.deep_equal(args, past_request.args)
-        ) {
+        if (new Date() - past_request.timestamp < threshold && frappe.utils.deep_equal(args, past_request.args)) {
             console.log("throttled");
             return true;
         }
@@ -429,10 +421,7 @@ frappe.request.cleanup = function (opts, r) {
 
     if (r) {
         // session expired? - Guest has no business here!
-        if (
-            r.session_expired ||
-            (frappe.session.user === "Guest" && frappe.session.logged_in_user !== "Guest")
-        ) {
+        if (r.session_expired || (frappe.session.user === "Guest" && frappe.session.logged_in_user !== "Guest")) {
             frappe.app.handle_session_expired();
             return;
         }
@@ -453,7 +442,7 @@ frappe.request.cleanup = function (opts, r) {
         let handlers = [].concat(global_handlers, request_handler).filter(Boolean);
 
         if (r.exc_type) {
-            handlers.forEach((handler) => {
+            handlers.forEach(handler => {
                 handler(r);
             });
         }
@@ -478,7 +467,7 @@ frappe.request.cleanup = function (opts, r) {
         if (r.exc) {
             r.exc = JSON.parse(r.exc);
             if (r.exc instanceof Array) {
-                r.exc.forEach((exc) => {
+                r.exc.forEach(exc => {
                     if (exc) {
                         console.error(exc);
                     }
@@ -510,7 +499,7 @@ frappe.request.cleanup = function (opts, r) {
 
 frappe.after_server_call = () => {
     if (frappe.request.ajax_count) {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             frappe.request.waiting_for_ajax.push(() => {
                 resolve();
             });
@@ -521,7 +510,7 @@ frappe.after_server_call = () => {
 };
 
 frappe.after_ajax = function (fn) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
         if (frappe.request.ajax_count) {
             frappe.request.waiting_for_ajax.push(() => {
                 if (fn) return resolve(fn());
@@ -549,7 +538,7 @@ frappe.request.report_error = function (xhr, request_opts) {
     }
 
     const copy_markdown_to_clipboard = () => {
-        const code_block = (snippet) => "```\n" + snippet + "\n```";
+        const code_block = snippet => "```\n" + snippet + "\n```";
 
         let request_data = Object.assign({}, request_opts);
         request_data.request_id = xhr.getResponseHeader("X-Frappe-Request-Id");
@@ -563,7 +552,7 @@ frappe.request.report_error = function (xhr, request_opts) {
             "### Request Data",
             code_block(JSON.stringify(request_data, null, "\t")),
             "### Response Data",
-            code_block(JSON.stringify(data, null, "\t")),
+            code_block(JSON.stringify(data, null, "\t"))
         ].join("\n");
         frappe.utils.copy_to_clipboard(traceback_info);
     };
@@ -586,7 +575,7 @@ frappe.request.report_error = function (xhr, request_opts) {
             "<pre>" + JSON.stringify(request_opts, null, "\t") + "</pre>",
             "<hr>",
             "<h5>Response JSON</h5>",
-            "<pre>" + JSON.stringify(data, null, "\t") + "</pre>",
+            "<pre>" + JSON.stringify(data, null, "\t") + "</pre>"
         ].join("\n");
 
         var communication_composer = new frappe.views.CommunicationComposer({
@@ -595,13 +584,10 @@ frappe.request.report_error = function (xhr, request_opts) {
             message: error_report_message,
             doc: {
                 doctype: "User",
-                id: frappe.session.user,
-            },
+                id: frappe.session.user
+            }
         });
-        communication_composer.dialog.$wrapper.css(
-            "z-index",
-            cint(frappe.msg_dialog.$wrapper.css("z-index")) + 1,
-        );
+        communication_composer.dialog.$wrapper.css("z-index", cint(frappe.msg_dialog.$wrapper.css("z-index")) + 1);
     };
 
     if (exc) {
@@ -613,7 +599,7 @@ frappe.request.report_error = function (xhr, request_opts) {
 
         if (!frappe.error_dialog) {
             frappe.error_dialog = new frappe.ui.Dialog({
-                title: __("Server Error"),
+                title: __("Server Error")
             });
 
             if (error_report_email) {

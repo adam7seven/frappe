@@ -21,7 +21,7 @@ context("Kanban Board", () => {
     it("Create ToDo from kanban", () => {
         cy.intercept({
             method: "POST",
-            url: "api/method/frappe.client.save",
+            url: "api/method/frappe.client.save"
         }).as("save-todo");
 
         cy.click_listview_primary_button("Add ToDo");
@@ -35,19 +35,15 @@ context("Kanban Board", () => {
     it("Add and Remove fields", () => {
         cy.visit("/app/todo/view/kanban/ToDo Kanban");
 
-        cy.intercept(
-            "POST",
-            "/api/method/frappe.desk.doctype.kanban_board.kanban_board.save_settings",
-        ).as("save-kanban");
-        cy.intercept(
-            "POST",
-            "/api/method/frappe.desk.doctype.kanban_board.kanban_board.update_order",
-        ).as("update-order");
+        cy.intercept("POST", "/api/method/frappe.desk.doctype.kanban_board.kanban_board.save_settings").as(
+            "save-kanban"
+        );
+        cy.intercept("POST", "/api/method/frappe.desk.doctype.kanban_board.kanban_board.update_order").as(
+            "update-order"
+        );
 
         cy.get(".page-actions .menu-btn-group > .btn").click();
-        cy.get(".page-actions .menu-btn-group .dropdown-menu li")
-            .contains("Kanban Settings")
-            .click();
+        cy.get(".page-actions .menu-btn-group .dropdown-menu li").contains("Kanban Settings").click();
         cy.get(".add-new-fields").click();
 
         cy.get(".checkbox-options .checkbox").contains("ID").click();
@@ -62,27 +58,14 @@ context("Kanban Board", () => {
         cy.wait("@save-kanban");
 
         cy.get('.kanban-column[data-column-value="Open"] .kanban-cards').as("open-cards");
-        cy.get("@open-cards")
-            .find(".kanban-card .kanban-card-doc")
-            .first()
-            .should("contain", "ID:");
-        cy.get("@open-cards")
-            .find(".kanban-card .kanban-card-doc")
-            .first()
-            .should("contain", "Status:");
-        cy.get("@open-cards")
-            .find(".kanban-card .kanban-card-doc")
-            .first()
-            .should("contain", "Priority:");
+        cy.get("@open-cards").find(".kanban-card .kanban-card-doc").first().should("contain", "ID:");
+        cy.get("@open-cards").find(".kanban-card .kanban-card-doc").first().should("contain", "Status:");
+        cy.get("@open-cards").find(".kanban-card .kanban-card-doc").first().should("contain", "Priority:");
 
         cy.get(".page-actions .menu-btn-group > .btn").click();
-        cy.get(".page-actions .menu-btn-group .dropdown-menu li")
-            .contains("Kanban Settings")
-            .click();
+        cy.get(".page-actions .menu-btn-group .dropdown-menu li").contains("Kanban Settings").click();
         cy.get_open_dialog()
-            .find(
-                '.frappe-control[data-fieldname="fields_html"] div[data-label="ID"] .remove-field',
-            )
+            .find('.frappe-control[data-fieldname="fields_html"] div[data-label="ID"] .remove-field')
             .click();
 
         cy.wait("@update-order");
@@ -91,10 +74,7 @@ context("Kanban Board", () => {
 
         cy.wait("@save-kanban");
 
-        cy.get("@open-cards")
-            .find(".kanban-card .kanban-card-doc")
-            .first()
-            .should("not.contain", "ID:");
+        cy.get("@open-cards").find(".kanban-card .kanban-card-doc").first().should("not.contain", "ID:");
     });
 
     it("Checks if Kanban Board edits are blocked for non-System Manager and non-owner of the Board", () => {
@@ -102,7 +82,7 @@ context("Kanban Board", () => {
 
         const not_system_manager = "nosysmanager@example.com";
         cy.call("frappe.tests.ui_test_helpers.create_test_user", {
-            username: not_system_manager,
+            username: not_system_manager
         });
         cy.remove_role(not_system_manager, "System Manager");
         cy.call("frappe.tests.ui_test_helpers.create_todo", { description: "Frappe User ToDo" });
@@ -113,10 +93,7 @@ context("Kanban Board", () => {
         cy.visit("/app/todo/view/kanban/Admin Kanban");
 
         // Menu button should be hidden (dropdown for 'Save Filters' and 'Delete Kanban Board')
-        cy.get(".no-list-sidebar .menu-btn-group .btn-default[data-original-title='Menu']").should(
-            "have.length",
-            0,
-        );
+        cy.get(".no-list-sidebar .menu-btn-group .btn-default[data-original-title='Menu']").should("have.length", 0);
         // Kanban Columns should be visible (read-only)
         cy.get(".kanban .kanban-column").should("have.length", 2);
         // User should be able to add card (has access to ToDo)

@@ -25,7 +25,7 @@ $.extend(frappe.contacts, {
     },
     get_last_doc: function (frm) {
         const reverse_routes = frappe.route_history.slice().reverse();
-        const last_route = reverse_routes.find((route) => {
+        const last_route = reverse_routes.find(route => {
             return route[0] === "Form" && route[1] !== frm.doctype;
         });
         let doctype = last_route && last_route[1];
@@ -35,7 +35,7 @@ $.extend(frappe.contacts, {
 
         return {
             doctype,
-            docid,
+            docid
         };
     },
     get_address_display: function (frm, address_field, display_field) {
@@ -53,17 +53,17 @@ $.extend(frappe.contacts, {
 
         frappe
             .xcall("frappe.contacts.doctype.address.address.get_address_display", {
-                address_dict: frm.doc[_address_field],
+                address_dict: frm.doc[_address_field]
             })
-            .then((address_display) => frm.set_value(_display_field, address_display));
-    },
+            .then(address_display => frm.set_value(_display_field, address_display));
+    }
 });
 
 function new_record(doctype, source_doc) {
     frappe.dynamic_link = {
         doctype: source_doc.doctype,
         doc: source_doc,
-        fieldname: "id",
+        fieldname: "id"
     };
 
     return frappe.new_doc(doctype);

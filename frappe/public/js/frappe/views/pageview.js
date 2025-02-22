@@ -36,7 +36,7 @@ frappe.views.pageview = {
                     }
                     callback();
                 },
-                freeze: true,
+                freeze: true
             });
         }
     },
@@ -55,7 +55,7 @@ frappe.views.pageview = {
                 frappe.container.change_to(id);
             });
         });
-    },
+    }
 };
 
 frappe.views.Page = class Page {
@@ -109,7 +109,7 @@ frappe.show_not_found = function (page_id) {
     frappe.show_message_page({
         page_id: page_id,
         message: __("Sorry! I could not find what you were looking for."),
-        img: "/assets/frappe/images/ui/bubble-tea-sorry.svg",
+        img: "/assets/frappe/images/ui/bubble-tea-sorry.svg"
     });
 };
 
@@ -117,7 +117,7 @@ frappe.show_not_permitted = function (page_id) {
     frappe.show_message_page({
         page_id: page_id,
         message: __("Sorry! You are not permitted to view this page."),
-        img: "/assets/frappe/images/ui/bubble-tea-sorry.svg",
+        img: "/assets/frappe/images/ui/bubble-tea-sorry.svg"
         // icon: "octicon octicon-circle-slash"
     });
 };
@@ -147,9 +147,9 @@ frappe.show_message_page = function (opts) {
             {
                 img: opts.img || "",
                 message: opts.message || "",
-                home: __("Home"),
-            },
-        ),
+                home: __("Home")
+            }
+        )
     );
 
     frappe.container.change_to(opts.page_id);

@@ -59,5 +59,5 @@ Object.assign(frappe.energy_points, {
             return __("{0} reverted {1}", [owner_id, log.revert_of]);
         }
         return __("gained by {0} via automatic rule {1}", [user, log.rule.bold()]);
-    },
+    }
 });

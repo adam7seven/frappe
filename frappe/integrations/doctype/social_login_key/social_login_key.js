@@ -10,7 +10,7 @@ const fields = [
     "redirect_url",
     "api_endpoint",
     "api_endpoint_args",
-    "auth_url_data",
+    "auth_url_data"
 ];
 
 frappe.ui.form.on("Social Login Key", {
@@ -29,10 +29,10 @@ frappe.ui.form.on("Social Login Key", {
                     doc: frm.doc,
                     method: "get_social_login_provider",
                     args: {
-                        provider: frm.doc.social_login_provider,
-                    },
+                        provider: frm.doc.social_login_provider
+                    }
                 })
-                .done((r) => {
+                .done(r => {
                     const provider = r.message;
                     for (var field of fields) {
                         frm.set_value(field, provider[field]);
@@ -80,5 +80,5 @@ frappe.ui.form.on("Social Login Key", {
             frm.set_value(field, "");
             frm.set_df_property(field, "read_only", 0);
         }
-    },
+    }
 });

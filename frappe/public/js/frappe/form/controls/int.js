@@ -19,7 +19,7 @@ frappe.ui.form.ControlInt = class ControlInt extends frappe.ui.form.ControlData 
             var parsed_value = value;
             if (parsed_components !== null) {
                 parsed_value = parsed_components
-                    .map((v) => {
+                    .map(v => {
                         return isNaN(parseFloat(v)) ? v : flt(v);
                     })
                     .join("");

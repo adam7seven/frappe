@@ -3,11 +3,7 @@ frappe.listview_settings["Email Account"] = {
     get_indicator: function (doc) {
         if (doc.default_incoming && doc.default_outgoing) {
             var color = doc.enable_incoming && doc.enable_outgoing ? "blue" : "gray";
-            return [
-                __("Default Sending and Inbox"),
-                color,
-                "default_incoming,=,Yes|default_outgoing,=,Yes",
-            ];
+            return [__("Default Sending and Inbox"), color, "default_incoming,=,Yes|default_outgoing,=,Yes"];
         } else if (doc.default_incoming) {
             color = doc.enable_incoming ? "blue" : "gray";
             return [__("Default Inbox"), color, "default_incoming,=,Yes"];
@@ -18,7 +14,7 @@ frappe.listview_settings["Email Account"] = {
             color = doc.enable_incoming ? "blue" : "gray";
             return [__("Inbox"), color, "default_outgoing,=,No|default_incoming=No"];
         }
-    },
+    }
 };
 
 frappe.help.youtube_id["Email Account"] = "YFYe0DrB95o";

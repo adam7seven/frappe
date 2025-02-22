@@ -11,9 +11,9 @@ context("Control Icon", () => {
                 {
                     label: "Icon",
                     fieldname: "icon",
-                    fieldtype: "Icon",
-                },
-            ],
+                    fieldtype: "Icon"
+                }
+            ]
         });
     }
 
@@ -22,19 +22,15 @@ context("Control Icon", () => {
         cy.get(".frappe-control[data-fieldname=icon]").findByRole("textbox").click();
 
         cy.get(".icon-picker .icon-wrapper[id=heart-active]").first().click();
-        cy.get(".frappe-control[data-fieldname=icon]")
-            .findByRole("textbox")
-            .should("have.value", "heart-active");
-        cy.get("@dialog").then((dialog) => {
+        cy.get(".frappe-control[data-fieldname=icon]").findByRole("textbox").should("have.value", "heart-active");
+        cy.get("@dialog").then(dialog => {
             let value = dialog.get_value("icon");
             expect(value).to.equal("heart-active");
         });
 
         cy.get(".icon-picker .icon-wrapper[id=heart]").first().click();
-        cy.get(".frappe-control[data-fieldname=icon]")
-            .findByRole("textbox")
-            .should("have.value", "heart");
-        cy.get("@dialog").then((dialog) => {
+        cy.get(".frappe-control[data-fieldname=icon]").findByRole("textbox").should("have.value", "heart");
+        cy.get("@dialog").then(dialog => {
             let value = dialog.get_value("icon");
             expect(value).to.equal("heart");
         });
@@ -43,8 +39,8 @@ context("Control Icon", () => {
     it("search for icon and clear search input", () => {
         let search_text = "ed";
         cy.get(".icon-picker").get(".search-icons > input").click().type(search_text);
-        cy.get(".icon-section .icon-wrapper:not(.hidden)").then((i) => {
-            cy.get(`.icon-section .icon-wrapper[id*='${search_text}']`).then((icons) => {
+        cy.get(".icon-section .icon-wrapper:not(.hidden)").then(i => {
+            cy.get(`.icon-section .icon-wrapper[id*='${search_text}']`).then(icons => {
                 expect(i.length).to.equal(icons.length);
             });
         });

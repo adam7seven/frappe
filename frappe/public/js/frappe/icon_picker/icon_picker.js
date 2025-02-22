@@ -32,10 +32,8 @@ class Picker {
     }
 
     setup_icons() {
-        this.icons.forEach((icon) => {
-            let $icon = $(
-                `<div id="${icon}" class="icon-wrapper">${frappe.utils.icon(icon, "md")}</div>`,
-            );
+        this.icons.forEach(icon => {
+            let $icon = $(`<div id="${icon}" class="icon-wrapper">${frappe.utils.icon(icon, "md")}</div>`);
             this.icon_wrapper.append($icon);
             const set_values = () => {
                 this.set_icon(icon);
@@ -44,7 +42,7 @@ class Picker {
             $icon.on("click", () => {
                 set_values();
             });
-            $icon.keydown((e) => {
+            $icon.keydown(e => {
                 const key_code = e.keyCode;
                 if ([13, 32].includes(key_code)) {
                     e.preventDefault();
@@ -52,7 +50,7 @@ class Picker {
                 }
             });
         });
-        this.search_input.keyup((e) => {
+        this.search_input.keyup(e => {
             e.preventDefault();
             this.filter_icons();
         });

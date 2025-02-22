@@ -5,7 +5,7 @@ context("List Paging", () => {
         return cy
             .window()
             .its("frappe")
-            .then((frappe) => {
+            .then(frappe => {
                 return frappe.call("frappe.tests.ui_test_helpers.create_multiple_todo_records");
             });
     });

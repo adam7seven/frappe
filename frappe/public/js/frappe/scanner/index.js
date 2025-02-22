@@ -45,11 +45,11 @@ frappe.ui.Scanner = class Scanner {
                         this.hide_dialog();
                     }
                 },
-                (errorMessage) => {
+                errorMessage => {
                     // parse error, ignore it.
-                },
+                }
             )
-            .catch((err) => {
+            .catch(err => {
                 this.is_alive = false;
                 this.hide_dialog();
                 console.error(err);
@@ -73,8 +73,8 @@ frappe.ui.Scanner = class Scanner {
             fields: [
                 {
                     fieldtype: "HTML",
-                    fieldname: "scan_area",
-                },
+                    fieldname: "scan_area"
+                }
             ],
             on_page_show: () => {
                 this.$scan_area = dialog.get_field("scan_area").$wrapper;
@@ -84,7 +84,7 @@ frappe.ui.Scanner = class Scanner {
             },
             on_hide: () => {
                 this.stop_scan();
-            },
+            }
         });
         return dialog;
     }

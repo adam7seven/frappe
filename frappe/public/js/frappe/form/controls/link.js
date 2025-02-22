@@ -89,9 +89,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
         // this is used to get the context in which link field is loaded
         if (this.doctype) return this.doctype;
         else {
-            return frappe.get_route && frappe.get_route()[0] === "List"
-                ? frappe.get_route()[1]
-                : null;
+            return frappe.get_route && frappe.get_route()[0] === "List" ? frappe.get_route()[1] : null;
         }
     }
     setup_buttons() {
@@ -126,8 +124,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
         }
 
         const link_title =
-            frappe.utils.get_link_title(doctype, value) ||
-            (await frappe.utils.fetch_link_title(doctype, value));
+            frappe.utils.get_link_title(doctype, value) || (await frappe.utils.fetch_link_title(doctype, value));
 
         this.translate_and_set_input_value(link_title, value);
     }
@@ -168,7 +165,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
         new frappe.ui.form.LinkSelector({
             doctype: doctype,
             target: this,
-            txt: this.get_input_value(),
+            txt: this.get_input_value()
         });
         return false;
     }
@@ -197,7 +194,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
         frappe._from_link = frappe.utils.deep_clone(this);
         frappe._from_link_scrollY = $(document).scrollTop();
 
-        frappe.ui.form.make_quick_entry(doctype, (doc) => {
+        frappe.ui.form.make_quick_entry(doctype, doc => {
             return me.set_value(doc.id);
         });
 
@@ -222,7 +219,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
             data: function (item) {
                 return {
                     label: me.get_translated(item.label || item.value),
-                    value: item.value,
+                    value: item.value
                 };
             },
             filter: function () {
@@ -245,7 +242,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
                     html += '<br><span class="small">' + __(d.description) + "</span>";
                 }
                 return $(`<div role="option">`)
-                    .on("click", (event) => {
+                    .on("click", event => {
                         me.awesomplete.select(event.currentTarget, event.currentTarget);
                         me.show_link_and_clear_buttons();
                     })
@@ -256,7 +253,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
             },
             sort: function () {
                 return 0;
-            },
+            }
         });
 
         this.custom_awesomplete_filter && this.custom_awesomplete_filter(this.awesomplete);
@@ -281,7 +278,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
                     doctype: doctype,
                     ignore_user_permissions: me.df.ignore_user_permissions,
                     reference_doctype: me.get_reference_doctype() || "",
-                    page_length: cint(frappe.boot.sysdefaults?.link_field_results_limit) || 10,
+                    page_length: cint(frappe.boot.sysdefaults?.link_field_results_limit) || 10
                 };
 
                 me.set_custom_query(args);
@@ -307,7 +304,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
                             r.message.push({
                                 html: `<span class="text-muted" style="line-height: 1.5">${filter_string}</span>`,
                                 value: "",
-                                action: () => {},
+                                action: () => {}
                             });
                         }
 
@@ -322,14 +319,13 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
                                         "</span>",
                                     label: __("Create a new {0}", [__(me.get_options())]),
                                     value: "create_new__link_option",
-                                    action: me.new_doc,
+                                    action: me.new_doc
                                 });
                             }
 
                             //custom link actions
                             let custom__link_options =
-                                frappe.ui.form.ControlLink.link_options &&
-                                frappe.ui.form.ControlLink.link_options(me);
+                                frappe.ui.form.ControlLink.link_options && frappe.ui.form.ControlLink.link_options(me);
 
                             if (custom__link_options) {
                                 r.message = r.message.concat(custom__link_options);
@@ -346,19 +342,19 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
                                         "</span>",
                                     label: __("Advanced Search"),
                                     value: "advanced_search__link_option",
-                                    action: me.open_advanced_search,
+                                    action: me.open_advanced_search
                                 });
                             }
                         }
                         me.$input.cache[doctype][term] = r.message;
                         me.awesomplete.list = me.$input.cache[doctype][term];
                         me.toggle_href(doctype);
-                        r.message.forEach((item) => {
+                        r.message.forEach(item => {
                             frappe.utils.add_link_title(doctype, item.value, item.label);
                         });
-                    },
+                    }
                 });
-            }, 500),
+            }, 500)
         );
 
         this.$input.on("blur", function () {
@@ -385,7 +381,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
             }
         });
 
-        this.$input.on("awesomplete-close", (e) => {
+        this.$input.on("awesomplete-close", e => {
             this.autocomplete_open = false;
 
             if (!me.get_label_value()) {
@@ -445,7 +441,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
         // suggestion list has two items with same value (docid) & description
         return results.reduce((newArr, currElem) => {
             if (newArr.length === 0) return [currElem];
-            let element_with_same_value = newArr.find((e) => e.value === currElem.value);
+            let element_with_same_value = newArr.find(e => e.value === currElem.value);
             if (element_with_same_value) {
                 element_with_same_value.description += `, ${currElem.description}`;
                 return [...newArr];
@@ -493,7 +489,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
         }
 
         // add doctype if missing
-        filter_array = filter_array.map((filter) => {
+        filter_array = filter_array.map(filter => {
             if (filter.length === 3) {
                 return [doctype, ...filter]; // doctype, fieldname, operator, value
             }
@@ -515,8 +511,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
                 filter[3].push("...");
             }
 
-            let value =
-                filter[3] == null || filter[3] === "" ? __("empty") : String(__(filter[3]));
+            let value = filter[3] == null || filter[3] === "" ? __("empty") : String(__(filter[3]));
 
             return [__(label).bold(), __(filter[2]), value.bold()].join(" ");
         }
@@ -539,7 +534,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
             }
         };
 
-        const set_nulls = (obj) => {
+        const set_nulls = obj => {
             $.each(obj, (key, value) => {
                 if (!is_valid_value(value, key)) {
                     delete obj[key];
@@ -581,11 +576,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
                 args.query = get_query;
             } else {
                 // get_query by function
-                var q = get_query(
-                    (this.frm && this.frm.doc) || this.doc,
-                    this.doctype,
-                    this.docid,
-                );
+                var q = get_query((this.frm && this.frm.doc) || this.doc, this.doctype, this.docid);
 
                 if (typeof q === "string") {
                     // returns a string
@@ -622,21 +613,21 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
         // take filters from the link field and add to the query
         this.get_query = function () {
             return {
-                filters,
+                filters
             };
         };
     }
 
     parse_filters(link_filters) {
         let filters = {};
-        link_filters.forEach((filter) => {
+        link_filters.forEach(filter => {
             let [_, fieldname, operator, value] = filter;
             if (value?.startsWith?.("eval:")) {
                 value = value.split("eval:")[1];
                 let context = {
                     doc: this.doc,
                     parent: this.doc.parenttype ? this.frm.doc : null,
-                    frappe,
+                    frappe
                 };
                 value = frappe.utils.eval(value, context);
             }
@@ -666,7 +657,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
             return value;
         }
 
-        const update_dependant_fields = (response) => {
+        const update_dependant_fields = response => {
             let field_value = "";
             for (const [target_field, source_field] of Object.entries(this.fetch_map)) {
                 if (value) {
@@ -676,13 +667,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
                 if (this.layout?.set_value) {
                     this.layout.set_value(target_field, field_value);
                 } else if (this.frm) {
-                    frappe.model.set_value(
-                        this.df.parent,
-                        this.docid,
-                        target_field,
-                        field_value,
-                        this.df.fieldtype,
-                    );
+                    frappe.model.set_value(this.df.parent, this.docid, target_field, field_value, this.df.fieldtype);
                 }
             }
         };
@@ -693,9 +678,9 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
                 .xcall("frappe.client.validate_link", {
                     doctype: options,
                     docid: value,
-                    fields: columns_to_fetch,
+                    fields: columns_to_fetch
                 })
-                .then((response) => {
+                .then(response => {
                     if (!this.docid || !columns_to_fetch.length) {
                         return response.id;
                     }
@@ -719,9 +704,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
             }
 
             // Target field kept as key because source field could be non-unique
-            me.layout.fetch_dict.setDefault(target_doctype, {}).setDefault(link_field, {})[
-                target_field
-            ] = source_field;
+            me.layout.fetch_dict.setDefault(target_doctype, {}).setDefault(link_field, {})[target_field] = source_field;
         }
 
         function setup_add_fetch(df) {
@@ -742,7 +725,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
                     "Date",
                     "Select",
                     "Duration",
-                    "Time",
+                    "Time"
                 ].includes(df.fieldtype) ||
                 df.read_only == 1 ||
                 df.is_virtual == 1;

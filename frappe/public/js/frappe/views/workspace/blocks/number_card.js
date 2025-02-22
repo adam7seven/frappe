@@ -3,7 +3,7 @@ export default class NumberCard extends Block {
     static get toolbox() {
         return {
             title: "Number Card",
-            icon: frappe.utils.icon("number-card", "sm"),
+            icon: frappe.utils.icon("number-card", "sm")
         };
     }
 
@@ -23,7 +23,7 @@ export default class NumberCard extends Block {
             allow_hiding: false,
             allow_edit: true,
             allow_resize: true,
-            for_workspace: true,
+            for_workspace: true
         };
     }
 
@@ -57,7 +57,7 @@ export default class NumberCard extends Block {
         return {
             number_card_id: this.wrapper.getAttribute("number_card_id"),
             col: this.get_col(),
-            new: this.new_block_widget,
+            new: this.new_block_widget
         };
     }
 }

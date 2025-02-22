@@ -12,7 +12,7 @@ frappe.ui.get_print_settings = function (pdf, callback, letter_head, pick_column
         {
             fieldtype: "Check",
             fieldname: "with_letter_head",
-            label: __("With Letter head"),
+            label: __("With Letter head")
         },
         {
             fieldtype: "Link",
@@ -20,7 +20,7 @@ frappe.ui.get_print_settings = function (pdf, callback, letter_head, pick_column
             label: __("Letter Head"),
             depends_on: "with_letter_head",
             options: "Letter Head",
-            default: letter_head || default_letter_head,
+            default: letter_head || default_letter_head
         },
         {
             fieldtype: "Select",
@@ -28,10 +28,10 @@ frappe.ui.get_print_settings = function (pdf, callback, letter_head, pick_column
             label: __("Orientation"),
             options: [
                 { value: "Landscape", label: __("Landscape") },
-                { value: "Portrait", label: __("Portrait") },
+                { value: "Portrait", label: __("Portrait") }
             ],
-            default: "Landscape",
-        },
+            default: "Landscape"
+        }
     ];
 
     if (pick_columns) {
@@ -39,7 +39,7 @@ frappe.ui.get_print_settings = function (pdf, callback, letter_head, pick_column
             {
                 label: __("Pick Columns"),
                 fieldtype: "Check",
-                fieldname: "pick_columns",
+                fieldname: "pick_columns"
             },
             {
                 label: __("Select Columns"),
@@ -48,11 +48,11 @@ frappe.ui.get_print_settings = function (pdf, callback, letter_head, pick_column
                 depends_on: "pick_columns",
                 columns: 2,
                 select_all: true,
-                options: pick_columns.map((df) => ({
+                options: pick_columns.map(df => ({
                     label: __(df.label, null, df.parent),
-                    value: df.fieldname,
-                })),
-            },
+                    value: df.fieldname
+                }))
+            }
         );
     }
 
@@ -68,7 +68,7 @@ frappe.ui.get_print_settings = function (pdf, callback, letter_head, pick_column
             }
             callback(data);
         },
-        __("Print Settings"),
+        __("Print Settings")
     );
 };
 
@@ -89,13 +89,13 @@ frappe.ui.form.qz_connect = function () {
                 // try to connect once before firing the mimetype launcher
                 frappe.show_alert({
                     message: __("Attempting Connection to QZ Tray..."),
-                    indicator: "blue",
+                    indicator: "blue"
                 });
                 qz.websocket.connect().then(
                     () => {
                         frappe.show_alert({
                             message: __("Connected to QZ Tray!"),
-                            indicator: "green",
+                            indicator: "green"
                         });
                         resolve();
                     },
@@ -105,44 +105,44 @@ frappe.ui.form.qz_connect = function () {
                             frappe.show_alert(
                                 {
                                     message: __("Attempting to launch QZ Tray..."),
-                                    indicator: "blue",
+                                    indicator: "blue"
                                 },
-                                14,
+                                14
                             );
                             window.location.assign("qz:launch");
                             qz.websocket
                                 .connect({
                                     retries: 3,
-                                    delay: 1,
+                                    delay: 1
                                 })
                                 .then(
                                     () => {
                                         frappe.show_alert({
                                             message: __("Connected to QZ Tray!"),
-                                            indicator: "green",
+                                            indicator: "green"
                                         });
                                         resolve();
                                     },
                                     () => {
                                         frappe.throw(
                                             __(
-                                                'Error connecting to QZ Tray Application...<br><br> You need to have QZ Tray application installed and running, to use the Raw Print feature.<br><br><a target="_blank" href="https://qz.io/download/">Click here to Download and install QZ Tray</a>.<br> <a target="_blank" href="https://erpnext.com/docs/user/manual/en/setting-up/print/raw-printing">Click here to learn more about Raw Printing</a>.',
-                                            ),
+                                                'Error connecting to QZ Tray Application...<br><br> You need to have QZ Tray application installed and running, to use the Raw Print feature.<br><br><a target="_blank" href="https://qz.io/download/">Click here to Download and install QZ Tray</a>.<br> <a target="_blank" href="https://erpnext.com/docs/user/manual/en/setting-up/print/raw-printing">Click here to learn more about Raw Printing</a>.'
+                                            )
                                         );
                                         reject();
-                                    },
+                                    }
                                 );
                         } else {
                             frappe.show_alert(
                                 {
                                     message: "QZ Tray " + err.toString(),
-                                    indicator: "red",
+                                    indicator: "red"
                                 },
-                                14,
+                                14
                             );
                             reject();
                         }
-                    },
+                    }
                 );
             }
         });
@@ -151,14 +151,14 @@ frappe.ui.form.qz_connect = function () {
 
 frappe.ui.form.qz_init = function () {
     // Initializing qz tray library
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
         if (typeof qz === "object" && typeof qz.version === "string") {
             // resolve immediately if already Initialized
             resolve();
         } else {
             let qz_required_assets = [
                 "/assets/frappe/node_modules/js-sha256/build/sha256.min.js",
-                "/assets/frappe/node_modules/qz-tray/qz-tray.js",
+                "/assets/frappe/node_modules/qz-tray/qz-tray.js"
             ];
             frappe.require(qz_required_assets, () => {
                 qz.api.setPromiseType(function promise(resolver) {
@@ -183,10 +183,10 @@ frappe.ui.form.qz_get_printer_list = function () {
         .then(function () {
             return qz.printers.find();
         })
-        .then((data) => {
+        .then(data => {
             return data;
         })
-        .catch((err) => {
+        .catch(err => {
             frappe.ui.form.qz_fail(err);
         });
 };
@@ -195,7 +195,7 @@ frappe.ui.form.qz_success = function () {
     // notify qz successful print
     frappe.show_alert({
         message: __("Print Sent to the printer!"),
-        indicator: "green",
+        indicator: "green"
     });
 };
 
@@ -204,8 +204,8 @@ frappe.ui.form.qz_fail = function (e) {
     frappe.show_alert(
         {
             message: __("QZ Tray Failed: ") + e.toString(),
-            indicator: "red",
+            indicator: "red"
         },
-        20,
+        20
     );
 };

@@ -10,18 +10,18 @@ export default {
         {
             fieldname: "date",
             fieldtype: "Date",
-            label: "Date",
+            label: "Date"
         },
         {
             fieldname: "time",
             fieldtype: "Time",
-            label: "Time",
+            label: "Time"
         },
         {
             fieldname: "datetime",
             fieldtype: "Datetime",
-            label: "Datetime",
-        },
+            label: "Datetime"
+        }
     ],
     issingle: 1,
     links: [],
@@ -38,11 +38,11 @@ export default {
             read: 1,
             role: "System Manager",
             share: 1,
-            write: 1,
-        },
+            write: 1
+        }
     ],
     quick_entry: 1,
     sort_field: "modified",
     sort_order: "ASC",
-    track_changes: 1,
+    track_changes: 1
 };

@@ -14,7 +14,7 @@ export default class BulkOperations {
         const BACKGROUND_PRINT_THRESHOLD = 25;
 
         const valid_docs = docs
-            .filter((doc) => {
+            .filter(doc => {
                 return (
                     !is_submittable ||
                     doc.docstatus === 1 ||
@@ -23,9 +23,9 @@ export default class BulkOperations {
                     frappe.user.has_role("Administrator")
                 );
             })
-            .map((doc) => doc.id);
+            .map(doc => doc.id);
 
-        const invalid_docs = docs.filter((doc) => !valid_docs.includes(doc.id));
+        const invalid_docs = docs.filter(doc => !valid_docs.includes(doc.id));
 
         if (invalid_docs.length > 0) {
             frappe.msgprint(__("You selected Draft or Cancelled documents"));
@@ -38,9 +38,7 @@ export default class BulkOperations {
         }
 
         if (valid_docs.length > MAX_PRINT_LIMIT) {
-            frappe.msgprint(
-                __("You can only print upto {0} documents at a time", [MAX_PRINT_LIMIT]),
-            );
+            frappe.msgprint(__("You can only print upto {0} documents at a time", [MAX_PRINT_LIMIT]));
             return;
         }
 
@@ -52,47 +50,47 @@ export default class BulkOperations {
                     label: __("Letter Head"),
                     fieldname: "letter_sel",
                     options: letterheads,
-                    default: letterheads[0],
+                    default: letterheads[0]
                 },
                 {
                     fieldtype: "Select",
                     label: __("Print Format"),
                     fieldname: "print_sel",
                     options: frappe.meta.get_print_formats(this.doctype),
-                    default: frappe.get_meta(this.doctype).default_print_format,
+                    default: frappe.get_meta(this.doctype).default_print_format
                 },
                 {
                     fieldtype: "Select",
                     label: __("Page Size"),
                     fieldname: "page_size",
                     options: frappe.meta.get_print_sizes(),
-                    default: print_settings.pdf_page_size,
+                    default: print_settings.pdf_page_size
                 },
                 {
                     fieldtype: "Float",
                     label: __("Page Height (in mm)"),
                     fieldname: "page_height",
                     depends_on: 'eval:doc.page_size == "Custom"',
-                    default: print_settings.pdf_page_height,
+                    default: print_settings.pdf_page_height
                 },
                 {
                     fieldtype: "Float",
                     label: __("Page Width (in mm)"),
                     fieldname: "page_width",
                     depends_on: 'eval:doc.page_size == "Custom"',
-                    default: print_settings.pdf_page_width,
+                    default: print_settings.pdf_page_width
                 },
                 {
                     fieldtype: "Check",
                     label: __("Background Print (required for >25 documents)"),
                     fieldname: "background_print",
                     default: valid_docs.length > BACKGROUND_PRINT_THRESHOLD,
-                    read_only: valid_docs.length > BACKGROUND_PRINT_THRESHOLD,
-                },
-            ],
+                    read_only: valid_docs.length > BACKGROUND_PRINT_THRESHOLD
+                }
+            ]
         });
 
-        dialog.set_primary_action(__("Print"), (args) => {
+        dialog.set_primary_action(__("Print"), args => {
             if (!args) return;
             const default_print_format = frappe.get_meta(this.doctype).default_print_format;
             const with_letterhead = args.letter_sel == __("No Letterhead") ? 0 : 1;
@@ -107,7 +105,7 @@ export default class BulkOperations {
                 }
                 pdf_options = JSON.stringify({
                     "page-height": args.page_height,
-                    "page-width": args.page_width,
+                    "page-width": args.page_width
                 });
             } else {
                 pdf_options = JSON.stringify({ "page-size": args.page_size });
@@ -121,20 +119,20 @@ export default class BulkOperations {
                         format: print_format,
                         no_letterhead: with_letterhead ? "0" : "1",
                         letterhead: letterhead,
-                        options: pdf_options,
+                        options: pdf_options
                     })
-                    .then((response) => {
+                    .then(response => {
                         let task_id = response.message.task_id;
                         frappe.realtime.task_subscribe(task_id);
-                        frappe.realtime.on(`task_complete:${task_id}`, (data) => {
+                        frappe.realtime.on(`task_complete:${task_id}`, data => {
                             frappe.msgprint({
                                 title: __("Bulk PDF Export"),
                                 message: __("Your PDF is ready for download"),
                                 primary_action: {
                                     label: __("Download PDF"),
                                     client_action: "window.open",
-                                    args: data.file_url,
-                                },
+                                    args: data.file_url
+                                }
                             });
                             frappe.realtime.task_unsubscribe(task_id);
                             frappe.realtime.off(`task_complete:${task_id}`);
@@ -154,7 +152,7 @@ export default class BulkOperations {
                         "&letterhead=" +
                         encodeURIComponent(letterhead) +
                         "&options=" +
-                        encodeURIComponent(pdf_options),
+                        encodeURIComponent(pdf_options)
                 );
 
                 if (!w) {
@@ -174,12 +172,12 @@ export default class BulkOperations {
                 doctype: "Letter Head",
                 fields: ["id", "is_default"],
                 filters: { disabled: 0 },
-                limit_page_length: 0,
+                limit_page_length: 0
             },
             async: false,
             callback(r) {
                 if (r.message) {
-                    r.message.forEach((letterhead) => {
+                    r.message.forEach(letterhead => {
                         if (letterhead.is_default) {
                             letterhead_options.unshift(letterhead.id);
                         } else {
@@ -187,7 +185,7 @@ export default class BulkOperations {
                         }
                     });
                 }
-            },
+            }
         });
         return letterhead_options;
     }
@@ -197,21 +195,18 @@ export default class BulkOperations {
             .call({
                 method: "frappe.desk.reportview.delete_items",
                 freeze: true,
-                freeze_message:
-                    docids.length <= 10 ? __("Deleting {0} records...", [docids.length]) : null,
+                freeze_message: docids.length <= 10 ? __("Deleting {0} records...", [docids.length]) : null,
                 args: {
                     items: docids,
-                    doctype: this.doctype,
-                },
+                    doctype: this.doctype
+                }
             })
-            .then((r) => {
+            .then(r => {
                 let failed = r.message;
                 if (!failed) failed = [];
 
                 if (failed.length && !r._server_messages) {
-                    frappe.throw(
-                        __("Cannot delete {0}", [failed.map((f) => f.bold()).join(", ")]),
-                    );
+                    frappe.throw(__("Cannot delete {0}", [failed.map(f => f.bold()).join(", ")]));
                 }
                 if (failed.length < docids.length) {
                     frappe.utils.play_sound("delete");
@@ -229,7 +224,7 @@ export default class BulkOperations {
                 docid: docids,
                 bulk_assign: true,
                 re_assign: true,
-                callback: done,
+                callback: done
             });
             assign_to.dialog.clear();
             assign_to.dialog.show();
@@ -246,10 +241,10 @@ export default class BulkOperations {
                     args: {
                         doctype: this.doctype,
                         ids: docids,
-                        ignore_permissions: true,
+                        ignore_permissions: true
                     },
                     freeze: true,
-                    freeze_message: "Removing assignments...",
+                    freeze_message: "Removing assignments..."
                 })
                 .then(() => {
                     done();
@@ -264,7 +259,7 @@ export default class BulkOperations {
             frappe
                 .call("frappe.automation.doctype.assignment_rule.assignment_rule.bulk_apply", {
                     doctype: this.doctype,
-                    docids: docids,
+                    docids: docids
                 })
                 .then(() => done());
         }
@@ -279,9 +274,9 @@ export default class BulkOperations {
                 doctype: this.doctype,
                 action: action,
                 docids: docids,
-                task_id: task_id,
+                task_id: task_id
             })
-            .then((failed_docids) => {
+            .then(failed_docids => {
                 if (failed_docids?.length) {
                     const comma_separated_records = frappe.utils.comma_and(failed_docids);
                     switch (action) {
@@ -307,13 +302,11 @@ export default class BulkOperations {
 
     edit(docids, field_mappings, done) {
         let field_options = Object.keys(field_mappings).sort(function (a, b) {
-            return __(cstr(field_mappings[a].label)).localeCompare(
-                cstr(__(field_mappings[b].label)),
-            );
+            return __(cstr(field_mappings[a].label)).localeCompare(cstr(__(field_mappings[b].label)));
         });
         const status_regex = /status/i;
 
-        const default_field = field_options.find((value) => status_regex.test(value));
+        const default_field = field_options.find(value => status_regex.test(value));
 
         const dialog = new frappe.ui.Dialog({
             title: __("Bulk Edit"),
@@ -327,7 +320,7 @@ export default class BulkOperations {
                     reqd: 1,
                     onchange: () => {
                         set_value_field(dialog);
-                    },
+                    }
                 },
                 {
                     fieldtype: "Data",
@@ -335,8 +328,8 @@ export default class BulkOperations {
                     fieldname: "value",
                     onchange() {
                         show_help_text();
-                    },
-                },
+                    }
+                }
             ],
             primary_action: ({ value }) => {
                 const fieldname = field_mappings[dialog.get_value("field")].fieldname;
@@ -350,19 +343,17 @@ export default class BulkOperations {
                             docids: docids,
                             action: "update",
                             data: {
-                                [fieldname]: value || null,
-                            },
-                        },
+                                [fieldname]: value || null
+                            }
+                        }
                     })
-                    .then((r) => {
+                    .then(r => {
                         let failed = r.message || [];
 
                         if (failed.length && !r._server_messages) {
                             dialog.enable_primary_action();
                             frappe.throw(
-                                __("Cannot update {0}", [
-                                    failed.map((f) => (f.bold ? f.bold() : f)).join(", "),
-                                ]),
+                                __("Cannot update {0}", [failed.map(f => (f.bold ? f.bold() : f)).join(", ")])
                             );
                         }
                         done();
@@ -370,7 +361,7 @@ export default class BulkOperations {
                         frappe.show_alert(__("Updated successfully"));
                     });
             },
-            primary_action_label: __("Update {0} records", [docids.length]),
+            primary_action_label: __("Update {0} records", [docids.length])
         });
 
         if (default_field) set_value_field(dialog); // to set `Value` df based on default `Field`
@@ -381,11 +372,7 @@ export default class BulkOperations {
             /* if the field label has status in it and
             if it has select fieldtype with no default value then
             set a default value from the available option. */
-            if (
-                new_df.label.match(status_regex) &&
-                new_df.fieldtype === "Select" &&
-                !new_df.default
-            ) {
+            if (new_df.label.match(status_regex) && new_df.fieldtype === "Select" && !new_df.default) {
                 let options = [];
                 if (typeof new_df.options === "string") {
                     options = new_df.options.split("\n");
@@ -420,7 +407,7 @@ export default class BulkOperations {
                 dialog.set_df_property(
                     "value",
                     "description",
-                    __("You have not entered a value. The field will be set to empty."),
+                    __("You have not entered a value. The field will be set to empty.")
                 );
             } else {
                 dialog.set_df_property("value", "description", "");
@@ -442,8 +429,8 @@ export default class BulkOperations {
                     reqd: true,
                     get_data: function (txt) {
                         return frappe.db.get_link_options("Tag", txt);
-                    },
-                },
+                    }
+                }
             ],
             primary_action_label: __("Add"),
             primary_action: () => {
@@ -456,29 +443,24 @@ export default class BulkOperations {
                         args: {
                             tags: args.tags,
                             dt: this.doctype,
-                            docs: docids,
+                            docs: docids
                         },
                         callback: () => {
                             dialog.hide();
                             done();
-                        },
+                        }
                     });
                 }
-            },
+            }
         });
         dialog.show();
     }
 
     export(doctype, docids) {
         frappe.require("data_import_tools.bundle.js", () => {
-            const data_exporter = new frappe.data_import.DataExporter(
-                doctype,
-                "Insert New Records",
-            );
+            const data_exporter = new frappe.data_import.DataExporter(doctype, "Insert New Records");
             data_exporter.dialog.set_value("export_records", "by_filter");
-            data_exporter.filter_group.add_filters_to_filter_group([
-                [doctype, "id", "in", docids, false],
-            ]);
+            data_exporter.filter_group.add_filters_to_filter_group([[doctype, "id", "in", docids, false]]);
         });
     }
 }

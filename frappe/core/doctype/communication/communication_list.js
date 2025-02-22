@@ -10,7 +10,7 @@ frappe.listview_settings["Communication"] = {
         "reference_doctype",
         "reference_id",
         "has_attachment",
-        "communication_date",
+        "communication_date"
     ],
 
     onload: function (list_view) {
@@ -26,5 +26,5 @@ frappe.listview_settings["Communication"] = {
 
     primary_action: function () {
         new frappe.views.CommunicationComposer();
-    },
+    }
 };

@@ -21,7 +21,7 @@ class TelemetryManager {
                 autocapture: false,
                 capture_pageview: false,
                 capture_pageleave: false,
-                advanced_disable_decide: disable_decide,
+                advanced_disable_decide: disable_decide
             });
             posthog.identify(frappe.boot.sitename);
             this.send_heartbeat();

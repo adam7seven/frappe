@@ -34,12 +34,7 @@ frappe.views.FormFactory = class FormFactory extends frappe.views.Factory {
     }
 
     make_form(doctype) {
-        this.page.frm = new frappe.ui.form.Form(
-            doctype,
-            this.page,
-            true,
-            frappe.router.doctype_layout,
-        );
+        this.page.frm = new frappe.ui.form.Form(doctype, this.page, true, frappe.router.doctype_layout);
     }
 
     setup_events() {
@@ -64,11 +59,7 @@ frappe.views.FormFactory = class FormFactory extends frappe.views.Factory {
         }
 
         const doc = frappe.get_doc(doctype, id);
-        if (
-            doc &&
-            frappe.model.get_docinfo(doctype, id) &&
-            (doc.__islocal || frappe.model.is_fresh(doc))
-        ) {
+        if (doc && frappe.model.get_docinfo(doctype, id) && (doc.__islocal || frappe.model.is_fresh(doc))) {
             // is document available and recent?
             this.render(doctype_layout, id);
         } else {

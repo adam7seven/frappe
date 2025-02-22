@@ -10,7 +10,7 @@ const save_routes = frappe.utils.debounce(() => {
 
     frappe
         .xcall("frappe.desk.doctype.route_history.route_history.deferred_insert", {
-            routes: routes,
+            routes: routes
         })
         .catch(() => {
             frappe.route_history_queue.concat(routes);
@@ -22,7 +22,7 @@ frappe.router.on("change", () => {
     if (is_route_useful(route)) {
         frappe.route_history_queue.push({
             creation: frappe.datetime.now_datetime(),
-            route: frappe.get_route_str(),
+            route: frappe.get_route_str()
         });
 
         save_routes();

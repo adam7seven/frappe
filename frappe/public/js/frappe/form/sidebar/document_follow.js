@@ -26,11 +26,7 @@ frappe.ui.form.DocumentFollow = class DocumentFollow {
         const docinfo = this.frm.get_docinfo();
         const document_follow_enabled = frappe.boot.user.document_follow_notify;
         const document_can_be_followed = frappe.get_meta(this.frm.doctype).track_changes;
-        if (
-            frappe.session.user === "Administrator" ||
-            !document_follow_enabled ||
-            !document_can_be_followed
-        ) {
+        if (frappe.session.user === "Administrator" || !document_follow_enabled || !document_can_be_followed) {
             this.hide_follow_section();
             return;
         }
@@ -58,13 +54,13 @@ frappe.ui.form.DocumentFollow = class DocumentFollow {
                     doctype: this.frm.doctype,
                     doc_id: this.frm.doc.id,
                     user: frappe.session.user,
-                    force: true,
+                    force: true
                 },
-                callback: (r) => {
+                callback: r => {
                     if (r.message) {
                         this.follow_action();
                     }
-                },
+                }
             });
         });
 
@@ -75,13 +71,13 @@ frappe.ui.form.DocumentFollow = class DocumentFollow {
                 args: {
                     doctype: this.frm.doctype,
                     doc_id: this.frm.doc.id,
-                    user: frappe.session.user,
+                    user: frappe.session.user
                 },
-                callback: (r) => {
+                callback: r => {
                     if (r.message) {
                         this.unfollow_action();
                     }
-                },
+                }
             });
         });
     }
@@ -94,23 +90,23 @@ frappe.ui.form.DocumentFollow = class DocumentFollow {
         this.followed_by.removeClass("hidden");
         this.followed_by_label.removeClass("hidden");
         this.followed_by.empty();
-        this.get_followed_user().then((user) => {
+        this.get_followed_user().then(user => {
             $(user).appendTo(this.followed_by);
         });
     }
 
     get_followed_user() {
         var html = "";
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             frappe
                 .call({
                     method: "frappe.desk.form.document_follow.get_follow_users",
                     args: {
                         doctype: this.frm.doctype,
-                        doc_id: this.frm.doc.id,
-                    },
+                        doc_id: this.frm.doc.id
+                    }
                 })
-                .then((r) => {
+                .then(r => {
                     this.count_others = 0;
                     for (var d in r.message) {
                         this.count_others++;
@@ -129,9 +125,9 @@ frappe.ui.form.DocumentFollow = class DocumentFollow {
     follow_action() {
         frappe.show_alert({
             message: __(
-                "You are now following this document. You will receive daily updates via email. You can change this in User Settings.",
+                "You are now following this document. You will receive daily updates via email. You can change this in User Settings."
             ),
-            indicator: "orange",
+            indicator: "orange"
         });
         this.follow_document_link.removeClass("text-muted disable-click");
         this.follow_document_link.addClass("hidden");
@@ -142,7 +138,7 @@ frappe.ui.form.DocumentFollow = class DocumentFollow {
     unfollow_action() {
         frappe.show_alert({
             message: __("You unfollowed this document"),
-            indicator: "red",
+            indicator: "red"
         });
         this.unfollow_document_link.removeClass("text-muted disable-click");
         this.unfollow_document_link.addClass("hidden");

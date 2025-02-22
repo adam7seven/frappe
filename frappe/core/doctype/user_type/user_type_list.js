@@ -6,5 +6,5 @@ frappe.listview_settings["User Type"] = {
         } else {
             return [__("Custom"), "blue", "is_standard,=,0"];
         }
-    },
+    }
 };

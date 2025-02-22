@@ -53,7 +53,7 @@ Object.assign(frappe.model, {
         }
     },
 
-    sync_docinfo: (r) => {
+    sync_docinfo: r => {
         // set docinfo (comments, assign, attachments)
         if (r.docinfo) {
             const { doctype, id } = r.docinfo;
@@ -78,8 +78,7 @@ Object.assign(frappe.model, {
 
             doc.id = frappe.model.get_new_id(doc.doctype);
 
-            if (!doc.parentfield)
-                frappe.provide("frappe.model.docinfo." + doc.doctype + "." + doc.id);
+            if (!doc.parentfield) frappe.provide("frappe.model.docinfo." + doc.doctype + "." + doc.id);
         }
 
         locals[doc.doctype][doc.id] = doc;
@@ -108,7 +107,7 @@ Object.assign(frappe.model, {
         // update values in the existing local doc instead of replacing
         let local_doc = locals[doc.doctype][doc.id];
         let clear_keys = function (source, target) {
-            Object.keys(target).map((key) => {
+            Object.keys(target).map(key => {
                 if (source[key] == undefined) delete target[key];
             });
         };
@@ -176,5 +175,5 @@ Object.assign(frappe.model, {
 
         // clear keys on parent
         clear_keys(doc, local_doc);
-    },
+    }
 });

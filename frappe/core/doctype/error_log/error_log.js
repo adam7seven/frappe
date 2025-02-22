@@ -9,9 +9,9 @@ frappe.ui.form.on("Error Log", {
             frm.add_custom_button(__("Show Related Errors"), function () {
                 frappe.set_route("List", "Error Log", {
                     reference_doctype: frm.doc.reference_doctype,
-                    reference_id: frm.doc.reference_id,
+                    reference_id: frm.doc.reference_id
                 });
             });
         }
-    },
+    }
 });

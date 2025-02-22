@@ -14,11 +14,11 @@ frappe.ui.form.on("System Settings", {
                     frappe.app.setup_moment();
                     delete frm.re_setup_moment;
                 }
-            },
+            }
         });
 
-        frappe.xcall("frappe.apps.get_apps").then((r) => {
-            let apps = r?.map((r) => r.id) || [];
+        frappe.xcall("frappe.apps.get_apps").then(r => {
+            let apps = r?.map(r => r.id) || [];
             frm.set_df_property("default_app", "options", [" ", ...apps]);
         });
 
@@ -50,7 +50,7 @@ frappe.ui.form.on("System Settings", {
 
         const attr_tuples = [
             [frm.doc.language, frappe.boot.sysdefaults.language, frappe.boot.user.language],
-            [frm.doc.rounding_method, frappe.boot.sysdefaults.rounding_method], // no user override.
+            [frm.doc.rounding_method, frappe.boot.sysdefaults.rounding_method] // no user override.
         ];
 
         if (attr_tuples.some(has_effectively_changed)) {
@@ -64,9 +64,7 @@ frappe.ui.form.on("System Settings", {
 
     rounding_method: function (frm) {
         if (frm.doc.rounding_method == frappe.boot.sysdefaults.rounding_method) return;
-        let msg = __(
-            "Changing rounding method on site with data can result in unexpected behaviour.",
-        );
+        let msg = __("Changing rounding method on site with data can result in unexpected behaviour.");
         msg += "<br>";
         msg += __("Do you still want to proceed?");
 
@@ -75,7 +73,7 @@ frappe.ui.form.on("System Settings", {
             () => {},
             () => {
                 frm.set_value("rounding_method", frappe.boot.sysdefaults.rounding_method);
-            },
+            }
         );
     },
 
@@ -85,10 +83,10 @@ frappe.ui.form.on("System Settings", {
 
             field.df.options = field.df.options
                 .split("\n")
-                .filter((o) => o != "Banker's Rounding (legacy)")
+                .filter(o => o != "Banker's Rounding (legacy)")
                 .join("\n");
 
             field.refresh();
         }
-    },
+    }
 });

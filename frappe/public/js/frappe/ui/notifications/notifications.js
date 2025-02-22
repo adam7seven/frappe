@@ -28,7 +28,7 @@ frappe.ui.Notifications = class Notifications {
         $(`<span class="notification-settings pull-right" data-action="go_to_settings">
 			${frappe.utils.icon("setting-gear")}
 		</span>`)
-            .on("click", (e) => {
+            .on("click", e => {
                 e.stopImmediatePropagation();
                 this.dropdown.dropdown("hide");
                 frappe.set_route("Form", "Notification Settings", frappe.session.user);
@@ -40,7 +40,7 @@ frappe.ui.Notifications = class Notifications {
         $(`<span class="mark-all-read pull-right" data-action="mark_all_as_read">
 			${frappe.utils.icon("mark-as-read")}
 		</span>`)
-            .on("click", (e) => this.mark_all_as_read(e))
+            .on("click", e => this.mark_all_as_read(e))
             .appendTo(this.header_actions)
             .attr("title", __("Mark all as read"))
             .tooltip({ delay: { show: 600, hide: 100 }, trigger: "hover" });
@@ -50,23 +50,23 @@ frappe.ui.Notifications = class Notifications {
                 label: __("Notifications"),
                 id: "notifications",
                 view: NotificationsView,
-                el: this.panel_notifications,
+                el: this.panel_notifications
             },
             {
                 label: __("Events"),
                 id: "todays_events",
                 view: EventsView,
-                el: this.panel_events,
+                el: this.panel_events
             },
             {
                 label: __("What's New"),
                 id: "changelog_feed",
                 view: ChangelogFeedView,
-                el: this.panel_changelog_feed,
-            },
+                el: this.panel_changelog_feed
+            }
         ];
 
-        let get_headers_html = (item) => {
+        let get_headers_html = item => {
             let active = item.id == "notifications" ? "active" : "";
 
             return `<li class="notifications-category ${active}"
@@ -76,9 +76,9 @@ frappe.ui.Notifications = class Notifications {
         };
 
         let navitem = $(`<ul class="notification-item-tabs nav nav-tabs" role="tablist"></ul>`);
-        this.categories = this.categories.map((item) => {
+        this.categories = this.categories.map(item => {
             item.$tab = $(get_headers_html(item));
-            item.$tab.on("click", (e) => {
+            item.$tab.on("click", e => {
                 e.stopImmediatePropagation();
                 this.switch_tab(item);
             });
@@ -87,7 +87,7 @@ frappe.ui.Notifications = class Notifications {
             return item;
         });
         navitem.appendTo(this.header_items);
-        this.categories.forEach((category) => {
+        this.categories.forEach(category => {
             this.make_tab_view(category);
         });
         this.switch_tab(this.categories[0]);
@@ -95,14 +95,14 @@ frappe.ui.Notifications = class Notifications {
 
     switch_tab(item) {
         // Set active tab
-        this.categories.forEach((item) => {
+        this.categories.forEach(item => {
             item.$tab.removeClass("active");
         });
 
         item.$tab.addClass("active");
 
         // Hide other tabs
-        Object.keys(this.tabs).forEach((tab_name) => this.tabs[tab_name].hide());
+        Object.keys(this.tabs).forEach(tab_name => this.tabs[tab_name].hide());
         this.tabs[item.id].show();
     }
 
@@ -118,13 +118,13 @@ frappe.ui.Notifications = class Notifications {
     }
 
     setup_dropdown_events() {
-        this.dropdown.on("hide.bs.dropdown", (e) => {
+        this.dropdown.on("hide.bs.dropdown", e => {
             let hide = $(e.currentTarget).data("closable");
             $(e.currentTarget).data("closable", true);
             return hide;
         });
 
-        this.dropdown.on("click", (e) => {
+        this.dropdown.on("click", e => {
             $(e.currentTarget).data("closable", true);
         });
     }
@@ -132,7 +132,7 @@ frappe.ui.Notifications = class Notifications {
 
 frappe.ui.notifications = {
     get_notification_config() {
-        return frappe.xcall("frappe.desk.notifications.get_notification_info").then((r) => {
+        return frappe.xcall("frappe.desk.notifications.get_notification_info").then(r => {
             frappe.ui.notifications.config = r;
             return r;
         });
@@ -157,7 +157,7 @@ frappe.ui.notifications = {
             $.extend(frappe.route_options, filters);
         }
         frappe.set_route("List", doctype);
-    },
+    }
 };
 
 class BaseNotificationsView {
@@ -188,7 +188,7 @@ class NotificationsView extends BaseNotificationsView {
             .tooltip({ delay: { show: 600, hide: 100 }, trigger: "hover" });
 
         this.setup_notification_listeners();
-        this.get_notifications_list(this.max_length).then((r) => {
+        this.get_notifications_list(this.max_length).then(r => {
             if (!r.message) return;
             this.dropdown_items = r.message.notification_logs;
             frappe.update_user_info(r.message.user_info);
@@ -200,7 +200,7 @@ class NotificationsView extends BaseNotificationsView {
     }
 
     update_dropdown() {
-        this.get_notifications_list(1).then((r) => {
+        this.get_notifications_list(1).then(r => {
             if (!r.message) return;
             let new_item = r.message.notification_logs[0];
             frappe.update_user_info(r.message.user_info);
@@ -220,7 +220,7 @@ class NotificationsView extends BaseNotificationsView {
                 `<a class="recent-item text-center text-muted"
 					href="/app/List/Notification Log">
 					<div class="full-log-btn">${__("View Full Log")}</div>
-				</a>`,
+				</a>`
             );
         }
     }
@@ -228,7 +228,7 @@ class NotificationsView extends BaseNotificationsView {
     mark_as_read(docid, $el) {
         frappe
             .call("frappe.desk.doctype.notification_log.notification_log.mark_as_read", {
-                docid: docid,
+                docid: docid
             })
             .then(() => {
                 $el.removeClass("unread");
@@ -249,9 +249,7 @@ class NotificationsView extends BaseNotificationsView {
         let message = notification_log.subject;
 
         let title = message.match(/<b class="subject-title">(.*?)<\/b>/);
-        message = title
-            ? message.replace(title[1], frappe.ellipsis(strip_html(title[1]), 100))
-            : message;
+        message = title ? message.replace(title[1], frappe.ellipsis(strip_html(title[1]), 100)) : message;
 
         let timestamp = frappe.datetime.comment_when(notification_log.creation);
         let message_html = `<div class="message">
@@ -279,7 +277,7 @@ class NotificationsView extends BaseNotificationsView {
         if (!notification_log.read) {
             let mark_btn = item_html.find(".mark-as-read");
             mark_btn.tooltip({ delay: { show: 600, hide: 100 }, trigger: "hover" });
-            mark_btn.on("click", (e) => {
+            mark_btn.on("click", e => {
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 this.mark_as_read(notification_log.id, item_html);
@@ -303,7 +301,7 @@ class NotificationsView extends BaseNotificationsView {
         } else {
             if (this.dropdown_items.length) {
                 this.container.empty();
-                this.dropdown_items.forEach((notification_log) => {
+                this.dropdown_items.forEach(notification_log => {
                     this.container.append(this.get_dropdown_item_html(notification_log));
                 });
                 this.container.append(`<a class="list-footer"
@@ -318,29 +316,24 @@ class NotificationsView extends BaseNotificationsView {
 						<div class="title">${__("No New notifications")}</div>
 						<div class="subtitle">
 							${__("Looks like you haven’t received any notifications.")}
-					</div></div></div>`),
+					</div></div></div>`)
                 );
             }
         }
     }
 
     get_notifications_list(limit) {
-        return frappe.call(
-            "frappe.desk.doctype.notification_log.notification_log.get_notification_logs",
-            { limit: limit },
-        );
+        return frappe.call("frappe.desk.doctype.notification_log.notification_log.get_notification_logs", {
+            limit: limit
+        });
     }
 
     get_item_link(notification_doc) {
         if (notification_doc.link) {
             return notification_doc.link;
         }
-        const link_doctype = notification_doc.document_type
-            ? notification_doc.document_type
-            : "Notification Log";
-        const link_docid = notification_doc.document_id
-            ? notification_doc.document_id
-            : notification_doc.id;
+        const link_doctype = notification_doc.document_type ? notification_doc.document_type : "Notification Log";
+        const link_docid = notification_doc.document_id ? notification_doc.document_id : notification_doc.id;
         return frappe.utils.get_form_link(link_doctype, link_docid);
     }
 
@@ -350,13 +343,10 @@ class NotificationsView extends BaseNotificationsView {
     }
 
     toggle_seen(flag) {
-        frappe.call(
-            "frappe.desk.doctype.notification_settings.notification_settings.set_seen_value",
-            {
-                value: cint(flag),
-                user: frappe.session.user,
-            },
-        );
+        frappe.call("frappe.desk.doctype.notification_settings.notification_settings.set_seen_value", {
+            value: cint(flag),
+            user: frappe.session.user
+        });
     }
 
     setup_notification_listeners() {
@@ -373,9 +363,7 @@ class NotificationsView extends BaseNotificationsView {
             this.toggle_seen(true);
             if (this.notifications_icon.find(".notifications-unseen").is(":visible")) {
                 this.toggle_notification_icon(true);
-                frappe.call(
-                    "frappe.desk.doctype.notification_log.notification_log.trigger_indicator_hide",
-                );
+                frappe.call("frappe.desk.doctype.notification_log.notification_log.trigger_indicator_hide");
             }
         });
     }
@@ -387,9 +375,9 @@ class EventsView extends BaseNotificationsView {
         frappe
             .xcall("frappe.desk.doctype.event.event.get_events", {
                 start: today,
-                end: today,
+                end: today
             })
-            .then((event_list) => {
+            .then(event_list => {
                 this.render_events_html(event_list);
             });
     }
@@ -397,7 +385,7 @@ class EventsView extends BaseNotificationsView {
     render_events_html(event_list) {
         let html = "";
         if (event_list.length) {
-            let get_event_html = (event) => {
+            let get_event_html = event => {
                 let time = __("All Day");
                 if (!event.all_day) {
                     let start_time = frappe.datetime.get_time(event.starts_on);
@@ -456,10 +444,8 @@ class ChangelogFeedView extends BaseNotificationsView {
         let html = "";
         if (changelog_feed.length) {
             this.container.empty();
-            const get_changelog_feed_html = (changelog_feed_item) => {
-                const timestamp = frappe.datetime.prettyDate(
-                    changelog_feed_item.posting_timestamp,
-                );
+            const get_changelog_feed_html = changelog_feed_item => {
+                const timestamp = frappe.datetime.prettyDate(changelog_feed_item.posting_timestamp);
                 const message_html = `<div class="message">
 							<div>${changelog_feed_item.title}</div>
 							<div class="notification-timestamp text-muted">

@@ -43,9 +43,7 @@ To subclass, use:
         for (var name in props) {
             // Check if we're overwriting an existing function
             proto[name] =
-                typeof props[name] === "function" &&
-                typeof _super[name] == "function" &&
-                fnTest.test(props[name])
+                typeof props[name] === "function" && typeof _super[name] == "function" && fnTest.test(props[name])
                     ? (function (name, fn) {
                           return function () {
                               var tmp = this._super;

@@ -11,35 +11,30 @@ frappe.ui.form.on("Newsletter", {
                 () => {
                     frm.events.send_test_email(frm);
                 },
-                __("Preview"),
+                __("Preview")
             );
 
             frm.add_custom_button(
                 __("Check broken links"),
                 () => {
                     frm.dashboard.set_headline(__("Checking broken links..."));
-                    frm.call("find_broken_links").then((r) => {
+                    frm.call("find_broken_links").then(r => {
                         frm.dashboard.set_headline("");
                         let links = r.message;
                         if (links && links.length) {
-                            let html =
-                                "<ul>" +
-                                links.map((link) => `<li>${link}</li>`).join("") +
-                                "</ul>";
+                            let html = "<ul>" + links.map(link => `<li>${link}</li>`).join("") + "</ul>";
                             frm.dashboard.set_headline(
-                                __("Following links are broken in the email content: {0}", [html]),
+                                __("Following links are broken in the email content: {0}", [html])
                             );
                         } else {
-                            frm.dashboard.set_headline(
-                                __("No broken links found in the email content"),
-                            );
+                            frm.dashboard.set_headline(__("No broken links found in the email content"));
                             setTimeout(() => {
                                 frm.dashboard.set_headline("");
                             }, 3000);
                         }
                     });
                 },
-                __("Preview"),
+                __("Preview")
             );
 
             frm.add_custom_button(
@@ -48,22 +43,19 @@ frappe.ui.form.on("Newsletter", {
                     if (frm.doc.schedule_send) {
                         frappe.confirm(
                             __(
-                                "This newsletter was scheduled to send on a later date. Are you sure you want to send it now?",
+                                "This newsletter was scheduled to send on a later date. Are you sure you want to send it now?"
                             ),
                             function () {
                                 frm.events.send_emails(frm);
-                            },
+                            }
                         );
                         return;
                     }
-                    frappe.confirm(
-                        __("Are you sure you want to send this newsletter now?"),
-                        () => {
-                            frm.events.send_emails(frm);
-                        },
-                    );
+                    frappe.confirm(__("Are you sure you want to send this newsletter now?"), () => {
+                        frm.events.send_emails(frm);
+                    });
                 },
-                __("Send"),
+                __("Send")
             );
 
             frm.add_custom_button(
@@ -71,7 +63,7 @@ frappe.ui.form.on("Newsletter", {
                 () => {
                     frm.events.schedule_send_dialog(frm);
                 },
-                __("Send"),
+                __("Send")
             );
         }
 
@@ -91,15 +83,13 @@ frappe.ui.form.on("Newsletter", {
         frm.call("send_emails").then(() => {
             frm.refresh();
             frappe.dom.unfreeze();
-            frappe.show_alert(
-                __("Queued {0} emails", [frappe.utils.shorten_number(frm.doc.total_recipients)]),
-            );
+            frappe.show_alert(__("Queued {0} emails", [frappe.utils.shorten_number(frm.doc.total_recipients)]));
         });
     },
 
     schedule_send_dialog(frm) {
         let hours = frappe.utils.range(24);
-        let time_slots = hours.map((hour) => {
+        let time_slots = hours.map(hour => {
             return `${(hour + "").padStart(2, "0")}:00`;
         });
         let d = new frappe.ui.Dialog({
@@ -110,17 +100,17 @@ frappe.ui.form.on("Newsletter", {
                     fieldname: "date",
                     fieldtype: "Date",
                     options: {
-                        minDate: new Date(),
+                        minDate: new Date()
                     },
-                    reqd: true,
+                    reqd: true
                 },
                 {
                     label: __("Time"),
                     fieldname: "time",
                     fieldtype: "Select",
                     options: time_slots,
-                    reqd: true,
-                },
+                    reqd: true
+                }
             ],
             primary_action_label: __("Schedule"),
             primary_action({ date, time }) {
@@ -135,7 +125,7 @@ frappe.ui.form.on("Newsletter", {
                 frm.set_value("schedule_send", "");
                 d.hide();
                 frm.save();
-            },
+            }
         });
         if (frm.doc.schedule_sending) {
             let parts = frm.doc.schedule_send.split(" ");
@@ -156,8 +146,8 @@ frappe.ui.form.on("Newsletter", {
                     label: __("Email"),
                     fieldname: "email",
                     fieldtype: "Data",
-                    options: "Email",
-                },
+                    options: "Email"
+                }
             ],
             primary_action_label: __("Send"),
             primary_action({ email }) {
@@ -165,7 +155,7 @@ frappe.ui.form.on("Newsletter", {
                 frm.call("send_test_email", { email }).then(() => {
                     d.get_primary_btn().text(__("Send again")).prop("disabled", false);
                 });
-            },
+            }
         });
         d.show();
     },
@@ -177,10 +167,7 @@ frappe.ui.form.on("Newsletter", {
             frm.waiting_for_request = false;
             let stats = res.message;
             stats && frm.events.update_sending_progress(frm, stats);
-            if (
-                stats.sent + stats.error >= frm.doc.total_recipients ||
-                (!stats.total && !stats.emails_queued)
-            ) {
+            if (stats.sent + stats.error >= frm.doc.total_recipients || (!stats.total && !stats.emails_queued)) {
                 frm.sending_status && clearInterval(frm.sending_status);
                 frm.sending_status = null;
                 return;
@@ -202,7 +189,7 @@ frappe.ui.form.on("Newsletter", {
             frm.dashboard.show_progress(
                 __("Sending emails"),
                 (stats.sent * 100) / frm.doc.total_recipients,
-                __("{0} of {1} sent", [stats.sent, frm.doc.total_recipients]),
+                __("{0} of {1} sent", [stats.sent, frm.doc.total_recipients])
             );
         } else if (stats.emails_queued) {
             frm.page.set_indicator(__("Queued"), "blue");
@@ -219,11 +206,9 @@ frappe.ui.form.on("Newsletter", {
     update_schedule_message(frm) {
         if (!frm.doc.email_sent && frm.doc.schedule_send) {
             let datetime = frappe.datetime.global_date_format(frm.doc.schedule_send);
-            frm.dashboard.set_headline_alert(
-                __("This newsletter is scheduled to be sent on {0}", [datetime.bold()]),
-            );
+            frm.dashboard.set_headline_alert(__("This newsletter is scheduled to be sent on {0}", [datetime.bold()]));
         } else {
             frm.dashboard.clear_headline();
         }
-    },
+    }
 });

@@ -18,9 +18,9 @@ frappe.ui.form.on("S3 Backup Settings", {
                             frappe.msgprint(__("S3 Backup complete!"));
                             frm.dashboard.clear_headline();
                         }
-                    },
+                    }
                 });
             }).addClass("btn-primary");
         }
-    },
+    }
 });

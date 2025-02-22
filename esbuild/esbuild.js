@@ -24,55 +24,53 @@ const {
     log_warn,
     log_error,
     bench_path,
-    get_redis_subscriber,
+    get_redis_subscriber
 } = require("./utils");
 
 const argv = yargs
     .usage("Usage: node esbuild [options]")
     .option("apps", {
         type: "string",
-        description: "Run build for specific apps",
+        description: "Run build for specific apps"
     })
     .option("skip_frappe", {
         type: "boolean",
-        description: "Skip building frappe assets",
+        description: "Skip building frappe assets"
     })
     .option("files", {
         type: "string",
-        description: "Run build for specified bundles",
+        description: "Run build for specified bundles"
     })
     .option("watch", {
         type: "boolean",
-        description: "Run in watch mode and rebuild on file changes",
+        description: "Run in watch mode and rebuild on file changes"
     })
     .option("live-reload", {
         type: "boolean",
         description: `Automatically reload Desk when assets are rebuilt.
-			Can only be used with the --watch flag.`,
+			Can only be used with the --watch flag.`
     })
     .option("production", {
         type: "boolean",
-        description: "Run build in production mode",
+        description: "Run build in production mode"
     })
     .option("run-build-command", {
         type: "boolean",
-        description: "Run build command for apps",
+        description: "Run build command for apps"
     })
     .option("save-metafiles", {
         type: "boolean",
         description:
-            "Saves esbuild metafiles for built assets. Useful for analyzing bundle size. More info: https://esbuild.github.io/api/#metafile",
+            "Saves esbuild metafiles for built assets. Useful for analyzing bundle size. More info: https://esbuild.github.io/api/#metafile"
     })
     .example("node esbuild --apps frappe,erpnext", "Run build only for frappe and erpnext")
     .example(
         "node esbuild --files frappe/website.bundle.js,frappe/desk.bundle.js",
-        "Run build only for specified bundles",
+        "Run build only for specified bundles"
     )
     .version(false).argv;
 
-const APPS = (!argv.apps ? app_list : argv.apps.split(",")).filter(
-    (app) => !(argv.skip_frappe && app == "frappe"),
-);
+const APPS = (!argv.apps ? app_list : argv.apps.split(",")).filter(app => !(argv.skip_frappe && app == "frappe"));
 const FILES_TO_BUILD = argv.files ? argv.files.split(",") : [];
 const WATCH_MODE = Boolean(argv.watch);
 const PRODUCTION = Boolean(argv.production);
@@ -81,12 +79,12 @@ const RUN_BUILD_COMMAND = !WATCH_MODE && Boolean(argv["run-build-command"]);
 const TOTAL_BUILD_TIME = `${chalk.black.bgGreen(" DONE ")} Total Build Time`;
 const NODE_PATHS = [].concat(
     // node_modules of apps directly importable
-    app_list.map((app) => path.resolve(apps_path, app, "node_modules")).filter(fs.existsSync),
+    app_list.map(app => path.resolve(apps_path, app, "node_modules")).filter(fs.existsSync),
     // import js file of any app if you provide the full path
-    app_list.map((app) => path.resolve(apps_path, app)).filter(fs.existsSync),
+    app_list.map(app => path.resolve(apps_path, app)).filter(fs.existsSync)
 );
 
-execute().catch((e) => {
+execute().catch(e => {
     console.error(e);
     process.exit(1);
 });
@@ -129,11 +127,9 @@ async function execute() {
 }
 
 function build_assets_for_apps(apps, files) {
-    let { include_patterns, ignore_patterns } = files.length
-        ? get_files_to_build(files)
-        : get_all_files_to_build(apps);
+    let { include_patterns, ignore_patterns } = files.length ? get_files_to_build(files) : get_all_files_to_build(apps);
 
-    return glob(include_patterns, { ignore: ignore_patterns }).then((files) => {
+    return glob(include_patterns, { ignore: ignore_patterns }).then(files => {
         let output_path = assets_path;
 
         let file_map = {};
@@ -152,10 +148,7 @@ function build_assets_for_apps(apps, files) {
             }
             output_name = path.join(app, "dist", output_name);
 
-            if (
-                Object.keys(file_map).includes(output_name) ||
-                Object.keys(style_file_map).includes(output_name)
-            ) {
+            if (Object.keys(file_map).includes(output_name) || Object.keys(style_file_map).includes(output_name)) {
                 log_warn(`Duplicate output file ${output_name} generated from ${file}`);
             }
             if ([".css", ".scss", ".less", ".sass", ".styl"].includes(extension)) {
@@ -167,16 +160,16 @@ function build_assets_for_apps(apps, files) {
         }
         let build = build_files({
             files: file_map,
-            outdir: output_path,
+            outdir: output_path
         });
         let style_build = build_style_files({
             files: style_file_map,
-            outdir: output_path,
+            outdir: output_path
         });
         let rtl_style_build = build_style_files({
             files: rtl_style_file_map,
             outdir: output_path,
-            rtl_style: true,
+            rtl_style: true
         });
         return Promise.all([build, style_build, rtl_style_build]);
     });
@@ -188,18 +181,13 @@ function get_all_files_to_build(apps) {
 
     for (let app of apps) {
         let public_path = get_public_path(app);
-        include_patterns.push(
-            path.resolve(public_path, "**", "*.bundle.{js,ts,css,sass,scss,less,styl,jsx}"),
-        );
-        ignore_patterns.push(
-            path.resolve(public_path, "node_modules"),
-            path.resolve(public_path, "dist"),
-        );
+        include_patterns.push(path.resolve(public_path, "**", "*.bundle.{js,ts,css,sass,scss,less,styl,jsx}"));
+        ignore_patterns.push(path.resolve(public_path, "node_modules"), path.resolve(public_path, "dist"));
     }
 
     return {
         include_patterns,
-        ignore_patterns,
+        ignore_patterns
     };
 }
 
@@ -212,15 +200,12 @@ function get_files_to_build(files) {
         let [app, bundle] = file.split("/");
         let public_path = get_public_path(app);
         include_patterns.push(path.resolve(public_path, "**", bundle));
-        ignore_patterns.push(
-            path.resolve(public_path, "node_modules"),
-            path.resolve(public_path, "dist"),
-        );
+        ignore_patterns.push(path.resolve(public_path, "node_modules"), path.resolve(public_path, "dist"));
     }
 
     return {
         include_patterns,
-        ignore_patterns,
+        ignore_patterns
     };
 }
 
@@ -240,8 +225,8 @@ function build_style_files({ files, outdir, rtl_style = false }) {
         build_cleanup_plugin,
         postCssPlugin({
             plugins: plugins,
-            sassOptions: sass_options,
-        }),
+            sassOptions: sass_options
+        })
     ];
 
     plugins.push(require("autoprefixer"));
@@ -262,10 +247,10 @@ function get_build_options(files, outdir, plugins) {
         define: {
             "process.env.NODE_ENV": JSON.stringify(PRODUCTION ? "production" : "development"),
             __VUE_OPTIONS_API__: JSON.stringify(true),
-            __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+            __VUE_PROD_DEVTOOLS__: JSON.stringify(false)
         },
         plugins: plugins,
-        watch: get_watch_config(),
+        watch: get_watch_config()
     };
 }
 
@@ -279,9 +264,7 @@ function get_watch_config() {
                     log(chalk.dim(error.stack));
                     notify_redis({ error });
                 } else {
-                    let { new_assets_json, prev_assets_json } = await write_assets_json(
-                        result.metafile,
-                    );
+                    let { new_assets_json, prev_assets_json } = await write_assets_json(result.metafile);
 
                     let changed_files;
                     if (prev_assets_json) {
@@ -298,7 +281,7 @@ function get_watch_config() {
                     }
                     notify_redis({ success: true, changed_files });
                 }
-            },
+            }
         };
     }
     return null;
@@ -313,12 +296,12 @@ function log_built_assets(results) {
     cliui.div(
         {
             text: chalk.cyan.bold("File"),
-            width: column_widths[0],
+            width: column_widths[0]
         },
         {
             text: chalk.cyan.bold("Size"),
-            width: column_widths[1],
-        },
+            width: column_widths[1]
+        }
     );
     cliui.div("");
 
@@ -333,7 +316,7 @@ function log_built_assets(results) {
         output_by_dist_path[dist_path] = output_by_dist_path[dist_path] || [];
         output_by_dist_path[dist_path].push({
             name: filename,
-            size: (data.bytes / 1000).toFixed(2) + " Kb",
+            size: (data.bytes / 1000).toFixed(2) + " Kb"
         });
     }
 
@@ -341,7 +324,7 @@ function log_built_assets(results) {
         let files = output_by_dist_path[dist_path];
         cliui.div({
             text: dist_path,
-            width: column_widths[0],
+            width: column_widths[0]
         });
 
         for (let i in files) {
@@ -356,12 +339,12 @@ function log_built_assets(results) {
             cliui.div(
                 {
                     text: branch + chalk[color]("" + file.name),
-                    width: column_widths[0],
+                    width: column_widths[0]
                 },
                 {
                     text: file.size,
-                    width: column_widths[1],
-                },
+                    width: column_widths[1]
+                }
             );
         }
         cliui.div("");
@@ -413,7 +396,7 @@ async function write_assets_json(metafile) {
     }
     return {
         new_assets_json,
-        prev_assets_json,
+        prev_assets_json
     };
 }
 
@@ -426,7 +409,7 @@ async function update_assets_json_in_cache() {
     } catch (e) {
         log_warn("Cannot connect to redis_cache to update assets_json");
     }
-    client.del("assets_json", (err) => {
+    client.del("assets_json", err => {
         client.unref();
     });
 }
@@ -466,20 +449,20 @@ async function notify_redis({ error, success, changed_files }) {
     if (error) {
         let formatted = await esbuild.formatMessages(error.errors, {
             kind: "error",
-            terminalWidth: 100,
+            terminalWidth: 100
         });
         let stack = error.stack.replace(new RegExp(bench_path, "g"), "");
         payload = {
             error,
             formatted,
-            stack,
+            stack
         };
     }
     if (success) {
         payload = {
             success: true,
             changed_files,
-            live_reload: argv["live-reload"],
+            live_reload: argv["live-reload"]
         };
     }
 
@@ -487,8 +470,8 @@ async function notify_redis({ error, success, changed_files }) {
         "events",
         JSON.stringify({
             event: "build_event",
-            message: payload,
-        }),
+            message: payload
+        })
     );
 }
 
@@ -499,7 +482,7 @@ async function open_in_editor() {
     } catch (e) {
         log_warn("Cannot connect to redis_queue for open_in_editor events");
     }
-    subscriber.subscribe("open_in_editor", (file) => {
+    subscriber.subscribe("open_in_editor", file => {
         file = JSON.parse(file);
         let file_path = path.resolve(file.file);
         log("Opening file in editor:", file_path);

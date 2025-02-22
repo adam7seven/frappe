@@ -12,7 +12,7 @@ context("Realtime updates", () => {
     });
 
     it("Shows version conflict warning", { scrollBehavior: false }, () => {
-        cy.insert_doc("ToDo", { description: "old" }).then((doc) => {
+        cy.insert_doc("ToDo", { description: "old" }).then(doc => {
             cy.visit(`/app/todo/${doc.id}`);
             // make form dirty
             cy.fill_field("status", "Cancelled", "Select");
@@ -28,7 +28,7 @@ context("Realtime updates", () => {
     it("List view updates in realtime on insert", { scrollBehavior: false }, () => {
         const original = "Added for realtime update";
         const updated = "Updated for realtime update";
-        cy.insert_doc("ToDo", { description: original }).then((doc) => {
+        cy.insert_doc("ToDo", { description: original }).then(doc => {
             cy.contains(original).should("be.visible");
 
             // update doc using api - simulating parallel change by another user
@@ -52,13 +52,13 @@ context("Realtime updates", () => {
         let handler = {
             handle() {
                 console.log("clear");
-            },
+            }
         };
         cy.spy(handler, "handle").as("callback");
 
         cy.window()
             .its("frappe")
-            .then((frappe) => {
+            .then(frappe => {
                 frappe.realtime.on(event, () => handler.handle());
             });
 

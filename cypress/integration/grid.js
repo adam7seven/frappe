@@ -9,33 +9,27 @@ context("Grid", () => {
         return cy
             .window()
             .its("frappe")
-            .then((frappe) => {
-                return frappe.call(
-                    "frappe.tests.ui_test_helpers.create_contact_phone_nos_records",
-                );
+            .then(frappe => {
+                return frappe.call("frappe.tests.ui_test_helpers.create_contact_phone_nos_records");
             });
     });
     it("update docfield property using update_docfield_property", () => {
         cy.visit("/app/contact/Test Contact");
         cy.window()
             .its("cur_frm")
-            .then((frm) => {
+            .then(frm => {
                 cy.get('.frappe-control[data-fieldname="phone_nos"]').as("table");
                 let field = frm.get_field("phone_nos");
                 field.grid.update_docfield_property("is_primary_phone", "hidden", true);
 
                 cy.get("@table").find('[data-idx="1"] .btn-open-row').click();
                 cy.get(".grid-row-open").as("table-form");
-                cy.get("@table-form")
-                    .find('.frappe-control[data-fieldname="is_primary_phone"]')
-                    .should("be.hidden");
+                cy.get("@table-form").find('.frappe-control[data-fieldname="is_primary_phone"]').should("be.hidden");
                 cy.get("@table-form").find(".grid-footer-toolbar").click();
 
                 cy.get("@table").find('[data-idx="2"] .btn-open-row').click();
                 cy.get(".grid-row-open").as("table-form");
-                cy.get("@table-form")
-                    .find('.frappe-control[data-fieldname="is_primary_phone"]')
-                    .should("be.hidden");
+                cy.get("@table-form").find('.frappe-control[data-fieldname="is_primary_phone"]').should("be.hidden");
                 cy.get("@table-form").find(".grid-footer-toolbar").click();
             });
     });
@@ -43,7 +37,7 @@ context("Grid", () => {
         cy.visit("/app/contact/Test Contact");
         cy.window()
             .its("cur_frm")
-            .then((frm) => {
+            .then(frm => {
                 cy.get('.frappe-control[data-fieldname="phone_nos"]').as("table");
                 let field = frm.get_field("phone_nos");
                 field.grid.toggle_display("is_primary_mobile_no", false);
@@ -67,7 +61,7 @@ context("Grid", () => {
         cy.visit("/app/contact/Test Contact");
         cy.window()
             .its("cur_frm")
-            .then((frm) => {
+            .then(frm => {
                 cy.get('.frappe-control[data-fieldname="phone_nos"]').as("table");
                 let field = frm.get_field("phone_nos");
                 field.grid.toggle_enable("phone", false);
@@ -91,7 +85,7 @@ context("Grid", () => {
         cy.visit("/app/contact/Test Contact");
         cy.window()
             .its("cur_frm")
-            .then((frm) => {
+            .then(frm => {
                 cy.get('.frappe-control[data-fieldname="phone_nos"]').as("table");
                 let field = frm.get_field("phone_nos");
                 field.grid.toggle_reqd("phone", false);

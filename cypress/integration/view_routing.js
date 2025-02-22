@@ -9,7 +9,7 @@ context("View", () => {
         cy.wait(500);
         cy.window()
             .its("cur_list")
-            .then((list) => {
+            .then(list => {
                 expect(list.view_name).to.equal("List");
             });
     });
@@ -19,7 +19,7 @@ context("View", () => {
         cy.wait(500);
         cy.window()
             .its("cur_list")
-            .then((list) => {
+            .then(list => {
                 expect(list.view_name).to.equal("Report");
             });
     });
@@ -29,7 +29,7 @@ context("View", () => {
         cy.wait(500);
         cy.window()
             .its("cur_list")
-            .then((list) => {
+            .then(list => {
                 expect(list.view_name).to.equal("Dashboard");
             });
     });
@@ -39,7 +39,7 @@ context("View", () => {
         cy.wait(500);
         cy.window()
             .its("cur_list")
-            .then((list) => {
+            .then(list => {
                 expect(list.view_name).to.equal("Gantt");
             });
     });
@@ -50,7 +50,7 @@ context("View", () => {
             cy.wait(500);
             cy.window()
                 .its("cur_list")
-                .then((list) => {
+                .then(list => {
                     expect(list.view_name).to.equal("Kanban");
                 });
         });
@@ -61,7 +61,7 @@ context("View", () => {
         cy.wait(500);
         cy.window()
             .its("cur_list")
-            .then((list) => {
+            .then(list => {
                 expect(list.view_name).to.equal("Calendar");
             });
     });
@@ -72,7 +72,7 @@ context("View", () => {
             cy.wait(500);
             cy.window()
                 .its("cur_tree")
-                .then((list) => {
+                .then(list => {
                     expect(list.view_name).to.equal("Tree");
                 });
         });
@@ -84,7 +84,7 @@ context("View", () => {
             cy.wait(500);
             cy.window()
                 .its("cur_list")
-                .then((list) => {
+                .then(list => {
                     expect(list.view_name).to.equal("Image");
                 });
         });
@@ -96,7 +96,7 @@ context("View", () => {
             cy.wait(500);
             cy.window()
                 .its("cur_list")
-                .then((list) => {
+                .then(list => {
                     expect(list.view_name).to.equal("Inbox");
                 });
         });
@@ -108,7 +108,7 @@ context("View", () => {
         cy.wait("@list_loaded");
         cy.window()
             .its("cur_list")
-            .then((list) => {
+            .then(list => {
                 expect(list.view_name).to.equal("File");
                 expect(list.current_folder).to.equal("Home");
             });
@@ -117,7 +117,7 @@ context("View", () => {
         cy.wait("@list_loaded");
         cy.window()
             .its("cur_list")
-            .then((list) => {
+            .then(list => {
                 expect(list.view_name).to.equal("File");
                 expect(list.current_folder).to.equal("Home/Attachments");
             });
@@ -129,7 +129,7 @@ context("View", () => {
             cy.wait(500);
             cy.window()
                 .its("cur_list")
-                .then((list) => {
+                .then(list => {
                     expect(list.view_name).to.equal("Report");
                 });
         });
@@ -141,7 +141,7 @@ context("View", () => {
             cy.wait(500);
             cy.window()
                 .its("cur_list")
-                .then((list) => {
+                .then(list => {
                     expect(list.view_name).to.equal("Report");
                 });
         });
@@ -153,7 +153,7 @@ context("View", () => {
             cy.wait(500);
             cy.window()
                 .its("cur_list")
-                .then((list) => {
+                .then(list => {
                     expect(list.view_name).to.equal("Report");
                 });
         });
@@ -162,13 +162,13 @@ context("View", () => {
     it("Force Route to default view from app/{doctype}", () => {
         cy.call("frappe.tests.ui_test_helpers.setup_default_view", {
             view: "Report",
-            force_reroute: true,
+            force_reroute: true
         }).then(() => {
             cy.visit("/app/event");
             cy.wait(500);
             cy.window()
                 .its("cur_list")
-                .then((list) => {
+                .then(list => {
                     expect(list.view_name).to.equal("Report");
                 });
         });
@@ -177,13 +177,13 @@ context("View", () => {
     it("Force Route to default view from app/{doctype}/view", () => {
         cy.call("frappe.tests.ui_test_helpers.setup_default_view", {
             view: "Report",
-            force_reroute: true,
+            force_reroute: true
         }).then(() => {
             cy.visit("/app/event/view");
             cy.wait(500);
             cy.window()
                 .its("cur_list")
-                .then((list) => {
+                .then(list => {
                     expect(list.view_name).to.equal("Report");
                 });
         });
@@ -192,13 +192,13 @@ context("View", () => {
     it("Force Route to default view from app/{doctype}/view", () => {
         cy.call("frappe.tests.ui_test_helpers.setup_default_view", {
             view: "Report",
-            force_reroute: true,
+            force_reroute: true
         }).then(() => {
             cy.visit("/app/event/view/list");
             cy.wait(500);
             cy.window()
                 .its("cur_list")
-                .then((list) => {
+                .then(list => {
                     expect(list.view_name).to.equal("Report");
                 });
         });
@@ -219,7 +219,7 @@ context("View", () => {
         cy.visit(`/app/user/${test_user}`);
         cy.window()
             .its("cur_frm")
-            .then((frm) => {
+            .then(frm => {
                 expect(frm.doc.id).to.equal(test_user);
             });
     });

@@ -50,13 +50,13 @@ class RealTimeClient {
                 secure: true,
                 withCredentials: true,
                 reconnectionAttempts: 3,
-                autoConnect: !lazy_connect,
+                autoConnect: !lazy_connect
             });
         } else if (window.location.protocol == "http:") {
             this.socket = io(this.get_host(port), {
                 withCredentials: true,
                 reconnectionAttempts: 3,
-                autoConnect: !lazy_connect,
+                autoConnect: !lazy_connect
             });
         }
 
@@ -78,13 +78,7 @@ class RealTimeClient {
                 data.percent = (flt(data.progress[0]) / data.progress[1]) * 100;
             }
             if (data.percent) {
-                frappe.show_progress(
-                    data.title || __("Progress"),
-                    data.percent,
-                    100,
-                    data.description,
-                    true,
-                );
+                frappe.show_progress(data.title || __("Progress"), data.percent, 100, data.description, true);
             }
         });
 

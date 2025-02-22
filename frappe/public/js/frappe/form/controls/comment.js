@@ -25,9 +25,7 @@ frappe.ui.form.ControlComment = class ControlComment extends frappe.ui.form.Cont
         this.comment_wrapper.appendTo(this.parent);
 
         // wrapper should point to frappe-control
-        this.$wrapper = !this.no_wrapper
-            ? this.comment_wrapper.find(".frappe-control")
-            : this.comment_wrapper;
+        this.$wrapper = !this.no_wrapper ? this.comment_wrapper.find(".frappe-control") : this.comment_wrapper;
 
         this.wrapper = this.$wrapper;
 
@@ -41,7 +39,7 @@ frappe.ui.form.ControlComment = class ControlComment extends frappe.ui.form.Cont
             this.submit();
         });
 
-        this.$wrapper.on("keydown", (e) => {
+        this.$wrapper.on("keydown", e => {
             const key = frappe.ui.keys.get_key(e);
             if (key === "ctrl+enter") {
                 e.preventDefault();
@@ -53,7 +51,7 @@ frappe.ui.form.ControlComment = class ControlComment extends frappe.ui.form.Cont
             "text-change",
             frappe.utils.debounce(() => {
                 this.update_state();
-            }, 300),
+            }, 300)
         );
     }
 
@@ -75,7 +73,7 @@ frappe.ui.form.ControlComment = class ControlComment extends frappe.ui.form.Cont
         return Object.assign(options, {
             theme: "bubble",
             bounds: this.quill_container[0],
-            placeholder: __("Type a reply / comment"),
+            placeholder: __("Type a reply / comment")
         });
     }
 
@@ -87,7 +85,7 @@ frappe.ui.form.ControlComment = class ControlComment extends frappe.ui.form.Cont
             ["link", "image"],
             [{ list: "ordered" }, { list: "bullet" }],
             [{ align: [] }],
-            ["clean"],
+            ["clean"]
         ];
     }
 

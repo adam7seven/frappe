@@ -22,11 +22,7 @@ frappe.ui.form.on("DocType", {
     },
 
     after_save: function (frm) {
-        if (
-            frappe.form_builder &&
-            frappe.form_builder.doctype === frm.doc.id &&
-            frappe.form_builder.store
-        ) {
+        if (frappe.form_builder && frappe.form_builder.doctype === frm.doc.id && frappe.form_builder.store) {
             frappe.form_builder.store.fetch();
         }
     },
@@ -36,7 +32,7 @@ frappe.ui.form.on("DocType", {
             if (doc.custom && frappe.session.user != "Administrator") {
                 return {
                     query: "frappe.core.doctype.role.role.role_query",
-                    filters: [["Role", "id", "!=", "All"]],
+                    filters: [["Role", "id", "!=", "All"]]
                 };
             }
         });
@@ -70,17 +66,13 @@ frappe.ui.form.on("DocType", {
             frm.dashboard.add_comment(
                 __("DocTypes can not be modified, please use {0} instead", [customize_form_link]),
                 "blue",
-                true,
+                true
             );
         } else if (frappe.boot.developer_mode) {
             frm.dashboard.clear_comment();
-            let msg = __(
-                "This site is running in developer mode. Any change made here will be updated in code.",
-            );
+            let msg = __("This site is running in developer mode. Any change made here will be updated in code.");
             msg += "<br>";
-            msg += __("If you just want to customize for your site, use {0} instead.", [
-                customize_form_link,
-            ]);
+            msg += __("If you just want to customize for your site, use {0} instead.", [customize_form_link]);
             frm.dashboard.add_comment(msg, "yellow", true);
         }
 
@@ -92,9 +84,7 @@ frappe.ui.form.on("DocType", {
         }
 
         // set label for "In List View" for child tables
-        frm.get_docfield("fields", "in_list_view").label = frm.doc.istable
-            ? __("In Grid View")
-            : __("In List View");
+        frm.get_docfield("fields", "in_list_view").label = frm.doc.istable ? __("In Grid View") : __("In List View");
 
         frm.cscript.autoid(frm);
         frm.cscript.set_naming_rule_description(frm);
@@ -103,7 +93,7 @@ frappe.ui.form.on("DocType", {
         render_form_builder(frm);
     },
 
-    istable: (frm) => {
+    istable: frm => {
         if (frm.doc.istable && frm.is_new()) {
             frm.set_value("default_view", null);
         } else if (!frm.doc.istable && !frm.is_new()) {
@@ -111,25 +101,25 @@ frappe.ui.form.on("DocType", {
         }
     },
 
-    set_default_permission: (frm) => {
+    set_default_permission: frm => {
         if (!(frm.doc.permissions && frm.doc.permissions.length)) {
             frm.add_child("permissions", { role: "System Manager" });
         }
     },
 
-    is_tree: (frm) => {
+    is_tree: frm => {
         frm.trigger("setup_default_views");
     },
 
-    is_calendar_and_gantt: (frm) => {
+    is_calendar_and_gantt: frm => {
         frm.trigger("setup_default_views");
     },
 
-    setup_default_views: (frm) => {
+    setup_default_views: frm => {
         frappe.model.set_default_views_for_doctype(frm.doc.id, frm);
     },
 
-    on_tab_change: (frm) => {
+    on_tab_change: frm => {
         let current_tab = frm.get_active_tab().label;
 
         if (current_tab === "Form") {
@@ -141,7 +131,7 @@ frappe.ui.form.on("DocType", {
             frm.form_wrapper.find(".form-message").show();
             frm.form_wrapper.removeClass("mb-1");
         }
-    },
+    }
 });
 
 frappe.ui.form.on("DocField", {
@@ -153,9 +143,9 @@ frappe.ui.form.on("DocField", {
         frm.trigger("max_attachments");
     },
 
-    fields_add: (frm) => {
+    fields_add: frm => {
         frm.trigger("setup_default_views");
-    },
+    }
 });
 
 function render_form_builder(frm) {
@@ -178,7 +168,7 @@ function render_form_builder(frm) {
                 wrapper: $(frm.fields_dict["form_builder"].wrapper),
                 frm: frm,
                 doctype: frm.doc.id,
-                customize: false,
+                customize: false
             });
         });
     }

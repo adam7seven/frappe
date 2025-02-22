@@ -44,10 +44,7 @@ frappe.ui.FieldGroup = class FieldGroup extends frappe.ui.form.Layout {
                 .find("input, select")
                 .on("change awesomplete-selectcomplete", () => {
                     this.dirty = true;
-                    frappe.run_serially([
-                        () => frappe.timeout(0.1),
-                        () => me.refresh_dependency(),
-                    ]);
+                    frappe.run_serially([() => frappe.timeout(0.1), () => me.refresh_dependency()]);
                 });
         }
     }
@@ -95,8 +92,7 @@ frappe.ui.FieldGroup = class FieldGroup extends frappe.ui.form.Layout {
             let f = this.fields_dict[key];
             if (f.get_value) {
                 let v = f.get_value();
-                if (f.df.reqd && is_null(typeof v === "string" ? strip_html(v) : v))
-                    errors.push(__(f.df.label));
+                if (f.df.reqd && is_null(typeof v === "string" ? strip_html(v) : v)) errors.push(__(f.df.label));
 
                 if (f.df.reqd && f.df.fieldtype === "Text Editor" && is_null(strip_html(cstr(v))))
                     errors.push(__(f.df.label));
@@ -117,11 +113,8 @@ frappe.ui.FieldGroup = class FieldGroup extends frappe.ui.form.Layout {
             frappe.msgprint({
                 title: __("Missing Values Required"),
                 message:
-                    __("Following fields have missing values:") +
-                    "<br><br><ul><li>" +
-                    errors.join("<li>") +
-                    "</ul>",
-                indicator: "orange",
+                    __("Following fields have missing values:") + "<br><br><ul><li>" + errors.join("<li>") + "</ul>",
+                indicator: "orange"
             });
             return null;
         }
@@ -130,11 +123,8 @@ frappe.ui.FieldGroup = class FieldGroup extends frappe.ui.form.Layout {
             frappe.msgprint({
                 title: __("Invalid Values"),
                 message:
-                    __("Following fields have invalid values:") +
-                    "<br><br><ul><li>" +
-                    invalid.join("<li>") +
-                    "</ul>",
-                indicator: "orange",
+                    __("Following fields have invalid values:") + "<br><br><ul><li>" + invalid.join("<li>") + "</ul>",
+                indicator: "orange"
             });
             return null;
         }
@@ -147,7 +137,7 @@ frappe.ui.FieldGroup = class FieldGroup extends frappe.ui.form.Layout {
     }
 
     set_value(key, val) {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             let f = this.fields_dict[key];
             if (f) {
                 f.set_value(val).then(() => {

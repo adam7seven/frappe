@@ -32,8 +32,7 @@ class Picker {
 				</div>
 			</div>
 		`.trim();
-        this.color_picker_wrapper =
-            color_picker_template.content.firstElementChild.cloneNode(true);
+        this.color_picker_wrapper = color_picker_template.content.firstElementChild.cloneNode(true);
         this.parent.appendChild(this.color_picker_wrapper);
         this.color_map = this.color_picker_wrapper.getElementsByClassName("color-map")[0];
         this.color_selector_circle = this.color_map.getElementsByClassName("color-selector")[0];
@@ -53,7 +52,7 @@ class Picker {
     setup_swatches() {
         let swatch_template = document.createElement("template");
         swatch_template.innerHTML = '<div class="swatch" tabindex=0></div>';
-        this.swatches.forEach((color) => {
+        this.swatches.forEach(color => {
             let swatch = swatch_template.content.firstElementChild.cloneNode(true);
             this.swatches_wrapper.appendChild(swatch);
             const set_values = () => {
@@ -64,7 +63,7 @@ class Picker {
             swatch.addEventListener("click", () => {
                 set_values();
             });
-            swatch.onkeydown = (e) => {
+            swatch.onkeydown = e => {
                 const key_code = e.keyCode;
                 if ([13, 32].includes(key_code)) {
                     e.preventDefault();
@@ -80,7 +79,7 @@ class Picker {
         this.color_selector_position = this.get_pointer_coords();
         this.hue_selector_position = {
             x: (this.hue * this.hue_map.offsetWidth) / 360,
-            y: this.hue_map.offsetHeight / 2,
+            y: this.hue_map.offsetHeight / 2
         };
         this.update_color_selector(silent);
         this.update_hue_selector(silent);
@@ -101,11 +100,7 @@ class Picker {
         let y = this.color_selector_position.y;
         let w = this.color_map.offsetWidth;
         let h = this.color_map.offsetHeight;
-        let color = utils.hsv_to_hex(
-            this.hue,
-            Math.round((x / w) * 100),
-            Math.round((1 - y / h) * 100),
-        );
+        let color = utils.hsv_to_hex(this.hue, Math.round((x / w) * 100), Math.round((1 - y / h) * 100));
         this.set_color(color);
     }
 
@@ -113,10 +108,8 @@ class Picker {
         let x = this.color_selector_position.x;
         let y = this.color_selector_position.y;
         // set color selector position and background
-        this.color_selector_circle.style.top =
-            y - this.color_selector_circle.offsetHeight / 2 + "px";
-        this.color_selector_circle.style.left =
-            x - this.color_selector_circle.offsetWidth / 2 + "px";
+        this.color_selector_circle.style.top = y - this.color_selector_circle.offsetHeight / 2 + "px";
+        this.color_selector_circle.style.left = x - this.color_selector_circle.offsetWidth / 2 + "px";
         this.color_map.style.color = this.get_color();
         !silent && this.on_change && this.on_change(this.get_color());
     }
@@ -177,12 +170,12 @@ class Picker {
         element.addEventListener("mousedown", () => (element.drag_enabled = true));
         document.addEventListener("mouseup", () => (element.drag_enabled = false));
         document.addEventListener("mousemove", on_drag);
-        element.addEventListener("click", (event) => on_drag(event, true));
+        element.addEventListener("click", event => on_drag(event, true));
 
         element.addEventListener("touchstart", () => (element.drag_enabled = true));
         element.addEventListener("touchend", () => (element.drag_enabled = false));
         element.addEventListener("touchcancel", () => (element.drag_enabled = false));
-        element.addEventListener("touchmove", (event) => {
+        element.addEventListener("touchmove", event => {
             if (event.touches.length == 1) {
                 on_drag(event);
             } else {

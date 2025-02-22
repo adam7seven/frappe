@@ -4,15 +4,9 @@
 frappe.ui.form.on("Role", {
     refresh: function (frm) {
         if (frm.doc.id === "All") {
-            frm.dashboard.add_comment(
-                __("Role 'All' will be given to all system + website users."),
-                "yellow",
-            );
+            frm.dashboard.add_comment(__("Role 'All' will be given to all system + website users."), "yellow");
         } else if (frm.doc.id === "Desk User") {
-            frm.dashboard.add_comment(
-                __("Role 'Desk User' will be given to all system users."),
-                "yellow",
-            );
+            frm.dashboard.add_comment(__("Role 'Desk User' will be given to all system users."), "yellow");
         }
 
         frm.set_df_property("is_custom", "read_only", frappe.session.user !== "Administrator");
@@ -25,5 +19,5 @@ frappe.ui.form.on("Role", {
             frappe.route_options = { role: frm.doc.id };
             frappe.set_route("List", "User", "Report");
         });
-    },
+    }
 });

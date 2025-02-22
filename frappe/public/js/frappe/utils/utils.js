@@ -16,12 +16,12 @@ if (!Array.prototype.uniqBy) {
                 var k = key(item);
                 return k in seen ? false : (seen[k] = true);
             });
-        },
+        }
     });
     Object.defineProperty(Array.prototype, "move", {
         value: function (from, to) {
             this.splice(to, 0, this.splice(from, 1)[0]);
-        },
+        }
     });
 }
 
@@ -31,7 +31,7 @@ Object.defineProperty(Object.prototype, "setDefault", {
         if (!(key in this)) this[key] = default_value;
         return this[key];
     },
-    writable: true,
+    writable: true
 });
 
 // Pluralize
@@ -54,7 +54,7 @@ String.prototype.plural = function (revert) {
         "(octop)us$": "$1i",
         "(ax|test)is$": "$1es",
         "(us)$": "$1es",
-        "([^s]+)$": "$1s",
+        "([^s]+)$": "$1s"
     };
 
     const singular = {
@@ -85,7 +85,7 @@ String.prototype.plural = function (revert) {
         "(h|bl)ouses$": "$1ouse",
         "(corpse)s$": "$1",
         "(us)es$": "$1",
-        s$: "",
+        s$: ""
     };
 
     const irregular = {
@@ -96,7 +96,7 @@ String.prototype.plural = function (revert) {
         child: "children",
         man: "men",
         tooth: "teeth",
-        person: "people",
+        person: "people"
     };
 
     const uncountable = [
@@ -109,7 +109,7 @@ String.prototype.plural = function (revert) {
         "money",
         "rice",
         "information",
-        "equipment",
+        "equipment"
     ];
 
     // save some time in the case that singular and plural are the same
@@ -160,8 +160,7 @@ Object.assign(frappe.utils, {
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-        for (var i = 0; i < len; i++)
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        for (var i = 0; i < len; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
 
         return text;
     },
@@ -228,7 +227,7 @@ Object.assign(frappe.utils, {
         var tagsToReplace = {
             "&": "&amp;",
             "<": "&lt;",
-            ">": "&gt;",
+            ">": "&gt;"
         };
 
         function replaceTag(tag) {
@@ -264,10 +263,10 @@ Object.assign(frappe.utils, {
             '"': "&quot;",
             "'": "&#39;",
             "`": "&#x60;",
-            "=": "&#x3D;",
+            "=": "&#x3D;"
         };
 
-        return String(txt).replace(/[&<>"'`=]/g, (char) => escape_html_mapping[char] || char);
+        return String(txt).replace(/[&<>"'`=]/g, char => escape_html_mapping[char] || char);
     },
 
     unescape_html: function (txt) {
@@ -278,12 +277,12 @@ Object.assign(frappe.utils, {
             "&quot;": '"',
             "&#39;": "'",
             "&#x60;": "`",
-            "&#x3D;": "=",
+            "&#x3D;": "="
         };
 
         return String(txt).replace(
             /&amp;|&lt;|&gt;|&quot;|&#39;|&#x60;|&#x3D;/g,
-            (char) => unescape_html_mapping[char] || char,
+            char => unescape_html_mapping[char] || char
         );
     },
 
@@ -294,10 +293,7 @@ Object.assign(frappe.utils, {
     },
 
     is_url: function (txt) {
-        return (
-            txt.toLowerCase().substr(0, 7) == "http://" ||
-            txt.toLowerCase().substr(0, 8) == "https://"
-        );
+        return txt.toLowerCase().substr(0, 7) == "http://" || txt.toLowerCase().substr(0, 8) == "https://";
     },
     to_title_case: function (string, with_space = false) {
         let titlecased_string = string.toLowerCase().replace(/(?:^|[\s-/])\w/g, function (match) {
@@ -315,7 +311,7 @@ Object.assign(frappe.utils, {
         content.find("blockquote").parent("blockquote").addClass("hidden").before(
             '<p><a class="text-muted btn btn-default toggle-blockquote" style="padding: 2px 7px 0px; line-height: 1;"> \
 					• • • \
-				</a></p>',
+				</a></p>'
         );
         return content.html();
     },
@@ -325,7 +321,7 @@ Object.assign(frappe.utils, {
         additional_offset,
         element_to_be_scrolled,
         callback,
-        highlight_element = false,
+        highlight_element = false
     ) {
         if (frappe.flags.disable_auto_scroll) return;
 
@@ -352,7 +348,7 @@ Object.assign(frappe.utils, {
                     function () {
                         $(element).removeClass("highlight");
                     },
-                    { once: true },
+                    { once: true }
                 );
             }
         };
@@ -364,7 +360,7 @@ Object.assign(frappe.utils, {
         if (animate) {
             element_to_be_scrolled
                 .animate({
-                    scrollTop: scroll_top,
+                    scrollTop: scroll_top
                 })
                 .promise()
                 .then(() => {
@@ -376,8 +372,7 @@ Object.assign(frappe.utils, {
         }
     },
     get_scroll_position: function (element, additional_offset) {
-        let header_offset =
-            $(".navbar").height() + $(".page-head:visible").height() || $(".navbar").height();
+        let header_offset = $(".navbar").height() + $(".page-head:visible").height() || $(".navbar").height();
         return $(element).offset().top - header_offset - cint(additional_offset);
     },
     filter_dict: function (dict, filters) {
@@ -504,9 +499,7 @@ Object.assign(frappe.utils, {
             if (has_words(["Pending", "Review", "Medium", "Not Approved"], text)) {
                 style = "warning";
                 colour = "orange";
-            } else if (
-                has_words(["Open", "Urgent", "High", "Failed", "Rejected", "Error"], text)
-            ) {
+            } else if (has_words(["Open", "Urgent", "High", "Failed", "Rejected", "Error"], text)) {
                 style = "danger";
                 colour = "red";
             } else if (
@@ -523,9 +516,9 @@ Object.assign(frappe.utils, {
                         "Active",
                         "Available",
                         "Paid",
-                        "Success",
+                        "Success"
                     ],
-                    text,
+                    text
                 )
             ) {
                 style = "success";
@@ -543,23 +536,21 @@ Object.assign(frappe.utils, {
     },
 
     get_indicator_color: function (state) {
-        return frappe.db
-            .get_list("Workflow State", { filters: { id: state }, fields: ["id", "style"] })
-            .then((res) => {
-                const state = res[0];
-                if (!state.style) {
-                    return frappe.utils.guess_colour(state.id);
-                }
-                const style = state.style;
-                const colour_map = {
-                    Success: "green",
-                    Warning: "orange",
-                    Danger: "red",
-                    Primary: "blue",
-                };
+        return frappe.db.get_list("Workflow State", { filters: { id: state }, fields: ["id", "style"] }).then(res => {
+            const state = res[0];
+            if (!state.style) {
+                return frappe.utils.guess_colour(state.id);
+            }
+            const style = state.style;
+            const colour_map = {
+                Success: "green",
+                Warning: "orange",
+                Danger: "red",
+                Primary: "blue"
+            };
 
-                return colour_map[style];
-            });
+            return colour_map[style];
+        });
     },
 
     sort: function (list, key, compare_type, reverse) {
@@ -571,7 +562,7 @@ Object.assign(frappe.utils, {
             },
             number: function (a, b) {
                 return flt(a[key]) - flt(b[key]);
-            },
+            }
         };
 
         if (!compare_type) compare_type = typeof list[0][key] === "string" ? "string" : "number";
@@ -742,7 +733,7 @@ Object.assign(frappe.utils, {
                 '([^"\\' +
                 strDelimiter +
                 "\\r\\n]*))",
-            "gi",
+            "gi"
         );
 
         // Create an array to hold our data. Give the array
@@ -916,13 +907,7 @@ Object.assign(frappe.utils, {
             if (callNow) func.apply(context, args);
         };
     },
-    get_form_link: function (
-        doctype,
-        id,
-        html = false,
-        display_text = null,
-        query_params_obj = null,
-    ) {
+    get_form_link: function (doctype, id, html = false, display_text = null, query_params_obj = null) {
         display_text = display_text || id;
         id = encodeURIComponent(id);
         let route = `/app/${encodeURIComponent(doctype.toLowerCase().replace(/ /g, "-"))}/${id}`;
@@ -1048,7 +1033,7 @@ Object.assign(frappe.utils, {
         const show_success_alert = () => {
             frappe.show_alert({
                 indicator: "green",
-                message: __("Copied to clipboard."),
+                message: __("Copied to clipboard.")
             });
         };
         if (navigator.clipboard && window.isSecureContext) {
@@ -1070,7 +1055,7 @@ Object.assign(frappe.utils, {
         // remove previously bound event
         $($el).off("click.class_actions");
         // attach new event
-        $($el).on("click.class_actions", "[data-action]", (e) => {
+        $($el).on("click.class_actions", "[data-action]", e => {
             let $target = $(e.currentTarget);
             let action = $target.data("action");
             let method = object[action];
@@ -1115,7 +1100,7 @@ Object.assign(frappe.utils, {
         }
         return {
             id: M[0],
-            version: M[1],
+            version: M[1]
         };
     },
 
@@ -1124,7 +1109,7 @@ Object.assign(frappe.utils, {
         if (!duration_options) {
             duration_options = {
                 hide_days: 0,
-                hide_seconds: 0,
+                hide_seconds: 0
             };
         }
         if (value) {
@@ -1155,7 +1140,7 @@ Object.assign(frappe.utils, {
             days: round(seconds / 86400), // 60 * 60 * 24
             hours: round((seconds % 86400) / 3600),
             minutes: round((seconds % 3600) / 60),
-            seconds: round(seconds % 60),
+            seconds: round(seconds % 60)
         };
 
         if (duration_options && duration_options.hide_days) {
@@ -1186,7 +1171,7 @@ Object.assign(frappe.utils, {
     get_duration_options: function (docfield) {
         return {
             hide_days: docfield.hide_days,
-            hide_seconds: docfield.hide_seconds,
+            hide_seconds: docfield.hide_seconds
         };
     },
 
@@ -1205,10 +1190,9 @@ Object.assign(frappe.utils, {
         zoom: 13,
         tiles: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
         options: {
-            attribution:
-                '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         },
-        image_path: "/assets/frappe/images/leaflet/",
+        image_path: "/assets/frappe/images/leaflet/"
     },
 
     icon(icon_name, size = "sm", icon_class = "", icon_style = "", svg_class = "") {
@@ -1222,11 +1206,7 @@ Object.assign(frappe.utils, {
             size_class = `icon-${size}`;
         }
         return `<svg class="${
-            is_espresso
-                ? icon_name.startsWith("es-solid")
-                    ? "es-icon es-solid"
-                    : "es-icon es-line"
-                : "icon"
+            is_espresso ? (icon_name.startsWith("es-solid") ? "es-icon es-solid" : "es-icon es-line") : "icon"
         } ${svg_class} ${size_class}" style="${icon_style}" aria-hidden="true">
 			<use class="${icon_class}" href="${icon_name}"></use>
 		</svg>`;
@@ -1246,8 +1226,8 @@ Object.assign(frappe.utils, {
                 xIsSeries: 1,
                 shortenYAxisNumbers: 1,
                 xAxisMode: "tick",
-                numberFormatter: frappe.utils.format_chart_axis_number,
-            },
+                numberFormatter: frappe.utils.format_chart_axis_number
+            }
         };
 
         for (let key in custom_options) {
@@ -1317,8 +1297,7 @@ Object.assign(frappe.utils, {
                 if (item.is_query_report) {
                     route = "query-report/" + item.id;
                 } else if (!item.is_query_report && item.report_ref_doctype) {
-                    route =
-                        frappe.router.slug(item.report_ref_doctype) + "/view/report/" + item.id;
+                    route = frappe.router.slug(item.report_ref_doctype) + "/view/report/" + item.id;
                 } else {
                     route = "/report/" + item.id;
                 }
@@ -1378,10 +1357,7 @@ Object.assign(frappe.utils, {
                     If no_of_decimals is greater than max_no_of_decimals,
                     round the number to max_no_of_decimals
                 */
-                result =
-                    no_of_decimals > max_no_of_decimals
-                        ? result.toFixed(max_no_of_decimals)
-                        : result;
+                result = no_of_decimals > max_no_of_decimals ? result.toFixed(max_no_of_decimals) : result;
                 return result + " " + map.symbol;
             }
         }
@@ -1397,9 +1373,7 @@ Object.assign(frappe.utils, {
     build_summary_item(summary) {
         if (summary.type == "separator") {
             return $(`<div class="summary-separator">
-				<div class="summary-value ${summary.color ? summary.color.toLowerCase() : "text-muted"}">${
-                    summary.value
-                }</div>
+				<div class="summary-value ${summary.color ? summary.color.toLowerCase() : "text-muted"}">${summary.value}</div>
 			</div>`);
         }
         let df = { fieldtype: summary.datatype };
@@ -1436,8 +1410,8 @@ Object.assign(frappe.utils, {
                     (letterhead ? "0" : "1") +
                     "&letterhead=" +
                     encodeURIComponent(letterhead) +
-                    (lang_code ? "&_lang=" + lang_code : ""),
-            ),
+                    (lang_code ? "&_lang=" + lang_code : "")
+            )
         );
 
         if (!w) {
@@ -1448,17 +1422,14 @@ Object.assign(frappe.utils, {
 
     get_clipboard_data(clipboard_paste_event) {
         let e = clipboard_paste_event;
-        let clipboard_data =
-            e.clipboardData || window.clipboardData || e.originalEvent.clipboardData;
+        let clipboard_data = e.clipboardData || window.clipboardData || e.originalEvent.clipboardData;
         return clipboard_data.getData("Text");
     },
 
     add_custom_button(html, action, class_name = "", title = "", btn_type, wrapper, prepend) {
         if (!btn_type) btn_type = "btn-secondary";
-        let button = $(
-            `<button class="btn ${btn_type} btn-xs ${class_name}" title="${title}">${html}</button>`,
-        );
-        button.click((event) => {
+        let button = $(`<button class="btn ${btn_type} btn-xs ${class_name}" title="${title}">${html}</button>`);
+        button.click(event => {
             event.stopPropagation();
             action && action(event);
         });
@@ -1494,7 +1465,7 @@ Object.assign(frappe.utils, {
 			</div>
 		`);
 
-        actions.forEach((action) => {
+        actions.forEach(action => {
             $(`<li>
 				<a class="dropdown-item flex">
 					<div class="tick-icon mr-2">${frappe.utils.icon("check", "xs")}</div>
@@ -1505,7 +1476,7 @@ Object.assign(frappe.utils, {
 				</a>
 			</li>`)
                 .appendTo($select_group_button.find(".dropdown-menu"))
-                .click((e) => {
+                .click(e => {
                     selected_action = action;
                     $select_group_button.find(".selected-button .label").text(action.label);
 
@@ -1516,7 +1487,7 @@ Object.assign(frappe.utils, {
 
         $select_group_button.find(".dropdown-menu li:first-child .tick-icon").addClass("selected");
 
-        $select_group_button.find(".selected-button").click((event) => {
+        $select_group_button.find(".selected-button").click(event => {
             event.stopPropagation();
             selected_action.action && selected_action.action(event);
         });
@@ -1528,7 +1499,7 @@ Object.assign(frappe.utils, {
     },
 
     sleep(time) {
-        return new Promise((resolve) => setTimeout(resolve, time));
+        return new Promise(resolve => setTimeout(resolve, time));
     },
 
     parse_array(array) {
@@ -1580,9 +1551,9 @@ Object.assign(frappe.utils, {
             return frappe
                 .xcall("frappe.desk.search.get_link_title", {
                     doctype: doctype,
-                    docid: id,
+                    docid: id
                 })
-                .then((title) => {
+                .then(title => {
                     frappe.utils.add_link_title(doctype, id, title);
                     return title;
                 });
@@ -1594,13 +1565,10 @@ Object.assign(frappe.utils, {
     },
 
     only_allow_num_decimal(input) {
-        input.on("input", (e) => {
+        input.on("input", e => {
             let self = $(e.target);
             self.val(self.val().replace(/[^0-9.\-]/g, ""));
-            if (
-                (e.which != 46 || self.val().indexOf(".") != -1) &&
-                (e.which < 48 || e.which > 57)
-            ) {
+            if ((e.which != 46 || self.val().indexOf(".") != -1) && (e.which < 48 || e.which > 57)) {
                 e.preventDefault();
             }
         });
@@ -1631,7 +1599,7 @@ Object.assign(frappe.utils, {
         let filter = null;
         if (filters.length) {
             filter = {};
-            filters.forEach((arr) => {
+            filters.forEach(arr => {
                 filter[arr[1]] = [arr[2], arr[3]];
             });
             filter = JSON.stringify(filter);
@@ -1661,7 +1629,7 @@ Object.assign(frappe.utils, {
                 // backward compatibility
                 if (Array.isArray(filters_json)) {
                     let filter = {};
-                    filters_json.forEach((arr) => {
+                    filters_json.forEach(arr => {
                         filter[arr[1]] = [arr[2], arr[3]];
                     });
                     return filter || [];
@@ -1678,7 +1646,7 @@ Object.assign(frappe.utils, {
             }
             // don't remove unless patch is created to convert all existing filters from object to array
             // backward compatibility
-            return Object.keys(filters_json).map((filter) => {
+            return Object.keys(filters_json).map(filter => {
                 let val = filters_json[filter];
                 return [doctype, filter, val[0], val[1], false];
             });
@@ -1713,9 +1681,9 @@ Object.assign(frappe.utils, {
                 set: function (value) {
                     callback();
                     obj[private_prop] = value;
-                },
+                }
             });
-        },
+        }
     },
     generate_tracking_url() {
         frappe.prompt(
@@ -1726,13 +1694,13 @@ Object.assign(frappe.utils, {
                     fieldtype: "Data",
                     options: "URL",
                     reqd: 1,
-                    default: localStorage.getItem("tracker_url:url"),
+                    default: localStorage.getItem("tracker_url:url")
                 },
                 {
                     fieldname: "source",
                     label: __("Source"),
                     fieldtype: "Data",
-                    default: localStorage.getItem("tracker_url:source"),
+                    default: localStorage.getItem("tracker_url:source")
                 },
                 {
                     fieldname: "campaign",
@@ -1740,14 +1708,14 @@ Object.assign(frappe.utils, {
                     fieldtype: "Link",
                     ignore_link_validation: 1,
                     options: "Marketing Campaign",
-                    default: localStorage.getItem("tracker_url:campaign"),
+                    default: localStorage.getItem("tracker_url:campaign")
                 },
                 {
                     fieldname: "medium",
                     label: __("Medium"),
                     fieldtype: "Data",
-                    default: localStorage.getItem("tracker_url:medium"),
-                },
+                    default: localStorage.getItem("tracker_url:medium")
+                }
             ],
             function (data) {
                 let url = data.url;
@@ -1772,10 +1740,10 @@ Object.assign(frappe.utils, {
                     __("Tracking URL generated and copied to clipboard") +
                         ": <br>" +
                         `<a href="${url}">${url.bold()}</a>`,
-                    __("Here's your tracking URL"),
+                    __("Here's your tracking URL")
                 );
             },
-            __("Generate Tracking URL"),
+            __("Generate Tracking URL")
         );
-    },
+    }
 });

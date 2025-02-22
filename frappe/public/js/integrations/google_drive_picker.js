@@ -18,7 +18,7 @@ export default class GoogleDrivePicker {
             gapi.load("client:picker", {
                 callback: () => {
                     gapi.client.load("https://www.googleapis.com/discovery/v1/apis/drive/v3/rest");
-                },
+                }
             });
         });
     }
@@ -27,13 +27,13 @@ export default class GoogleDrivePicker {
         const tokenClient = google.accounts.oauth2.initTokenClient({
             client_id: this.clientId,
             scope: this.scope,
-            callback: async (response) => {
+            callback: async response => {
                 if (response.error !== undefined) {
                     frappe.throw(response);
                 }
 
                 this.createPicker(response.access_token);
-            },
+            }
         });
 
         // Always try to get away with an empty prompt.

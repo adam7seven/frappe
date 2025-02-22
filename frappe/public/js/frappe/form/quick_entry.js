@@ -1,7 +1,7 @@
 frappe.provide("frappe.ui.form");
 
 frappe.quick_edit = function (doctype, id) {
-    frappe.db.get_doc(doctype, id).then((doc) => {
+    frappe.db.get_doc(doctype, id).then(doc => {
         frappe.ui.form.make_quick_entry(doctype, null, null, doc);
     });
 };
@@ -14,13 +14,7 @@ frappe.ui.form.make_quick_entry = (doctype, after_insert, init_callback, doc, fo
         controller_name = trimmed_doctype + "QuickEntryForm";
     }
 
-    frappe.quick_entry = new frappe.ui.form[controller_name](
-        doctype,
-        after_insert,
-        init_callback,
-        doc,
-        force,
-    );
+    frappe.quick_entry = new frappe.ui.form[controller_name](doctype, after_insert, init_callback, doc, force);
     return frappe.quick_entry.setup();
 };
 
@@ -34,7 +28,7 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm {
     }
 
     setup() {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             frappe.model.with_doctype(this.doctype, () => {
                 this.check_quick_entry_doc();
                 this.set_meta_and_mandatory_fields();
@@ -58,12 +52,9 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm {
         this.meta = frappe.get_meta(this.doctype);
         let fields = this.meta.fields;
 
-        this.mandatory = fields.filter((df) => {
+        this.mandatory = fields.filter(df => {
             return (
-                (df.reqd || df.allow_in_quick_entry) &&
-                !df.read_only &&
-                !df.is_virtual &&
-                df.fieldtype !== "Tab Break"
+                (df.reqd || df.allow_in_quick_entry) && !df.read_only && !df.is_virtual && df.fieldtype !== "Tab Break"
             );
         });
     }
@@ -115,8 +106,8 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm {
                     fieldname: "__newid",
                     label: __("{0} ID", [__(this.meta.id)]),
                     reqd: 1,
-                    fieldtype: "Data",
-                },
+                    fieldtype: "Data"
+                }
             ].concat(this.mandatory);
         }
     }
@@ -126,7 +117,7 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm {
         this.dialog = new frappe.ui.Dialog({
             title: __("New {0}", [__(this.doctype)]),
             fields: this.mandatory,
-            doc: this.doc,
+            doc: this.doc
         });
 
         this.register_primary_action();
@@ -174,12 +165,12 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm {
 
     insert() {
         let me = this;
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             me.update_doc();
             frappe.call({
                 method: "frappe.client.save",
                 args: {
-                    doc: me.dialog.doc,
+                    doc: me.dialog.doc
                 },
                 callback: function (r) {
                     if (frappe.model.is_submittable(me.doctype)) {
@@ -189,7 +180,7 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm {
                                 me.dialog.set_primary_action(__("Submit"), function () {
                                     me.submit(r.message);
                                 });
-                            },
+                            }
                         ]);
                     } else {
                         me.dialog.hide();
@@ -216,7 +207,7 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm {
                     me.dialog.working = false;
                     resolve(me.dialog.doc);
                 },
-                freeze: true,
+                freeze: true
             });
         });
     }
@@ -226,7 +217,7 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm {
         frappe.call({
             method: "frappe.client.submit",
             args: {
-                doc: doc,
+                doc: doc
             },
             callback: function (r) {
                 me.dialog.hide();
@@ -244,7 +235,7 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm {
                 }
 
                 cur_frm && cur_frm.reload_doc();
-            },
+            }
         });
     }
 
@@ -272,7 +263,7 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm {
         this.update_doc();
         if (set_hooks && this.after_insert) {
             frappe.route_options = frappe.route_options || {};
-            frappe.route_options.after_save = (frm) => {
+            frappe.route_options.after_save = frm => {
                 this.after_insert(frm);
             };
         }

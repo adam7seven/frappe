@@ -28,7 +28,7 @@ frappe.ui.keys.add_shortcut = ({
     page,
     target,
     condition,
-    ignore_inputs = false,
+    ignore_inputs = false
 } = {}) => {
     if (target instanceof jQuery) {
         let $target = target;
@@ -39,11 +39,9 @@ frappe.ui.keys.add_shortcut = ({
     if (!condition) {
         condition = () => true;
     }
-    let handler = (e) => {
+    let handler = e => {
         let $focused_element = $(document.activeElement);
-        let is_input_focused = $focused_element.is(
-            "input, select, textarea, [contenteditable=true]",
-        );
+        let is_input_focused = $focused_element.is("input, select, textarea, [contenteditable=true]");
         if (is_input_focused && !ignore_inputs) return;
         if (!condition()) return;
 
@@ -64,7 +62,7 @@ frappe.ui.keys.add_shortcut = ({
     frappe.ui.keys.on(shortcut, handler);
 
     // update standard shortcut list
-    let existing_shortcut_index = standard_shortcuts.findIndex((s) => s.shortcut === shortcut);
+    let existing_shortcut_index = standard_shortcuts.findIndex(s => s.shortcut === shortcut);
     let new_shortcut = { shortcut, action, description, page, condition };
     if (existing_shortcut_index === -1) {
         standard_shortcuts.push(new_shortcut);
@@ -76,13 +74,13 @@ frappe.ui.keys.add_shortcut = ({
 frappe.ui.keys.show_keyboard_shortcut_dialog = () => {
     if (frappe.ui.keys.is_dialog_shown) return;
 
-    let global_shortcuts = standard_shortcuts.filter((shortcut) => !shortcut.page);
+    let global_shortcuts = standard_shortcuts.filter(shortcut => !shortcut.page);
     let current_page_shortcuts = standard_shortcuts.filter(
-        (shortcut) => shortcut.page && shortcut.page === window.cur_page.page.page,
+        shortcut => shortcut.page && shortcut.page === window.cur_page.page.page
     );
 
     let grid_shortcuts = standard_shortcuts.filter(
-        (shortcut) => shortcut.page && shortcut.page === window.cur_page.page.frm,
+        shortcut => shortcut.page && shortcut.page === window.cur_page.page.frm
     );
 
     function generate_shortcuts_html(shortcuts, heading) {
@@ -90,13 +88,10 @@ frappe.ui.keys.show_keyboard_shortcut_dialog = () => {
             return "";
         }
         let html = shortcuts
-            .filter((s) => (s.condition ? s.condition() : true))
-            .filter((s) => !!s.description)
-            .map((shortcut) => {
-                let shortcut_label = shortcut.shortcut
-                    .split("+")
-                    .map(frappe.utils.to_title_case)
-                    .join("+");
+            .filter(s => (s.condition ? s.condition() : true))
+            .filter(s => !!s.description)
+            .map(shortcut => {
+                let shortcut_label = shortcut.shortcut.split("+").map(frappe.utils.to_title_case).join("+");
                 if (frappe.utils.is_mac()) {
                     shortcut_label = shortcut_label.replace("Ctrl", "⌘").replace("Alt", "⌥");
                 }
@@ -119,17 +114,14 @@ frappe.ui.keys.show_keyboard_shortcut_dialog = () => {
     }
 
     let global_shortcuts_html = generate_shortcuts_html(global_shortcuts, __("Global Shortcuts"));
-    let current_page_shortcuts_html = generate_shortcuts_html(
-        current_page_shortcuts,
-        __("Page Shortcuts"),
-    );
+    let current_page_shortcuts_html = generate_shortcuts_html(current_page_shortcuts, __("Page Shortcuts"));
     let grid_shortcuts_html = generate_shortcuts_html(grid_shortcuts, __("Grid Shortcuts"));
 
     let dialog = new frappe.ui.Dialog({
         title: __("Keyboard Shortcuts"),
         on_hide() {
             frappe.ui.keys.is_dialog_shown = false;
-        },
+        }
     });
 
     dialog.$body.append(global_shortcuts_html);
@@ -178,7 +170,7 @@ frappe.ui.keys.on = function (key, handler) {
 frappe.ui.keys.off = function (key, page) {
     let handlers = frappe.ui.keys.handlers[key];
     if (!handlers || handlers.length === 0) return;
-    frappe.ui.keys.handlers[key] = handlers.filter((h) => {
+    frappe.ui.keys.handlers[key] = handlers.filter(h => {
         if (!page) return false;
         return h.page !== page;
     });
@@ -192,7 +184,7 @@ frappe.ui.keys.add_shortcut({
         return false;
     },
     description: __("Trigger Primary Action"),
-    ignore_inputs: true,
+    ignore_inputs: true
 });
 
 frappe.ui.keys.add_shortcut({
@@ -202,7 +194,7 @@ frappe.ui.keys.add_shortcut({
         e.preventDefault();
         return false;
     },
-    description: __("Open Awesomebar"),
+    description: __("Open Awesomebar")
 });
 
 frappe.ui.keys.add_shortcut({
@@ -211,7 +203,7 @@ frappe.ui.keys.add_shortcut({
         e.preventDefault();
         $(".navbar-home img").click();
     },
-    description: __("Navigate Home"),
+    description: __("Navigate Home")
 });
 
 frappe.ui.keys.add_shortcut({
@@ -220,7 +212,7 @@ frappe.ui.keys.add_shortcut({
         e.preventDefault();
         $(".dropdown-navbar-user button").eq(0).click();
     },
-    description: __("Open Settings"),
+    description: __("Open Settings")
 });
 
 frappe.ui.keys.add_shortcut({
@@ -228,7 +220,7 @@ frappe.ui.keys.add_shortcut({
     action: function () {
         frappe.ui.keys.show_keyboard_shortcut_dialog();
     },
-    description: __("Show Keyboard Shortcuts"),
+    description: __("Show Keyboard Shortcuts")
 });
 
 frappe.ui.keys.add_shortcut({
@@ -237,7 +229,7 @@ frappe.ui.keys.add_shortcut({
         e.preventDefault();
         $(".dropdown-help button").eq(0).click();
     },
-    description: __("Open Help"),
+    description: __("Open Help")
 });
 
 frappe.ui.keys.on("escape", function (e) {
@@ -275,7 +267,7 @@ frappe.ui.keys.add_shortcut({
     action: function () {
         frappe.ui.toolbar.clear_cache();
     },
-    description: __("Clear Cache and Reload"),
+    description: __("Clear Cache and Reload")
 });
 
 frappe.ui.keys.key_map = {
@@ -299,7 +291,7 @@ frappe.ui.keys.key_map = {
     116: "f5",
     191: "/",
     188: "<",
-    190: ">",
+    190: ">"
 };
 
 "abcdefghijklmnopqrstuvwxyz".split("").forEach((letter, i) => {
@@ -316,7 +308,7 @@ frappe.ui.keyCode = {
     ENTER: 13,
     TAB: 9,
     SPACE: 32,
-    BACKSPACE: 8,
+    BACKSPACE: 8
 };
 
 function handle_escape_key() {

@@ -20,8 +20,8 @@ frappe.ui.form.on("Customize Form", {
                     ["DocType", "issingle", "=", 0],
                     ["DocType", "custom", "=", 0],
                     ["DocType", "id", "not in", frappe.model.core_doctypes_list],
-                    ["DocType", "restrict_to_domain", "in", frappe.boot.active_domains],
-                ],
+                    ["DocType", "restrict_to_domain", "in", frappe.boot.active_domains]
+                ]
             };
         });
 
@@ -29,8 +29,8 @@ frappe.ui.form.on("Customize Form", {
             return {
                 filters: {
                     print_format_type: ["!=", "JS"],
-                    doc_type: ["=", frm.doc.doc_type],
-                },
+                    doc_type: ["=", frm.doc.doc_type]
+                }
             };
         });
 
@@ -68,7 +68,7 @@ frappe.ui.form.on("Customize Form", {
                         }
                     }
                     localStorage["customize_doctype"] = frm.doc.doc_type;
-                },
+                }
             });
         } else {
             frm.refresh();
@@ -86,7 +86,7 @@ frappe.ui.form.on("Customize Form", {
             frm.add_custom_button(
                 __(f.options),
                 () => frm.set_value("doc_type", f.options),
-                __("Customize Child Table"),
+                __("Customize Child Table")
             );
         });
     },
@@ -105,7 +105,7 @@ frappe.ui.form.on("Customize Form", {
                     function () {
                         frappe.set_route("List", frm.doc.doc_type);
                     },
-                    __("Actions"),
+                    __("Actions")
                 );
 
                 frm.add_custom_button(
@@ -113,7 +113,7 @@ frappe.ui.form.on("Customize Form", {
                     function () {
                         frappe.set_route("permission-manager", frm.doc.doc_type);
                     },
-                    __("Actions"),
+                    __("Actions")
                 );
 
                 frm.add_custom_button(
@@ -121,7 +121,7 @@ frappe.ui.form.on("Customize Form", {
                     function () {
                         frm.script_manager.trigger("doc_type");
                     },
-                    __("Actions"),
+                    __("Actions")
                 );
 
                 frm.add_custom_button(
@@ -129,7 +129,7 @@ frappe.ui.form.on("Customize Form", {
                     () => {
                         frm.trigger("reset_layout");
                     },
-                    __("Actions"),
+                    __("Actions")
                 );
 
                 frm.add_custom_button(
@@ -137,7 +137,7 @@ frappe.ui.form.on("Customize Form", {
                     function () {
                         frappe.customize_form.confirm(__("Remove all customizations?"), frm);
                     },
-                    __("Actions"),
+                    __("Actions")
                 );
 
                 frm.add_custom_button(
@@ -145,16 +145,13 @@ frappe.ui.form.on("Customize Form", {
                     function () {
                         frm.trigger("trim_table");
                     },
-                    __("Actions"),
+                    __("Actions")
                 );
 
                 const is_autoid_autoincrement = frm.doc.autoid === "autoincrement";
                 frm.set_df_property("naming_rule", "hidden", is_autoid_autoincrement);
                 frm.set_df_property("autoid", "read_only", is_autoid_autoincrement);
-                frm.toggle_display(
-                    ["queue_in_background"],
-                    frappe.get_meta(frm.doc.doc_type).is_submittable || 0,
-                );
+                frm.toggle_display(["queue_in_background"], frappe.get_meta(frm.doc.doc_type).is_submittable || 0);
 
                 render_form_builder(frm);
                 frm.get_field("form_builder").tab.set_active();
@@ -182,30 +179,27 @@ frappe.ui.form.on("Customize Form", {
     },
 
     reset_layout(frm) {
-        frappe.confirm(
-            __("Layout will be reset to standard layout, are you sure you want to do this?"),
-            () => {
-                return frm.call({
-                    doc: frm.doc,
-                    method: "reset_layout",
-                    callback: function (r) {
-                        if (!r.exc) {
-                            frappe.show_alert({
-                                message: __("Layout Reset"),
-                                indicator: "green",
-                            });
-                            frappe.customize_form.clear_locals_and_refresh(frm);
-                        }
-                    },
-                });
-            },
-        );
+        frappe.confirm(__("Layout will be reset to standard layout, are you sure you want to do this?"), () => {
+            return frm.call({
+                doc: frm.doc,
+                method: "reset_layout",
+                callback: function (r) {
+                    if (!r.exc) {
+                        frappe.show_alert({
+                            message: __("Layout Reset"),
+                            indicator: "green"
+                        });
+                        frappe.customize_form.clear_locals_and_refresh(frm);
+                    }
+                }
+            });
+        });
     },
 
     async trim_table(frm) {
         let dropped_columns = await frappe.xcall(
             "frappe.custom.doctype.customize_form.customize_form.get_orphaned_columns",
-            { doctype: frm.doc.doc_type },
+            { doctype: frm.doc.doc_type }
         );
 
         if (!dropped_columns?.length) {
@@ -214,9 +208,9 @@ frappe.ui.form.on("Customize Form", {
         }
         let msg = __(
             "Warning: DATA LOSS IMMINENT! Proceeding will permanently delete following database columns from doctype {0}:",
-            [frm.doc.doc_type.bold()],
+            [frm.doc.doc_type.bold()]
         );
-        msg += "<ol>" + dropped_columns.map((col) => `<li>${col}</li>`).join("") + "</ol>";
+        msg += "<ol>" + dropped_columns.map(col => `<li>${col}</li>`).join("") + "</ol>";
         msg += __("This action is irreversible. Do you wish to continue?");
 
         frappe.confirm(msg, () => {
@@ -227,11 +221,11 @@ frappe.ui.form.on("Customize Form", {
                     if (!r.exc) {
                         frappe.show_alert({
                             message: __("Table Trimmed"),
-                            indicator: "green",
+                            indicator: "green"
                         });
                         frappe.customize_form.clear_locals_and_refresh(frm);
                     }
-                },
+                }
             });
         });
     },
@@ -248,23 +242,23 @@ frappe.ui.form.on("Customize Form", {
                                 fieldname: "module",
                                 options: "Module Def",
                                 label: __("Module to Export"),
-                                reqd: 1,
+                                reqd: 1
                             },
                             {
                                 fieldtype: "Check",
                                 fieldname: "sync_on_migrate",
                                 label: __("Sync on Migrate"),
-                                default: 1,
+                                default: 1
                             },
                             {
                                 fieldtype: "Check",
                                 fieldname: "with_permissions",
                                 label: __("Export Custom Permissions"),
                                 description: __(
-                                    "Exported permissions will be force-synced on every migrate overriding any other customization.",
+                                    "Exported permissions will be force-synced on every migrate overriding any other customization."
                                 ),
-                                default: 0,
-                            },
+                                default: 0
+                            }
                         ],
                         function (data) {
                             frappe.call({
@@ -273,14 +267,14 @@ frappe.ui.form.on("Customize Form", {
                                     doctype: frm.doc.doc_type,
                                     module: data.module,
                                     sync_on_migrate: data.sync_on_migrate,
-                                    with_permissions: data.with_permissions,
-                                },
+                                    with_permissions: data.with_permissions
+                                }
                             });
                         },
-                        __("Select Module"),
+                        __("Select Module")
                     );
                 },
-                __("Actions"),
+                __("Actions")
             );
         }
     },
@@ -298,7 +292,7 @@ frappe.ui.form.on("Customize Form", {
 
     setup_default_views(frm) {
         frappe.model.set_default_views_for_doctype(frm.doc.doc_type, frm);
-    },
+    }
 });
 
 // can't delete standard fields
@@ -308,18 +302,17 @@ frappe.ui.form.on("Customize Form Field", {
 
         if (row.is_system_generated) {
             frappe.throw(
-                __(
-                    "Cannot delete system generated field <strong>{0}</strong>. You can hide it instead.",
-                    [__(row.label) || row.fieldname],
-                ),
+                __("Cannot delete system generated field <strong>{0}</strong>. You can hide it instead.", [
+                    __(row.label) || row.fieldname
+                ])
             );
         }
 
         if (!(row.is_custom_field || row.__islocal)) {
             frappe.throw(
                 __("Cannot delete standard field <strong>{0}</strong>. You can hide it instead.", [
-                    __(row.label) || row.fieldname,
-                ]),
+                    __(row.label) || row.fieldname
+                ])
             );
         }
     },
@@ -332,7 +325,7 @@ frappe.ui.form.on("Customize Form Field", {
 
     form_render(frm, doctype, docid) {
         frm.trigger("setup_fetch_from_fields", doctype, docid);
-    },
+    }
 });
 
 let parenttype, parent; // used in the form events for the child tables: links, actions and states
@@ -356,7 +349,7 @@ frappe.ui.form.on("DocType Link", {
         // replicate the changed rows from the browser's copy of the parent doc to the current 'Customize Form' doc
         let parent_doc = locals[parenttype][parent];
         frm.doc.links = parent_doc.links;
-    },
+    }
 });
 
 // can't delete standard actions
@@ -378,7 +371,7 @@ frappe.ui.form.on("DocType Action", {
         // replicate the changed rows from the browser's copy of the parent doc to the current 'Customize Form' doc
         let parent_doc = locals[parenttype][parent];
         frm.doc.actions = parent_doc.actions;
-    },
+    }
 });
 
 // can't delete standard states
@@ -400,7 +393,7 @@ frappe.ui.form.on("DocType State", {
         // replicate the changed rows from the browser's copy of the parent doc to the current 'Customize Form' doc
         let parent_doc = locals[parenttype][parent];
         frm.doc.states = parent_doc.states;
-    },
+    }
 });
 
 frappe.customize_form.save_customization = function (frm) {
@@ -416,7 +409,7 @@ frappe.customize_form.save_customization = function (frm) {
                     frappe.customize_form.clear_locals_and_refresh(frm);
                     frm.script_manager.trigger("doc_type");
                 }
-            },
+            }
         });
     }
 };
@@ -449,8 +442,8 @@ frappe.customize_form.confirm = function (msg, frm) {
         fields: [
             {
                 fieldtype: "HTML",
-                options: __("All customizations will be removed. Please confirm."),
-            },
+                options: __("All customizations will be removed. Please confirm.")
+            }
         ],
         primary_action: function () {
             return frm.call({
@@ -463,13 +456,13 @@ frappe.customize_form.confirm = function (msg, frm) {
                         d.hide();
                         frappe.show_alert({
                             message: __("Customizations Reset"),
-                            indicator: "green",
+                            indicator: "green"
                         });
                         frappe.customize_form.clear_locals_and_refresh(frm);
                     }
-                },
+                }
             });
-        },
+        }
     });
 
     frappe.customize_form.confirm.dialog = d;
@@ -504,7 +497,7 @@ function render_form_builder(frm) {
                 wrapper: $(frm.fields_dict["form_builder"].wrapper),
                 frm: frm,
                 doctype: frm.doc.doc_type,
-                customize: true,
+                customize: true
             });
         });
     }

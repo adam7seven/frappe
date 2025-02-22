@@ -2,13 +2,13 @@ frappe.ui.form.on("Website Settings", {
     setup(frm) {
         frm.set_query("navbar_template", () => ({
             filters: {
-                type: "Navbar",
-            },
+                type: "Navbar"
+            }
         }));
         frm.set_query("footer_template", () => ({
             filters: {
-                type: "Footer",
-            },
+                type: "Footer"
+            }
         }));
     },
 
@@ -33,7 +33,7 @@ frappe.ui.form.on("Website Settings", {
         frm.fields_dict.top_bar_items.grid.update_docfield_property(
             "parent_label",
             "options",
-            frm.events.get_parent_options(frm, "top_bar_items"),
+            frm.events.get_parent_options(frm, "top_bar_items")
         );
     },
 
@@ -41,7 +41,7 @@ frappe.ui.form.on("Website Settings", {
         frm.fields_dict.footer_items.grid.update_docfield_property(
             "parent_label",
             "options",
-            frm.events.get_parent_options(frm, "footer_items"),
+            frm.events.get_parent_options(frm, "footer_items")
         );
     },
 
@@ -49,14 +49,14 @@ frappe.ui.form.on("Website Settings", {
         frappe.call({
             method: "frappe.website.doctype.website_settings.google_indexing.authorize_access",
             args: {
-                reauthorize: frm.doc.indexing_authorization_code ? 1 : 0,
+                reauthorize: frm.doc.indexing_authorization_code ? 1 : 0
             },
             callback: function (r) {
                 if (!r.exc) {
                     frm.save();
                     window.open(r.message.url);
                 }
-            },
+            }
         });
     },
 
@@ -101,10 +101,10 @@ frappe.ui.form.on("Website Settings", {
             return;
         }
         let values = JSON.parse(frm.doc[values_field] || "{}");
-        open_web_template_values_editor(template, values).then((new_values) => {
+        open_web_template_values_editor(template, values).then(new_values => {
             frm.set_value(values_field, JSON.stringify(new_values));
         });
-    },
+    }
 });
 
 frappe.ui.form.on("Top Bar Item", {
@@ -130,22 +130,20 @@ frappe.ui.form.on("Top Bar Item", {
 
     label: function (frm, doctype, id) {
         frm.events.set_parent_options(frm, doctype, id);
-    },
+    }
 });
 
 frappe.tour["Website Settings"] = [
     {
         fieldname: "enable_view_tracking",
         title: __("Enable Tracking Page Views"),
-        description: __(
-            "Checking this will enable tracking page views for blogs, web pages, etc.",
-        ),
+        description: __("Checking this will enable tracking page views for blogs, web pages, etc.")
     },
     {
         fieldname: "disable_signup",
         title: __("Disable Signup for your site"),
         description: __(
-            "Check this if you don't want users to sign up for an account on your site. Users won't get desk access unless you explicitly provide it.",
-        ),
-    },
+            "Check this if you don't want users to sign up for an account on your site. Users won't get desk access unless you explicitly provide it."
+        )
+    }
 ];

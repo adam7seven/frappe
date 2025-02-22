@@ -27,11 +27,11 @@ frappe.ui.form.LinkSelector = class LinkSelector {
                     fieldtype: "Data",
                     fieldname: "txt",
                     label: __("Beginning with"),
-                    description: __("You can use wildcard %"),
+                    description: __("You can use wildcard %")
                 },
                 {
                     fieldtype: "HTML",
-                    fieldname: "results",
+                    fieldname: "results"
                 },
                 {
                     fieldtype: "Button",
@@ -40,14 +40,14 @@ frappe.ui.form.LinkSelector = class LinkSelector {
                     click: () => {
                         me.start += me.page_length;
                         me.search();
-                    },
-                },
+                    }
+                }
             ],
             primary_action_label: __("Search"),
             primary_action: function () {
                 me.start = 0;
                 me.search();
-            },
+            }
         });
 
         if (this.txt) this.dialog.fields_dict.txt.set_input(this.txt);
@@ -66,7 +66,7 @@ frappe.ui.form.LinkSelector = class LinkSelector {
             txt: this.dialog.fields_dict.txt.get_value(),
             searchfield: "id",
             start: this.start,
-            page_length: this.page_length,
+            page_length: this.page_length
         };
         var me = this;
 
@@ -104,9 +104,9 @@ frappe.ui.form.LinkSelector = class LinkSelector {
 						</div>',
                                 {
                                     name: v[0],
-                                    values: v.splice(1).join(", "),
-                                },
-                            ),
+                                    values: v.splice(1).join(", ")
+                                }
+                            )
                         ).appendTo(parent);
 
                         row.find("a")
@@ -118,8 +118,7 @@ frappe.ui.form.LinkSelector = class LinkSelector {
                                     // call search after value is set to get latest filtered results
                                     me.set_in_grid(value).then(() => me.search());
                                 } else {
-                                    if (me.target.doctype)
-                                        me.target.parse_validate_and_set_in_model(value);
+                                    if (me.target.doctype) me.target.parse_validate_and_set_in_model(value);
                                     else {
                                         me.target.set_input(value);
                                         me.target.$input.trigger("change");
@@ -139,7 +138,7 @@ frappe.ui.form.LinkSelector = class LinkSelector {
                                   __("Create a new {0}", [__(me.doctype)]) +
                                   "</a>"
                                 : "") +
-                            "</p>",
+                            "</p>"
                     )
                         .appendTo(parent)
                         .find(".new-doc")
@@ -155,11 +154,11 @@ frappe.ui.form.LinkSelector = class LinkSelector {
                     more_btn.show();
                 }
             },
-            this.dialog.get_primary_btn(),
+            this.dialog.get_primary_btn()
         );
     }
     set_in_grid(value) {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             if (this.qty_fieldname) {
                 frappe.prompt(
                     {
@@ -167,27 +166,18 @@ frappe.ui.form.LinkSelector = class LinkSelector {
                         fieldtype: "Float",
                         label: "Qty",
                         default: 1,
-                        reqd: 1,
+                        reqd: 1
                     },
-                    (data) => {
-                        let updated = (this.target.frm.doc[this.target.df.fieldname] || []).some(
-                            (d) => {
-                                if (d[this.fieldname] === value) {
-                                    frappe.model
-                                        .set_value(d.doctype, d.id, this.qty_fieldname, data.qty)
-                                        .then(() => {
-                                            frappe.show_alert(
-                                                __("Added {0} ({1})", [
-                                                    value,
-                                                    d[this.qty_fieldname],
-                                                ]),
-                                            );
-                                            resolve();
-                                        });
-                                    return true;
-                                }
-                            },
-                        );
+                    data => {
+                        let updated = (this.target.frm.doc[this.target.df.fieldname] || []).some(d => {
+                            if (d[this.fieldname] === value) {
+                                frappe.model.set_value(d.doctype, d.id, this.qty_fieldname, data.qty).then(() => {
+                                    frappe.show_alert(__("Added {0} ({1})", [value, d[this.qty_fieldname]]));
+                                    resolve();
+                                });
+                                return true;
+                            }
+                        });
                         if (!updated) {
                             let d = null;
                             frappe.run_serially([
@@ -200,21 +190,16 @@ frappe.ui.form.LinkSelector = class LinkSelector {
                                     return frappe.model.set_value(d.doctype, d.id, args);
                                 },
                                 () => frappe.show_alert(__("Added {0} ({1})", [value, data.qty])),
-                                () => resolve(),
+                                () => resolve()
                             ]);
                         }
                     },
                     __("Set Quantity"),
-                    __("Set Quantity"),
+                    __("Set Quantity")
                 );
             } else if (this.dynamic_link_field) {
                 let d = this.target.add_new_row();
-                frappe.model.set_value(
-                    d.doctype,
-                    d.id,
-                    this.dynamic_link_field,
-                    this.dynamic_link_reference,
-                );
+                frappe.model.set_value(d.doctype, d.id, this.dynamic_link_field, this.dynamic_link_reference);
                 frappe.model.set_value(d.doctype, d.id, this.fieldname, value).then(() => {
                     frappe.show_alert(__("{0} {1} added", [this.dynamic_link_reference, value]));
                     resolve();
@@ -233,7 +218,7 @@ frappe.ui.form.LinkSelector = class LinkSelector {
 frappe.link_search = function (doctype, args, callback, btn) {
     if (!args) {
         args = {
-            txt: "",
+            txt: ""
         };
     }
     args.doctype = doctype;
@@ -248,6 +233,6 @@ frappe.link_search = function (doctype, args, callback, btn) {
         callback: function (r) {
             callback && callback(r.message);
         },
-        btn: btn,
+        btn: btn
     });
 };

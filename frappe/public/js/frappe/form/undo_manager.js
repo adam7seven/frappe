@@ -15,7 +15,7 @@ export class UndoManager {
             new_value,
             doctype,
             docid,
-            is_child,
+            is_child
         });
     }
 
@@ -48,18 +48,13 @@ export class UndoManager {
         stack.push({
             ...change,
             new_value: change.old_value,
-            old_value: change.new_value,
+            old_value: change.new_value
         });
     }
 
     _apply_change(change) {
         if (change.is_child) {
-            frappe.model.set_value(
-                change.doctype,
-                change.docid,
-                change.fieldname,
-                change.old_value,
-            );
+            frappe.model.set_value(change.doctype, change.docid, change.fieldname, change.old_value);
         } else {
             this.frm.set_value(change.fieldname, change.old_value);
             this.frm.scroll_to_field(change.fieldname, false);

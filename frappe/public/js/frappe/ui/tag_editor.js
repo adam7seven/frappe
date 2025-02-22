@@ -32,7 +32,7 @@ frappe.ui.TagEditor = class TagEditor {
         this.tags = new frappe.ui.Tags({
             parent: this.wrapper,
             placeholder: '<svg class="es-icon icon-sm"><use href="#es-line-add"></use></svg>',
-            onTagAdd: (tag) => {
+            onTagAdd: tag => {
                 if (me.initialized && !me.refreshing) {
                     return frappe.call({
                         method: "frappe.desk.doctype.tag.tag.add_tag",
@@ -43,11 +43,11 @@ frappe.ui.TagEditor = class TagEditor {
                             me.user_tags = user_tags.join(",");
                             me.on_change && me.on_change(me.user_tags);
                             frappe.tags.utils.fetch_tags();
-                        },
+                        }
                     });
                 }
             },
-            onTagRemove: (tag) => {
+            onTagRemove: tag => {
                 if (!me.refreshing) {
                     return frappe.call({
                         method: "frappe.desk.doctype.tag.tag.remove_tag",
@@ -58,10 +58,10 @@ frappe.ui.TagEditor = class TagEditor {
                             me.user_tags = user_tags.join(",");
                             me.on_change && me.on_change(me.user_tags);
                             frappe.tags.utils.fetch_tags();
-                        },
+                        }
                     });
                 }
-            },
+            }
         });
         this.setup_awesomplete();
         this.setup_complete = true;
@@ -73,7 +73,7 @@ frappe.ui.TagEditor = class TagEditor {
         this.awesomplete = new Awesomplete(input, {
             minChars: 0,
             maxItems: 99,
-            list: [],
+            list: []
         });
         $input.on("awesomplete-open", function (e) {
             $input.attr("state", "open");
@@ -87,11 +87,11 @@ frappe.ui.TagEditor = class TagEditor {
                 method: "frappe.desk.doctype.tag.tag.get_tags",
                 args: {
                     doctype: me.frm.doctype,
-                    txt: value.toLowerCase(),
+                    txt: value.toLowerCase()
                 },
                 callback: function (r) {
                     me.awesomplete.list = r.message;
-                },
+                }
             });
         });
         $input.on("focus", function (e) {
@@ -104,7 +104,7 @@ frappe.ui.TagEditor = class TagEditor {
         return {
             tag: tag,
             dt: this.frm.doctype,
-            dn: this.frm.docid,
+            dn: this.frm.docid
         };
     }
     refresh(user_tags) {

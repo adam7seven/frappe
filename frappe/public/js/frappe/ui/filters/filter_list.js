@@ -53,7 +53,7 @@ frappe.ui.FilterGroup = class {
             trigger: "manual",
             container: "body",
             placement: "bottom",
-            offset: "-100px, 0",
+            offset: "-100px, 0"
         });
     }
 
@@ -62,7 +62,7 @@ frappe.ui.FilterGroup = class {
     }
 
     set_popover_events() {
-        $(document.body).on("click", (e) => {
+        $(document.body).on("click", e => {
             if (this.wrapper && this.wrapper.is(":visible")) {
                 const in_datepicker =
                     $(e.target).is(".datepicker--cell") ||
@@ -115,7 +115,7 @@ frappe.ui.FilterGroup = class {
     }
 
     add_filters_to_popover(filters) {
-        filters.forEach((filter) => {
+        filters.forEach(filter => {
             filter.parent = this.wrapper;
             filter.field = null;
             filter.make();
@@ -140,10 +140,7 @@ frappe.ui.FilterGroup = class {
         this.filter_button.find(".filter-icon").toggleClass("active", filters_applied);
 
         this.filter_button.find(".button-label").html(button_label);
-        this.filter_button.attr(
-            "title",
-            `${this.filters.length} Filter${this.filters.length > 1 ? "s" : ""} Applied`,
-        );
+        this.filter_button.attr("title", `${this.filters.length} Filter${this.filters.length > 1 ? "s" : ""} Applied`);
     }
 
     set_filter_events() {
@@ -199,7 +196,7 @@ frappe.ui.FilterGroup = class {
         ) {
             frappe.msgprint({
                 message: __("Invalid filter: {0}", [fieldname.bold()]),
-                indicator: "red",
+                indicator: "red"
             });
 
             return false;
@@ -232,14 +229,14 @@ frappe.ui.FilterGroup = class {
             value: value,
             hidden: hidden,
             index: this.filters.length + 1,
-            on_change: (update) => {
+            on_change: update => {
                 if (update) this.update_filters();
                 this.on_change();
             },
             filter_items: (doctype, fieldname) => {
                 return !this.filter_exists([doctype, fieldname]);
             },
-            filter_list: this.base_list || this,
+            filter_list: this.base_list || this
         };
 
         let filter = new frappe.ui.Filter(args);
@@ -248,15 +245,15 @@ frappe.ui.FilterGroup = class {
     }
 
     get_filter_value(fieldname) {
-        let filter_obj = this.filters.find((f) => f.fieldname == fieldname) || {};
+        let filter_obj = this.filters.find(f => f.fieldname == fieldname) || {};
         return filter_obj.value;
     }
 
     filter_exists(filter_value) {
         // filter_value of form: [doctype, fieldname, condition, value]
         return this.filters
-            .filter((f) => f.field)
-            .some((f) => {
+            .filter(f => f.field)
+            .some(f => {
                 let f_value = f.get_value();
                 if (filter_value.length === 2) {
                     return filter_value[0] === f_value[0] && filter_value[1] === f_value[1];
@@ -267,29 +264,29 @@ frappe.ui.FilterGroup = class {
 
     get_filters() {
         return this.filters
-            .filter((f) => f.field)
-            .map((f) => {
+            .filter(f => f.field)
+            .map(f => {
                 return f.get_value();
             });
     }
 
     update_filters() {
         // remove hidden filters and undefined filters
-        const filter_exists = (f) => ![undefined, null].includes(f.get_selected_value());
-        this.filters.map((f) => !filter_exists(f) && f.remove());
-        this.filters = this.filters.filter((f) => filter_exists(f) && f.field);
+        const filter_exists = f => ![undefined, null].includes(f.get_selected_value());
+        this.filters.map(f => !filter_exists(f) && f.remove());
+        this.filters = this.filters.filter(f => filter_exists(f) && f.field);
         this.update_filter_button();
         this.filters.length === 0 && this.toggle_empty_filters(true);
     }
 
     clear_filters() {
-        this.filters.map((f) => f.remove(true));
+        this.filters.map(f => f.remove(true));
         // {}: Clear page filters, .date-range-picker (called list run())
         this.filters = [];
     }
 
     get_filter(fieldname) {
-        return this.filters.filter((f) => {
+        return this.filters.filter(f => {
             return f.field && f.field.df.fieldname == fieldname;
         })[0];
     }
@@ -326,7 +323,7 @@ frappe.ui.FilterGroup = class {
     get_filters_as_object() {
         return this.get_filters().reduce((acc, filter) => {
             return Object.assign(acc, {
-                [filter[1]]: [filter[2], filter[3]],
+                [filter[1]]: [filter[2], filter[3]]
             });
         }, {});
     }
@@ -334,7 +331,7 @@ frappe.ui.FilterGroup = class {
     add_filters_to_filter_group(filters) {
         if (filters && filters.length) {
             this.toggle_empty_filters(false);
-            filters.forEach((filter) => {
+            filters.forEach(filter => {
                 this.add_filter(filter[0], filter[1], filter[2], filter[3]);
             });
         }
@@ -349,7 +346,7 @@ frappe.ui.FilterGroup = class {
             filters = [filter];
         }
 
-        filters = filters.filter((f) => {
+        filters = filters.filter(f => {
             return !this.exists(f);
         });
 
@@ -357,10 +354,7 @@ frappe.ui.FilterGroup = class {
 
         return promise
             .then(() => {
-                return (
-                    non_standard_filters.length > 0 &&
-                    this.filter_list.add_filters(non_standard_filters)
-                );
+                return non_standard_filters.length > 0 && this.filter_list.add_filters(non_standard_filters);
             })
             .then(() => {
                 refresh && this.list_view.refresh();

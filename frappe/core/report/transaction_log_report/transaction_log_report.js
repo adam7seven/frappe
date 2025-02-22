@@ -6,5 +6,5 @@ frappe.query_reports["Transaction Log Report"] = {
         query_report.add_make_chart_button = function () {
             //
         };
-    },
+    }
 };

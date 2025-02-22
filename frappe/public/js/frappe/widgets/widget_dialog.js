@@ -17,7 +17,7 @@ class WidgetDialog {
         this.dialog = new frappe.ui.Dialog({
             title: this.get_title(),
             fields: this.get_fields(),
-            primary_action: (data) => {
+            primary_action: data => {
                 data = this.process_data(data);
 
                 if (!this.editing && !data.id) {
@@ -27,7 +27,7 @@ class WidgetDialog {
                 this.dialog.hide();
                 this.primary_action(data);
             },
-            primary_action_label: this.primary_action_label || __("Add"),
+            primary_action_label: this.primary_action_label || __("Add")
         });
     }
 
@@ -80,7 +80,7 @@ class WidgetDialog {
         this.filter_group = new frappe.ui.FilterGroup({
             parent: this.dialog.get_field("filter_area").$wrapper,
             doctype: doctype,
-            on_change: () => {},
+            on_change: () => {}
         });
 
         frappe.model.with_doctype(doctype, () => {
@@ -103,13 +103,13 @@ class ChartDialog extends WidgetDialog {
                 fieldname: "chart_id",
                 label: __("Chart Name"),
                 options: "Dashboard Chart",
-                reqd: 1,
+                reqd: 1
             },
             {
                 fieldtype: "Data",
                 fieldname: "label",
-                label: "Label",
-            },
+                label: "Label"
+            }
         ];
     }
 
@@ -139,43 +139,40 @@ class QuickListDialog extends WidgetDialog {
                     return {
                         filters: {
                             issingle: 0,
-                            istable: 0,
-                        },
+                            istable: 0
+                        }
                     };
-                },
+                }
             },
             {
                 fieldtype: "Column Break",
-                fieldname: "column_break_4",
+                fieldname: "column_break_4"
             },
             {
                 fieldtype: "Data",
                 fieldname: "label",
-                label: __("Label"),
+                label: __("Label")
             },
             {
                 fieldtype: "Section Break",
                 fieldname: "filter_section",
                 label: __("Add Filters"),
-                depends_on: "eval: doc.document_type",
+                depends_on: "eval: doc.document_type"
             },
             {
                 fieldtype: "HTML",
-                fieldname: "filter_area_loading",
+                fieldname: "filter_area_loading"
             },
             {
                 fieldtype: "HTML",
-                fieldname: "filter_area",
-            },
+                fieldname: "filter_area"
+            }
         ];
     }
 
     generate_filter_from_json() {
         if (this.values && this.values.quick_list_filter) {
-            this.filters = frappe.utils.get_filter_from_json(
-                this.values.quick_list_filter,
-                this.values.document_type,
-            );
+            this.filters = frappe.utils.get_filter_from_json(this.values.quick_list_filter, this.values.document_type);
         }
     }
 
@@ -202,8 +199,8 @@ class OnboardingDialog extends WidgetDialog {
                 fieldname: "onboarding_id",
                 label: __("Onboarding Name"),
                 options: "Module Onboarding",
-                reqd: 1,
-            },
+                reqd: 1
+            }
         ];
     }
 }
@@ -219,13 +216,13 @@ class CardDialog extends WidgetDialog {
             {
                 fieldtype: "Data",
                 fieldname: "label",
-                label: __("Label"),
+                label: __("Label")
             },
             {
                 fieldtype: "HTML Editor",
                 fieldname: "description",
                 label: __("Description"),
-                max_height: "7rem",
+                max_height: "7rem"
             },
             {
                 fieldname: "links",
@@ -243,7 +240,7 @@ class CardDialog extends WidgetDialog {
                         in_list_view: 1,
                         label: __("Link Type"),
                         reqd: 1,
-                        options: ["DocType", "Page", "Report"],
+                        options: ["DocType", "Page", "Report"]
                     },
                     {
                         fieldname: "link_to",
@@ -251,59 +248,59 @@ class CardDialog extends WidgetDialog {
                         in_list_view: 1,
                         label: __("Link To"),
                         reqd: 1,
-                        get_options: (df) => {
+                        get_options: df => {
                             return df.doc.link_type;
                         },
                         get_query: function (df) {
                             if (df.link_type == "DocType") {
                                 return {
                                     filters: {
-                                        istable: 0,
-                                    },
+                                        istable: 0
+                                    }
                                 };
                             }
-                        },
+                        }
                     },
                     {
                         fieldname: "label",
                         fieldtype: "Data",
                         in_list_view: 1,
-                        label: __("Label"),
+                        label: __("Label")
                     },
                     {
                         fieldname: "icon",
                         fieldtype: "Icon",
-                        label: "Icon",
+                        label: "Icon"
                     },
                     {
                         fieldname: "column_break_7",
-                        fieldtype: "Column Break",
+                        fieldtype: "Column Break"
                     },
                     {
                         fieldname: "dependencies",
                         fieldtype: "Data",
-                        label: __("Dependencies"),
+                        label: __("Dependencies")
                     },
                     {
                         fieldname: "only_for",
                         fieldtype: "Link",
                         label: __("Only for"),
-                        options: "Country",
+                        options: "Country"
                     },
                     {
                         default: "0",
                         fieldname: "onboard",
                         fieldtype: "Check",
-                        label: __("Onboard"),
+                        label: __("Onboard")
                     },
                     {
                         default: "0",
                         fieldname: "is_query_report",
                         fieldtype: "Check",
-                        label: __("Is Query Report"),
-                    },
-                ],
-            },
+                        label: __("Is Query Report")
+                    }
+                ]
+            }
         ];
     }
 
@@ -334,7 +331,7 @@ class CardDialog extends WidgetDialog {
             frappe.throw({
                 message: __(message),
                 title: __("Missing Values Required"),
-                indicator: "orange",
+                indicator: "orange"
             });
         }
 
@@ -373,23 +370,23 @@ class ShortcutDialog extends WidgetDialog {
                                 query: "frappe.core.report.permitted_documents_for_user.permitted_documents_for_user.query_doctypes",
                                 filters: {
                                     user: frappe.session.user,
-                                    include_single_doctypes: true,
-                                },
+                                    include_single_doctypes: true
+                                }
                             };
                         };
                     } else {
                         this.dialog.fields_dict.link_to.get_query = null;
                     }
-                },
+                }
             },
             {
                 fieldtype: "Data",
                 fieldname: "label",
-                label: __("Label"),
+                label: __("Label")
             },
             {
                 fieldtype: "Column Break",
-                fieldname: "column_break_4",
+                fieldname: "column_break_4"
             },
             {
                 fieldtype: "Dynamic Link",
@@ -416,7 +413,7 @@ class ShortcutDialog extends WidgetDialog {
                             const response = await frappe.db.get_value(
                                 "Kanban Board",
                                 { reference_doctype: doctype },
-                                "id",
+                                "id"
                             );
                             if (response?.message?.id) views.push("Kanban");
 
@@ -426,27 +423,25 @@ class ShortcutDialog extends WidgetDialog {
                         this.hide_filters();
                     }
                 },
-                depends_on: (s) => s.type != "URL",
-                mandatory_depends_on: (s) => s.type != "URL",
+                depends_on: s => s.type != "URL",
+                mandatory_depends_on: s => s.type != "URL"
             },
             {
                 fieldtype: "Data",
                 fieldname: "url",
                 label: __("URL"),
                 default: "",
-                depends_on: (s) => s.type == "URL",
-                mandatory_depends_on: (s) => s.type == "URL",
+                depends_on: s => s.type == "URL",
+                mandatory_depends_on: s => s.type == "URL"
             },
             {
                 fieldtype: "Select",
                 fieldname: "doc_view",
                 label: __("DocType View"),
                 options: "List\nReport Builder\nDashboard\nTree\nNew\nCalendar\nKanban",
-                description: __(
-                    "Which view of the associated DocType should this shortcut take you to?",
-                ),
+                description: __("Which view of the associated DocType should this shortcut take you to?"),
                 default: "List",
-                depends_on: (state) => {
+                depends_on: state => {
                     if (this.dialog) {
                         let doctype = this.dialog.get_value("link_to");
                         let is_single = frappe.boot.single_types.includes(doctype);
@@ -460,14 +455,14 @@ class ShortcutDialog extends WidgetDialog {
                         this.dialog.fields_dict.kanban_board.get_query = () => {
                             return {
                                 filters: {
-                                    reference_doctype: this.dialog.get_value("link_to"),
-                                },
+                                    reference_doctype: this.dialog.get_value("link_to")
+                                }
                             };
                         };
                     } else {
                         this.dialog.fields_dict.link_to.get_query = null;
                     }
-                },
+                }
             },
             {
                 fieldtype: "Link",
@@ -481,28 +476,28 @@ class ShortcutDialog extends WidgetDialog {
                 mandatory_depends_on: () => {
                     let doc_view = this.dialog?.get_value("doc_view");
                     return doc_view == "Kanban";
-                },
+                }
             },
             {
                 fieldtype: "Section Break",
                 fieldname: "filters_section_break",
                 label: __("Count Filter"),
-                hidden: 1,
+                hidden: 1
             },
             {
                 fieldtype: "HTML",
-                fieldname: "filter_area_loading",
+                fieldname: "filter_area_loading"
             },
             {
                 fieldtype: "HTML",
                 fieldname: "filter_area",
-                hidden: 1,
+                hidden: 1
             },
             {
                 fieldtype: "Section Break",
                 fieldname: "count_section_break",
                 label: __("Count Customizations"),
-                hidden: 1,
+                hidden: 1
             },
             {
                 fieldtype: "Select",
@@ -517,20 +512,19 @@ class ShortcutDialog extends WidgetDialog {
                     if (!$select.parent().find(".color-box").get(0)) {
                         $(`<div class="color-box"></div>`).insertBefore($select.get(0));
                     }
-                    $select.parent().find(".color-box").get(0).style.backgroundColor =
-                        `var(--text-on-${color})`;
-                },
+                    $select.parent().find(".color-box").get(0).style.backgroundColor = `var(--text-on-${color})`;
+                }
             },
             {
                 fieldtype: "Column Break",
-                fieldname: "column_break_3",
+                fieldname: "column_break_3"
             },
             {
                 fieldtype: "Data",
                 fieldname: "format",
                 label: __("Format"),
-                description: __("For Example: {} Open"),
-            },
+                description: __("For Example: {} Open")
+            }
         ];
     }
 
@@ -542,10 +536,7 @@ class ShortcutDialog extends WidgetDialog {
 
     generate_filter_from_json() {
         if (this.values && this.values.stats_filter) {
-            this.filters = frappe.utils.get_filter_from_json(
-                this.values.stats_filter,
-                this.values.link_to,
-            );
+            this.filters = frappe.utils.get_filter_from_json(this.values.stats_filter, this.values.link_to);
         }
     }
 
@@ -566,7 +557,7 @@ class ShortcutDialog extends WidgetDialog {
                 frappe.throw({
                     message: __("<b>{0}</b> is not a valid URL", [data.url]),
                     title: __("Invalid URL"),
-                    indicator: "red",
+                    indicator: "red"
                 });
 
             if (!data.label) {
@@ -598,16 +589,16 @@ class NumberCardDialog extends WidgetDialog {
                         return {
                             query: "frappe.desk.doctype.number_card.number_card.get_cards_for_user",
                             filters: {
-                                document_type: this.document_type,
-                            },
+                                document_type: this.document_type
+                            }
                         };
-                    },
+                    }
                 },
                 {
                     fieldtype: "Data",
                     fieldname: "label",
-                    label: __("Label"),
-                },
+                    label: __("Label")
+                }
             ];
         }
 
@@ -616,7 +607,7 @@ class NumberCardDialog extends WidgetDialog {
                 fieldtype: "Select",
                 label: __("Choose Existing Card or create New Card"),
                 fieldname: "new_or_existing",
-                options: ["New Card", "Existing Card"],
+                options: ["New Card", "Existing Card"]
             },
             {
                 fieldtype: "Link",
@@ -627,22 +618,22 @@ class NumberCardDialog extends WidgetDialog {
                     return {
                         query: "frappe.desk.doctype.number_card.number_card.get_cards_for_user",
                         filters: {
-                            document_type: this.document_type,
-                        },
+                            document_type: this.document_type
+                        }
                     };
                 },
-                depends_on: 'eval: doc.new_or_existing == "Existing Card"',
+                depends_on: 'eval: doc.new_or_existing == "Existing Card"'
             },
             {
                 fieldtype: "Section Break",
                 fieldname: "sb_1",
-                depends_on: 'eval: doc.new_or_existing == "New Card"',
+                depends_on: 'eval: doc.new_or_existing == "New Card"'
             },
             {
                 label: __("Label"),
                 fieldname: "label",
                 fieldtype: "Data",
-                mandatory_depends_on: 'eval: doc.new_or_existing == "New Card"',
+                mandatory_depends_on: 'eval: doc.new_or_existing == "New Card"'
             },
             {
                 label: __("Doctype"),
@@ -654,51 +645,50 @@ class NumberCardDialog extends WidgetDialog {
                     this.set_aggregate_function_fields(this.dialog.get_values());
                     this.setup_filter(this.document_type);
                 },
-                hidden: 1,
+                hidden: 1
             },
             {
                 label: __("Color"),
                 fieldname: "color",
-                fieldtype: "Color",
+                fieldtype: "Color"
             },
             {
                 fieldtype: "Column Break",
-                fieldname: "cb_1",
+                fieldname: "cb_1"
             },
             {
                 label: __("Function"),
                 fieldname: "function",
                 fieldtype: "Select",
                 options: ["Count", "Sum", "Average", "Minimum", "Maximum"],
-                mandatory_depends_on: 'eval: doc.new_or_existing == "New Card"',
+                mandatory_depends_on: 'eval: doc.new_or_existing == "New Card"'
             },
             {
                 label: __("Function Based On"),
                 fieldname: "aggregate_function_based_on",
                 fieldtype: "Select",
                 depends_on: "eval: doc.function !== 'Count'",
-                mandatory_depends_on:
-                    'eval: doc.function !== "Count" && doc.new_or_existing == "New Card"',
+                mandatory_depends_on: 'eval: doc.function !== "Count" && doc.new_or_existing == "New Card"'
             },
             {
                 fieldtype: "Section Break",
                 fieldname: "sb_1",
                 label: __("Add Filters"),
-                depends_on: 'eval: doc.new_or_existing == "New Card"',
+                depends_on: 'eval: doc.new_or_existing == "New Card"'
             },
             {
                 fieldtype: "HTML",
-                fieldname: "filter_area_loading",
+                fieldname: "filter_area_loading"
             },
             {
                 fieldtype: "HTML",
                 fieldname: "filter_area",
-                hidden: 1,
+                hidden: 1
             },
             {
                 fieldtype: "Section Break",
-                fieldname: "sb_1",
-            },
+                fieldname: "sb_1"
+            }
         ];
 
         return fields;
@@ -719,7 +709,7 @@ class NumberCardDialog extends WidgetDialog {
     set_aggregate_function_fields() {
         let aggregate_function_fields = [];
         if (this.document_type && frappe.get_meta(this.document_type)) {
-            frappe.get_meta(this.document_type).fields.map((df) => {
+            frappe.get_meta(this.document_type).fields.map(df => {
                 if (frappe.model.numeric_fieldtypes.includes(df.fieldtype)) {
                     if (df.fieldtype == "Currency") {
                         if (!df.options || df.options !== "Company:company:default_currency") {
@@ -730,11 +720,7 @@ class NumberCardDialog extends WidgetDialog {
                 }
             });
         }
-        this.dialog.set_df_property(
-            "aggregate_function_based_on",
-            "options",
-            aggregate_function_fields,
-        );
+        this.dialog.set_df_property("aggregate_function_based_on", "options", aggregate_function_fields);
     }
 
     process_data(data) {
@@ -767,10 +753,10 @@ class CustomBlockDialog extends WidgetDialog {
                 reqd: 1,
                 get_query: () => {
                     return {
-                        query: "frappe.desk.doctype.custom_html_block.custom_html_block.get_custom_blocks_for_user",
+                        query: "frappe.desk.doctype.custom_html_block.custom_html_block.get_custom_blocks_for_user"
                     };
-                },
-            },
+                }
+            }
         ];
     }
 }
@@ -783,7 +769,7 @@ export default function get_dialog_constructor(type) {
         onboarding: OnboardingDialog,
         quick_list: QuickListDialog,
         number_card: NumberCardDialog,
-        custom_block: CustomBlockDialog,
+        custom_block: CustomBlockDialog
     };
 
     return widget_map[type] || WidgetDialog;

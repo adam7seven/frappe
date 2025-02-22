@@ -9,11 +9,11 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
         // setup formatters for fieldtype
         frappe.meta.docfield_map[
             this.frm.doctype === "DocType" ? "DocField" : "Customize Form Field"
-        ].fieldtype.formatter = (value) => {
+        ].fieldtype.formatter = value => {
             const prefix = {
                 "Tab Break": "--red-600",
                 "Section Break": "--blue-600",
-                "Column Break": "--yellow-600",
+                "Column Break": "--yellow-600"
             };
             if (prefix[value]) {
                 value = `<span class="bold" style="color: var(${prefix[value]})">${value}</span>`;
@@ -30,17 +30,14 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
         const doctype = this.frm.doc.doc_type || this.frm.doc.id;
         frappe
             .xcall("frappe.core.doctype.doctype.doctype.get_row_size_utilization", {
-                doctype,
+                doctype
             })
-            .then((r) => {
+            .then(r => {
                 if (r < 50.0) return;
                 this.frm.dashboard.show_progress(
                     __("Database Row Size Utilization"),
                     r,
-                    __(
-                        "Database Table Row Size Utilization: {0}%, this limits number of fields you can add.",
-                        [r],
-                    ),
+                    __("Database Table Row Size Utilization: {0}%, this limits number of fields you can add.", [r])
                 );
             });
     }
@@ -49,17 +46,14 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
         if (!this.frm.doc.max_attachments) {
             return;
         }
-        const is_attach_field = (f) => ["Attach", "Attach Image"].includes(f.fieldtype);
+        const is_attach_field = f => ["Attach", "Attach Image"].includes(f.fieldtype);
         const no_of_attach_fields = this.frm.doc.fields.filter(is_attach_field).length;
 
         if (no_of_attach_fields > this.frm.doc.max_attachments) {
             this.frm.set_value("max_attachments", no_of_attach_fields);
             const label = this.frm.get_docfield("max_attachments").label;
             frappe.show_alert(
-                __("Number of attachment fields are more than {}, limit updated to {}.", [
-                    label,
-                    no_of_attach_fields,
-                ]),
+                __("Number of attachment fields are more than {}, limit updated to {}.", [label, no_of_attach_fields])
             );
         }
     }
@@ -78,12 +72,9 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
                 Expression: "format:",
                 "Expression (sld style)": "",
                 Random: "hash",
-                "By script": "",
+                "By script": ""
             };
-            this.frm.set_value(
-                "autoid",
-                naming_rule_default_autoid_map[this.frm.doc.naming_rule] || "",
-            );
+            this.frm.set_value("autoid", naming_rule_default_autoid_map[this.frm.doc.naming_rule] || "");
             setTimeout(() => (this.frm.__from_naming_rule = false), 500);
 
             this.set_naming_rule_description();
@@ -100,16 +91,13 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
                 "Format: <code>naming_series:[fieldname]</code>. Default fieldname is <code>naming_series</code>",
             Expression:
                 "Format: <code>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</code> - Replace all braced words (fieldnames, date words (DD, MM, YY), series) with their value. Outside braces, any characters can be used.",
-            "Expression (old style)":
-                "Format: <code>EXAMPLE-.#####</code> Series by prefix (separated by a dot)",
+            "Expression (old style)": "Format: <code>EXAMPLE-.#####</code> Series by prefix (separated by a dot)",
             Random: "",
-            "By script": "",
+            "By script": ""
         };
 
         if (this.frm.doc.naming_rule) {
-            this.frm
-                .get_field("autoid")
-                .set_description(naming_rule_description[this.frm.doc.naming_rule]);
+            this.frm.get_field("autoid").set_description(naming_rule_description[this.frm.doc.naming_rule]);
         }
     }
 
@@ -121,12 +109,9 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
             const autoid = this.frm.doc.autoid.toLowerCase();
 
             if (autoid === "prompt") this.frm.set_value("naming_rule", "Set by user");
-            else if (autoid === "autoincrement")
-                this.frm.set_value("naming_rule", "Autoincrement");
-            else if (autoid.startsWith("field:"))
-                this.frm.set_value("naming_rule", "By fieldname");
-            else if (autoid.startsWith("naming_series:"))
-                this.frm.set_value("naming_rule", 'By "Naming Series" field');
+            else if (autoid === "autoincrement") this.frm.set_value("naming_rule", "Autoincrement");
+            else if (autoid.startsWith("field:")) this.frm.set_value("naming_rule", "By fieldname");
+            else if (autoid.startsWith("naming_series:")) this.frm.set_value("naming_rule", 'By "Naming Series" field');
             else if (autoid.startsWith("format:")) this.frm.set_value("naming_rule", "Expression");
             else if (autoid === "hash") this.frm.set_value("naming_rule", "Random");
             else this.frm.set_value("naming_rule", "Expression (old style)");
@@ -158,17 +143,14 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
         }
 
         let doctypes = frm.doc.fields
-            .filter((df) => df.fieldtype == "Link")
-            .filter((df) => df.options && df.fieldname != row.fieldname)
+            .filter(df => df.fieldtype == "Link")
+            .filter(df => df.options && df.fieldname != row.fieldname)
             .sort((a, b) => a.options.localeCompare(b.options))
-            .map((df) => ({
+            .map(df => ({
                 label: `${df.options} (${df.fieldname})`,
-                value: df.fieldname,
+                value: df.fieldname
             }));
-        $doctype_select.add_options([
-            { label: __("Select DocType"), value: "", selected: true },
-            ...doctypes,
-        ]);
+        $doctype_select.add_options([{ label: __("Select DocType"), value: "", selected: true }, ...doctypes]);
 
         $doctype_select.on("change", () => {
             row.fetch_from = "";
@@ -181,26 +163,26 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
 
             let link_fieldname = $doctype_select.val();
             if (!link_fieldname) return;
-            let link_field = frm.doc.fields.find((df) => df.fieldname === link_fieldname);
+            let link_field = frm.doc.fields.find(df => df.fieldname === link_fieldname);
             let link_doctype = link_field.options;
             frappe.model.with_doctype(link_doctype, () => {
                 let fields = frappe.meta
                     .get_docfields(link_doctype, null, {
-                        fieldtype: ["not in", frappe.model.no_value_type],
+                        fieldtype: ["not in", frappe.model.no_value_type]
                     })
                     .sort((a, b) => a.label.localeCompare(b.label))
-                    .map((df) => ({
+                    .map(df => ({
                         label: `${df.label} (${df.fieldtype})`,
-                        value: df.fieldname,
+                        value: df.fieldname
                     }));
                 $field_select.add_options([
                     {
                         label: __("Select Field"),
                         value: "",
                         selected: true,
-                        disabled: true,
+                        disabled: true
                     },
-                    ...fields,
+                    ...fields
                 ]);
 
                 if (curr_value.fieldname) {

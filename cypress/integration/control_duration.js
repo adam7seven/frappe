@@ -12,9 +12,9 @@ context("Control Duration", () => {
                     fieldname: "duration",
                     fieldtype: "Duration",
                     hide_days: hide_days,
-                    hide_seconds: hide_seconds,
-                },
-            ],
+                    hide_seconds: hide_seconds
+                }
+            ]
         });
     }
 
@@ -22,18 +22,14 @@ context("Control Duration", () => {
         get_dialog_with_duration().as("dialog");
         cy.wait(500);
         cy.get(".frappe-control[data-fieldname=duration] input").first().click();
-        cy.get(".duration-input[data-duration=days]")
-            .type(45, { force: true })
-            .blur({ force: true });
+        cy.get(".duration-input[data-duration=days]").type(45, { force: true }).blur({ force: true });
         cy.wait(500);
         cy.get(".duration-input[data-duration=minutes]").type(30).blur({ force: true });
         cy.wait(500);
-        cy.get(".frappe-control[data-fieldname=duration] input")
-            .first()
-            .should("have.value", "45d 30m");
+        cy.get(".frappe-control[data-fieldname=duration] input").first().should("have.value", "45d 30m");
         cy.get(".frappe-control[data-fieldname=duration] input").first().blur();
         cy.get(".duration-picker").should("not.be.visible");
-        cy.get("@dialog").then((dialog) => {
+        cy.get("@dialog").then(dialog => {
             let value = dialog.get_value("duration");
             expect(value).to.equal(3889800);
             cy.hide_dialog();

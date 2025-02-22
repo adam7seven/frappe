@@ -25,7 +25,7 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 						<p class="help-box small text-muted"></p>
 					</div>
 				</div>
-			</div>`,
+			</div>`
             ).appendTo(this.parent);
         }
     }
@@ -54,11 +54,7 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
     }
 
     read_only_because_of_fetch_from() {
-        return (
-            this.df.fetch_from &&
-            !this.df.fetch_if_empty &&
-            this.frm?.doc?.[this.df.fetch_from.split(".")[0]]
-        );
+        return this.df.fetch_from && !this.df.fetch_if_empty && this.frm?.doc?.[this.df.fetch_from.split(".")[0]];
     }
 
     // update input value, label, description
@@ -117,8 +113,8 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
                         "title",
                         __(
                             "This value is fetched from {0}'s {1} field",
-                            me.df.fetch_from.split(".").map((value) => __(frappe.unscrub(value))),
-                        ),
+                            me.df.fetch_from.split(".").map(value => __(frappe.unscrub(value)))
+                        )
                     );
                 }
             }
@@ -137,10 +133,7 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
     }
 
     set_disp_area(value) {
-        if (
-            ["Currency", "Int", "Float"].includes(this.df.fieldtype) &&
-            (this.value === 0 || value === 0)
-        ) {
+        if (["Currency", "Int", "Float"].includes(this.df.fieldtype) && (this.value === 0 || value === 0)) {
             // to set the 0 value in readonly for currency, int, float field
             value = 0;
         } else {
@@ -179,22 +172,16 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 
         var icon = "";
         this.label_span.innerHTML =
-            (icon ? '<i class="' + icon + '"></i> ' : "") +
-                __(this.df.label, null, this.df.parent) || "&nbsp;";
+            (icon ? '<i class="' + icon + '"></i> ' : "") + __(this.df.label, null, this.df.parent) || "&nbsp;";
         this._label = this.df.label;
     }
 
     set_doc_url() {
         let unsupported_fieldtypes = frappe.model.no_value_type.filter(
-            (x) => frappe.model.table_fields.indexOf(x) === -1,
+            x => frappe.model.table_fields.indexOf(x) === -1
         );
 
-        if (
-            !this.df.label ||
-            !this.df?.documentation_url ||
-            unsupported_fieldtypes.includes(this.df.fieldtype)
-        )
-            return;
+        if (!this.df.label || !this.df?.documentation_url || unsupported_fieldtypes.includes(this.df.fieldtype)) return;
 
         let $help = this.$wrapper.find("span.help");
         $help.empty();

@@ -18,19 +18,19 @@ license.bind_events = function () {
                 const content = e.target.result;
                 frappe
                     .call("frappe.app_core.import_license", { content: content })
-                    .then((r) => {
+                    .then(r => {
                         frappe.show_alert(
                             {
                                 message: __("The license import successfully"),
-                                indicator: "green",
+                                indicator: "green"
                             },
-                            5,
+                            5
                         );
                         setTimeout(() => {
                             window.location.reload(true);
                         }, 1000);
                     })
-                    .catch((e) => {
+                    .catch(e => {
                         console.log(e);
                     });
             };
@@ -56,7 +56,7 @@ license.bind_events = function () {
                     document.body.removeChild(a);
                     URL.revokeObjectURL(url);
                 }
-            },
+            }
         });
 
         return false;

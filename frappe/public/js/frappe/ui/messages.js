@@ -13,7 +13,7 @@ frappe.messages.get_waiting_message = function (msg) {
     return repl(
         '<div class="msg-box" style="width: 63%; margin: 30px auto;">\
 		<p class="text-center">%(msg)s</p></div>',
-        { msg: msg },
+        { msg: msg }
     );
 };
 
@@ -35,7 +35,7 @@ frappe.confirm = function (message, confirm_action, reject_action) {
             d.hide();
         },
         secondary_action_label: __("No", null, "Dismiss confirmation dialog"),
-        secondary_action: () => d.hide(),
+        secondary_action: () => d.hide()
     });
 
     d.$body.append(`<p class="frappe-confirm-message">${message}</p>`);
@@ -67,7 +67,7 @@ frappe.warn = function (title, message_html, proceed_action, primary_label, is_m
         },
         secondary_action_label: __("Cancel", null, "Secondary button in warning dialog"),
         secondary_action: () => d.hide(),
-        minimizable: is_minimizable,
+        minimizable: is_minimizable
     });
 
     d.$body.append(`<div class="frappe-confirm-message">${message_html}</div>`);
@@ -84,26 +84,23 @@ frappe.prompt = function (fields, callback, title, primary_label) {
                 label: fields,
                 fieldname: "value",
                 fieldtype: "Data",
-                reqd: 1,
-            },
+                reqd: 1
+            }
         ];
     }
     if (!$.isArray(fields)) fields = [fields];
     var d = new frappe.ui.Dialog({
         fields: fields,
-        title: title || __("Enter Value", null, "Title of prompt dialog"),
+        title: title || __("Enter Value", null, "Title of prompt dialog")
     });
-    d.set_primary_action(
-        primary_label || __("Submit", null, "Primary action of prompt dialog"),
-        function () {
-            var values = d.get_values();
-            if (!values) {
-                return;
-            }
-            d.hide();
-            callback(values);
-        },
-    );
+    d.set_primary_action(primary_label || __("Submit", null, "Primary action of prompt dialog"), function () {
+        var values = d.get_values();
+        if (!values) {
+            return;
+        }
+        d.hide();
+        callback(values);
+    });
     d.show();
     return d;
 };
@@ -128,14 +125,14 @@ frappe.msgprint = function (msg, title, is_minimizable) {
     }
 
     if (data.as_list) {
-        const list_rows = data.message.map((m) => `<li>${m}</li>`).join("");
+        const list_rows = data.message.map(m => `<li>${m}</li>`).join("");
         data.message = `<ul style="padding-left: 20px">${list_rows}</ul>`;
     }
 
     if (data.as_table) {
         const rows = data.message
-            .map((row) => {
-                const cols = row.map((col) => `<td>${col}</td>`).join("");
+            .map(row => {
+                const cols = row.map(col => `<td>${col}</td>`).join("");
                 return `<tr>${cols}</tr>`;
             })
             .join("");
@@ -145,14 +142,14 @@ frappe.msgprint = function (msg, title, is_minimizable) {
     if (data.message instanceof Array) {
         let messages = data.message;
         const exceptions = messages
-            .map((m) => {
+            .map(m => {
                 if (typeof m == "string") {
                     return JSON.parse(m);
                 } else {
                     return m;
                 }
             })
-            .filter((m) => m.raise_exception);
+            .filter(m => m.raise_exception);
 
         // only show exceptions if any exceptions exist
         if (exceptions.length) {
@@ -179,7 +176,7 @@ frappe.msgprint = function (msg, title, is_minimizable) {
                 }
                 frappe.msg_dialog.msg_area.empty();
             },
-            minimizable: data.is_minimizable || is_minimizable,
+            minimizable: data.is_minimizable || is_minimizable
         });
 
         // class "msgprint" is used in tests
@@ -194,29 +191,23 @@ frappe.msgprint = function (msg, title, is_minimizable) {
 
     // setup and bind an action to the primary button
     if (data.primary_action) {
-        if (
-            data.primary_action.server_action &&
-            typeof data.primary_action.server_action === "string"
-        ) {
+        if (data.primary_action.server_action && typeof data.primary_action.server_action === "string") {
             data.primary_action.action = () => {
                 frappe.call({
                     method: data.primary_action.server_action,
                     args: {
-                        args: data.primary_action.args,
+                        args: data.primary_action.args
                     },
                     callback() {
                         if (data.primary_action.hide_on_success) {
                             frappe.hide_msgprint();
                         }
-                    },
+                    }
                 });
             };
         }
 
-        if (
-            data.primary_action.client_action &&
-            typeof data.primary_action.client_action === "string"
-        ) {
+        if (data.primary_action.client_action && typeof data.primary_action.client_action === "string") {
             let parts = data.primary_action.client_action.split(".");
             let obj = window;
             for (let part of parts) {
@@ -231,7 +222,7 @@ frappe.msgprint = function (msg, title, is_minimizable) {
 
         frappe.msg_dialog.set_primary_action(
             __(data.primary_action.label) || __(data.primary_action_label) || __("Done"),
-            data.primary_action.action,
+            data.primary_action.action
         );
     } else {
         if (frappe.msg_dialog.has_primary_action) {
@@ -242,9 +233,7 @@ frappe.msgprint = function (msg, title, is_minimizable) {
 
     if (data.secondary_action) {
         frappe.msg_dialog.set_secondary_action(data.secondary_action.action);
-        frappe.msg_dialog.set_secondary_action_label(
-            __(data.secondary_action.label) || __("Close"),
-        );
+        frappe.msg_dialog.set_secondary_action_label(__(data.secondary_action.label) || __("Close"));
     }
 
     if (data.message == null) {
@@ -265,9 +254,7 @@ frappe.msgprint = function (msg, title, is_minimizable) {
     if (data.title || !msg_exists) {
         // set title only if it is explicitly given
         // and no existing title exists
-        frappe.msg_dialog.set_title(
-            data.title || __("Message", null, "Default title of the message dialog"),
-        );
+        frappe.msg_dialog.set_title(data.title || __("Message", null, "Default title of the message dialog"));
     }
 
     // show / hide indicator
@@ -335,37 +322,33 @@ frappe.verify_password = function (callback) {
             fieldname: "password",
             label: __("Enter your password"),
             fieldtype: "Password",
-            reqd: 1,
+            reqd: 1
         },
         function (data) {
             frappe.call({
                 method: "frappe.core.doctype.user.user.verify_password",
                 args: {
-                    password: data.password,
+                    password: data.password
                 },
                 callback: function (r) {
                     if (!r.exc) {
                         callback();
                     }
-                },
+                }
             });
         },
         __("Verify Password"),
-        __("Verify"),
+        __("Verify")
     );
 };
 
 frappe.show_progress = (title, count, total = 100, description, hide_on_completion = false) => {
     let dialog;
-    if (
-        frappe.cur_progress &&
-        frappe.cur_progress.title === title &&
-        frappe.cur_progress.is_visible
-    ) {
+    if (frappe.cur_progress && frappe.cur_progress.title === title && frappe.cur_progress.is_visible) {
         dialog = frappe.cur_progress;
     } else {
         dialog = new frappe.ui.Dialog({
-            title: title,
+            title: title
         });
         dialog.progress = $(`<div>
 			<div class="progress">
@@ -405,12 +388,12 @@ frappe.show_alert = frappe.toast = function (message, seconds = 7, actions = {})
         yellow: "solid-warning",
         blue: "solid-info",
         green: "solid-success",
-        red: "solid-error",
+        red: "solid-error"
     };
 
     if (typeof message === "string") {
         message = {
-            message: message,
+            message: message
         };
     }
 
@@ -453,7 +436,7 @@ frappe.show_alert = frappe.toast = function (message, seconds = 7, actions = {})
         return false;
     });
 
-    Object.keys(actions).map((key) => {
+    Object.keys(actions).map(key => {
         div.find(`[data-action=${key}]`).on("click", actions[key]);
     });
 

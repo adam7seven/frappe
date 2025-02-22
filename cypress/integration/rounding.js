@@ -7,7 +7,7 @@ context("Rounding behaviour", () => {
     it("Commercial Rounding", () => {
         cy.window()
             .its("flt")
-            .then((flt) => {
+            .then(flt => {
                 let rounding_method = "Commercial Rounding";
 
                 expect(flt("0.5", 0, null, rounding_method)).eq(1);
@@ -45,7 +45,7 @@ context("Rounding behaviour", () => {
     it("Banker's Rounding", () => {
         cy.window()
             .its("flt")
-            .then((flt) => {
+            .then(flt => {
                 let rounding_method = "Banker's Rounding";
 
                 expect(flt("0.5", 0, null, rounding_method)).eq(0);

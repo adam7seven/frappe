@@ -15,13 +15,13 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
             .addClass("input-with-feedback form-control")
             .prependTo(this.input_area);
 
-        this.$input.on("paste", (e) => {
+        this.$input.on("paste", e => {
             let pasted_data = frappe.utils.get_clipboard_data(e);
             let maxlength = this.$input.attr("maxlength");
             if (maxlength && pasted_data.length > maxlength) {
                 let warning_message = __(
                     "The value you pasted was {0} characters long. Max allowed characters is {1}.",
-                    [cstr(pasted_data.length).bold(), cstr(maxlength).bold()],
+                    [cstr(pasted_data.length).bold(), cstr(maxlength).bold()]
                 );
 
                 // Only show edit link to users who can update the doctype
@@ -32,30 +32,24 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
                             "DocType",
                             this.frm.doctype,
                             true,
-                            __("this form"),
+                            __("this form")
                         );
                     } else {
-                        doctype_edit_link = frappe.utils.get_form_link(
-                            "Customize Form",
-                            "Customize Form",
-                            true,
-                            null,
-                            {
-                                doc_type: this.frm.doctype,
-                            },
-                        );
+                        doctype_edit_link = frappe.utils.get_form_link("Customize Form", "Customize Form", true, null, {
+                            doc_type: this.frm.doctype
+                        });
                     }
-                    let edit_note = __(
-                        "{0}: You can increase the limit for the field if required via {1}",
-                        [__("Note").bold(), doctype_edit_link],
-                    );
+                    let edit_note = __("{0}: You can increase the limit for the field if required via {1}", [
+                        __("Note").bold(),
+                        doctype_edit_link
+                    ]);
                     warning_message += `<br><br><span class="text-muted text-small">${edit_note}</span>`;
                 }
 
                 frappe.msgprint({
                     message: warning_message,
                     indicator: "orange",
-                    title: __("Data Clipped"),
+                    title: __("Data Clipped")
                 });
             }
         });
@@ -81,7 +75,7 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
 				<a class="btn-open no-decoration" title="${__("Open Link")}" target="_blank">
 					${frappe.utils.icon("link-url", "sm")}
 				</a>
-			</span>`,
+			</span>`
         );
 
         this.$link = this.$wrapper.find(".link-btn");
@@ -125,7 +119,7 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
                 .append(
                     `<button class="btn action-btn">
 					${frappe.utils.icon("clipboard", "sm")}
-				</button>`,
+				</button>`
                 )
                 .find(".action-btn")
                 .click(() => {
@@ -140,7 +134,7 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
 				<a class="btn-open no-decoration" title="${__("Scan")}">
 					${frappe.utils.icon("scan", "sm")}
 				</a>
-			</span>`,
+			</span>`
         );
 
         this.$scan_btn = this.$wrapper.find(".link-btn");
@@ -155,13 +149,13 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
                     if (data && data.result && data.result.text) {
                         me.set_value(data.result.text);
                     }
-                },
+                }
             });
         });
     }
 
     bind_change_event() {
-        const change_handler = (e) => {
+        const change_handler = e => {
             if (this.change) this.change(e);
             else {
                 let value = this.get_input_value();
@@ -197,14 +191,12 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
                             this.doctype,
                             this.$input.val(),
                             "id",
-                            (val) => {
+                            val => {
                                 if (val && val.id) {
-                                    this.set_description(
-                                        __("{0} already exists. Select another id", [val.id]),
-                                    );
+                                    this.set_description(__("{0} already exists. Select another id", [val.id]));
                                 }
                             },
-                            this.doc.parenttype,
+                            this.doc.parenttype
                         );
                         this.last_check = null;
                     }, 1000);
@@ -214,11 +206,7 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
         }
     }
     set_input_attributes() {
-        if (
-            ["Data", "Link", "Dynamic Link", "Password", "Select", "Read Only"].includes(
-                this.df.fieldtype,
-            )
-        ) {
+        if (["Data", "Link", "Dynamic Link", "Password", "Select", "Read Only"].includes(this.df.fieldtype)) {
             if (this.frm?.meta?.issingle) {
                 // singles dont have any "real" length requirements
                 return;

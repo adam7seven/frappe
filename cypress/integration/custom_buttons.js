@@ -4,13 +4,13 @@ const test_button_names = [
     "Porcupine Tree (the GOAT)",
     "AC / DC",
     `Electronic Dance "music"`,
-    "l'imperatrice",
+    "l'imperatrice"
 ];
 
 const add_button = (label, group = "TestGroup") => {
     cy.window()
         .its("cur_frm")
-        .then((frm) => {
+        .then(frm => {
             frm.add_custom_button(label, () => {}, group);
         });
 };
@@ -43,7 +43,7 @@ describe(
             cy.visit(`/app/note/new`);
         });
 
-        test_button_names.forEach((button_name) => {
+        test_button_names.forEach(button_name => {
             it(`Custom button works with name '${button_name}'`, () => {
                 add_button(button_name);
                 check_button_count(button_name);
@@ -53,5 +53,5 @@ describe(
                 check_button_count(button_name);
             });
         });
-    },
+    }
 );

@@ -50,11 +50,11 @@ frappe.ui.form.on("Print Format", {
                         frappe.call({
                             method: "frappe.printing.doctype.print_format.print_format.make_default",
                             args: {
-                                id: frm.doc.id,
+                                id: frm.doc.id
                             },
                             callback: function () {
                                 frm.refresh();
-                            },
+                            }
                         });
                     });
                 });
@@ -78,11 +78,11 @@ frappe.ui.form.on("Print Format", {
         if (doctype) {
             frappe.model.with_doctype(doctype, () => {
                 const meta = frappe.get_meta(doctype);
-                const has_int_float_currency_field = meta.fields.filter((df) =>
-                    ["Int", "Float", "Currency"].includes(df.fieldtype),
+                const has_int_float_currency_field = meta.fields.filter(df =>
+                    ["Int", "Float", "Currency"].includes(df.fieldtype)
                 );
                 frm.toggle_display("absolute_value", has_int_float_currency_field.length);
             });
         }
-    },
+    }
 });

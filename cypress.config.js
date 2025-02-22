@@ -12,7 +12,7 @@ module.exports = defineConfig({
     viewportWidth: 1400,
     retries: {
         runMode: 1,
-        openMode: 1,
+        openMode: 1
     },
     e2e: {
         // We've imported your old cypress plugins here.
@@ -22,6 +22,6 @@ module.exports = defineConfig({
         },
         testIsolation: false,
         baseUrl: "http://test_site_ui:8000",
-        specPattern: ["./cypress/integration/*.js", "**/ui_test_*.js"],
-    },
+        specPattern: ["./cypress/integration/*.js", "**/ui_test_*.js"]
+    }
 });

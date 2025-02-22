@@ -23,7 +23,7 @@ frappe.ui.form.AssignTo = class AssignTo {
         let assignments_wrapper = this.parent.find(".assignments");
 
         assignments_wrapper.empty();
-        let assigned_users = assignments.map((d) => d.owner);
+        let assigned_users = assignments.map(d => d.owner);
 
         if (!assigned_users.length) {
             assignments_wrapper.hide();
@@ -32,7 +32,7 @@ frappe.ui.form.AssignTo = class AssignTo {
 
         let avatar_group = frappe.avatar_group(assigned_users, 5, {
             align: "left",
-            overlap: true,
+            overlap: true
         });
 
         assignments_wrapper.show();
@@ -40,7 +40,7 @@ frappe.ui.form.AssignTo = class AssignTo {
         avatar_group.click(() => {
             new frappe.ui.form.AssignmentDialog({
                 assignments: assigned_users,
-                frm: this.frm,
+                frm: this.frm
             });
         });
     }
@@ -60,7 +60,7 @@ frappe.ui.form.AssignTo = class AssignTo {
                 frm: me.frm,
                 callback: function (r) {
                     me.render(r.message);
-                },
+                }
             });
         }
         me.assign_to.dialog.clear();
@@ -76,9 +76,9 @@ frappe.ui.form.AssignTo = class AssignTo {
             .xcall("frappe.desk.form.assign_to.remove", {
                 doctype: this.frm.doctype,
                 id: this.frm.docid,
-                assign_to: owner,
+                assign_to: owner
             })
-            .then((assignments) => {
+            .then(assignments => {
                 this.render(assignments);
             });
     }
@@ -111,7 +111,7 @@ frappe.ui.form.AssignToDialog = class AssignToDialog {
                             id: me.docid,
                             assign_to: args.assign_to,
                             bulk_assign: me.bulk_assign || false,
-                            re_assign: me.re_assign || false,
+                            re_assign: me.re_assign || false
                         }),
                         btn: me.dialog.get_primary_btn(),
                         callback: function (r) {
@@ -123,10 +123,10 @@ frappe.ui.form.AssignToDialog = class AssignToDialog {
                             } else {
                                 me.dialog.clear_message();
                             }
-                        },
+                        }
                     });
                 }
-            },
+            }
         });
     }
     assign_to_me() {
@@ -150,10 +150,10 @@ frappe.ui.form.AssignToDialog = class AssignToDialog {
                 .get_list("User Group Member", {
                     parent_doctype: "User Group",
                     filters: { parent: user_group },
-                    fields: ["user"],
+                    fields: ["user"]
                 })
-                .then((response) => {
-                    user_group_members = response.map((group_member) => group_member.user);
+                .then(response => {
+                    user_group_members = response.map(group_member => group_member.user);
                     me.dialog.set_value("assign_to", user_group_members);
                 });
         }
@@ -174,14 +174,14 @@ frappe.ui.form.AssignToDialog = class AssignToDialog {
                 fieldtype: "Check",
                 fieldname: "assign_to_me",
                 default: 0,
-                onchange: () => me.assign_to_me(),
+                onchange: () => me.assign_to_me()
             },
             {
                 label: __("Assign To User Group"),
                 fieldtype: "Link",
                 fieldname: "assign_to_user_group",
                 options: "User Group",
-                onchange: () => me.user_group_list(),
+                onchange: () => me.user_group_list()
             },
             {
                 fieldtype: "MultiSelectPills",
@@ -191,20 +191,20 @@ frappe.ui.form.AssignToDialog = class AssignToDialog {
                 get_data: function (txt) {
                     return frappe.db.get_link_options("User", txt, {
                         user_type: "System User",
-                        enabled: 1,
+                        enabled: 1
                     });
-                },
+                }
             },
             {
-                fieldtype: "Section Break",
+                fieldtype: "Section Break"
             },
             {
                 label: __("Complete By"),
                 fieldtype: "Date",
-                fieldname: "date",
+                fieldname: "date"
             },
             {
-                fieldtype: "Column Break",
+                fieldtype: "Column Break"
             },
             {
                 label: __("Priority"),
@@ -213,30 +213,30 @@ frappe.ui.form.AssignToDialog = class AssignToDialog {
                 options: [
                     {
                         value: "Low",
-                        label: __("Low"),
+                        label: __("Low")
                     },
                     {
                         value: "Medium",
-                        label: __("Medium"),
+                        label: __("Medium")
                     },
                     {
                         value: "High",
-                        label: __("High"),
-                    },
+                        label: __("High")
+                    }
                 ],
                 // Pick up priority from the source document, if it exists and is available in ToDo
                 default: ["Low", "Medium", "High"].includes(
-                    me.frm && me.frm.doc.priority ? me.frm.doc.priority : "Medium",
-                ),
+                    me.frm && me.frm.doc.priority ? me.frm.doc.priority : "Medium"
+                )
             },
             {
-                fieldtype: "Section Break",
+                fieldtype: "Section Break"
             },
             {
                 label: __("Comment"),
                 fieldtype: "Small Text",
-                fieldname: "description",
-            },
+                fieldname: "description"
+            }
         ];
     }
 };
@@ -275,19 +275,19 @@ frappe.ui.form.AssignmentDialog = class {
                                     this.assigning = false;
                                 });
                         }
-                    },
+                    }
                 },
                 {
                     fieldtype: "HTML",
-                    fieldname: "assignment_list",
-                },
-            ],
+                    fieldname: "assignment_list"
+                }
+            ]
         });
 
         this.assignment_list = $(this.dialog.get_field("assignment_list").wrapper);
         this.assignment_list.removeClass("frappe-control");
 
-        this.assignments.forEach((assignment) => {
+        this.assignments.forEach(assignment => {
             this.update_assignment(assignment);
         });
         this.dialog.show();
@@ -300,9 +300,9 @@ frappe.ui.form.AssignmentDialog = class {
             .xcall("frappe.desk.form.assign_to.add", {
                 doctype: this.frm.doctype,
                 id: this.frm.docid,
-                assign_to: [assignment],
+                assign_to: [assignment]
             })
-            .then((assignments) => {
+            .then(assignments => {
                 this.update_assignment(assignment);
                 this.render(assignments);
             });
@@ -311,14 +311,14 @@ frappe.ui.form.AssignmentDialog = class {
         return frappe.xcall("frappe.desk.form.assign_to.remove", {
             doctype: this.frm.doctype,
             id: this.frm.docid,
-            assign_to: assignment,
+            assign_to: assignment
         });
     }
     close_assignment(assignment) {
         return frappe.xcall("frappe.desk.form.assign_to.close", {
             doctype: this.frm.doctype,
             id: this.frm.docid,
-            assign_to: assignment,
+            assign_to: assignment
         });
     }
     update_assignment(assignment) {
@@ -348,7 +348,7 @@ frappe.ui.form.AssignmentDialog = class {
 				</button>
 			`);
             btn_group.find(".complete-btn").click(() => {
-                this.close_assignment(assignment).then((assignments) => {
+                this.close_assignment(assignment).then(assignments => {
                     row.remove();
                     this.render(assignments);
                 });
@@ -362,7 +362,7 @@ frappe.ui.form.AssignmentDialog = class {
 				</button>
 			`);
             btn_group.find(".remove-btn").click(() => {
-                this.remove_assignment(assignment).then((assignments) => {
+                this.remove_assignment(assignment).then(assignments => {
                     row.remove();
                     this.render(assignments);
                 });

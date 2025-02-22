@@ -25,11 +25,10 @@ frappe.ui.form.ControlDatetime = class ControlDatetime extends frappe.ui.form.Co
         this.today_text = __("Now");
         let sysdefaults = frappe.boot.sysdefaults;
         this.date_format = frappe.defaultDatetimeFormat;
-        let time_format =
-            sysdefaults && sysdefaults.time_format ? sysdefaults.time_format : "HH:mm:ss";
+        let time_format = sysdefaults && sysdefaults.time_format ? sysdefaults.time_format : "HH:mm:ss";
         $.extend(this.datepicker_options, {
             timepicker: true,
-            timeFormat: time_format.toLowerCase().replace("mm", "ii"),
+            timeFormat: time_format.toLowerCase().replace("mm", "ii")
         });
     }
     get_now_date() {

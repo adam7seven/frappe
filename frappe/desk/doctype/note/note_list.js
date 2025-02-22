@@ -7,5 +7,5 @@ frappe.listview_settings["Note"] = {
         } else {
             return [__("Private"), "gray", "public,=,No"];
         }
-    },
+    }
 };

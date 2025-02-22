@@ -50,7 +50,7 @@ frappe.ui.form.setup_user_image_event = function (frm) {
     }
 
     if (frm.meta.image_field && !frm.fields_dict[frm.meta.image_field].df.read_only) {
-        frm.sidebar.image_wrapper.on("click", ":not(.sidebar-image-actions)", (e) => {
+        frm.sidebar.image_wrapper.on("click", ":not(.sidebar-image-actions)", e => {
             let $target = $(e.currentTarget);
             if ($target.is("a.dropdown-toggle, .dropdown")) {
                 return;
@@ -62,28 +62,21 @@ frappe.ui.form.setup_user_image_event = function (frm) {
     }
 
     // bind click on image_wrapper
-    frm.sidebar.image_wrapper.on(
-        "click",
-        ".sidebar-image-change, .sidebar-image-remove",
-        function (e) {
-            let $target = $(e.currentTarget);
-            var field = frm.get_field(frm.meta.image_field);
-            if ($target.is(".sidebar-image-change")) {
-                if (!field.$input) {
-                    field.make_input();
-                }
-                field.$input.trigger("attach_doc_image");
-                // close sidebar
-                frm.page.close_sidebar?.();
-            } else {
-                /// on remove event for a sidebar image wrapper remove attach file.
-                frm.attachments.remove_attachment_by_filename(
-                    frm.doc[frm.meta.image_field],
-                    function () {
-                        field.set_value("").then(() => frm.save());
-                    },
-                );
+    frm.sidebar.image_wrapper.on("click", ".sidebar-image-change, .sidebar-image-remove", function (e) {
+        let $target = $(e.currentTarget);
+        var field = frm.get_field(frm.meta.image_field);
+        if ($target.is(".sidebar-image-change")) {
+            if (!field.$input) {
+                field.make_input();
             }
-        },
-    );
+            field.$input.trigger("attach_doc_image");
+            // close sidebar
+            frm.page.close_sidebar?.();
+        } else {
+            /// on remove event for a sidebar image wrapper remove attach file.
+            frm.attachments.remove_attachment_by_filename(frm.doc[frm.meta.image_field], function () {
+                field.set_value("").then(() => frm.save());
+            });
+        }
+    });
 };

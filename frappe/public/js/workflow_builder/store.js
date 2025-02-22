@@ -40,16 +40,16 @@ export const useStore = defineStore("workflow-builder-store", () => {
             await frappe.model.with_doctype(doc_type);
             workflow_doc_fields.value = frappe.meta
                 .get_docfields(doc_type, null, {
-                    fieldtype: ["not in", frappe.model.no_value_type],
+                    fieldtype: ["not in", frappe.model.no_value_type]
                 })
                 .sort((a, b) => {
                     if (a.label && b.label) {
                         return a.label.localeCompare(b.label);
                     }
                 })
-                .map((df) => ({
+                .map(df => ({
                     label: `${df.label || __("No Label")} (${df.fieldtype})`,
-                    value: df.fieldname,
+                    value: df.fieldname
                 }));
         }
 
@@ -95,29 +95,19 @@ export const useStore = defineStore("workflow-builder-store", () => {
             frappe.throw({
                 message: __(message),
                 title: __("Missing Values Required"),
-                indicator: "orange",
+                indicator: "orange"
             });
         }
     }
 
     function clean_workflow_data() {
-        return workflow.value.elements.map((el) => {
-            const {
-                selected,
-                dragging,
-                resizing,
-                data,
-                events,
-                initialized,
-                sourceNode,
-                targetNode,
-                ...obj
-            } = el;
+        return workflow.value.elements.map(el => {
+            const { selected, dragging, resizing, data, events, initialized, sourceNode, targetNode, ...obj } = el;
 
             if (el.type == "action") {
                 obj.data = {
                     from_id: data.from_id,
-                    to_id: data.to_id,
+                    to_id: data.to_id
                 };
             }
 
@@ -139,7 +129,7 @@ export const useStore = defineStore("workflow-builder-store", () => {
         let doc_status_map = {
             Draft: 0,
             Submitted: 1,
-            Cancelled: 2,
+            Cancelled: 2
         };
         data.doc_status = doc_status_map[data.doc_status];
         return data;
@@ -147,7 +137,7 @@ export const useStore = defineStore("workflow-builder-store", () => {
 
     function get_updated_states() {
         let states = [];
-        workflow.value.elements.forEach((element) => {
+        workflow.value.elements.forEach(element => {
             if (element.type == "state") {
                 element.data.workflow_builder_id = element.id;
                 states.push(get_state_df(element.data));
@@ -164,22 +154,18 @@ export const useStore = defineStore("workflow-builder-store", () => {
         let transitions = [];
         let actions = [];
 
-        workflow.value.elements.forEach((element) => {
+        workflow.value.elements.forEach(element => {
             if (element.type == "action") {
                 element.data.workflow_builder_id = element.id;
                 actions.push(element);
             }
         });
 
-        actions.forEach((action) => {
-            let states = workflow.value.elements.filter((e) => e.type == "state");
+        actions.forEach(action => {
+            let states = workflow.value.elements.filter(e => e.type == "state");
 
-            let state = states.find(
-                (state) => state.data.workflow_builder_id == action.data.from_id,
-            );
-            let next_state = states.find(
-                (state) => state.data.workflow_builder_id == action.data.to_id,
-            );
+            let state = states.find(state => state.data.workflow_builder_id == action.data.from_id);
+            let next_state = states.find(state => state.data.workflow_builder_id == action.data.to_id);
 
             if (action.data.to.length === 0 && next_state != undefined) {
                 action.data.to = next_state.data.state;
@@ -189,15 +175,15 @@ export const useStore = defineStore("workflow-builder-store", () => {
             if (error) {
                 frappe.throw({
                     message: error,
-                    title: __("Invalid Transition"),
+                    title: __("Invalid Transition")
                 });
             }
             transitions.push(
                 get_transition_df({
                     ...action.data,
                     state: action.data.from,
-                    next_state: action.data.to,
-                }),
+                    next_state: action.data.to
+                })
             );
         });
 
@@ -205,7 +191,7 @@ export const useStore = defineStore("workflow-builder-store", () => {
     }
 
     let undo_redo_keyboard_event = () =>
-        onKeyDown(true, (e) => {
+        onKeyDown(true, e => {
             if (!ref_history.value) return;
             if (e.ctrlKey || e.metaKey) {
                 if (e.key === "z" && !e.shiftKey && ref_history.value.canUndo) {
@@ -233,6 +219,6 @@ export const useStore = defineStore("workflow-builder-store", () => {
         fetch,
         reset_changes,
         save_changes,
-        setup_undo_redo,
+        setup_undo_redo
     };
 });

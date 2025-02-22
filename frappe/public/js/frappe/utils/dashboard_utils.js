@@ -1,6 +1,6 @@
 frappe.dashboard_utils = {
     render_chart_filters: function (filters, button_class, container, append) {
-        filters.forEach((filter) => {
+        filters.forEach(filter => {
             let icon_html = "",
                 filter_class = "";
 
@@ -30,29 +30,28 @@ frappe.dashboard_utils = {
 						<a class="dropdown-item" data-fieldname="${
                             filter.fieldnames[i]
                         }" data-option="${encodeURIComponent(option)}">${__(option)}</a>
-					</li>`,
+					</li>`
                     )
                     .join("");
             } else {
                 options_html = filter.options
                     .map(
-                        (option) =>
+                        option =>
                             `<li><a class="dropdown-item" data-option="${encodeURIComponent(
-                                option,
-                            )}">${__(option)}</a></li>`,
+                                option
+                            )}">${__(option)}</a></li>`
                     )
                     .join("");
             }
 
-            let dropdown_html =
-                chart_filter_html + `<ul class="dropdown-menu">${options_html}</ul></div>`;
+            let dropdown_html = chart_filter_html + `<ul class="dropdown-menu">${options_html}</ul></div>`;
             let $chart_filter = $(dropdown_html);
 
             if (append) {
                 $chart_filter.prependTo(container);
             } else $chart_filter.appendTo(container);
 
-            $chart_filter.find(".dropdown-menu").on("click", "li a", (e) => {
+            $chart_filter.find(".dropdown-menu").on("click", "li a", e => {
                 let $el = $(e.currentTarget);
                 let fieldname;
                 if ($el.attr("data-fieldname")) {
@@ -68,14 +67,13 @@ frappe.dashboard_utils = {
 
     get_filters_for_chart_type: function (chart) {
         if (chart.chart_type === "Custom" && chart.source) {
-            const method =
-                "frappe.desk.doctype.dashboard_chart_source.dashboard_chart_source.get_config";
-            return frappe.xcall(method, { id: chart.source }).then((config) => {
+            const method = "frappe.desk.doctype.dashboard_chart_source.dashboard_chart_source.get_config";
+            return frappe.xcall(method, { id: chart.source }).then(config => {
                 frappe.dom.eval(config);
                 return frappe.dashboards.chart_sources[chart.source].filters;
             });
         } else if (chart.chart_type === "Report" && chart.report_id) {
-            return frappe.report_utils.get_report_filters(chart.report_id).then((filters) => {
+            return frappe.report_utils.get_report_filters(chart.report_id).then(filters => {
                 return filters;
             });
         } else {
@@ -87,13 +85,13 @@ frappe.dashboard_utils = {
         return frappe.db
             .get_list("Dashboard Settings", {
                 filters: {
-                    id: frappe.session.user,
+                    id: frappe.session.user
                 },
-                fields: ["*"],
+                fields: ["*"]
             })
-            .then((settings) => {
+            .then(settings => {
                 if (!settings.length) {
-                    return this.create_dashboard_settings().then((settings) => {
+                    return this.create_dashboard_settings().then(settings => {
                         return settings;
                     });
                 } else {
@@ -104,13 +102,10 @@ frappe.dashboard_utils = {
 
     create_dashboard_settings() {
         return frappe
-            .xcall(
-                "frappe.desk.doctype.dashboard_settings.dashboard_settings.create_dashboard_settings",
-                {
-                    user: frappe.session.user,
-                },
-            )
-            .then((settings) => {
+            .xcall("frappe.desk.doctype.dashboard_settings.dashboard_settings.create_dashboard_settings", {
+                user: frappe.session.user
+            })
+            .then(settings => {
                 return settings;
             });
     },
@@ -133,12 +128,9 @@ frappe.dashboard_utils = {
     remove_common_static_filter_values(static_filters, dynamic_filters) {
         if (dynamic_filters) {
             if ($.isArray(static_filters)) {
-                static_filters = static_filters.filter((static_filter) => {
+                static_filters = static_filters.filter(static_filter => {
                     for (let dynamic_filter of dynamic_filters) {
-                        if (
-                            static_filter[0] == dynamic_filter[0] &&
-                            static_filter[1] == dynamic_filter[1]
-                        ) {
+                        if (static_filter[0] == dynamic_filter[0] && static_filter[1] == dynamic_filter[1]) {
                             return false;
                         }
                     }
@@ -165,15 +157,15 @@ frappe.dashboard_utils = {
 						<p>${__("For example:")}
 							<code>frappe.defaults.get_user_default("Company")</code>
 						</p>
-					</div>`,
-            },
+					</div>`
+            }
         ];
 
         if (is_document_type) {
             if (dynamic_filters) {
                 filters = [...filters, ...dynamic_filters];
             }
-            filters.forEach((f) => {
+            filters.forEach(f => {
                 for (let field of fields) {
                     if (field.fieldname == f[0] + ":" + f[1]) {
                         return;
@@ -183,7 +175,7 @@ frappe.dashboard_utils = {
                     fields.push({
                         label: `${f[1]} (${f[0]})`,
                         fieldname: f[0] + ":" + f[1],
-                        fieldtype: "Data",
+                        fieldtype: "Data"
                     });
                 }
             });
@@ -193,7 +185,7 @@ frappe.dashboard_utils = {
                 fields.push({
                     label: key,
                     fieldname: key,
-                    fieldtype: "Data",
+                    fieldtype: "Data"
                 });
             }
         }
@@ -203,16 +195,14 @@ frappe.dashboard_utils = {
 
     get_all_filters(doc) {
         let filters = doc.filters_json ? JSON.parse(doc.filters_json) : null;
-        let dynamic_filters = doc.dynamic_filters_json
-            ? JSON.parse(doc.dynamic_filters_json)
-            : null;
+        let dynamic_filters = doc.dynamic_filters_json ? JSON.parse(doc.dynamic_filters_json) : null;
 
         if (!dynamic_filters || !Object.keys(dynamic_filters).length) {
             return filters;
         }
 
         if (Array.isArray(dynamic_filters)) {
-            dynamic_filters.forEach((f) => {
+            dynamic_filters.forEach(f => {
                 try {
                     f[3] = eval(f[3]);
                 } catch (e) {
@@ -240,15 +230,15 @@ frappe.dashboard_utils = {
             label: __("Select Dashboard"),
             fieldtype: "Link",
             fieldname: "dashboard",
-            options: "Dashboard",
+            options: "Dashboard"
         };
 
         if (!frappe.boot.developer_mode) {
             field.get_query = () => {
                 return {
                     filters: {
-                        is_standard: 0,
-                    },
+                        is_standard: 0
+                    }
                 };
             };
         }
@@ -262,24 +252,20 @@ frappe.dashboard_utils = {
         const dialog = new frappe.ui.Dialog({
             title: __("Add to Dashboard"),
             fields: [field],
-            primary_action: (values) => {
+            primary_action: values => {
                 values.id = docid;
                 values.set_standard = frappe.boot.developer_mode;
                 frappe.xcall(method, { args: values }).then(() => {
                     let dashboard_route_html = `<a href = "/app/dashboard/${values.dashboard}">${values.dashboard}</a>`;
-                    let message = __("{0} {1} added to Dashboard {2}", [
-                        doctype,
-                        values.id,
-                        dashboard_route_html,
-                    ]);
+                    let message = __("{0} {1} added to Dashboard {2}", [doctype, values.id, dashboard_route_html]);
 
                     frappe.msgprint(message);
                 });
 
                 dialog.hide();
-            },
+            }
         });
 
         return dialog;
-    },
+    }
 };

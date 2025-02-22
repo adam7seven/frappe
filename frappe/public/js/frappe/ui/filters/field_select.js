@@ -22,7 +22,7 @@ frappe.ui.FieldSelect = class FieldSelect {
                 return $(repl('<li class="filter-field-select"><p>%(label)s</p></li>', item))
                     .data("item.autocomplete", item)
                     .get(0);
-            },
+            }
         });
         this.$input.on("awesomplete-select", function (e) {
             var o = e.originalEvent;
@@ -47,9 +47,7 @@ frappe.ui.FieldSelect = class FieldSelect {
         this.set_value(this.doctype, "id");
     }
     get_value() {
-        return this.selected_doctype
-            ? this.selected_doctype + "." + this.selected_fieldname
-            : null;
+        return this.selected_doctype ? this.selected_doctype + "." + this.selected_fieldname : null;
     }
     val(value) {
         if (value === undefined) {
@@ -101,8 +99,8 @@ frappe.ui.FieldSelect = class FieldSelect {
                     fieldname: "parent",
                     fieldtype: "Data",
                     label: "Parent",
-                    parent: me.doctype,
-                },
+                    parent: me.doctype
+                }
             ]);
         }
 
@@ -110,17 +108,14 @@ frappe.ui.FieldSelect = class FieldSelect {
         if (this.with_blank) {
             this.options.push({
                 label: "",
-                value: "",
+                value: ""
             });
         }
 
         // main table
         var main_table_fields = std_filters.concat(frappe.meta.docfield_list[me.doctype]);
         $.each(frappe.utils.sort(main_table_fields, "label", "string"), function (i, df) {
-            let doctype =
-                frappe.get_meta(me.doctype).istable && me.parent_doctype
-                    ? me.parent_doctype
-                    : me.doctype;
+            let doctype = frappe.get_meta(me.doctype).istable && me.parent_doctype ? me.parent_doctype : me.doctype;
 
             // show fields where user has read access and if report hide flag is not set
             if (frappe.perm.has_perm(doctype, df.permlevel, "read")) me.add_field_option(df);
@@ -132,21 +127,16 @@ frappe.ui.FieldSelect = class FieldSelect {
                 let child_table_fields = [].concat(frappe.meta.docfield_list[table_df.options]);
 
                 if (table_df.fieldtype === "Table MultiSelect") {
-                    const link_field = frappe.meta
-                        .get_docfields(table_df.options)
-                        .find((df) => df.fieldtype === "Link");
+                    const link_field = frappe.meta.get_docfields(table_df.options).find(df => df.fieldtype === "Link");
                     child_table_fields = link_field ? [link_field] : [];
                 }
 
                 $.each(frappe.utils.sort(child_table_fields, "label", "string"), function (i, df) {
                     let doctype =
-                        frappe.get_meta(me.doctype).istable && me.parent_doctype
-                            ? me.parent_doctype
-                            : me.doctype;
+                        frappe.get_meta(me.doctype).istable && me.parent_doctype ? me.parent_doctype : me.doctype;
 
                     // show fields where user has read access and if report hide flag is not set
-                    if (frappe.perm.has_perm(doctype, df.permlevel, "read"))
-                        me.add_field_option(df);
+                    if (frappe.perm.has_perm(doctype, df.permlevel, "read")) me.add_field_option(df);
                 });
             }
         });
@@ -181,7 +171,7 @@ frappe.ui.FieldSelect = class FieldSelect {
                 label: label,
                 value: table + "." + df.fieldname,
                 fieldname: df.fieldname,
-                doctype: df.parent,
+                doctype: df.parent
             });
             if (!me.fields_by_id[df.parent]) me.fields_by_id[df.parent] = {};
             me.fields_by_id[df.parent][df.fieldname] = df;

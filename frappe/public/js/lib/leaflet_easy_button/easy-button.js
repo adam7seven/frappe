@@ -6,7 +6,7 @@
         options: {
             position: "topleft", // part of leaflet's defaults
             id: null, // an id to tag the Bar with
-            leafletClasses: true, // use leaflet classes?
+            leafletClasses: true // use leaflet classes?
         },
 
         initialize: function (buttons, options) {
@@ -28,10 +28,7 @@
         _buildContainer: function () {
             this._container = this.container = L.DomUtil.create("div", "");
             this.options.leafletClasses &&
-                L.DomUtil.addClass(
-                    this.container,
-                    "leaflet-bar easy-button-container leaflet-control",
-                );
+                L.DomUtil.addClass(this.container, "leaflet-bar easy-button-container leaflet-control");
             this.options.id && (this.container.id = this.options.id);
         },
 
@@ -73,7 +70,7 @@
             }
 
             return this;
-        },
+        }
     });
 
     L.easyBar = function () {
@@ -105,7 +102,7 @@
             // }
 
             leafletClasses: true, // use leaflet styles for the button
-            tagName: "button",
+            tagName: "button"
         },
 
         initialize: function (icon, onClick, title, id) {
@@ -128,16 +125,12 @@
 
             // if there aren't any states in options
             // use the early params
-            if (
-                this.options.states.length === 0 &&
-                typeof icon === "string" &&
-                typeof onClick === "function"
-            ) {
+            if (this.options.states.length === 0 && typeof icon === "string" && typeof onClick === "function") {
                 // turn the options object into a state
                 this.options.states.push({
                     icon: icon,
                     onClick: onClick,
-                    title: typeof title === "string" ? title : "",
+                    title: typeof title === "string" ? title : ""
                 });
             }
 
@@ -166,10 +159,7 @@
             }
 
             if (this.options.leafletClasses) {
-                L.DomUtil.addClass(
-                    this.button,
-                    "easy-button-button leaflet-bar-part leaflet-interactive",
-                );
+                L.DomUtil.addClass(this.button, "easy-button-button leaflet-bar-part leaflet-interactive");
             }
 
             // don't let double clicks and mousedown get to the map
@@ -185,7 +175,7 @@
                     this._currentState.onClick(this, this._map ? this._map : null);
                     this._map && this._map.getContainer().focus();
                 },
-                this,
+                this
             );
 
             // prep the contents of the control
@@ -203,7 +193,7 @@
             stateName: "unnamed",
             icon: (function () {
                 return document.createElement("span");
-            })(),
+            })()
         },
 
         _states: null, // populated on init
@@ -248,10 +238,7 @@
 
                 // update classes for animations
                 for (var i = 0; i < this._states.length; i++) {
-                    L.DomUtil.removeClass(
-                        this._states[i].icon,
-                        this._currentState.stateName + "-active",
-                    );
+                    L.DomUtil.removeClass(this._states[i].icon, this._currentState.stateName + "-active");
                     L.DomUtil.addClass(this._states[i].icon, newState.stateName + "-active");
                 }
 
@@ -281,7 +268,7 @@
         onAdd: function (map) {
             var bar = L.easyBar([this], {
                 position: this.options.position,
-                leafletClasses: this.options.leafletClasses,
+                leafletClasses: this.options.leafletClasses
             });
             this._anonymousBar = bar;
             this._container = bar.container;
@@ -291,7 +278,7 @@
         removeFrom: function (map) {
             if (this._map === map) this.remove();
             return this;
-        },
+        }
     });
 
     L.easyButton = function (/* args will pass automatically */) {
@@ -314,15 +301,9 @@
         // build the wrapper
         this.icon = L.DomUtil.create("span", "");
 
-        L.DomUtil.addClass(
-            this.icon,
-            "button-state state-" + this.stateName.replace(/(^\s*|\s*$)/g, ""),
-        );
+        L.DomUtil.addClass(this.icon, "button-state state-" + this.stateName.replace(/(^\s*|\s*$)/g, ""));
         this.icon.innerHTML = buildIcon(template.icon);
-        this.onClick = L.Util.bind(
-            template.onClick ? template.onClick : function () {},
-            easyButton,
-        );
+        this.onClick = L.Util.bind(template.onClick ? template.onClick : function () {}, easyButton);
     }
 
     function buildIcon(ambiguousIconString) {

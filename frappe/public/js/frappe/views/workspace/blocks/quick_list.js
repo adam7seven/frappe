@@ -3,7 +3,7 @@ export default class QuickList extends Block {
     static get toolbox() {
         return {
             title: "Quick List",
-            icon: frappe.utils.icon("list", "sm"),
+            icon: frappe.utils.icon("list", "sm")
         };
     }
 
@@ -23,7 +23,7 @@ export default class QuickList extends Block {
             allow_edit: true,
             allow_resize: true,
             min_width: 4,
-            max_widget_count: 2,
+            max_widget_count: 2
         };
     }
 
@@ -57,7 +57,7 @@ export default class QuickList extends Block {
         return {
             quick_list_id: this.wrapper.getAttribute("quick_list_id"),
             col: this.get_col(),
-            new: this.new_block_widget,
+            new: this.new_block_widget
         };
     }
 }

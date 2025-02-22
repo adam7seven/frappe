@@ -1,10 +1,5 @@
 import { defineStore } from "pinia";
-import {
-    create_layout,
-    scrub_field_names,
-    load_doctype_model,
-    section_boilerplate,
-} from "./utils";
+import { create_layout, scrub_field_names, load_doctype_model, section_boilerplate } from "./utils";
 import { computed, nextTick, ref } from "vue";
 import { useDebouncedRefHistory, onKeyDown, useActiveElement } from "@vueuse/core";
 
@@ -17,7 +12,7 @@ export const useStore = defineStore("form-builder-store", () => {
     let form = ref({
         layout: {},
         active_tab: null,
-        selected_field: null,
+        selected_field: null
     });
     let dirty = ref(false);
     let read_only = ref(false);
@@ -33,7 +28,7 @@ export const useStore = defineStore("form-builder-store", () => {
     });
 
     let current_tab = computed(() => {
-        return form.value.layout.tabs.find((tab) => tab.df.name == form.value.active_tab);
+        return form.value.layout.tabs.find(tab => tab.df.name == form.value.active_tab);
     });
 
     const active_element = useActiveElement();
@@ -41,8 +36,7 @@ export const useStore = defineStore("form-builder-store", () => {
         () =>
             active_element.value?.readOnly ||
             active_element.value?.disabled ||
-            (active_element.value?.tagName !== "INPUT" &&
-                active_element.value?.tagName !== "TEXTAREA"),
+            (active_element.value?.tagName !== "INPUT" && active_element.value?.tagName !== "TEXTAREA")
     );
 
     // Actions
@@ -68,12 +62,12 @@ export const useStore = defineStore("form-builder-store", () => {
         let children = {
             "Tab Break": "sections",
             "Section Break": "columns",
-            "Column Break": "fields",
+            "Column Break": "fields"
         }[field.df.fieldtype];
 
         if (!children) return false;
 
-        return field[children].some((child) => {
+        return field[children].some(child => {
             if (!child.df.is_custom_field) return true;
             return has_standard_field(child);
         });
@@ -117,15 +111,14 @@ export const useStore = defineStore("form-builder-store", () => {
                 frm.value.doc.__unsaved = 0;
                 frm.value.page.clear_indicator();
             }
-            read_only.value =
-                !is_customize_form.value && !frappe.boot.developer_mode && !doc.value.custom;
+            read_only.value = !is_customize_form.value && !frappe.boot.developer_mode && !doc.value.custom;
             preview.value = false;
         });
 
         setup_undo_redo();
     }
 
-    let undo_redo_keyboard_event = onKeyDown(true, (e) => {
+    let undo_redo_keyboard_event = onKeyDown(true, e => {
         if (!ref_history.value) return;
         if (frm.value.get_active_tab().label == "Form" && (e.ctrlKey || e.metaKey)) {
             if (e.key === "z" && !e.shiftKey && ref_history.value.canUndo) {
@@ -146,7 +139,7 @@ export const useStore = defineStore("form-builder-store", () => {
         fields = scrub_field_names(fields);
         let error_message = "";
 
-        let has_fields = fields.some((df) => {
+        let has_fields = fields.some(df => {
             return !["Section Break", "Tab Break", "Column Break"].includes(df.fieldtype);
         });
 
@@ -156,7 +149,7 @@ export const useStore = defineStore("form-builder-store", () => {
 
         let not_allowed_in_list_view = ["Attach Image", ...frappe.model.no_value_type];
         if (is_table) {
-            not_allowed_in_list_view = not_allowed_in_list_view.filter((f) => f != "Button");
+            not_allowed_in_list_view = not_allowed_in_list_view.filter(f => f != "Button");
         }
 
         function get_field_data(df) {
@@ -168,43 +161,31 @@ export const useStore = defineStore("form-builder-store", () => {
             return [fieldname, fieldtype];
         }
 
-        fields.forEach((df) => {
+        fields.forEach(df => {
             // check if fieldname already exist
-            let duplicate = fields.filter((f) => f.fieldname == df.fieldname);
+            let duplicate = fields.filter(f => f.fieldname == df.fieldname);
             if (duplicate.length > 1) {
                 error_message = __("Fieldname {0} appears multiple times", get_field_data(df));
             }
 
             // Link & Table fields should always have options set
             if (["Link", ...frappe.model.table_fields].includes(df.fieldtype) && !df.options) {
-                error_message = __(
-                    "Options is required for field {0} of type {1}",
-                    get_field_data(df),
-                );
+                error_message = __("Options is required for field {0} of type {1}", get_field_data(df));
             }
 
             // Do not allow if field is hidden & required but doesn't have default value
             if (df.hidden && df.reqd && !df.default) {
-                error_message = __(
-                    "{0} cannot be hidden and mandatory without any default value",
-                    get_field_data(df),
-                );
+                error_message = __("{0} cannot be hidden and mandatory without any default value", get_field_data(df));
             }
 
             // In List View is not allowed for some fieldtypes
             if (df.in_list_view && not_allowed_in_list_view.includes(df.fieldtype)) {
-                error_message = __(
-                    "'In List View' is not allowed for field {0} of type {1}",
-                    get_field_data(df),
-                );
+                error_message = __("'In List View' is not allowed for field {0} of type {1}", get_field_data(df));
             }
 
             // In Global Search is not allowed for no_value_type fields
             if (df.in_global_search && frappe.model.no_value_type.includes(df.fieldtype)) {
-                error_message = __(
-                    "'In Global Search' is not allowed for field {0} of type {1}",
-                    get_field_data(df),
-                );
+                error_message = __("'In Global Search' is not allowed for field {0} of type {1}", get_field_data(df));
             }
 
             if (df.link_filters === "") {
@@ -218,7 +199,7 @@ export const useStore = defineStore("form-builder-store", () => {
                 } catch (e) {
                     error_message = __(
                         "Invalid Filter Format for field {0} of type {1}. Try using filter icon on the field to set it correctly",
-                        get_field_data(df),
+                        get_field_data(df)
                     );
                 }
             }
@@ -248,17 +229,12 @@ export const useStore = defineStore("form-builder-store", () => {
     function get_updated_fields() {
         let fields = [];
         let idx = 0;
-        let new_field_name = is_customize_form.value
-            ? "new-customize-form-field-"
-            : "new-docfield-";
+        let new_field_name = is_customize_form.value ? "new-customize-form-field-" : "new-docfield-";
 
         let layout_fields = JSON.parse(JSON.stringify(form.value.layout.tabs));
 
         layout_fields.forEach((tab, i) => {
-            if (
-                (i == 0 && is_df_updated(tab.df, get_df("Tab Break", "", __("Details")))) ||
-                i > 0
-            ) {
+            if ((i == 0 && is_df_updated(tab.df, get_df("Tab Break", "", __("Details")))) || i > 0) {
                 idx++;
                 tab.df.idx = idx;
                 if (tab.df.__unsaved && tab.df.__islocal) {
@@ -298,7 +274,7 @@ export const useStore = defineStore("form-builder-store", () => {
                         fields.push(column.df);
                     }
 
-                    column.fields.forEach((field) => {
+                    column.fields.forEach(field => {
                         idx++;
                         field.df.idx = idx;
                         if (field.df.__unsaved && field.df.__islocal) {
@@ -336,7 +312,7 @@ export const useStore = defineStore("form-builder-store", () => {
     function add_new_tab() {
         let tab = {
             df: get_df("Tab Break", "", "Tab " + (form.value.layout.tabs.length + 1)),
-            sections: [section_boilerplate()],
+            sections: [section_boilerplate()]
         };
 
         form.value.layout.tabs.push(tab);
@@ -352,7 +328,7 @@ export const useStore = defineStore("form-builder-store", () => {
             $(".tabs .tab.active")[0]?.scrollIntoView({
                 behavior: "smooth",
                 inline: "center",
-                block: "nearest",
+                block: "nearest"
             });
         });
     }
@@ -382,6 +358,6 @@ export const useStore = defineStore("form-builder-store", () => {
         is_df_updated,
         get_layout,
         add_new_tab,
-        activate_tab,
+        activate_tab
     };
 });

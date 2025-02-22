@@ -17,7 +17,7 @@ dns.setDefaultResultOrder("ipv4first");
 function get_conf() {
     // defaults
     var conf = {
-        socketio_port: 9000,
+        socketio_port: 9000
     };
 
     var read_config = function (file_path) {
@@ -65,7 +65,7 @@ function get_redis_subscriber(kind = "redis_queue", options = {}) {
     if (connStr && connStr.startsWith("unix://")) {
         client = redis.createClient({
             socket: { path: connStr.replace("unix://", "") },
-            ...options,
+            ...options
         });
     } else {
         client = redis.createClient({ url: connStr, ...options });
@@ -75,5 +75,5 @@ function get_redis_subscriber(kind = "redis_queue", options = {}) {
 
 module.exports = {
     get_conf,
-    get_redis_subscriber,
+    get_redis_subscriber
 };

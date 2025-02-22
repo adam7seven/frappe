@@ -143,8 +143,8 @@ frappe.dom = {
             freeze.html(
                 repl(
                     '<div class="freeze-message-container"><div class="freeze-message"><p class="lead">%(msg)s</p></div></div>',
-                    { msg: msg || "" },
-                ),
+                    { msg: msg || "" }
+                )
             );
 
             setTimeout(function () {
@@ -202,7 +202,7 @@ frappe.dom = {
     handle_broken_images(container) {
         $(container)
             .find("img")
-            .on("error", (e) => {
+            .on("error", e => {
                 const $img = $(e.currentTarget);
                 $img.addClass("no-image");
             });
@@ -212,7 +212,7 @@ frappe.dom = {
         $container.scrollTop($container[0].scrollHeight);
     },
     file_to_base64(file_obj) {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             const reader = new FileReader();
             reader.onload = function () {
                 resolve(reader.result);
@@ -233,9 +233,7 @@ frappe.dom = {
         }, 200);
     },
     pixel_to_inches(pixels) {
-        const div = $(
-            '<div id="dpi" style="height: 1in; width: 1in; left: 100%; position: fixed; top: 100%;"></div>',
-        );
+        const div = $('<div id="dpi" style="height: 1in; width: 1in; left: 100%; position: fixed; top: 100%;"></div>');
         div.appendTo(document.body);
 
         const dpi_x = document.getElementById("dpi").offsetWidth;
@@ -243,7 +241,7 @@ frappe.dom = {
         div.remove();
 
         return inches;
-    },
+    }
 };
 
 frappe.ellipsis = function (text, max) {
@@ -257,7 +255,7 @@ frappe.ellipsis = function (text, max) {
 
 frappe.run_serially = function (tasks) {
     var result = Promise.resolve();
-    tasks.forEach((task) => {
+    tasks.forEach(task => {
         if (task) {
             result = result.then ? result.then(task) : Promise.resolve();
         }
@@ -276,8 +274,8 @@ frappe.load_image = (src, onload, onerror, preprocess = () => {}) => {
     tester.src = src;
 };
 
-frappe.timeout = (seconds) => {
-    return new Promise((resolve) => {
+frappe.timeout = seconds => {
+    return new Promise(resolve => {
         setTimeout(() => resolve(), seconds * 1000);
     });
 };
@@ -290,13 +288,7 @@ frappe.unscrub = function (txt) {
     return frappe.model.unscrub(txt);
 };
 
-frappe.get_data_pill = (
-    label,
-    target_id = null,
-    remove_action = null,
-    image = null,
-    colored = false,
-) => {
+frappe.get_data_pill = (label, target_id = null, remove_action = null, image = null, colored = false) => {
     let color = "",
         style = "";
     if (colored) {
@@ -421,7 +413,7 @@ $(window).on("online", function () {
     if (document.hidden) return;
     frappe.show_alert({
         indicator: "green",
-        message: __("You are connected to internet."),
+        message: __("You are connected to internet.")
     });
 });
 
@@ -429,6 +421,6 @@ $(window).on("offline", function () {
     if (document.hidden) return;
     frappe.show_alert({
         indicator: "orange",
-        message: __("Connection lost. Some features might not work."),
+        message: __("Connection lost. Some features might not work.")
     });
 });

@@ -8,16 +8,14 @@ frappe.ui.form.Control = class BaseControl {
     }
     make() {
         this.make_wrapper();
-        this.$wrapper
-            .attr("data-fieldtype", this.df.fieldtype)
-            .attr("data-fieldname", this.df.fieldname);
+        this.$wrapper.attr("data-fieldtype", this.df.fieldtype).attr("data-fieldname", this.df.fieldname);
         this.wrapper = this.$wrapper.get(0);
         this.wrapper.fieldobj = this; // reference for event handlers
 
         this.tooltip = $(`<span class="tooltip-content">${__(this.df.fieldname)}</span>`);
         this.$wrapper.append(this.tooltip);
 
-        this.tooltip.on("click", (e) => {
+        this.tooltip.on("click", e => {
             let text = $(e.target).text();
             frappe.utils.copy_to_clipboard(text);
         });
@@ -50,11 +48,7 @@ frappe.ui.form.Control = class BaseControl {
             return this.df.get_status(this);
         }
 
-        if (
-            (!this.doctype && !this.docid) ||
-            this.df.parenttype === "Web Form" ||
-            this.df.is_web_form
-        ) {
+        if ((!this.doctype && !this.docid) || this.df.parenttype === "Web Form" || this.df.is_web_form) {
             let status = "Write";
 
             // like in case of a dialog box
@@ -64,9 +58,7 @@ frappe.ui.form.Control = class BaseControl {
             } else if (cint(this.df.hidden_due_to_dependency)) {
                 if (explain) console.log("By Hidden Dependency: None");
                 return "None";
-            } else if (
-                cint(this.df.read_only || this.df.is_virtual || this.df.fieldtype === "Read Only")
-            ) {
+            } else if (cint(this.df.read_only || this.df.is_virtual || this.df.fieldtype === "Read Only")) {
                 if (explain) console.log("By Read Only: Read");
                 status = "Read";
             } else if (
@@ -81,11 +73,7 @@ frappe.ui.form.Control = class BaseControl {
             let value = this.value || this.get_model_value();
             value = this.get_parsed_value(value);
 
-            if (
-                status === "Read" &&
-                is_null(value) &&
-                !["HTML", "Image", "Button"].includes(this.df.fieldtype)
-            )
+            if (status === "Read" && is_null(value) && !["HTML", "Image", "Button"].includes(this.df.fieldtype))
                 status = "Read";
 
             return status;
@@ -95,14 +83,11 @@ frappe.ui.form.Control = class BaseControl {
             this.df,
             frappe.model.get_doc(this.doctype, this.docid),
             this.perm || (this.frm && this.frm.perm),
-            explain,
+            explain
         );
 
         // Match parent grid controls read only status
-        if (
-            status === "Write" &&
-            (this.grid || (this.layout && this.layout.grid && !cint(this.df.allow_on_submit)))
-        ) {
+        if (status === "Write" && (this.grid || (this.layout && this.layout.grid && !cint(this.df.allow_on_submit)))) {
             var grid = this.grid || this.layout.grid;
             if (grid.display_status == "Read") {
                 status = "Read";
@@ -161,9 +146,7 @@ frappe.ui.form.Control = class BaseControl {
         // Already attached button
         if (this.$wrapper.find(".clearfix .btn-translation").length) return;
 
-        const translation_btn = `<a class="btn-translation no-decoration text-muted" title="${__(
-            "Open Translation",
-        )}">
+        const translation_btn = `<a class="btn-translation no-decoration text-muted" title="${__("Open Translation")}">
 				<i class="fa fa-globe"></i>
 			</a>`;
 
@@ -175,19 +158,13 @@ frappe.ui.form.Control = class BaseControl {
                         df: this.df,
                         source_text: this.value,
                         target_language: this.doc.language,
-                        doc: this.doc,
+                        doc: this.doc
                     });
                 }
             });
     }
     get_doc() {
-        return (
-            (this.doctype &&
-                this.docid &&
-                locals[this.doctype] &&
-                locals[this.doctype][this.docid]) ||
-            {}
-        );
+        return (this.doctype && this.docid && locals[this.doctype] && locals[this.doctype][this.docid]) || {};
     }
     get_model_value() {
         if (this.doc) {
@@ -223,7 +200,7 @@ frappe.ui.form.Control = class BaseControl {
             new_value: value,
             doctype: this.doctype,
             docid: this.docid,
-            is_child: Boolean(this.doc?.parenttype),
+            is_child: Boolean(this.doc?.parenttype)
         });
         this.inside_change_event = true;
         function set(value) {
@@ -242,13 +219,13 @@ frappe.ui.form.Control = class BaseControl {
                         return set;
                     }
                     me.set_invalid && me.set_invalid();
-                },
+                }
             ]);
         }
         value = this.validate(value);
         if (value && value.then) {
             // got a promise
-            return value.then((value) => set(value));
+            return value.then(value => set(value));
         } else {
             // all clear
             return set(value);
@@ -268,13 +245,7 @@ frappe.ui.form.Control = class BaseControl {
     set_model_value(value) {
         if (this.frm) {
             this.last_value = value;
-            return frappe.model.set_value(
-                this.doctype,
-                this.docid,
-                this.df.fieldname,
-                value,
-                this.df.fieldtype,
-            );
+            return frappe.model.set_value(this.doctype, this.docid, this.df.fieldname, value, this.df.fieldtype);
         } else {
             if (this.doc) {
                 this.doc[this.df.fieldname] = value;

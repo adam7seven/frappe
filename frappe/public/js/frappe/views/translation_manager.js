@@ -11,7 +11,7 @@ frappe.views.TranslationManager = class TranslationManager {
             title: __("Translate {0}", [this.df.label]),
             no_submit_on_enter: true,
             primary_action_label: __("Update Translations"),
-            primary_action: (values) =>
+            primary_action: values =>
                 this.update_translations(values).then(() => {
                     this.dialog.hide();
 
@@ -20,12 +20,12 @@ frappe.views.TranslationManager = class TranslationManager {
                     frappe.msgprint({
                         title: __("Success"),
                         message: __("Successfully updated translations"),
-                        indicator: "green",
+                        indicator: "green"
                     });
-                }),
+                })
         });
 
-        this.get_translations_data().then((data) => {
+        this.get_translations_data().then(data => {
             this.data.push(...(data || []));
             this.dialog.refresh();
             this.dialog.show();
@@ -40,7 +40,7 @@ frappe.views.TranslationManager = class TranslationManager {
                 fieldtype: "Data",
                 read_only: 1,
                 bold: 1,
-                default: this.source_text,
+                default: this.source_text
             },
             {
                 label: __("Translations"),
@@ -53,21 +53,21 @@ frappe.views.TranslationManager = class TranslationManager {
                         fieldtype: "Link",
                         options: "Language",
                         in_list_view: 1,
-                        columns: 3,
+                        columns: 3
                     },
                     {
                         label: "Translation",
                         fieldname: "translation",
                         fieldtype: "Text",
                         in_list_view: 1,
-                        columns: 7,
-                    },
+                        columns: 7
+                    }
                 ],
                 data: this.data,
                 get_data: () => {
                     return this.data;
-                },
-            },
+                }
+            }
         ];
         return fields;
     }
@@ -76,14 +76,14 @@ frappe.views.TranslationManager = class TranslationManager {
         return frappe.db.get_list("Translation", {
             fields: ["id", "language", "translated_text as translation"],
             filters: {
-                source_text: strip_html(this.source_text),
-            },
+                source_text: strip_html(this.source_text)
+            }
         });
     }
 
     update_translations({ source, translation_data = [] }) {
         const translation_dict = {};
-        translation_data.map((row) => {
+        translation_data.map(row => {
             translation_dict[row.language] = row.translation;
         });
 
@@ -93,14 +93,14 @@ frappe.views.TranslationManager = class TranslationManager {
                 btn: this.dialog.get_primary_btn(),
                 args: {
                     source,
-                    translation_dict,
-                },
+                    translation_dict
+                }
             })
             .fail(() => {
                 frappe.msgprint({
                     title: __("Something went wrong"),
                     message: __("Please try again"),
-                    indicator: "red",
+                    indicator: "red"
                 });
             });
     }

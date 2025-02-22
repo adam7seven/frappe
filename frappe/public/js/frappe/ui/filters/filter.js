@@ -25,7 +25,7 @@ frappe.ui.Filter = class {
             [">=", __("Greater Than Or Equal To")],
             ["<=", __("Less Than Or Equal To")],
             ["Between", __("Between")],
-            ["Timespan", __("Timespan")],
+            ["Timespan", __("Timespan")]
         ];
 
         this.nested_set_conditions = [
@@ -33,7 +33,7 @@ frappe.ui.Filter = class {
             ["descendants of (inclusive)", __("Descendants Of (inclusive)")],
             ["not descendants of", __("Not Descendants Of")],
             ["ancestors of", __("Ancestors Of")],
-            ["not ancestors of", __("Not Ancestors Of")],
+            ["not ancestors of", __("Not Ancestors Of")]
         ];
 
         this.conditions.push(...this.nested_set_conditions);
@@ -46,13 +46,13 @@ frappe.ui.Filter = class {
             Link: ["Between", "Timespan", ">", "<", ">=", "<="],
             Currency: ["Between", "Timespan"],
             Color: ["Between", "Timespan"],
-            Check: this.conditions.map((c) => c[0]).filter((c) => c !== "="),
+            Check: this.conditions.map(c => c[0]).filter(c => c !== "="),
             Code: ["Between", "Timespan", ">", "<", ">=", "<=", "in", "not in"],
             "HTML Editor": ["Between", "Timespan", ">", "<", ">=", "<=", "in", "not in"],
             "Markdown Editor": ["Between", "Timespan", ">", "<", ">=", "<=", "in", "not in"],
             Password: ["Between", "Timespan", ">", "<", ">=", "<=", "in", "not in"],
             Rating: ["like", "not like", "Between", "in", "not in", "Timespan"],
-            Float: ["like", "not like", "Between", "in", "not in", "Timespan"],
+            Float: ["like", "not like", "Between", "in", "not in", "Timespan"]
         };
 
         this.special_condition_labels = {
@@ -60,14 +60,14 @@ frappe.ui.Filter = class {
                 "<": __("Before"),
                 ">": __("After"),
                 "<=": __("On or Before"),
-                ">=": __("On or After"),
+                ">=": __("On or After")
             },
             Datetime: {
                 "<": __("Before"),
                 ">": __("After"),
                 "<=": __("On or Before"),
-                ">=": __("On or After"),
-            },
+                ">=": __("On or After")
+            }
         };
     }
 
@@ -89,8 +89,8 @@ frappe.ui.Filter = class {
     make() {
         this.filter_edit_area = $(
             frappe.render_template("edit_filter", {
-                conditions: this.conditions,
-            }),
+                conditions: this.conditions
+            })
         );
         this.parent && this.filter_edit_area.appendTo(this.parent.find(".filter-edit-area"));
         this.make_select();
@@ -107,7 +107,7 @@ frappe.ui.Filter = class {
             input_class: "input-xs",
             select: (doctype, fieldname) => {
                 this.set_field(doctype, fieldname);
-            },
+            }
         });
 
         if (this.fieldname) {
@@ -134,10 +134,7 @@ frappe.ui.Filter = class {
                 this.filter_edit_area.find(".filter-description").empty();
             }
 
-            if (
-                ["Select", "MultiSelect"].includes(this.field.df.fieldtype) &&
-                ["in", "not in"].includes(condition)
-            ) {
+            if (["Select", "MultiSelect"].includes(this.field.df.fieldtype) && ["in", "not in"].includes(condition)) {
                 fieldtype = "MultiSelect";
             }
 
@@ -264,7 +261,7 @@ frappe.ui.Filter = class {
                 const filter_value = this.filter_list.get_filter_value(field_name);
                 args[field_name] = filter_value;
             }
-            let setup_field = (field) => {
+            let setup_field = field => {
                 df.fieldtype = field.fieldtype;
                 df.options = field.options;
                 df.fieldname = fieldname;
@@ -274,7 +271,7 @@ frappe.ui.Filter = class {
                 let field = this.filters_config[condition].data;
                 setup_field(field);
             } else {
-                frappe.xcall(this.filters_config[condition].get_field, args).then((field) => {
+                frappe.xcall(this.filters_config[condition].get_field, args).then(field => {
                     this.filters_config[condition].data = field;
                     setup_field(field);
                 });
@@ -294,7 +291,7 @@ frappe.ui.Filter = class {
         let f = frappe.ui.form.make_control({
             df: df,
             parent: field_area,
-            only_input: true,
+            only_input: true
         });
         f.refresh();
 
@@ -313,7 +310,7 @@ frappe.ui.Filter = class {
         // run on enter
         $(this.field.wrapper)
             .find(":input")
-            .keydown((e) => {
+            .keydown(e => {
                 if (e.which == 13 && this.field.df.fieldtype !== "MultiSelect") {
                     this.on_change();
                 }
@@ -326,7 +323,7 @@ frappe.ui.Filter = class {
             this.field.df.fieldname,
             this.get_condition(),
             this.get_selected_value(),
-            this.hidden,
+            this.hidden
         ];
     }
 
@@ -359,7 +356,7 @@ frappe.ui.Filter = class {
     make_tag() {
         if (!this.field) return;
         this.$filter_tag = this.get_filter_tag_element().insertAfter(
-            this.parent.find(".active-tag-filters .clear-filters"),
+            this.parent.find(".active-tag-filters .clear-filters")
         );
         this.set_filter_button_text();
         this.bind_tag();
@@ -380,10 +377,7 @@ frappe.ui.Filter = class {
     }
 
     get_filter_button_text() {
-        let value = this.utils.get_formatted_value(
-            this.field,
-            this.get_selected_label() || this.get_selected_value(),
-        );
+        let value = this.utils.get_formatted_value(this.field, this.get_selected_label() || this.get_selected_value());
         return `${__(this.field.df.label)} ${__(this.get_condition())} ${__(value)}`;
     }
 
@@ -401,9 +395,7 @@ frappe.ui.Filter = class {
 
     hide_invalid_conditions(fieldtype, original_type) {
         let invalid_conditions =
-            this.invalid_condition_map[original_type] ||
-            this.invalid_condition_map[fieldtype] ||
-            [];
+            this.invalid_condition_map[original_type] || this.invalid_condition_map[fieldtype] || [];
 
         for (let condition of this.conditions) {
             this.filter_edit_area
@@ -417,24 +409,17 @@ frappe.ui.Filter = class {
         for (let condition of this.conditions) {
             let special_label = special_conditions[condition[0]];
             if (special_label) {
-                this.filter_edit_area
-                    .find(`.condition option[value="${condition[0]}"]`)
-                    .text(special_label);
+                this.filter_edit_area.find(`.condition option[value="${condition[0]}"]`).text(special_label);
             } else {
-                this.filter_edit_area
-                    .find(`.condition option[value="${condition[0]}"]`)
-                    .text(__(condition[1]));
+                this.filter_edit_area.find(`.condition option[value="${condition[0]}"]`).text(__(condition[1]));
             }
         }
     }
 
     toggle_nested_set_conditions(df) {
-        let show_condition =
-            df.fieldtype === "Link" && frappe.boot.nested_set_doctypes.includes(df.options);
-        this.nested_set_conditions.forEach((condition) => {
-            this.filter_edit_area
-                .find(`.condition option[value="${condition[0]}"]`)
-                .toggle(show_condition);
+        let show_condition = df.fieldtype === "Link" && frappe.boot.nested_set_doctypes.includes(df.options);
+        this.nested_set_conditions.forEach(condition => {
+            this.filter_edit_area.find(`.condition option[value="${condition[0]}"]`).toggle(show_condition);
         });
     }
 };
@@ -479,7 +464,7 @@ frappe.ui.filter_utils = {
             }
         } else if (["in", "not in"].includes(condition)) {
             if (val) {
-                val = val.split(",").map((v) => strip(v));
+                val = val.split(",").map(v => strip(v));
             }
         } else if (frappe.boot.additional_filters_config[condition]) {
             val = field.value || val;
@@ -530,13 +515,13 @@ frappe.ui.filter_utils = {
             df.options = [
                 { value: 0, label: __("Draft") },
                 { value: 1, label: __("Submitted") },
-                { value: 2, label: __("Cancelled") },
+                { value: 2, label: __("Cancelled") }
             ];
         } else if (df.fieldtype == "Check") {
             df.fieldtype = "Select";
             df.options = [
                 { label: __("Yes", null, "Checkbox is checked"), value: "Yes" },
-                { label: __("No", null, "Checkbox is not checked"), value: "No" },
+                { label: __("No", null, "Checkbox is not checked"), value: "No" }
             ];
         } else if (
             [
@@ -556,7 +541,7 @@ frappe.ui.filter_utils = {
                 "Dynamic Link",
                 "Read Only",
                 "Assign",
-                "Color",
+                "Color"
             ].indexOf(df.fieldtype) != -1
         ) {
             df.fieldtype = "Data";
@@ -569,7 +554,7 @@ frappe.ui.filter_utils = {
                 "descendants of (inclusive)",
                 "ancestors of",
                 "not descendants of",
-                "not ancestors of",
+                "not ancestors of"
             ].indexOf(condition) == -1
         ) {
             df.fieldtype = "Data";
@@ -580,25 +565,15 @@ frappe.ui.filter_utils = {
         if (condition == "Between" && (df.fieldtype == "Date" || df.fieldtype == "Datetime")) {
             df.fieldtype = "DateRange";
         }
-        if (
-            condition == "Timespan" &&
-            ["Date", "Datetime", "DateRange", "Select"].includes(df.fieldtype)
-        ) {
+        if (condition == "Timespan" && ["Date", "Datetime", "DateRange", "Select"].includes(df.fieldtype)) {
             df.fieldtype = "Select";
-            df.options = this.get_timespan_options([
-                "Last",
-                "Yesterday",
-                "Today",
-                "Tomorrow",
-                "This",
-                "Next",
-            ]);
+            df.options = this.get_timespan_options(["Last", "Yesterday", "Today", "Tomorrow", "This", "Next"]);
         }
         if (condition === "is") {
             df.fieldtype = "Select";
             df.options = [
                 { label: __("Set", null, "Field value is set"), value: "set" },
-                { label: __("Not Set", null, "Field value is not set"), value: "not set" },
+                { label: __("Not Set", null, "Field value is not set"), value: "not set" }
             ];
         }
         return;
@@ -608,24 +583,24 @@ frappe.ui.filter_utils = {
         const period_map = {
             Last: ["7 Days", "14 Days", "30 Days", "Week", "Month", "Quarter", "6 months", "Year"],
             This: ["Week", "Month", "Quarter", "Year"],
-            Next: ["7 Days", "14 Days", "30 Days", "Week", "Month", "Quarter", "6 months", "Year"],
+            Next: ["7 Days", "14 Days", "30 Days", "Week", "Month", "Quarter", "6 months", "Year"]
         };
         let options = [];
-        periods.forEach((period) => {
+        periods.forEach(period => {
             if (period_map[period]) {
-                period_map[period].forEach((p) => {
+                period_map[period].forEach(p => {
                     options.push({
                         label: `${period} ${p}`,
-                        value: `${period.toLowerCase()} ${p.toLowerCase()}`,
+                        value: `${period.toLowerCase()} ${p.toLowerCase()}`
                     });
                 });
             } else {
                 options.push({
                     label: __(period),
-                    value: `${period.toLowerCase()}`,
+                    value: `${period.toLowerCase()}`
                 });
             }
         });
         return options;
-    },
+    }
 };

@@ -11,7 +11,7 @@ frappe.ui.form.Share = class Share {
     }
     render_sidebar() {
         const shared = this.shared || this.frm.get_docinfo().shared;
-        const shared_users = shared.filter(Boolean).map((s) => s.user);
+        const shared_users = shared.filter(Boolean).map(s => s.user);
 
         if (this.frm.is_new()) {
             this.parent.find(".share-doc-btn").hide();
@@ -42,7 +42,7 @@ frappe.ui.form.Share = class Share {
     show() {
         var me = this;
         var d = new frappe.ui.Dialog({
-            title: __("Share {0} with", [this.frm.doc.id]),
+            title: __("Share {0} with", [this.frm.doc.id])
         });
 
         this.dialog = d;
@@ -54,11 +54,11 @@ frappe.ui.form.Share = class Share {
             method: "frappe.share.get_users",
             args: {
                 doctype: this.frm.doctype,
-                id: this.frm.doc.id,
+                id: this.frm.doc.id
             },
             callback: function (r) {
                 me.render_shared(r.message || []);
-            },
+            }
         });
 
         d.onhide = function () {
@@ -85,8 +85,8 @@ frappe.ui.form.Share = class Share {
             frappe.render_template("set_sharing", {
                 frm: this.frm,
                 shared: this.shared,
-                everyone: everyone,
-            }),
+                everyone: everyone
+            })
         ).appendTo(d.body);
 
         if (frappe.model.can_share(null, this.frm)) {
@@ -109,11 +109,11 @@ frappe.ui.form.Share = class Share {
                 options: "User",
                 filters: {
                     user_type: "System User",
-                    id: ["!=", frappe.session.user],
-                },
+                    id: ["!=", frappe.session.user]
+                }
             },
             only_input: true,
-            render_input: true,
+            render_input: true
         });
     }
     add_share_button() {
@@ -136,7 +136,7 @@ frappe.ui.form.Share = class Share {
                         write: $(d.body).find(".add-share-write").prop("checked") ? 1 : 0,
                         submit: $(d.body).find(".add-share-submit").prop("checked") ? 1 : 0,
                         share: $(d.body).find(".add-share-share").prop("checked") ? 1 : 0,
-                        notify: 1,
+                        notify: 1
                     },
                     btn: this,
                     callback: function (r) {
@@ -150,7 +150,7 @@ frappe.ui.form.Share = class Share {
                         me.shared.push(r.message);
                         me.render_shared();
                         me.frm.shared.refresh();
-                    },
+                    }
                 });
             });
     }
@@ -173,7 +173,7 @@ frappe.ui.form.Share = class Share {
                         user: user,
                         permission_to: property,
                         value: value,
-                        everyone: everyone,
+                        everyone: everyone
                     },
                     callback: function (r) {
                         var found = null;
@@ -197,7 +197,7 @@ frappe.ui.form.Share = class Share {
                         me.dirty = true;
                         me.render_shared();
                         me.frm.shared.refresh();
-                    },
+                    }
                 });
             });
     }

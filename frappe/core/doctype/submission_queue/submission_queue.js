@@ -12,9 +12,9 @@ frappe.ui.form.on("Submission Queue", {
 					and could lead to non-ideal conditions.`,
                     () => {
                         frm.call("unlock_doc");
-                    },
+                    }
                 );
             });
         }
-    },
+    }
 });

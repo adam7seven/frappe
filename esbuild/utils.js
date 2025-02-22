@@ -27,7 +27,7 @@ const bundle_map = app_list.reduce((out, app) => {
     const public_js_path = public_js_paths[app];
     if (fs.existsSync(public_js_path)) {
         const all_files = fs.readdirSync(public_js_path);
-        const js_files = all_files.filter((file) => file.endsWith(".js"));
+        const js_files = all_files.filter(file => file.endsWith(".js"));
 
         for (let js_file of js_files) {
             const filename = path.basename(js_file).split(".")[0];
@@ -38,9 +38,9 @@ const bundle_map = app_list.reduce((out, app) => {
     return out;
 }, {});
 
-const get_public_path = (app) => public_paths[app];
+const get_public_path = app => public_paths[app];
 
-const get_build_json_path = (app) => path.resolve(get_public_path(app), "build.json");
+const get_build_json_path = app => path.resolve(get_public_path(app), "build.json");
 
 function get_build_json(app) {
     try {
@@ -59,7 +59,7 @@ function delete_file(path) {
 
 function run_serially(tasks) {
     let result = Promise.resolve();
-    tasks.forEach((task) => {
+    tasks.forEach(task => {
         if (task) {
             result = result.then ? result.then(task) : Promise.resolve();
         }
@@ -70,7 +70,7 @@ function run_serially(tasks) {
 function get_apps_list() {
     return fs
         .readFileSync(path.resolve(sites_path, "apps.txt"), {
-            encoding: "utf-8",
+            encoding: "utf-8"
         })
         .split("\n")
         .filter(Boolean);
@@ -140,5 +140,5 @@ module.exports = {
     log,
     log_warn,
     log_error,
-    get_redis_subscriber,
+    get_redis_subscriber
 };

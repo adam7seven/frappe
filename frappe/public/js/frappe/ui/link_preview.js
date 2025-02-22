@@ -7,7 +7,7 @@ frappe.ui.LinkPreview = class {
     }
 
     setup_events() {
-        $(document.body).on("mouseover", this.LINK_CLASSES, (e) => {
+        $(document.body).on("mouseover", this.LINK_CLASSES, e => {
             this.link_hovered = true;
             this.element = $(e.currentTarget);
             this.is_link = this.element.get(0).tagName.toLowerCase() === "a";
@@ -29,10 +29,7 @@ frappe.ui.LinkPreview = class {
             this.id = frappe.utils.unescape_html(this.element.attr("data-name"));
             this.href = this.element.attr("href");
         } else {
-            this.href = this.element
-                .parents(".control-input-wrapper")
-                .find(".control-value a")
-                .attr("href");
+            this.href = this.element.parents(".control-input-wrapper").find(".control-value a").attr("href");
             // input
             this.doctype = this.element.attr("data-target");
             this.id = this.element.val();
@@ -67,7 +64,7 @@ frappe.ui.LinkPreview = class {
             return;
         }
 
-        this.get_preview_data().then((preview_data) => {
+        this.get_preview_data().then(preview_data => {
             if (preview_data) {
                 if (this.popover_timeout) {
                     clearTimeout(this.popover_timeout);
@@ -127,13 +124,13 @@ frappe.ui.LinkPreview = class {
     }
 
     clear_all_popovers() {
-        this.popovers_list.forEach(($el) => $el.hide());
+        this.popovers_list.forEach($el => $el.hide());
     }
 
     get_preview_data() {
         return frappe.xcall("frappe.desk.link_preview.get_preview_data", {
             doctype: this.doctype,
-            docid: this.id,
+            docid: this.id
         });
     }
 
@@ -149,10 +146,10 @@ frappe.ui.LinkPreview = class {
 				</div>
 			`,
             html: true,
-            sanitizeFn: (content) => content,
+            sanitizeFn: content => content,
             content: popover_content,
             trigger: "manual",
-            placement: "top",
+            placement: "top"
         });
 
         const $popover = $(this.element.data("bs.popover").tip);
@@ -205,11 +202,7 @@ frappe.ui.LinkPreview = class {
     }
 
     get_image_html(preview_data) {
-        let avatar_html = frappe.get_avatar(
-            "avatar-medium",
-            preview_data.preview_title,
-            preview_data.preview_image,
-        );
+        let avatar_html = frappe.get_avatar("avatar-medium", preview_data.preview_title, preview_data.preview_image);
 
         return `<div class="preview-image">
 			${avatar_html}
@@ -219,7 +212,7 @@ frappe.ui.LinkPreview = class {
     get_content_html(preview_data) {
         let content_html = "";
 
-        Object.keys(preview_data).forEach((key) => {
+        Object.keys(preview_data).forEach(key => {
             if (!["preview_image", "preview_title", "id"].includes(key)) {
                 let value = frappe.ellipsis(preview_data[key], 280);
                 let label = key;

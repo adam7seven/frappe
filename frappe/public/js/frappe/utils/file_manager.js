@@ -25,12 +25,12 @@ frappe.file_manager = (function () {
                     args: {
                         file_list: files_to_move,
                         new_parent: new_folder,
-                        old_parent: old_folder,
+                        old_parent: old_folder
                     },
-                    callback: (r) => {
+                    callback: r => {
                         reset();
                         resolve(r);
-                    },
+                    }
                 })
                 .fail(reject);
         });
@@ -53,6 +53,6 @@ frappe.file_manager = (function () {
         },
         get files_to_move() {
             return files_to_move;
-        },
+        }
     };
 })();

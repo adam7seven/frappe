@@ -4,7 +4,7 @@ export function create_layout(fields) {
     let store = useStore();
 
     let layout = {
-        tabs: [],
+        tabs: []
     };
 
     let tab = null,
@@ -114,9 +114,9 @@ export async function get_table_columns(df, child_doctype) {
     let total_colsize = 1;
     table_columns.push([
         {
-            label: __("No.", null, "Title of the 'row number' column"),
+            label: __("No.", null, "Title of the 'row number' column")
         },
-        1,
+        1
     ]);
     for (let tf of table_fields) {
         if (!frappe.model.layout_fields.includes(tf.fieldtype) && tf.in_list_view && tf.label) {
@@ -136,9 +136,9 @@ export async function get_table_columns(df, child_doctype) {
                     {
                         label: tf.label,
                         fieldname: tf.fieldname,
-                        fieldtype: tf.fieldtype,
+                        fieldtype: tf.fieldtype
                     },
-                    colsize,
+                    colsize
                 ]);
             }
         }
@@ -159,11 +159,7 @@ export async function get_table_columns(df, child_doctype) {
                 var _df = table_columns[i][0];
                 var colsize = table_columns[i][1];
                 if (colsize > 1 && colsize < 11 && frappe.model.is_non_std_field(_df.fieldname)) {
-                    if (
-                        passes < 3 &&
-                        ["Int", "Currency", "Float", "Check", "Percent"].indexOf(_df.fieldtype) !==
-                            -1
-                    ) {
+                    if (passes < 3 && ["Int", "Currency", "Float", "Check", "Percent"].indexOf(_df.fieldtype) !== -1) {
                         // don't increase/decrease col size of these fields in first 3 passes
                         continue;
                     }
@@ -240,9 +236,9 @@ export function section_boilerplate() {
         columns: [
             {
                 df: store.get_df("Column Break"),
-                fields: [],
-            },
-        ],
+                fields: []
+            }
+        ]
     };
 }
 
@@ -257,7 +253,7 @@ export function move_children_to_parent(props, parent, child, current_container)
         // move current children and children after that to a new column
         let new_parent = {
             df: store.get_df(name + " Break"),
-            [child + "s"]: children.splice(index),
+            [child + "s"]: children.splice(index)
         };
 
         // add new parent after current parent
@@ -273,7 +269,7 @@ export function move_children_to_parent(props, parent, child, current_container)
 }
 
 export function scrub_field_names(fields) {
-    fields.forEach((d) => {
+    fields.forEach(d => {
         if (d.fieldtype) {
             if (!d.fieldname) {
                 if (d.label) {
@@ -292,10 +288,7 @@ export function scrub_field_names(fields) {
                         d.fieldname = d.fieldname + "_tab";
                     }
                 } else {
-                    d.fieldname =
-                        d.fieldtype.toLowerCase().replaceAll(" ", "_") +
-                        "_" +
-                        frappe.utils.get_random(4);
+                    d.fieldname = d.fieldtype.toLowerCase().replaceAll(" ", "_") + "_" + frappe.utils.get_random(4);
                 }
             } else {
                 if (frappe.model.restricted_fields.includes(d.fieldname)) {
@@ -329,7 +322,7 @@ export function confirm_dialog(
     primary_action,
     primary_action_label,
     secondary_action,
-    secondary_action_label,
+    secondary_action_label
 ) {
     let d = new frappe.ui.Dialog({
         title: title,
@@ -342,7 +335,7 @@ export function confirm_dialog(
         secondary_action: () => {
             secondary_action && secondary_action();
             d.hide();
-        },
+        }
     });
     d.show();
     d.set_message(message);

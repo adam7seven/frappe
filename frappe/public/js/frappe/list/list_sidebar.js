@@ -28,13 +28,10 @@ frappe.views.ListSidebar = class ListSidebar {
         // used to trigger custom scripts
         $(document).trigger("list_sidebar_setup");
 
-        if (
-            this.list_view.list_view_settings &&
-            this.list_view.list_view_settings.disable_sidebar_stats
-        ) {
+        if (this.list_view.list_view_settings && this.list_view.list_view_settings.disable_sidebar_stats) {
             this.sidebar.find(".list-tags").remove();
         } else {
-            this.sidebar.find(".list-stats").on("show.bs.dropdown", (e) => {
+            this.sidebar.find(".list-stats").on("show.bs.dropdown", e => {
                 this.reload_stats();
             });
         }
@@ -95,11 +92,9 @@ frappe.views.ListSidebar = class ListSidebar {
 
         if (
             this.list_view.settings.get_coords_method ||
-            (this.list_view.meta.fields.find((i) => i.fieldname === "latitude") &&
-                this.list_view.meta.fields.find((i) => i.fieldname === "longitude")) ||
-            this.list_view.meta.fields.find(
-                (i) => i.fieldname === "location" && i.fieldtype == "Geolocation",
-            )
+            (this.list_view.meta.fields.find(i => i.fieldname === "latitude") &&
+                this.list_view.meta.fields.find(i => i.fieldname === "longitude")) ||
+            this.list_view.meta.fields.find(i => i.fieldname === "location" && i.fieldtype == "Geolocation")
         ) {
             this.sidebar.find('.list-link[data-view="Map"]').removeClass("hide");
             show_list_link = true;
@@ -121,9 +116,7 @@ frappe.views.ListSidebar = class ListSidebar {
             $.each(reports, function (id, r) {
                 if (!r.ref_doctype || r.ref_doctype == me.doctype) {
                     var report_type =
-                        r.report_type === "Report Builder"
-                            ? `List/${r.ref_doctype}/Report`
-                            : "query-report";
+                        r.report_type === "Report Builder" ? `List/${r.ref_doctype}/Report` : "query-report";
 
                     var route = r.route || report_type + "/" + (r.title || r.id);
 
@@ -136,9 +129,7 @@ frappe.views.ListSidebar = class ListSidebar {
                             divider = true;
                         }
 
-                        $(
-                            '<li><a href="#' + route + '">' + __(r.title || r.id) + "</a></li>",
-                        ).appendTo(dropdown);
+                        $('<li><a href="#' + route + '">' + __(r.title || r.id) + "</a></li>").appendTo(dropdown);
                     }
                 }
             });
@@ -150,10 +141,7 @@ frappe.views.ListSidebar = class ListSidebar {
         }
 
         // Sort reports alphabetically
-        var reports =
-            Object.values(frappe.boot.user.all_reports).sort((a, b) =>
-                a.title.localeCompare(b.title),
-            ) || [];
+        var reports = Object.values(frappe.boot.user.all_reports).sort((a, b) => a.title.localeCompare(b.title)) || [];
 
         // from specially tagged reports
         add_reports(reports);
@@ -163,7 +151,7 @@ frappe.views.ListSidebar = class ListSidebar {
         this.list_filter = new ListFilter({
             wrapper: this.page.sidebar.find(".list-filters"),
             doctype: this.doctype,
-            list_view: this.list_view,
+            list_view: this.list_view
         });
     }
 
@@ -183,7 +171,7 @@ frappe.views.ListSidebar = class ListSidebar {
             doctype: this.doctype,
             sidebar: this,
             list_view: this.list_view,
-            page: this.page,
+            page: this.page
         });
     }
 
@@ -200,17 +188,14 @@ frappe.views.ListSidebar = class ListSidebar {
                 stats: me.stats,
                 doctype: me.doctype,
                 // wait for list filter area to be generated before getting filters, or fallback to default filters
-                filters:
-                    (me.list_view.filter_area
-                        ? me.list_view.get_filters_for_args()
-                        : me.default_filters) || [],
+                filters: (me.list_view.filter_area ? me.list_view.get_filters_for_args() : me.default_filters) || []
             },
             callback: function (r) {
                 let stats = (r.message.stats || {})["_user_tags"] || [];
                 me.render_stat(stats);
                 let stats_dropdown = me.sidebar.find(".list-stats-dropdown");
                 frappe.utils.setup_search(stats_dropdown, ".stat-link", ".stat-label");
-            },
+            }
         });
     }
 
@@ -225,27 +210,23 @@ frappe.views.ListSidebar = class ListSidebar {
     render_stat(stats) {
         let args = {
             stats: stats,
-            label: __("Tags"),
+            label: __("Tags")
         };
 
-        let tag_list = $(frappe.render_template("list_sidebar_stat", args)).on(
-            "click",
-            ".stat-link",
-            (e) => {
-                let fieldname = $(e.currentTarget).attr("data-field");
-                let label = $(e.currentTarget).attr("data-label");
-                let condition = "like";
-                let existing = this.list_view.filter_area.filter_list.get_filter(fieldname);
-                if (existing) {
-                    existing.remove();
-                }
-                if (label == "No Tags") {
-                    label = "%,%";
-                    condition = "not like";
-                }
-                this.list_view.filter_area.add(this.doctype, fieldname, condition, label);
-            },
-        );
+        let tag_list = $(frappe.render_template("list_sidebar_stat", args)).on("click", ".stat-link", e => {
+            let fieldname = $(e.currentTarget).attr("data-field");
+            let label = $(e.currentTarget).attr("data-label");
+            let condition = "like";
+            let existing = this.list_view.filter_area.filter_list.get_filter(fieldname);
+            if (existing) {
+                existing.remove();
+            }
+            if (label == "No Tags") {
+                label = "%,%";
+                condition = "not like";
+            }
+            this.list_view.filter_area.add(this.doctype, fieldname, condition, label);
+        });
 
         this.sidebar.find(".list-stats-dropdown .stat-result").html(tag_list);
     }
