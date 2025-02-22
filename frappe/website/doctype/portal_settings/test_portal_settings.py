@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestPortalSettings(UnitTestCase):
-	"""
-	Unit tests for PortalSettings.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for PortalSettings.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestPortalSettings(IntegrationTestCase):
-	pass
+    pass

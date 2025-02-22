@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestOnboardingPermission(UnitTestCase):
-	"""
-	Unit tests for OnboardingPermission.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for OnboardingPermission.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestOnboardingPermission(IntegrationTestCase):
-	pass
+    pass

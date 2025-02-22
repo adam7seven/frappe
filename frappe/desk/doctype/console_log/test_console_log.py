@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestConsoleLog(UnitTestCase):
-	"""
-	Unit tests for ConsoleLog.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for ConsoleLog.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestConsoleLog(IntegrationTestCase):
-	pass
+    pass

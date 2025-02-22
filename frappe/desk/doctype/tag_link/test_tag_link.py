@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestTagLink(UnitTestCase):
-	"""
-	Unit tests for TagLink.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for TagLink.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestTagLink(IntegrationTestCase):
-	pass
+    pass

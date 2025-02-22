@@ -5,8 +5,8 @@ libraries.
 """
 
 from frappe.deprecation_dumpster import (
-	_old_deprecated as deprecated,
+    _old_deprecated as deprecated,
 )
 from frappe.deprecation_dumpster import (
-	_old_deprecation_warning as deprecation_warning,
+    _old_deprecation_warning as deprecation_warning,
 )

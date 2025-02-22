@@ -12,18 +12,18 @@ IGNORE_TEST_RECORD_DEPENDENCIES = []  # eg. ["User"]
 
 
 class UnitTestSchedulerEvent(UnitTestCase):
-	"""
-	Unit tests for SchedulerEvent.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for SchedulerEvent.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class IntegrationTestSchedulerEvent(IntegrationTestCase):
-	"""
-	Integration tests for SchedulerEvent.
-	Use this class for testing interactions between multiple components.
-	"""
+    """
+    Integration tests for SchedulerEvent.
+    Use this class for testing interactions between multiple components.
+    """
 
-	pass
+    pass

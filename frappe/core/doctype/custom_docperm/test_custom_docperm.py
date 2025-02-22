@@ -4,13 +4,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestCustomDocperm(UnitTestCase):
-	"""
-	Unit tests for CustomDocperm.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for CustomDocperm.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestCustomDocPerm(IntegrationTestCase):
-	pass
+    pass

@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestPrintStyle(UnitTestCase):
-	"""
-	Unit tests for PrintStyle.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for PrintStyle.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestPrintStyle(IntegrationTestCase):
-	pass
+    pass

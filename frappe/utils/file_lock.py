@@ -19,56 +19,56 @@ LOCKS_DIR = "locks"
 
 
 class LockTimeoutError(Exception):
-	pass
+    pass
 
 
 def create_lock(name):
-	"""Creates a file in the /locks folder by the given name.
+    """Creates a file in the /locks folder by the given name.
 
-	Note: This is a "weak lock" and is prone to race conditions. Do not use this lock for small
-	sections of code that execute immediately.
+    Note: This is a "weak lock" and is prone to race conditions. Do not use this lock for small
+    sections of code that execute immediately.
 
-	This is primarily use for locking documents for background submission.
-	"""
-	lock_path = get_lock_path(name)
-	if not check_lock(lock_path):
-		return touch_file(lock_path)
-	else:
-		return False
+    This is primarily use for locking documents for background submission.
+    """
+    lock_path = get_lock_path(name)
+    if not check_lock(lock_path):
+        return touch_file(lock_path)
+    else:
+        return False
 
 
 def lock_exists(name):
-	"""Return True if lock of the given name exists."""
-	return os.path.exists(get_lock_path(name))
+    """Return True if lock of the given name exists."""
+    return os.path.exists(get_lock_path(name))
 
 
 def lock_age(name) -> float:
-	"""Return time in seconds since lock was created."""
-	return time() - Path(get_lock_path(name)).stat().st_mtime
+    """Return time in seconds since lock was created."""
+    return time() - Path(get_lock_path(name)).stat().st_mtime
 
 
 def check_lock(path, timeout=600):
-	if not os.path.exists(path):
-		return False
-	if time() - os.path.getmtime(path) > timeout:
-		raise LockTimeoutError(path)
-	return True
+    if not os.path.exists(path):
+        return False
+    if time() - os.path.getmtime(path) > timeout:
+        raise LockTimeoutError(path)
+    return True
 
 
 def delete_lock(name):
-	lock_path = get_lock_path(name)
-	try:
-		os.remove(lock_path)
-	except OSError:
-		pass
-	return True
+    lock_path = get_lock_path(name)
+    try:
+        os.remove(lock_path)
+    except OSError:
+        pass
+    return True
 
 
 def get_lock_path(name):
-	return get_site_path(LOCKS_DIR, f"{name.lower()}.lock")
+    return get_site_path(LOCKS_DIR, f"{name.lower()}.lock")
 
 
 def release_document_locks():
-	"""Unlocks all documents that were locked by the current context."""
-	for doc in frappe.local.locked_documents:
-		doc.unlock()
+    """Unlocks all documents that were locked by the current context."""
+    for doc in frappe.local.locked_documents:
+        doc.unlock()

@@ -2,15 +2,15 @@ import frappe
 
 
 class MaxFileSizeReachedError(frappe.ValidationError):
-	pass
+    pass
 
 
 class FolderNotEmpty(frappe.ValidationError):
-	pass
+    pass
 
 
 class FileTypeNotAllowed(frappe.ValidationError):
-	pass
+    pass
 
 
 from frappe.exceptions import *

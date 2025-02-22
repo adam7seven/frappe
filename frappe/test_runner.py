@@ -9,33 +9,33 @@ DO NOT ADD ANYTHING!
 """
 
 from frappe.deprecation_dumpster import (
-	test_runner_add_to_test_record_log as add_to_test_record_log,
+    test_runner_add_to_test_record_log as add_to_test_record_log,
 )
 from frappe.deprecation_dumpster import (
-	test_runner_get_dependencies as get_dependencies,
+    test_runner_get_dependencies as get_dependencies,
 )
 from frappe.deprecation_dumpster import (
-	test_runner_get_modules as get_modules,
+    test_runner_get_modules as get_modules,
 )
 from frappe.deprecation_dumpster import (
-	test_runner_get_test_record_log as get_test_record_log,
+    test_runner_get_test_record_log as get_test_record_log,
 )
 from frappe.deprecation_dumpster import (
-	test_runner_main as main,
+    test_runner_main as main,
 )
 from frappe.deprecation_dumpster import (
-	test_runner_make_test_objects as make_test_objects,
+    test_runner_make_test_objects as make_test_objects,
 )
 from frappe.deprecation_dumpster import (
-	test_runner_make_test_records as make_test_records,
+    test_runner_make_test_records as make_test_records,
 )
 from frappe.deprecation_dumpster import (
-	test_runner_make_test_records_for_doctype as make_test_records_for_doctype,
+    test_runner_make_test_records_for_doctype as make_test_records_for_doctype,
 )
 from frappe.deprecation_dumpster import (
-	test_runner_print_mandatory_fields as print_mandatory_fields,
+    test_runner_print_mandatory_fields as print_mandatory_fields,
 )
 from frappe.deprecation_dumpster import (
-	test_xmlrunner_wrapper as xml_runner_wrapper,
+    test_xmlrunner_wrapper as xml_runner_wrapper,
 )
 from frappe.testing.result import SLOW_TEST_THRESHOLD

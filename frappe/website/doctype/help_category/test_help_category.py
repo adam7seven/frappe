@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestHelpCategory(UnitTestCase):
-	"""
-	Unit tests for HelpCategory.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for HelpCategory.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestHelpCategory(IntegrationTestCase):
-	pass
+    pass

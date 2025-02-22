@@ -4,13 +4,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestLanguage(UnitTestCase):
-	"""
-	Unit tests for Language.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for Language.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestLanguage(IntegrationTestCase):
-	pass
+    pass

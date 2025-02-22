@@ -4,13 +4,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestEmailTemplate(UnitTestCase):
-	"""
-	Unit tests for EmailTemplate.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for EmailTemplate.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestEmailTemplate(IntegrationTestCase):
-	pass
+    pass

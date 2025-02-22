@@ -9,37 +9,37 @@ OLD_PARENT = "__default"
 
 
 def execute():
-	table = frappe.qb.DocType(DOCTYPE)
+    table = frappe.qb.DocType(DOCTYPE)
 
-	# set parent for `*_otplogin`
-	(
-		frappe.qb.update(table)
-		.set(table.parent, PARENT_FOR_DEFAULTS)
-		.where(table.parent == OLD_PARENT)
-		.where(table.defkey.like("%_otplogin"))
-	).run()
+    # set parent for `*_otplogin`
+    (
+        frappe.qb.update(table)
+        .set(table.parent, PARENT_FOR_DEFAULTS)
+        .where(table.parent == OLD_PARENT)
+        .where(table.defkey.like("%_otplogin"))
+    ).run()
 
-	# update records for `*_otpsecret`
-	secrets = {
-		key: value
-		for key, value in frappe.defaults.get_defaults_for(parent=OLD_PARENT).items()
-		if key.endswith("_otpsecret")
-	}
+    # update records for `*_otpsecret`
+    secrets = {
+        key: value
+        for key, value in frappe.defaults.get_defaults_for(parent=OLD_PARENT).items()
+        if key.endswith("_otpsecret")
+    }
 
-	if not secrets:
-		return
+    if not secrets:
+        return
 
-	defvalue_cases = frappe.qb.terms.Case()
+    defvalue_cases = frappe.qb.terms.Case()
 
-	for key, value in secrets.items():
-		defvalue_cases.when(table.defkey == key, encrypt(value))
+    for key, value in secrets.items():
+        defvalue_cases.when(table.defkey == key, encrypt(value))
 
-	(
-		frappe.qb.update(table)
-		.set(table.parent, PARENT_FOR_DEFAULTS)
-		.set(table.defvalue, defvalue_cases)
-		.where(table.parent == OLD_PARENT)
-		.where(table.defkey.like("%_otpsecret"))
-	).run()
+    (
+        frappe.qb.update(table)
+        .set(table.parent, PARENT_FOR_DEFAULTS)
+        .set(table.defvalue, defvalue_cases)
+        .where(table.parent == OLD_PARENT)
+        .where(table.defkey.like("%_otpsecret"))
+    ).run()
 
-	clear_defaults_cache()
+    clear_defaults_cache()

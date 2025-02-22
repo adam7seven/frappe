@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestOauthClient(UnitTestCase):
-	"""
-	Unit tests for OauthClient.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for OauthClient.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestOAuthClient(IntegrationTestCase):
-	pass
+    pass

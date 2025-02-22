@@ -4,13 +4,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestModuleDef(UnitTestCase):
-	"""
-	Unit tests for ModuleDef.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for ModuleDef.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestModuleDef(IntegrationTestCase):
-	pass
+    pass

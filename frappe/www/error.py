@@ -8,16 +8,18 @@ no_cache = 1
 
 
 def get_context(context):
-	if frappe.flags.in_migrate:
-		return
+    if frappe.flags.in_migrate:
+        return
 
-	if not context.title:
-		context.title = _("Server Error")
-	if not context.message:
-		context.message = _("There was an error building this page")
+    if not context.title:
+        context.title = _("Server Error")
+    if not context.message:
+        context.message = _("There was an error building this page")
 
-	return {
-		"error": frappe.get_traceback().replace("<", "&lt;").replace(">", "&gt;")
-		if is_traceback_allowed()
-		else ""
-	}
+    return {
+        "error": (
+            frappe.get_traceback().replace("<", "&lt;").replace(">", "&gt;")
+            if is_traceback_allowed()
+            else ""
+        )
+    }

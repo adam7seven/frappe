@@ -6,13 +6,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestPushNotificationSettings(UnitTestCase):
-	"""
-	Unit tests for PushNotificationSettings.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for PushNotificationSettings.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestPushNotificationSettings(IntegrationTestCase):
-	pass
+    pass

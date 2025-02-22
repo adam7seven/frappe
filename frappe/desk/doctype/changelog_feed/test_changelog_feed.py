@@ -6,13 +6,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestChangelogFeed(UnitTestCase):
-	"""
-	Unit tests for ChangelogFeed.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for ChangelogFeed.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestChangelogFeed(IntegrationTestCase):
-	pass
+    pass

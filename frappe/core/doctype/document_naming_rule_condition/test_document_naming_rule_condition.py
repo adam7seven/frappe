@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestDocumentNamingRuleCondition(UnitTestCase):
-	"""
-	Unit tests for DocumentNamingRuleCondition.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for DocumentNamingRuleCondition.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestDocumentNamingRuleCondition(IntegrationTestCase):
-	pass
+    pass

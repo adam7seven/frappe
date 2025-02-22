@@ -6,13 +6,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestDiscussionTopic(UnitTestCase):
-	"""
-	Unit tests for DiscussionTopic.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for DiscussionTopic.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestDiscussionTopic(IntegrationTestCase):
-	pass
+    pass

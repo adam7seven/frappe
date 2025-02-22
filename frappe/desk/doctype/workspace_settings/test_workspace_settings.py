@@ -6,13 +6,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestWorkspaceSettings(UnitTestCase):
-	"""
-	Unit tests for WorkspaceSettings.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for WorkspaceSettings.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestWorkspaceSettings(IntegrationTestCase):
-	pass
+    pass

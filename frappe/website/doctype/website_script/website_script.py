@@ -8,21 +8,21 @@ from frappe.model.document import Document
 
 
 class WebsiteScript(Document):
-	# begin: auto-generated types
-	# This code is auto-generated. Do not modify anything in this block.
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
 
-	from typing import TYPE_CHECKING
+    from typing import TYPE_CHECKING
 
-	if TYPE_CHECKING:
-		from frappe.types import DF
+    if TYPE_CHECKING:
+        from frappe.types import DF
 
-		javascript: DF.Code | None
-	# end: auto-generated types
+        javascript: DF.Code | None
+    # end: auto-generated types
 
-	def on_update(self):
-		"""clear cache"""
-		frappe.clear_cache(user="Guest")
+    def on_update(self):
+        """clear cache"""
+        frappe.clear_cache(user="Guest")
 
-		from frappe.website.utils import clear_cache
+        from frappe.website.utils import clear_cache
 
-		clear_cache()
+        clear_cache()

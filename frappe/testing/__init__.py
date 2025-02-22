@@ -43,18 +43,18 @@ logger = logging.getLogger(__name__)
 from frappe.utils.logger import create_handler as createFrappeFileHandler
 
 LOGGING_CONFIG = {
-	"version": 1,
-	"disable_existing_loggers": False,
-	"formatters": {},
-	"loggers": {
-		f"{__name__}": {
-			"handlers": [],  # only log to the frappe handler
-			"propagate": False,
-		},
-	},
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {},
+    "loggers": {
+        f"{__name__}": {
+            "handlers": [],  # only log to the frappe handler
+            "propagate": False,
+        },
+    },
 }
 
 logging.config.dictConfig(LOGGING_CONFIG)
 handlers = createFrappeFileHandler(__name__)
 for handler in handlers:
-	logger.addHandler(handler)
+    logger.addHandler(handler)

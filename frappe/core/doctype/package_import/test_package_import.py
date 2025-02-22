@@ -6,13 +6,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestPackageImport(UnitTestCase):
-	"""
-	Unit tests for PackageImport.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for PackageImport.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestPackageImport(IntegrationTestCase):
-	pass
+    pass

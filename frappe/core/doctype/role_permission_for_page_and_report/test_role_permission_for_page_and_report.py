@@ -6,13 +6,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestRolePermissionForPageAndReport(UnitTestCase):
-	"""
-	Unit tests for RolePermissionForPageAndReport.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for RolePermissionForPageAndReport.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestRolePermissionforPageandReport(IntegrationTestCase):
-	pass
+    pass

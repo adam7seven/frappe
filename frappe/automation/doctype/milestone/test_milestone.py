@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestMilestone(UnitTestCase):
-	"""
-	Unit tests for Milestone.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for Milestone.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestMilestone(IntegrationTestCase):
-	pass
+    pass

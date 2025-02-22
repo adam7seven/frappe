@@ -6,18 +6,18 @@ from frappe.model.document import Document
 
 
 class UTMCampaign(Document):
-	# begin: auto-generated types
-	# This code is auto-generated. Do not modify anything in this block.
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
 
-	from typing import TYPE_CHECKING
+    from typing import TYPE_CHECKING
 
-	if TYPE_CHECKING:
-		from frappe.types import DF
+    if TYPE_CHECKING:
+        from frappe.types import DF
 
-		campaign_description: DF.SmallText | None
-		slug: DF.Data | None
-	# end: auto-generated types
+        campaign_description: DF.SmallText | None
+        slug: DF.Data | None
+    # end: auto-generated types
 
-	def before_save(self):
-		if self.slug:
-			self.slug = frappe.utils.slug(self.slug)
+    def before_save(self):
+        if self.slug:
+            self.slug = frappe.utils.slug(self.slug)

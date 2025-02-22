@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestDoctypeLayout(UnitTestCase):
-	"""
-	Unit tests for DoctypeLayout.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for DoctypeLayout.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestDocTypeLayout(IntegrationTestCase):
-	pass
+    pass

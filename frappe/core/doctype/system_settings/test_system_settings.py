@@ -4,13 +4,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestSystemSettings(UnitTestCase):
-	"""
-	Unit tests for SystemSettings.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for SystemSettings.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestSystemSettings(IntegrationTestCase):
-	pass
+    pass

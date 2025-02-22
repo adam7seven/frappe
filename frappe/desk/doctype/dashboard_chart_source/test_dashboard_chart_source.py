@@ -4,13 +4,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestDashboardChartSource(UnitTestCase):
-	"""
-	Unit tests for DashboardChartSource.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for DashboardChartSource.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestDashboardChartSource(IntegrationTestCase):
-	pass
+    pass

@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestNumberCard(UnitTestCase):
-	"""
-	Unit tests for NumberCard.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for NumberCard.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestNumberCard(IntegrationTestCase):
-	pass
+    pass

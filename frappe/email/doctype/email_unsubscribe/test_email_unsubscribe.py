@@ -4,13 +4,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestEmailUnsubscribe(UnitTestCase):
-	"""
-	Unit tests for EmailUnsubscribe.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for EmailUnsubscribe.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestEmailUnsubscribe(IntegrationTestCase):
-	pass
+    pass

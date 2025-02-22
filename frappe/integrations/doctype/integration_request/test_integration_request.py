@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestIntegrationRequest(UnitTestCase):
-	"""
-	Unit tests for IntegrationRequest.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for IntegrationRequest.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestIntegrationRequest(IntegrationTestCase):
-	pass
+    pass

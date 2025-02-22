@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestOnboardingStep(UnitTestCase):
-	"""
-	Unit tests for OnboardingStep.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for OnboardingStep.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestOnboardingStep(IntegrationTestCase):
-	pass
+    pass
