@@ -4660,7 +4660,7 @@ msgid "Cannot change state of Cancelled Document. Transition row {0}"
 msgstr "Kan nie die status van gekanselleerde dokument verander nie. Oorgangsreël {0}"
 
 #: core/doctype/doctype/doctype.py:1104
-msgid "Cannot change to/from autoincrement autoname in Customize Form"
+msgid "Cannot change to/from autoincrement autoid in Customize Form"
 msgstr ""
 
 #: core/doctype/communication/communication.py:193
@@ -15868,7 +15868,7 @@ msgid "Invalid field name {0}"
 msgstr "Ongeldige veldnaam {0}"
 
 #: core/doctype/doctype/doctype.py:1048
-msgid "Invalid fieldname '{0}' in autoname"
+msgid "Invalid fieldname '{0}' in autoid"
 msgstr "Ongeldige veldnaam &#39;{0}&#39; in outoname"
 
 #: client.py:344

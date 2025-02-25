@@ -2796,8 +2796,8 @@ msgstr "خودکار"
 msgid "Auto Email Report"
 msgstr "گزارش خودکار ایمیل"
 
-#. Label of the autoname (Data) field in DocType 'DocType'
-#. Label of the autoname (Data) field in DocType 'Customize Form'
+#. Label of the autoid (Data) field in DocType 'DocType'
+#. Label of the autoid (Data) field in DocType 'Customize Form'
 #: frappe/core/doctype/doctype/doctype.json
 #: frappe/custom/doctype/customize_form/customize_form.json
 msgid "Auto Name"
@@ -4053,8 +4053,8 @@ msgid "Cannot change state of Cancelled Document. Transition row {0}"
 msgstr "نمی توان وضعیت سند لغو شده را تغییر داد. ردیف انتقال {0}"
 
 #: frappe/core/doctype/doctype/doctype.py:1155
-msgid "Cannot change to/from autoincrement autoname in Customize Form"
-msgstr "در سفارشی کردن فرم نمی توان به / از autoincrement autoname تغییر داد"
+msgid "Cannot change to/from autoincrement autoid in Customize Form"
+msgstr "در سفارشی کردن فرم نمی توان به / از autoincrement autoid تغییر داد"
 
 #: frappe/core/doctype/communication/communication.py:169
 msgid "Cannot create a {0} against a child document: {1}"
@@ -13284,7 +13284,7 @@ msgid "Invalid field name {0}"
 msgstr "نام فیلد نامعتبر {0}"
 
 #: frappe/core/doctype/doctype/doctype.py:1081
-msgid "Invalid fieldname '{0}' in autoname"
+msgid "Invalid fieldname '{0}' in autoid"
 msgstr "نام فیلد \"{0}\" در نام خودکار نامعتبر است"
 
 #: frappe/deprecation_dumpster.py:319

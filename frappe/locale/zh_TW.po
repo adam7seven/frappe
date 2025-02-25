@@ -4660,7 +4660,7 @@ msgid "Cannot change state of Cancelled Document. Transition row {0}"
 msgstr "不能改變註銷文件的狀態。"
 
 #: core/doctype/doctype/doctype.py:1104
-msgid "Cannot change to/from autoincrement autoname in Customize Form"
+msgid "Cannot change to/from autoincrement autoid in Customize Form"
 msgstr ""
 
 #: core/doctype/communication/communication.py:193
@@ -15868,7 +15868,7 @@ msgid "Invalid field name {0}"
 msgstr "字段名稱{0}無效"
 
 #: core/doctype/doctype/doctype.py:1048
-msgid "Invalid fieldname '{0}' in autoname"
+msgid "Invalid fieldname '{0}' in autoid"
 msgstr "在自動命名無效字段名“{0}”"
 
 #: client.py:344

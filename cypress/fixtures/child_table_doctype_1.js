@@ -1,8 +1,8 @@
 export default {
-	name: "Child Table Doctype 1",
+	id: "Child Table Doctype 1",
 	actions: [],
 	custom: 1,
-	autoname: "format: Test-{####}",
+	autoid: "format: Test-{####}",
 	creation: "2022-02-09 20:15:21.242213",
 	doctype: "DocType",
 	editable_grid: 1,

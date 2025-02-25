@@ -65,7 +65,7 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
 		this.input = this.$input.get(0);
 		this.has_input = true;
 		this.bind_change_event();
-		this.setup_autoname_check();
+		this.setup_autoid_check();
 		this.setup_copy_button();
 		if (this.df.options == "URL") {
 			this.setup_url_field();
@@ -175,14 +175,14 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
 			this.$input.on("input", frappe.utils.debounce(change_handler, 500));
 		}
 	}
-	setup_autoname_check() {
+	setup_autoid_check() {
 		if (!this.df.parent) return;
 		this.meta = frappe.get_meta(this.df.parent);
 		if (
 			this.meta &&
-			((this.meta.autoname &&
-				this.meta.autoname.substr(0, 6) === "field:" &&
-				this.meta.autoname.substr(6) === this.df.fieldname) ||
+			((this.meta.autoid &&
+				this.meta.autoid.substr(0, 6) === "field:" &&
+				this.meta.autoid.substr(6) === this.df.fieldname) ||
 				this.df.fieldname === "__newname")
 		) {
 			this.$input.on("keyup", () => {

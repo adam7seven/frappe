@@ -45,9 +45,9 @@ $.extend(frappe.model, {
 		if (frappe.route_options && frappe.route_options.name_field) {
 			var meta = frappe.get_meta(doctype);
 			// set title field / name as name
-			if (meta.autoname && meta.autoname.indexOf("field:") !== -1) {
-				doc[meta.autoname.substr(6)] = frappe.route_options.name_field;
-			} else if (meta.autoname && meta.autoname === "prompt") {
+			if (meta.autoid && meta.autoid.indexOf("field:") !== -1) {
+				doc[meta.autoid.substr(6)] = frappe.route_options.name_field;
+			} else if (meta.autoid && meta.autoid === "prompt") {
 				doc.__newname = frappe.route_options.name_field;
 			} else if (meta.title_field) {
 				doc[meta.title_field] = frappe.route_options.name_field;

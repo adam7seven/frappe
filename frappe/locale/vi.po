@@ -4660,7 +4660,7 @@ msgid "Cannot change state of Cancelled Document. Transition row {0}"
 msgstr "Không thể thay đổi trạng thái của tài liệu bị hủy. Hàng chuyển {0}"
 
 #: core/doctype/doctype/doctype.py:1104
-msgid "Cannot change to/from autoincrement autoname in Customize Form"
+msgid "Cannot change to/from autoincrement autoid in Customize Form"
 msgstr ""
 
 #: core/doctype/communication/communication.py:193
@@ -15868,7 +15868,7 @@ msgid "Invalid field name {0}"
 msgstr "Tên trường không hợp lệ {0}"
 
 #: core/doctype/doctype/doctype.py:1048
-msgid "Invalid fieldname '{0}' in autoname"
+msgid "Invalid fieldname '{0}' in autoid"
 msgstr "tên trường không hợp lệ '{0}' trong tên tự động"
 
 #: client.py:344

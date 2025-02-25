@@ -77,8 +77,8 @@ frappe.ui.form.Layout = class Layout {
 				if (
 					field.frm &&
 					field.frm.is_new() &&
-					field.frm.meta.autoname &&
-					["prompt", "name"].includes(field.frm.meta.autoname.toLowerCase())
+					field.frm.meta.autoid &&
+					["prompt", "name"].includes(field.frm.meta.autoid.toLowerCase())
 				) {
 					return "Write";
 				}

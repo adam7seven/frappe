@@ -4660,7 +4660,7 @@ msgid "Cannot change state of Cancelled Document. Transition row {0}"
 msgstr "Tidak dapat mengubah keadaan Dibatalkan Dokumen. Transisi baris {0}"
 
 #: core/doctype/doctype/doctype.py:1104
-msgid "Cannot change to/from autoincrement autoname in Customize Form"
+msgid "Cannot change to/from autoincrement autoid in Customize Form"
 msgstr ""
 
 #: core/doctype/communication/communication.py:193
@@ -15868,8 +15868,8 @@ msgid "Invalid field name {0}"
 msgstr "Nama bidang tidak valid {0}"
 
 #: core/doctype/doctype/doctype.py:1048
-msgid "Invalid fieldname '{0}' in autoname"
-msgstr "fieldname tidak valid &#39;{0}&#39; di autoname"
+msgid "Invalid fieldname '{0}' in autoid"
+msgstr "fieldname tidak valid &#39;{0}&#39; di autoid"
 
 #: client.py:344
 msgid "Invalid file path: {0}"

@@ -65,12 +65,12 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
 	}
 
 	naming_rule() {
-		// set the "autoname" property based on naming_rule
-		if (this.frm.doc.naming_rule && !this.frm.__from_autoname) {
+		// set the "autoid" property based on naming_rule
+		if (this.frm.doc.naming_rule && !this.frm.__from_autoid) {
 			// flag to avoid recursion
 			this.frm.__from_naming_rule = true;
 
-			const naming_rule_default_autoname_map = {
+			const naming_rule_default_autoid_map = {
 				Autoincrement: "autoincrement",
 				"Set by user": "prompt",
 				"By fieldname": "field:",
@@ -82,8 +82,8 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
 				"By script": "",
 			};
 			this.frm.set_value(
-				"autoname",
-				naming_rule_default_autoname_map[this.frm.doc.naming_rule] || ""
+				"autoid",
+				naming_rule_default_autoid_map[this.frm.doc.naming_rule] || ""
 			);
 			setTimeout(() => (this.frm.__from_naming_rule = false), 500);
 
@@ -109,31 +109,30 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
 
 		if (this.frm.doc.naming_rule) {
 			this.frm
-				.get_field("autoname")
+				.get_field("autoid")
 				.set_description(naming_rule_description[this.frm.doc.naming_rule]);
 		}
 	}
 
-	autoname() {
-		// set naming_rule based on autoname (for old doctypes where its not been set)
-		if (this.frm.doc.autoname && !this.frm.doc.naming_rule && !this.frm.__from_naming_rule) {
+	autoid() {
+		// set naming_rule based on autoid (for old doctypes where its not been set)
+		if (this.frm.doc.autoid && !this.frm.doc.naming_rule && !this.frm.__from_naming_rule) {
 			// flag to avoid recursion
-			this.frm.__from_autoname = true;
-			const autoname = this.frm.doc.autoname.toLowerCase();
+			this.frm.__from_autoid = true;
+			const autoid = this.frm.doc.autoid.toLowerCase();
 
-			if (autoname === "prompt") this.frm.set_value("naming_rule", "Set by user");
-			else if (autoname === "autoincrement")
+			if (autoid === "prompt") this.frm.set_value("naming_rule", "Set by user");
+			else if (autoid === "autoincrement")
 				this.frm.set_value("naming_rule", "Autoincrement");
-			else if (autoname.startsWith("field:"))
+			else if (autoid.startsWith("field:"))
 				this.frm.set_value("naming_rule", "By fieldname");
-			else if (autoname.startsWith("naming_series:"))
+			else if (autoid.startsWith("naming_series:"))
 				this.frm.set_value("naming_rule", 'By "Naming Series" field');
-			else if (autoname.startsWith("format:"))
-				this.frm.set_value("naming_rule", "Expression");
-			else if (autoname === "hash") this.frm.set_value("naming_rule", "Random");
+			else if (autoid.startsWith("format:")) this.frm.set_value("naming_rule", "Expression");
+			else if (autoid === "hash") this.frm.set_value("naming_rule", "Random");
 			else this.frm.set_value("naming_rule", "Expression (old style)");
 
-			setTimeout(() => (this.frm.__from_autoname = false), 500);
+			setTimeout(() => (this.frm.__from_autoid = false), 500);
 		}
 	}
 

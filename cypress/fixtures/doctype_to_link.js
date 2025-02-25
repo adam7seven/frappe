@@ -3,7 +3,7 @@ export default {
 	actions: [],
 	custom: 1,
 	naming_rule: "By fieldname",
-	autoname: "field:title",
+	autoid: "field:title",
 	creation: "2022-02-09 20:15:21.242213",
 	doctype: "DocType",
 	editable_grid: 1,

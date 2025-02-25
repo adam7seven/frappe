@@ -264,11 +264,11 @@ frappe.data_import.DataExporter = class DataExporter {
 			this.column_map = get_columns_for_picker(this.doctype);
 		}
 
-		let autoname_field = null;
+		let autoid_field = null;
 		let meta = frappe.get_meta(doctype);
-		if (meta.autoname && meta.autoname.startsWith("field:")) {
-			let fieldname = meta.autoname.slice("field:".length);
-			autoname_field = frappe.meta.get_field(doctype, fieldname);
+		if (meta.autoid && meta.autoid.startsWith("field:")) {
+			let fieldname = meta.autoid.slice("field:".length);
+			autoid_field = frappe.meta.get_field(doctype, fieldname);
 		}
 
 		let fields = child_fieldname ? this.column_map[child_fieldname] : this.column_map[doctype];
@@ -277,7 +277,7 @@ frappe.data_import.DataExporter = class DataExporter {
 			if (df.reqd && this.exporting_for == "Insert New Records") {
 				return true;
 			}
-			if (autoname_field && df.fieldname == autoname_field.fieldname) {
+			if (autoid_field && df.fieldname == autoid_field.fieldname) {
 				return true;
 			}
 			if (df.fieldname === "name") {
@@ -288,7 +288,7 @@ frappe.data_import.DataExporter = class DataExporter {
 
 		return fields
 			.filter((df) => {
-				if (autoname_field && df.fieldname === "name") {
+				if (autoid_field && df.fieldname === "name") {
 					return false;
 				}
 				return true;

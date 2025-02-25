@@ -710,19 +710,15 @@ frappe.ui.form.Form = class FrappeForm {
 			}
 		}
 
-		if (
-			this.meta.autoname &&
-			this.meta.autoname.substr(0, 6) == "field:" &&
-			!this.doc.__islocal
-		) {
-			var fn = this.meta.autoname.substr(6);
+		if (this.meta.autoid && this.meta.autoid.substr(0, 6) == "field:" && !this.doc.__islocal) {
+			var fn = this.meta.autoid.substr(6);
 
 			if (this.doc[fn]) {
 				this.toggle_display(fn, false);
 			}
 		}
 
-		if (this.meta.autoname == "naming_series:" && !this.doc.__islocal) {
+		if (this.meta.autoid == "naming_series:" && !this.doc.__islocal) {
 			this.toggle_display("naming_series", false);
 		}
 	}
