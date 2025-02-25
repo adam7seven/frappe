@@ -99,7 +99,9 @@ class AutoEmailReport(Document):
         count = frappe.db.count("Auto Email Report", {"user": self.user, "enabled": 1})
 
         max_reports_per_user = (
-            cint(frappe.local.conf.max_reports_per_user)  # kept for backward compatibilty
+            cint(
+                frappe.local.conf.max_reports_per_user
+            )  # kept for backward compatibilty
             or cint(frappe.get_system_settings("max_auto_email_report_per_user"))
             or 20
         )

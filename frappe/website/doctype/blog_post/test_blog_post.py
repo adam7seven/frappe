@@ -77,7 +77,9 @@ class TestBlogPost(IntegrationTestCase):
 
         # On blog post page find link to the category page
         soup = BeautifulSoup(blog_page_html, "html.parser")
-        category_page_link = next(iter(soup.find_all("a", href=re.compile(blog.blog_category))))
+        category_page_link = next(
+            iter(soup.find_all("a", href=re.compile(blog.blog_category)))
+        )
         category_page_url = category_page_link["href"]
 
         cached_value = frappe.db.value_cache.get(("DocType", "Blog Post", "id"))
@@ -203,7 +205,9 @@ def make_test_blog(category_title="Test Blog Category"):
     if not frappe.db.exists("Blog Category", category_id):
         frappe.get_doc(doctype="Blog Category", title=category_title).insert()
     if not frappe.db.exists("Blogger", "test-blogger"):
-        frappe.get_doc(doctype="Blogger", short_id="test-blogger", full_name="Test Blogger").insert()
+        frappe.get_doc(
+            doctype="Blogger", short_id="test-blogger", full_name="Test Blogger"
+        ).insert()
 
     return frappe.get_doc(
         doctype="Blog Post",

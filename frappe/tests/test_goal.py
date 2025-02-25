@@ -29,7 +29,9 @@ class TestGoal(IntegrationTestCase):
 
     def test_get_monthly_goal_graph_data(self):
         """Test for accurate values in graph data (based on test_get_monthly_results)"""
-        docname = frappe.get_list("Event", filters={"subject": ["=", "_Test Event 1"]})[0]["name"]
+        docname = frappe.get_list("Event", filters={"subject": ["=", "_Test Event 1"]})[
+            0
+        ]["name"]
         frappe.db.set_value("Event", docname, "description", 1)
         data = get_monthly_goal_graph_data(
             "Test",

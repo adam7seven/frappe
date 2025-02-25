@@ -50,7 +50,9 @@ class Exporter:
         self.add_data()
 
     def get_all_exportable_fields(self):
-        child_table_fields = [df.fieldname for df in self.meta.fields if df.fieldtype in table_fieldtypes]
+        child_table_fields = [
+            df.fieldname for df in self.meta.fields if df.fieldtype in table_fieldtypes
+        ]
 
         meta = frappe.get_meta(self.doctype)
         exportable_fields = frappe._dict({})
@@ -120,7 +122,9 @@ class Exporter:
                 for doc in data:
                     if doc.get("owner") != frappe.session.user:
                         raise frappe.PermissionError(
-                            _("You are not allowed to export {} doctype").format(self.doctype)
+                            _("You are not allowed to export {} doctype").format(
+                                self.doctype
+                            )
                         )
             else:
                 raise frappe.PermissionError(
@@ -136,7 +140,9 @@ class Exporter:
                     for i, child_row in enumerate(doc.get(f, [])):
                         table_df = self.meta.get_field(f)
                         child_doctype = table_df.options
-                        rows = self.add_data_row(child_doctype, child_row.parentfield, child_row, rows, i)
+                        rows = self.add_data_row(
+                            child_doctype, child_row.parentfield, child_row, rows, i
+                        )
 
             yield from rows
 

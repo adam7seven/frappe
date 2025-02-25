@@ -61,7 +61,9 @@ class TestImporter(IntegrationTestCase):
 
     def test_data_validation_semicolon_success(self):
         import_file = get_import_file("sample_import_file_semicolon")
-        data_import = self.get_importer(doctype_id, import_file, update=True, use_sniffer=True)
+        data_import = self.get_importer(
+            doctype_id, import_file, update=True, use_sniffer=True
+        )
 
         doc = data_import.get_preview_from_template().get("data", [{}])
 
@@ -72,7 +74,9 @@ class TestImporter(IntegrationTestCase):
     def test_data_validation_semicolon_failure(self):
         import_file = get_import_file("sample_import_file_semicolon")
 
-        data_import = self.get_importer_semicolon(doctype_id, import_file, use_sniffer=True)
+        data_import = self.get_importer_semicolon(
+            doctype_id, import_file, use_sniffer=True
+        )
         doc = data_import.get_preview_from_template().get("data", [{}])
         # if semicolon delimiter detection fails, and falls back to comma,
         # column number will be less than 15 -> 2 (+1 id)
@@ -167,7 +171,9 @@ class TestImporter(IntegrationTestCase):
 
     def get_importer(self, doctype, import_file, update=False, use_sniffer=False):
         data_import = frappe.new_doc("Data Import")
-        data_import.import_type = "Insert New Records" if not update else "Update Existing Records"
+        data_import.import_type = (
+            "Insert New Records" if not update else "Update Existing Records"
+        )
         data_import.reference_doctype = doctype
         data_import.import_file = import_file.file_url
         data_import.use_csv_sniffer = use_sniffer
@@ -177,9 +183,13 @@ class TestImporter(IntegrationTestCase):
 
         return data_import
 
-    def get_importer_semicolon(self, doctype, import_file, update=False, use_sniffer=False):
+    def get_importer_semicolon(
+        self, doctype, import_file, update=False, use_sniffer=False
+    ):
         data_import = frappe.new_doc("Data Import")
-        data_import.import_type = "Insert New Records" if not update else "Update Existing Records"
+        data_import.import_type = (
+            "Insert New Records" if not update else "Update Existing Records"
+        )
         data_import.reference_doctype = doctype
         data_import.import_file = import_file.file_url
         data_import.use_csv_sniffer = use_sniffer

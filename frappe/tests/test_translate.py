@@ -24,10 +24,16 @@ from frappe.translate import (
 from frappe.utils import get_bench_path, set_request
 
 dirname = os.path.dirname(__file__)
-translation_string_file = os.path.abspath(os.path.join(dirname, "translation_test_file.txt"))
+translation_string_file = os.path.abspath(
+    os.path.join(dirname, "translation_test_file.txt")
+)
 first_lang, second_lang, third_lang, fourth_lang, fifth_lang = choices(
     # skip "en*" since it is a default language
-    frappe.get_all("Language", pluck="name", filters=[["name", "not like", "en%"], ["enabled", "=", 1]]),
+    frappe.get_all(
+        "Language",
+        pluck="name",
+        filters=[["name", "not like", "en%"], ["enabled", "=", 1]],
+    ),
     k=5,
 )
 
@@ -55,7 +61,9 @@ class TestTranslate(IntegrationTestCase):
         _("Trigger caching")
 
         self.assertIsNotNone(frappe.cache.hget(USER_TRANSLATION_KEY, frappe.local.lang))
-        self.assertIsNotNone(frappe.cache.hget(MERGED_TRANSLATION_KEY, frappe.local.lang))
+        self.assertIsNotNone(
+            frappe.cache.hget(MERGED_TRANSLATION_KEY, frappe.local.lang)
+        )
 
         clear_cache()
 
@@ -137,7 +145,9 @@ class TestTranslate(IntegrationTestCase):
 
         frappe.form_dict._lang = first_lang
 
-        with patch.object(frappe.translate, "get_preferred_language_cookie", return_value=second_lang):
+        with patch.object(
+            frappe.translate, "get_preferred_language_cookie", return_value=second_lang
+        ):
             return_val = get_language()
 
         self.assertIn(return_val, [first_lang, get_parent_language(first_lang)])
@@ -148,12 +158,16 @@ class TestTranslate(IntegrationTestCase):
         Case 2: frappe.form_dict._lang is not set, but preferred_language cookie is
         """
 
-        with patch.object(frappe.translate, "get_preferred_language_cookie", return_value="fr"):
+        with patch.object(
+            frappe.translate, "get_preferred_language_cookie", return_value="fr"
+        ):
             set_request(method="POST", path="/", headers=[("Accept-Language", "hr")])
             return_val = get_language()
             # system default language
             self.assertEqual(return_val, "en")
-            self.assertNotIn(return_val, [second_lang, get_parent_language(second_lang)])
+            self.assertNotIn(
+                return_val, [second_lang, get_parent_language(second_lang)]
+            )
 
     def test_guest_request_language_resolution_with_cookie(self):
         """Test for frappe.translate.get_language
@@ -161,8 +175,12 @@ class TestTranslate(IntegrationTestCase):
         Case 3: frappe.form_dict._lang is not set, but preferred_language cookie is [Guest User]
         """
 
-        with patch.object(frappe.translate, "get_preferred_language_cookie", return_value=second_lang):
-            set_request(method="POST", path="/", headers=[("Accept-Language", third_lang)])
+        with patch.object(
+            frappe.translate, "get_preferred_language_cookie", return_value=second_lang
+        ):
+            set_request(
+                method="POST", path="/", headers=[("Accept-Language", third_lang)]
+            )
             return_val = get_language()
 
         self.assertIn(return_val, [second_lang, get_parent_language(second_lang)])
@@ -300,7 +318,12 @@ class TestTranslate(IntegrationTestCase):
             )"""
         )
         self.assertEqual(
-            args, ("Multiline translation with format replacements and context {0} {1}", None, "context")
+            args,
+            (
+                "Multiline translation with format replacements and context {0} {1}",
+                None,
+                "context",
+            ),
         )
 
         args = get_args(
@@ -315,7 +338,11 @@ class TestTranslate(IntegrationTestCase):
             )"""
         )
         self.assertEqual(
-            args, ("Multiline translation with format replacements and no context {0} {1}", None)
+            args,
+            (
+                "Multiline translation with format replacements and no context {0} {1}",
+                None,
+            ),
         )
 
 
@@ -335,11 +362,19 @@ def verify_translation_files(app):
 
 
 expected_output = [
-    ("Warning: Unable to find {0} in any table related to {1}", "This is some context", 2),
+    (
+        "Warning: Unable to find {0} in any table related to {1}",
+        "This is some context",
+        2,
+    ),
     ("Warning: Unable to find {0} in any table related to {1}", None, 4),
     ("You don't have any messages yet.", None, 6),
     ("Submit", "Some DocType", 8),
-    ("Warning: Unable to find {0} in any table related to {1}", "This is some context", 15),
+    (
+        "Warning: Unable to find {0} in any table related to {1}",
+        "This is some context",
+        15,
+    ),
     ("Submit", "Some DocType", 17),
     ("You don't have any messages yet.", None, 19),
     ("You don't have any messages yet.", None, 21),

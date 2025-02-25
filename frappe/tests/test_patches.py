@@ -58,13 +58,19 @@ class TestPatches(IntegrationTestCase):
             else:
                 if patchmodule.startswith("finally:"):
                     patchmodule = patchmodule.split("finally:")[-1]
-                self.assertTrue(frappe.get_attr(patchmodule.split(maxsplit=1)[0] + ".execute"))
+                self.assertTrue(
+                    frappe.get_attr(patchmodule.split(maxsplit=1)[0] + ".execute")
+                )
 
         frappe.flags.in_install = False
 
     def test_get_patch_list(self):
-        pre = patch_handler.get_patches_from_app("frappe", patch_handler.PatchType.pre_model_sync)
-        post = patch_handler.get_patches_from_app("frappe", patch_handler.PatchType.post_model_sync)
+        pre = patch_handler.get_patches_from_app(
+            "frappe", patch_handler.PatchType.pre_model_sync
+        )
+        post = patch_handler.get_patches_from_app(
+            "frappe", patch_handler.PatchType.post_model_sync
+        )
         all_patches = patch_handler.get_patches_from_app("frappe")
         self.assertGreater(len(pre), 0)
         self.assertGreater(len(post), 0)
@@ -82,8 +88,12 @@ class TestPatchReader(IntegrationTestCase):
     def get_patches(self):
         return (
             patch_handler.get_patches_from_app("frappe"),
-            patch_handler.get_patches_from_app("frappe", patch_handler.PatchType.pre_model_sync),
-            patch_handler.get_patches_from_app("frappe", patch_handler.PatchType.post_model_sync),
+            patch_handler.get_patches_from_app(
+                "frappe", patch_handler.PatchType.pre_model_sync
+            ),
+            patch_handler.get_patches_from_app(
+                "frappe", patch_handler.PatchType.post_model_sync
+            ),
         )
 
     @patch("builtins.open", new_callable=mock_open, read_data=EMTPY_FILE)
@@ -103,7 +113,9 @@ class TestPatchReader(IntegrationTestCase):
     @patch("builtins.open", new_callable=mock_open, read_data=FILLED_SECTIONS)
     def test_new_style(self, _file):
         all, pre, post = self.get_patches()
-        self.assertEqual(all, ["app.module.patch1", "app.module.patch2", "app.module.patch3"])
+        self.assertEqual(
+            all, ["app.module.patch1", "app.module.patch2", "app.module.patch3"]
+        )
         self.assertEqual(pre, ["app.module.patch1", "app.module.patch2"])
         self.assertEqual(
             post,
@@ -115,8 +127,12 @@ class TestPatchReader(IntegrationTestCase):
     @patch("builtins.open", new_callable=mock_open, read_data=OLD_STYLE_PATCH_TXT)
     def test_old_style(self, _file):
         all, pre, post = self.get_patches()
-        self.assertEqual(all, ["app.module.patch1", "app.module.patch2", "app.module.patch3"])
-        self.assertEqual(pre, ["app.module.patch1", "app.module.patch2", "app.module.patch3"])
+        self.assertEqual(
+            all, ["app.module.patch1", "app.module.patch2", "app.module.patch3"]
+        )
+        self.assertEqual(
+            pre, ["app.module.patch1", "app.module.patch2", "app.module.patch3"]
+        )
         self.assertEqual(post, [])
 
     @patch("builtins.open", new_callable=mock_open, read_data=EDGE_CASES)
@@ -148,7 +164,9 @@ def check_patch_files(app):
 
     patch_dir = Path(frappe.get_app_path(app)) / "patches"
 
-    app_patches = [p.split(maxsplit=1)[0] for p in patch_handler.get_patches_from_app(app)]
+    app_patches = [
+        p.split(maxsplit=1)[0] for p in patch_handler.get_patches_from_app(app)
+    ]
 
     missing_patches = []
 

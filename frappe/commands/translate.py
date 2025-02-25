@@ -40,7 +40,9 @@ def new_language(context: CliCtxObj, lang_code, app):
     frappe.translate.write_translations_file(app, lang_code)
 
     print(f"File created at ./apps/{app}/{app}/translations/{lang_code}.csv")
-    print("You will need to add the language in frappe/geo/languages.csv, if you haven't done it already.")
+    print(
+        "You will need to add the language in frappe/geo/languages.csv, if you haven't done it already."
+    )
 
 
 @click.command("get-untranslated")
@@ -49,7 +51,9 @@ def new_language(context: CliCtxObj, lang_code, app):
 @click.argument("untranslated_file")
 @click.option("--all", default=False, is_flag=True, help="Get all message strings")
 @pass_context
-def get_untranslated(context: CliCtxObj, lang, untranslated_file, app="_ALL_APPS", all=None):
+def get_untranslated(
+    context: CliCtxObj, lang, untranslated_file, app="_ALL_APPS", all=None
+):
     "Get untranslated strings for language"
     import frappe.translate
 
@@ -68,7 +72,9 @@ def get_untranslated(context: CliCtxObj, lang, untranslated_file, app="_ALL_APPS
 @click.argument("untranslated_file")
 @click.argument("translated-file")
 @pass_context
-def update_translations(context: CliCtxObj, lang, untranslated_file, translated_file, app="_ALL_APPS"):
+def update_translations(
+    context: CliCtxObj, lang, untranslated_file, translated_file, app="_ALL_APPS"
+):
     "Update translated strings"
     import frappe.translate
 
@@ -76,7 +82,9 @@ def update_translations(context: CliCtxObj, lang, untranslated_file, translated_
     try:
         frappe.init(site)
         frappe.connect()
-        frappe.translate.update_translations(lang, untranslated_file, translated_file, app=app)
+        frappe.translate.update_translations(
+            lang, untranslated_file, translated_file, app=app
+        )
     finally:
         frappe.destroy()
 

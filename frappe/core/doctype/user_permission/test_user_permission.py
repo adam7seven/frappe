@@ -177,7 +177,9 @@ class TestUserPermission(IntegrationTestCase):
             doc.is_tree = 1
             doc.insert()
 
-        parent_record = frappe.get_doc({"doctype": "Person", "person_name": "Parent", "is_group": 1}).insert()
+        parent_record = frappe.get_doc(
+            {"doctype": "Person", "person_name": "Parent", "is_group": 1}
+        ).insert()
 
         child_record = frappe.get_doc(
             {

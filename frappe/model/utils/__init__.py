@@ -77,7 +77,9 @@ def render_include(content):
                         include = html_to_js_template(path, include)
 
                     content = re.sub(
-                        rf"""{{% include\s['"]{path}['"]\s%}}""", include.replace("\\", "\\\\"), content
+                        rf"""{{% include\s['"]{path}['"]\s%}}""",
+                        include.replace("\\", "\\\\"),
+                        content,
                     )
 
         else:

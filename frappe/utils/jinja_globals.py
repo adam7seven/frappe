@@ -15,7 +15,9 @@ def resolve_class(*classes):
         return " ".join(resolve_class(c) for c in classes).strip()
 
     if isinstance(classes, dict):
-        return " ".join(classname for classname in classes if classes[classname]).strip()
+        return " ".join(
+            classname for classname in classes if classes[classname]
+        ).strip()
 
     return classes
 

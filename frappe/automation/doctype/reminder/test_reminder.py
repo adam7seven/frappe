@@ -2,7 +2,10 @@
 # See license.txt
 
 import frappe
-from frappe.automation.doctype.reminder.reminder import create_new_reminder, send_reminders
+from frappe.automation.doctype.reminder.reminder import (
+    create_new_reminder,
+    send_reminders,
+)
 from frappe.desk.doctype.notification_log.notification_log import get_notification_logs
 from frappe.tests import IntegrationTestCase, UnitTestCase
 from frappe.utils import add_to_date, now_datetime
@@ -22,7 +25,9 @@ class TestReminder(IntegrationTestCase):
         description = "TEST_REMINDER"
 
         create_new_reminder(
-            remind_at=add_to_date(now_datetime(), minutes=1, as_datetime=True, as_string=True),
+            remind_at=add_to_date(
+                now_datetime(), minutes=1, as_datetime=True, as_string=True
+            ),
             description=description,
         )
 

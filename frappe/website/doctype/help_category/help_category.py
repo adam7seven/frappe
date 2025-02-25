@@ -22,7 +22,9 @@ class HelpCategory(WebsiteGenerator):
         route: DF.Data | None
     # end: auto-generated types
 
-    website = frappe._dict(condition_field="published", page_title_field="category_name")
+    website = frappe._dict(
+        condition_field="published", page_title_field="category_name"
+    )
 
     def before_insert(self):
         self.published = 1

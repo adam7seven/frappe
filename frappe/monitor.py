@@ -85,7 +85,9 @@ class Monitor:
 
         if job := rq.get_current_job():
             self.data.job_id = job.id
-            waitdiff = self.data.timestamp - job.enqueued_at.replace(tzinfo=datetime.timezone.utc)
+            waitdiff = self.data.timestamp - job.enqueued_at.replace(
+                tzinfo=datetime.timezone.utc
+            )
             self.data.job.wait = int(waitdiff.total_seconds() * 1000000)
 
     def add_custom_data(self, **kwargs):
@@ -94,14 +96,18 @@ class Monitor:
 
     def dump(self, response=None):
         try:
-            timediff = datetime.datetime.now(datetime.timezone.utc) - self.data.timestamp
+            timediff = (
+                datetime.datetime.now(datetime.timezone.utc) - self.data.timestamp
+            )
             # Obtain duration in microseconds
             self.data.duration = int(timediff.total_seconds() * 1000000)
 
             if self.data.transaction_type == "request":
                 if response:
                     self.data.request.status_code = response.status_code
-                    self.data.request.response_length = int(response.headers.get("Content-Length", 0))
+                    self.data.request.response_length = int(
+                        response.headers.get("Content-Length", 0)
+                    )
                 else:
                     self.data.request.status_code = 500
 
@@ -116,7 +122,9 @@ class Monitor:
             traceback.print_exc()
 
     def store(self):
-        serialized = json.dumps(self.data, sort_keys=True, default=str, separators=(",", ":"))
+        serialized = json.dumps(
+            self.data, sort_keys=True, default=str, separators=(",", ":")
+        )
         length = frappe.cache.rpush(MONITOR_REDIS_KEY, serialized)
         if cint(length) > MONITOR_MAX_ENTRIES:
             frappe.cache.ltrim(MONITOR_REDIS_KEY, 1, -1)

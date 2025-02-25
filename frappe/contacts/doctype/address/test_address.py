@@ -19,7 +19,9 @@ class UnitTestAddress(UnitTestCase):
 class TestAddress(IntegrationTestCase):
     def test_template_works(self):
         if not frappe.db.exists("Address Template", "India"):
-            frappe.get_doc({"doctype": "Address Template", "country": "India", "is_default": 1}).insert()
+            frappe.get_doc(
+                {"doctype": "Address Template", "country": "India", "is_default": 1}
+            ).insert()
 
         if not frappe.db.exists("Address", "_Test Address-Office"):
             frappe.get_doc(

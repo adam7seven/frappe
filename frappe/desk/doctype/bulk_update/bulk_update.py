@@ -47,7 +47,9 @@ class BulkUpdate(Document):
 
 
 @frappe.whitelist()
-def submit_cancel_or_update_docs(doctype, docids, action="submit", data=None, task_id=None):
+def submit_cancel_or_update_docs(
+    doctype, docids, action="submit", data=None, task_id=None
+):
     if isinstance(docids, str):
         docids = frappe.parse_json(docids)
 
@@ -66,7 +68,10 @@ def submit_cancel_or_update_docs(doctype, docids, action="submit", data=None, ta
             timeout=1000,
         )
     else:
-        frappe.throw(_("Bulk operations only support up to 500 documents."), title=_("Too Many Documents"))
+        frappe.throw(
+            _("Bulk operations only support up to 500 documents."),
+            title=_("Too Many Documents"),
+        )
 
 
 def _bulk_action(doctype, docids, action, data, task_id=None):

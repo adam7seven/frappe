@@ -137,7 +137,10 @@ def transform_parameter_types(func: Callable, args: tuple, kwargs: dict):
         # if the type is a ForwardRef or str, ignore it
         if isinstance(current_arg_type, ForwardRef | str):
             continue
-        elif any(isinstance(x, ForwardRef | str) for x in getattr(current_arg_type, "__args__", [])):
+        elif any(
+            isinstance(x, ForwardRef | str)
+            for x in getattr(current_arg_type, "__args__", [])
+        ):
             continue
         # ignore unittest.mock objects
         elif isinstance(current_arg_value, mock.Mock):
@@ -157,15 +160,25 @@ def transform_parameter_types(func: Callable, args: tuple, kwargs: dict):
                 current_arg_type = Union[current_arg_type]  # noqa: UP007
 
             elif param_def.default != current_arg_type:
-                current_arg_type = Union[current_arg_type, type(param_def.default)]  # noqa: UP007
+                current_arg_type = Union[
+                    current_arg_type, type(param_def.default)
+                ]  # noqa: UP007
         elif isinstance(current_arg_type, tuple):
             current_arg_type = Union[current_arg_type]  # noqa: UP007
 
         # validate the type set using pydantic - raise a TypeError if Validation is raised or Ellipsis is returned
         try:
-            current_arg_value_after = TypeAdapter(current_arg_type).validate_python(current_arg_value)
+            current_arg_value_after = TypeAdapter(current_arg_type).validate_python(
+                current_arg_value
+            )
         except (TypeError, PyValidationError) as e:
-            raise_type_error(func, current_arg, current_arg_type, current_arg_value, current_exception=e)
+            raise_type_error(
+                func,
+                current_arg,
+                current_arg_type,
+                current_arg_value,
+                current_exception=e,
+            )
 
         if isinstance(current_arg_value_after, EllipsisType):
             raise_type_error(func, current_arg, current_arg_type, current_arg_value)

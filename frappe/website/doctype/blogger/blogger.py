@@ -29,7 +29,11 @@ class Blogger(Document):
         if self.user and not frappe.db.exists("User", self.user):
             # for data import
             frappe.get_doc(
-                {"doctype": "User", "email": self.user, "first_name": self.user.split("@", 1)[0]}
+                {
+                    "doctype": "User",
+                    "email": self.user,
+                    "first_name": self.user.split("@", 1)[0],
+                }
             ).insert()
 
     def on_update(self):

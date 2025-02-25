@@ -81,7 +81,9 @@ def get_data(user: str) -> list[list]:
         for perm_type in PERM_TYPES:
             if perm_type not in perm:
                 continue
-            agg_perms[(dt, if_owner)][perm_type] = agg_perms[(dt, if_owner)][perm_type] or perm[perm_type]
+            agg_perms[(dt, if_owner)][perm_type] = (
+                agg_perms[(dt, if_owner)][perm_type] or perm[perm_type]
+            )
 
     result = []
     sorted_keys = sorted(agg_perms.keys(), key=lambda x: _(x[0]))

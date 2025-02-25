@@ -1,6 +1,8 @@
 import frappe
 from frappe.patches.v13_0.encrypt_2fa_secrets import DOCTYPE
-from frappe.patches.v13_0.encrypt_2fa_secrets import PARENT_FOR_DEFAULTS as TWOFACTOR_PARENT
+from frappe.patches.v13_0.encrypt_2fa_secrets import (
+    PARENT_FOR_DEFAULTS as TWOFACTOR_PARENT,
+)
 from frappe.utils import cint
 
 
@@ -11,7 +13,9 @@ def execute():
     """
 
     if not frappe.db.get_value(
-        DOCTYPE, {"parent": TWOFACTOR_PARENT, "defkey": ("not like", "%_otp%")}, "defkey"
+        DOCTYPE,
+        {"parent": TWOFACTOR_PARENT, "defkey": ("not like", "%_otp%")},
+        "defkey",
     ):
         return
 
@@ -21,7 +25,8 @@ def execute():
 
     # home page
     frappe.db.set_default(
-        "desktop:home_page", "workspace" if cint(system_settings.setup_complete) else "setup-wizard"
+        "desktop:home_page",
+        "workspace" if cint(system_settings.setup_complete) else "setup-wizard",
     )
 
     # letter head

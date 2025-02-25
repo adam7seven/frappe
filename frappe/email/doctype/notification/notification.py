@@ -18,7 +18,13 @@ from frappe.integrations.doctype.slack_webhook_url.slack_webhook_url import (
 )
 from frappe.model.document import Document
 from frappe.modules.utils import export_module_json, get_doc_module
-from frappe.utils import add_to_date, cast, now_datetime, nowdate, validate_email_address
+from frappe.utils import (
+    add_to_date,
+    cast,
+    now_datetime,
+    nowdate,
+    validate_email_address,
+)
 from frappe.utils.jinja import validate_template
 from frappe.utils.safe_exec import get_safe_globals
 
@@ -34,7 +40,9 @@ class Notification(Document):
     from typing import TYPE_CHECKING
 
     if TYPE_CHECKING:
-        from frappe.email.doctype.notification_recipient.notification_recipient import NotificationRecipient
+        from frappe.email.doctype.notification_recipient.notification_recipient import (
+            NotificationRecipient,
+        )
         from frappe.types import DF
 
         attach_print: DF.Check
@@ -97,7 +105,11 @@ class Notification(Document):
         try:
             doc = frappe.get_cached_doc(self.document_type, preview_document)
             context = get_context(doc)
-            return _("Yes") if frappe.safe_eval(self.condition, eval_locals=context) else _("No")
+            return (
+                _("Yes")
+                if frappe.safe_eval(self.condition, eval_locals=context)
+                else _("No")
+            )
         except Exception as e:
             frappe.local.message_log = []
             return _("Failed to evaluate conditions: {}").format(e)
@@ -155,7 +167,9 @@ class Notification(Document):
                 frappe.throw(_("Please specify the minutes offset"))
             if self.minutes_offset < 10:
                 frappe.throw(
-                    _("Please specify at least 10 minutes due to the trigger cadence of the scheduler")
+                    _(
+                        "Please specify at least 10 minutes due to the trigger cadence of the scheduler"
+                    )
                 )
 
         if self.event == "Value Change" and not self.value_changed:
@@ -208,7 +222,8 @@ def get_context(context):
 
     def validate_forbidden_document_types(self):
         if self.document_type in FORBIDDEN_DOCUMENT_TYPES or (
-            frappe.get_meta(self.document_type).istable and self.event not in DATE_BASED_EVENTS
+            frappe.get_meta(self.document_type).istable
+            and self.event not in DATE_BASED_EVENTS
         ):
             # only date based events are allowed for child tables
             frappe.throw(
@@ -268,7 +283,9 @@ def get_context(context):
         now = now_datetime()  # reference now
         last = (
             # one ficticious scheduler tick earlier if frist run
-            add_to_date(now, minutes=-5) if not self.datetime_last_run else self.datetime_last_run
+            add_to_date(now, minutes=-5)
+            if not self.datetime_last_run
+            else self.datetime_last_run
         )
 
         if self.event == "Minutes After":
@@ -292,7 +309,9 @@ def get_context(context):
         for d in doc_list:
             doc = frappe.get_doc(self.document_type, d.id)
 
-            if self.condition and not frappe.safe_eval(self.condition, None, get_context(doc)):
+            if self.condition and not frappe.safe_eval(
+                self.condition, None, get_context(doc)
+            ):
                 continue
 
             docs.append(doc)
@@ -486,8 +505,12 @@ def get_context(context):
 
     def send_sms(self, doc, context):
         send_sms(
-            receiver_list=self.get_receiver_list(doc, context, "mobile_no", self.get_mobile_no),
-            msg=frappe.utils.strip_html_tags(frappe.render_template(self.message, context)),
+            receiver_list=self.get_receiver_list(
+                doc, context, "mobile_no", self.get_mobile_no
+            ),
+            msg=frappe.utils.strip_html_tags(
+                frappe.render_template(self.message, context)
+            ),
         )
 
     @staticmethod
@@ -498,21 +521,27 @@ def get_context(context):
             mobile_no = doc.get(field)
             if not mobile_no:
                 doc.log_error(
-                    _("Notification: document {0} has no {1} number set (field: {2})").format(
-                        field, doc.id, option, field
-                    )
+                    _(
+                        "Notification: document {0} has no {1} number set (field: {2})"
+                    ).format(field, doc.id, option, field)
                 )
         # but on user & customer it's expected to be set on the proper field
         elif option == "User":
             user = doc.get(field)
             mobile_no = frappe.get_value("User", user, "mobile_no")
             if not mobile_no:
-                doc.log_error(_("Notification: user {0} has no Mobile number set").format(user))
+                doc.log_error(
+                    _("Notification: user {0} has no Mobile number set").format(user)
+                )
         elif option == "Customer":
             customer = doc.get(field)
             mobile_no = frappe.get_value("Customer", customer, "mobile_no")
             if not mobile_no:
-                doc.log_error(_("Notification: customer {0} has no Mobile number set").format(customer))
+                doc.log_error(
+                    _("Notification: customer {0} has no Mobile number set").format(
+                        customer
+                    )
+                )
         else:
             frappe.throw(
                 _(
@@ -562,7 +591,9 @@ def get_context(context):
 
         return list(set(recipients)), list(set(cc)), list(set(bcc))
 
-    def get_receiver_list(self, doc, context, field_on_user="mobile_no", recipient_extractor_func=None):
+    def get_receiver_list(
+        self, doc, context, field_on_user="mobile_no", recipient_extractor_func=None
+    ):
         """return receiver list based on the doc field and role specified"""
         if not recipient_extractor_func:
             recipient_extractor_func = self.get_mobile_no
@@ -574,7 +605,9 @@ def get_context(context):
 
             # For sending messages to the owner's mobile phone number
             if recipient.receiver_by_document_field == "owner":
-                receiver_list += get_user_info([dict(user_name=doc.get("owner"))], field_on_user)
+                receiver_list += get_user_info(
+                    [dict(user_name=doc.get("owner"))], field_on_user
+                )
             # For sending messages to the number specified in the receiver field
             elif recipient.receiver_by_document_field:
                 data_field, child_field = _parse_receiver_by_document_field(
@@ -667,6 +700,7 @@ def get_context(context):
     def on_trash(self):
         frappe.cache.hdel("notifications", self.document_type)
 
+
 def clear_notification_cache():
     frappe.client_cache.delete_keys("notifications::")
 
@@ -706,7 +740,11 @@ def trigger_notifications(doc, method=None):
 
     elif method == "offset":
         doc_list = frappe.get_all(
-            "Notification", filters={"event": ("in", ("Minutes Before", "Minutes After")), "enabled": 1}
+            "Notification",
+            filters={
+                "event": ("in", ("Minutes Before", "Minutes After")),
+                "enabled": 1,
+            },
         )
         for d in doc_list:
             alert = frappe.get_doc("Notification", d.id)

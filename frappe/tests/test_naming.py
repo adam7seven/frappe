@@ -5,7 +5,12 @@ import time
 from uuid import UUID
 
 import uuid_utils
-from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_full_jitter
+from tenacity import (
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_full_jitter,
+)
 
 import frappe
 from frappe.core.doctype.doctype.test_doctype import new_doctype
@@ -46,8 +51,12 @@ class TestNaming(IntegrationTestCase):
 
         note = frappe.get_doc({"doctype": DOCTYPE, "title": TITLE}).insert()
 
-        self.assertEqual(append_number_if_name_exists(DOCTYPE, note.name), f"{note.name}-1")
-        self.assertEqual(append_number_if_name_exists(DOCTYPE, TITLE, "title", "_"), f"{TITLE}_1")
+        self.assertEqual(
+            append_number_if_name_exists(DOCTYPE, note.name), f"{note.name}-1"
+        )
+        self.assertEqual(
+            append_number_if_name_exists(DOCTYPE, TITLE, "title", "_"), f"{TITLE}_1"
+        )
 
     def test_field_autoname_name_sync(self):
         country = frappe.get_last_doc("Country")
@@ -60,7 +69,9 @@ class TestNaming(IntegrationTestCase):
         self.assertEqual(country.name, country.country_name)
 
     def test_child_table_naming(self):
-        child_dt_with_naming = new_doctype(istable=1, autoname="field:some_fieldname").insert()
+        child_dt_with_naming = new_doctype(
+            istable=1, autoname="field:some_fieldname"
+        ).insert()
         dt_with_child_autoname = new_doctype(
             fields=[
                 {
@@ -94,7 +105,9 @@ class TestNaming(IntegrationTestCase):
         """
         Test if braced params are replaced in format autoname
         """
-        doctype = new_doctype(autoname="format:TODO-{MM}-{some_fieldname}-{##}").insert()
+        doctype = new_doctype(
+            autoname="format:TODO-{MM}-{some_fieldname}-{##}"
+        ).insert()
 
         description = "Format"
 
@@ -105,7 +118,9 @@ class TestNaming(IntegrationTestCase):
         series = getseries("", 2)
         series = int(series) - 1
 
-        self.assertEqual(doc.name, f"TODO-{now_datetime().strftime('%m')}-{description}-{series:02}")
+        self.assertEqual(
+            doc.name, f"TODO-{now_datetime().strftime('%m')}-{description}-{series:02}"
+        )
 
     def test_format_autoname_for_datetime_field(self):
         """Test if datetime, date and time objects get converted to strings for naming."""
@@ -156,7 +171,9 @@ class TestNaming(IntegrationTestCase):
         series = f"TEST-{year}-"
         key = "TEST-.YYYY.-"
         name = f"TEST-{year}-00001"
-        frappe.db.sql("""INSERT INTO `tabSeries` (name, current) values (%s, 1)""", (series,))
+        frappe.db.sql(
+            """INSERT INTO `tabSeries` (name, current) values (%s, 1)""", (series,)
+        )
         revert_series_if_last(key, name)
         current_index = frappe.db.sql(
             """SELECT current from `tabSeries` where name = %s""", series, as_dict=True
@@ -168,7 +185,9 @@ class TestNaming(IntegrationTestCase):
         series = f"TEST-{year}-"
         key = "TEST-.YYYY.-.#####"
         name = f"TEST-{year}-00002"
-        frappe.db.sql("""INSERT INTO `tabSeries` (name, current) values (%s, 2)""", (series,))
+        frappe.db.sql(
+            """INSERT INTO `tabSeries` (name, current) values (%s, 2)""", (series,)
+        )
         revert_series_if_last(key, name)
         current_index = frappe.db.sql(
             """SELECT current from `tabSeries` where name = %s""", series, as_dict=True
@@ -181,7 +200,9 @@ class TestNaming(IntegrationTestCase):
         key = "TEST-"
         name = "TEST-00003"
         frappe.db.delete("Series", {"name": series})
-        frappe.db.sql("""INSERT INTO `tabSeries` (name, current) values (%s, 3)""", (series,))
+        frappe.db.sql(
+            """INSERT INTO `tabSeries` (name, current) values (%s, 3)""", (series,)
+        )
         revert_series_if_last(key, name)
         current_index = frappe.db.sql(
             """SELECT current from `tabSeries` where name = %s""", series, as_dict=True
@@ -194,7 +215,9 @@ class TestNaming(IntegrationTestCase):
         key = "TEST1-.#####.-2021-22"
         name = "TEST1-00003-2021-22"
         frappe.db.delete("Series", {"name": series})
-        frappe.db.sql("""INSERT INTO `tabSeries` (name, current) values (%s, 3)""", (series,))
+        frappe.db.sql(
+            """INSERT INTO `tabSeries` (name, current) values (%s, 3)""", (series,)
+        )
         revert_series_if_last(key, name)
         current_index = frappe.db.sql(
             """SELECT current from `tabSeries` where name = %s""", series, as_dict=True
@@ -207,7 +230,9 @@ class TestNaming(IntegrationTestCase):
         key = ".#####.-2021-22"
         name = "00003-2021-22"
         frappe.db.delete("Series", {"name": series})
-        frappe.db.sql("""INSERT INTO `tabSeries` (name, current) values (%s, 3)""", (series,))
+        frappe.db.sql(
+            """INSERT INTO `tabSeries` (name, current) values (%s, 3)""", (series,)
+        )
         revert_series_if_last(key, name)
         current_index = frappe.db.sql(
             """SELECT current from `tabSeries` where name = %s""", series, as_dict=True
@@ -302,10 +327,14 @@ class TestNaming(IntegrationTestCase):
         from frappe.core.doctype.doctype.test_doctype import new_doctype
 
         doctype = "autoinc_doctype" + frappe.generate_hash(length=5)
-        dt = new_doctype(doctype, autoname="autoincrement").insert(ignore_permissions=True)
+        dt = new_doctype(doctype, autoname="autoincrement").insert(
+            ignore_permissions=True
+        )
 
         for i in range(1, 20):
-            self.assertEqual(frappe.new_doc(doctype).save(ignore_permissions=True).name, i)
+            self.assertEqual(
+                frappe.new_doc(doctype).save(ignore_permissions=True).name, i
+            )
 
         dt.delete(ignore_permissions=True)
 
@@ -345,7 +374,8 @@ class TestNaming(IntegrationTestCase):
         webhook.webhook_docevent = "on_update"
         name = NamingSeries("KOOH-.{webhook_docevent}.").generate_next_name(webhook)
         self.assertTrue(
-            name.startswith("KOOH-on_update"), f"incorrect name generated {name}, missing field value"
+            name.startswith("KOOH-on_update"),
+            f"incorrect name generated {name}, missing field value",
         )
 
     def test_naming_with_empty_part(self):
@@ -358,7 +388,8 @@ class TestNaming(IntegrationTestCase):
 
         name = parse_naming_series(series, doc=webhook)
         self.assertTrue(
-            name.startswith("KOOH-on_update"), f"incorrect name generated {name}, missing field value"
+            name.startswith("KOOH-on_update"),
+            f"incorrect name generated {name}, missing field value",
         )
 
     def test_naming_with_unsupported_part(self):
@@ -370,7 +401,10 @@ class TestNaming(IntegrationTestCase):
         series = "KOOH-..{webhook_docevent}.-.####"
 
         name = parse_naming_series(series, doc=webhook)
-        self.assertTrue(name.startswith("KOOH-"), f"incorrect name generated {name}, missing field value")
+        self.assertTrue(
+            name.startswith("KOOH-"),
+            f"incorrect name generated {name}, missing field value",
+        )
 
     def test_naming_with_empty_field(self):
         # check naming with empty field value
@@ -440,7 +474,9 @@ class TestNaming(IntegrationTestCase):
             doc = frappe.new_doc(uuid_doctype, name=str(uid)).insert()
             self.assertEqual(doc.name, str(uid))
 
-        self.assertRaises(InvalidUUIDValue, frappe.new_doc(uuid_doctype, name="XYZ").insert)
+        self.assertRaises(
+            InvalidUUIDValue, frappe.new_doc(uuid_doctype, name="XYZ").insert
+        )
 
 
 def parse_naming_series_variable(doc, variable):

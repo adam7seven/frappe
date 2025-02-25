@@ -472,7 +472,9 @@ class LDAP_TestCase:
                 f"syncing of the user roles failed. {len(updated_user_roles)} != {len(test_user_data[test_user])} for user {test_user}",
             )
 
-            for user_role in updated_user_roles:  # match each users role mapped to ldap groups
+            for (
+                user_role
+            ) in updated_user_roles:  # match each users role mapped to ldap groups
                 self.assertTrue(
                     role_to_group_map[user_role] in test_user_data[test_user],
                     f"during sync_roles(), the user was given role {user_role} which should not have occurred",
@@ -524,10 +526,12 @@ class LDAP_TestCase:
                 )
 
                 self.assertTrue(
-                    sync_roles_method.called, "User roles need to be updated for an existing user"
+                    sync_roles_method.called,
+                    "User roles need to be updated for an existing user",
                 )
                 self.assertTrue(
-                    update_user_fields_method.called, "User fields need to be updated for an existing user"
+                    update_user_fields_method.called,
+                    "User fields need to be updated for an existing user",
                 )
 
     @mock_ldap_connection
@@ -611,7 +615,9 @@ class LDAP_TestCase:
             if (
                 "ACCESS:test3" in search_filter
             ):  # posix.user does not have str in ldap.description auth should fail
-                with self.assertRaises(frappe.exceptions.ValidationError) as display_massage:
+                with self.assertRaises(
+                    frappe.exceptions.ValidationError
+                ) as display_massage:
                     self.test_class.authenticate("posix.user", "posix_user_password")
 
                 self.assertTrue(
@@ -663,7 +669,9 @@ class LDAP_TestCase:
         method_return = self.test_class.convert_ldap_entry_to_dict(test_ldap_entry)
 
         self.assertTrue(isinstance(method_return, dict))  # must be dict
-        self.assertTrue(len(method_return) == 6)  # there are 6 fields in mock_ldap for use
+        self.assertTrue(
+            len(method_return) == 6
+        )  # there are 6 fields in mock_ldap for use
 
 
 class Test_OpenLDAP(LDAP_TestCase, TestCase):
@@ -675,8 +683,16 @@ class Test_OpenLDAP(LDAP_TestCase, TestCase):
             "ldap_group": "Administrators",
             "erpnext_role": "System Manager",
         },
-        {"doctype": "LDAP Group Mapping", "ldap_group": "Users", "erpnext_role": "Blogger"},
-        {"doctype": "LDAP Group Mapping", "ldap_group": "Group3", "erpnext_role": "Accounts User"},
+        {
+            "doctype": "LDAP Group Mapping",
+            "ldap_group": "Users",
+            "erpnext_role": "Blogger",
+        },
+        {
+            "doctype": "LDAP Group Mapping",
+            "ldap_group": "Group3",
+            "erpnext_role": "Accounts User",
+        },
     ]
     LDAP_USERNAME_FIELD = "uid"
     LDAP_SCHEMA = OFFLINE_SLAPD_2_4
@@ -699,7 +715,11 @@ class Test_ActiveDirectory(LDAP_TestCase, TestCase):
             "ldap_group": "Domain Administrators",
             "erpnext_role": "System Manager",
         },
-        {"doctype": "LDAP Group Mapping", "ldap_group": "Domain Users", "erpnext_role": "Blogger"},
+        {
+            "doctype": "LDAP Group Mapping",
+            "ldap_group": "Domain Users",
+            "erpnext_role": "Blogger",
+        },
         {
             "doctype": "LDAP Group Mapping",
             "ldap_group": "Enterprise Administrators",

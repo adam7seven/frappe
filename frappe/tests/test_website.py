@@ -27,13 +27,15 @@ class TestWebsite(IntegrationTestCase):
         frappe.set_user("Administrator")
         # test home page via role
         user = frappe.get_doc(
-            doctype="User", email="test-user-for-home-page@example.com", first_name="test"
+            doctype="User",
+            email="test-user-for-home-page@example.com",
+            first_name="test",
         ).insert(ignore_if_duplicate=True)
         user.reload()
 
-        role = frappe.get_doc(doctype="Role", role_name="home-page-test", desk_access=0).insert(
-            ignore_if_duplicate=True
-        )
+        role = frappe.get_doc(
+            doctype="Role", role_name="home-page-test", desk_access=0
+        ).insert(ignore_if_duplicate=True)
 
         user.add_roles(role.name)
         user.save()
@@ -46,7 +48,9 @@ class TestWebsite(IntegrationTestCase):
         frappe.db.set_value("Role", "home-page-test", "home_page", "")
 
         # home page via portal settings
-        frappe.db.set_single_value("Portal Settings", "default_portal_home", "test-portal-home")
+        frappe.db.set_single_value(
+            "Portal Settings", "default_portal_home", "test-portal-home"
+        )
 
         frappe.set_user("test-user-for-home-page@example.com")
         frappe.cache.hdel("home_page", frappe.session.user)
@@ -76,22 +80,29 @@ class TestWebsite(IntegrationTestCase):
             frappe,
             "get_hooks",
             patched_get_hooks(
-                "get_website_user_home_page", ["frappe.www._test._test_home_page.get_website_user_home_page"]
+                "get_website_user_home_page",
+                ["frappe.www._test._test_home_page.get_website_user_home_page"],
             ),
         ):
             self.assertEqual(get_home_page(), "_test/_test_folder")
 
         clear_website_cache()
-        with patch.object(frappe, "get_hooks", patched_get_hooks("website_user_home_page", ["login"])):
+        with patch.object(
+            frappe, "get_hooks", patched_get_hooks("website_user_home_page", ["login"])
+        ):
             self.assertEqual(get_home_page(), "login")
 
         clear_website_cache()
-        with patch.object(frappe, "get_hooks", patched_get_hooks("home_page", ["about"])):
+        with patch.object(
+            frappe, "get_hooks", patched_get_hooks("home_page", ["about"])
+        ):
             self.assertEqual(get_home_page(), "about")
 
         clear_website_cache()
         with patch.object(
-            frappe, "get_hooks", patched_get_hooks("role_home_page", {"home-page-test": ["home-page-test"]})
+            frappe,
+            "get_hooks",
+            patched_get_hooks("role_home_page", {"home-page-test": ["home-page-test"]}),
         ):
             self.assertEqual(get_home_page(), "home-page-test")
 
@@ -163,7 +174,11 @@ class TestWebsite(IntegrationTestCase):
             dict(source=r"/testfrom", target=r"://testto1"),
             dict(source=r"/testfromregex.*", target=r"://testto2"),
             dict(source=r"/testsub/(.*)", target=r"://testto3/\1"),
-            dict(source=r"/courses/course\?course=(.*)", target=r"/courses/\1", match_with_query_string=True),
+            dict(
+                source=r"/courses/course\?course=(.*)",
+                target=r"/courses/\1",
+                match_with_query_string=True,
+            ),
             dict(
                 source="/test307",
                 target="/test",
@@ -178,7 +193,11 @@ class TestWebsite(IntegrationTestCase):
         )
         website_settings.append(
             "route_redirects",
-            {"source": "/testdoc307", "target": "/testtarget", "redirect_http_status": 307},
+            {
+                "source": "/testdoc307",
+                "target": "/testtarget",
+                "redirect_http_status": 307,
+            },
         )
         website_settings.save()
 
@@ -288,13 +307,18 @@ class TestWebsite(IntegrationTestCase):
     def test_index_and_next_comment(self):
         content = get_response_content("/_test/_test_folder")
         # test if {index} was rendered
-        self.assertIn('<a href="/_test/_test_folder/_test_page"> Test Page</a>', content)
+        self.assertIn(
+            '<a href="/_test/_test_folder/_test_page"> Test Page</a>', content
+        )
 
         self.assertIn('<a href="/_test/_test_folder/_test_toc">Test TOC</a>', content)
 
         content = get_response_content("/_test/_test_folder/_test_page")
         # test if {next} was rendered
-        self.assertIn('Next: <a class="btn-next" href="/_test/_test_folder/_test_toc">Test TOC</a>', content)
+        self.assertIn(
+            'Next: <a class="btn-next" href="/_test/_test_folder/_test_toc">Test TOC</a>',
+            content,
+        )
 
     def test_colocated_assets(self):
         content = get_response_content("/_test/_test_folder/_test_page")
@@ -304,7 +328,9 @@ class TestWebsite(IntegrationTestCase):
     def test_raw_assets_are_loaded(self):
         content = get_response_content("/_test/assets/js_asset.min.js")
         # minified js files should not be passed through jinja renderer
-        self.assertEqual("""//{% if title %} {{title}} {% endif %}\nconsole.log("in");\n""", content)
+        self.assertEqual(
+            """//{% if title %} {{title}} {% endif %}\nconsole.log("in");\n""", content
+        )
 
         content = get_response_content("/_test/assets/css_asset.css")
         self.assertEqual("""body{color:red}""", content)
@@ -362,7 +388,9 @@ class TestWebsite(IntegrationTestCase):
     def test_metatags(self):
         content = get_response_content("/_test/_test_metatags")
         self.assertIn('<meta name="title" content="Test Title Metatag">', content)
-        self.assertIn('<meta name="description" content="Test Description for Metatag">', content)
+        self.assertIn(
+            '<meta name="description" content="Test Description for Metatag">', content
+        )
 
     def test_resolve_class(self):
         from frappe.utils.jinja_globals import resolve_class
@@ -370,14 +398,18 @@ class TestWebsite(IntegrationTestCase):
         context = frappe._dict(primary=True)
         self.assertEqual(resolve_class("test"), "test")
         self.assertEqual(resolve_class("test", "test-2"), "test test-2")
-        self.assertEqual(resolve_class("test", {"test-2": False, "test-3": True}), "test test-3")
         self.assertEqual(
-            resolve_class(["test1", "test2", context.primary and "primary"]), "test1 test2 primary"
+            resolve_class("test", {"test-2": False, "test-3": True}), "test test-3"
+        )
+        self.assertEqual(
+            resolve_class(["test1", "test2", context.primary and "primary"]),
+            "test1 test2 primary",
         )
 
         content = '<a class="{{ resolve_class("btn btn-default", primary and "btn-primary") }}">Test</a>'
         self.assertEqual(
-            frappe.render_template(content, context), '<a class="btn btn-default btn-primary">Test</a>'
+            frappe.render_template(content, context),
+            '<a class="btn btn-default btn-primary">Test</a>',
         )
 
     def test_app_include(self):
@@ -394,16 +426,27 @@ class TestWebsite(IntegrationTestCase):
             frappe.set_user("Administrator")
             frappe.hooks.app_include_js.append("test_app_include.js")
             frappe.hooks.app_include_css.append("test_app_include.css")
-            frappe.conf.update({"app_include_js": ["test_app_include_via_site_config.js"]})
-            frappe.conf.update({"app_include_css": ["test_app_include_via_site_config.css"]})
+            frappe.conf.update(
+                {"app_include_js": ["test_app_include_via_site_config.js"]}
+            )
+            frappe.conf.update(
+                {"app_include_css": ["test_app_include_via_site_config.css"]}
+            )
 
             set_request(method="GET", path="/app")
             content = get_response_content("/app")
-            self.assertIn('<script type="text/javascript" src="/test_app_include.js"></script>', content)
             self.assertIn(
-                '<script type="text/javascript" src="/test_app_include_via_site_config.js"></script>', content
+                '<script type="text/javascript" src="/test_app_include.js"></script>',
+                content,
             )
-            self.assertIn('<link type="text/css" rel="stylesheet" href="/test_app_include.css">', content)
+            self.assertIn(
+                '<script type="text/javascript" src="/test_app_include_via_site_config.js"></script>',
+                content,
+            )
+            self.assertIn(
+                '<link type="text/css" rel="stylesheet" href="/test_app_include.css">',
+                content,
+            )
             self.assertIn(
                 '<link type="text/css" rel="stylesheet" href="/test_app_include_via_site_config.css">',
                 content,
@@ -433,4 +476,6 @@ class CustomPageRenderer:
             return True
 
     def render(self):
-        return build_response(self.path, """<div>Custom Page Response</div>""", self.status_code)
+        return build_response(
+            self.path, """<div>Custom Page Response</div>""", self.status_code
+        )

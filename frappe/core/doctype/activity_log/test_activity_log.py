@@ -71,7 +71,12 @@ class TestActivityLog(IntegrationTestCase):
         )
 
         frappe.local.form_dict = frappe._dict(
-            {"cmd": "login", "sid": "Guest", "pwd": self.ADMIN_PASSWORD, "usr": "Administrator"}
+            {
+                "cmd": "login",
+                "sid": "Guest",
+                "pwd": self.ADMIN_PASSWORD,
+                "usr": "Administrator",
+            }
         )
 
         frappe.local.request_ip = "127.0.0.1"

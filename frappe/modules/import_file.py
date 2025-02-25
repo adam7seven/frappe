@@ -37,7 +37,9 @@ ignore_values = {
 ignore_doctypes = [""]
 
 
-def import_files(module, dt=None, dn=None, force=False, pre_process=None, reset_permissions=False):
+def import_files(
+    module, dt=None, dn=None, force=False, pre_process=None, reset_permissions=False
+):
     if isinstance(module, list):
         return [
             import_file(
@@ -52,14 +54,21 @@ def import_files(module, dt=None, dn=None, force=False, pre_process=None, reset_
         ]
     else:
         return import_file(
-            module, dt, dn, force=force, pre_process=pre_process, reset_permissions=reset_permissions
+            module,
+            dt,
+            dn,
+            force=force,
+            pre_process=pre_process,
+            reset_permissions=reset_permissions,
         )
 
 
 def import_file(module, dt, dn, force=False, pre_process=None, reset_permissions=False):
     """Sync a file from txt if modifed, return false if not updated"""
     path = get_file_path(module, dt, dn)
-    return import_file_by_path(path, force, pre_process=pre_process, reset_permissions=reset_permissions)
+    return import_file_by_path(
+        path, force, pre_process=pre_process, reset_permissions=reset_permissions
+    )
 
 
 def get_file_path(module, dt, dn):
@@ -118,7 +127,9 @@ def import_file_by_path(
 
         for doc in docs:
             # modified timestamp in db, none if doctype's first import
-            db_modified_timestamp = frappe.db.get_value(doc["doctype"], doc["id"], "modified")
+            db_modified_timestamp = frappe.db.get_value(
+                doc["doctype"], doc["id"], "modified"
+            )
             is_db_timestamp_latest = db_modified_timestamp and (
                 get_datetime(doc.get("modified")) <= get_datetime(db_modified_timestamp)
             )
@@ -127,7 +138,9 @@ def import_file_by_path(
                 stored_hash = None
                 if doc["doctype"] == "DocType":
                     try:
-                        stored_hash = frappe.db.get_value(doc["doctype"], doc["id"], "migration_hash")
+                        stored_hash = frappe.db.get_value(
+                            doc["doctype"], doc["id"], "migration_hash"
+                        )
                     except Exception:
                         pass
 
@@ -150,9 +163,9 @@ def import_file_by_path(
 
             if doc["doctype"] == "DocType":
                 doctype_table = DocType("DocType")
-                frappe.qb.update(doctype_table).set(doctype_table.migration_hash, calculated_hash).where(
-                    doctype_table.id == doc["id"]
-                ).run()
+                frappe.qb.update(doctype_table).set(
+                    doctype_table.migration_hash, calculated_hash
+                ).where(doctype_table.id == doc["id"]).run()
 
             new_modified_timestamp = doc.get("modified")
 
@@ -186,15 +199,20 @@ def update_modified(original_modified, doc):
     if doc["doctype"] == doc["id"] and doc["id"] != "DocType":
         singles_table = DocType("Singles")
 
-        frappe.qb.update(singles_table).set(singles_table.value, original_modified).where(
-            singles_table["field"] == "modified",  # singles_table.field is a method of pypika Selectable
-        ).where(singles_table.doctype == doc["id"]).run()
+        frappe.qb.update(singles_table).set(
+            singles_table.value, original_modified
+        ).where(
+            singles_table["field"]
+            == "modified",  # singles_table.field is a method of pypika Selectable
+        ).where(
+            singles_table.doctype == doc["id"]
+        ).run()
     else:
         doctype_table = DocType(doc["doctype"])
 
-        frappe.qb.update(doctype_table).set(doctype_table.modified, original_modified).where(
-            doctype_table.id == doc["id"]
-        ).run()
+        frappe.qb.update(doctype_table).set(
+            doctype_table.modified, original_modified
+        ).where(doctype_table.id == doc["id"]).run()
 
 
 def import_doc(
@@ -209,7 +227,11 @@ def import_doc(
     docdict["__islocal"] = 1
 
     controller = get_controller(docdict["doctype"])
-    if controller and hasattr(controller, "prepare_for_import") and callable(controller.prepare_for_import):
+    if (
+        controller
+        and hasattr(controller, "prepare_for_import")
+        and callable(controller.prepare_for_import)
+    ):
         controller.prepare_for_import(docdict)
 
     doc = frappe.get_doc(docdict)
@@ -267,7 +289,9 @@ def delete_old_doc(doc, reset_permissions):
             ignore.append(df.options)
 
     # delete old
-    frappe.delete_doc(doc.doctype, doc.id, force=1, ignore_doctypes=ignore, for_reload=True)
+    frappe.delete_doc(
+        doc.doctype, doc.id, force=1, ignore_doctypes=ignore, for_reload=True
+    )
 
     doc.flags.ignore_children_type = ignore
 

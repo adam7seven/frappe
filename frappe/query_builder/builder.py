@@ -63,7 +63,9 @@ class MariaDB(Base, MySQLQuery):
 
 
 class Postgres(Base, PostgreSQLQuery):
-    field_translation = types.MappingProxyType({"table_name": "relname", "table_rows": "n_tup_ins"})
+    field_translation = types.MappingProxyType(
+        {"table_name": "relname", "table_rows": "n_tup_ins"}
+    )
     schema_translation = types.MappingProxyType({"tables": "pg_stat_all_tables"})
     # TODO: Find a better way to do this
     # These are interdependent query changes that need fixing. These

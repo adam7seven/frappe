@@ -16,7 +16,9 @@ def make_mapped_doc(method, source_id, selected_children=None, args=None):
 
     Called from `open_mapped_doc` from create_new.js"""
 
-    for hook in reversed(frappe.get_hooks("override_whitelisted_methods", {}).get(method, [])):
+    for hook in reversed(
+        frappe.get_hooks("override_whitelisted_methods", {}).get(method, [])
+    ):
         # override using the last hook
         method = hook
         break
@@ -66,7 +68,9 @@ def get_mapped_doc(
     ignore_child_tables=False,
     cached=False,
 ):
-    apply_strict_user_permissions = frappe.get_system_settings("apply_strict_user_permissions")
+    apply_strict_user_permissions = frappe.get_system_settings(
+        "apply_strict_user_permissions"
+    )
 
     # main
     if not target_doc:
@@ -75,7 +79,9 @@ def get_mapped_doc(
             target_parent = table_maps[from_doctype].get("on_parent")
             if isinstance(target_parent, str):
                 target_parent = frappe.get_doc(json.loads(target_parent))
-            target_parentfield = target_parent.get_parentfield_of_doctype(target_doctype)
+            target_parentfield = target_parent.get_parentfield_of_doctype(
+                target_doctype
+            )
             target_doc = frappe.new_doc(
                 target_doctype, parent_doc=target_parent, parentfield=target_parentfield
             )
@@ -129,7 +135,9 @@ def get_mapped_doc(
 
             if table_map:
                 target_child_doctype = table_map["doctype"]
-                target_parentfield = target_doc.get_parentfield_of_doctype(target_child_doctype)
+                target_parentfield = target_doc.get_parentfield_of_doctype(
+                    target_child_doctype
+                )
 
                 if table_map.get("reset_value"):
                     setattr(target_doc, target_parentfield, [])
@@ -158,7 +166,9 @@ def get_mapped_doc(
                     if table_map.get("ignore"):
                         continue
 
-                    if table_map.get("add_if_empty") and row_exists_for_parentfield.get(target_parentfield):
+                    if table_map.get("add_if_empty") and row_exists_for_parentfield.get(
+                        target_parentfield
+                    ):
                         continue
 
                     if table_map.get("filter") and table_map.get("filter")(source_d):
@@ -202,7 +212,11 @@ def map_fields(source_doc, target_doc, table_map, source_parent):
             for d in source_doc.meta.get("fields")
             if (d.no_copy == 1 or d.fieldtype in table_fields)
         ]
-        + [d.fieldname for d in target_doc.meta.get("fields") if (d.fieldtype in table_fields)]
+        + [
+            d.fieldname
+            for d in target_doc.meta.get("fields")
+            if (d.fieldtype in table_fields)
+        ]
         + list(default_fields)
         + list(child_table_fields)
         + list(table_map.get("field_no_map", []))
@@ -279,7 +293,9 @@ def map_fetch_fields(target_doc, df, no_copy_fields):
 def map_child_doc(source_d, target_parent, table_map, source_parent=None):
     target_child_doctype = table_map["doctype"]
     target_parentfield = target_parent.get_parentfield_of_doctype(target_child_doctype)
-    target_d = frappe.new_doc(target_child_doctype, parent_doc=target_parent, parentfield=target_parentfield)
+    target_d = frappe.new_doc(
+        target_child_doctype, parent_doc=target_parent, parentfield=target_parentfield
+    )
 
     map_doc(source_d, target_d, table_map, source_parent)
 

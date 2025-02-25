@@ -46,7 +46,9 @@ class TestAutoEmailReport(IntegrationTestCase):
 
         auto_email_report.prepare_dynamic_filters()
 
-        self.assertEqual(auto_email_report.filters["from_date"], add_to_date(today(), weeks=-1))
+        self.assertEqual(
+            auto_email_report.filters["from_date"], add_to_date(today(), weeks=-1)
+        )
         self.assertEqual(auto_email_report.filters["to_date"], today())
 
 
@@ -64,6 +66,8 @@ def get_auto_email_report():
             filters=json.dumps(dict(user="Administrator", doctype="DocType")),
         ).insert()
     else:
-        auto_email_report = frappe.get_doc("Auto Email Report", "Permitted Documents For User")
+        auto_email_report = frappe.get_doc(
+            "Auto Email Report", "Permitted Documents For User"
+        )
 
     return auto_email_report

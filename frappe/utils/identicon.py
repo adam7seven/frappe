@@ -45,10 +45,14 @@ class Identicon:
             if self.hash & 1:
                 x = BORDER_SIZE + square_x * SQUARE_SIZE
                 y = BORDER_SIZE + square_y * SQUARE_SIZE
-                self.draw.rectangle((x, y, x + SQUARE_SIZE, y + SQUARE_SIZE), fill=color, outline=color)
+                self.draw.rectangle(
+                    (x, y, x + SQUARE_SIZE, y + SQUARE_SIZE), fill=color, outline=color
+                )
                 # following is just for mirroring
                 x = BORDER_SIZE + (GRID_SIZE - 1 - square_x) * SQUARE_SIZE
-                self.draw.rectangle((x, y, x + SQUARE_SIZE, y + SQUARE_SIZE), fill=color, outline=color)
+                self.draw.rectangle(
+                    (x, y, x + SQUARE_SIZE, y + SQUARE_SIZE), fill=color, outline=color
+                )
             self.hash >>= 1  # shift to right
             square_y += 1
             if square_y == GRID_SIZE:  # done with first column

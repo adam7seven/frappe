@@ -44,7 +44,9 @@ def get_language(lang_list: list | None = None) -> str:
 
     # fetch language from form_dict
     if frappe.form_dict._lang:
-        language = get_lang_code(frappe.form_dict._lang or get_parent_language(frappe.form_dict._lang))
+        language = get_lang_code(
+            frappe.form_dict._lang or get_parent_language(frappe.form_dict._lang)
+        )
         if language:
             return language
 
@@ -122,7 +124,12 @@ def set_default_language(lang):
 def get_lang_dict():
     """Return all languages in dict format, full name is the key e.g. `{"english":"en"}`."""
     return dict(
-        frappe.get_all("Language", fields=["language_name", "name"], order_by="creation", as_list=True)
+        frappe.get_all(
+            "Language",
+            fields=["language_name", "name"],
+            order_by="creation",
+            as_list=True,
+        )
     )
 
 
@@ -156,14 +163,18 @@ def get_all_translations(lang: str) -> dict[str, str]:
         parent_lang = get_parent_language(lang)
 
         # Get translations for parent language
-        all_translations = get_translations_from_apps(parent_lang).copy() if parent_lang else {}
+        all_translations = (
+            get_translations_from_apps(parent_lang).copy() if parent_lang else {}
+        )
 
         # Update with child language translations (overriding parent translations)
         all_translations.update(get_translations_from_apps(lang))
 
         with suppress(Exception):
             # Get translations for parent language
-            all_translations.update(get_user_translations(parent_lang) if parent_lang else {})
+            all_translations.update(
+                get_user_translations(parent_lang) if parent_lang else {}
+            )
             # Update with child language translations (overriding parent translations)
             all_translations.update(get_user_translations(lang))
             all_translations.update(get_translated_countries())
@@ -171,7 +182,9 @@ def get_all_translations(lang: str) -> dict[str, str]:
         return all_translations
 
     try:
-        return frappe.cache.hget(MERGED_TRANSLATION_KEY, lang, generator=_merge_translations)
+        return frappe.cache.hget(
+            MERGED_TRANSLATION_KEY, lang, generator=_merge_translations
+        )
     except Exception:
         # People mistakenly call translation function on global variables
         # where locals are not initialized, translations don't make much sense there
@@ -228,7 +241,9 @@ def get_user_translations(lang):
     def _read_from_db():
         user_translations = {}
         translations = frappe.get_all(
-            "Translation", fields=["source_text", "translated_text", "context"], filters={"language": lang}
+            "Translation",
+            fields=["source_text", "translated_text", "context"],
+            filters={"language": lang},
         )
 
         for t in translations:
@@ -259,14 +274,20 @@ def get_messages_for_app(app, deduplicate=True):
         if isinstance(modules, str):
             modules = [modules]
         filtered_doctypes = (
-            frappe.qb.from_("DocType").where(Field("module").isin(modules)).select("name").run(pluck=True)
+            frappe.qb.from_("DocType")
+            .where(Field("module").isin(modules))
+            .select("name")
+            .run(pluck=True)
         )
         for name in filtered_doctypes:
             messages.extend(get_messages_from_doctype(name))
 
         # pages
         filtered_pages = (
-            frappe.qb.from_("Page").where(Field("module").isin(modules)).select("name", "title").run()
+            frappe.qb.from_("Page")
+            .where(Field("module").isin(modules))
+            .select("name", "title")
+            .run()
         )
         for name, title in filtered_pages:
             messages.append((None, title or name))
@@ -312,7 +333,9 @@ def get_messages_for_app(app, deduplicate=True):
 
 def get_messages_from_navbar():
     """Return all labels from Navbar Items, as specified in Navbar Settings."""
-    labels = frappe.get_all("Navbar Item", filters={"item_label": ("is", "set")}, pluck="item_label")
+    labels = frappe.get_all(
+        "Navbar Item", filters={"item_label": ("is", "set")}, pluck="item_label"
+    )
     return [("Navbar:", label, "Label of a Navbar Item") for label in labels]
 
 
@@ -343,11 +366,17 @@ def get_messages_from_doctype(name):
     # translations of roles
     messages.extend(d.role for d in meta.get("permissions") if d.role)
     messages = [message for message in messages if message]
-    messages = [("DocType: " + name, message) for message in messages if is_translatable(message)]
+    messages = [
+        ("DocType: " + name, message)
+        for message in messages
+        if is_translatable(message)
+    ]
 
     # extract from js, py files
     if not meta.custom:
-        doctype_file_path = frappe.get_module_path(meta.module, "doctype", meta.name, meta.name)
+        doctype_file_path = frappe.get_module_path(
+            meta.module, "doctype", meta.name, meta.name
+        )
         messages.extend(get_messages_from_file(doctype_file_path + ".js"))
         messages.extend(get_messages_from_file(doctype_file_path + "_list.js"))
         messages.extend(get_messages_from_file(doctype_file_path + "_list.html"))
@@ -373,8 +402,13 @@ def get_messages_from_workflow(doctype=None, app_name=None):
             if isinstance(fixture, str) and fixture == "Workflow":
                 workflows = frappe.get_all("Workflow")
                 break
-            elif isinstance(fixture, dict) and fixture.get("dt", fixture.get("doctype")) == "Workflow":
-                workflows.extend(frappe.get_all("Workflow", filters=fixture.get("filters")))
+            elif (
+                isinstance(fixture, dict)
+                and fixture.get("dt", fixture.get("doctype")) == "Workflow"
+            ):
+                workflows.extend(
+                    frappe.get_all("Workflow", filters=fixture.get("filters"))
+                )
 
     messages = []
     document_state = DocType("Workflow Document State")
@@ -396,7 +430,8 @@ def get_messages_from_workflow(doctype=None, app_name=None):
         )
         states = frappe.db.get_values(
             document_state,
-            filters=(document_state.parent == w["name"]) & (document_state.message.isnotnull()),
+            filters=(document_state.parent == w["name"])
+            & (document_state.message.isnotnull()),
             fieldname="message",
             distinct=True,
             order_by=None,
@@ -439,10 +474,14 @@ def get_messages_from_custom_fields(app_name):
     for fixture in fixtures:
         if isinstance(fixture, str) and fixture == "Custom Field":
             custom_fields = frappe.get_all(
-                "Custom Field", fields=["name", "label", "description", "fieldtype", "options"]
+                "Custom Field",
+                fields=["name", "label", "description", "fieldtype", "options"],
             )
             break
-        elif isinstance(fixture, dict) and fixture.get("dt", fixture.get("doctype")) == "Custom Field":
+        elif (
+            isinstance(fixture, dict)
+            and fixture.get("dt", fixture.get("doctype")) == "Custom Field"
+        ):
             custom_fields.extend(
                 frappe.get_all(
                     "Custom Field",
@@ -456,7 +495,9 @@ def get_messages_from_custom_fields(app_name):
         for prop in ("label", "description"):
             if not cf.get(prop) or not is_translatable(cf[prop]):
                 continue
-            messages.append(("Custom Field - {}: {}".format(prop, cf["name"]), cf[prop]))
+            messages.append(
+                ("Custom Field - {}: {}".format(prop, cf["name"]), cf[prop])
+            )
         if cf["fieldtype"] == "Selection" and cf.get("options"):
             messages.extend(
                 ("Custom Field - Description: " + cf["name"], option)
@@ -484,10 +525,14 @@ def get_messages_from_report(name):
         context = "Column of report '{}'".format(
             report.name
         )  # context has to match context in `prepare_columns` in query_report.js
-        messages.extend([(None, report_column.label, context) for report_column in report.columns])
+        messages.extend(
+            [(None, report_column.label, context) for report_column in report.columns]
+        )
 
     if report.filters:
-        messages.extend([(None, report_filter.label) for report_filter in report.filters])
+        messages.extend(
+            [(None, report_filter.label) for report_filter in report.filters]
+        )
 
     if report.query:
         messages.extend(
@@ -508,7 +553,9 @@ def _get_messages_from_page_or_report(doctype, name, module=None):
 
     doc_path = frappe.get_module_path(module, doctype, name)
 
-    messages = get_messages_from_file(os.path.join(doc_path, frappe.scrub(name) + ".py"))
+    messages = get_messages_from_file(
+        os.path.join(doc_path, frappe.scrub(name) + ".py")
+    )
 
     if os.path.exists(doc_path):
         for filename in os.listdir(doc_path):
@@ -526,7 +573,9 @@ def get_server_messages(app):
     app_walk = os.walk(frappe.get_app_path(app))
 
     for basepath, folders, files in app_walk:
-        folders[:] = [folder for folder in folders if folder not in {".git", "__pycache__"}]
+        folders[:] = [
+            folder for folder in folders if folder not in {".git", "__pycache__"}
+        ]
 
         if "public/dist" in basepath:
             continue
@@ -560,15 +609,25 @@ def get_messages_from_include_files(app_name=None):
 def get_all_messages_from_js_files(app_name=None):
     """Extracts all translatable strings from app `.js` files"""
     messages = []
-    for app in [app_name] if app_name else frappe.get_installed_apps(_ensure_on_bench=True):
+    for app in (
+        [app_name] if app_name else frappe.get_installed_apps(_ensure_on_bench=True)
+    ):
         if os.path.exists(frappe.get_app_path(app, "public")):
-            for basepath, folders, files in os.walk(frappe.get_app_path(app, "public")):  # noqa: B007
+            for basepath, folders, files in os.walk(
+                frappe.get_app_path(app, "public")
+            ):  # noqa: B007
                 if "frappe/public/js/lib" in basepath:
                     continue
 
                 for fname in files:
-                    if fname.endswith(".js") or fname.endswith(".html") or fname.endswith(".vue"):
-                        messages.extend(get_messages_from_file(os.path.join(basepath, fname)))
+                    if (
+                        fname.endswith(".js")
+                        or fname.endswith(".html")
+                        or fname.endswith(".vue")
+                    ):
+                        messages.extend(
+                            get_messages_from_file(os.path.join(basepath, fname))
+                        )
 
     return messages
 
@@ -643,7 +702,9 @@ def extract_messages_from_python_code(code: str) -> list[tuple[int, str, str | N
     return messages
 
 
-def extract_messages_from_javascript_code(code: str) -> list[tuple[int, str, str | None]]:
+def extract_messages_from_javascript_code(
+    code: str,
+) -> list[tuple[int, str, str | None]]:
     """Extracts translatable strings from JavaScript code using babel."""
 
     messages = []
@@ -746,7 +807,11 @@ def get_untranslated(lang, untranslated_file, get_all=False, app="_ALL_APPS"):
                 untranslated.append(m[1])
 
         if untranslated:
-            print(str(len(untranslated)) + " missing translations of " + str(len(messages)))
+            print(
+                str(len(untranslated))
+                + " missing translations of "
+                + str(len(messages))
+            )
             with open(untranslated_file, "wb") as f:
                 for m in untranslated:
                     # replace \n with ||| so that internal linebreaks don't get split
@@ -808,8 +873,12 @@ def import_translations(lang, path):
 
 def migrate_translations(source_app, target_app):
     """Migrate target-app-specific translations from source-app to target-app"""
-    strings_in_source_app = [m[1] for m in frappe.translate.get_messages_for_app(source_app)]
-    strings_in_target_app = [m[1] for m in frappe.translate.get_messages_for_app(target_app)]
+    strings_in_source_app = [
+        m[1] for m in frappe.translate.get_messages_for_app(source_app)
+    ]
+    strings_in_target_app = [
+        m[1] for m in frappe.translate.get_messages_for_app(target_app)
+    ]
 
     strings_in_target_app_but_not_in_source_app = list(
         set(strings_in_target_app) - set(strings_in_source_app)
@@ -832,7 +901,9 @@ def migrate_translations(source_app, target_app):
         target_csv = os.path.join(target_app_translations_dir, lang + ".csv")
         temp_csv = os.path.join(source_app_translations_dir, "_temp.csv")
 
-        with open(source_csv) as s, open(target_csv, "a+") as t, open(temp_csv, "a+") as temp:
+        with open(source_csv) as s, open(target_csv, "a+") as t, open(
+            temp_csv, "a+"
+        ) as temp:
             source_reader = reader(s, lineterminator="\n")
             target_writer = writer(t, lineterminator="\n")
             temp_writer = writer(temp, lineterminator="\n")
@@ -872,7 +943,11 @@ def write_translations_file(app, lang, full_dict=None, app_messages=None):
 
     tpath = frappe.get_app_path(app, "translations")
     frappe.create_folder(tpath)
-    write_csv_file(os.path.join(tpath, lang + ".csv"), app_messages, full_dict or get_all_translations(lang))
+    write_csv_file(
+        os.path.join(tpath, lang + ".csv"),
+        app_messages,
+        full_dict or get_all_translations(lang),
+    )
 
 
 def send_translations(translation_dict):
@@ -929,7 +1004,9 @@ def get_all_languages(with_language_name: bool = False) -> list:
     """Return all enabled language codes ar, ch etc."""
 
     def get_all_language_with_name():
-        return frappe.get_all("Language", ["language_code", "language_name"], {"enabled": 1})
+        return frappe.get_all(
+            "Language", ["language_code", "language_name"], {"enabled": 1}
+        )
 
     if with_language_name:
         return frappe.cache.get_value("languages_with_name", get_all_language_with_name)
@@ -948,7 +1025,9 @@ def get_preferred_language_cookie():
 def get_translated_doctypes():
     dts = frappe.get_all("DocType", {"translated_doctype": 1}, pluck="name")
     custom_dts = frappe.get_all(
-        "Property Setter", {"property": "translated_doctype", "value": "1"}, pluck="doc_type"
+        "Property Setter",
+        {"property": "translated_doctype", "value": "1"},
+        pluck="doc_type",
     )
     return unique(dts + custom_dts)
 

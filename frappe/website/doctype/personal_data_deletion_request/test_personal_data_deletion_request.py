@@ -26,7 +26,10 @@ class TestPersonalDataDeletionRequest(IntegrationTestCase):
     def setUp(self):
         create_user_if_not_exists(email="test_delete@example.com")
         self.delete_request = frappe.get_doc(
-            {"doctype": "Personal Data Deletion Request", "email": "test_delete@example.com"}
+            {
+                "doctype": "Personal Data Deletion Request",
+                "email": "test_delete@example.com",
+            }
         )
         self.delete_request.save(ignore_permissions=True)
 
@@ -70,9 +73,9 @@ class TestPersonalDataDeletionRequest(IntegrationTestCase):
         self.assertEqual(self.delete_request.status, "Deleted")
 
     def test_unverified_record_removal(self):
-        date_time_obj = datetime.strptime(self.delete_request.creation, "%Y-%m-%d %H:%M:%S.%f") + timedelta(
-            days=-7
-        )
+        date_time_obj = datetime.strptime(
+            self.delete_request.creation, "%Y-%m-%d %H:%M:%S.%f"
+        ) + timedelta(days=-7)
         self.delete_request.db_set("creation", date_time_obj)
         self.delete_request.db_set("status", "Pending Verification")
 
@@ -83,9 +86,9 @@ class TestPersonalDataDeletionRequest(IntegrationTestCase):
 
     def test_process_auto_request(self):
         frappe.db.set_single_value("Website Settings", "auto_account_deletion", "1")
-        date_time_obj = datetime.strptime(self.delete_request.creation, "%Y-%m-%d %H:%M:%S.%f") + timedelta(
-            hours=-2
-        )
+        date_time_obj = datetime.strptime(
+            self.delete_request.creation, "%Y-%m-%d %H:%M:%S.%f"
+        ) + timedelta(hours=-2)
         self.delete_request.db_set("creation", date_time_obj)
         self.delete_request.db_set("status", "Pending Approval")
 

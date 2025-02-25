@@ -22,7 +22,15 @@ class PrintSettings(Document):
         allow_print_for_draft: DF.Check
         enable_print_server: DF.Check
         enable_raw_printing: DF.Check
-        font: DF.Literal["Default", "Helvetica Neue", "Arial", "Helvetica", "Inter", "Verdana", "Monospace"]
+        font: DF.Literal[
+            "Default",
+            "Helvetica Neue",
+            "Arial",
+            "Helvetica",
+            "Inter",
+            "Verdana",
+            "Monospace",
+        ]
         font_size: DF.Float
         pdf_page_height: DF.Float
         pdf_page_size: DF.Literal[
@@ -67,7 +75,9 @@ class PrintSettings(Document):
     # end: auto-generated types
 
     def validate(self):
-        if self.pdf_page_size == "Custom" and not (self.pdf_page_height and self.pdf_page_width):
+        if self.pdf_page_size == "Custom" and not (
+            self.pdf_page_height and self.pdf_page_width
+        ):
             frappe.throw(_("Page height and width cannot be zero"))
 
     def on_update(self):

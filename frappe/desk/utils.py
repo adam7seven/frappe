@@ -68,7 +68,14 @@ def apply_csv_decimal_sep(data: list[list], decimal_sep: str) -> list[list]:
         return data
 
     return [
-        [str(value).replace(".", decimal_sep, 1) if isinstance(value, float) else value for value in row]
+        [
+            (
+                str(value).replace(".", decimal_sep, 1)
+                if isinstance(value, float)
+                else value
+            )
+            for value in row
+        ]
         for row in data
     ]
 

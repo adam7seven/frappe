@@ -27,7 +27,11 @@ class CustomRole(Document):
 
     def get_permission_log_options(self, event=None):
         if self.report:
-            return {"for_doctype": "Report", "for_document": self.report, "fields": ["roles"]}
+            return {
+                "for_doctype": "Report",
+                "for_document": self.report,
+                "fields": ["roles"],
+            }
         return {"for_doctype": "Page", "for_document": self.page, "fields": ["roles"]}
 
 

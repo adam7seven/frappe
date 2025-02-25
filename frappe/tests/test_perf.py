@@ -81,11 +81,15 @@ class TestPerformance(IntegrationTestCase):
             frappe.db.set_value("User", "Administrator", "interest", "Nothing")
 
         with self.assertQueryCount(1):
-            frappe.db.set_value("User", {"user_type": "System User"}, "interest", "Nothing")
+            frappe.db.set_value(
+                "User", {"user_type": "System User"}, "interest", "Nothing"
+            )
 
         with self.assertQueryCount(1):
             frappe.db.set_value(
-                "User", {"user_type": "System User"}, {"interest": "Nothing", "bio": "boring person"}
+                "User",
+                {"user_type": "System User"},
+                {"interest": "Nothing", "bio": "boring person"},
             )
 
     def test_controller_caching(self):
@@ -101,12 +105,17 @@ class TestPerformance(IntegrationTestCase):
         frappe.db.get_values("User", filters=filters[0], limit=1)
         for filter in filters:
             with self.assertRowsRead(1):
-                self.assertEqual(1, len(frappe.db.get_values("User", filters=filter, limit=1)))
+                self.assertEqual(
+                    1, len(frappe.db.get_values("User", filters=filter, limit=1))
+                )
             with self.assertRowsRead(2):
-                self.assertEqual(2, len(frappe.db.get_values("User", filters=filter, limit=2)))
+                self.assertEqual(
+                    2, len(frappe.db.get_values("User", filters=filter, limit=2))
+                )
 
             self.assertEqual(
-                len(frappe.db.get_values("User", filters=filter)), frappe.db.count("User", filter)
+                len(frappe.db.get_values("User", filters=filter)),
+                frappe.db.count("User", filter),
             )
 
             with self.assertRowsRead(1):
@@ -232,7 +241,9 @@ class TestPerformance(IntegrationTestCase):
         frappe.init(site, force=True)
         patched_run = frappe.qb._BuilderClasss.run
 
-        self.assertIs(run, patched_run, "frappe.init should run one-time patching code just once")
+        self.assertIs(
+            run, patched_run, "frappe.init should run one-time patching code just once"
+        )
 
     def test_idle_cpu_utilization_redis_pubsub(self):
         pid = frappe.client_cache.invalidator_thread.native_id
@@ -249,20 +260,32 @@ class TestPerformance(IntegrationTestCase):
         siblings = [(i,) for i in range(8)]
         cores = list(range(8))
         for pid in cores:
-            self.assertEqual(assign_core(pid, len(cores), len(cores), cores, siblings), pid)
+            self.assertEqual(
+                assign_core(pid, len(cores), len(cores), cores, siblings), pid
+            )
 
         # All physical, pid wraps for core for 8-15
         for pid in range(8, 16):
-            self.assertEqual(assign_core(pid, len(cores), len(cores), cores, siblings), pid % len(cores))
+            self.assertEqual(
+                assign_core(pid, len(cores), len(cores), cores, siblings),
+                pid % len(cores),
+            )
 
         default_affinity_16 = list(range(16))
         # "linear" siblings = (0,1) (2,3) ...
         linear_siblings_16 = list(itertools.batched(range(16), 2))
         logical_cores = list(range(16))
-        expected_assignments = [*(l[0] for l in linear_siblings_16), *(l[1] for l in linear_siblings_16)]
+        expected_assignments = [
+            *(l[0] for l in linear_siblings_16),
+            *(l[1] for l in linear_siblings_16),
+        ]
         for pid, expected_core in zip(logical_cores, expected_assignments, strict=True):
             core = assign_core(
-                pid, len(logical_cores) // 2, len(logical_cores), default_affinity_16, linear_siblings_16
+                pid,
+                len(logical_cores) // 2,
+                len(logical_cores),
+                default_affinity_16,
+                linear_siblings_16,
             )
             self.assertEqual(core, expected_core)
 
@@ -270,7 +293,11 @@ class TestPerformance(IntegrationTestCase):
         block_siblings_16 = list(zip(range(8), range(8, 16), strict=True))
         for pid in logical_cores:
             core = assign_core(
-                pid, len(logical_cores) // 2, len(logical_cores), logical_cores, block_siblings_16
+                pid,
+                len(logical_cores) // 2,
+                len(logical_cores),
+                logical_cores,
+                block_siblings_16,
             )
             self.assertEqual(core, pid)
 
@@ -310,7 +337,9 @@ class TestOverheadCalls(FrappeAPITestCase):
         sid = self.sid
         self.get(self.resource("ToDo"), {"sid": sid})
         self.get(self.resource("ToDo"), {"sid": sid})
-        with self.assertRedisCallCounts(6), self.assertQueryCount(self.BASE_SQL_CALLS + 1):
+        with self.assertRedisCallCounts(6), self.assertQueryCount(
+            self.BASE_SQL_CALLS + 1
+        ):
             self.get(self.resource("ToDo"), {"sid": sid})
 
     def test_get_doc_overheads(self):
@@ -318,7 +347,9 @@ class TestOverheadCalls(FrappeAPITestCase):
         tables = len(frappe.get_meta("User").get_table_fields())
         self.get(self.resource("User", "Administrator"), {"sid": sid})
         self.get(self.resource("User", "Administrator"), {"sid": sid})
-        with self.assertRedisCallCounts(3), self.assertQueryCount(self.BASE_SQL_CALLS + 1 + tables):
+        with self.assertRedisCallCounts(3), self.assertQueryCount(
+            self.BASE_SQL_CALLS + 1 + tables
+        ):
             self.get(self.resource("User", "Administrator"), {"sid": sid})
 
 

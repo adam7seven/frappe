@@ -16,5 +16,7 @@ def login_feed(login_manager):
 
 def logout_feed(user, reason):
     if user and user != "Guest":
-        subject = _("{0} logged out: {1}").format(get_fullname(user), frappe.bold(reason))
+        subject = _("{0} logged out: {1}").format(
+            get_fullname(user), frappe.bold(reason)
+        )
         add_authentication_log(subject, user, operation="Logout")

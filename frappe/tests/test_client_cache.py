@@ -21,7 +21,9 @@ class TestClientCache(IntegrationTestCase):
     def test_client_cache_is_updated_instantly_noloop(self):
         val = frappe.generate_hash()
         frappe.client_cache.set_value(TEST_KEY, val)
-        with self.assertRedisCallCounts(0):  # Locally set value should not be invalidated.
+        with self.assertRedisCallCounts(
+            0
+        ):  # Locally set value should not be invalidated.
             self.assertEqual(frappe.client_cache.get_value(TEST_KEY), val)
 
     def test_invalidation_from_another_client_works(self):
@@ -96,7 +98,9 @@ class TestClientCache(IntegrationTestCase):
         val = frappe.generate_hash()
         frappe.client_cache.set_value(TEST_KEY, val)
 
-        self.assertEqual(frappe.client_cache.get_value(TEST_KEY), frappe.cache.get_value(TEST_KEY))
+        self.assertEqual(
+            frappe.client_cache.get_value(TEST_KEY), frappe.cache.get_value(TEST_KEY)
+        )
 
     def test_shared_keys(self):
         val = frappe.generate_hash()
@@ -107,10 +111,14 @@ class TestClientCache(IntegrationTestCase):
     def test_generator(self):
         val = frappe.generate_hash()
         with self.assertRedisCallCounts(3, exact=True):
-            self.assertEqual(frappe.client_cache.get_value(TEST_KEY, generator=lambda: val), val)
+            self.assertEqual(
+                frappe.client_cache.get_value(TEST_KEY, generator=lambda: val), val
+            )
 
         with self.assertRedisCallCounts(0):
-            self.assertEqual(frappe.client_cache.get_value(TEST_KEY, generator=lambda: val), val)
+            self.assertEqual(
+                frappe.client_cache.get_value(TEST_KEY, generator=lambda: val), val
+            )
 
     def test_get_doc(self):
         frappe.client_cache.get_doc("User", "Guest")

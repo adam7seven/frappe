@@ -14,15 +14,23 @@ def setup_database():
 
     # If user exists, just update password
     if root_conn.sql(f"SELECT 1 FROM pg_roles WHERE rolname='{frappe.conf.db_user}'"):
-        root_conn.sql(f"ALTER USER \"{frappe.conf.db_user}\" WITH PASSWORD '{frappe.conf.db_password}'")
+        root_conn.sql(
+            f"ALTER USER \"{frappe.conf.db_user}\" WITH PASSWORD '{frappe.conf.db_password}'"
+        )
     else:
-        root_conn.sql(f"CREATE USER \"{frappe.conf.db_user}\" WITH PASSWORD '{frappe.conf.db_password}'")
+        root_conn.sql(
+            f"CREATE USER \"{frappe.conf.db_user}\" WITH PASSWORD '{frappe.conf.db_password}'"
+        )
     root_conn.sql(f'CREATE DATABASE "{frappe.conf.db_name}"')
-    root_conn.sql(f'GRANT ALL PRIVILEGES ON DATABASE "{frappe.conf.db_name}" TO "{frappe.conf.db_user}"')
+    root_conn.sql(
+        f'GRANT ALL PRIVILEGES ON DATABASE "{frappe.conf.db_name}" TO "{frappe.conf.db_user}"'
+    )
     if psql_version := root_conn.sql("SHOW server_version_num", as_dict=True):
         semver_version_num = psql_version[0].get("server_version_num") or "140000"
         if cint(semver_version_num) > 150000:
-            root_conn.sql(f'ALTER DATABASE "{frappe.conf.db_name}" OWNER TO "{frappe.conf.db_user}"')
+            root_conn.sql(
+                f'ALTER DATABASE "{frappe.conf.db_name}" OWNER TO "{frappe.conf.db_user}"'
+            )
     root_conn.close()
 
 
@@ -67,7 +75,10 @@ def get_root_connection():
             frappe.flags.root_login = (
                 frappe.conf.get("postgres_root_login")
                 or frappe.conf.get("root_login")
-                or (sys.__stdin__.isatty() and input("Enter postgres super user [postgres]: "))
+                or (
+                    sys.__stdin__.isatty()
+                    and input("Enter postgres super user [postgres]: ")
+                )
                 or "postgres"
             )
 

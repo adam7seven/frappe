@@ -46,7 +46,9 @@ class TestUserType(IntegrationTestCase):
         create_user_type("Test User Type")
 
         # check if print, share & email values are set to 1
-        perm = frappe.get_all("Custom DocPerm", filters={"role": "_Test User Type"}, fields=["*"])[0]
+        perm = frappe.get_all(
+            "Custom DocPerm", filters={"role": "_Test User Type"}, fields=["*"]
+        )[0]
 
         self.assertTrue(perm.print == 1)
         self.assertTrue(perm.share == 1)

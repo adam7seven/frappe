@@ -13,7 +13,9 @@ default_log_level = logging.WARNING if frappe._dev_server else logging.ERROR
 stream_logging = os.environ.get("FRAPPE_STREAM_LOGGING")
 
 
-def create_handler(module, site=None, max_size=100_000, file_count=20, stream_only=False):
+def create_handler(
+    module, site=None, max_size=100_000, file_count=20, stream_only=False
+):
     """Create and return a Frappe-specific logging handler."""
     formatter = logging.Formatter(f"%(asctime)s %(levelname)s {module} %(message)s")
 
@@ -22,13 +24,17 @@ def create_handler(module, site=None, max_size=100_000, file_count=20, stream_on
     else:
         logfile = f"{module}.log"
         log_filename = os.path.join("..", "logs", logfile)
-        handler = RotatingFileHandler(log_filename, maxBytes=max_size, backupCount=file_count)
+        handler = RotatingFileHandler(
+            log_filename, maxBytes=max_size, backupCount=file_count
+        )
 
     handler.setFormatter(formatter)
 
     if site and not stream_only:
         sitelog_filename = os.path.join(site, "logs", logfile)
-        site_handler = RotatingFileHandler(sitelog_filename, maxBytes=max_size, backupCount=file_count)
+        site_handler = RotatingFileHandler(
+            sitelog_filename, maxBytes=max_size, backupCount=file_count
+        )
         site_handler.setFormatter(formatter)
         return [handler, site_handler]
 
@@ -108,7 +114,9 @@ class SiteContextFilter(logging.Filter):
 
 def set_log_level(level: Literal["ERROR", "WARNING", "WARN", "INFO", "DEBUG"]) -> None:
     """Use this method to set log level to something other than the default DEBUG"""
-    frappe.log_level = getattr(logging, (level or "").upper(), None) or default_log_level
+    frappe.log_level = (
+        getattr(logging, (level or "").upper(), None) or default_log_level
+    )
     frappe.loggers = {}
 
 

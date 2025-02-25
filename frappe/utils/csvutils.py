@@ -53,7 +53,9 @@ def read_csv_content(fcontent, use_sniffer: bool = False):
 
         if not decoded:
             frappe.msgprint(
-                _("Unknown file encoding. Tried to use: {0}").format(", ".join(FILE_ENCODING_OPTIONS)),
+                _("Unknown file encoding. Tried to use: {0}").format(
+                    ", ".join(FILE_ENCODING_OPTIONS)
+                ),
                 raise_exception=True,
             )
 
@@ -70,7 +72,8 @@ def read_csv_content(fcontent, use_sniffer: bool = False):
         try:
             # csv by default uses excel dialect, which is not always correct
             dialect = sniffer.sniff(
-                sample="\n".join(sample_content), delimiters=frappe.flags.delimiter_options
+                sample="\n".join(sample_content),
+                delimiters=frappe.flags.delimiter_options,
             )
         except csv.Error:
             # if sniff fails, show alert on user interface. Fall back to use default dialect (excel)
@@ -155,13 +158,16 @@ def check_record(d):
         val = d[key]
         if docfield:
             if docfield.reqd and (val == "" or val is None):
-                frappe.msgprint(_("{0} is required").format(docfield.label), raise_exception=1)
+                frappe.msgprint(
+                    _("{0} is required").format(docfield.label), raise_exception=1
+                )
 
             if docfield.fieldtype == "Select" and val and docfield.options:
                 if val not in docfield.options.split("\n"):
                     frappe.throw(
                         _("{0} must be one of {1}").format(
-                            _(docfield.label, context=docfield.parent), comma_or(docfield.options.split("\n"))
+                            _(docfield.label, context=docfield.parent),
+                            comma_or(docfield.options.split("\n")),
                         )
                     )
 
@@ -247,7 +253,11 @@ def validate_google_sheets_url(url):
     from urllib.parse import urlparse
 
     u = urlparse(url)
-    if u.scheme != "https" or u.netloc != "docs.google.com" or "/spreadsheets/" not in u.path:
+    if (
+        u.scheme != "https"
+        or u.netloc != "docs.google.com"
+        or "/spreadsheets/" not in u.path
+    ):
         frappe.throw(
             _('"{0}" is not a valid Google Sheets URL').format(url),
             title=_("Invalid URL"),

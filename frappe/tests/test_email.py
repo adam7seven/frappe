@@ -38,7 +38,8 @@ class TestEmail(IntegrationTestCase):
         )
 
         email_queue = frappe.db.sql(
-            """select name,message from `tabEmail Queue` where status='Not Sent'""", as_dict=1
+            """select name,message from `tabEmail Queue` where status='Not Sent'""",
+            as_dict=1,
         )
         self.assertEqual(len(email_queue), 1)
         queue_recipients = [
@@ -59,7 +60,9 @@ class TestEmail(IntegrationTestCase):
         from frappe.email.queue import flush
 
         flush()
-        email_queue = frappe.db.sql("""select name from `tabEmail Queue` where status='Sent'""", as_dict=1)
+        email_queue = frappe.db.sql(
+            """select name from `tabEmail Queue` where status='Sent'""", as_dict=1
+        )
         self.assertEqual(len(email_queue), 0)
 
     def test_flush(self):
@@ -67,7 +70,9 @@ class TestEmail(IntegrationTestCase):
         from frappe.email.queue import flush
 
         flush()
-        email_queue = frappe.db.sql("""select name from `tabEmail Queue` where status='Sent'""", as_dict=1)
+        email_queue = frappe.db.sql(
+            """select name from `tabEmail Queue` where status='Sent'""", as_dict=1
+        )
         self.assertEqual(len(email_queue), 1)
         queue_recipients = [
             r.recipient
@@ -132,7 +137,9 @@ class TestEmail(IntegrationTestCase):
             expose_recipients="footer",
             now=True,
         )
-        email_queue = frappe.db.sql("""select name from `tabEmail Queue` where status='Sent'""", as_dict=1)
+        email_queue = frappe.db.sql(
+            """select name from `tabEmail Queue` where status='Sent'""", as_dict=1
+        )
         self.assertEqual(len(email_queue), 1)
         queue_recipients = [
             r.recipient
@@ -165,7 +172,9 @@ class TestEmail(IntegrationTestCase):
             unsubscribe_message="Unsubscribe",
             now=True,
         )
-        email_queue = frappe.db.sql("""select name from `tabEmail Queue` where status='Sent'""", as_dict=1)
+        email_queue = frappe.db.sql(
+            """select name from `tabEmail Queue` where status='Sent'""", as_dict=1
+        )
         self.assertEqual(len(email_queue), 1)
         queue_recipients = [
             r.recipient
@@ -185,7 +194,9 @@ class TestEmail(IntegrationTestCase):
         )[0].message
         self.assertTrue("<!--recipient-->" in message)
 
-        email_obj = email.message_from_string(frappe.safe_decode(frappe.flags.sent_mail))
+        email_obj = email.message_from_string(
+            frappe.safe_decode(frappe.flags.sent_mail)
+        )
         for part in email_obj.walk():
             content = part.get_payload(decode=True)
 
@@ -193,7 +204,10 @@ class TestEmail(IntegrationTestCase):
                 eol = "\r\n"
 
                 query_string = re.search(
-                    r"(?<=/api/method/frappe.email.queue.unsubscribe\?).*(?=" + eol + ")", content.decode()
+                    r"(?<=/api/method/frappe.email.queue.unsubscribe\?).*(?="
+                    + eol
+                    + ")",
+                    content.decode(),
                 ).group(0)
 
                 set_request(method="GET", query_string=query_string)
@@ -202,7 +216,9 @@ class TestEmail(IntegrationTestCase):
 
     def test_sender(self):
         def _patched_assertion(email_account, assertion):
-            with patch.object(QueueBuilder, "get_outgoing_email_account", return_value=email_account):
+            with patch.object(
+                QueueBuilder, "get_outgoing_email_account", return_value=email_account
+            ):
                 frappe.sendmail(
                     recipients=["test1@example.com"],
                     sender="admin@example.com",
@@ -210,7 +226,9 @@ class TestEmail(IntegrationTestCase):
                     message="This mail is queued!",
                     now=True,
                 )
-                email_queue_sender = frappe.db.get_value("Email Queue", {"status": "Sent"}, "sender")
+                email_queue_sender = frappe.db.get_value(
+                    "Email Queue", {"status": "Sent"}, "sender"
+                )
                 self.assertEqual(email_queue_sender, assertion)
 
         email_account = frappe.get_doc("Email Account", "_Test Email Account 1")
@@ -237,7 +255,11 @@ class TestEmail(IntegrationTestCase):
         self.assertTrue(
             frappe.db.get_value(
                 "Email Unsubscribe",
-                {"reference_doctype": "User", "reference_name": "Administrator", "email": "test@example.com"},
+                {
+                    "reference_doctype": "User",
+                    "reference_name": "Administrator",
+                    "email": "test@example.com",
+                },
             )
         )
 
@@ -277,9 +299,15 @@ class TestEmail(IntegrationTestCase):
 
         frappe.db.delete("Communication", {"sender": "sukh@yyy.com"})
 
-        with open(frappe.get_app_path("frappe", "tests", "data", "email_with_image.txt")) as raw:
+        with open(
+            frappe.get_app_path("frappe", "tests", "data", "email_with_image.txt")
+        ) as raw:
             messages = {
-                '"INBOX"': {"latest_messages": [raw.read()], "seen_status": {2: "UNSEEN"}, "uid_list": [2]}
+                '"INBOX"': {
+                    "latest_messages": [raw.read()],
+                    "seen_status": {2: "UNSEEN"},
+                    "uid_list": [2],
+                }
             }
 
             email_account = frappe.get_doc("Email Account", "_Test Email Account 1")
@@ -291,15 +319,23 @@ class TestEmail(IntegrationTestCase):
 
             # TODO: fix this flaky test! - 'IndexError: list index out of range' for `.process()` line
             if not mails:
-                raise self.skipTest("No inbound mails found / Email Account wasn't patched properly")
+                raise self.skipTest(
+                    "No inbound mails found / Email Account wasn't patched properly"
+                )
 
             communication = mails[0].process()
 
         self.assertTrue(
-            re.search("""<img[^>]*src=["']/private/files/rtco1.png[^>]*>""", communication.content)
+            re.search(
+                """<img[^>]*src=["']/private/files/rtco1.png[^>]*>""",
+                communication.content,
+            )
         )
         self.assertTrue(
-            re.search("""<img[^>]*src=["']/private/files/rtco2.png[^>]*>""", communication.content)
+            re.search(
+                """<img[^>]*src=["']/private/files/rtco2.png[^>]*>""",
+                communication.content,
+            )
         )
 
         if changed_flag:
@@ -356,7 +392,11 @@ class TestEmailIntegrationTest(IntegrationTestCase):
         content = "is email working?"
 
         email = frappe.sendmail(
-            sender=sender, recipients=recipients, subject=subject, content=content, now=True
+            sender=sender,
+            recipients=recipients,
+            subject=subject,
+            content=content,
+            now=True,
         )
         email.reload()
         self.assertEqual(email.sender, sender)
@@ -369,10 +409,14 @@ class TestEmailIntegrationTest(IntegrationTestCase):
         for sent_mail in sent_mails:
             self.assertEqual(sent_mail["from"], sender)
             self.assertEqual(sent_mail["subject"], subject)
-        self.assertSetEqual(set(recipients.split(",")), {m["to"][0] for m in sent_mails})
+        self.assertSetEqual(
+            set(recipients.split(",")), {m["to"][0] for m in sent_mails}
+        )
 
     @run_only_if(db_type_is.MARIADB)
-    @IntegrationTestCase.change_settings("System Settings", store_attached_pdf_document=1)
+    @IntegrationTestCase.change_settings(
+        "System Settings", store_attached_pdf_document=1
+    )
     def test_store_attachments(self):
         """ "attach print" feature just tells email queue which document to attach, this is not
         actually stored unless system setting says so."""

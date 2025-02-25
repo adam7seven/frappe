@@ -39,7 +39,9 @@ class EnergyPointRule(Document):
     # end: auto-generated types
 
     def on_update(self):
-        frappe.cache_manager.clear_doctype_map("Energy Point Rule", self.reference_doctype)
+        frappe.cache_manager.clear_doctype_map(
+            "Energy Point Rule", self.reference_doctype
+        )
 
     def on_trash(self):
         frappe.cache_manager.clear_doctype_map(

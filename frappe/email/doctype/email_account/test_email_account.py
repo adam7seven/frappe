@@ -67,7 +67,9 @@ class TestEmailAccount(IntegrationTestCase):
         comm = frappe.get_doc("Communication", {"sender": "test_sender@example.com"})
         self.assertTrue("test_receiver@example.com" in comm.recipients)
         # check if todo is created
-        self.assertTrue(frappe.db.get_value(comm.reference_doctype, comm.reference_name, "name"))
+        self.assertTrue(
+            frappe.db.get_value(comm.reference_doctype, comm.reference_name, "name")
+        )
 
     def test_unread_notification(self):
         todo = frappe.get_last_doc("ToDo")
@@ -99,7 +101,9 @@ class TestEmailAccount(IntegrationTestCase):
     def test_incoming_with_attach(self):
         cleanup("test_sender@example.com")
 
-        existing_file = frappe.get_doc({"doctype": "File", "file_name": "erpnext-conf-14.png"})
+        existing_file = frappe.get_doc(
+            {"doctype": "File", "file_name": "erpnext-conf-14.png"}
+        )
         frappe.delete_doc("File", existing_file.name)
 
         messages = {
@@ -122,7 +126,9 @@ class TestEmailAccount(IntegrationTestCase):
         self.assertTrue("erpnext-conf-14.png" in [f.file_name for f in attachments])
 
         # cleanup
-        existing_file = frappe.get_doc({"doctype": "File", "file_name": "erpnext-conf-14.png"})
+        existing_file = frappe.get_doc(
+            {"doctype": "File", "file_name": "erpnext-conf-14.png"}
+        )
         frappe.delete_doc("File", existing_file.name)
 
     def test_incoming_attached_email_from_outlook_plain_text_only(self):
@@ -141,9 +147,13 @@ class TestEmailAccount(IntegrationTestCase):
         TestEmailAccount.mocked_email_receive(email_account, messages)
 
         comm = frappe.get_doc("Communication", {"sender": "test_sender@example.com"})
-        self.assertTrue("From: &quot;Microsoft Outlook&quot; &lt;test_sender@example.com&gt;" in comm.content)
         self.assertTrue(
-            "This is an e-mail message sent automatically by Microsoft Outlook while" in comm.content
+            "From: &quot;Microsoft Outlook&quot; &lt;test_sender@example.com&gt;"
+            in comm.content
+        )
+        self.assertTrue(
+            "This is an e-mail message sent automatically by Microsoft Outlook while"
+            in comm.content
         )
 
     def test_incoming_attached_email_from_outlook_layers(self):
@@ -162,9 +172,13 @@ class TestEmailAccount(IntegrationTestCase):
         TestEmailAccount.mocked_email_receive(email_account, messages)
 
         comm = frappe.get_doc("Communication", {"sender": "test_sender@example.com"})
-        self.assertTrue("From: &quot;Microsoft Outlook&quot; &lt;test_sender@example.com&gt;" in comm.content)
         self.assertTrue(
-            "This is an e-mail message sent automatically by Microsoft Outlook while" in comm.content
+            "From: &quot;Microsoft Outlook&quot; &lt;test_sender@example.com&gt;"
+            in comm.content
+        )
+        self.assertTrue(
+            "This is an e-mail message sent automatically by Microsoft Outlook while"
+            in comm.content
         )
 
     def test_outgoing(self):
@@ -195,7 +209,9 @@ class TestEmailAccount(IntegrationTestCase):
             delayed=False,
         )
 
-        sent_mail = email.message_from_string(frappe.safe_decode(frappe.flags.sent_mail))
+        sent_mail = email.message_from_string(
+            frappe.safe_decode(frappe.flags.sent_mail)
+        )
         self.assertTrue("test-mail-001" in sent_mail.get("Subject"))
 
     def test_print_format(self):
@@ -233,16 +249,24 @@ class TestEmailAccount(IntegrationTestCase):
             send_email=True,
         )["name"]
 
-        sent_mail = email.message_from_string(frappe.get_last_doc("Email Queue").message)
+        sent_mail = email.message_from_string(
+            frappe.get_last_doc("Email Queue").message
+        )
 
-        with open(os.path.join(os.path.dirname(__file__), "test_mails", "reply-1.raw")) as f:
+        with open(
+            os.path.join(os.path.dirname(__file__), "test_mails", "reply-1.raw")
+        ) as f:
             raw = f.read()
             raw = raw.replace("<-- in-reply-to -->", sent_mail.get("Message-Id"))
 
         # parse reply
         messages = {
             # append_to = ToDo
-            '"INBOX"': {"latest_messages": [raw], "seen_status": {2: "UNSEEN"}, "uid_list": [2]}
+            '"INBOX"': {
+                "latest_messages": [raw],
+                "seen_status": {2: "UNSEEN"},
+                "uid_list": [2],
+            }
         }
 
         email_account = frappe.get_doc("Email Account", "_Test Email Account 1")
@@ -257,10 +281,14 @@ class TestEmailAccount(IntegrationTestCase):
     def test_threading_by_subject(self):
         cleanup(["in", ["test_sender@example.com", "test@example.com"]])
 
-        with open(os.path.join(os.path.dirname(__file__), "test_mails", "reply-2.raw")) as f:
+        with open(
+            os.path.join(os.path.dirname(__file__), "test_mails", "reply-2.raw")
+        ) as f:
             test_mails = [f.read()]
 
-        with open(os.path.join(os.path.dirname(__file__), "test_mails", "reply-3.raw")) as f:
+        with open(
+            os.path.join(os.path.dirname(__file__), "test_mails", "reply-3.raw")
+        ) as f:
             test_mails.append(f.read())
 
         # parse reply
@@ -304,12 +332,16 @@ class TestEmailAccount(IntegrationTestCase):
         last_mail = frappe.get_doc("Email Queue", dict(reference_name=event.name))
 
         # get test mail with message-id as in-reply-to
-        with open(os.path.join(os.path.dirname(__file__), "test_mails", "reply-4.raw")) as f:
+        with open(
+            os.path.join(os.path.dirname(__file__), "test_mails", "reply-4.raw")
+        ) as f:
             messages = {
                 # append_to = ToDo
                 '"INBOX"': {
                     "latest_messages": [
-                        f.read().replace("{{ message_id }}", "<" + last_mail.message_id + ">")
+                        f.read().replace(
+                            "{{ message_id }}", "<" + last_mail.message_id + ">"
+                        )
                     ],
                     "seen_status": {2: "UNSEEN"},
                     "uid_list": [2],
@@ -349,7 +381,10 @@ class TestEmailAccount(IntegrationTestCase):
         self.assertTrue(
             frappe.db.get_value(
                 "Email Queue",
-                {"reference_doctype": comm.reference_doctype, "reference_name": comm.reference_name},
+                {
+                    "reference_doctype": comm.reference_doctype,
+                    "reference_name": comm.reference_name,
+                },
             )
         )
 
@@ -359,7 +394,9 @@ class TestEmailAccount(IntegrationTestCase):
 
         email_account = frappe.get_doc("Email Account", "_Test Email Account 1")
         email_account.handle_bad_emails(uid=-1, raw=mail_content, reason="Testing")
-        self.assertTrue(frappe.db.get_value("Unhandled Email", {"message_id": message_id}))
+        self.assertTrue(
+            frappe.db.get_value("Unhandled Email", {"message_id": message_id})
+        )
 
     def test_handle_bad_encoding(self):
         """If the email has invalid encoding, it should still be saved as an Unhandled Email."""
@@ -395,7 +432,11 @@ class TestEmailAccount(IntegrationTestCase):
         # the append_to for the email is set to ToDO in "_Test Email Account 1"
         self.assertEqual(communication.reference_doctype, "ToDo")
         self.assertTrue(communication.reference_name)
-        self.assertTrue(frappe.db.exists(communication.reference_doctype, communication.reference_name))
+        self.assertTrue(
+            frappe.db.exists(
+                communication.reference_doctype, communication.reference_name
+            )
+        )
 
     @unittest.skip("poorly written and flaky")
     def test_append_to_with_imap_folders(self):
@@ -432,7 +473,9 @@ class TestEmailAccount(IntegrationTestCase):
                 self.assertEqual(communication.reference_doctype, "ToDo")
                 self.assertTrue(communication.reference_name)
                 self.assertTrue(
-                    frappe.db.exists(communication.reference_doctype, communication.reference_name)
+                    frappe.db.exists(
+                        communication.reference_doctype, communication.reference_name
+                    )
                 )
             else:
                 test_folder_mails += 1
@@ -582,7 +625,9 @@ class TestInboundMail(IntegrationTestCase):
         Ex: User replied to his/her mail.
         """
         message_id = "new-message-id"
-        mail_content = self.get_test_mail(fname="reply-4.raw").replace("{{ message_id }}", message_id)
+        mail_content = self.get_test_mail(fname="reply-4.raw").replace(
+            "{{ message_id }}", message_id
+        )
 
         email_account = frappe.get_doc("Email Account", "_Test Email Account 1")
         inbound_mail = InboundMail(mail_content, email_account, 12345, 1)
@@ -610,7 +655,9 @@ class TestInboundMail(IntegrationTestCase):
         # Create email queue record
         todo = self.new_todo()
         # communication = self.new_communication(reference_doctype='ToDo', reference_name=todo.name)
-        queue_record = self.new_email_queue(reference_doctype="ToDo", reference_name=todo.name)
+        queue_record = self.new_email_queue(
+            reference_doctype="ToDo", reference_name=todo.name
+        )
         mail_content = self.get_test_mail(fname="reply-4.raw").replace(
             "{{ message_id }}", queue_record.message_id
         )
@@ -624,9 +671,9 @@ class TestInboundMail(IntegrationTestCase):
         # Create email queue record
         todo = self.new_todo()
 
-        mail_content = self.get_test_mail(fname="incoming-subject-placeholder.raw").replace(
-            "{{ subject }}", f"RE: (#{todo.name})"
-        )
+        mail_content = self.get_test_mail(
+            fname="incoming-subject-placeholder.raw"
+        ).replace("{{ subject }}", f"RE: (#{todo.name})")
 
         email_account = frappe.get_doc("Email Account", "_Test Email Account 1")
         inbound_mail = InboundMail(mail_content, email_account, 12345, 1)
@@ -637,9 +684,9 @@ class TestInboundMail(IntegrationTestCase):
         subject = "New todo"
         todo = self.new_todo(sender="test_sender@example.com", description=subject)
 
-        mail_content = self.get_test_mail(fname="incoming-subject-placeholder.raw").replace(
-            "{{ subject }}", f"RE: {subject}"
-        )
+        mail_content = self.get_test_mail(
+            fname="incoming-subject-placeholder.raw"
+        ).replace("{{ subject }}", f"RE: {subject}")
         email_account = frappe.get_doc("Email Account", "_Test Email Account 1")
         inbound_mail = InboundMail(mail_content, email_account, 12345, 1)
         reference_doc = inbound_mail.reference_document()

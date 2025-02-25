@@ -233,7 +233,9 @@ class TestDocumentCache(FrappeAPITestCase):
         new_doc = frappe.get_cached_doc(self.TEST_DOCTYPE, self.TEST_DOCNAME)
 
         self.assertIsNot(doc, new_doc)  # Shouldn't be same object from frappe.local
-        self.assertEqual(new_doc.get(self.TEST_FIELD), self.test_value)  # Cache invalidated and fetched
+        self.assertEqual(
+            new_doc.get(self.TEST_FIELD), self.test_value
+        )  # Cache invalidated and fetched
         frappe.db.rollback()
 
         doc_after_rollback = frappe.get_cached_doc(self.TEST_DOCTYPE, self.TEST_DOCNAME)

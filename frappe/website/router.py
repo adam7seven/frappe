@@ -120,7 +120,12 @@ def get_pages_from_path(start, app, app_path):
 
                 if extn in ("html", "xml", "js", "css", "md"):
                     page_info = get_page_info(
-                        os.path.join(basepath, fname), app, start, basepath, app_path, fname
+                        os.path.join(basepath, fname),
+                        app,
+                        start,
+                        basepath,
+                        app_path,
+                        fname,
                     )
                     pages[page_info.route] = page_info
 
@@ -329,7 +334,9 @@ def get_start_folders():
 def clear_routing_cache():
     from frappe.website.doctype.web_form.web_form import get_published_web_forms
     from frappe.website.doctype.web_page.web_page import get_dynamic_web_pages
-    from frappe.website.page_renderers.document_page import _find_matching_document_webview
+    from frappe.website.page_renderers.document_page import (
+        _find_matching_document_webview,
+    )
     from frappe.www.sitemap import get_public_pages_from_doctypes
 
     _find_matching_document_webview.clear_cache()

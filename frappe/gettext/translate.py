@@ -148,7 +148,12 @@ def generate_pot(target_app: str | None = None):
             if not message:
                 continue
 
-            catalog.add(message, locations=[(filename, lineno)], auto_comments=comments, context=context)
+            catalog.add(
+                message,
+                locations=[(filename, lineno)],
+                auto_comments=comments,
+                context=context,
+            )
 
         pot_path = write_catalog(app, catalog)
         print(f"POT file created at {pot_path}")
@@ -194,7 +199,9 @@ def new_po(locale, target_app: str | None = None):
         )
 
 
-def compile_translations(target_app: str | None = None, locale: str | None = None, force=False):
+def compile_translations(
+    target_app: str | None = None, locale: str | None = None, force=False
+):
     apps = [target_app] if target_app else frappe.get_all_apps(True)
     tasks = []
     for app in apps:
@@ -217,7 +224,11 @@ def _compile_translation(app, locale, force=False):
     if not po_path.exists():
         return
 
-    if mo_path.exists() and po_path.stat().st_mtime < mo_path.stat().st_mtime and not force:
+    if (
+        mo_path.exists()
+        and po_path.stat().st_mtime < mo_path.stat().st_mtime
+        and not force
+    ):
         print(f"MO file already up to date at {mo_path}")
         return
 
@@ -261,7 +272,11 @@ def migrate(app: str | None = None, locale: str | None = None):
 
 
 def csv_to_po(app: str, locale: str):
-    csv_file = Path(frappe.get_app_path(app)) / "translations" / f"{locale.replace('_', '-')}.csv"
+    csv_file = (
+        Path(frappe.get_app_path(app))
+        / "translations"
+        / f"{locale.replace('_', '-')}.csv"
+    )
     locale = locale.replace("-", "_")
     if not csv_file.exists():
         return

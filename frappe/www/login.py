@@ -47,11 +47,17 @@ def get_context(context):
     context["hide_login"] = True  # dont show login link on login page again.
     context["provider_logins"] = []
     context["disable_signup"] = cint(frappe.get_website_settings("disable_signup"))
-    context["show_footer_on_login"] = cint(frappe.get_website_settings("show_footer_on_login"))
-    context["disable_user_pass_login"] = cint(frappe.get_system_settings("disable_user_pass_login"))
+    context["show_footer_on_login"] = cint(
+        frappe.get_website_settings("show_footer_on_login")
+    )
+    context["disable_user_pass_login"] = cint(
+        frappe.get_system_settings("disable_user_pass_login")
+    )
     context["logo"] = get_app_logo()
     context["app_name"] = (
-        frappe.get_website_settings("app_name") or frappe.get_system_settings("app_name") or _("Frappe")
+        frappe.get_website_settings("app_name")
+        or frappe.get_system_settings("app_name")
+        or _("Frappe")
     )
 
     signup_form_template = frappe.get_hooks("signup_form_template")
@@ -167,9 +173,14 @@ def _generate_temporary_login_link(email: str, expiry: int):
     assert isinstance(email, str)
 
     if not frappe.db.exists("User", email):
-        frappe.throw(_("User with email address {0} does not exist").format(email), frappe.DoesNotExistError)
+        frappe.throw(
+            _("User with email address {0} does not exist").format(email),
+            frappe.DoesNotExistError,
+        )
     key = frappe.generate_hash()
-    frappe.cache.set_value(f"one_time_login_key:{key}", email, expires_in_sec=expiry * 60)
+    frappe.cache.set_value(
+        f"one_time_login_key:{key}", email, expires_in_sec=expiry * 60
+    )
 
     return get_url(f"/api/method/frappe.www.login.login_via_key?key={key}")
 
@@ -189,7 +200,8 @@ def login_via_key(key: str):
         frappe.local.login_manager.login_as(email)
 
         redirect_post_login(
-            desk_user=frappe.db.get_value("User", frappe.session.user, "user_type") == "System User"
+            desk_user=frappe.db.get_value("User", frappe.session.user, "user_type")
+            == "System User"
         )
     else:
         frappe.respond_as_web_page(

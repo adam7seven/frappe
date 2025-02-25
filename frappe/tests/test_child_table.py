@@ -29,7 +29,12 @@ class TestChildTable(IntegrationTestCase):
                     "custom": 1,
                     "module": "Integrations",
                     "fields": [
-                        {"label": "Some Field", "fieldname": "some_fieldname", "fieldtype": "Data", "reqd": 1}
+                        {
+                            "label": "Some Field",
+                            "fieldname": "some_fieldname",
+                            "fieldtype": "Data",
+                            "reqd": 1,
+                        }
                     ],
                 }
             ).insert(ignore_permissions=True)
@@ -44,7 +49,9 @@ class TestChildTable(IntegrationTestCase):
         try:
             doc.save(ignore_permissions=True)
         except Exception:
-            self.fail("Not able to transition from Child Table Doctype to Normal Doctype")
+            self.fail(
+                "Not able to transition from Child Table Doctype to Normal Doctype"
+            )
 
         self.check_valid_columns(self.assertFalse)
 
@@ -53,7 +60,9 @@ class TestChildTable(IntegrationTestCase):
         try:
             doc.save(ignore_permissions=True)
         except Exception:
-            self.fail("Not able to transition from Normal Doctype to Child Table Doctype")
+            self.fail(
+                "Not able to transition from Normal Doctype to Child Table Doctype"
+            )
 
         self.check_valid_columns(self.assertTrue)
 

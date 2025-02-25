@@ -38,7 +38,9 @@ def setup_database(force, verbose, mariadb_user_host_login_scope=None):
     if force or (db_name not in dbman.get_database_list()):
         dbman.drop_database(db_name)
     else:
-        print(f"Database {db_name} already exists, please drop it manually or pass `--force`.")
+        print(
+            f"Database {db_name} already exists, please drop it manually or pass `--force`."
+        )
         sys.exit(1)
 
     dbman.create_database(db_name)

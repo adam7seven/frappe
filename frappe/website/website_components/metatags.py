@@ -61,7 +61,9 @@ class MetaTags:
             # homepage
             route = frappe.get_website_settings("home_page")
 
-        route_exists = route and not route.endswith((".js", ".css")) and has_meta_tags(route)
+        route_exists = (
+            route and not route.endswith((".js", ".css")) and has_meta_tags(route)
+        )
 
         if route_exists:
             website_route_meta = frappe.get_doc("Website Route Meta", route)

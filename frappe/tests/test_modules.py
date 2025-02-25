@@ -44,10 +44,13 @@ class TestUtils(IntegrationTestCase):
     def test_export_module_json_no_export(self):
         frappe.local.flags.in_import = True
         doc = frappe.get_last_doc("DocType")
-        self.assertIsNone(export_module_json(doc=doc, is_standard=True, module=doc.module))
+        self.assertIsNone(
+            export_module_json(doc=doc, is_standard=True, module=doc.module)
+        )
 
     @unittest.skipUnless(
-        os.access(frappe.get_app_path("frappe"), os.W_OK), "Only run if frappe app paths is writable"
+        os.access(frappe.get_app_path("frappe"), os.W_OK),
+        "Only run if frappe app paths is writable",
     )
     def test_export_module_json(self):
         doc = frappe.get_last_doc("DocType", {"issingle": 0, "custom": 0})
@@ -61,7 +64,9 @@ class TestUtils(IntegrationTestCase):
             export_doc_before = frappe.parse_json(f.read())
 
         last_modified_before = os.path.getmtime(export_doc_path)
-        self.addCleanup(write_file, path=export_doc_path, content=frappe.as_json(export_doc_before))
+        self.addCleanup(
+            write_file, path=export_doc_path, content=frappe.as_json(export_doc_before)
+        )
 
         frappe.flags.in_import = False
         frappe.conf.developer_mode = True
@@ -75,7 +80,8 @@ class TestUtils(IntegrationTestCase):
         self.assertTrue(last_modified_after > last_modified_before)
 
     @unittest.skipUnless(
-        os.access(frappe.get_app_path("frappe"), os.W_OK), "Only run if frappe app paths is writable"
+        os.access(frappe.get_app_path("frappe"), os.W_OK),
+        "Only run if frappe app paths is writable",
     )
     def test_export_customizations(self):
         with note_customizations():
@@ -85,17 +91,24 @@ class TestUtils(IntegrationTestCase):
             self.assertTrue(os.path.exists(file_path))
 
     @unittest.skipUnless(
-        os.access(frappe.get_app_path("frappe"), os.W_OK), "Only run if frappe app paths is writable"
+        os.access(frappe.get_app_path("frappe"), os.W_OK),
+        "Only run if frappe app paths is writable",
     )
     def test_sync_customizations(self):
         with note_customizations() as (custom_field, property_setter):
-            file_path = export_customizations(module="Custom", doctype="Note", sync_on_migrate=True)
+            file_path = export_customizations(
+                module="Custom", doctype="Note", sync_on_migrate=True
+            )
             custom_field.db_set("modified", now_datetime())
             custom_field.reload()
 
             # Untracked property setter
             custom_prop_setter = make_property_setter(
-                "Note", fieldname="content", property="bold", value="1", property_type="Check"
+                "Note",
+                fieldname="content",
+                property="bold",
+                value="1",
+                property_type="Check",
             )
 
             self.assertTrue(file_path.endswith("/custom/custom/note.json"))
@@ -115,7 +128,9 @@ class TestUtils(IntegrationTestCase):
             self.addCleanup(delete_file, path=file_path)
 
     def test_reload_doc(self):
-        frappe.db.set_value("DocType", "Note", "migration_hash", "", update_modified=False)
+        frappe.db.set_value(
+            "DocType", "Note", "migration_hash", "", update_modified=False
+        )
         self.assertFalse(frappe.db.get_value("DocType", "Note", "migration_hash"))
         frappe.db.set_value(
             "DocField",
@@ -125,18 +140,23 @@ class TestUtils(IntegrationTestCase):
             update_modified=False,
         )
         self.assertEqual(
-            frappe.db.get_value("DocField", {"parent": "Note", "fieldname": "title"}, "fieldtype"),
+            frappe.db.get_value(
+                "DocField", {"parent": "Note", "fieldname": "title"}, "fieldtype"
+            ),
             "Text",
         )
         frappe.reload_doctype("Note")
         self.assertEqual(
-            frappe.db.get_value("DocField", {"parent": "Note", "fieldname": "title"}, "fieldtype"),
+            frappe.db.get_value(
+                "DocField", {"parent": "Note", "fieldname": "title"}, "fieldtype"
+            ),
             "Data",
         )
         self.assertTrue(frappe.db.get_value("DocType", "Note", "migration_hash"))
 
     @unittest.skipUnless(
-        os.access(frappe.get_app_path("frappe"), os.W_OK), "Only run if frappe app paths is writable"
+        os.access(frappe.get_app_path("frappe"), os.W_OK),
+        "Only run if frappe app paths is writable",
     )
     def test_export_doc(self):
         note = frappe.new_doc("Note")
@@ -144,18 +164,23 @@ class TestUtils(IntegrationTestCase):
         note.save()
         export_doc(doctype="Note", name=note.name)
         exported_doc_path = Path(
-            frappe.get_app_path("frappe", "desk", "note", note.name, f"{note.name}.json")
+            frappe.get_app_path(
+                "frappe", "desk", "note", note.name, f"{note.name}.json"
+            )
         )
         self.assertTrue(os.path.exists(exported_doc_path))
         self.addCleanup(delete_path, path=exported_doc_path.parent.parent)
 
     @unittest.skipUnless(
-        os.access(frappe.get_app_path("frappe"), os.W_OK), "Only run if frappe app paths is writable"
+        os.access(frappe.get_app_path("frappe"), os.W_OK),
+        "Only run if frappe app paths is writable",
     )
     def test_make_boilerplate(self):
         with temp_doctype() as doctype:
             scrubbed = frappe.scrub(doctype.name)
-            path = frappe.get_app_path("frappe", "core", "doctype", scrubbed, f"{scrubbed}.json")
+            path = frappe.get_app_path(
+                "frappe", "core", "doctype", scrubbed, f"{scrubbed}.json"
+            )
             self.assertFalse(os.path.exists(path))
             doctype.custom = False
             doctype.save()
@@ -183,7 +208,11 @@ def note_customizations():
         custom_field = create_custom_field("Note", df=df)
 
         property_setter = make_property_setter(
-            "Note", fieldname="content", property="bold", value="1", property_type="Check"
+            "Note",
+            fieldname="content",
+            property="bold",
+            value="1",
+            property_type="Check",
         )
         yield custom_field, property_setter
     finally:

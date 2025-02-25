@@ -24,7 +24,9 @@ class TestReadOnlyDocument(IntegrationTestCase):
     def test_read_only_insert(self):
         with read_only_document():
             with self.assertRaises(frappe.DatabaseModificationError):
-                frappe.get_doc({"doctype": "ToDo", "description": "Another Test ToDo"}).insert()
+                frappe.get_doc(
+                    {"doctype": "ToDo", "description": "Another Test ToDo"}
+                ).insert()
 
     def test_read_only_delete(self):
         with read_only_document():
@@ -90,12 +92,16 @@ class TestReadOnlyDocument(IntegrationTestCase):
         # Verify that document can be modified outside read_only_document
         self.test_doc.description = "Modified outside read_only_document"
         self.test_doc.save()
-        self.assertEqual(self.test_doc.description, "Modified outside read_only_document")
+        self.assertEqual(
+            self.test_doc.description, "Modified outside read_only_document"
+        )
 
     def test_error_log_exception_in_read_only(self):
         with read_only_document():
             # Attempt to insert an Error Log
-            error_log = frappe.get_doc({"doctype": "Error Log", "error": "Test error in read-only mode"})
+            error_log = frappe.get_doc(
+                {"doctype": "Error Log", "error": "Test error in read-only mode"}
+            )
 
             # This should not raise an exception
             error_log.insert()
@@ -126,7 +132,9 @@ class TestReadOnlyDocument(IntegrationTestCase):
             def custom_save(self):
                 self.save()
 
-        custom_doc = CustomDocument({"doctype": "ToDo", "description": "Custom Test ToDo"})
+        custom_doc = CustomDocument(
+            {"doctype": "ToDo", "description": "Custom Test ToDo"}
+        )
 
         with read_only_document():
             with self.assertRaises(frappe.DatabaseModificationError):
@@ -166,7 +174,9 @@ class TestReadOnlyDocument(IntegrationTestCase):
             with self.assertRaises(frappe.DatabaseModificationError) as cm:
                 self.test_doc.save()
 
-            self.assertIn("Cannot call save in read-only document mode", str(cm.exception))
+            self.assertIn(
+                "Cannot call save in read-only document mode", str(cm.exception)
+            )
 
     def test_read_only_does_not_affect_reads(self):
         with read_only_document():

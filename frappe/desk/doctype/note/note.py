@@ -85,7 +85,11 @@ def get_unseen_notes():
                 & (note.expire_notification_on > frappe.utils.now())
                 & (
                     ParameterizedValueWrapper(frappe.session.user).notin(
-                        SubQuery(frappe.qb.from_(nsb).select(nsb.user).where(nsb.parent == note.id))
+                        SubQuery(
+                            frappe.qb.from_(nsb)
+                            .select(nsb.user)
+                            .where(nsb.parent == note.id)
+                        )
                     )
                 )
             )

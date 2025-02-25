@@ -42,7 +42,9 @@ class IntegrationRequest(Document):
         from frappe.query_builder.functions import Now
 
         table = frappe.qb.DocType("Integration Request")
-        frappe.db.delete(table, filters=(table.creation < (Now() - Interval(days=days))))
+        frappe.db.delete(
+            table, filters=(table.creation < (Now() - Interval(days=days)))
+        )
 
     def update_status(self, params, status):
         data = json.loads(self.data)

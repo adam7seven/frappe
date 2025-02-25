@@ -50,6 +50,10 @@ class StaticPage(BaseRenderer):
     def render(self):
         # file descriptor to be left open, closed by middleware
         f = open(self.file_path, "rb")
-        response = Response(wrap_file(frappe.local.request.environ, f), direct_passthrough=True)
-        response.mimetype = mimetypes.guess_type(self.file_path)[0] or "application/octet-stream"
+        response = Response(
+            wrap_file(frappe.local.request.environ, f), direct_passthrough=True
+        )
+        response.mimetype = (
+            mimetypes.guess_type(self.file_path)[0] or "application/octet-stream"
+        )
         return response

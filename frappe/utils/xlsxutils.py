@@ -35,12 +35,16 @@ def make_xlsx(data, sheet_name, wb=None, column_widths=None):
     for row in data:
         clean_row = []
         for item in row:
-            if isinstance(item, str) and (sheet_name not in ["Data Import Template", "Data Export"]):
+            if isinstance(item, str) and (
+                sheet_name not in ["Data Import Template", "Data Export"]
+            ):
                 value = handle_html(item)
             else:
                 value = item
 
-            if isinstance(item, str) and next(ILLEGAL_CHARACTERS_RE.finditer(value), None):
+            if isinstance(item, str) and next(
+                ILLEGAL_CHARACTERS_RE.finditer(value), None
+            ):
                 # Remove illegal characters from the string
                 value = ILLEGAL_CHARACTERS_RE.sub("", value)
 

@@ -26,11 +26,19 @@ class TestPackage(IntegrationTestCase):
         make_test_web_page()
 
         # make release
-        frappe.get_doc(doctype="Package Release", package="Test Package", publish=1).insert()
+        frappe.get_doc(
+            doctype="Package Release", package="Test Package", publish=1
+        ).insert()
 
-        self.assertTrue(os.path.exists(frappe.get_site_path("packages", "test-package")))
         self.assertTrue(
-            os.path.exists(frappe.get_site_path("packages", "test-package", "test_module_for_package"))
+            os.path.exists(frappe.get_site_path("packages", "test-package"))
+        )
+        self.assertTrue(
+            os.path.exists(
+                frappe.get_site_path(
+                    "packages", "test-package", "test_module_for_package"
+                )
+            )
         )
         self.assertTrue(
             os.path.exists(
@@ -62,7 +70,10 @@ class TestPackage(IntegrationTestCase):
 def make_test_package():
     if not frappe.db.exists("Package", "Test Package"):
         frappe.get_doc(
-            doctype="Package", id="Test Package", package_name="test-package", readme="# Test Package"
+            doctype="Package",
+            id="Test Package",
+            package_name="test-package",
+            readme="# Test Package",
         ).insert()
 
 

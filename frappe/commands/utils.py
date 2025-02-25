@@ -30,7 +30,9 @@ if typing.TYPE_CHECKING:
     help="Copy the files instead of symlinking",
     envvar="FRAPPE_HARD_LINK_ASSETS",
 )
-@click.option("--production", is_flag=True, default=False, help="Build assets in production mode")
+@click.option(
+    "--production", is_flag=True, default=False, help="Build assets in production mode"
+)
 @click.option("--verbose", is_flag=True, default=False, help="Verbose")
 @click.option(
     "--force",
@@ -237,7 +239,7 @@ def reset_perms(context: CliCtxObj):
             frappe.connect()
             for d in frappe.db.sql_list(
                 """select id from `tabDocType`
-                where istable=0 and custom=0"""
+				where istable=0 and custom=0"""
             ):
                 frappe.clear_cache(doctype=d)
                 reset_perms(d)
@@ -374,13 +376,13 @@ def export_json(context: CliCtxObj, doctype, path, id=None):
 @click.argument("doctype")
 @click.argument("path")
 @pass_context
-def export_csv(context, doctype, path):
+def export_csv(context: CliCtxObj, doctype, path):
     "Export data import template with data for DocType"
     from frappe.core.doctype.data_import.data_import import export_csv
 
     for site in context.sites:
         try:
-            frappe.init(site=site)
+            frappe.init(site)
             frappe.connect()
             export_csv(doctype, path)
         finally:
@@ -398,7 +400,7 @@ def export_fixtures(context: CliCtxObj, app=None):
 
     for site in context.sites:
         try:
-            frappe.init(site=site)
+            frappe.init(site)
             frappe.connect()
             export_fixtures(app=app)
         finally:
@@ -422,7 +424,7 @@ def import_doc(context: CliCtxObj, path, force=False):
 
     for site in context.sites:
         try:
-            frappe.init(site=site)
+            frappe.init(site)
             frappe.connect()
             import_doc(path)
         finally:
@@ -437,7 +439,10 @@ def import_doc(context: CliCtxObj, path, force=False):
     "file_path",
     type=click.Path(exists=True, dir_okay=False, resolve_path=True),
     required=True,
-    help=("Path to import file (.csv, .xlsx)." "Consider that relative paths will resolve from 'sites' directory"),
+    help=(
+        "Path to import file (.csv, .xlsx)."
+        "Consider that relative paths will resolve from 'sites' directory"
+    ),
 )
 @click.option("--doctype", type=str, required=True)
 @click.option(
@@ -448,17 +453,29 @@ def import_doc(context: CliCtxObj, path, force=False):
     help="Insert New Records or Update Existing Records",
 )
 @click.option(
-    "--submit-after-import", default=False, is_flag=True, help="Submit document after importing it"
+    "--submit-after-import",
+    default=False,
+    is_flag=True,
+    help="Submit document after importing it",
 )
-@click.option("--mute-emails", default=True, is_flag=True, help="Mute emails during import")
+@click.option(
+    "--mute-emails", default=True, is_flag=True, help="Mute emails during import"
+)
 @pass_context
 def data_import(
-    context, file_path, doctype, import_type=None, submit_after_import=False, mute_emails=True
+    context: CliCtxObj,
+    file_path,
+    doctype,
+    import_type=None,
+    submit_after_import=False,
+    mute_emails=True,
 ):
+    "Import documents in bulk from CSV or XLSX using data import"
+    from frappe.core.doctype.data_import.data_import import import_file
 
     site = get_site(context)
 
-    frappe.init(site=site)
+    frappe.init(site)
     frappe.connect()
     import_file(doctype, file_path, import_type, submit_after_import, console=True)
     frappe.destroy()
@@ -468,7 +485,7 @@ def data_import(
 @click.argument("doctype")
 @click.argument("path")
 @pass_context
-def bulk_rename(context: CliCtxObj, doctype, path):
+def bulk_reid(context: CliCtxObj, doctype, path):
     "Reid multiple records via CSV file"
     from frappe.model.reid_doc import bulk_reid
     from frappe.utils.csvutils import read_csv_content
@@ -489,14 +506,14 @@ def bulk_rename(context: CliCtxObj, doctype, path):
 @click.command("db-console", context_settings=EXTRA_ARGS_CTX)
 @click.argument("extra_args", nargs=-1)
 @pass_context
-def database(context, extra_args):
+def database(context: CliCtxObj, extra_args):
     """
     Enter into the Database console for given site.
     """
     site = get_site(context)
-    if not site:
-        raise SiteNotSpecifiedError
-    frappe.init(site=site)
+    frappe.init(site)
+    _enter_console(extra_args=extra_args)
+
 
 @click.command("mariadb", context_settings=EXTRA_ARGS_CTX)
 @click.argument("extra_args", nargs=-1)
@@ -506,9 +523,9 @@ def mariadb(context: CliCtxObj, extra_args):
     Enter into mariadb console for a given site.
     """
     site = get_site(context)
-    if not site:
-        raise SiteNotSpecifiedError
-    frappe.init(site=site)
+    frappe.init(site)
+    frappe.conf.db_type = "mariadb"
+    _enter_console(extra_args=extra_args)
 
 
 @click.command("postgres", context_settings=EXTRA_ARGS_CTX)
@@ -519,9 +536,9 @@ def postgres(context: CliCtxObj, extra_args):
     Enter into postgres console for a given site.
     """
     site = get_site(context)
-    frappe.init(site=site)
-    _psql(extra_args=extra_args)
-
+    frappe.init(site)
+    frappe.conf.db_type = "postgres"
+    _enter_console(extra_args=extra_args)
 
 
 def _enter_console(extra_args=None):
@@ -529,9 +546,13 @@ def _enter_console(extra_args=None):
     from frappe.utils import get_site_path
 
     if frappe.conf.db_type == "mariadb":
-        os.environ["MYSQL_HISTFILE"] = os.path.abspath(get_site_path("logs", "mariadb_console.log"))
-        frappe.conf.db_name,
-    env["PGPASSWORD"] = frappe.conf.db_password
+        os.environ["MYSQL_HISTFILE"] = os.path.abspath(
+            get_site_path("logs", "mariadb_console.log")
+        )
+    else:
+        os.environ["PSQL_HISTORY"] = os.path.abspath(
+            get_site_path("logs", "postgresql_console.log")
+        )
 
     bin, args, bin_name = get_command(
         socket=frappe.conf.db_socket,
@@ -540,11 +561,13 @@ def _enter_console(extra_args=None):
         user=frappe.conf.db_user,
         password=frappe.conf.db_password,
         db_name=frappe.conf.db_name,
-        psql_cmd = psql_cmd + list(extra_args)
+        extra=list(extra_args) if extra_args else [],
     )
     if not bin:
         frappe.throw(
-            _("{} not found in PATH! This is required to access the console.").format(bin_name),
+            _("{} not found in PATH! This is required to access the console.").format(
+                bin_name
+            ),
             exc=frappe.ExecutableNotFound,
         )
     os.execv(bin, [bin, *args])
@@ -556,7 +579,9 @@ def jupyter(context: CliCtxObj):
     """Start an interactive jupyter notebook"""
     installed_packages = (
         r.split("==", 1)[0]
-        for r in subprocess.check_output([sys.executable, "-m", "pip", "freeze"], encoding="utf8")
+        for r in subprocess.check_output(
+            [sys.executable, "-m", "pip", "freeze"], encoding="utf8"
+        )
     )
 
     if "jupyter" not in installed_packages:
@@ -575,7 +600,7 @@ def jupyter(context: CliCtxObj):
         os.mkdir(jupyter_notebooks_path)
     bin_path = os.path.abspath("../env/bin")
     print(
-        """
+        f"""
 Starting Jupyter notebook
 Run the following in your first cell to connect notebook to frappe
 ```
@@ -585,14 +610,14 @@ frappe.connect()
 frappe.local.lang = frappe.get_system_settings('language')
 frappe.db.connect()
 ```
-    """.format(
-            site=site, sites_path=sites_path
-        )
+	"""
     )
     os.execv(
         f"{bin_path}/jupyter",
         [
             f"{bin_path}/jupyter",
+            "notebook",
+            jupyter_notebooks_path,
         ],
     )
 
@@ -603,14 +628,14 @@ def _console_cleanup():
     frappe.destroy()
 
 
-@click.command("console")
-@click.option("--autoreload", is_flag=True, help="Reload changes to code automatically")
-@pass_context
-def console(context, autoreload=False):
-    "Start ipython console for a site"
-    site = get_site(context)
-    frappe.init(site=site)
-    frappe.connect()
+def store_logs(terminal: "InteractiveShellEmbed") -> None:
+    from contextlib import suppress
+
+    frappe.log_level = 20  # info
+    with suppress(Exception):
+        logger = frappe.logger("ipython")
+        logger.info("=== bench console session ===")
+        for line in terminal.history_manager.get_range():
             logger.info(line[2])
         logger.info("=== session end ===")
 
@@ -623,7 +648,7 @@ def console(context: CliCtxObj, autoreload=False):
     site = get_site(context)
     frappe.init(site)
     frappe.connect()
-    frappe.local.lang = frappe.db.get_default("lang")
+    frappe.local.lang = frappe.get_system_settings("language")
 
     from atexit import register
 
@@ -638,12 +663,12 @@ def console(context: CliCtxObj, autoreload=False):
 
     all_apps = frappe.get_installed_apps()
     failed_to_import = []
+    register(store_logs, terminal)  # Note: atexit runs in reverse order of registration
 
-    for app in all_apps:
+    for app in list(all_apps):
         try:
             locals()[app] = __import__(app)
         except ModuleNotFoundError:
-            failed_to_import.append(app)
             failed_to_import.append(app)
             all_apps.remove(app)
 
@@ -655,23 +680,26 @@ def console(context: CliCtxObj, autoreload=False):
     try:
         from IPython.core import ultratb
 
+        ultratb.VerboseTB._tb_highlight = "bg:ansibrightblack"
+    except Exception:
+        pass
 
-@click.command(
-    "transform-database", help="Change tables' internal settings changing engine and row formats"
-)
     terminal.colors = "neutral"
     terminal.display_banner = False
     terminal()
 
 
-@click.command("transform-database", help="Change tables' internal settings changing engine and row formats")
+@click.command(
+    "transform-database",
+    help="Change tables' internal settings changing engine and row formats",
+)
 @click.option(
     "--table",
     required=True,
     help="Comma separated name of tables to convert. To convert all tables, pass 'all'",
 )
-    help="Comma separated name of tables to convert. To convert all tables, pass 'all'",
-)
+@click.option(
+    "--engine",
     default=None,
     type=click.Choice(["InnoDB", "MyISAM"]),
     help="Choice of storage engine for said table(s)",
@@ -682,23 +710,25 @@ def console(context: CliCtxObj, autoreload=False):
     type=click.Choice(["DYNAMIC", "COMPACT", "REDUNDANT", "COMPRESSED"]),
     help="Set ROW_FORMAT parameter for said table(s)",
 )
-@click.option("--failfast", is_flag=True, default=False, help="Exit on first failure occurred")
+@click.option(
+    "--failfast", is_flag=True, default=False, help="Exit on first failure occurred"
+)
 @pass_context
-def transform_database(context, table, engine, row_format, failfast):
+def transform_database(context: CliCtxObj, table, engine, row_format, failfast):
     "Transform site database through given parameters"
     site = get_site(context)
     check_table = []
     add_line = False
     skipped = 0
-    frappe.init(site=site)
+    frappe.init(site)
 
     if frappe.conf.db_type != "mariadb":
-        click.secho("This command only has support for MariaDB databases at this point", fg="yellow")
+        click.secho(
+            "This command only has support for MariaDB databases at this point",
+            fg="yellow",
+        )
         sys.exit(1)
 
-    if not (engine or row_format):
-        click.secho("Values for `--engine` or `--row_format` must be set")
-        sys.exit(1)
     if not (engine or row_format):
         click.secho("Values for `--engine` or `--row_format` must be set")
         sys.exit(1)
@@ -752,21 +782,21 @@ def transform_database(context, table, engine, row_format, failfast):
     frappe.destroy()
 
 
-@click.command("run-tests")
-@click.option("--app", help="For App")
-@click.option("--doctype", help="For DocType")
-@click.option("--module-def", help="For all Doctypes in Module Def")
-@click.option("--case", help="Select particular TestCase")
+@click.command("serve")
+@click.option("--port", default=8000)
+@click.option("--profile", is_flag=True, default=False)
 @click.option(
-    "--doctype-list-path",
-    help="Path to .txt file for list of doctypes. Example erpnext/tests/server/agriculture.txt",
+    "--proxy",
+    is_flag=True,
+    default=False,
+    help="The development server may be run behind a proxy, e.g. ngrok / localtunnel",
 )
 @click.option("--noreload", "no_reload", is_flag=True, default=False)
 @click.option("--nothreading", "no_threading", is_flag=True, default=False)
 @click.option("--with-coverage", is_flag=True, default=False)
 @pass_context
 def serve(
-    context,
+    context: CliCtxObj,
     port=None,
     profile=False,
     proxy=False,
@@ -800,22 +830,24 @@ def serve(
 
 
 @click.command("request")
-@click.option("--args", help="arguments like `?cmd=test&key=value` or `/api/request/method?..`")
+@click.option(
+    "--args", help="arguments like `?cmd=test&key=value` or `/api/request/method?..`"
+)
 @click.option("--path", help="path to request JSON")
 @pass_context
-def request(context, args=None, path=None):
+def request(context: CliCtxObj, args=None, path=None):
     "Run a request as an admin"
     import frappe.api
     import frappe.handler
 
     for site in context.sites:
         try:
-            frappe.init(site=site)
+            frappe.init(site)
             frappe.connect()
             if args:
                 if "?" in args:
                     frappe.local.form_dict = frappe._dict(
-                else:
+                        [a.split("=") for a in args.split("?")[-1].split("&")]
                     )
                 else:
                     frappe.local.form_dict = frappe._dict()
@@ -841,15 +873,21 @@ def request(context, args=None, path=None):
 @click.argument("destination")
 @click.argument("app_name")
 @click.option(
-    "--no-git", is_flag=True, default=False, help="Do not initialize git repository for the app"
+    "--no-git",
+    is_flag=True,
+    default=False,
+    help="Do not initialize git repository for the app",
 )
 def make_app(destination, app_name, no_git=False):
     "Creates a boilerplate app"
-    from frappe.utils.boilerplate import make_boilerplate
+    from frappe.utils import get_sites
 
-    make_boilerplate(destination, app_name, no_git=no_git)
+    if app_name in get_sites():
+        click.secho(
+            f"Your bench has a site called {app_name}, please choose another name for the app.",
+            fg="red",
         )
-def create_patch():
+        sys.exit(1)
 
     from frappe.utils.boilerplate import make_boilerplate
 
@@ -870,13 +908,22 @@ def create_patch():
 @click.argument("key")
 @click.argument("value")
 @click.option(
-    "-g", "--global", "global_", is_flag=True, default=False, help="Set value in bench config"
+    "-g",
+    "--global",
+    "global_",
+    is_flag=True,
+    default=False,
+    help="Set value in bench config",
 )
-@click.option("-p", "--parse", is_flag=True, default=False, help="Evaluate as Python Object")
+@click.option(
+    "-p", "--parse", is_flag=True, default=False, help="Evaluate as Python Object"
+)
 @pass_context
-def set_config(context, key, value, global_=False, parse=False):
+def set_config(context: CliCtxObj, key, value, global_=False, parse=False):
     "Insert/Update a value in site_config.json"
     from frappe.installer import update_site_config
+
+    if parse:
         import ast
 
         value = ast.literal_eval(value)
@@ -884,7 +931,9 @@ def set_config(context, key, value, global_=False, parse=False):
     if global_:
         sites_path = os.getcwd()
         common_site_config_path = os.path.join(sites_path, "common_site_config.json")
-        update_site_config(key, value, validate=False, site_config_path=common_site_config_path)
+        update_site_config(
+            key, value, validate=False, site_config_path=common_site_config_path
+        )
     else:
         if not context.sites:
             raise SiteNotSpecifiedError
@@ -921,24 +970,36 @@ def get_version(output):
         app_info = frappe._dict()
 
         try:
-            app_info.commit = Repo(frappe.get_app_source_path(app)).head.object.hexsha[:7]
+            app_info.commit = Repo(frappe.get_app_source_path(app)).head.object.hexsha[
+                :7
+            ]
         except InvalidGitRepositoryError:
             app_info.commit = ""
 
         app_info.app = app
         app_info.branch = get_app_branch(app)
-        app_info.version = getattr(app_hooks, f"{app_info.branch}_version", None) or module.__version__
+        app_info.version = (
+            getattr(app_hooks, f"{app_info.branch}_version", None) or module.__version__
+        )
 
         data.append(app_info)
 
     {
-        "legacy": lambda: [click.echo(f"{app_info.app} {app_info.version}") for app_info in data],
+        "legacy": lambda: [
+            click.echo(f"{app_info.app} {app_info.version}") for app_info in data
+        ],
         "plain": lambda: [
-            click.echo(f"{app_info.app} {app_info.version} {app_info.branch} ({app_info.commit})") for app_info in data
+            click.echo(
+                f"{app_info.app} {app_info.version} {app_info.branch} ({app_info.commit})"
+            )
+            for app_info in data
         ],
         "table": lambda: render_table(
             [["App", "Version", "Branch", "Commit"]]
-            + [[app_info.app, app_info.version, app_info.branch, app_info.commit] for app_info in data]
+            + [
+                [app_info.app, app_info.version, app_info.branch, app_info.commit]
+                for app_info in data
+            ]
         ),
         "json": lambda: click.echo(json.dumps(data, indent=4)),
     }[output]()
@@ -946,13 +1007,18 @@ def get_version(output):
 
 @click.command("rebuild-global-search")
 @click.option(
-    "--static-pages", is_flag=True, default=False, help="Rebuild global search for static pages"
+    "--static-pages",
+    is_flag=True,
+    default=False,
+    help="Rebuild global search for static pages",
 )
 @pass_context
-def rebuild_global_search(context, static_pages=False):
+def rebuild_global_search(context: CliCtxObj, static_pages=False):
     """Setup help table in the current site (called after migrate)"""
     from frappe.utils.global_search import (
         add_route_to_global_search,
+        get_doctypes_with_global_search,
+        get_routes_to_index,
         rebuild_for_doctype,
         sync_global_search,
     )

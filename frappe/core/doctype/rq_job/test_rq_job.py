@@ -65,7 +65,9 @@ class TestRQJob(IntegrationTestCase):
     def test_func_obj_serialization(self):
         job = frappe.enqueue(method=test_func, queue="short")
         rq_job = frappe.get_doc("RQ Job", job.id)
-        self.assertEqual(rq_job.job_name, "frappe.core.doctype.rq_job.test_rq_job.test_func")
+        self.assertEqual(
+            rq_job.job_name, "frappe.core.doctype.rq_job.test_rq_job.test_func"
+        )
 
     @timeout
     def test_get_list_filtering(self):
@@ -185,9 +187,14 @@ class TestRQJob(IntegrationTestCase):
         limit = 10
         update_site_config("rq_failed_jobs_limit", limit)
 
-        jobs = [frappe.enqueue(method=self.BG_JOB, queue="short", fail=True) for _ in range(limit * 2)]
+        jobs = [
+            frappe.enqueue(method=self.BG_JOB, queue="short", fail=True)
+            for _ in range(limit * 2)
+        ]
         self.check_status(jobs[-1], "failed")
-        self.assertLessEqual(RQJob.get_count(filters=[["RQ Job", "status", "=", "failed"]]), limit * 1.1)
+        self.assertLessEqual(
+            RQJob.get_count(filters=[["RQ Job", "status", "=", "failed"]]), limit * 1.1
+        )
 
 
 def test_func(fail=False, sleep=0):

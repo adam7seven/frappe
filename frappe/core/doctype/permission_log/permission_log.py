@@ -55,7 +55,11 @@ def insert_perm_log(
     if not previous and not current:
         return
 
-    status = "Updated" if doc_before_save else ("Added" if doc.flags.in_insert else "Removed")
+    status = (
+        "Updated"
+        if doc_before_save
+        else ("Added" if doc.flags.in_insert else "Removed")
+    )
 
     frappe.get_doc(
         {
@@ -84,7 +88,11 @@ def get_changes(doc: Document, doc_before_save=None, fields=None):
 
     if not doc_before_save:
         empty_changes = dict.fromkeys(current_changes, "")
-        return (current_changes, empty_changes) if doc.flags.in_insert else (empty_changes, current_changes)
+        return (
+            (current_changes, empty_changes)
+            if doc.flags.in_insert
+            else (empty_changes, current_changes)
+        )
 
     previous_changes = get_filtered_changes(
         doc_before_save.as_dict(
@@ -118,7 +126,9 @@ def get_changes_diff(current_changes, previous_changes):
         elif previous_changes.get(k, None) == current_val:
             continue
 
-        previous_values[k] = previous_values[k] if k in previous_values else previous_changes[k]
+        previous_values[k] = (
+            previous_values[k] if k in previous_values else previous_changes[k]
+        )
         current_values[k] = current_val
 
     return current_values, previous_values

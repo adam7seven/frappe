@@ -72,7 +72,9 @@ TEST_EXCEPTIONS = (
 
 
 class TestExceptionSourceGuessing(IntegrationTestCase):
-    @patch.object(frappe, "get_installed_apps", return_value=["frappe", "erpnext", "3pa"])
+    @patch.object(
+        frappe, "get_installed_apps", return_value=["frappe", "erpnext", "3pa"]
+    )
     def test_exc_source_guessing(self, _installed_apps):
         for source, exc in TEST_EXCEPTIONS:
             result = guess_exception_source(exc)

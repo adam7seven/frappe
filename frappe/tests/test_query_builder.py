@@ -23,7 +23,9 @@ from frappe.tests import IntegrationTestCase
 
 
 def run_only_if(dbtype: db_type_is) -> Callable:
-    return unittest.skipIf(db_type_is(frappe.conf.db_type) != dbtype, f"Only runs for {dbtype.value}")
+    return unittest.skipIf(
+        db_type_is(frappe.conf.db_type) != dbtype, f"Only runs for {dbtype.value}"
+    )
 
 
 @run_only_if(db_type_is.MARIADB)
@@ -36,11 +38,17 @@ class TestCustomFunctionsMariaDB(IntegrationTestCase):
         with self.assertRaises(Exception):
             query.get_sql()
         query = query.Against("text")
-        self.assertEqual(" MATCH('Notes') AGAINST ('+text*' IN BOOLEAN MODE)", query.get_sql())
+        self.assertEqual(
+            " MATCH('Notes') AGAINST ('+text*' IN BOOLEAN MODE)", query.get_sql()
+        )
 
     def test_constant_column(self):
-        query = frappe.qb.from_("DocType").select("name", ConstantColumn("John").as_("User"))
-        self.assertEqual(query.get_sql(), "SELECT `name`,'John' `User` FROM `tabDocType`")
+        query = frappe.qb.from_("DocType").select(
+            "name", ConstantColumn("John").as_("User")
+        )
+        self.assertEqual(
+            query.get_sql(), "SELECT `name`,'John' `User` FROM `tabDocType`"
+        )
 
     def test_timestamp(self):
         note = frappe.qb.DocType("Note")
@@ -49,7 +57,8 @@ class TestCustomFunctionsMariaDB(IntegrationTestCase):
             CombineDatetime(note.posting_date, note.posting_time).get_sql(),
         )
         self.assertEqual(
-            "TIMESTAMP('2021-01-01','00:00:21')", CombineDatetime("2021-01-01", "00:00:21").get_sql()
+            "TIMESTAMP('2021-01-01','00:00:21')",
+            CombineDatetime("2021-01-01", "00:00:21").get_sql(),
         )
 
         todo = frappe.qb.DocType("ToDo")
@@ -60,17 +69,21 @@ class TestCustomFunctionsMariaDB(IntegrationTestCase):
             .select(CombineDatetime(note.posting_date, note.posting_time))
         )
         self.assertIn(
-            "select timestamp(`tabnote`.`posting_date`,`tabnote`.`posting_time`)", str(select_query).lower()
+            "select timestamp(`tabnote`.`posting_date`,`tabnote`.`posting_time`)",
+            str(select_query).lower(),
         )
 
-        select_query = select_query.orderby(CombineDatetime(note.posting_date, note.posting_time))
+        select_query = select_query.orderby(
+            CombineDatetime(note.posting_date, note.posting_time)
+        )
         self.assertIn(
             "order by timestamp(`tabnote`.`posting_date`,`tabnote`.`posting_time`)",
             str(select_query).lower(),
         )
 
         select_query = select_query.where(
-            CombineDatetime(note.posting_date, note.posting_time) >= CombineDatetime("2021-01-01", "00:00:01")
+            CombineDatetime(note.posting_date, note.posting_time)
+            >= CombineDatetime("2021-01-01", "00:00:01")
         )
         self.assertIn(
             "timestamp(`tabnote`.`posting_date`,`tabnote`.`posting_time`)>=timestamp('2021-01-01','00:00:01')",
@@ -101,7 +114,9 @@ class TestCustomFunctionsMariaDB(IntegrationTestCase):
             .on(todo.refernce_name == note.name)
             .select(UnixTimestamp(note.posting_date))
         )
-        self.assertIn("select unix_timestamp(`tabnote`.`posting_date`)", str(select_query).lower())
+        self.assertIn(
+            "select unix_timestamp(`tabnote`.`posting_date`)", str(select_query).lower()
+        )
 
         # Order by
         select_query = select_query.orderby(UnixTimestamp(note.posting_date))
@@ -111,14 +126,18 @@ class TestCustomFunctionsMariaDB(IntegrationTestCase):
         )
 
         # Function comparison
-        select_query = select_query.where(UnixTimestamp(note.posting_date) >= UnixTimestamp("2021-01-01"))
+        select_query = select_query.where(
+            UnixTimestamp(note.posting_date) >= UnixTimestamp("2021-01-01")
+        )
         self.assertIn(
             "unix_timestamp(`tabnote`.`posting_date`)>=unix_timestamp('2021-01-01')",
             str(select_query).lower(),
         )
 
         # aliasing
-        select_query = select_query.select(UnixTimestamp(note.posting_date, alias="unix_ts"))
+        select_query = select_query.select(
+            UnixTimestamp(note.posting_date, alias="unix_ts")
+        )
         self.assertIn(
             "unix_timestamp(`tabnote`.`posting_date`) `unix_ts`",
             str(select_query).lower(),
@@ -127,11 +146,16 @@ class TestCustomFunctionsMariaDB(IntegrationTestCase):
     def test_time(self):
         note = frappe.qb.DocType("Note")
         self.assertEqual(
-            "TIMESTAMP('2021-01-01','00:00:21')", CombineDatetime("2021-01-01", time(0, 0, 21)).get_sql()
+            "TIMESTAMP('2021-01-01','00:00:21')",
+            CombineDatetime("2021-01-01", time(0, 0, 21)).get_sql(),
         )
 
-        select_query = frappe.qb.from_(note).select(CombineDatetime(note.posting_date, note.posting_time))
-        self.assertIn("select timestamp(`posting_date`,`posting_time`)", str(select_query).lower())
+        select_query = frappe.qb.from_(note).select(
+            CombineDatetime(note.posting_date, note.posting_time)
+        )
+        self.assertIn(
+            "select timestamp(`posting_date`,`posting_time`)", str(select_query).lower()
+        )
 
         select_query = select_query.where(
             CombineDatetime(note.posting_date, note.posting_time)
@@ -147,7 +171,10 @@ class TestCustomFunctionsMariaDB(IntegrationTestCase):
         self.assertEqual("CONCAT(name,'')", Cast_(note.name, "varchar").get_sql())
         self.assertEqual("CAST(name AS INTEGER)", Cast_(note.name, "integer").get_sql())
         self.assertEqual(
-            frappe.qb.from_("red").from_(note).select("other", Cast_(note.name, "varchar")).get_sql(),
+            frappe.qb.from_("red")
+            .from_(note)
+            .select("other", Cast_(note.name, "varchar"))
+            .get_sql(),
             "SELECT `tabred`.`other`,CONCAT(`tabNote`.`name`,'') FROM `tabred`,`tabNote`",
         )
 
@@ -163,7 +190,9 @@ class TestCustomFunctionsMariaDB(IntegrationTestCase):
     def test_truncate(self):
         note = frappe.qb.DocType("Note")
         query = frappe.qb.from_(note).select(Truncate(note.price, 3))
-        self.assertEqual("select truncate(`price`,3) from `tabnote`", str(query).lower())
+        self.assertEqual(
+            "select truncate(`price`,3) from `tabnote`", str(query).lower()
+        )
 
 
 @run_only_if(db_type_is.POSTGRES)
@@ -175,16 +204,23 @@ class TestCustomFunctionsPostgres(IntegrationTestCase):
         query = Match("Notes")
         self.assertEqual("TO_TSVECTOR('Notes')", query.get_sql())
         query = Match("Notes").Against("text")
-        self.assertEqual("TO_TSVECTOR('Notes') @@ PLAINTO_TSQUERY('text')", query.get_sql())
+        self.assertEqual(
+            "TO_TSVECTOR('Notes') @@ PLAINTO_TSQUERY('text')", query.get_sql()
+        )
 
     def test_constant_column(self):
-        query = frappe.qb.from_("DocType").select("name", ConstantColumn("John").as_("User"))
-        self.assertEqual(query.get_sql(), 'SELECT "name",\'John\' "User" FROM "tabDocType"')
+        query = frappe.qb.from_("DocType").select(
+            "name", ConstantColumn("John").as_("User")
+        )
+        self.assertEqual(
+            query.get_sql(), 'SELECT "name",\'John\' "User" FROM "tabDocType"'
+        )
 
     def test_timestamp(self):
         note = frappe.qb.DocType("Note")
         self.assertEqual(
-            "posting_date+posting_time", CombineDatetime(note.posting_date, note.posting_time).get_sql()
+            "posting_date+posting_time",
+            CombineDatetime(note.posting_date, note.posting_time).get_sql(),
         )
         self.assertEqual(
             "CAST('2021-01-01' AS DATE)+CAST('00:00:21' AS TIME)",
@@ -198,13 +234,22 @@ class TestCustomFunctionsPostgres(IntegrationTestCase):
             .on(todo.refernce_name == note.name)
             .select(CombineDatetime(note.posting_date, note.posting_time))
         )
-        self.assertIn('select "tabnote"."posting_date"+"tabnote"."posting_time"', str(select_query).lower())
+        self.assertIn(
+            'select "tabnote"."posting_date"+"tabnote"."posting_time"',
+            str(select_query).lower(),
+        )
 
-        select_query = select_query.orderby(CombineDatetime(note.posting_date, note.posting_time))
-        self.assertIn('order by "tabnote"."posting_date"+"tabnote"."posting_time"', str(select_query).lower())
+        select_query = select_query.orderby(
+            CombineDatetime(note.posting_date, note.posting_time)
+        )
+        self.assertIn(
+            'order by "tabnote"."posting_date"+"tabnote"."posting_time"',
+            str(select_query).lower(),
+        )
 
         select_query = select_query.where(
-            CombineDatetime(note.posting_date, note.posting_time) >= CombineDatetime("2021-01-01", "00:00:01")
+            CombineDatetime(note.posting_date, note.posting_time)
+            >= CombineDatetime("2021-01-01", "00:00:01")
         )
         self.assertIn(
             """where "tabnote"."posting_date"+"tabnote"."posting_time">=cast('2021-01-01' as date)+cast('00:00:01' as time)""",
@@ -215,7 +260,8 @@ class TestCustomFunctionsPostgres(IntegrationTestCase):
             CombineDatetime(note.posting_date, note.posting_time, alias="timestamp")
         )
         self.assertIn(
-            '"tabnote"."posting_date"+"tabnote"."posting_time" "timestamp"', str(select_query).lower()
+            '"tabnote"."posting_date"+"tabnote"."posting_time" "timestamp"',
+            str(select_query).lower(),
         )
 
     def test_unix_ts_postgres(self):
@@ -234,7 +280,9 @@ class TestCustomFunctionsPostgres(IntegrationTestCase):
             .on(todo.refernce_name == note.name)
             .select(UnixTimestamp(note.posting_date))
         )
-        self.assertIn('extract(epoch from "tabnote"."posting_date")', str(select_query).lower())
+        self.assertIn(
+            'extract(epoch from "tabnote"."posting_date")', str(select_query).lower()
+        )
 
         # Order by
         select_query = select_query.orderby(UnixTimestamp(note.posting_date))
@@ -253,7 +301,9 @@ class TestCustomFunctionsPostgres(IntegrationTestCase):
         )
 
         # aliasing
-        select_query = select_query.select(UnixTimestamp(note.posting_date, alias="unix_ts"))
+        select_query = select_query.select(
+            UnixTimestamp(note.posting_date, alias="unix_ts")
+        )
         self.assertIn(
             'extract(epoch from "tabnote"."posting_date") "unix_ts"',
             str(select_query).lower(),
@@ -267,7 +317,9 @@ class TestCustomFunctionsPostgres(IntegrationTestCase):
             CombineDatetime("2021-01-01", time(0, 0, 21)).get_sql(),
         )
 
-        select_query = frappe.qb.from_(note).select(CombineDatetime(note.posting_date, note.posting_time))
+        select_query = frappe.qb.from_(note).select(
+            CombineDatetime(note.posting_date, note.posting_time)
+        )
         self.assertIn('select "posting_date"+"posting_time"', str(select_query).lower())
 
         select_query = select_query.where(
@@ -284,7 +336,10 @@ class TestCustomFunctionsPostgres(IntegrationTestCase):
         self.assertEqual("CAST(name AS VARCHAR)", Cast_(note.name, "varchar").get_sql())
         self.assertEqual("CAST(name AS INTEGER)", Cast_(note.name, "integer").get_sql())
         self.assertEqual(
-            frappe.qb.from_("red").from_(note).select("other", Cast_(note.name, "varchar")).get_sql(),
+            frappe.qb.from_("red")
+            .from_(note)
+            .select("other", Cast_(note.name, "varchar"))
+            .get_sql(),
             'SELECT "tabred"."other",CAST("tabNote"."name" AS VARCHAR) FROM "tabred","tabNote"',
         )
 
@@ -300,7 +355,9 @@ class TestCustomFunctionsPostgres(IntegrationTestCase):
     def test_truncate(self):
         note = frappe.qb.DocType("Note")
         query = frappe.qb.from_(note).select(Truncate(note.price, 3))
-        self.assertEqual('select truncate("price",3) from "tabnote"', str(query).lower())
+        self.assertEqual(
+            'select truncate("price",3) from "tabnote"', str(query).lower()
+        )
 
 
 class TestBuilderBase:
@@ -341,7 +398,9 @@ class TestBuilderBase:
         frappe.get_doc(sample_data).insert(ignore_mandatory=True)
         self.assertEqual(frappe.qb.max(self.doctype_name, "number"), 4)
         self.assertEqual(frappe.qb.min(self.doctype_name, "number"), 1)
-        self.assertAlmostEqual(frappe.qb.avg(self.doctype_name, "number"), 2.666, places=2)
+        self.assertAlmostEqual(
+            frappe.qb.avg(self.doctype_name, "number"), 2.666, places=2
+        )
         self.assertEqual(frappe.qb.sum(self.doctype_name, "number"), 8.0)
         frappe.db.rollback()
 
@@ -349,7 +408,11 @@ class TestBuilderBase:
 class TestParameterization(IntegrationTestCase):
     def test_where_conditions(self):
         DocType = frappe.qb.DocType("DocType")
-        query = frappe.qb.from_(DocType).select(DocType.name).where(DocType.owner == "Administrator' --")
+        query = (
+            frappe.qb.from_(DocType)
+            .select(DocType.name)
+            .where(DocType.owner == "Administrator' --")
+        )
         self.assertTrue("walk" in dir(query))
         query, params = query.walk()
 
@@ -371,7 +434,9 @@ class TestParameterization(IntegrationTestCase):
     def test_where_conditions_functions(self):
         DocType = frappe.qb.DocType("DocType")
         query = (
-            frappe.qb.from_(DocType).select(DocType.name).where(Coalesce(DocType.search_fields == "subject"))
+            frappe.qb.from_(DocType)
+            .select(DocType.name)
+            .where(Coalesce(DocType.search_fields == "subject"))
         )
 
         self.assertTrue("walk" in dir(query))
@@ -386,7 +451,9 @@ class TestParameterization(IntegrationTestCase):
         query = frappe.qb.from_(DocType).select(
             Case()
             .when(DocType.search_fields == "value", "other_value")
-            .when(Coalesce(DocType.search_fields == "subject_in_function"), "true_value")
+            .when(
+                Coalesce(DocType.search_fields == "subject_in_function"), "true_value"
+            )
             .else_("Overdue")
         )
 
@@ -407,7 +474,9 @@ class TestParameterization(IntegrationTestCase):
             "parent",
             Case()
             .when(DocType.search_fields == "value", "other_value")
-            .when(Coalesce(DocType.search_fields == "subject_in_function"), "true_value")
+            .when(
+                Coalesce(DocType.search_fields == "subject_in_function"), "true_value"
+            )
             .else_("Overdue"),
         )
 
@@ -439,21 +508,31 @@ class TestParameterization(IntegrationTestCase):
 @run_only_if(db_type_is.MARIADB)
 class TestBuilderMaria(IntegrationTestCase, TestBuilderBase):
     def test_adding_tabs_in_from(self):
-        self.assertEqual("SELECT * FROM `tabNotes`", frappe.qb.from_("Notes").select("*").get_sql())
-        self.assertEqual("SELECT * FROM `__Auth`", frappe.qb.from_("__Auth").select("*").get_sql())
+        self.assertEqual(
+            "SELECT * FROM `tabNotes`", frappe.qb.from_("Notes").select("*").get_sql()
+        )
+        self.assertEqual(
+            "SELECT * FROM `__Auth`", frappe.qb.from_("__Auth").select("*").get_sql()
+        )
 
     def test_get_qb_type(self):
         from frappe.query_builder import get_query_builder
 
         qb = get_query_builder(frappe.db.db_type)
-        self.assertEqual("SELECT * FROM `tabDocType`", qb().from_("DocType").select("*").get_sql())
+        self.assertEqual(
+            "SELECT * FROM `tabDocType`", qb().from_("DocType").select("*").get_sql()
+        )
 
 
 @run_only_if(db_type_is.POSTGRES)
 class TestBuilderPostgres(IntegrationTestCase, TestBuilderBase):
     def test_adding_tabs_in_from(self):
-        self.assertEqual('SELECT * FROM "tabNotes"', frappe.qb.from_("Notes").select("*").get_sql())
-        self.assertEqual('SELECT * FROM "__Auth"', frappe.qb.from_("__Auth").select("*").get_sql())
+        self.assertEqual(
+            'SELECT * FROM "tabNotes"', frappe.qb.from_("Notes").select("*").get_sql()
+        )
+        self.assertEqual(
+            'SELECT * FROM "__Auth"', frappe.qb.from_("__Auth").select("*").get_sql()
+        )
 
     def test_replace_tables(self):
         info_schema = frappe.qb.Schema("information_schema")
@@ -469,7 +548,9 @@ class TestBuilderPostgres(IntegrationTestCase, TestBuilderBase):
         from frappe.query_builder import get_query_builder
 
         qb = get_query_builder(frappe.db.db_type)
-        self.assertEqual('SELECT * FROM "tabDocType"', qb().from_("DocType").select("*").get_sql())
+        self.assertEqual(
+            'SELECT * FROM "tabDocType"', qb().from_("DocType").select("*").get_sql()
+        )
 
 
 class TestMisc(IntegrationTestCase):

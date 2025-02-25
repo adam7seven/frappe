@@ -74,23 +74,31 @@ class TestResult(unittest.TextTestResult):
             logger.info(f"{test_class}")
 
             if hasattr(self, "_module_or_class_stdout_capture"):
-                for line in self._module_or_class_stdout_capture.getvalue().splitlines():
+                for (
+                    line
+                ) in self._module_or_class_stdout_capture.getvalue().splitlines():
                     self.stream.write(click.style(f"  ▹ {line}\n", fg="bright_black"))
                     self.stream.flush()
                 self._module_or_class_stdout_capture.seek(0)
                 self._module_or_class_stdout_capture.truncate()
 
             if hasattr(self, "_module_or_class_stderr_capture"):
-                for line in self._module_or_class_stderr_capture.getvalue().splitlines():
+                for (
+                    line
+                ) in self._module_or_class_stderr_capture.getvalue().splitlines():
                     # self.stream.write(f"  ▸ {line}\n")
                     self.stream.write(click.style(f"  ▸ {line}\n", fg="bright_black"))
                     self.stream.flush()
                 self._module_or_class_stderr_capture.seek(0)
                 self._module_or_class_stderr_capture.truncate()
 
-            if new_doctypes := getattr(test.__class__, "_newly_created_test_records", None):
+            if new_doctypes := getattr(
+                test.__class__, "_newly_created_test_records", None
+            ):
                 records = [f"{name} ({qty})" for name, qty in reversed(new_doctypes)]
-                hint = click.style(f"  Test Records created: {', '.join(records)}", fg="bright_black")
+                hint = click.style(
+                    f"  Test Records created: {', '.join(records)}", fg="bright_black"
+                )
                 self.stream.write(hint + "\n")
                 logger.info(f"records created: {', '.join(records)}")
             self.stream.flush()
@@ -122,7 +130,9 @@ class TestResult(unittest.TextTestResult):
         super(unittest.TextTestResult, self).addSuccess(test)
         elapsed = time.monotonic() - self._started_at
         threshold_passed = elapsed >= SLOW_TEST_THRESHOLD
-        long_elapsed = click.style(f" ({elapsed:.03}s)", fg="red") if threshold_passed else ""
+        long_elapsed = (
+            click.style(f" ({elapsed:.03}s)", fg="red") if threshold_passed else ""
+        )
         self._write_result(test, " ✔ ", "green", long_elapsed)
         logger.debug(f"{test!s:<200} {'[success]':>20} ⌛{elapsed}")
 

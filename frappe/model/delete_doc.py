@@ -265,7 +265,9 @@ def check_permission_and_not_submitted(doc):
     # check if submitted
     if doc.meta.is_submittable and doc.docstatus.is_submitted():
         frappe.msgprint(
-            _("{0} {1}: Submitted Record cannot be deleted. You must {2} Cancel {3} it first.").format(
+            _(
+                "{0} {1}: Submitted Record cannot be deleted. You must {2} Cancel {3} it first."
+            ).format(
                 _(doc.doctype),
                 doc.id,
                 "<a href='https://docs.erpnext.com//docs/user/manual/en/setting-up/articles/delete-submitted-document' target='_blank'>",
@@ -291,7 +293,9 @@ def check_if_doc_is_linked(doc, method="Delete"):
 
     for lf in link_fields:
         link_dt, link_field, issingle = lf["parent"], lf["fieldname"], lf["issingle"]
-        if link_dt in ignored_doctypes or (link_field == "amended_from" and method == "Cancel"):
+        if link_dt in ignored_doctypes or (
+            link_field == "amended_from" and method == "Cancel"
+        ):
             continue
 
         try:

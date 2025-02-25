@@ -17,7 +17,9 @@ if TYPE_CHECKING:
     from zxcvbn.matching import _Match
 
 
-def test_password_strength(password: str, user_inputs: "Iterable[object] | None" = None) -> "_Result":
+def test_password_strength(
+    password: str, user_inputs: "Iterable[object] | None" = None
+) -> "_Result":
     """Wrapper around zxcvbn.password_strength"""
     if len(password) > 128:
         # zxcvbn takes forever when checking long, random passwords.
@@ -50,7 +52,9 @@ default_feedback: "PasswordStrengthFeedback" = {
 def get_feedback(score: int, sequence: list) -> "PasswordStrengthFeedback":
     """Return the feedback dictionary consisting of ("warning","suggestions") for the given sequences."""
     global default_feedback
-    minimum_password_score = int(frappe.get_system_settings("minimum_password_score") or 2)
+    minimum_password_score = int(
+        frappe.get_system_settings("minimum_password_score") or 2
+    )
 
     # Starting feedback
     if len(sequence) == 0:
@@ -75,7 +79,9 @@ def get_feedback(score: int, sequence: list) -> "PasswordStrengthFeedback":
     return feedback
 
 
-def get_match_feedback(match: "_Match", is_sole_match: bool) -> "PasswordStrengthFeedback":
+def get_match_feedback(
+    match: "_Match", is_sole_match: bool
+) -> "PasswordStrengthFeedback":
     """Return feedback as a dictionary for a certain match."""
 
     def fun_bruteforce():
@@ -95,14 +101,18 @@ def get_match_feedback(match: "_Match", is_sole_match: bool) -> "PasswordStrengt
         if match.get("turns") == 1:
             feedback = {
                 "warning": _("Straight rows of keys are easy to guess"),
-                "suggestions": [_("Try to use a longer keyboard pattern with more turns")],
+                "suggestions": [
+                    _("Try to use a longer keyboard pattern with more turns")
+                ],
             }
 
         return feedback
 
     def fun_repeat():
         feedback = {
-            "warning": _('Repeats like "abcabcabc" are only slightly harder to guess than "abc"'),
+            "warning": _(
+                'Repeats like "abcabcabc" are only slightly harder to guess than "abc"'
+            ),
             "suggestions": [_("Try to avoid repeated words and characters")],
         }
         if match.get("repeated_char") and len(match.get("repeated_char")) == 1:
@@ -114,14 +124,19 @@ def get_match_feedback(match: "_Match", is_sole_match: bool) -> "PasswordStrengt
 
     def fun_sequence():
         return {
-            "suggestions": [_("Avoid sequences like abc or 6543 as they are easy to guess")],
+            "suggestions": [
+                _("Avoid sequences like abc or 6543 as they are easy to guess")
+            ],
         }
 
     def fun_regex():
         if match["regex_name"] == "recent_year":
             return {
                 "warning": _("Recent years are easy to guess."),
-                "suggestions": [_("Avoid recent years."), _("Avoid years that are associated with you.")],
+                "suggestions": [
+                    _("Avoid recent years."),
+                    _("Avoid years that are associated with you."),
+                ],
             }
 
     def fun_date():
@@ -146,7 +161,9 @@ def get_match_feedback(match: "_Match", is_sole_match: bool) -> "PasswordStrengt
         return pattern_fn()
 
 
-def get_dictionary_match_feedback(match: "_Match", is_sole_match: bool) -> "PasswordStrengthFeedback":
+def get_dictionary_match_feedback(
+    match: "_Match", is_sole_match: bool
+) -> "PasswordStrengthFeedback":
     """Return feedback for a match that is found in a dictionary."""
     warning = ""
     suggestions = []
@@ -180,10 +197,14 @@ def get_dictionary_match_feedback(match: "_Match", is_sole_match: bool) -> "Pass
     if START_UPPER.match(word):
         suggestions.append(_("Capitalization doesn't help very much."))
     elif ALL_UPPER.match(word):
-        suggestions.append(_("All-uppercase is almost as easy to guess as all-lowercase."))
+        suggestions.append(
+            _("All-uppercase is almost as easy to guess as all-lowercase.")
+        )
 
     # Match contains l33t speak substitutions
     if match.get("l33t_entropy"):
-        suggestions.append(_("Predictable substitutions like '@' instead of 'a' don't help very much."))
+        suggestions.append(
+            _("Predictable substitutions like '@' instead of 'a' don't help very much.")
+        )
 
     return {"warning": warning, "suggestions": suggestions}

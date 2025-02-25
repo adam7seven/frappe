@@ -39,7 +39,9 @@ class TestDocumentLocks(IntegrationTestCase):
         self.assertEqual(todo.is_locked, False)
 
     def test_locks_auto_expiry(self):
-        todo = frappe.get_doc(doctype="ToDo", description=frappe.generate_hash()).insert()
+        todo = frappe.get_doc(
+            doctype="ToDo", description=frappe.generate_hash()
+        ).insert()
         todo.lock()
 
         self.assertRaises(frappe.DocumentLockedError, todo.lock)

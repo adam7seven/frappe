@@ -22,7 +22,9 @@ InputValue: TypeAlias = _InputValue | Sequence[_InputValue]
 
 
 FilterTupleSpec: TypeAlias = (
-    tuple[Fld, InputValue] | tuple[Fld, Op, InputValue] | tuple[Doct, Fld, Op, InputValue]
+    tuple[Fld, InputValue]
+    | tuple[Fld, Op, InputValue]
+    | tuple[Doct, Fld, Op, InputValue]
 )
 FilterMappingSpec: TypeAlias = Mapping[Fld, _InputValue | tuple[Op, InputValue]]
 
@@ -107,7 +109,9 @@ class FilterTuple(_FilterTuple):
                     )
                     doctype, fieldname, operator, value, _noop = s
                 else:
-                    raise ValueError(f"Invalid sequence length: {len(s)}. Expected 2, 3, or 4 elements.")
+                    raise ValueError(
+                        f"Invalid sequence length: {len(s)}. Expected 2, 3, or 4 elements."
+                    )
             if is_unspecified(doctype) or doctype is None:
                 raise ValueError("doctype is required")
             if is_unspecified(fieldname) or fieldname is None:
@@ -147,7 +151,9 @@ class FilterTuple(_FilterTuple):
 
     @override
     def __str__(self) -> str:
-        value_repr = f"'{self.value}'" if isinstance(self.value, str) else repr(self.value)
+        value_repr = (
+            f"'{self.value}'" if isinstance(self.value, str) else repr(self.value)
+        )
         return f"<{self.doctype}>.{self.fieldname} {self.operator} {value_repr}"
 
 
@@ -188,15 +194,34 @@ class Filters(list[FilterTuple]):
                     and isinstance(s[0][0], Sequence | Mapping)
                 ):
                     self.extend(
-                        cast(Iterable[FilterTuple | FilterTupleSpec | FilterMappingSpec], s[0]), doctype
+                        cast(
+                            Iterable[FilterTuple | FilterTupleSpec | FilterMappingSpec],
+                            s[0],
+                        ),
+                        doctype,
                     )
                 else:
-                    self.extend(cast(Iterable[FilterTuple | FilterTupleSpec | FilterMappingSpec], s), doctype)
+                    self.extend(
+                        cast(
+                            Iterable[FilterTuple | FilterTupleSpec | FilterMappingSpec],
+                            s,
+                        ),
+                        doctype,
+                    )
             else:
-                self.extend(cast(Iterable[FilterTuple | FilterTupleSpec | FilterMappingSpec], s), doctype)
+                self.extend(
+                    cast(
+                        Iterable[FilterTuple | FilterTupleSpec | FilterMappingSpec], s
+                    ),
+                    doctype,
+                )
         except Exception as e:
             error_lines = str(e).split("\n")
-            indented_error = error_lines[0] + "\n" + textwrap.indent("\n".join(error_lines[1:]), "       ")
+            indented_error = (
+                error_lines[0]
+                + "\n"
+                + textwrap.indent("\n".join(error_lines[1:]), "       ")
+            )
             error_context = (
                 f"\nError creating Filters:\n"
                 f"Input: {s}, doctype={doctype}\n"
@@ -224,27 +249,37 @@ class Filters(list[FilterTuple]):
 
     @override
     def append(
-        self, value: FilterTuple | FilterTupleSpec | FilterMappingSpec, doctype: Doct | Sentinel = UNSPECIFIED
+        self,
+        value: FilterTuple | FilterTupleSpec | FilterMappingSpec,
+        doctype: Doct | Sentinel = UNSPECIFIED,
     ) -> None:
         if isinstance(value, FilterTuple):
             super().append(value)
         elif isinstance(value, Mapping):
             if is_unspecified(doctype) or doctype is None:
-                raise ValueError("When initiated with a mapping, doctype keyword argument is required")
+                raise ValueError(
+                    "When initiated with a mapping, doctype keyword argument is required"
+                )
             self._init_from_mapping(value, doctype)
         elif isinstance(value, Sequence):  # type: ignore[redundant-expr]
             super().append(FilterTuple(value, doctype=doctype))
         else:
-            raise TypeError(f"Expected FilterTruple, Mapping or Sequence, got {type(value).__name__}")
+            raise TypeError(
+                f"Expected FilterTruple, Mapping or Sequence, got {type(value).__name__}"
+            )
 
     def _init_from_mapping(self, s: FilterMappingSpec, doctype: Doct) -> None:
         for k, v in s.items():
             if isinstance(v, _InputValue):
                 self.append(FilterTuple(doctype=doctype, fieldname=k, value=v))
             elif isinstance(v, Sequence):  # type: ignore[redundant-expr]
-                self.append(FilterTuple(doctype=doctype, fieldname=k, operator=v[0], value=v[1]))
+                self.append(
+                    FilterTuple(doctype=doctype, fieldname=k, operator=v[0], value=v[1])
+                )
             else:
-                raise ValueError(f"Invalid value for key '{k}': expected value or (operator, value[s]) tuple")
+                raise ValueError(
+                    f"Invalid value for key '{k}': expected value or (operator, value[s]) tuple"
+                )
 
     def optimize(self) -> None:
         """Optimize the filters by grouping '=' operators into 'in' operators where possible."""
@@ -253,7 +288,9 @@ class Filters(list[FilterTuple]):
             return (f.doctype, f.fieldname, f.operator == "=")
 
         optimized = Filters()
-        for (doctype, fieldname, collatable), filters in groupby(sorted(self, key=group_key), key=group_key):
+        for (doctype, fieldname, collatable), filters in groupby(
+            sorted(self, key=group_key), key=group_key
+        ):
             if not collatable:
                 optimized.extend(filters)
             else:
@@ -261,7 +298,9 @@ class Filters(list[FilterTuple]):
                 def _values() -> Generator[_Value, None, None]:
                     for f in filters:
                         # f.value is already narrowed to Val when we optimize over fully initialized FilterTuple
-                        yield cast(_Value, f.value)  # = operator only is allowed to have _Value
+                        yield cast(
+                            _Value, f.value
+                        )  # = operator only is allowed to have _Value
 
                 values = tuple(_values())
 

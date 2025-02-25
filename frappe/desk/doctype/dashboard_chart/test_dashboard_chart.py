@@ -51,7 +51,9 @@ class TestDashboardChart(IntegrationTestCase):
         self.doctype_id = doc.id
 
     def test_period_ending(self):
-        self.assertEqual(get_period_ending("2019-04-10", "Daily"), getdate("2019-04-10"))
+        self.assertEqual(
+            get_period_ending("2019-04-10", "Daily"), getdate("2019-04-10")
+        )
 
         # week starts on monday
         with patch.object(
@@ -315,13 +317,23 @@ class TestDashboardChart(IntegrationTestCase):
             timeseries=1,
         ).insert()
 
-        with patch.object(frappe.utils.data, "get_user_date_format", return_value="dd.mm.yyyy"):
+        with patch.object(
+            frappe.utils.data, "get_user_date_format", return_value="dd.mm.yyyy"
+        ):
             result = get(id="Test Dashboard Chart Date Label")
-            self.assertEqual(sorted(result.get("labels")), sorted(["05.01.2019", "12.01.2019", "19.01.2019"]))
+            self.assertEqual(
+                sorted(result.get("labels")),
+                sorted(["05.01.2019", "12.01.2019", "19.01.2019"]),
+            )
 
-        with patch.object(frappe.utils.data, "get_user_date_format", return_value="mm-dd-yyyy"):
+        with patch.object(
+            frappe.utils.data, "get_user_date_format", return_value="mm-dd-yyyy"
+        ):
             result = get(id="Test Dashboard Chart Date Label")
-            self.assertEqual(sorted(result.get("labels")), sorted(["01-19-2019", "01-05-2019", "01-12-2019"]))
+            self.assertEqual(
+                sorted(result.get("labels")),
+                sorted(["01-19-2019", "01-05-2019", "01-12-2019"]),
+            )
 
 
 def insert_test_records(doctype_id):

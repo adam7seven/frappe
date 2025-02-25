@@ -55,7 +55,9 @@ def patch_request_header(key, *args, **kwargs):
 
 
 class ThreadWithReturnValue(Thread):
-    def __init__(self, group=None, target=None, name=None, args=(), kwargs=None, *, site=None):
+    def __init__(
+        self, group=None, target=None, name=None, args=(), kwargs=None, *, site=None
+    ):
         if kwargs is None:
             kwargs = {}
         Thread.__init__(self, group, target, name, args, kwargs)
@@ -182,13 +184,17 @@ class TestResourceAPI(FrappeAPITestCase):
 
     def test_get_list_dict(self):
         # test 4: fetch response as (not) dict
-        response = self.get(self.resource(self.DOCTYPE), {"sid": self.sid, "as_dict": True})
+        response = self.get(
+            self.resource(self.DOCTYPE), {"sid": self.sid, "as_dict": True}
+        )
         json = frappe._dict(response.json)
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(json.data, list)
         self.assertIsInstance(json.data[0], dict)
 
-        response = self.get(self.resource(self.DOCTYPE), {"sid": self.sid, "as_dict": False})
+        response = self.get(
+            self.resource(self.DOCTYPE), {"sid": self.sid, "as_dict": False}
+        )
         json = frappe._dict(response.json)
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(json.data, list)
@@ -197,7 +203,9 @@ class TestResourceAPI(FrappeAPITestCase):
     def test_get_list_debug(self):
         # test 5: fetch response with debug
         with suppress_stdout():
-            response = self.get(self.resource(self.DOCTYPE), {"sid": self.sid, "debug": True})
+            response = self.get(
+                self.resource(self.DOCTYPE), {"sid": self.sid, "debug": True}
+            )
         self.assertEqual(response.status_code, 200)
         self.assertIn("_debug_messages", response.json)
         self.assertIsInstance(response.json["_debug_messages"], str)
@@ -205,7 +213,9 @@ class TestResourceAPI(FrappeAPITestCase):
 
     def test_get_list_fields(self):
         # test 6: fetch response with fields
-        response = self.get(self.resource(self.DOCTYPE), {"sid": self.sid, "fields": '["description"]'})
+        response = self.get(
+            self.resource(self.DOCTYPE), {"sid": self.sid, "fields": '["description"]'}
+        )
         self.assertEqual(response.status_code, 200)
         json = frappe._dict(response.json)
         self.assertIn("description", json.data[0])
@@ -243,16 +253,24 @@ class TestResourceAPI(FrappeAPITestCase):
     def test_run_doc_method(self):
         # test 10: Run whitelisted method on doc via /api/resource
         # status_code is 403 if no other tests are run before this - it's not logged in
-        self.post(self.resource("Website Theme", "Standard"), {"run_method": "get_apps"})
-        response = self.get(self.resource("Website Theme", "Standard"), {"run_method": "get_apps"})
+        self.post(
+            self.resource("Website Theme", "Standard"), {"run_method": "get_apps"}
+        )
+        response = self.get(
+            self.resource("Website Theme", "Standard"), {"run_method": "get_apps"}
+        )
 
         self.assertIn(response.status_code, (403, 200))
 
         if response.status_code == 403:
-            self.assertTrue(set(response.json.keys()) == {"exc_type", "exception", "exc", "_server_messages"})
+            self.assertTrue(
+                set(response.json.keys())
+                == {"exc_type", "exception", "exc", "_server_messages"}
+            )
             self.assertEqual(response.json.get("exc_type"), "PermissionError")
             self.assertEqual(
-                response.json.get("exception"), "frappe.exceptions.PermissionError: Not permitted"
+                response.json.get("exception"),
+                "frappe.exceptions.PermissionError: Not permitted",
             )
             self.assertIsInstance(response.json.get("exc"), str)
 
@@ -275,7 +293,9 @@ class TestMethodAPI(FrappeAPITestCase):
         response = self.get(self.method("frappe.realtime.get_user_info"))
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.json, dict)
-        self.assertIn(response.json.get("message").get("user"), ("Administrator", "Guest"))
+        self.assertIn(
+            response.json.get("message").get("user"), ("Administrator", "Guest")
+        )
 
     def test_auth_cycle(self):
         # test 4: Pass authorization token in request
@@ -302,7 +322,9 @@ class TestMethodAPI(FrappeAPITestCase):
     def test_404s(self):
         response = self.get(self.get_path("rest"), {"sid": self.sid})
         self.assertEqual(response.status_code, 404)
-        response = self.get(self.resource("User", "NonExistent@s.com"), {"sid": self.sid})
+        response = self.get(
+            self.resource("User", "NonExistent@s.com"), {"sid": self.sid}
+        )
         self.assertEqual(response.status_code, 404)
 
     def test_logs(self):
@@ -314,15 +336,22 @@ class TestMethodAPI(FrappeAPITestCase):
             )
 
         expected_message = "Failed"
-        response = self.get(self.method(method), {"sid": self.sid, "message": expected_message})
-        self.assertEqual(get_message(response, "_server_messages").message, expected_message)
+        response = self.get(
+            self.method(method), {"sid": self.sid, "message": expected_message}
+        )
+        self.assertEqual(
+            get_message(response, "_server_messages").message, expected_message
+        )
 
         # Cause handled failured
         with suppress_stdout():
             response = self.get(
-                self.method(method), {"sid": self.sid, "message": expected_message, "fail": True}
+                self.method(method),
+                {"sid": self.sid, "message": expected_message, "fail": True},
             )
-        self.assertEqual(get_message(response, "_server_messages").message, expected_message)
+        self.assertEqual(
+            get_message(response, "_server_messages").message, expected_message
+        )
         self.assertEqual(response.json["exc_type"], "ValidationError")
         self.assertIn("Traceback", response.json["exc"])
 
@@ -330,7 +359,12 @@ class TestMethodAPI(FrappeAPITestCase):
         with suppress_stdout():
             response = self.get(
                 self.method(method),
-                {"sid": self.sid, "message": expected_message, "fail": True, "handled": False},
+                {
+                    "sid": self.sid,
+                    "message": expected_message,
+                    "fail": True,
+                    "handled": False,
+                },
             )
         self.assertNotIn("_server_messages", response.json)
         self.assertIn("ZeroDivisionError", response.json["exception"])  # WHY?
@@ -366,7 +400,8 @@ class TestReadOnlyMode(FrappeAPITestCase):
     def test_blocked_writes(self):
         with suppress_stdout():
             response = self.post(
-                self.resource("ToDo"), {"description": frappe.mock("paragraph"), "sid": self.sid}
+                self.resource("ToDo"),
+                {"description": frappe.mock("paragraph"), "sid": self.sid},
             )
         self.assertEqual(response.status_code, 503)
         self.assertEqual(response.json["exc_type"], "InReadOnlyMode")
@@ -386,7 +421,10 @@ class TestWSGIApp(FrappeAPITestCase):
             self.assertIsNone(_test_REQ_HOOK.get("after_request"))
             res = self.get("/api/method/ping")
             self.assertEqual(res.json, {"message": "pong"})
-            self.assertLess(_test_REQ_HOOK.get("before_request"), _test_REQ_HOOK.get("after_request"))
+            self.assertLess(
+                _test_REQ_HOOK.get("before_request"),
+                _test_REQ_HOOK.get("after_request"),
+            )
 
 
 _test_REQ_HOOK = {}
@@ -494,14 +532,18 @@ class TestResponse(FrappeAPITestCase):
         from frappe.utils.response import build_response
 
         filename = "دفتر الأستاذ العام"
-        encoded_filename = filename.encode("utf-8").decode("unicode-escape", "ignore") + ".xlsx"
+        encoded_filename = (
+            filename.encode("utf-8").decode("unicode-escape", "ignore") + ".xlsx"
+        )
         provide_binary_file(filename, "xlsx", "content")
 
         response = build_response("binary")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers["content-type"], "application/octet-stream")
         self.assertGreater(cint(response.headers["content-length"]), 0)
-        self.assertEqual(response.headers["content-disposition"], f'filename="{encoded_filename}"')
+        self.assertEqual(
+            response.headers["content-disposition"], f'filename="{encoded_filename}"'
+        )
 
     def test_download_private_file_with_unique_url(self):
         test_content = frappe.generate_hash()
@@ -515,7 +557,9 @@ class TestResponse(FrappeAPITestCase):
         )
         file.insert()
 
-        self.assertEqual(self.get(file.unique_url, {"sid": self.sid}).text, test_content)
+        self.assertEqual(
+            self.get(file.unique_url, {"sid": self.sid}).text, test_content
+        )
         self.assertEqual(self.get(file.file_url, {"sid": self.sid}).text, test_content)
 
     def test_login_redirects(self):
@@ -528,7 +572,9 @@ class TestResponse(FrappeAPITestCase):
             "http://localhost/app": "http://localhost/app",
         }
         for redirect, expected_redirect in expected_redirects.items():
-            response = self.get(f"/login?{urlencode({'redirect-to':redirect})}", {"sid": self.sid})
+            response = self.get(
+                f"/login?{urlencode({'redirect-to':redirect})}", {"sid": self.sid}
+            )
             self.assertEqual(response.location, expected_redirect)
 
 

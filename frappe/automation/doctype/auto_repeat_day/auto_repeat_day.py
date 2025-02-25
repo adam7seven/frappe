@@ -14,7 +14,9 @@ class AutoRepeatDay(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        day: DF.Literal["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        day: DF.Literal[
+            "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+        ]
         parent: DF.Data
         parentfield: DF.Data
         parenttype: DF.Data

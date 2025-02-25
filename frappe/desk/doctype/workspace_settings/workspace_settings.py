@@ -34,7 +34,9 @@ def set_sequence(sidebar_items):
     cnt = 1
     for item in json.loads(sidebar_items):
         frappe.db.set_value("Workspace", item.get("name"), "sequence_id", cnt)
-        frappe.db.set_value("Workspace", item.get("name"), "parent_page", item.get("parent") or "")
+        frappe.db.set_value(
+            "Workspace", item.get("name"), "parent_page", item.get("parent") or ""
+        )
         cnt += 1
 
     frappe.clear_cache()

@@ -12,7 +12,11 @@ import frappe.utils
 from frappe import _, _dict
 from frappe.desk.form.document_follow import is_document_followed
 from frappe.model.utils.user_settings import get_user_settings
-from frappe.permissions import check_doctype_permission, get_doc_permissions, has_permission
+from frappe.permissions import (
+    check_doctype_permission,
+    get_doc_permissions,
+    has_permission,
+)
 from frappe.utils.data import cstr
 from frappe.utils.html_utils import clean_email_html
 
@@ -101,9 +105,15 @@ def get_docinfo(doc=None, doctype=None, id=None):
         doc.check_permission("read")
 
     all_communications = _get_communications(doc.doctype, doc.id, limit=21)
-    automated_messages = [msg for msg in all_communications if msg["communication_type"] == "Automated Message"]
+    automated_messages = [
+        msg
+        for msg in all_communications
+        if msg["communication_type"] == "Automated Message"
+    ]
     communications_except_auto_messages = [
-        msg for msg in all_communications if msg["communication_type"] != "Automated Message"
+        msg
+        for msg in all_communications
+        if msg["communication_type"] != "Automated Message"
     ]
 
     docinfo = frappe._dict(user_info={})
@@ -123,9 +133,13 @@ def get_docinfo(doc=None, doctype=None, id=None):
             "shared": get_docshares(doc),
             "views": get_view_logs(doc),
             "energy_point_logs": get_point_logs(doc.doctype, doc.id),
-            "additional_timeline_content": get_additional_timeline_content(doc.doctype, doc.id),
+            "additional_timeline_content": get_additional_timeline_content(
+                doc.doctype, doc.id
+            ),
             "milestones": get_milestones(doc.doctype, doc.id),
-            "is_document_followed": is_document_followed(doc.doctype, doc.id, frappe.session.user),
+            "is_document_followed": is_document_followed(
+                doc.doctype, doc.id, frappe.session.user
+            ),
             "tags": get_tags(doc.doctype, doc.id),
             "document_email": get_document_email(doc.doctype, doc.id),
         }
@@ -211,7 +225,9 @@ def get_communications(doctype, id, start=0, limit=20):
     return _get_communications(doctype, id, cint(start), cint(limit))
 
 
-def get_comments(doctype: str, id: str, comment_type: str | list[str] = "Comment") -> list[frappe._dict]:
+def get_comments(
+    doctype: str, id: str, comment_type: str | list[str] = "Comment"
+) -> list[frappe._dict]:
     if isinstance(comment_type, list):
         comment_types = comment_type
 
@@ -246,14 +262,20 @@ def get_comments(doctype: str, id: str, comment_type: str | list[str] = "Comment
 
 
 def get_point_logs(doctype, docid):
-    from frappe.social.doctype.energy_point_settings.energy_point_settings import is_energy_point_enabled
+    from frappe.social.doctype.energy_point_settings.energy_point_settings import (
+        is_energy_point_enabled,
+    )
 
     if not is_energy_point_enabled():
         return []
 
     return frappe.get_all(
         "Energy Point Log",
-        filters={"reference_doctype": doctype, "reference_id": docid, "type": ["!=", "Review"]},
+        filters={
+            "reference_doctype": doctype,
+            "reference_id": docid,
+            "type": ["!=", "Review"],
+        },
         fields=["*"],
     )
 
@@ -266,7 +288,10 @@ def _get_communications(doctype, id, start=0, limit=20):
                 frappe.get_all(
                     "File",
                     fields=["file_url", "is_private"],
-                    filters={"attached_to_doctype": "Communication", "attached_to_id": c.id},
+                    filters={
+                        "attached_to_doctype": "Communication",
+                        "attached_to_id": c.id,
+                    },
                 )
             )
 
@@ -390,7 +415,9 @@ def get_tags(doctype: str, id: str) -> str:
 
 
 def get_document_email(doctype, id):
-    from frappe.email.doctype.email_account.email_account import get_automatic_email_link
+    from frappe.email.doctype.email_account.email_account import (
+        get_automatic_email_link,
+    )
 
     email = get_automatic_email_link()
     if not email:
@@ -437,8 +464,12 @@ def get_title_values_for_link_and_dynamic_link_fields(doc, link_fields=None):
         if not meta or not meta.title_field or not meta.show_title_field_in_link:
             continue
 
-        link_title = frappe.db.get_value(doctype, doc_fieldvalue, meta.title_field, cache=True, order_by=None)
-        link_titles.update({doctype + "::" + doc_fieldvalue: link_title or doc_fieldvalue})
+        link_title = frappe.db.get_value(
+            doctype, doc_fieldvalue, meta.title_field, cache=True, order_by=None
+        )
+        link_titles.update(
+            {doctype + "::" + doc_fieldvalue: link_title or doc_fieldvalue}
+        )
 
     return link_titles
 

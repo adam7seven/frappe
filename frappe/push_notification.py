@@ -37,7 +37,8 @@ class PushNotification:
         :return: tuple[bool, str] First element is the success status, second element is the message.
         """
         data = self._send_post_request(
-            "notification_relay.api.token.remove", {"user_id": user_id, "fcm_token": token}
+            "notification_relay.api.token.remove",
+            {"user_id": user_id, "fcm_token": token},
         )
         return data["success"], data["message"]
 

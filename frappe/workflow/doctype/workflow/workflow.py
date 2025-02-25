@@ -18,7 +18,9 @@ class Workflow(Document):
         from frappe.workflow.doctype.workflow_document_state.workflow_document_state import (
             WorkflowDocumentState,
         )
-        from frappe.workflow.doctype.workflow_transition.workflow_transition import WorkflowTransition
+        from frappe.workflow.doctype.workflow_transition.workflow_transition import (
+            WorkflowTransition,
+        )
 
         document_type: DF.Link
         is_active: DF.Check
@@ -63,7 +65,9 @@ class Workflow(Document):
             ).save()
 
             frappe.msgprint(
-                _("Created Custom Field {0} in {1}").format(self.workflow_state_field, self.document_type)
+                _("Created Custom Field {0} in {1}").format(
+                    self.workflow_state_field, self.document_type
+                )
             )
 
     def update_default_workflow_status(self):
@@ -97,7 +101,9 @@ class Workflow(Document):
 
             if state.doc_status == "2":
                 frappe.throw(
-                    frappe._("Cannot change state of Cancelled Document. Transition row {0}").format(t.idx)
+                    frappe._(
+                        "Cannot change state of Cancelled Document. Transition row {0}"
+                    ).format(t.idx)
                 )
 
             if state.doc_status == "1" and next_state.doc_status == "0":
@@ -108,7 +114,11 @@ class Workflow(Document):
                 )
 
             if state.doc_status == "0" and next_state.doc_status == "2":
-                frappe.throw(frappe._("Cannot cancel before submitting. See Transition {0}").format(t.idx))
+                frappe.throw(
+                    frappe._(
+                        "Cannot cancel before submitting. See Transition {0}"
+                    ).format(t.idx)
+                )
 
     def set_active(self):
         if cint(self.is_active):

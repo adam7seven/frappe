@@ -22,7 +22,9 @@ def check_orpahned_doctypes():
 
     if orpahned_doctypes:
         frappe.throw(
-            "Following doctypes exist in DB without controller.\n {}".format("\n".join(orpahned_doctypes))
+            "Following doctypes exist in DB without controller.\n {}".format(
+                "\n".join(orpahned_doctypes)
+            )
         )
 
 

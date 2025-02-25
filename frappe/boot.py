@@ -9,7 +9,10 @@ import os
 import frappe
 import frappe.defaults
 import frappe.desk.desk_page
-from frappe.core.doctype.navbar_settings.navbar_settings import get_app_logo, get_navbar_settings
+from frappe.core.doctype.navbar_settings.navbar_settings import (
+    get_app_logo,
+    get_navbar_settings,
+)
 from frappe.desk.doctype.changelog_feed.changelog_feed import get_changelog_feed_items
 from frappe.desk.doctype.form_tour.form_tour import get_onboarding_ui_tours
 from frappe.desk.doctype.route_history.route_history import frequently_visited_links
@@ -100,7 +103,9 @@ def get_bootinfo():
     bootinfo.update(get_email_accounts(user=frappe.session.user))
     bootinfo.energy_points_enabled = is_energy_point_enabled()
     bootinfo.website_tracking_enabled = is_tracking_enabled()
-    bootinfo.sms_gateway_enabled = bool(frappe.db.get_single_value("SMS Settings", "sms_gateway_url"))
+    bootinfo.sms_gateway_enabled = bool(
+        frappe.db.get_single_value("SMS Settings", "sms_gateway_url")
+    )
     bootinfo.points = get_energy_points(frappe.session.user)
     bootinfo.frequently_visited_links = frequently_visited_links()
     bootinfo.link_preview_doctypes = get_link_preview_doctypes()
@@ -127,9 +132,12 @@ def get_letter_heads():
 
     if not frappe.has_permission("Letter Head"):
         return letter_heads
-    for letter_head in frappe.get_list("Letter Head", fields=["id", "content", "footer"]):
+    for letter_head in frappe.get_list(
+        "Letter Head", fields=["id", "content", "footer"]
+    ):
         letter_heads.setdefault(
-            letter_head.id, {"header": letter_head.content, "footer": letter_head.footer}
+            letter_head.id,
+            {"header": letter_head.content, "footer": letter_head.footer},
         )
 
     return letter_heads
@@ -139,7 +147,12 @@ def load_conf_settings(bootinfo):
     from frappe.core.api.file import get_max_file_size
 
     bootinfo.max_file_size = get_max_file_size()
-    for key in ("developer_mode", "socketio_port", "file_watcher_port", "fc_communication_secret"):
+    for key in (
+        "developer_mode",
+        "socketio_port",
+        "file_watcher_port",
+        "fc_communication_secret",
+    ):
         if key in frappe.conf:
             bootinfo[key] = frappe.conf.get(key)
 
@@ -149,7 +162,9 @@ def load_desktop_data(bootinfo):
 
     bootinfo.sidebar_pages = get_workspace_sidebar_items()
     allowed_pages = [d.id for d in bootinfo.sidebar_pages.get("pages")]
-    bootinfo.module_wise_workspaces = get_controller("Workspace").get_module_wise_workspaces()
+    bootinfo.module_wise_workspaces = get_controller(
+        "Workspace"
+    ).get_module_wise_workspaces()
     bootinfo.dashboards = frappe.get_all("Dashboard")
     bootinfo.app_data = []
 
@@ -200,7 +215,9 @@ def load_desktop_data(bootinfo):
                 app_logo_url=app_info.get("logo")
                 or frappe.get_hooks("app_logo_url", app_name=app_name)
                 or frappe.get_hooks("app_logo_url", app_name="frappe"),
-                modules=[m.id for m in frappe.get_all("Module Def", dict(app_name=app_name))],
+                modules=[
+                    m.id for m in frappe.get_all("Module Def", dict(app_name=app_name))
+                ],
                 workspaces=workspaces,
             )
         )
@@ -525,7 +542,9 @@ def get_marketplace_apps():
         apps = [app for app in apps if app["id"] not in installed_apps]
     except Exception:
         # Don't retry for a day
-        frappe.cache.set_value(cache_key, apps, shared=True, expires_in_sec=24 * 60 * 60)
+        frappe.cache.set_value(
+            cache_key, apps, shared=True, expires_in_sec=24 * 60 * 60
+        )
 
     return apps
 

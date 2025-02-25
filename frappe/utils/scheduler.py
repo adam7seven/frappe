@@ -63,7 +63,9 @@ def start_scheduler() -> NoReturn:
 
 
 def _get_scheduler_lock_file() -> True:
-    return os.path.abspath(os.path.join(get_bench_path(), "config", "scheduler_process"))
+    return os.path.abspath(
+        os.path.join(get_bench_path(), "config", "scheduler_process")
+    )
 
 
 def is_schduler_process_running() -> bool:
@@ -110,12 +112,16 @@ def enqueue_events_for_all_sites() -> None:
         try:
             enqueue_events_for_site(site=site)
         except Exception:
-            frappe.logger("scheduler").debug(f"Failed to enqueue events for site: {site}", exc_info=True)
+            frappe.logger("scheduler").debug(
+                f"Failed to enqueue events for site: {site}", exc_info=True
+            )
 
 
 def enqueue_events_for_site(site: str) -> None:
     def log_exc():
-        frappe.logger("scheduler").error(f"Exception in Enqueue Events for Site {site}", exc_info=True)
+        frappe.logger("scheduler").error(
+            f"Exception in Enqueue Events for Site {site}", exc_info=True
+        )
 
     try:
         _proctitle(f"scheduling events for {site}")
@@ -139,7 +145,9 @@ def enqueue_events_for_site(site: str) -> None:
 def enqueue_events() -> list[str] | None:
     if schedule_jobs_based_on_activity():
         enqueued_jobs = []
-        all_jobs = frappe.get_all("Scheduled Job Type", filters={"stopped": 0}, fields="*")
+        all_jobs = frappe.get_all(
+            "Scheduled Job Type", filters={"stopped": 0}, fields="*"
+        )
         random.shuffle(all_jobs)
         for job_type in all_jobs:
             job_type = frappe.get_doc(doctype="Scheduled Job Type", **job_type)
@@ -177,7 +185,9 @@ def is_scheduler_disabled(verbose=True) -> bool:
             cprint(f"{frappe.local.site}: frappe.conf.disable_scheduler is SET")
         return True
 
-    scheduler_disabled = not frappe.utils.cint(frappe.db.get_single_value("System Settings", "enable_scheduler"))
+    scheduler_disabled = not frappe.utils.cint(
+        frappe.db.get_single_value("System Settings", "enable_scheduler")
+    )
     if scheduler_disabled:
         if verbose:
             cprint(f"{frappe.local.site}: SystemSettings.enable_scheduler is UNSET")
@@ -199,14 +209,17 @@ def disable_scheduler():
 @redis_cache(ttl=60 * 60)
 def schedule_jobs_based_on_activity(check_time=None):
     """Return True for active sites as defined by `Activity Log`.
-    Also return True for inactive sites once every 24 hours based on `Scheduled Job Log`."""
+    Also return True for inactive sites once every 24 hours based on `Scheduled Job Log`.
+    """
     if is_dormant(check_time=check_time):
         # ensure last job is one day old
         last_job_timestamp = _get_last_creation_timestamp("Scheduled Job Log")
         if not last_job_timestamp:
             return True
         else:
-            if ((check_time or now_datetime()) - last_job_timestamp).total_seconds() >= 86400:
+            if (
+                (check_time or now_datetime()) - last_job_timestamp
+            ).total_seconds() >= 86400:
                 # one day is passed since jobs are run, so lets do this
                 return True
             else:
@@ -225,13 +238,17 @@ def is_dormant(check_time=None):
     since = (frappe.get_system_settings("dormant_days") or 4) * 86400
     if not last_activity_log_timestamp:
         return True
-    if ((check_time or now_datetime()) - last_activity_log_timestamp).total_seconds() >= since:
+    if (
+        (check_time or now_datetime()) - last_activity_log_timestamp
+    ).total_seconds() >= since:
         return True
     return False
 
 
 def _get_last_creation_timestamp(doctype):
-    timestamp = frappe.db.get_value(doctype, filters={}, fieldname="creation", order_by="creation desc")
+    timestamp = frappe.db.get_value(
+        doctype, filters={}, fieldname="creation", order_by="creation desc"
+    )
     if timestamp:
         return get_datetime(timestamp)
 
@@ -243,7 +260,9 @@ def activate_scheduler():
     frappe.only_for("Administrator")
 
     if frappe.local.conf.maintenance_mode:
-        frappe.throw(frappe._("Scheduler can not be re-enabled when maintenance mode is active."))
+        frappe.throw(
+            frappe._("Scheduler can not be re-enabled when maintenance mode is active.")
+        )
 
     if is_scheduler_disabled():
         enable_scheduler()

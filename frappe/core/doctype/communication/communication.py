@@ -252,7 +252,9 @@ class Communication(Document, CommunicationEmailMixin):
         update_comment_in_doc(self)
 
         parent = get_parent_doc(self)
-        if (method := getattr(parent, "on_communication_update", None)) and callable(method):
+        if (method := getattr(parent, "on_communication_update", None)) and callable(
+            method
+        ):
             parent.on_communication_update(self)
             return
         update_parent_document_on_communication(self)
@@ -273,12 +275,18 @@ class Communication(Document, CommunicationEmailMixin):
         """
         emails = split_emails(emails) if isinstance(emails, str) else (emails or [])
         if exclude_displayname:
-            return [email.lower() for email in {parse_addr(email)[1] for email in emails} if email]
+            return [
+                email.lower()
+                for email in {parse_addr(email)[1] for email in emails}
+                if email
+            ]
         return [email for email in set(emails) if email]
 
     def to_list(self, exclude_displayname=True):
         """Return `to` list."""
-        return self._get_emails_list(self.recipients, exclude_displayname=exclude_displayname)
+        return self._get_emails_list(
+            self.recipients, exclude_displayname=exclude_displayname
+        )
 
     def cc_list(self, exclude_displayname=True):
         """Return `cc` list."""
@@ -412,7 +420,9 @@ class Communication(Document, CommunicationEmailMixin):
                 frappe.db.commit()
 
     def parse_email_for_timeline_links(self):
-        if not frappe.db.get_value("Email Account", filters={"enable_automatic_linking": 1}):
+        if not frappe.db.get_value(
+            "Email Account", filters={"enable_automatic_linking": 1}
+        ):
             return
 
         for doctype, docid in parse_email([self.recipients, self.cc, self.bcc]):
@@ -517,7 +527,9 @@ def get_permission_query_conditions_for_communication(user):
         if not accounts:
             return """`tabCommunication`.communication_medium!='Email'"""
 
-        email_accounts = ['"{}"'.format(account.get("email_account")) for account in accounts]
+        email_accounts = [
+            '"{}"'.format(account.get("email_account")) for account in accounts
+        ]
         return """`tabCommunication`.email_account in ({email_accounts})""".format(
             email_accounts=",".join(email_accounts)
         )
@@ -655,11 +667,14 @@ def update_parent_document_on_communication(doc):
 
         # if status has a "Open" option and status is "Replied", then update the status for received communication
         if (
-            (("Open" in options) and parent.status == "Replied" and doc.sent_or_received == "Received")
-            or (
-                parent.doctype == "Issue" and ("Open" in options) and doc.sent_or_received == "Received"
-            )  # For 'Issue', current status is not considered.
-        ):
+            ("Open" in options)
+            and parent.status == "Replied"
+            and doc.sent_or_received == "Received"
+        ) or (
+            parent.doctype == "Issue"
+            and ("Open" in options)
+            and doc.sent_or_received == "Received"
+        ):  # For 'Issue', current status is not considered.
             parent.db_set("status", "Open")
             parent.run_method("handle_hold_time", "Replied")
             apply_assignment_rule(parent)
@@ -671,16 +686,21 @@ def update_parent_document_on_communication(doc):
 
 
 def update_first_response_time(parent, communication):
-    if parent.meta.has_field("first_response_time") and not parent.get("first_response_time"):
+    if parent.meta.has_field("first_response_time") and not parent.get(
+        "first_response_time"
+    ):
         if (
             is_system_user(communication.sender)
-            or frappe.get_cached_value("User", frappe.session.user, "user_type") == "System User"
+            or frappe.get_cached_value("User", frappe.session.user, "user_type")
+            == "System User"
         ):
             if communication.sent_or_received == "Sent":
                 first_responded_on = communication.creation
                 if parent.meta.has_field("first_responded_on"):
                     parent.db_set("first_responded_on", first_responded_on)
-                first_response_time = round(time_diff_in_seconds(first_responded_on, parent.creation), 2)
+                first_response_time = round(
+                    time_diff_in_seconds(first_responded_on, parent.creation), 2
+                )
                 parent.db_set("first_response_time", first_response_time)
 
 

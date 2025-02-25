@@ -41,7 +41,9 @@ class TestDocRef(IntegrationTestCase):
         ).insert()
 
         # Getter using the DocRef
-        result = frappe.db.get_value("ToDo", {"reference_name": user}, ["name", "description"])
+        result = frappe.db.get_value(
+            "ToDo", {"reference_name": user}, ["name", "description"]
+        )
         self.assertEqual(result[0], test_doc.name)
         self.assertEqual(result[1], "Test ToDo")
         # Setter using Document as DocRef

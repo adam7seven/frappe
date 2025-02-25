@@ -53,7 +53,9 @@ def _get_jenv():
             return super().is_safe_attribute(obj, attr, *args, **kwargs)
 
     # frappe will be loaded last, so app templates will get precedence
-    jenv = FrappeSandboxedEnvironment(loader=get_jloader(), undefined=DebugUndefined, cache_size=32)
+    jenv = FrappeSandboxedEnvironment(
+        loader=get_jloader(), undefined=DebugUndefined, cache_size=32
+    )
     set_filters(jenv)
 
     return jenv
@@ -146,10 +148,16 @@ def render_template(template, context=None, is_path=None, safe_render=True):
     except Exception as e:
         import html
 
-        throw(title="Context Error", msg=f"<pre>{html.escape(get_traceback())}</pre>", exc=e)
+        throw(
+            title="Context Error",
+            msg=f"<pre>{html.escape(get_traceback())}</pre>",
+            exc=e,
+        )
     finally:
         if is_path:
-            logger.debug(f"Rendering time: {time.monotonic() - start_time:.6f} seconds ({template})")
+            logger.debug(
+                f"Rendering time: {time.monotonic() - start_time:.6f} seconds ({template})"
+            )
         else:
             logger.debug(f"Rendering time: {time.monotonic() - start_time:.6f} seconds")
 

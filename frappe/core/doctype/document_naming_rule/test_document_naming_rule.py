@@ -16,7 +16,10 @@ class UnitTestDocumentNamingRule(UnitTestCase):
 class TestDocumentNamingRule(IntegrationTestCase):
     def test_naming_rule_by_series(self):
         naming_rule = frappe.get_doc(
-            doctype="Document Naming Rule", document_type="ToDo", prefix="test-todo-", prefix_digits=5
+            doctype="Document Naming Rule",
+            document_type="ToDo",
+            prefix="test-todo-",
+            prefix_digits=5,
         ).insert()
 
         todo = frappe.get_doc(
@@ -53,15 +56,21 @@ class TestDocumentNamingRule(IntegrationTestCase):
         naming_rule_2.insert()
 
         todo = frappe.get_doc(
-            doctype="ToDo", priority="High", description="Is this my id " + frappe.generate_hash()
+            doctype="ToDo",
+            priority="High",
+            description="Is this my id " + frappe.generate_hash(),
         ).insert()
 
         todo_1 = frappe.get_doc(
-            doctype="ToDo", priority="Medium", description="Is this my id " + frappe.generate_hash()
+            doctype="ToDo",
+            priority="Medium",
+            description="Is this my id " + frappe.generate_hash(),
         ).insert()
 
         todo_2 = frappe.get_doc(
-            doctype="ToDo", priority="Low", description="Is this my id " + frappe.generate_hash()
+            doctype="ToDo",
+            priority="Low",
+            description="Is this my id " + frappe.generate_hash(),
         ).insert()
 
         try:

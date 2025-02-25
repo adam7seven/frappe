@@ -6,7 +6,12 @@ def execute():
 
     # Remove "Workspace Settings" item from version 15
     workspace_item = next(
-        (item for item in navbar_settings.settings_dropdown if item.item_label == "Workspace Settings"), None
+        (
+            item
+            for item in navbar_settings.settings_dropdown
+            if item.item_label == "Workspace Settings"
+        ),
+        None,
     )
 
     if workspace_item:

@@ -19,7 +19,9 @@ from frappe.utils.background_jobs import (
 
 class TestBackgroundJobs(IntegrationTestCase):
     def test_remove_failed_jobs(self):
-        frappe.enqueue(method="frappe.tests.test_background_jobs.fail_function", queue="short")
+        frappe.enqueue(
+            method="frappe.tests.test_background_jobs.fail_function", queue="short"
+        )
         # wait for enqueued job to execute
         time.sleep(2)
         conn = get_redis_conn()
@@ -51,7 +53,9 @@ class TestBackgroundJobs(IntegrationTestCase):
         high_priority_job = frappe.enqueue(**kwargs, at_front=True)
 
         # lesser is earlier
-        self.assertTrue(high_priority_job.get_position() < low_priority_job.get_position())
+        self.assertTrue(
+            high_priority_job.get_position() < low_priority_job.get_position()
+        )
 
     def test_job_hooks(self):
         self.addCleanup(lambda: _test_JOB_HOOK.clear())
@@ -72,7 +76,9 @@ class TestBackgroundJobs(IntegrationTestCase):
                 kwargs={},
             )
             self.assertEqual(r, "pong")
-            self.assertLess(_test_JOB_HOOK.get("before_job"), _test_JOB_HOOK.get("after_job"))
+            self.assertLess(
+                _test_JOB_HOOK.get("before_job"), _test_JOB_HOOK.get("after_job")
+            )
 
 
 def fail_function():

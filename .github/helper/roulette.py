@@ -141,7 +141,9 @@ def is_ci(file):
 
 def is_frontend_code(file):
     """Check if the file is frontend code."""
-    return file.lower().endswith((".css", ".scss", ".less", ".sass", ".styl", ".js", ".ts", ".vue", ".html"))
+    return file.lower().endswith(
+        (".css", ".scss", ".less", ".sass", ".styl", ".js", ".ts", ".vue", ".html")
+    )
 
 
 def is_docs(file):
@@ -171,7 +173,9 @@ if __name__ == "__main__":
     # Analyze changed files
     ci_files_changed = any(f for f in files_list if is_ci(f))
     only_docs_changed = len(list(filter(is_docs, files_list))) == len(files_list)
-    only_frontend_code_changed = len(list(filter(is_frontend_code, files_list))) == len(files_list)
+    only_frontend_code_changed = len(list(filter(is_frontend_code, files_list))) == len(
+        files_list
+    )
     updated_py_file_count = len(list(filter(is_server_side_code, files_list)))
     only_py_changed = updated_py_file_count == len(files_list)
 
@@ -196,7 +200,11 @@ if __name__ == "__main__":
     ):
         print("Only Frontend code was updated; Stopping Python build process.")
         sys.exit(0)
-    elif build_type == "ui" and only_py_changed and not has_run_ui_tests_label(pr_number, repo):
+    elif (
+        build_type == "ui"
+        and only_py_changed
+        and not has_run_ui_tests_label(pr_number, repo)
+    ):
         print("Only Python code was updated, stopping Cypress build process.")
         sys.exit(0)
 

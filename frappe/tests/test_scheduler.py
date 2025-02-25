@@ -5,7 +5,10 @@ from unittest import TestCase
 from unittest.mock import patch
 
 import frappe
-from frappe.core.doctype.scheduled_job_type.scheduled_job_type import ScheduledJobType, sync_jobs
+from frappe.core.doctype.scheduled_job_type.scheduled_job_type import (
+    ScheduledJobType,
+    sync_jobs,
+)
 from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, get_datetime
 from frappe.utils.data import now_datetime
@@ -43,7 +46,9 @@ class TestScheduler(IntegrationTestCase):
         purge_pending_jobs()
 
     def test_enqueue_jobs(self):
-        frappe.db.sql("update `tabScheduled Job Type` set last_execution = '2010-01-01 00:00:00'")
+        frappe.db.sql(
+            "update `tabScheduled Job Type` set last_execution = '2010-01-01 00:00:00'"
+        )
 
         enqueued_jobs = enqueue_events()
 
@@ -63,12 +68,22 @@ class TestScheduler(IntegrationTestCase):
 
     def test_is_dormant(self):
         self.assertTrue(is_dormant(check_time=get_datetime("2100-01-01 00:00:00")))
-        self.assertTrue(is_dormant(check_time=add_days(frappe.db.get_last_created("Activity Log"), 5)))
-        self.assertFalse(is_dormant(check_time=frappe.db.get_last_created("Activity Log")))
+        self.assertTrue(
+            is_dormant(
+                check_time=add_days(frappe.db.get_last_created("Activity Log"), 5)
+            )
+        )
+        self.assertFalse(
+            is_dormant(check_time=frappe.db.get_last_created("Activity Log"))
+        )
 
     def test_once_a_day_for_dormant(self):
         frappe.db.truncate("Scheduled Job Log")
-        self.assertTrue(schedule_jobs_based_on_activity(check_time=get_datetime("2100-01-01 00:00:00")))
+        self.assertTrue(
+            schedule_jobs_based_on_activity(
+                check_time=get_datetime("2100-01-01 00:00:00")
+            )
+        )
         self.assertTrue(
             schedule_jobs_based_on_activity(
                 check_time=add_days(frappe.db.get_last_created("Activity Log"), 5)
@@ -76,11 +91,15 @@ class TestScheduler(IntegrationTestCase):
         )
 
         # create a fake job executed 5 days from now
-        job = get_test_job(method="frappe.tests.test_scheduler.test_method", frequency="Daily")
+        job = get_test_job(
+            method="frappe.tests.test_scheduler.test_method", frequency="Daily"
+        )
         job.execute()
         job_log = frappe.get_doc("Scheduled Job Log", dict(scheduled_job_type=job.name))
         job_log.db_set(
-            "creation", add_days(_get_last_creation_timestamp("Activity Log"), 5), update_modified=False
+            "creation",
+            add_days(_get_last_creation_timestamp("Activity Log"), 5),
+            update_modified=False,
         )
         schedule_jobs_based_on_activity.clear_cache()
 
@@ -111,10 +130,14 @@ class TestScheduler(IntegrationTestCase):
         for delta, expected_sleep in test_cases.items():
             fake_time = datetime(2024, 1, 1) + delta
             with self.freeze_time(fake_time, is_utc=True):
-                self.assertEqual(sleep_duration(DEFAULT_SCHEDULER_TICK), expected_sleep, delta)
+                self.assertEqual(
+                    sleep_duration(DEFAULT_SCHEDULER_TICK), expected_sleep, delta
+                )
 
 
-def get_test_job(method="frappe.tests.test_scheduler.test_timeout_10", frequency="All") -> ScheduledJobType:
+def get_test_job(
+    method="frappe.tests.test_scheduler.test_timeout_10", frequency="All"
+) -> ScheduledJobType:
     if not frappe.db.exists("Scheduled Job Type", dict(method=method)):
         job = frappe.get_doc(
             doctype="Scheduled Job Type",

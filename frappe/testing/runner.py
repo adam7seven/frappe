@@ -77,7 +77,8 @@ class TestRunner(unittest.TextTestRunner):
     def iterRun(self) -> Iterator[tuple[str, str, unittest.TestSuite]]:
         for app, categories in self.per_app_categories.items():
             sorted_categories = sorted(
-                categories.items(), key=lambda x: CATEGORY_PRIORITIES.get(x[0], float("inf"))
+                categories.items(),
+                key=lambda x: CATEGORY_PRIORITIES.get(x[0], float("inf")),
             )
             for category, suite in sorted_categories:
                 if not self._has_tests(suite):
@@ -99,14 +100,18 @@ class TestRunner(unittest.TextTestRunner):
 
         dispatcher = {
             "integration": self.integration_preparation,
-            "old-frappe-test-class-category": get_compat_frappe_test_case_preparation(self.cfg),
+            "old-frappe-test-class-category": get_compat_frappe_test_case_preparation(
+                self.cfg
+            ),
             # Add other categories here as needed
         }
         prepare_method = dispatcher.get(category.lower())
         if prepare_method:
             prepare_method(suite, app, category)
         else:
-            logger.debug(f"Unknown test category: {category}. No specific preparation performed.")
+            logger.debug(
+                f"Unknown test category: {category}. No specific preparation performed."
+            )
 
     def _apply_debug_decorators(self, suite):
         if self.cfg.pdb_on_exceptions:
@@ -114,7 +119,9 @@ class TestRunner(unittest.TextTestRunner):
                 setattr(
                     test,
                     test._testMethodName,
-                    debug_on(*self.cfg.pdb_on_exceptions)(getattr(test, test._testMethodName)),
+                    debug_on(*self.cfg.pdb_on_exceptions)(
+                        getattr(test, test._testMethodName)
+                    ),
                 )
 
     @contextlib.contextmanager

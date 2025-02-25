@@ -52,7 +52,11 @@ class DBIndex:
     _score: float = 0.0
 
     def __eq__(self, other: "DBIndex") -> bool:
-        return self.column == other.column and self.sequence == other.sequence and self.table == other.table
+        return (
+            self.column == other.column
+            and self.sequence == other.sequence
+            and self.table == other.table
+        )
 
     def __repr__(self):
         return f"DBIndex(`{self.table}`.`{self.column}`)"
@@ -90,7 +94,11 @@ class ColumnStat:
             avg_frequency=data["avg_frequency"],
             avg_length=data["avg_length"],
             nulls_ratio=data["nulls_ratio"],
-            histogram=[flt(bin) for bin in data["histogram"].split(",")] if data["histogram"] else [],
+            histogram=(
+                [flt(bin) for bin in data["histogram"].split(",")]
+                if data["histogram"]
+                else []
+            ),
         )
 
 
@@ -111,7 +119,11 @@ class DBTable:
         """Estimate cardinality using mysql.column_stat"""
         for column_stat in column_stats:
             for col in self.schema:
-                if col.name == column_stat.column_name and not col.cardinality and column_stat.avg_frequency:
+                if (
+                    col.name == column_stat.column_name
+                    and not col.cardinality
+                    and column_stat.avg_frequency
+                ):
                     # "hack" or "math" - average frequency is on average how frequently a row value appears.
                     # Avg = total_rows / cardinality, so...
                     col.cardinality = self.total_rows / column_stat.avg_frequency
@@ -164,7 +176,9 @@ class DBOptimizer:
                     break
         return DBIndex(column=column_name, name=column_name, table=table)
 
-    def _remove_existing_indexes(self, potential_indexes: list[DBIndex]) -> list[DBIndex]:
+    def _remove_existing_indexes(
+        self, potential_indexes: list[DBIndex]
+    ) -> list[DBIndex]:
         """Given list of potential index candidates remove the ones that already exist.
 
         This also removes multi-column indexes for parts that are applicable to query.
@@ -179,7 +193,9 @@ class DBOptimizer:
             matched_sub_index = []
             for idx_part in list(idx):
                 matching_part = [
-                    i for i in potential_indexes if i.column == idx_part.column and i.table == idx_part.table
+                    i
+                    for i in potential_indexes
+                    if i.column == idx_part.column and i.table == idx_part.table
                 ]
                 if not matching_part:
                     # pop and recurse
@@ -272,7 +288,8 @@ class DBOptimizer:
     def index_score(self, index: DBIndex) -> float:
         """Score an index from 0 to 1 based on usefulness.
 
-        A score of 0.5 indicates on average this index will read 50% of the table. (e.g. checkboxes)"""
+        A score of 0.5 indicates on average this index will read 50% of the table. (e.g. checkboxes)
+        """
         table = self.tables[index.table]
 
         cardinality = index.cardinality or 2

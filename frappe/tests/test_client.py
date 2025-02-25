@@ -37,7 +37,9 @@ class TestClient(IntegrationTestCase):
 
         self.assertFalse(frappe.db.exists("Note", note.name))
         self.assertRaises(frappe.DoesNotExistError, delete, "Note", note.name)
-        self.assertRaises(frappe.DoesNotExistError, delete, "Note Seen By", child_row_name)
+        self.assertRaises(
+            frappe.DoesNotExistError, delete, "Note Seen By", child_row_name
+        )
 
     def test_http_valid_method_access(self):
         from frappe.client import delete
@@ -49,7 +51,10 @@ class TestClient(IntegrationTestCase):
         frappe.local.request.method = "POST"
 
         frappe.local.form_dict = frappe._dict(
-            {"doc": dict(doctype="ToDo", description="Valid http method"), "cmd": "frappe.client.save"}
+            {
+                "doc": dict(doctype="ToDo", description="Valid http method"),
+                "cmd": "frappe.client.save",
+            }
         )
         todo = execute_cmd("frappe.client.save")
 
@@ -66,7 +71,10 @@ class TestClient(IntegrationTestCase):
         frappe.local.request.method = "GET"
 
         frappe.local.form_dict = frappe._dict(
-            {"doc": dict(doctype="ToDo", description="Invalid http method"), "cmd": "frappe.client.save"}
+            {
+                "doc": dict(doctype="ToDo", description="Invalid http method"),
+                "cmd": "frappe.client.save",
+            }
         )
 
         self.assertRaises(frappe.PermissionError, execute_cmd, "frappe.client.save")
@@ -112,7 +120,9 @@ class TestClient(IntegrationTestCase):
             }
         )
 
-        self.assertRaises(frappe.PermissionError, execute_cmd, frappe.local.form_dict.cmd)
+        self.assertRaises(
+            frappe.PermissionError, execute_cmd, frappe.local.form_dict.cmd
+        )
 
     def test_array_values_in_request_args(self):
         import requests
@@ -166,12 +176,16 @@ class TestClient(IntegrationTestCase):
             self.assertEqual(validate_link("User", "GueSt"), {"name": "Guest"})
 
         # Fetch
-        self.assertEqual(validate_link("User", "Guest", fields=["enabled"]), {"name": "Guest", "enabled": 1})
+        self.assertEqual(
+            validate_link("User", "Guest", fields=["enabled"]),
+            {"name": "Guest", "enabled": 1},
+        )
 
         # Permissions
         with self.set_user("Guest"), self.assertRaises(frappe.PermissionError):
             self.assertEqual(
-                validate_link("User", "Guest", fields=["enabled"]), {"name": "Guest", "enabled": 1}
+                validate_link("User", "Guest", fields=["enabled"]),
+                {"name": "Guest", "enabled": 1},
             )
 
     def test_client_insert(self):
@@ -253,8 +267,12 @@ class TestClient(IntegrationTestCase):
         docs = insert_many(doc_list)
 
         self.assertEqual(len(docs), 7)
-        self.assertEqual(frappe.db.get_value("Note", docs[3], "title"), "not-a-random-title")
-        self.assertEqual(frappe.db.get_value("Note", docs[6], "title"), "another-note-title")
+        self.assertEqual(
+            frappe.db.get_value("Note", docs[3], "title"), "not-a-random-title"
+        )
+        self.assertEqual(
+            frappe.db.get_value("Note", docs[6], "title"), "another-note-title"
+        )
         self.assertIn(note1.name, docs)
 
         # cleanup

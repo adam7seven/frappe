@@ -60,7 +60,9 @@ class NestedSetTestUtil:
         frappe.db.delete("DocType", TEST_DOCTYPE)
         frappe.db.sql_ddl(f"drop table if exists `tab{TEST_DOCTYPE}`")
 
-        self.tree_doctype = new_doctype(TEST_DOCTYPE, is_tree=True, autoname="field:some_fieldname")
+        self.tree_doctype = new_doctype(
+            TEST_DOCTYPE, is_tree=True, autoname="field:some_fieldname"
+        )
         self.tree_doctype.insert()
 
         for record in records:
@@ -80,7 +82,9 @@ class NestedSetTestUtil:
     def get_no_of_children(self, record_name: str) -> int:
         if not record_name:
             return frappe.db.count(TEST_DOCTYPE)
-        return len(get_descendants_of(TEST_DOCTYPE, record_name, ignore_permissions=True))
+        return len(
+            get_descendants_of(TEST_DOCTYPE, record_name, ignore_permissions=True)
+        )
 
 
 class TestNestedSet(IntegrationTestCase):
@@ -102,7 +106,9 @@ class TestNestedSet(IntegrationTestCase):
         global records
 
         min_lft = 1
-        max_rgt = frappe.qb.from_(TEST_DOCTYPE).select(Max(Field("rgt"))).run(pluck=True)[0]
+        max_rgt = (
+            frappe.qb.from_(TEST_DOCTYPE).select(Max(Field("rgt"))).run(pluck=True)[0]
+        )
 
         for record in records:
             lft, rgt, parent_test_tree_doctype = frappe.db.get_value(
@@ -132,7 +138,11 @@ class TestNestedSet(IntegrationTestCase):
             no_of_children = self.nsu.get_no_of_children(record["some_fieldname"])
             self.assertTrue(
                 rgt == (lft + 1 + (2 * no_of_children)),
-                msg=(record, no_of_children, self.nsu.get_no_of_children(record["some_fieldname"])),
+                msg=(
+                    record,
+                    no_of_children,
+                    self.nsu.get_no_of_children(record["some_fieldname"]),
+                ),
             )
 
             no_of_children = self.nsu.get_no_of_children(parent_test_tree_doctype)
@@ -174,20 +184,32 @@ class TestNestedSet(IntegrationTestCase):
         child_2 = frappe.get_doc(TEST_DOCTYPE, "Child 2")
 
         # assert that child 2 is not already under parent 1
-        parent_lft_old, parent_rgt_old = frappe.db.get_value(TEST_DOCTYPE, "Parent 2", ["lft", "rgt"])
-        self.assertTrue((parent_lft_old > child_2.lft) and (parent_rgt_old > child_2.rgt))
+        parent_lft_old, parent_rgt_old = frappe.db.get_value(
+            TEST_DOCTYPE, "Parent 2", ["lft", "rgt"]
+        )
+        self.assertTrue(
+            (parent_lft_old > child_2.lft) and (parent_rgt_old > child_2.rgt)
+        )
 
         child_2.parent_test_tree_doctype = "Parent 2"
         child_2.save()
         self.test_basic_tree()
 
         # assert that child 2 is under parent 1
-        parent_lft_new, parent_rgt_new = frappe.db.get_value(TEST_DOCTYPE, "Parent 2", ["lft", "rgt"])
-        self.assertFalse((parent_lft_new > child_2.lft) and (parent_rgt_new > child_2.rgt))
+        parent_lft_new, parent_rgt_new = frappe.db.get_value(
+            TEST_DOCTYPE, "Parent 2", ["lft", "rgt"]
+        )
+        self.assertFalse(
+            (parent_lft_new > child_2.lft) and (parent_rgt_new > child_2.rgt)
+        )
 
     def test_delete_leaf(self):
         global records
-        el = {"some_fieldname": "Child 1", "parent_test_tree_doctype": "Parent 1", "is_group": 0}
+        el = {
+            "some_fieldname": "Child 1",
+            "parent_test_tree_doctype": "Parent 1",
+            "is_group": 0,
+        }
 
         child_1 = frappe.get_doc(TEST_DOCTYPE, "Child 1")
         child_1.delete()
@@ -215,18 +237,28 @@ class TestNestedSet(IntegrationTestCase):
         doctype = new_doctype(is_tree=True).insert()
 
         # Rename doctype
-        frappe.rename_doc("DocType", doctype.name, "Test " + random_string(10), force=True)
+        frappe.rename_doc(
+            "DocType", doctype.name, "Test " + random_string(10), force=True
+        )
 
     def test_merge_groups(self):
         global records
-        el = {"some_fieldname": "Parent 2", "parent_test_tree_doctype": "Root Node", "is_group": 1}
+        el = {
+            "some_fieldname": "Parent 2",
+            "parent_test_tree_doctype": "Root Node",
+            "is_group": 1,
+        }
         frappe.rename_doc(TEST_DOCTYPE, "Parent 2", "Parent 1", merge=True)
         records.remove(el)
         self.test_basic_tree()
 
     def test_merge_leaves(self):
         global records
-        el = {"some_fieldname": "Child 3", "parent_test_tree_doctype": "Parent 2", "is_group": 0}
+        el = {
+            "some_fieldname": "Child 3",
+            "parent_test_tree_doctype": "Parent 2",
+            "is_group": 0,
+        }
 
         frappe.rename_doc(
             TEST_DOCTYPE,
@@ -291,11 +323,21 @@ class TestNestedSet(IntegrationTestCase):
         self.assertIn(record, frappe.get_all(linked_doctype, inclusive_link, run=0))
 
         # QB
-        self.assertNotIn(record, str(frappe.qb.get_query(TEST_DOCTYPE, filters=exclusive_filter)))
-        self.assertIn(record, str(frappe.qb.get_query(TEST_DOCTYPE, filters=inclusive_filter)))
+        self.assertNotIn(
+            record, str(frappe.qb.get_query(TEST_DOCTYPE, filters=exclusive_filter))
+        )
+        self.assertIn(
+            record, str(frappe.qb.get_query(TEST_DOCTYPE, filters=inclusive_filter))
+        )
 
-        self.assertNotIn(record, str(frappe.qb.get_query(table=linked_doctype, filters=exclusive_link)))
-        self.assertIn(record, str(frappe.qb.get_query(table=linked_doctype, filters=inclusive_link)))
+        self.assertNotIn(
+            record,
+            str(frappe.qb.get_query(table=linked_doctype, filters=exclusive_link)),
+        )
+        self.assertIn(
+            record,
+            str(frappe.qb.get_query(table=linked_doctype, filters=inclusive_link)),
+        )
 
     def test_disabled_records_in_treeview(self):
         """
@@ -324,7 +366,12 @@ class TestNestedSet(IntegrationTestCase):
 
         for record in [
             {"some_fieldname": "Root", "disabled": 0, "is_group": 1},
-            {"some_fieldname": "Sub Tree 1", "disabled": 1, "parent_" + doctype: "Root", "is_group": 0},
+            {
+                "some_fieldname": "Sub Tree 1",
+                "disabled": 1,
+                "parent_" + doctype: "Root",
+                "is_group": 0,
+            },
         ]:
             d = frappe.new_doc(doctype)
             d.update(record)

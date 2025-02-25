@@ -62,7 +62,9 @@ def handle():
 
 def execute_cmd(cmd, from_async=False):
     """execute a request as python module"""
-    for hook in reversed(frappe.get_hooks("override_whitelisted_methods", {}).get(cmd, [])):
+    for hook in reversed(
+        frappe.get_hooks("override_whitelisted_methods", {}).get(cmd, [])
+    ):
         # override using the last hook
         cmd = hook
         break
@@ -181,10 +183,14 @@ def upload_file():
     frappe.local.uploaded_file = content
     frappe.local.uploaded_filename = filename
 
-    if content is not None and (frappe.session.user == "Guest" or (user and not user.has_desk_access())):
+    if content is not None and (
+        frappe.session.user == "Guest" or (user and not user.has_desk_access())
+    ):
         filetype = guess_type(filename)[0]
         if filetype not in ALLOWED_MIMETYPES:
-            frappe.throw(_("You can only upload JPG, PNG, PDF, TXT, CSV or Microsoft documents."))
+            frappe.throw(
+                _("You can only upload JPG, PNG, PDF, TXT, CSV or Microsoft documents.")
+            )
 
     if method:
         method = frappe.get_attr(method)

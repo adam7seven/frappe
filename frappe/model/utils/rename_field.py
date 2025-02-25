@@ -23,7 +23,12 @@ def rename_field(doctype, old_fieldname, new_fieldname, validate=True):
             return
 
         if not meta.issingle and not frappe.db.has_column(doctype, old_fieldname):
-            print("rename_field: " + (old_fieldname) + " not found in table for: " + doctype)
+            print(
+                "rename_field: "
+                + (old_fieldname)
+                + " not found in table for: "
+                + doctype
+            )
             # never had the field?
             return
 
@@ -31,7 +36,9 @@ def rename_field(doctype, old_fieldname, new_fieldname, validate=True):
         # change parentfield of table mentioned in options
         frappe.db.sql(
             """update `tab{}` set parentfield={}
-            where parentfield={}""".format(new_field.options.split("\n", 1)[0], "%s", "%s"),
+            where parentfield={}""".format(
+                new_field.options.split("\n", 1)[0], "%s", "%s"
+            ),
             (new_fieldname, old_fieldname),
         )
 
@@ -149,7 +156,9 @@ def update_users_report_view_settings(doctype, ref_fieldname, new_fieldname):
         if columns_modified:
             frappe.db.sql(
                 """update `tabDefaultValue` set defvalue={}
-                where defkey={}""".format("%s", "%s"),
+                where defkey={}""".format(
+                    "%s", "%s"
+                ),
                 (json.dumps(new_columns), key),
             )
 

@@ -44,7 +44,10 @@ def fetch_changelog_feed():
             if changelog_feed is None:
                 changelog_feed = frappe.call(fn, since=since)[:20] or []
                 frappe.cache.set_value(
-                    cache_key, changelog_feed, expires_in_sec=7 * 24 * 60 * 60, shared=True
+                    cache_key,
+                    changelog_feed,
+                    expires_in_sec=7 * 24 * 60 * 60,
+                    shared=True,
                 )
 
             for feed_item in changelog_feed:
@@ -59,7 +62,9 @@ def fetch_changelog_feed():
         except Exception:
             frappe.log_error(f"Failed to fetch changelog from {fn}")
             # don't retry if it's broken for 1 week
-            frappe.cache.set_value(cache_key, [], expires_in_sec=7 * 24 * 60 * 60, shared=True)
+            frappe.cache.set_value(
+                cache_key, [], expires_in_sec=7 * 24 * 60 * 60, shared=True
+            )
 
 
 @redis_cache

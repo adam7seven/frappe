@@ -71,18 +71,26 @@ class LogSettings(Document):
     def add_default_logtypes(self):
         existing_logtypes = {d.ref_doctype for d in self.logs_to_clear}
         added_logtypes = set()
-        default_logtypes_retention = frappe.get_hooks("default_log_clearing_doctypes", {})
+        default_logtypes_retention = frappe.get_hooks(
+            "default_log_clearing_doctypes", {}
+        )
 
         for logtype, retentions in default_logtypes_retention.items():
             if logtype not in existing_logtypes and _supports_log_clearing(logtype):
                 if not frappe.db.exists("DocType", logtype):
                     continue
 
-                self.append("logs_to_clear", {"ref_doctype": logtype, "days": cint(retentions[-1])})
+                self.append(
+                    "logs_to_clear",
+                    {"ref_doctype": logtype, "days": cint(retentions[-1])},
+                )
                 added_logtypes.add(logtype)
 
         if added_logtypes:
-            frappe.msgprint(_("Added default log doctypes: {}").format(",".join(added_logtypes)), alert=True)
+            frappe.msgprint(
+                _("Added default log doctypes: {}").format(",".join(added_logtypes)),
+                alert=True,
+            )
 
     def clear_logs(self):
         """
@@ -186,7 +194,9 @@ def clear_log_table(doctype, days=90):
                 SELECT * FROM `{original}`
                 WHERE `{original}`.`creation` > NOW() - INTERVAL '{days}' DAY"""
         )
-        frappe.db.sql_ddl(f"RENAME TABLE `{original}` TO `{backup}`, `{temporary}` TO `{original}`")
+        frappe.db.sql_ddl(
+            f"RENAME TABLE `{original}` TO `{backup}`, `{temporary}` TO `{original}`"
+        )
     except Exception:
         frappe.db.rollback()
         frappe.db.sql_ddl(f"DROP TABLE IF EXISTS `{temporary}`")

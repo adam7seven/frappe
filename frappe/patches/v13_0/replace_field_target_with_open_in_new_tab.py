@@ -3,7 +3,9 @@ import frappe
 
 def execute():
     doctype = "Top Bar Item"
-    if not frappe.db.table_exists(doctype) or not frappe.db.has_column(doctype, "target"):
+    if not frappe.db.table_exists(doctype) or not frappe.db.has_column(
+        doctype, "target"
+    ):
         return
 
     frappe.reload_doc("website", "doctype", "top_bar_item")

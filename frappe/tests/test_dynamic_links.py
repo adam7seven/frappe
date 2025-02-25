@@ -43,11 +43,17 @@ class TestDynamicLinks(IntegrationTestCase):
         event.add_comment("Comment", "test")
 
         self.assertTrue(
-            frappe.get_all("Comment", filters={"reference_doctype": "Event", "reference_name": event.name})
+            frappe.get_all(
+                "Comment",
+                filters={"reference_doctype": "Event", "reference_name": event.name},
+            )
         )
         event.delete()
         self.assertFalse(
-            frappe.get_all("Comment", filters={"reference_doctype": "Event", "reference_name": event.name})
+            frappe.get_all(
+                "Comment",
+                filters={"reference_doctype": "Event", "reference_name": event.name},
+            )
         )
 
     def test_custom_fields(self):
@@ -57,7 +63,11 @@ class TestDynamicLinks(IntegrationTestCase):
         add_custom_field("Event", "test_ref_name", "Dynamic Link", "test_ref_doc")
 
         unsub = frappe.get_doc(
-            {"doctype": "Email Unsubscribe", "email": "test@example.com", "global_unsubscribe": 1}
+            {
+                "doctype": "Email Unsubscribe",
+                "email": "test@example.com",
+                "global_unsubscribe": 1,
+            }
         ).insert()
 
         event = frappe.get_doc(

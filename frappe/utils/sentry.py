@@ -31,9 +31,16 @@ class FrappeIntegration(Integration):
                 self.connect()
 
             with record_sql_queries(
-                hub, self._cursor, query, values, paramstyle="pyformat", executemany=False
+                hub,
+                self._cursor,
+                query,
+                values,
+                paramstyle="pyformat",
+                executemany=False,
             ):
-                return real_sql(self, query, values or EmptyQueryValues, *args, **kwargs)
+                return real_sql(
+                    self, query, values or EmptyQueryValues, *args, **kwargs
+                )
 
         def connect(self):
             hub = Hub.current
@@ -116,7 +123,9 @@ def capture_exception(message: str | None = None) -> None:
             ):
                 set_scope(scope)
             if frappe.request:
-                evt_processor = _make_wsgi_event_processor(frappe.request.environ, False)
+                evt_processor = _make_wsgi_event_processor(
+                    frappe.request.environ, False
+                )
                 scope.add_event_processor(evt_processor)
                 if frappe.request.is_json:
                     scope.set_context("JSON Body", frappe.request.json)
@@ -127,7 +136,9 @@ def capture_exception(message: str | None = None) -> None:
             exc_info = sys.exc_info()
             if any(exc_info):
                 # Don't report errors which we can't "fix" in code
-                if isinstance(exc_info[1], frappe.ValidationError | frappe.PermissionError):
+                if isinstance(
+                    exc_info[1], frappe.ValidationError | frappe.PermissionError
+                ):
                     return
 
                 event, hint = event_from_exception(

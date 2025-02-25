@@ -8,7 +8,11 @@ import frappe
 from frappe.app import make_form_dict
 from frappe.core.doctype.doctype.test_doctype import new_doctype
 from frappe.desk.doctype.note.note import Note
-from frappe.model.naming import make_autoname, parse_naming_series, revert_series_if_last
+from frappe.model.naming import (
+    make_autoname,
+    parse_naming_series,
+    revert_series_if_last,
+)
 from frappe.tests import IntegrationTestCase
 from frappe.utils import cint, now_datetime, set_request
 from frappe.website.serve import get_response
@@ -56,7 +60,9 @@ class TestDocument(IntegrationTestCase):
         )
         d.insert()
         self.assertTrue(d.name.startswith("EV"))
-        self.assertEqual(frappe.db.get_value("Event", d.name, "subject"), "test-doc-test-event 1")
+        self.assertEqual(
+            frappe.db.get_value("Event", d.name, "subject"), "test-doc-test-event 1"
+        )
 
         # test if default values are added
         self.assertEqual(d.send_reminder, 1)
@@ -66,12 +72,22 @@ class TestDocument(IntegrationTestCase):
         default = frappe.generate_hash()
         child_table = new_doctype(default=default, istable=1).insert().name
         parent = (
-            new_doctype(fields=[{"fieldtype": "Table", "options": child_table, "fieldname": "child_table"}])
+            new_doctype(
+                fields=[
+                    {
+                        "fieldtype": "Table",
+                        "options": child_table,
+                        "fieldname": "child_table",
+                    }
+                ]
+            )
             .insert()
             .name
         )
 
-        doc = frappe.get_doc({"doctype": parent, "child_table": [{"some_fieldname": "xasd"}]}).insert()
+        doc = frappe.get_doc(
+            {"doctype": parent, "child_table": [{"some_fieldname": "xasd"}]}
+        ).insert()
         doc.append("child_table", {})
         doc.save()
         self.assertEqual(doc.child_table[-1].some_fieldname, default)
@@ -87,14 +103,18 @@ class TestDocument(IntegrationTestCase):
         )
         d.insert()
         self.assertTrue(d.name.startswith("EV"))
-        self.assertEqual(frappe.db.get_value("Event", d.name, "subject"), "test-doc-test-event 2")
+        self.assertEqual(
+            frappe.db.get_value("Event", d.name, "subject"), "test-doc-test-event 2"
+        )
 
     def test_update(self):
         d = self.test_insert()
         d.subject = "subject changed"
         d.save()
 
-        self.assertEqual(frappe.db.get_value(d.doctype, d.name, "subject"), "subject changed")
+        self.assertEqual(
+            frappe.db.get_value(d.doctype, d.name, "subject"), "subject changed"
+        )
 
     def test_discard_transitions(self):
         d = self.test_insert()
@@ -157,7 +177,9 @@ class TestDocument(IntegrationTestCase):
 
     def test_text_editor_field(self):
         try:
-            frappe.get_doc(doctype="Activity Log", subject="test", message='<img src="test.png" />').insert()
+            frappe.get_doc(
+                doctype="Activity Log", subject="test", message='<img src="test.png" />'
+            ).insert()
         except frappe.MandatoryError:
             self.fail("Text Editor false positive mandatory error")
 
@@ -287,10 +309,14 @@ class TestDocument(IntegrationTestCase):
                 prefix = series.rsplit(".", 1)[0]
 
             prefix = parse_naming_series(prefix)
-            old_current = frappe.db.get_value("Series", prefix, "current", order_by="name")
+            old_current = frappe.db.get_value(
+                "Series", prefix, "current", order_by="name"
+            )
 
             revert_series_if_last(series, name)
-            new_current = cint(frappe.db.get_value("Series", prefix, "current", order_by="name"))
+            new_current = cint(
+                frappe.db.get_value("Series", prefix, "current", order_by="name")
+            )
 
             self.assertEqual(cint(old_current) - 1, new_current)
 
@@ -298,7 +324,11 @@ class TestDocument(IntegrationTestCase):
         frappe.delete_doc_if_exists("Currency", "Frappe Coin", 1)
 
         d = frappe.get_doc(
-            {"doctype": "Currency", "currency_name": "Frappe Coin", "smallest_currency_fraction_value": -1}
+            {
+                "doctype": "Currency",
+                "currency_name": "Frappe Coin",
+                "smallest_currency_fraction_value": -1,
+            }
         )
 
         self.assertRaises(frappe.NonNegativeError, d.insert)
@@ -317,7 +347,12 @@ class TestDocument(IntegrationTestCase):
                 "module": "Custom",
                 "custom": 1,
                 "fields": [
-                    {"label": "Currency", "fieldname": "currency", "reqd": 1, "fieldtype": "Currency"},
+                    {
+                        "label": "Currency",
+                        "fieldname": "currency",
+                        "reqd": 1,
+                        "fieldtype": "Currency",
+                    },
                 ],
             }
         ).insert(ignore_if_duplicate=True)
@@ -333,7 +368,10 @@ class TestDocument(IntegrationTestCase):
         ).insert()
 
         d = frappe.get_doc({"doctype": "Test Formatted", "currency": 100000})
-        self.assertEqual(d.get_formatted("currency", currency="INR", format="#,###.##"), "₹ 100,000.00")
+        self.assertEqual(
+            d.get_formatted("currency", currency="INR", format="#,###.##"),
+            "₹ 100,000.00",
+        )
 
         # should work even if options aren't set in df
         # and currency param is not passed
@@ -345,7 +383,9 @@ class TestDocument(IntegrationTestCase):
         self.assertEqual(len(doc.get("fields", limit=3)), 3)
 
         # limit with filters
-        self.assertEqual(len(doc.get("fields", filters={"fieldtype": "Data"}, limit=3)), 3)
+        self.assertEqual(
+            len(doc.get("fields", filters={"fieldtype": "Data"}, limit=3)), 3
+        )
 
     def test_virtual_fields(self):
         """Virtual fields are accessible via API and Form views, whenever .as_dict is invoked"""
@@ -356,7 +396,10 @@ class TestDocument(IntegrationTestCase):
         note.insert()
 
         def patch_note(class_=None):
-            return patch("frappe.controllers", new={frappe.local.site: {"Note": class_ or CustomTestNote}})
+            return patch(
+                "frappe.controllers",
+                new={frappe.local.site: {"Note": class_ or CustomTestNote}},
+            )
 
         @contextmanager
         def customize_note(with_options=False):
@@ -511,7 +554,10 @@ class TestDocument(IntegrationTestCase):
         doc.end_date = "2020-01-01"
         doc.start_date = "2020-12-31"
         self.assertRaises(
-            frappe.exceptions.InvalidDates, doc.validate_from_to_dates, "start_date", "end_date"
+            frappe.exceptions.InvalidDates,
+            doc.validate_from_to_dates,
+            "start_date",
+            "end_date",
         )
 
     def test_db_set_singles(self):
@@ -536,12 +582,16 @@ class TestDocumentWebView(IntegrationTestCase):
         document_key = todo.get_document_share_key()
 
         # with old-style signature key
-        with self.change_settings("System Settings", {"allow_older_web_view_links": True}):
+        with self.change_settings(
+            "System Settings", {"allow_older_web_view_links": True}
+        ):
             old_document_key = todo.get_signature()
             url = f"/ToDo/{todo.name}?key={old_document_key}"
             self.assertEqual(self.get(url).status, "200 OK")
 
-        with self.change_settings("System Settings", {"allow_older_web_view_links": False}):
+        with self.change_settings(
+            "System Settings", {"allow_older_web_view_links": False}
+        ):
             self.assertEqual(self.get(url).status, "403 FORBIDDEN")
 
         # with valid key
@@ -586,7 +636,9 @@ class TestDocumentWebView(IntegrationTestCase):
         )
         test_doctype.insert()
 
-        doc_path = Path(get_doc_path(test_doctype.module, test_doctype.doctype, test_doctype.name))
+        doc_path = Path(
+            get_doc_path(test_doctype.module, test_doctype.doctype, test_doctype.name)
+        )
         controller_file_path = doc_path / f"{scrub(test_doctype.name)}.py"
 
         # enable web view
@@ -616,7 +668,9 @@ class TestDocumentWebView(IntegrationTestCase):
         with open(controller_file_path) as f:
             file_content = f.read()
             self.assertIn(
-                "import Document", file_content, "`Document` not imported when web view is disabled!"
+                "import Document",
+                file_content,
+                "`Document` not imported when web view is disabled!",
             )
             self.assertIn(
                 "(Document)",
@@ -653,8 +707,12 @@ class TestDocumentWebView(IntegrationTestCase):
         all_docs = set(frappe.get_all(doctype, pluck="name"))
         all_child_docs = set(
             frappe.get_all(
-                child_doctype, filters={"parenttype": doctype, "parentfield": child_field}, pluck="name"
+                child_doctype,
+                filters={"parenttype": doctype, "parentfield": child_field},
+                pluck="name",
             )
         )
         self.assertEqual(sent_docs - all_docs, set(), "All docs should be inserted")
-        self.assertEqual(sent_child_docs - all_child_docs, set(), "All child docs should be inserted")
+        self.assertEqual(
+            sent_child_docs - all_child_docs, set(), "All child docs should be inserted"
+        )

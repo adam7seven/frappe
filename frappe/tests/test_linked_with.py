@@ -68,28 +68,37 @@ class TestLinkedWith(IntegrationTestCase):
             frappe.db.commit()
 
     def test_get_doctype_references_by_link_field(self):
-        references = linked_with.get_references_across_doctypes_by_link_field(to_doctypes=["Parent DocType"])
+        references = linked_with.get_references_across_doctypes_by_link_field(
+            to_doctypes=["Parent DocType"]
+        )
         self.assertEqual(len(references["Parent DocType"]), 3)
         self.assertIn(
-            {"doctype": "Child DocType1", "fieldname": "parent_doctype"}, references["Parent DocType"]
+            {"doctype": "Child DocType1", "fieldname": "parent_doctype"},
+            references["Parent DocType"],
         )
         self.assertIn(
-            {"doctype": "Child DocType2", "fieldname": "parent_doctype"}, references["Parent DocType"]
-        )
-
-        references = linked_with.get_references_across_doctypes_by_link_field(to_doctypes=["Child DocType1"])
-        self.assertEqual(len(references["Child DocType1"]), 2)
-        self.assertIn(
-            {"doctype": "Child DocType2", "fieldname": "child_doctype1"}, references["Child DocType1"]
+            {"doctype": "Child DocType2", "fieldname": "parent_doctype"},
+            references["Parent DocType"],
         )
 
         references = linked_with.get_references_across_doctypes_by_link_field(
-            to_doctypes=["Child DocType1", "Parent DocType"], limit_link_doctypes=["Child DocType1"]
+            to_doctypes=["Child DocType1"]
+        )
+        self.assertEqual(len(references["Child DocType1"]), 2)
+        self.assertIn(
+            {"doctype": "Child DocType2", "fieldname": "child_doctype1"},
+            references["Child DocType1"],
+        )
+
+        references = linked_with.get_references_across_doctypes_by_link_field(
+            to_doctypes=["Child DocType1", "Parent DocType"],
+            limit_link_doctypes=["Child DocType1"],
         )
         self.assertEqual(len(references["Child DocType1"]), 1)
         self.assertEqual(len(references["Parent DocType"]), 1)
         self.assertIn(
-            {"doctype": "Child DocType1", "fieldname": "parent_doctype"}, references["Parent DocType"]
+            {"doctype": "Child DocType1", "fieldname": "parent_doctype"},
+            references["Parent DocType"],
         )
 
     def test_get_doctype_references_by_dlink_field(self):
@@ -116,7 +125,9 @@ class TestLinkedWith(IntegrationTestCase):
 
         self.assertEqual(len(references["Parent DocType"]), 1)
         self.assertEqual(references["Parent DocType"][0]["doctype"], "Child DocType1")
-        self.assertEqual(references["Parent DocType"][0]["doctype_fieldname"], "reference_doctype")
+        self.assertEqual(
+            references["Parent DocType"][0]["doctype_fieldname"], "reference_doctype"
+        )
 
         child_record.delete()
         parent_record.delete()
@@ -133,7 +144,9 @@ class TestLinkedWith(IntegrationTestCase):
             }
         ).insert()
 
-        linked_docs = linked_with.get_submitted_linked_docs(parent_record.doctype, parent_record.name)["docs"]
+        linked_docs = linked_with.get_submitted_linked_docs(
+            parent_record.doctype, parent_record.name
+        )["docs"]
         self.assertIn(child_record.name, linked_docs[0]["name"])
         child_record.cancel()
         child_record.delete()
@@ -175,7 +188,9 @@ class TestLinkedWith(IntegrationTestCase):
         linked_doc = frappe.new_doc(dt_name).insert().submit()
 
         second_doc = (
-            frappe.new_doc(dt_name, **{"from": linked_doc.doctype, "order": linked_doc.name})
+            frappe.new_doc(
+                dt_name, **{"from": linked_doc.doctype, "order": linked_doc.name}
+            )
             .insert()
             .submit()
         )

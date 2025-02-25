@@ -146,7 +146,9 @@ def create_todo_workflow():
     TEST_ROLE = "Test Approver"
 
     if not frappe.db.exists("Role", TEST_ROLE):
-        frappe.get_doc(doctype="Role", role_id=TEST_ROLE).insert(ignore_if_duplicate=True)
+        frappe.get_doc(doctype="Role", role_id=TEST_ROLE).insert(
+            ignore_if_duplicate=True
+        )
         if frappe.db.exists("User", UI_TEST_USER):
             frappe.get_doc("User", UI_TEST_USER).add_roles(TEST_ROLE)
 
@@ -159,7 +161,12 @@ def create_todo_workflow():
     workflow.append("states", dict(state="Pending", allow_edit="All"))
     workflow.append(
         "states",
-        dict(state="Approved", allow_edit=TEST_ROLE, update_field="status", update_value="Closed"),
+        dict(
+            state="Approved",
+            allow_edit=TEST_ROLE,
+            update_field="status",
+            update_value="Closed",
+        ),
     )
     workflow.append("states", dict(state="Rejected", allow_edit=TEST_ROLE))
     workflow.append(
@@ -184,7 +191,13 @@ def create_todo_workflow():
     )
     workflow.append(
         "transitions",
-        dict(state="Rejected", action="Review", next_state="Pending", allowed="All", allow_self_approval=1),
+        dict(
+            state="Rejected",
+            action="Review",
+            next_state="Pending",
+            allowed="All",
+            allow_self_approval=1,
+        ),
     )
     workflow.insert(ignore_permissions=True)
 
@@ -192,4 +205,6 @@ def create_todo_workflow():
 
 
 def create_new_todo():
-    return frappe.get_doc(doctype="ToDo", description="workflow " + random_string(10)).insert()
+    return frappe.get_doc(
+        doctype="ToDo", description="workflow " + random_string(10)
+    ).insert()

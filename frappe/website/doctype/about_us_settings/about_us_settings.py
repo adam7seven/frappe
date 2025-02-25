@@ -15,8 +15,12 @@ class AboutUsSettings(Document):
 
     if TYPE_CHECKING:
         from frappe.types import DF
-        from frappe.website.doctype.about_us_team_member.about_us_team_member import AboutUsTeamMember
-        from frappe.website.doctype.company_history.company_history import CompanyHistory
+        from frappe.website.doctype.about_us_team_member.about_us_team_member import (
+            AboutUsTeamMember,
+        )
+        from frappe.website.doctype.company_history.company_history import (
+            CompanyHistory,
+        )
 
         company_history: DF.Table[CompanyHistory]
         company_history_heading: DF.Data | None

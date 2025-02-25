@@ -45,7 +45,10 @@ def main(
         discover_doctype_tests,
         discover_module_tests,
     )
-    from frappe.testing.environment import _cleanup_after_tests, _initialize_test_environment
+    from frappe.testing.environment import (
+        _cleanup_after_tests,
+        _initialize_test_environment,
+    )
 
     if debug and not debug_exceptions:
         debug_exceptions = (Exception,)
@@ -89,10 +92,16 @@ def main(
             debug_params.append(f"{param_name}={param_value}")
 
     if debug_params:
-        click.secho(f"Starting test run with parameters: {', '.join(debug_params)}", fg="cyan", bold=True)
+        click.secho(
+            f"Starting test run with parameters: {', '.join(debug_params)}",
+            fg="cyan",
+            bold=True,
+        )
         testing_module_logger.info(f"started with: {', '.join(debug_params)}")
     else:
-        click.secho("Starting test run with no specific parameters", fg="cyan", bold=True)
+        click.secho(
+            "Starting test run with no specific parameters", fg="cyan", bold=True
+        )
         testing_module_logger.info("started with no specific parameters")
     for handler in testing_module_logger.handlers:
         if file := getattr(handler, "baseFilename", None):
@@ -117,14 +126,18 @@ def main(
     try:
         # Create TestRunner instance
         runner = TestRunner(
-            verbosity=2 if testing_module_logger.getEffectiveLevel() < logging.INFO else 1,
+            verbosity=(
+                2 if testing_module_logger.getEffectiveLevel() < logging.INFO else 1
+            ),
             tb_locals=testing_module_logger.getEffectiveLevel() <= logging.INFO,
             cfg=test_config,
             buffer=not debug,  # unfortunate as it messes up stdout/stderr output order
         )
 
         if doctype or doctype_list_path:
-            doctype = _load_doctype_list(doctype_list_path) if doctype_list_path else doctype
+            doctype = (
+                _load_doctype_list(doctype_list_path) if doctype_list_path else doctype
+            )
             discover_doctype_tests(doctype, runner, app, force)
         elif module_def:
             _run_module_def_tests(app, module_def, runner, force)
@@ -137,7 +150,9 @@ def main(
         results = []
         for app, category, suite in runner.iterRun():
             click.secho(
-                f"\nRunning {suite.countTestCases()} {category} tests for {app}", fg="cyan", bold=True
+                f"\nRunning {suite.countTestCases()} {category} tests for {app}",
+                fg="cyan",
+                bold=True,
             )
             results.append([app, category, runner.run(suite)])
 
@@ -153,7 +168,9 @@ def main(
             xml_output_file.close()
 
         end_time = time.time()
-        testing_module_logger.debug(f"Total test run time: {end_time - start_time:.3f} seconds")
+        testing_module_logger.debug(
+            f"Total test run time: {end_time - start_time:.3f} seconds"
+        )
 
 
 def _setup_xml_output(junit_xml_output):
@@ -234,10 +251,18 @@ def _get_doctypes_for_module_def(app, module_def):
 @click.option("--profile", is_flag=True, default=False)
 @click.option("--coverage", is_flag=True, default=False)
 @click.option("--skip-test-records", is_flag=True, default=False, help="DEPRECATED")
-@click.option("--skip-before-tests", is_flag=True, default=False, help="Don't run before tests hook")
+@click.option(
+    "--skip-before-tests",
+    is_flag=True,
+    default=False,
+    help="Don't run before tests hook",
+)
 @click.option("--junit-xml-output", help="Destination file path for junit xml report")
 @click.option(
-    "--failfast", is_flag=True, default=False, help="Stop the test run on the first error or failure"
+    "--failfast",
+    is_flag=True,
+    default=False,
+    help="Stop the test run on the first error or failure",
 )
 @click.option(
     "--test-category",
@@ -284,8 +309,12 @@ def run_tests(
             return
 
         if skip_test_records:
-            click.secho("--skip-test-records is deprecated and without effect!", bold=True)
-            click.secho("All records are loaded lazily on first use, so the flag is useless, now.")
+            click.secho(
+                "--skip-test-records is deprecated and without effect!", bold=True
+            )
+            click.secho(
+                "All records are loaded lazily on first use, so the flag is useless, now."
+            )
             click.secho("Simply remove the flag.", fg="green")
             return
 
@@ -319,7 +348,9 @@ def run_tests(
     help="Build coverage file",
     envvar="CAPTURE_COVERAGE",
 )
-@click.option("--use-orchestrator", is_flag=True, help="Use orchestrator to run parallel tests")
+@click.option(
+    "--use-orchestrator", is_flag=True, help="Use orchestrator to run parallel tests"
+)
 @click.option("--dry-run", is_flag=True, default=False, help="Dont actually run tests")
 @pass_context
 def run_parallel_tests(
@@ -440,7 +471,9 @@ def run_ui_tests(
 
     # run for headless mode
     run_or_open = f"run --browser {browser}" if headless else "open"
-    formatted_command = f"{site_env} {password_env} {coverage_env} {cypress_path} {run_or_open}"
+    formatted_command = (
+        f"{site_env} {password_env} {coverage_env} {cypress_path} {run_or_open}"
+    )
 
     if os.environ.get("CYPRESS_RECORD_KEY"):
         formatted_command += " --record"

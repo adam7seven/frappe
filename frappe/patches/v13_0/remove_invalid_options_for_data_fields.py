@@ -11,5 +11,8 @@ def execute():
     (
         frappe.qb.update(custom_field)
         .set(custom_field.options, None)
-        .where((custom_field.fieldtype == "Data") & (custom_field.options.notin(data_field_options)))
+        .where(
+            (custom_field.fieldtype == "Data")
+            & (custom_field.options.notin(data_field_options))
+        )
     ).run()

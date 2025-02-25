@@ -585,7 +585,9 @@ def web_search(text: str, scope: str | None = None, start: int = 0, limit: int =
         mariadb_conditions += "MATCH(`content`) AGAINST ({} IN BOOLEAN MODE)".format(
             frappe.db.escape("+" + text + "*")
         )
-        postgres_conditions += f'TO_TSVECTOR("content") @@ PLAINTO_TSQUERY({frappe.db.escape(text)})'
+        postgres_conditions += (
+            f'TO_TSVECTOR("content") @@ PLAINTO_TSQUERY({frappe.db.escape(text)})'
+        )
 
         values = {
             "scope": "".join([scope, "%"]) if scope else "",

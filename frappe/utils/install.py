@@ -146,7 +146,9 @@ def install_basic_docs():
 
 
 def get_admin_password():
-    return frappe.conf.get("admin_password") or getpass.getpass("Set Administrator password: ")
+    return frappe.conf.get("admin_password") or getpass.getpass(
+        "Set Administrator password: "
+    )
 
 
 def before_tests():

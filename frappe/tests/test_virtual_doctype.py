@@ -88,7 +88,9 @@ class TestVirtualDoctypes(IntegrationTestCase):
         frappe.flags.allow_doctype_export = True
         cls.addClassCleanup(frappe.flags.pop, "allow_doctype_export", None)
 
-        cdt = new_doctype(name=TEST_CHILD_DOCTYPE_NAME, is_virtual=1, istable=1, custom=0).insert()
+        cdt = new_doctype(
+            name=TEST_CHILD_DOCTYPE_NAME, is_virtual=1, istable=1, custom=0
+        ).insert()
         vdt = new_doctype(
             name=TEST_DOCTYPE_NAME,
             is_virtual=1,
@@ -106,7 +108,8 @@ class TestVirtualDoctypes(IntegrationTestCase):
         cls.addClassCleanup(cdt.delete, force=True)
 
         patch_virtual_doc = patch(
-            "frappe.controllers", new={frappe.local.site: {TEST_DOCTYPE_NAME: VirtualDoctypeTest}}
+            "frappe.controllers",
+            new={frappe.local.site: {TEST_DOCTYPE_NAME: VirtualDoctypeTest}},
         )
         patch_virtual_doc.start()
         cls.addClassCleanup(patch_virtual_doc.stop)
@@ -136,7 +139,13 @@ class TestVirtualDoctypes(IntegrationTestCase):
 
         doc = frappe.get_doc(TEST_DOCTYPE_NAME, docname)
 
-        doc.update({"child_table": [{"name": "child-1", "some_fieldname": "child1-field-value"}]})
+        doc.update(
+            {
+                "child_table": [
+                    {"name": "child-1", "some_fieldname": "child1-field-value"}
+                ]
+            }
+        )
 
         savedocs(doc.as_json(), "Save")
         doc.reload()

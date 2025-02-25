@@ -44,7 +44,10 @@ class GoogleDrive(Document):
 
     def validate(self):
         doc_before_save = self.get_doc_before_save()
-        if doc_before_save and doc_before_save.backup_folder_name != self.backup_folder_name:
+        if (
+            doc_before_save
+            and doc_before_save.backup_folder_name != self.backup_folder_name
+        ):
             self.backup_folder_id = ""
 
     def get_access_token(self):
@@ -69,7 +72,11 @@ def authorize_access(reauthorize=False, code=None):
     Google Contact ID is set to flags to set_value after Authorization Code is obtained.
     """
 
-    oauth_code = frappe.db.get_single_value("Google Drive", "authorization_code") if not code else code
+    oauth_code = (
+        frappe.db.get_single_value("Google Drive", "authorization_code")
+        if not code
+        else code
+    )
     oauth_obj = GoogleOAuth("drive")
 
     if not oauth_code or reauthorize:
@@ -134,10 +141,16 @@ def check_for_folder_in_google_drive():
 
     try:
         google_drive_folders = (
-            google_drive.files().list(q="mimeType='application/vnd.google-apps.folder'").execute()
+            google_drive.files()
+            .list(q="mimeType='application/vnd.google-apps.folder'")
+            .execute()
         )
     except HttpError as e:
-        frappe.throw(_("Google Drive - Could not find folder in Google Drive - Error Code {0}").format(e))
+        frappe.throw(
+            _(
+                "Google Drive - Could not find folder in Google Drive - Error Code {0}"
+            ).format(e)
+        )
 
     for f in google_drive_folders.get("files"):
         if f.get("id") == account.backup_folder_name:
@@ -207,12 +220,16 @@ def upload_system_backup_to_google_drive():
 
         try:
             set_progress(2, _("Uploading backup to Google Drive."))
-            google_drive.files().create(body=file_metadata, media_body=media, fields="id").execute()
+            google_drive.files().create(
+                body=file_metadata, media_body=media, fields="id"
+            ).execute()
         except HttpError as e:
             send_email(False, "Google Drive", "Google Drive", "email", error_status=e)
 
     set_progress(3, _("Uploading successful."))
-    frappe.db.set_single_value("Google Drive", "last_backup_on", frappe.utils.now_datetime())
+    frappe.db.set_single_value(
+        "Google Drive", "last_backup_on", frappe.utils.now_datetime()
+    )
     send_email(True, "Google Drive", "Google Drive", "email")
     return _("Google Drive Backup Successful.")
 

@@ -119,7 +119,11 @@ def extract_messages_from_docfield(doctype: str, field: dict):
 
     if message := field.get("options"):
         if fieldtype == "Select" and fieldname not in EXCLUDE_SELECT_OPTIONS:
-            select_options = [option for option in message.split("\n") if option and not option.isdigit()]
+            select_options = [
+                option
+                for option in message.split("\n")
+                if option and not option.isdigit()
+            ]
 
             yield from (
                 (

@@ -4,7 +4,13 @@ from cryptography.fernet import Fernet
 
 import frappe
 from frappe.tests import IntegrationTestCase
-from frappe.utils.password import check_password, decrypt, encrypt, passlibctx, update_password
+from frappe.utils.password import (
+    check_password,
+    decrypt,
+    encrypt,
+    passlibctx,
+    update_password,
+)
 
 
 class TestPassword(IntegrationTestCase):
@@ -72,7 +78,9 @@ class TestPassword(IntegrationTestCase):
         self.assertTrue(check_password(user, old_password))
 
         # shouldn't work with old password
-        self.assertRaises(frappe.AuthenticationError, check_password, user, new_password)
+        self.assertRaises(
+            frappe.AuthenticationError, check_password, user, new_password
+        )
 
     def test_password_on_rename_user(self):
         password = "test-rename-password"

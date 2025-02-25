@@ -20,7 +20,10 @@ class UnitTestWebsiteRouteMeta(UnitTestCase):
 class TestWebsiteRouteMeta(IntegrationTestCase):
     def test_meta_tag_generation(self):
         blogs = frappe.get_all(
-            "Blog Post", fields=["id", "route"], filters={"published": 1, "route": ("!=", "")}, limit=1
+            "Blog Post",
+            fields=["id", "route"],
+            filters={"published": 1, "route": ("!=", "")},
+            limit=1,
         )
 
         blog = blogs[0]

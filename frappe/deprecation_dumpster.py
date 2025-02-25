@@ -78,7 +78,9 @@ class V17FrappeDeprecationWarning(PendingFrappeDeprecationWarning):
     pass
 
 
-def __get_deprecation_class(graduation: str | None = None, class_name: str | None = None) -> type:
+def __get_deprecation_class(
+    graduation: str | None = None, class_name: str | None = None
+) -> type:
     if graduation:
         # Scrub the graduation string to ensure it's a valid class name
         cleaned_graduation = re.sub(r"\W|^(?=\d)", "_", graduation.upper())
@@ -96,7 +98,12 @@ pythonwarnings = os.environ.get("PYTHONWARNINGS", "")
 for warning_filter in pythonwarnings.split(","):
     parts = warning_filter.strip().split(":")
     if len(parts) >= 3 and (
-        parts[2] in ("FrappeDeprecationError", "FrappeDeprecationWarning", "PendingFrappeDeprecationWarning")
+        parts[2]
+        in (
+            "FrappeDeprecationError",
+            "FrappeDeprecationWarning",
+            "PendingFrappeDeprecationWarning",
+        )
         or parts[2].endswith("FrappeDeprecationWarning")
     ):
         try:
@@ -125,7 +132,9 @@ except ImportError:
 
     T = TypeVar("T", bound=Callable)
 
-    def _deprecated(message: str, category=FrappeDeprecationWarning, stacklevel=1) -> Callable[[T], T]:
+    def _deprecated(
+        message: str, category=FrappeDeprecationWarning, stacklevel=1
+    ) -> Callable[[T], T]:
         def decorator(func: T) -> T:
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
@@ -142,7 +151,9 @@ except ImportError:
         return decorator
 
 
-def deprecated(original: str, marked: str, graduation: str, msg: str, stacklevel: int = 1):
+def deprecated(
+    original: str, marked: str, graduation: str, msg: str, stacklevel: int = 1
+):
     """Decorator to wrap a function/method as deprecated.
 
     Arguments:
@@ -161,15 +172,24 @@ def deprecated(original: str, marked: str, graduation: str, msg: str, stacklevel
                 + colorize(func.__name__, Color.CYAN)
                 + colorize(" can only be called from ", Color.YELLOW)
                 + colorize("frappe/deprecation_dumpster.py\n", Color.CYAN)
-                + colorize("Move the entire function there and import it back via adding\n ", Color.YELLOW)
-                + colorize(f"from frappe.deprecation_dumpster import {func.__name__}\n", Color.CYAN)
+                + colorize(
+                    "Move the entire function there and import it back via adding\n ",
+                    Color.YELLOW,
+                )
+                + colorize(
+                    f"from frappe.deprecation_dumpster import {func.__name__}\n",
+                    Color.CYAN,
+                )
                 + colorize("to file\n ", Color.YELLOW)
                 + colorize(caller_filepath, Color.CYAN)
             )
 
         func.__name__ = original
         wrapper = _deprecated(
-            colorize(f"It was marked on {marked} for removal from {graduation} with note: ", Color.RED)
+            colorize(
+                f"It was marked on {marked} for removal from {graduation} with note: ",
+                Color.RED,
+            )
             + colorize(f"{msg}", Color.YELLOW),
             category=__get_deprecation_class(graduation),
             stacklevel=stacklevel,
@@ -341,7 +361,12 @@ def read_multi_pdf(output) -> bytes:
         return merged_pdf.getvalue()
 
 
-@deprecated("frappe.gzip_compress", "unknown", "v17", "Use py3 methods directly (this was compat for py2).")
+@deprecated(
+    "frappe.gzip_compress",
+    "unknown",
+    "v17",
+    "Use py3 methods directly (this was compat for py2).",
+)
 def gzip_compress(data, compresslevel=9):
     """Compress data in one shot and return the compressed string.
     Optional argument is the compression level, in range of 0-9.
@@ -355,7 +380,12 @@ def gzip_compress(data, compresslevel=9):
     return buf.getvalue()
 
 
-@deprecated("frappe.gzip_decompress", "unknown", "v17", "Use py3 methods directly (this was compat for py2).")
+@deprecated(
+    "frappe.gzip_decompress",
+    "unknown",
+    "v17",
+    "Use py3 methods directly (this was compat for py2).",
+)
 def gzip_decompress(data):
     """Decompress a gzip compressed string in one shot.
     Return the decompressed string.
@@ -406,7 +436,12 @@ def validate_roles(self):
     self.populate_role_profile_roles()
 
 
-@deprecated("frappe.tests_runner.get_modules", "2024-20-08", "v17", "use frappe.tests.utils.get_modules")
+@deprecated(
+    "frappe.tests_runner.get_modules",
+    "2024-20-08",
+    "v17",
+    "use frappe.tests.utils.get_modules",
+)
 def test_runner_get_modules(doctype):
     from frappe.tests.utils import get_modules
 
@@ -414,7 +449,10 @@ def test_runner_get_modules(doctype):
 
 
 @deprecated(
-    "frappe.tests_runner.make_test_records", "2024-20-08", "v17", "use frappe.tests.utils.make_test_records"
+    "frappe.tests_runner.make_test_records",
+    "2024-20-08",
+    "v17",
+    "use frappe.tests.utils.make_test_records",
 )
 def test_runner_make_test_records(*args, **kwargs):
     from frappe.tests.utils import make_test_records
@@ -423,7 +461,10 @@ def test_runner_make_test_records(*args, **kwargs):
 
 
 @deprecated(
-    "frappe.tests_runner.make_test_objects", "2024-20-08", "v17", "use frappe.tests.utils.make_test_objects"
+    "frappe.tests_runner.make_test_objects",
+    "2024-20-08",
+    "v17",
+    "use frappe.tests.utils.make_test_objects",
 )
 def test_runner_make_test_objects(*args, **kwargs):
     from frappe.tests.utils import make_test_objects
@@ -502,7 +543,9 @@ def test_xmlrunner_wrapper(output):
     try:
         import xmlrunner
     except ImportError:
-        print("Development dependencies are required to execute this command. To install run:")
+        print(
+            "Development dependencies are required to execute this command. To install run:"
+        )
         print("$ bench setup requirements --dev")
         raise
 
@@ -603,7 +646,12 @@ def get_tests_CompatFrappeTestCase():
     from frappe.model.base_document import BaseDocument
     from frappe.utils import cint
 
-    datetime_like_types = (datetime.datetime, datetime.date, datetime.time, datetime.timedelta)
+    datetime_like_types = (
+        datetime.datetime,
+        datetime.date,
+        datetime.time,
+        datetime.timedelta,
+    )
 
     def _commit_watcher():
         import traceback
@@ -663,7 +711,9 @@ def get_tests_CompatFrappeTestCase():
                 frappe.db.before_commit.add(_commit_watcher)
 
             # enqueue teardown actions (executed in LIFO order)
-            cls.addClassCleanup(_restore_thread_locals, copy.deepcopy(frappe.local.flags))
+            cls.addClassCleanup(
+                _restore_thread_locals, copy.deepcopy(frappe.local.flags)
+            )
             cls.addClassCleanup(_rollback_db)
 
             return super().setUpClass()
@@ -671,7 +721,11 @@ def get_tests_CompatFrappeTestCase():
         def _apply_debug_decorator(self, exceptions=()):
             from frappe.tests.utils import debug_on
 
-            setattr(self, self._testMethodName, debug_on(*exceptions)(getattr(self, self._testMethodName)))
+            setattr(
+                self,
+                self._testMethodName,
+                debug_on(*exceptions)(getattr(self, self._testMethodName)),
+            )
 
         def assertSequenceSubset(self, larger: Sequence, smaller: Sequence, msg=None):
             """Assert that `expected` is a subset of `actual`."""
@@ -687,8 +741,14 @@ def get_tests_CompatFrappeTestCase():
             for field, value in expected.items():
                 if isinstance(value, list):
                     actual_child_docs = actual.get(field)
-                    self.assertEqual(len(value), len(actual_child_docs), msg=f"{field} length should be same")
-                    for exp_child, actual_child in zip(value, actual_child_docs, strict=False):
+                    self.assertEqual(
+                        len(value),
+                        len(actual_child_docs),
+                        msg=f"{field} length should be same",
+                    )
+                    for exp_child, actual_child in zip(
+                        value, actual_child_docs, strict=False
+                    ):
                         self.assertDocumentEqual(exp_child, actual_child)
                 else:
                     self._compare_field(value, actual.get(field), actual, field)
@@ -699,11 +759,16 @@ def get_tests_CompatFrappeTestCase():
             if isinstance(expected, float):
                 precision = doc.precision(field)
                 self.assertAlmostEqual(
-                    expected, actual, places=precision, msg=f"{field} should be same to {precision} digits"
+                    expected,
+                    actual,
+                    places=precision,
+                    msg=f"{field} should be same to {precision} digits",
                 )
             elif isinstance(expected, bool | int):
                 self.assertEqual(expected, cint(actual), msg=msg)
-            elif isinstance(expected, datetime_like_types) or isinstance(actual, datetime_like_types):
+            elif isinstance(expected, datetime_like_types) or isinstance(
+                actual, datetime_like_types
+            ):
                 self.assertEqual(str(expected), str(actual), msg=msg)
             else:
                 self.assertEqual(expected, actual, msg=msg)
@@ -718,13 +783,16 @@ def get_tests_CompatFrappeTestCase():
             """Formats SQL consistently so simple string comparisons can work on them."""
             import sqlparse
 
-            return sqlparse.format(query.strip(), keyword_case="upper", reindent=True, strip_comments=True)
+            return sqlparse.format(
+                query.strip(), keyword_case="upper", reindent=True, strip_comments=True
+            )
 
         @contextmanager
         def primary_connection(self):
             """Switch to primary DB connection
 
-            This is used for simulating multiple users performing actions by simulating two DB connections"""
+            This is used for simulating multiple users performing actions by simulating two DB connections
+            """
             try:
                 current_conn = frappe.local.db
                 frappe.local.db = self._primary_connection
@@ -767,7 +835,11 @@ def get_tests_CompatFrappeTestCase():
                 orig_sql = frappe.db.__class__.sql
                 frappe.db.__class__.sql = _sql_with_count
                 yield
-                self.assertLessEqual(len(queries), count, msg="Queries executed: \n" + "\n\n".join(queries))
+                self.assertLessEqual(
+                    len(queries),
+                    count,
+                    msg="Queries executed: \n" + "\n\n".join(queries),
+                )
             finally:
                 frappe.db.__class__.sql = orig_sql
 
@@ -788,7 +860,9 @@ def get_tests_CompatFrappeTestCase():
                 frappe.cache.execute_command = execute_command_and_count
                 yield
                 self.assertLessEqual(
-                    len(commands), count, msg="commands executed: \n" + "\n".join(str(c) for c in commands)
+                    len(commands),
+                    count,
+                    msg="commands executed: \n" + "\n".join(str(c) for c in commands),
                 )
             finally:
                 frappe.cache.execute_command = orig_execute
@@ -809,7 +883,9 @@ def get_tests_CompatFrappeTestCase():
                 orig_sql = frappe.db.sql
                 frappe.db.sql = _sql_with_count
                 yield
-                self.assertLessEqual(rows_read, count, msg="Queries read more rows than expected")
+                self.assertLessEqual(
+                    rows_read, count, msg="Queries read more rows than expected"
+                )
             finally:
                 frappe.db.sql = orig_sql
 
@@ -819,12 +895,22 @@ def get_tests_CompatFrappeTestCase():
             from frappe.installer import update_site_config
             from frappe.utils.safe_exec import SAFE_EXEC_CONFIG_KEY
 
-            cls._common_conf = os.path.join(frappe.local.sites_path, "common_site_config.json")
-            update_site_config(SAFE_EXEC_CONFIG_KEY, 1, validate=False, site_config_path=cls._common_conf)
+            cls._common_conf = os.path.join(
+                frappe.local.sites_path, "common_site_config.json"
+            )
+            update_site_config(
+                SAFE_EXEC_CONFIG_KEY,
+                1,
+                validate=False,
+                site_config_path=cls._common_conf,
+            )
 
             cls.addClassCleanup(
                 lambda: update_site_config(
-                    SAFE_EXEC_CONFIG_KEY, 0, validate=False, site_config_path=cls._common_conf
+                    SAFE_EXEC_CONFIG_KEY,
+                    0,
+                    validate=False,
+                    site_config_path=cls._common_conf,
                 )
             )
 
@@ -857,7 +943,11 @@ def get_tests_CompatFrappeTestCase():
 
             from freezegun import freeze_time
 
-            from frappe.utils.data import convert_utc_to_timezone, get_datetime, get_system_timezone
+            from frappe.utils.data import (
+                convert_utc_to_timezone,
+                get_datetime,
+                get_system_timezone,
+            )
 
             if not is_utc:
                 # Freeze time expects UTC or tzaware objects. We have neither, so convert to UTC.
@@ -1009,7 +1099,9 @@ def compat_preload_test_records_upfront(candidates: list):
 
         if os.path.basename(os.path.dirname(path)) == "doctype":
             # test_data_migration_connector.py > data_migration_connector.json
-            test_record_filename = re.sub("^test_", "", filename).replace(".py", ".json")
+            test_record_filename = re.sub("^test_", "", filename).replace(
+                ".py", ".json"
+            )
             test_record_file_path = os.path.join(path, test_record_filename)
             if os.path.exists(test_record_file_path):
                 with open(test_record_file_path) as f:

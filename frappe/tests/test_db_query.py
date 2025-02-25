@@ -52,7 +52,10 @@ class TestDBQuery(IntegrationTestCase):
         frappe.set_user("Administrator")
 
     def test_basic(self):
-        self.assertTrue({"name": "DocType"} in DatabaseQuery("DocType").execute(limit_page_length=None))
+        self.assertTrue(
+            {"name": "DocType"}
+            in DatabaseQuery("DocType").execute(limit_page_length=None)
+        )
 
     def test_extract_tables(self):
         db_query = DatabaseQuery("DocType")
@@ -167,8 +170,12 @@ class TestDBQuery(IntegrationTestCase):
         ).insert(ignore_if_duplicate=True)
 
         # test query
-        results1 = frappe.get_all("Parent DocType 1", fields=["name", "child.title as child_title"])
-        results2 = frappe.get_all("Parent DocType 2", fields=["name", "child.title as child_title"])
+        results1 = frappe.get_all(
+            "Parent DocType 1", fields=["name", "child.title as child_title"]
+        )
+        results2 = frappe.get_all(
+            "Parent DocType 2", fields=["name", "child.title as child_title"]
+        )
         # check both parents have same name
         self.assertEqual(results1[0].name, results2[0].name)
         # check both parents have different number of child records
@@ -180,7 +187,9 @@ class TestDBQuery(IntegrationTestCase):
         self.assertEqual(results2[0].child_title, "parent 2 child record 1")
 
     def test_link_field_syntax(self):
-        todo = frappe.get_doc(doctype="ToDo", description="Test ToDo", allocated_to="Administrator").insert()
+        todo = frappe.get_doc(
+            doctype="ToDo", description="Test ToDo", allocated_to="Administrator"
+        ).insert()
         result = frappe.get_all(
             "ToDo",
             filters={"name": todo.name},
@@ -228,53 +237,72 @@ class TestDBQuery(IntegrationTestCase):
     def test_fields(self):
         self.assertTrue(
             {"name": "DocType", "issingle": 0}
-            in DatabaseQuery("DocType").execute(fields=["name", "issingle"], limit_page_length=None)
+            in DatabaseQuery("DocType").execute(
+                fields=["name", "issingle"], limit_page_length=None
+            )
         )
 
     def test_filters_1(self):
         self.assertFalse(
             {"name": "DocType"}
-            in DatabaseQuery("DocType").execute(filters=[["DocType", "name", "like", "J%"]])
+            in DatabaseQuery("DocType").execute(
+                filters=[["DocType", "name", "like", "J%"]]
+            )
         )
 
     def test_filters_2(self):
         self.assertFalse(
-            {"name": "DocType"} in DatabaseQuery("DocType").execute(filters=[{"name": ["like", "J%"]}])
+            {"name": "DocType"}
+            in DatabaseQuery("DocType").execute(filters=[{"name": ["like", "J%"]}])
         )
 
     def test_filters_3(self):
         self.assertFalse(
-            {"name": "DocType"} in DatabaseQuery("DocType").execute(filters={"name": ["like", "J%"]})
+            {"name": "DocType"}
+            in DatabaseQuery("DocType").execute(filters={"name": ["like", "J%"]})
         )
 
     def test_filters_4(self):
         self.assertTrue(
-            {"name": "DocField"} in DatabaseQuery("DocType").execute(filters={"name": "DocField"})
+            {"name": "DocField"}
+            in DatabaseQuery("DocType").execute(filters={"name": "DocField"})
         )
 
     def test_in_not_in_filters(self):
-        self.assertFalse(DatabaseQuery("DocType").execute(filters={"name": ["in", None]}))
+        self.assertFalse(
+            DatabaseQuery("DocType").execute(filters={"name": ["in", None]})
+        )
         self.assertTrue(
-            {"name": "DocType"} in DatabaseQuery("DocType").execute(filters={"name": ["not in", None]})
+            {"name": "DocType"}
+            in DatabaseQuery("DocType").execute(filters={"name": ["not in", None]})
         )
 
         for result in [{"name": "DocType"}, {"name": "DocField"}]:
             self.assertTrue(
-                result in DatabaseQuery("DocType").execute(filters={"name": ["in", "DocType,DocField"]})
+                result
+                in DatabaseQuery("DocType").execute(
+                    filters={"name": ["in", "DocType,DocField"]}
+                )
             )
 
         for result in [{"name": "DocType"}, {"name": "DocField"}]:
             self.assertFalse(
-                result in DatabaseQuery("DocType").execute(filters={"name": ["not in", "DocType,DocField"]})
+                result
+                in DatabaseQuery("DocType").execute(
+                    filters={"name": ["not in", "DocType,DocField"]}
+                )
             )
 
     def test_string_as_field(self):
         self.assertEqual(
-            frappe.get_all("DocType", as_list=True), frappe.get_all("DocType", fields="name", as_list=True)
+            frappe.get_all("DocType", as_list=True),
+            frappe.get_all("DocType", fields="name", as_list=True),
         )
 
     def test_none_filter(self):
-        query = frappe.qb.get_query("DocType", fields="name", filters={"restrict_to_domain": None})
+        query = frappe.qb.get_query(
+            "DocType", fields="name", filters={"restrict_to_domain": None}
+        )
         sql = str(query).replace("`", "").replace('"', "")
         condition = "restrict_to_domain IS NULL"
         self.assertIn(condition, sql)
@@ -302,7 +330,9 @@ class TestDBQuery(IntegrationTestCase):
         event4 = create_event(starts_on="2016-07-08 00:00:00")
 
         # if the values are not passed in filters then event should be filter as current datetime
-        data = DatabaseQuery("Event").execute(filters={"starts_on": ["between", None]}, fields=["name"])
+        data = DatabaseQuery("Event").execute(
+            filters={"starts_on": ["between", None]}, fields=["name"]
+        )
 
         self.assertTrue({"name": event1.name} not in data)
 
@@ -357,7 +387,9 @@ class TestDBQuery(IntegrationTestCase):
         # single date should include entire day
         start = "2021-01-01"
         cond = get_between_date_filter([start, start], datetime_df)
-        self.assertQueryEqual(cond, f"'{start} 00:00:00.000000' AND '{start} 23:59:59.999999'")
+        self.assertQueryEqual(
+            cond, f"'{start} 00:00:00.000000' AND '{start} 23:59:59.999999'"
+        )
 
         # datetime field on datetime type should remain same
         start = "2021-01-01 01:01:00"
@@ -367,8 +399,12 @@ class TestDBQuery(IntegrationTestCase):
 
     def test_ignore_permissions_for_get_filters_cond(self):
         frappe.set_user("test2@example.com")
-        self.assertRaises(frappe.PermissionError, get_filters_cond, "DocType", dict(istable=1), [])
-        self.assertTrue(get_filters_cond("DocType", dict(istable=1), [], ignore_permissions=True))
+        self.assertRaises(
+            frappe.PermissionError, get_filters_cond, "DocType", dict(istable=1), []
+        )
+        self.assertTrue(
+            get_filters_cond("DocType", dict(istable=1), [], ignore_permissions=True)
+        )
         frappe.set_user("Administrator")
 
     def test_query_fields_sanitizer(self):
@@ -635,7 +671,9 @@ class TestDBQuery(IntegrationTestCase):
             or_filters=[["DocType", "module", "=", "Core"]],
             order_by="creation",
         )
-        self.assertTrue("Role Permission for Page and Report" in [d["name"] for d in out])
+        self.assertTrue(
+            "Role Permission for Page and Report" in [d["name"] for d in out]
+        )
 
         out = DatabaseQuery("DocType").execute(
             fields=["name"],
@@ -699,10 +737,14 @@ class TestDBQuery(IntegrationTestCase):
         clear_user_permissions_for_doctype("Nested DocType")
 
         # in descendants filter
-        data = frappe.get_all("Nested DocType", {"name": ("descendants of", "Level 2 A")})
+        data = frappe.get_all(
+            "Nested DocType", {"name": ("descendants of", "Level 2 A")}
+        )
         self.assertTrue({"name": "Level 3 A"} in data)
 
-        data = frappe.get_all("Nested DocType", {"name": ("descendants of", "Level 1 A")})
+        data = frappe.get_all(
+            "Nested DocType", {"name": ("descendants of", "Level 1 A")}
+        )
         self.assertTrue({"name": "Level 3 A"} in data)
         self.assertTrue({"name": "Level 2 A"} in data)
         self.assertFalse({"name": "Level 2 B"} in data)
@@ -728,14 +770,18 @@ class TestDBQuery(IntegrationTestCase):
         self.assertTrue({"name": "Root"} in data)
 
         # not descendants filter
-        data = frappe.get_all("Nested DocType", {"name": ("not descendants of", "Level 2 A")})
+        data = frappe.get_all(
+            "Nested DocType", {"name": ("not descendants of", "Level 2 A")}
+        )
         self.assertFalse({"name": "Level 3 A"} in data)
         self.assertTrue({"name": "Level 2 A"} in data)
         self.assertTrue({"name": "Level 2 B"} in data)
         self.assertTrue({"name": "Level 1 A"} in data)
         self.assertTrue({"name": "Root"} in data)
 
-        data = frappe.get_all("Nested DocType", {"name": ("not descendants of", "Level 1 A")})
+        data = frappe.get_all(
+            "Nested DocType", {"name": ("not descendants of", "Level 1 A")}
+        )
         self.assertFalse({"name": "Level 3 A"} in data)
         self.assertFalse({"name": "Level 2 A"} in data)
         self.assertTrue({"name": "Level 2 B"} in data)
@@ -744,7 +790,9 @@ class TestDBQuery(IntegrationTestCase):
         self.assertTrue({"name": "Root"} in data)
 
         # not ancestors of filter
-        data = frappe.get_all("Nested DocType", {"name": ("not ancestors of", "Level 2 A")})
+        data = frappe.get_all(
+            "Nested DocType", {"name": ("not ancestors of", "Level 2 A")}
+        )
         self.assertTrue({"name": "Level 3 A"} in data)
         self.assertTrue({"name": "Level 2 A"} in data)
         self.assertTrue({"name": "Level 2 B"} in data)
@@ -752,7 +800,9 @@ class TestDBQuery(IntegrationTestCase):
         self.assertTrue({"name": "Level 1 A"} not in data)
         self.assertTrue({"name": "Root"} not in data)
 
-        data = frappe.get_all("Nested DocType", {"name": ("not ancestors of", "Level 1 A")})
+        data = frappe.get_all(
+            "Nested DocType", {"name": ("not ancestors of", "Level 1 A")}
+        )
         self.assertTrue({"name": "Level 3 A"} in data)
         self.assertTrue({"name": "Level 2 A"} in data)
         self.assertTrue({"name": "Level 2 B"} in data)
@@ -763,7 +813,9 @@ class TestDBQuery(IntegrationTestCase):
         data = frappe.get_all("Nested DocType", {"name": ("ancestors of", "Root")})
         self.assertTrue(len(data) == 0)
         self.assertTrue(
-            len(frappe.get_all("Nested DocType", {"name": ("not ancestors of", "Root")}))
+            len(
+                frappe.get_all("Nested DocType", {"name": ("not ancestors of", "Root")})
+            )
             == len(frappe.get_all("Nested DocType"))
         )
 
@@ -778,7 +830,9 @@ class TestDBQuery(IntegrationTestCase):
         self.assertTrue({"name": "Prepared Report"} in res)
         self.assertFalse({"name": "Property Setter"} in res)
 
-        frappe.db.set_value("DocType", "Property Setter", "autoname", None, update_modified=False)
+        frappe.db.set_value(
+            "DocType", "Property Setter", "autoname", None, update_modified=False
+        )
 
         res = DatabaseQuery("DocType").execute(filters={"autoname": ["is", "set"]})
         self.assertFalse({"name": "Property Setter"} in res)
@@ -803,11 +857,15 @@ class TestDBQuery(IntegrationTestCase):
             self.fail("get_list not working with virtual field")
 
     def test_pluck_name(self):
-        names = DatabaseQuery("DocType").execute(filters={"name": "DocType"}, pluck="name")
+        names = DatabaseQuery("DocType").execute(
+            filters={"name": "DocType"}, pluck="name"
+        )
         self.assertEqual(names, ["DocType"])
 
     def test_pluck_any_field(self):
-        owners = DatabaseQuery("DocType").execute(filters={"name": "DocType"}, pluck="owner")
+        owners = DatabaseQuery("DocType").execute(
+            filters={"name": "DocType"}, pluck="owner"
+        )
         self.assertEqual(owners, ["Administrator"])
 
     def test_prepare_select_args(self):
@@ -973,7 +1031,9 @@ class TestDBQuery(IntegrationTestCase):
         from frappe.core.doctype.doctype.test_doctype import new_doctype
 
         frappe.delete_doc_if_exists("DocType", "autoinc_dt_test")
-        dt = new_doctype("autoinc_dt_test", autoname="autoincrement").insert(ignore_permissions=True)
+        dt = new_doctype("autoinc_dt_test", autoname="autoincrement").insert(
+            ignore_permissions=True
+        )
 
         query = DatabaseQuery("autoinc_dt_test").execute(
             fields=[
@@ -986,9 +1046,13 @@ class TestDBQuery(IntegrationTestCase):
         )
 
         if frappe.db.db_type == "postgres":
-            self.assertTrue('strpos( cast("tabautoinc_dt_test"."name" as varchar), \'1\')' in query)
+            self.assertTrue(
+                'strpos( cast("tabautoinc_dt_test"."name" as varchar), \'1\')' in query
+            )
             self.assertTrue("strpos( cast(name as varchar), '1')" in query)
-            self.assertTrue('where cast("tabautoinc_dt_test"."name" as varchar) = \'1\'' in query)
+            self.assertTrue(
+                'where cast("tabautoinc_dt_test"."name" as varchar) = \'1\'' in query
+            )
         else:
             self.assertTrue("locate('1', `tabautoinc_dt_test`.`name`)" in query)
             self.assertTrue("locate('1', name)" in query)
@@ -1021,9 +1085,9 @@ class TestDBQuery(IntegrationTestCase):
             ],
         ).insert(ignore_permissions=True)
 
-        dt_data = frappe.get_doc({"doctype": "dt_with_int_named_fieldname", "1field": "10"}).insert(
-            ignore_permissions=True
-        )
+        dt_data = frappe.get_doc(
+            {"doctype": "dt_with_int_named_fieldname", "1field": "10"}
+        ).insert(ignore_permissions=True)
 
         query = DatabaseQuery("dt_with_int_named_fieldname")
         self.assertTrue(query.execute(filters={"1field": "10"}))
@@ -1031,7 +1095,9 @@ class TestDBQuery(IntegrationTestCase):
         self.assertTrue(query.execute(filters={"1field": ["in", "1,2,10"]}))
         self.assertTrue(query.execute(filters={"1field": ["is", "set"]}))
         self.assertFalse(query.execute(filters={"1field": ["not like", "1%"]}))
-        self.assertTrue(query.execute(filters=[["table_dt", "2field", "is", "not set"]]))
+        self.assertTrue(
+            query.execute(filters=[["table_dt", "2field", "is", "not set"]])
+        )
 
         frappe.get_doc(
             {
@@ -1057,7 +1123,9 @@ class TestDBQuery(IntegrationTestCase):
         self.doctype = "Dashboard Settings"
         self.user = "test'5@example.com"
 
-        permission_query_conditions = DatabaseQuery.get_permission_query_conditions(self)
+        permission_query_conditions = DatabaseQuery.get_permission_query_conditions(
+            self
+        )
 
         create_dashboard_settings(self.user)
 
@@ -1086,7 +1154,12 @@ class TestDBQuery(IntegrationTestCase):
 
                 # Backward compatibility
                 self.assertEqual(
-                    args["filters"], [FilterTuple(doctype="Virtual DocType", fieldname="name", value="test")]
+                    args["filters"],
+                    [
+                        FilterTuple(
+                            doctype="Virtual DocType", fieldname="name", value="test"
+                        )
+                    ],
                 )
 
                 self.assertEqual(limit_page_length, 1)
@@ -1096,31 +1169,65 @@ class TestDBQuery(IntegrationTestCase):
             "frappe.controllers",
             new={frappe.local.site: {"Virtual DocType": VirtualDocType}},
         ):
-            frappe.get_all("Virtual DocType", filters={"name": "test"}, fields=["name"], limit=1)
+            frappe.get_all(
+                "Virtual DocType", filters={"name": "test"}, fields=["name"], limit=1
+            )
 
     def test_coalesce_with_in_ops(self):
-        self.assertNotIn("ifnull", frappe.get_all("User", {"first_name": ("in", ["a", "b"])}, run=0))
-        self.assertIn("ifnull", frappe.get_all("User", {"first_name": ("in", ["a", None])}, run=0))
-        self.assertIn("ifnull", frappe.get_all("User", {"first_name": ("in", ["a", ""])}, run=0))
-        self.assertIn("ifnull", frappe.get_all("User", {"first_name": ("in", [])}, run=0))
-        self.assertIn("ifnull", frappe.get_all("User", {"first_name": ("not in", ["a"])}, run=0))
-        self.assertIn("ifnull", frappe.get_all("User", {"first_name": ("not in", [])}, run=0))
-        self.assertIn("ifnull", frappe.get_all("User", {"first_name": ("not in", [""])}, run=0))
+        self.assertNotIn(
+            "ifnull", frappe.get_all("User", {"first_name": ("in", ["a", "b"])}, run=0)
+        )
+        self.assertIn(
+            "ifnull", frappe.get_all("User", {"first_name": ("in", ["a", None])}, run=0)
+        )
+        self.assertIn(
+            "ifnull", frappe.get_all("User", {"first_name": ("in", ["a", ""])}, run=0)
+        )
+        self.assertIn(
+            "ifnull", frappe.get_all("User", {"first_name": ("in", [])}, run=0)
+        )
+        self.assertIn(
+            "ifnull", frappe.get_all("User", {"first_name": ("not in", ["a"])}, run=0)
+        )
+        self.assertIn(
+            "ifnull", frappe.get_all("User", {"first_name": ("not in", [])}, run=0)
+        )
+        self.assertIn(
+            "ifnull", frappe.get_all("User", {"first_name": ("not in", [""])}, run=0)
+        )
 
         # primary key is never nullable
-        self.assertNotIn("ifnull", frappe.get_all("User", {"name": ("in", ["a", None])}, run=0))
-        self.assertNotIn("ifnull", frappe.get_all("User", {"name": ("in", ["a", ""])}, run=0))
-        self.assertNotIn("ifnull", frappe.get_all("User", {"name": ("in", (""))}, run=0))
+        self.assertNotIn(
+            "ifnull", frappe.get_all("User", {"name": ("in", ["a", None])}, run=0)
+        )
+        self.assertNotIn(
+            "ifnull", frappe.get_all("User", {"name": ("in", ["a", ""])}, run=0)
+        )
+        self.assertNotIn(
+            "ifnull", frappe.get_all("User", {"name": ("in", (""))}, run=0)
+        )
         self.assertNotIn("ifnull", frappe.get_all("User", {"name": ("in", ())}, run=0))
 
     def test_coalesce_with_datetime_ops(self):
-        self.assertNotIn("ifnull", frappe.get_all("User", {"last_active": (">", "2022-01-01")}, run=0))
-        self.assertNotIn("ifnull", frappe.get_all("User", {"creation": ("<", "2022-01-01")}, run=0))
         self.assertNotIn(
             "ifnull",
-            frappe.get_all("User", {"last_active": ("between", ("2022-01-01", "2023-01-01"))}, run=0),
+            frappe.get_all("User", {"last_active": (">", "2022-01-01")}, run=0),
         )
-        self.assertIn("ifnull", frappe.get_all("User", {"last_active": ("<", "2022-01-01")}, run=0))
+        self.assertNotIn(
+            "ifnull", frappe.get_all("User", {"creation": ("<", "2022-01-01")}, run=0)
+        )
+        self.assertNotIn(
+            "ifnull",
+            frappe.get_all(
+                "User",
+                {"last_active": ("between", ("2022-01-01", "2023-01-01"))},
+                run=0,
+            ),
+        )
+        self.assertIn(
+            "ifnull",
+            frappe.get_all("User", {"last_active": ("<", "2022-01-01")}, run=0),
+        )
 
     def test_ambiguous_linked_tables(self):
         from frappe.desk.reportview import get
@@ -1192,7 +1299,9 @@ class TestDBQuery(IntegrationTestCase):
         self.assertEqual(len(data["values"]), 1)
 
     def test_select_star_expansion(self):
-        count = frappe.get_list("Language", ["SUM(1)", "COUNT(*)"], as_list=1, order_by=None)[0]
+        count = frappe.get_list(
+            "Language", ["SUM(1)", "COUNT(*)"], as_list=1, order_by=None
+        )[0]
         self.assertEqual(count[0], frappe.db.count("Language"))
         self.assertEqual(count[1], frappe.db.count("Language"))
 
@@ -1353,7 +1462,9 @@ class TestReportView(IntegrationTestCase):
         )
 
         response = execute_cmd("frappe.desk.reportview.get")
-        self.assertListEqual(response["keys"], ["field_label", "field_name", "_aggregate_column"])
+        self.assertListEqual(
+            response["keys"], ["field_label", "field_name", "_aggregate_column"]
+        )
 
     def test_reportview_get_permlevel_system_users(self):
         with setup_patched_blog_post(), setup_test_user(set_user=True):
@@ -1401,7 +1512,9 @@ class TestReportView(IntegrationTestCase):
         Test if the 'not set' filter always translates correctly with/without qb under the hood.
         """
         frappe.get_doc({"doctype": "ToDo", "description": "filter test"}).insert()
-        frappe.get_doc({"doctype": "ToDo", "description": "filter test", "reference_name": ""}).insert()
+        frappe.get_doc(
+            {"doctype": "ToDo", "description": "filter test", "reference_name": ""}
+        ).insert()
 
         # `get_all` does not use QueryBuilder while `count` does. Both should return the same result.
         # `not set` must consider empty strings and NULL values both.
@@ -1420,7 +1533,9 @@ def add_child_table_to_blog_post():
             "name": "Test Child",
             "module": "Custom",
             "autoname": "Prompt",
-            "fields": [{"fieldname": "test_field", "fieldtype": "Data", "permlevel": 1}],
+            "fields": [
+                {"fieldname": "test_field", "fieldtype": "Data", "permlevel": 1}
+            ],
         }
     )
 

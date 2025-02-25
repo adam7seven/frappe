@@ -27,7 +27,9 @@ def _is_scheduler_enabled(site) -> bool:
     try:
         frappe.init(site)
         frappe.connect()
-        enable_scheduler = cint(frappe.db.get_single_value("System Settings", "enable_scheduler"))
+        enable_scheduler = cint(
+            frappe.db.get_single_value("System Settings", "enable_scheduler")
+        )
     except Exception:
         pass
     finally:
@@ -99,7 +101,11 @@ def _new_site(
             mariadb_user_host_login_scope=mariadb_user_host_login_scope,
         )
 
-        apps_to_install = ["frappe"] + (frappe.conf.get("install_apps") or []) + (list(install_apps or []))
+        apps_to_install = (
+            ["frappe"]
+            + (frappe.conf.get("install_apps") or [])
+            + (list(install_apps or []))
+        )
 
         for app in apps_to_install:
             # NOTE: not using force here for 2 reasons:
@@ -141,7 +147,11 @@ def install_db(
     mariadb_user_host_login_scope=None,
 ):
     import frappe.database
-    from frappe.database import bootstrap_database, drop_user_and_database, setup_database
+    from frappe.database import (
+        bootstrap_database,
+        drop_user_and_database,
+        setup_database,
+    )
 
     if not db_type:
         db_type = frappe.conf.db_type
@@ -167,7 +177,9 @@ def install_db(
     if setup:
         setup_database(force, verbose, mariadb_user_host_login_scope)
         if rollback_callback:
-            rollback_callback.add(lambda: drop_user_and_database(db_name, db_user or db_name))
+            rollback_callback.add(
+                lambda: drop_user_and_database(db_name, db_user or db_name)
+            )
 
     bootstrap_database(
         verbose=verbose,
@@ -389,8 +401,13 @@ def remove_app(app_name, dry_run=False, yes=False, no_backup=False, force=False)
     for app in frappe.get_installed_apps():
         if app != app_name:
             hooks = frappe.get_hooks(app_name=app)
-            if hooks.required_apps and any(app_name in required_app for required_app in hooks.required_apps):
-                click.secho(f"App {app_name} is a dependency of {app}. Uninstall {app} first.", fg="yellow")
+            if hooks.required_apps and any(
+                app_name in required_app for required_app in hooks.required_apps
+            ):
+                click.secho(
+                    f"App {app_name} is a dependency of {app}. Uninstall {app} first.",
+                    fg="yellow",
+                )
                 return
 
     print(f"Uninstalling App {app_name} from Site {site}...")
@@ -814,7 +831,9 @@ def is_downgrade(sql_file_path, verbose=False):
     if frappe.conf.db_type != "mariadb":
         return False
 
-    backup_version = get_backup_version(sql_file_path) or get_old_backup_version(sql_file_path)
+    backup_version = get_backup_version(sql_file_path) or get_old_backup_version(
+        sql_file_path
+    )
     current_version = Version(frappe.__version__)
 
     # Assume it's not a downgrade if we can't determine backup version
@@ -824,7 +843,9 @@ def is_downgrade(sql_file_path, verbose=False):
     is_downgrade = backup_version > current_version
 
     if verbose and is_downgrade:
-        print(f"Your site is currently on Frappe {current_version} and your backup is {backup_version}.")
+        print(
+            f"Your site is currently on Frappe {current_version} and your backup is {backup_version}."
+        )
 
     return is_downgrade
 
@@ -837,25 +858,6 @@ def get_old_backup_version(sql_file_path: str) -> Version | None:
     header = get_db_dump_header(sql_file_path).split("\n")
     if match := re.search(r"Frappe (\d+\.\d+\.\d+)", header[0]):
         return Version(match[1])
-    return None
-
-def is_partial(sql_file_path: str) -> bool:
-    """
-    Function to return whether the database dump is a partial backup or not
-
-def get_backup_version(sql_file_path: str) -> Version | None:
-    """Return the frappe version used to create the specified database dump."""
-    header = get_db_dump_header(sql_file_path).split("\n")
-    metadata = ""
-    if "begin frappe metadata" in header[0]:
-        for line in header[1:]:
-            if "end frappe metadata" in line:
-                break
-            metadata += line.replace("--", "").strip() + "\n"
-        parser = configparser.ConfigParser()
-        parser.read_string(metadata)
-        return Version(parser["frappe"]["version"])
-
     return None
 
 
@@ -911,7 +913,9 @@ def validate_database_sql(path: str, _raise: bool = True) -> None:
                 exc=frappe.ExecutableNotFound,
             )
         try:
-            frappe.utils.execute_in_shell(f"{executable} -m1 __Auth {path}", check_exit_code=True)
+            frappe.utils.execute_in_shell(
+                f"{executable} -m1 __Auth {path}", check_exit_code=True
+            )
             return
         except Exception:
             error_message = "Table `__Auth` not found in file."

@@ -11,7 +11,9 @@ HOMEPAGE_PATHS = ("/", "/index", "index")
 class NotFoundPage(TemplatePage):
     def __init__(self, path, http_status_code=None):
         self.request_path = path
-        self.request_url = frappe.local.request.url if hasattr(frappe.local, "request") else ""
+        self.request_url = (
+            frappe.local.request.url if hasattr(frappe.local, "request") else ""
+        )
         path = "404"
         http_status_code = http_status_code or 404
         super().__init__(path=path, http_status_code=http_status_code)

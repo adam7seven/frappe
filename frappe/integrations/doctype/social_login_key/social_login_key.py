@@ -79,14 +79,20 @@ class SocialLoginKey(Document):
         if not self.authorize_url:
             frappe.throw(_("Please enter Authorize URL"), exc=AuthorizeUrlNotSetError)
         if not self.access_token_url:
-            frappe.throw(_("Please enter Access Token URL"), exc=AccessTokenUrlNotSetError)
+            frappe.throw(
+                _("Please enter Access Token URL"), exc=AccessTokenUrlNotSetError
+            )
         if not self.redirect_url:
             frappe.throw(_("Please enter Redirect URL"), exc=RedirectUrlNotSetError)
         if self.enable_social_login and not self.client_id:
-            frappe.throw(_("Please enter Client ID before social login is enabled"), exc=ClientIDNotSetError)
+            frappe.throw(
+                _("Please enter Client ID before social login is enabled"),
+                exc=ClientIDNotSetError,
+            )
         if self.enable_social_login and not self.client_secret:
             frappe.throw(
-                _("Please enter Client Secret before social login is enabled"), exc=ClientSecretNotSetError
+                _("Please enter Client Secret before social login is enabled"),
+                exc=ClientSecretNotSetError,
             )
 
     def set_icon(self):

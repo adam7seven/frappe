@@ -24,8 +24,12 @@ class PushNotificationSettings(Document):
         self.validate_relay_server_setup()
 
     def validate_relay_server_setup(self):
-        if self.enable_push_notification_relay and not frappe.conf.get("push_relay_server_url"):
+        if self.enable_push_notification_relay and not frappe.conf.get(
+            "push_relay_server_url"
+        ):
             frappe.throw(
-                _("The Push Relay Server URL key (`push_relay_server_url`) is missing in your site config"),
+                _(
+                    "The Push Relay Server URL key (`push_relay_server_url`) is missing in your site config"
+                ),
                 title=_("Relay Server URL missing"),
             )

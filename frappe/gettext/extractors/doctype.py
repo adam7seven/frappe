@@ -23,7 +23,6 @@ def extract(fileobj, *args, **kwargs):
         yield None, "_", doctype_description, ["Description of a DocType"]
 
     messages = []
-    
 
     for field in data.get("fields", []):
         messages.extend(extract_messages_from_docfield(doctype, field))

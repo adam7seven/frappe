@@ -53,7 +53,11 @@ class PatchType(Enum):
 
 def run_all(skip_failing: bool = False, patch_type: PatchType | None = None) -> None:
     """run all pending patches"""
-    executed = set(frappe.get_all("Patch Log", filters={"skipped": 0}, fields="patch", pluck="patch"))
+    executed = set(
+        frappe.get_all(
+            "Patch Log", filters={"skipped": 0}, fields="patch", pluck="patch"
+        )
+    )
 
     frappe.flags.final_patches = []
 
@@ -112,7 +116,9 @@ def get_patches_from_app(app: str, patch_type: PatchType | None = None) -> list[
     return []
 
 
-def parse_as_configfile(patches_file: str, patch_type: PatchType | None = None) -> list[str]:
+def parse_as_configfile(
+    patches_file: str, patch_type: PatchType | None = None
+) -> list[str]:
     # Attempt to parse as ini file with pre/post patches
     # allow_no_value: patches are not key value pairs
     # delimiters = '\n' to avoid treating default `:` and `=` in execute as k:v delimiter
@@ -133,7 +139,9 @@ def parse_as_configfile(patches_file: str, patch_type: PatchType | None = None) 
     if patch_type.value in parser.sections():
         return [patch for patch in parser[patch_type.value]]
     else:
-        frappe.throw(frappe._("Patch type {} not found in patches.txt").format(patch_type))
+        frappe.throw(
+            frappe._("Patch type {} not found in patches.txt").format(patch_type)
+        )
 
 
 def reload_doc(args):

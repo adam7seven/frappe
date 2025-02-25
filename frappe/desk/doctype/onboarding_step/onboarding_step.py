@@ -18,7 +18,12 @@ class OnboardingStep(Document):
         from frappe.types import DF
 
         action: DF.Literal[
-            "Create Entry", "Update Settings", "Show Form Tour", "View Report", "Go to Page", "Watch Video"
+            "Create Entry",
+            "Update Settings",
+            "Show Form Tour",
+            "View Report",
+            "Go to Page",
+            "Watch Video",
         ]
         action_label: DF.Data | None
         callback_message: DF.SmallText | None

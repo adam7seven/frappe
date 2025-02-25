@@ -40,7 +40,9 @@ class TestHooks(IntegrationTestCase):
         if isinstance(address_has_permission_hook, str):
             address_has_permission_hook = [address_has_permission_hook]
 
-        address_has_permission_hook.append("frappe.tests.test_hooks.custom_has_permission")
+        address_has_permission_hook.append(
+            "frappe.tests.test_hooks.custom_has_permission"
+        )
 
         hooks.has_permission["Address"] = address_has_permission_hook
 
@@ -48,7 +50,9 @@ class TestHooks(IntegrationTestCase):
         if isinstance(wildcard_has_permission_hook, str):
             wildcard_has_permission_hook = [wildcard_has_permission_hook]
 
-        wildcard_has_permission_hook.append("frappe.tests.test_hooks.custom_has_permission")
+        wildcard_has_permission_hook.append(
+            "frappe.tests.test_hooks.custom_has_permission"
+        )
 
         hooks.has_permission["*"] = wildcard_has_permission_hook
 
@@ -77,7 +81,11 @@ class TestHooks(IntegrationTestCase):
 
     def test_ignore_links_on_delete(self):
         email_unsubscribe = frappe.get_doc(
-            {"doctype": "Email Unsubscribe", "email": "test@example.com", "global_unsubscribe": 1}
+            {
+                "doctype": "Email Unsubscribe",
+                "email": "test@example.com",
+                "global_unsubscribe": 1,
+            }
         ).insert()
 
         event = frappe.get_doc(
@@ -147,7 +155,8 @@ class TestHooks(IntegrationTestCase):
         export_fixtures(app)
         # use assertCountEqual (replaced assertItemsEqual), beacuse os.listdir might return the list in a different order, depending on OS
         self.assertCountEqual(
-            ["user.json", "contact.json", "role.json"], os.listdir(frappe.get_app_path(app, "fixtures"))
+            ["user.json", "contact.json", "role.json"],
+            os.listdir(frappe.get_app_path(app, "fixtures")),
         )
 
         hooks.fixture_auto_order = True

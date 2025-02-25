@@ -84,7 +84,8 @@ class IntegrationTestCase(UnitTestCase):
     def primary_connection(self) -> AbstractContextManager[None]:
         """Switch to primary DB connection
 
-        This is used for simulating multiple users performing actions by simulating two DB connections"""
+        This is used for simulating multiple users performing actions by simulating two DB connections
+        """
         try:
             current_conn = frappe.local.db
             frappe.local.db = self._primary_connection
@@ -124,12 +125,16 @@ class IntegrationTestCase(UnitTestCase):
             orig_sql = frappe.db.__class__.sql
             frappe.db.__class__.sql = _sql_with_count
             yield
-            self.assertLessEqual(len(queries), count, msg="Queries executed: \n" + "\n\n".join(queries))
+            self.assertLessEqual(
+                len(queries), count, msg="Queries executed: \n" + "\n\n".join(queries)
+            )
         finally:
             frappe.db.__class__.sql = orig_sql
 
     @contextmanager
-    def assertRedisCallCounts(self, count: int, *, exact=False) -> AbstractContextManager[None]:
+    def assertRedisCallCounts(
+        self, count: int, *, exact=False
+    ) -> AbstractContextManager[None]:
         from frappe.utils.redis_wrapper import RedisWrapper
 
         commands = []
@@ -170,7 +175,9 @@ class IntegrationTestCase(UnitTestCase):
             orig_sql = frappe.db.sql
             frappe.db.sql = _sql_with_count
             yield
-            self.assertLessEqual(rows_read, count, msg="Queries read more rows than expected")
+            self.assertLessEqual(
+                rows_read, count, msg="Queries read more rows than expected"
+            )
         finally:
             frappe.db.sql = orig_sql
 

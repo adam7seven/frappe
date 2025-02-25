@@ -25,11 +25,14 @@ class TestPage(IntegrationTestCase):
         )
 
     @unittest.skipUnless(
-        os.access(frappe.get_app_path("frappe"), os.W_OK), "Only run if frappe app paths is writable"
+        os.access(frappe.get_app_path("frappe"), os.W_OK),
+        "Only run if frappe app paths is writable",
     )
     @patch.dict(frappe.conf, {"developer_mode": 1})
     def test_trashing(self):
-        page = frappe.new_doc("Page", page_id=frappe.generate_hash(), module="Core").insert()
+        page = frappe.new_doc(
+            "Page", page_id=frappe.generate_hash(), module="Core"
+        ).insert()
 
         page.delete()
         frappe.db.commit()

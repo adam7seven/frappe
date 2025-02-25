@@ -21,7 +21,9 @@ class DocRef:
         try:
             name = self.name
         except AttributeError:
-            raise TypeError("Partially instantiated document instances can't be hashed.")
+            raise TypeError(
+                "Partially instantiated document instances can't be hashed."
+            )
         if name:
             return hash(self.doctype + name)
         raise TypeError(

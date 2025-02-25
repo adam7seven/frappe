@@ -21,7 +21,9 @@ class RedisQueue:
         if conf.redis_queue_sentinel_enabled:
             from frappe.utils.redis_wrapper import get_sentinel_connection
 
-            sentinels = [tuple(node.split(":")) for node in conf.get("redis_queue_sentinels", [])]
+            sentinels = [
+                tuple(node.split(":")) for node in conf.get("redis_queue_sentinels", [])
+            ]
             sentinel = get_sentinel_connection(
                 sentinels=sentinels,
                 sentinel_username=conf.get("redis_queue_sentinel_username"),
@@ -41,11 +43,18 @@ class RedisQueue:
         return cls(cls.get_connection(username, password))
 
     @classmethod
-    def set_admin_password(cls, cur_password=None, new_password=None, reset_passwords=False):
+    def set_admin_password(
+        cls, cur_password=None, new_password=None, reset_passwords=False
+    ):
         username = "default"
         conn = cls.get_connection(username, cur_password)
         password = "+" + (new_password or conn.acl_genpass())
-        conn.acl_setuser(username=username, enabled=True, reset_passwords=reset_passwords, passwords=password)
+        conn.acl_setuser(
+            username=username,
+            enabled=True,
+            reset_passwords=reset_passwords,
+            passwords=password,
+        )
         return password[1:]
 
     @classmethod
@@ -78,13 +87,17 @@ class RedisQueue:
         This list contains default ACL user and the bench ACL user(used by all sites incase of ACL is enabled).
         """
         bench_username = get_bench_id()
-        bench_user_rules = cls.get_acl_key_rules(include_key_prefix=True) + cls.get_acl_command_rules()
+        bench_user_rules = (
+            cls.get_acl_key_rules(include_key_prefix=True) + cls.get_acl_command_rules()
+        )
         bench_user_rule_str = " ".join(bench_user_rules).strip()
         bench_user_password = random_string(20)
 
         default_username = "default"
         _default_user_password = random_string(20) if set_admin_password else ""
-        default_user_password = ">" + _default_user_password if _default_user_password else "nopass"
+        default_user_password = (
+            ">" + _default_user_password if _default_user_password else "nopass"
+        )
 
         return [
             f"user {default_username} on {default_user_password} ~* &* +@all",

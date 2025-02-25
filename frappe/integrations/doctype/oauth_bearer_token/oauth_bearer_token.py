@@ -27,4 +27,6 @@ class OAuthBearerToken(Document):
 
     def validate(self):
         if not self.expiration_time:
-            self.expiration_time = add_to_date(self.creation, seconds=self.expires_in, as_datetime=True)
+            self.expiration_time = add_to_date(
+                self.creation, seconds=self.expires_in, as_datetime=True
+            )

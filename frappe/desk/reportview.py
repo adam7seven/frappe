@@ -80,10 +80,16 @@ def get_count() -> int | None:
     # We should not attempt to fetch accurate count for 2 entire minutes! (default timeout)
     # Very short timeout is used to here to set an upper bound on damage a bad request can do.
     # Users can request accurate count by dropping limit from arguments.
-    timeout_clause = "SET STATEMENT max_statement_time=1 FOR" if frappe.db.db_type == "mariadb" else ""
+    timeout_clause = (
+        "SET STATEMENT max_statement_time=1 FOR"
+        if frappe.db.db_type == "mariadb"
+        else ""
+    )
 
     try:
-        count = frappe.db.sql(f"{timeout_clause} select count(*) from ( {partial_query} ) p")[0][0]
+        count = frappe.db.sql(
+            f"{timeout_clause} select count(*) from ( {partial_query} ) p"
+        )[0][0]
     except Exception as e:
         if frappe.db.is_statement_timeout(e):  # Skip fetching accurate count
             count = None
@@ -91,7 +97,9 @@ def get_count() -> int | None:
             raise
 
     if count == args.limit or count is None:
-        frappe.local.response_headers.set("Cache-Control", "private,max-age=600,stale-while-revalidate=10800")
+        frappe.local.response_headers.set(
+            "Cache-Control", "private,max-age=600,stale-while-revalidate=10800"
+        )
 
     return count
 
@@ -148,7 +156,9 @@ def validate_fields(data):
             continue
 
         if df.fieldname in [_df.fieldname for _df in meta.get_high_permlevel_fields()]:
-            if df.get("permlevel") not in meta.get_permlevel_access(parenttype=data.doctype):
+            if df.get("permlevel") not in meta.get_permlevel_access(
+                parenttype=data.doctype
+            ):
                 data.fields.remove(field)
 
 
@@ -207,7 +217,11 @@ def raise_invalid_field(fieldname):
 def is_standard(fieldname):
     if "." in fieldname:
         fieldname = fieldname.split(".")[1].strip("`")
-    return fieldname in default_fields or fieldname in optional_fields or fieldname in child_table_fields
+    return (
+        fieldname in default_fields
+        or fieldname in optional_fields
+        or fieldname in child_table_fields
+    )
 
 
 @lru_cache(maxsize=1024)
@@ -236,10 +250,14 @@ def get_meta_and_docfield(fieldname, data):
 
 def update_wildcard_field_param(data):
     if (isinstance(data.fields, str) and data.fields == "*") or (
-        isinstance(data.fields, list | tuple) and len(data.fields) == 1 and data.fields[0] == "*"
+        isinstance(data.fields, list | tuple)
+        and len(data.fields) == 1
+        and data.fields[0] == "*"
     ):
         parent_type = data.parenttype or data.parent_doctype
-        data.fields = get_permitted_fields(data.doctype, parenttype=parent_type, ignore_virtual=True)
+        data.fields = get_permitted_fields(
+            data.doctype, parenttype=parent_type, ignore_virtual=True
+        )
         return True
 
     return False
@@ -261,7 +279,9 @@ def clean_params(data):
 def parse_json(data):
     if (filters := data.get("filters")) and isinstance(filters, str):
         data["filters"] = json.loads(filters)
-    if (applied_filters := data.get("applied_filters")) and isinstance(applied_filters, str):
+    if (applied_filters := data.get("applied_filters")) and isinstance(
+        applied_filters, str
+    ):
         data["applied_filters"] = json.loads(applied_filters)
     if (or_filters := data.get("or_filters")) and isinstance(or_filters, str):
         data["or_filters"] = json.loads(or_filters)
@@ -338,7 +358,9 @@ def save_report(id, doctype, report_settings):
             frappe.throw(_("Only reports of type Report Builder can be edited"))
 
         if report.owner != frappe.session.user and not report.has_permission("write"):
-            frappe.throw(_("Insufficient Permissions for editing Report"), frappe.PermissionError)
+            frappe.throw(
+                _("Insufficient Permissions for editing Report"), frappe.PermissionError
+            )
     else:
         report = frappe.new_doc("Report")
         report.report_id = id
@@ -367,7 +389,9 @@ def delete_report(id):
         frappe.throw(_("Only reports of type Report Builder can be deleted"))
 
     if report.owner != frappe.session.user and not report.has_permission("delete"):
-        frappe.throw(_("Insufficient Permissions for deleting Report"), frappe.PermissionError)
+        frappe.throw(
+            _("Insufficient Permissions for deleting Report"), frappe.PermissionError
+        )
 
     report.delete(ignore_permissions=True)
     frappe.msgprint(
@@ -418,7 +442,9 @@ def export_query():
                         _("You are not allowed to export {} doctype").format(doctype)
                     )
         else:
-            raise frappe.PermissionError(_("You are not allowed to export {} doctype").format(doctype))
+            raise frappe.PermissionError(
+                _("You are not allowed to export {} doctype").format(doctype)
+            )
 
     if add_totals_row:
         ret = append_totals_row(ret)
@@ -436,7 +462,8 @@ def export_query():
         processed_data = []
         for i, row in enumerate(ret):
             processed_row = [i + 1] + [
-                _(value) if translatable_fields[idx] else value for idx, value in enumerate(row)
+                _(value) if translatable_fields[idx] else value
+                for idx, value in enumerate(row)
             ]
             processed_data.append(processed_row)
             data.extend(processed_data)
@@ -448,7 +475,13 @@ def export_query():
 
         file_extension = "csv"
         content = get_csv_bytes(
-            [[handle_html(frappe.as_unicode(v)) if isinstance(v, str) else v for v in r] for r in data],
+            [
+                [
+                    handle_html(frappe.as_unicode(v)) if isinstance(v, str) else v
+                    for v in r
+                ]
+                for r in data
+            ],
             csv_params,
         )
     elif file_format_type == "Excel":
@@ -508,7 +541,11 @@ def get_field_info(fields, doctype):
                 label = _(df.label)
                 fieldtype = df.fieldtype
                 translatable = getattr(df, "translatable", False)
-            elif df and df.fieldtype == "Link" and frappe.get_meta(df.options).translated_doctype:
+            elif (
+                df
+                and df.fieldtype == "Link"
+                and frappe.get_meta(df.options).translated_doctype
+            ):
                 id = df.id
                 label = _(df.label)
                 fieldtype = df.fieldtype
@@ -579,7 +616,9 @@ def delete_items():
     doctype = frappe.form_dict.get("doctype")
 
     if len(items) > 10:
-        frappe.enqueue("frappe.desk.reportview.delete_bulk", doctype=doctype, items=items)
+        frappe.enqueue(
+            "frappe.desk.reportview.delete_bulk", doctype=doctype, items=items
+        )
     else:
         delete_bulk(doctype, items)
 
@@ -594,7 +633,9 @@ def delete_bulk(doctype, items):
                 frappe.publish_realtime(
                     "progress",
                     dict(
-                        progress=[i + 1, len(items)], title=_("Deleting {0}").format(doctype), description=d
+                        progress=[i + 1, len(items)],
+                        title=_("Deleting {0}").format(doctype),
+                        description=d,
                     ),
                     user=frappe.session.user,
                 )
@@ -610,13 +651,17 @@ def delete_bulk(doctype, items):
         delete_bulk(doctype, undeleted_items)
     elif undeleted_items:
         frappe.msgprint(
-            _("Failed to delete {0} documents: {1}").format(len(undeleted_items), ", ".join(undeleted_items)),
+            _("Failed to delete {0} documents: {1}").format(
+                len(undeleted_items), ", ".join(undeleted_items)
+            ),
             realtime=True,
             title=_("Bulk Operation Failed"),
         )
     else:
         frappe.msgprint(
-            _("Deleted all documents successfully"), realtime=True, title=_("Bulk Operation Successful")
+            _("Deleted all documents successfully"),
+            realtime=True,
+            title=_("Bulk Operation Successful"),
         )
 
 
@@ -727,9 +772,7 @@ def get_filter_dashboard_data(stats, doctype, filters=None):
             "Float",
             "Currency",
             "Percent",
-        ] and tag[
-            "id"
-        ] not in ["docstatus"]:
+        ] and tag["id"] not in ["docstatus"]:
             stats[tag["id"]] = list(tagcount)
             if stats[tag["id"]]:
                 data = [
@@ -780,13 +823,17 @@ def get_match_cond(doctype, as_condition=True):
 
 
 def build_match_conditions(doctype, user=None, as_condition=True):
-    match_conditions = DatabaseQuery(doctype, user=user).build_match_conditions(as_condition=as_condition)
+    match_conditions = DatabaseQuery(doctype, user=user).build_match_conditions(
+        as_condition=as_condition
+    )
     if as_condition:
         return match_conditions.replace("%", "%%")
     return match_conditions
 
 
-def get_filters_cond(doctype, filters, conditions, ignore_permissions=None, with_match_conditions=False):
+def get_filters_cond(
+    doctype, filters, conditions, ignore_permissions=None, with_match_conditions=False
+):
     if isinstance(filters, str):
         filters = json.loads(filters)
 

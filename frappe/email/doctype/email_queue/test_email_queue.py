@@ -3,7 +3,10 @@
 import textwrap
 
 import frappe
-from frappe.email.doctype.email_queue.email_queue import SendMailContext, get_email_retry_limit
+from frappe.email.doctype.email_queue.email_queue import (
+    SendMailContext,
+    get_email_retry_limit,
+)
 from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
@@ -95,12 +98,17 @@ class TestEmailQueue(IntegrationTestCase):
     def test_perf_reusing_smtp_server(self):
         """Ensure that same smtpserver instance is being returned when retrieved multiple times."""
 
-        self.assertTrue(frappe.new_doc("Email Queue").get_email_account()._from_site_config)
+        self.assertTrue(
+            frappe.new_doc("Email Queue").get_email_account()._from_site_config
+        )
 
         def get_server(q):
             return q.get_email_account().get_smtp_server()
 
-        self.assertIs(get_server(frappe.new_doc("Email Queue")), get_server(frappe.new_doc("Email Queue")))
+        self.assertIs(
+            get_server(frappe.new_doc("Email Queue")),
+            get_server(frappe.new_doc("Email Queue")),
+        )
 
         q1 = frappe.new_doc("Email Queue", email_account="_Test Email Account 1")
         q2 = frappe.new_doc("Email Queue", email_account="_Test Email Account 1")

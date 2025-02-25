@@ -37,4 +37,6 @@ def has_tags(doctype: str):
     def check_db():
         return frappe.db.exists("Tag Link", {"document_type": doctype})
 
-    return frappe.client_cache.get_value(f"doctype_has_tags::{doctype}", generator=check_db)
+    return frappe.client_cache.get_value(
+        f"doctype_has_tags::{doctype}", generator=check_db
+    )

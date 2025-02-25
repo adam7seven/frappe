@@ -23,11 +23,19 @@ class Workspace(Document):
     if TYPE_CHECKING:
         from frappe.core.doctype.has_role.has_role import HasRole
         from frappe.desk.doctype.workspace_chart.workspace_chart import WorkspaceChart
-        from frappe.desk.doctype.workspace_custom_block.workspace_custom_block import WorkspaceCustomBlock
+        from frappe.desk.doctype.workspace_custom_block.workspace_custom_block import (
+            WorkspaceCustomBlock,
+        )
         from frappe.desk.doctype.workspace_link.workspace_link import WorkspaceLink
-        from frappe.desk.doctype.workspace_number_card.workspace_number_card import WorkspaceNumberCard
-        from frappe.desk.doctype.workspace_quick_list.workspace_quick_list import WorkspaceQuickList
-        from frappe.desk.doctype.workspace_shortcut.workspace_shortcut import WorkspaceShortcut
+        from frappe.desk.doctype.workspace_number_card.workspace_number_card import (
+            WorkspaceNumberCard,
+        )
+        from frappe.desk.doctype.workspace_quick_list.workspace_quick_list import (
+            WorkspaceQuickList,
+        )
+        from frappe.desk.doctype.workspace_shortcut.workspace_shortcut import (
+            WorkspaceShortcut,
+        )
         from frappe.types import DF
 
         app: DF.Data | None
@@ -72,7 +80,11 @@ class Workspace(Document):
     def validate(self):
         self.title = strip_html(self.title)
 
-        if self.public and not is_workspace_manager() and not disable_saving_as_public():
+        if (
+            self.public
+            and not is_workspace_manager()
+            and not disable_saving_as_public()
+        ):
             frappe.throw(_("You need to be Workspace Manager to edit this document"))
         if self.has_value_changed("title"):
             validate_route_conflict(self.doctype, self.title)
@@ -87,7 +99,9 @@ class Workspace(Document):
 
         for d in self.get("links"):
             if d.link_type == "Report" and d.is_query_report != 1:
-                d.report_ref_doctype = frappe.get_value("Report", d.link_to, "ref_doctype")
+                d.report_ref_doctype = frappe.get_value(
+                    "Report", d.link_to, "ref_doctype"
+                )
 
         if not self.app and self.module:
             from frappe.modules.utils import get_module_app
@@ -124,7 +138,9 @@ class Workspace(Document):
 
     def on_trash(self):
         if self.public and not is_workspace_manager():
-            frappe.throw(_("You need to be Workspace Manager to delete a public workspace."))
+            frappe.throw(
+                _("You need to be Workspace Manager to delete a public workspace.")
+            )
 
     def after_delete(self):
         if disable_saving_as_public():
@@ -177,7 +193,9 @@ class Workspace(Document):
 
                 current_card = link
                 card_links = []
-            elif not link.get("only_for") or link.get("only_for") == frappe.get_system_settings("country"):
+            elif not link.get("only_for") or link.get(
+                "only_for"
+            ) == frappe.get_system_settings("country"):
                 card_links.append(link)
 
         current_card["links"] = card_links
@@ -271,14 +289,18 @@ def new_page(new_page):
     if page.get("public") and not is_workspace_manager():
         return
     elif (
-        not page.get("public") and page.get("for_user") != frappe.session.user and not is_workspace_manager()
+        not page.get("public")
+        and page.get("for_user") != frappe.session.user
+        and not is_workspace_manager()
     ):
-        frappe.throw(_("Cannot create private workspace of other users"), frappe.PermissionError)
+        frappe.throw(
+            _("Cannot create private workspace of other users"), frappe.PermissionError
+        )
 
     elif not frappe.has_permission(doctype="Workspace", ptype="create"):
-        frappe.flags.error_message = _("User {0} does not have the permission to create a Workspace.").format(
-            frappe.bold(frappe.session.user)
-        )
+        frappe.flags.error_message = _(
+            "User {0} does not have the permission to create a Workspace."
+        ).format(frappe.bold(frappe.session.user))
         raise frappe.PermissionError
 
     doc = frappe.new_doc("Workspace")
@@ -318,20 +340,28 @@ def update_page(id, title, icon, indicator_color, parent, public):
     public = frappe.parse_json(public)
     doc = frappe.get_doc("Workspace", id)
 
-    if not doc.get("public") and doc.get("for_user") != frappe.session.user and not is_workspace_manager():
+    if (
+        not doc.get("public")
+        and doc.get("for_user") != frappe.session.user
+        and not is_workspace_manager()
+    ):
         frappe.throw(
             _("Need Workspace Manager role to edit private workspace of other users"),
             frappe.PermissionError,
         )
 
     if doc:
-        child_docs = frappe.get_all("Workspace", filters={"parent_page": doc.title, "public": doc.public})
+        child_docs = frappe.get_all(
+            "Workspace", filters={"parent_page": doc.title, "public": doc.public}
+        )
         doc.title = title
         doc.icon = icon
         doc.indicator_color = indicator_color
         doc.parent_page = parent
         if doc.public != public:
-            doc.sequence_id = frappe.db.count("Workspace", {"public": public}, cache=True)
+            doc.sequence_id = frappe.db.count(
+                "Workspace", {"public": public}, cache=True
+            )
             doc.public = public
         doc.for_user = "" if public else doc.for_user or frappe.session.user
         doc.label = new_id = f"{title}-{doc.for_user}" if doc.for_user else title
@@ -347,9 +377,13 @@ def update_page(id, title, icon, indicator_color, parent, public):
                 child_doc.parent_page = doc.title
                 if child_doc.public != public:
                     child_doc.public = public
-                child_doc.for_user = "" if public else child_doc.for_user or frappe.session.user
+                child_doc.for_user = (
+                    "" if public else child_doc.for_user or frappe.session.user
+                )
                 child_doc.label = new_child_id = (
-                    f"{child_doc.title}-{child_doc.for_user}" if child_doc.for_user else child_doc.title
+                    f"{child_doc.title}-{child_doc.for_user}"
+                    if child_doc.for_user
+                    else child_doc.title
                 )
                 child_doc.save(ignore_permissions=True)
 
@@ -366,7 +400,9 @@ def update_page(id, title, icon, indicator_color, parent, public):
 
 
 def last_sequence_id(doc):
-    doc_exists = frappe.db.exists({"doctype": "Workspace", "public": doc.public, "for_user": doc.for_user})
+    doc_exists = frappe.db.exists(
+        {"doctype": "Workspace", "public": doc.public, "for_user": doc.for_user}
+    )
 
     if not doc_exists:
         return 0

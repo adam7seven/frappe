@@ -27,6 +27,8 @@ class TestDashboard(IntegrationTestCase):
                 with self.set_user("Administrator"):
                     all_modules = get_modules_from_all_apps_for_user("Administrator")
                     for module in all_modules:
-                        user.append("block_modules", {"module": module.get("module_id")})
+                        user.append(
+                            "block_modules", {"module": module.get("module_id")}
+                        )
                     user.save()
                 frappe.get_list("Dashboard")

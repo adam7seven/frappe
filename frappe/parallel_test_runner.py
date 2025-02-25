@@ -76,7 +76,9 @@ class ParallelTestRunner:
 
     def setup_test_file_list(self):
         self.test_file_list = self.get_test_file_list()
-        self.total_test_weight = sum(self.get_test_weight(test) for test in self.test_file_list)
+        self.total_test_weight = sum(
+            self.get_test_weight(test) for test in self.test_file_list
+        )
 
     def run_tests(self):
         self.test_result = TestResult(stream=sys.stderr, descriptions=True, verbosity=2)
@@ -142,7 +144,9 @@ class ParallelTestRunner:
         test_list = get_all_tests(self.app)
 
         test_counts = [self.get_test_weight(test) for test in test_list]
-        test_chunks = split_by_weight(test_list, test_counts, chunk_count=self.total_builds)
+        test_chunks = split_by_weight(
+            test_list, test_counts, chunk_count=self.total_builds
+        )
 
         return test_chunks[self.build_number - 1]
 
@@ -249,7 +253,9 @@ class ParallelTestWithOrchestrator(ParallelTestRunner):
 
     def register_instance(self):
         test_spec_list = get_all_tests(self.app)
-        response_data = self.call_orchestrator("register-instance", data={"test_spec_list": test_spec_list})
+        response_data = self.call_orchestrator(
+            "register-instance", data={"test_spec_list": test_spec_list}
+        )
         self.is_master = response_data.get("is_master")
 
     def get_next_test(self):

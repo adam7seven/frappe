@@ -35,7 +35,9 @@ class WebPage(WebsiteGenerator):
         from frappe.website.doctype.web_page_block.web_page_block import WebPageBlock
 
         breadcrumbs: DF.Code | None
-        content_type: DF.Literal["Rich Text", "Markdown", "HTML", "Page Builder", "Slideshow"]
+        content_type: DF.Literal[
+            "Rich Text", "Markdown", "HTML", "Page Builder", "Slideshow"
+        ]
         context_script: DF.Code | None
         css: DF.Code | None
         dynamic_route: DF.Check

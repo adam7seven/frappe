@@ -13,7 +13,12 @@ from frappe.utils import cint
 
 logger = logging.Logger(__file__)
 
-datetime_like_types = (datetime.datetime, datetime.date, datetime.time, datetime.timedelta)
+datetime_like_types = (
+    datetime.datetime,
+    datetime.date,
+    datetime.time,
+    datetime.timedelta,
+)
 
 
 class BaseTestCase:
@@ -58,12 +63,16 @@ class UnitTestCase(unittest.TestCase, BaseTestCase):
     def assertQueryEqual(self, first: str, second: str) -> None:
         self.assertEqual(self.normalize_sql(first), self.normalize_sql(second))
 
-    def assertSequenceSubset(self, larger: Sequence, smaller: Sequence, msg: str | None = None) -> None:
+    def assertSequenceSubset(
+        self, larger: Sequence, smaller: Sequence, msg: str | None = None
+    ) -> None:
         """Assert that `expected` is a subset of `actual`."""
         self.assertTrue(set(smaller).issubset(set(larger)), msg=msg)
 
     # --- Frappe Framework specific assertions
-    def assertDocumentEqual(self, expected: dict | BaseDocument, actual: BaseDocument) -> None:
+    def assertDocumentEqual(
+        self, expected: dict | BaseDocument, actual: BaseDocument
+    ) -> None:
         """Compare a (partial) expected document with actual Document."""
 
         if isinstance(expected, BaseDocument):
@@ -72,23 +81,36 @@ class UnitTestCase(unittest.TestCase, BaseTestCase):
         for field, value in expected.items():
             if isinstance(value, list):
                 actual_child_docs = actual.get(field)
-                self.assertEqual(len(value), len(actual_child_docs), msg=f"{field} length should be same")
-                for exp_child, actual_child in zip(value, actual_child_docs, strict=False):
+                self.assertEqual(
+                    len(value),
+                    len(actual_child_docs),
+                    msg=f"{field} length should be same",
+                )
+                for exp_child, actual_child in zip(
+                    value, actual_child_docs, strict=False
+                ):
                     self.assertDocumentEqual(exp_child, actual_child)
             else:
                 self._compare_field(value, actual.get(field), actual, field)
 
-    def _compare_field(self, expected: Any, actual: Any, doc: BaseDocument, field: str) -> None:
+    def _compare_field(
+        self, expected: Any, actual: Any, doc: BaseDocument, field: str
+    ) -> None:
         msg = f"{field} should be same."
 
         if isinstance(expected, float):
             precision = doc.precision(field)
             self.assertAlmostEqual(
-                expected, actual, places=precision, msg=f"{field} should be same to {precision} digits"
+                expected,
+                actual,
+                places=precision,
+                msg=f"{field} should be same to {precision} digits",
             )
         elif isinstance(expected, bool | int):
             self.assertEqual(expected, cint(actual), msg=msg)
-        elif isinstance(expected, datetime_like_types) or isinstance(actual, datetime_like_types):
+        elif isinstance(expected, datetime_like_types) or isinstance(
+            actual, datetime_like_types
+        ):
             self.assertEqual(str(expected), str(actual), msg=msg)
         else:
             self.assertEqual(expected, actual, msg=msg)
@@ -105,7 +127,9 @@ class UnitTestCase(unittest.TestCase, BaseTestCase):
         """Formats SQL consistently so simple string comparisons can work on them."""
         import sqlparse
 
-        return sqlparse.format(query.strip(), keyword_case="upper", reindent=True, strip_comments=True)
+        return sqlparse.format(
+            query.strip(), keyword_case="upper", reindent=True, strip_comments=True
+        )
 
 
 def _get_doctype_from_module(cls):

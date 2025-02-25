@@ -35,7 +35,9 @@ def get_headers():
 
 @frappe.whitelist()
 def current_site_info():
-    request = requests.post(f"{get_base_url()}/api/method/press.saas.api.site.info", headers=get_headers())
+    request = requests.post(
+        f"{get_base_url()}/api/method/press.saas.api.site.info", headers=get_headers()
+    )
     if request.status_code == 200:
         return request.json().get("message")
     else:
@@ -61,7 +63,11 @@ def api(method, data=None):
 def is_fc_site():
     is_system_manager = frappe.get_roles(frappe.session.user).count("System Manager")
     setup_completed = frappe.get_system_settings("setup_complete")
-    return is_system_manager and setup_completed and frappe.conf.get("fc_communication_secret")
+    return (
+        is_system_manager
+        and setup_completed
+        and frappe.conf.get("fc_communication_secret")
+    )
 
 
 # login to frappe cloud dashboard
@@ -83,7 +89,11 @@ def verify_verification_code(verification_code: str, route: str):
     request = requests.post(
         f"{get_base_url()}/api/method/press.api.developer.saas.verify_verification_code",
         headers=get_headers(),
-        json={"domain": get_site_name(), "verification_code": verification_code, "route": route},
+        json={
+            "domain": get_site_name(),
+            "verification_code": verification_code,
+            "route": route,
+        },
     )
 
     if request.status_code == 200:

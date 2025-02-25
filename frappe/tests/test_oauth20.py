@@ -14,7 +14,9 @@ from frappe.tests.test_api import get_test_client, make_request, suppress_stdout
 from frappe.tests.utils import make_test_records
 
 if TYPE_CHECKING:
-    from frappe.integrations.doctype.social_login_key.social_login_key import SocialLoginKey
+    from frappe.integrations.doctype.social_login_key.social_login_key import (
+        SocialLoginKey,
+    )
 
 
 class FrappeRequestTestCase(IntegrationTestCase):
@@ -34,21 +36,32 @@ class FrappeRequestTestCase(IntegrationTestCase):
 
     def get(self, path: str, params: dict | None = None, **kwargs) -> TestResponse:
         return make_request(
-            target=self.TEST_CLIENT.get, args=(path,), kwargs={"data": params, **kwargs}, site=self.site
+            target=self.TEST_CLIENT.get,
+            args=(path,),
+            kwargs={"data": params, **kwargs},
+            site=self.site,
         )
 
     def post(self, path, data, **kwargs) -> TestResponse:
         return make_request(
-            target=self.TEST_CLIENT.post, args=(path,), kwargs={"data": data, **kwargs}, site=self.site
+            target=self.TEST_CLIENT.post,
+            args=(path,),
+            kwargs={"data": data, **kwargs},
+            site=self.site,
         )
 
     def put(self, path, data, **kwargs) -> TestResponse:
         return make_request(
-            target=self.TEST_CLIENT.put, args=(path,), kwargs={"data": data, **kwargs}, site=self.site
+            target=self.TEST_CLIENT.put,
+            args=(path,),
+            kwargs={"data": data, **kwargs},
+            site=self.site,
         )
 
     def delete(self, path, **kwargs) -> TestResponse:
-        return make_request(target=self.TEST_CLIENT.delete, args=(path,), kwargs=kwargs, site=self.site)
+        return make_request(
+            target=self.TEST_CLIENT.delete, args=(path,), kwargs=kwargs, site=self.site
+        )
 
 
 class TestOAuth20(FrappeRequestTestCase):
@@ -143,7 +156,9 @@ class TestOAuth20(FrappeRequestTestCase):
         self.assertTrue(bearer_token.get("scope"))
         self.assertTrue(bearer_token.get("token_type") == "Bearer")
         self.assertTrue(
-            check_valid_openid_response(access_token=bearer_token.get("access_token"), client=self)
+            check_valid_openid_response(
+                access_token=bearer_token.get("access_token"), client=self
+            )
         )
 
         decoded_token = self.decode_id_token(bearer_token.get("id_token"))
@@ -244,7 +259,9 @@ class TestOAuth20(FrappeRequestTestCase):
 
         # Check revoked token
         self.assertFalse(
-            check_valid_openid_response(access_token=bearer_token.get("access_token"), client=self)
+            check_valid_openid_response(
+                access_token=bearer_token.get("access_token"), client=self
+            )
         )
 
     def test_resource_owner_password_credentials_grant(self):
@@ -272,7 +289,9 @@ class TestOAuth20(FrappeRequestTestCase):
 
         # Check token for valid response
         self.assertTrue(
-            check_valid_openid_response(access_token=bearer_token.get("access_token"), client=self)
+            check_valid_openid_response(
+                access_token=bearer_token.get("access_token"), client=self
+            )
         )
 
     def test_login_using_implicit_token(self):
@@ -310,7 +329,9 @@ class TestOAuth20(FrappeRequestTestCase):
         self.assertTrue(response_dict.get("expires_in"))
         self.assertTrue(response_dict.get("scope"))
         self.assertTrue(response_dict.get("token_type"))
-        self.assertTrue(check_valid_openid_response(response_dict.get("access_token")[0]))
+        self.assertTrue(
+            check_valid_openid_response(response_dict.get("access_token")[0])
+        )
         oauth_client.delete(force=True)
         oauth_client_before.insert()
         frappe.db.commit()
@@ -372,7 +393,9 @@ class TestOAuth20(FrappeRequestTestCase):
         )
 
 
-def check_valid_openid_response(access_token=None, client: "FrappeRequestTestCase" = None):
+def check_valid_openid_response(
+    access_token=None, client: "FrappeRequestTestCase" = None
+):
     """Return True for valid response."""
     # Use token in header
     headers = {}
@@ -391,7 +414,10 @@ def check_valid_openid_response(access_token=None, client: "FrappeRequestTestCas
 
 
 def login(session):
-    session.post(get_full_url("/api/method/login"), data={"usr": "test@example.com", "pwd": "Eastern_43A1W"})
+    session.post(
+        get_full_url("/api/method/login"),
+        data={"usr": "test@example.com", "pwd": "Eastern_43A1W"},
+    )
 
 
 def get_full_url(endpoint):

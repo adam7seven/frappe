@@ -94,7 +94,9 @@ class DocTags:
         if tag not in tl:
             tl.append(tag)
             if not frappe.db.exists("Tag", tag):
-                frappe.get_doc({"doctype": "Tag", "id": tag}).insert(ignore_permissions=True)
+                frappe.get_doc({"doctype": "Tag", "id": tag}).insert(
+                    ignore_permissions=True
+                )
             self.update(dn, tl)
 
     def remove(self, dn, tag):
@@ -116,7 +118,10 @@ class DocTags:
             tags = ",".join(tl)
         try:
             frappe.db.sql(
-                "update `tab{}` set _user_tags={} where id={}".format(self.dt, "%s", "%s"), (tags, dn)
+                "update `tab{}` set _user_tags={} where id={}".format(
+                    self.dt, "%s", "%s"
+                ),
+                (tags, dn),
             )
             doc = frappe.get_doc(self.dt, dn)
             update_tags(doc, tags)

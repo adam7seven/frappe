@@ -217,7 +217,9 @@ def return_link_expired_page(doc, doc_workflow_state):
     )
 
 
-def update_completed_workflow_actions(doc, user=None, workflow=None, workflow_state=None):
+def update_completed_workflow_actions(
+    doc, user=None, workflow=None, workflow_state=None
+):
     allowed_roles = get_allowed_roles(user, workflow, workflow_state)
     # There is no transaction leading upto this state
     # so no older actions to complete
@@ -279,7 +281,14 @@ def update_completed_workflow_actions_using_role(user=None, workflow_action=None
 def get_next_possible_transitions(workflow_id, state, doc=None):
     transitions = frappe.get_all(
         "Workflow Transition",
-        fields=["allowed", "action", "state", "allow_self_approval", "next_state", "condition"],
+        fields=[
+            "allowed",
+            "action",
+            "state",
+            "allow_self_approval",
+            "next_state",
+            "condition",
+        ],
         filters=[["parent", "=", workflow_id], ["state", "=", state]],
     )
 

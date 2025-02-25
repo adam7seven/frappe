@@ -24,7 +24,9 @@ class NumberFormat:
 
     @classmethod
     def from_string(cls, number_format: str) -> "NumberFormat":
-        decimal_separator, thousands_separator, precision = NUMBER_FORMAT_MAP[number_format]
+        decimal_separator, thousands_separator, precision = NUMBER_FORMAT_MAP[
+            number_format
+        ]
         return NumberFormat(
             precision=precision,
             decimal_separator=decimal_separator,

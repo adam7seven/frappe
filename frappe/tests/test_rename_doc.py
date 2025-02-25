@@ -74,7 +74,13 @@ class TestRenameDoc(IntegrationTestCase):
                 "module": "Custom",
                 "name": self.doctype.old,
                 "custom": 0,
-                "fields": [{"label": "Some Field", "fieldname": "some_fieldname", "fieldtype": "Data"}],
+                "fields": [
+                    {
+                        "label": "Some Field",
+                        "fieldname": "some_fieldname",
+                        "fieldtype": "Data",
+                    }
+                ],
                 "permissions": [{"role": "System Manager", "read": 1}],
             }
         ).insert()
@@ -124,7 +130,10 @@ class TestRenameDoc(IntegrationTestCase):
         """Rename an existing document via frappe.rename_doc"""
         old_name = choice(self.available_documents)
         new_name = old_name + ".new"
-        self.assertEqual(new_name, frappe.rename_doc(self.test_doctype, old_name, new_name, force=True))
+        self.assertEqual(
+            new_name,
+            frappe.rename_doc(self.test_doctype, old_name, new_name, force=True),
+        )
         self.available_documents.remove(old_name)
         self.available_documents.append(new_name)
 
@@ -136,7 +145,9 @@ class TestRenameDoc(IntegrationTestCase):
         second_todo_doc.priority = "High"
         second_todo_doc.save()
 
-        merged_todo = frappe.rename_doc(self.test_doctype, first_todo, second_todo, merge=True, force=True)
+        merged_todo = frappe.rename_doc(
+            self.test_doctype, first_todo, second_todo, merge=True, force=True
+        )
         merged_todo_doc = frappe.get_doc(self.test_doctype, merged_todo)
         self.available_documents.remove(first_todo)
 
@@ -150,7 +161,9 @@ class TestRenameDoc(IntegrationTestCase):
         # check if module exists exists;
         # if custom, get_controller will return Document class
         # if not custom, a different class will be returned
-        self.assertNotEqual(get_controller(self.doctype.old), frappe.model.document.Document)
+        self.assertNotEqual(
+            get_controller(self.doctype.old), frappe.model.document.Document
+        )
 
         old_doctype_path = get_doc_path("Custom", "DocType", self.doctype.old)
 
@@ -186,18 +199,23 @@ class TestRenameDoc(IntegrationTestCase):
 
         # Rename doctype
         self.assertEqual(
-            "Renamed Doc", frappe.rename_doc("DocType", "Rename This", "Renamed Doc", force=True)
+            "Renamed Doc",
+            frappe.rename_doc("DocType", "Rename This", "Renamed Doc", force=True),
         )
 
         # Test if Doctype value has changed in Link field
-        linked_to_doctype = frappe.db.get_value("Renamed Doc", to_rename_record.name, "linked_to_doctype")
+        linked_to_doctype = frappe.db.get_value(
+            "Renamed Doc", to_rename_record.name, "linked_to_doctype"
+        )
         self.assertEqual(linked_to_doctype, "Renamed Doc")
 
         # Test if there are conflicts between a record and a DocType
         # having the same name
         old_name = to_rename_record.name
         new_name = "ToDo"
-        self.assertEqual(new_name, frappe.rename_doc("Renamed Doc", old_name, new_name, force=True))
+        self.assertEqual(
+            new_name, frappe.rename_doc("Renamed Doc", old_name, new_name, force=True)
+        )
 
     def test_update_document_title_api(self):
         test_doctype = "Module Def"
@@ -216,7 +234,9 @@ class TestRenameDoc(IntegrationTestCase):
 
         # pass invalid types to API
         with self.assertRaises(TypeError):
-            update_document_title(doctype=dt, docname=dn, title={}, name={"hack": "this"})
+            update_document_title(
+                doctype=dt, docname=dn, title={}, name={"hack": "this"}
+            )
 
         doc_before = frappe.get_doc(test_doctype, dn)
         return_value = update_document_title(doctype=dt, docname=dn, new_name=new_name)
@@ -263,8 +283,12 @@ class TestRenameDoc(IntegrationTestCase):
             "options": child.name,
         }
 
-        parent_a = new_doctype(fields=[table_field], allow_rename=1, autoname="Prompt").insert()
-        parent_b = new_doctype(fields=[table_field], allow_rename=1, autoname="Prompt").insert()
+        parent_a = new_doctype(
+            fields=[table_field], allow_rename=1, autoname="Prompt"
+        ).insert()
+        parent_b = new_doctype(
+            fields=[table_field], allow_rename=1, autoname="Prompt"
+        ).insert()
 
         parent_a_instance = frappe.get_doc(
             doctype=parent_a.name, test_table=[{"some_fieldname": "x"}], name="XYZ"
@@ -321,4 +345,6 @@ class TestRenameDoc(IntegrationTestCase):
         linked_with_marilyn.reload()
 
         self.assertTrue(frappe.db.exists("Autoincrement DocType", marilyn.name) is None)
-        self.assertEqual(linked_with_marilyn.autoincrement_doctype, frappe.utils.cstr(mary.name))
+        self.assertEqual(
+            linked_with_marilyn.autoincrement_doctype, frappe.utils.cstr(mary.name)
+        )

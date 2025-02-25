@@ -40,7 +40,9 @@ class ErrorLog(Document):
     @staticmethod
     def clear_old_logs(days=30):
         table = frappe.qb.DocType("Error Log")
-        frappe.db.delete(table, filters=(table.creation < (Now() - Interval(days=days))))
+        frappe.db.delete(
+            table, filters=(table.creation < (Now() - Interval(days=days)))
+        )
 
 
 @frappe.whitelist()

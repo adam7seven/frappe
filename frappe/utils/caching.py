@@ -162,7 +162,9 @@ def site_cache(ttl: int | None = None, maxsize: int | None = None) -> Callable:
     return time_cache_wrapper
 
 
-def redis_cache(ttl: int | None = 3600, user: str | bool | None = None, shared: bool = False) -> Callable:
+def redis_cache(
+    ttl: int | None = 3600, user: str | bool | None = None, shared: bool = False
+) -> Callable:
     """Decorator to cache method calls and its return values in Redis
 
     args:
@@ -182,7 +184,9 @@ def redis_cache(ttl: int | None = 3600, user: str | bool | None = None, shared: 
 
         @wraps(func)
         def redis_cache_wrapper(*args, **kwargs):
-            func_call_key = func_key + "::" + str(__generate_request_cache_key(args, kwargs))
+            func_call_key = (
+                func_key + "::" + str(__generate_request_cache_key(args, kwargs))
+            )
             cached_val = frappe.cache.get_value(func_call_key, user=user, shared=shared)
             if cached_val is not None:
                 return cached_val
@@ -194,7 +198,9 @@ def redis_cache(ttl: int | None = 3600, user: str | bool | None = None, shared: 
 
             val = func(*args, **kwargs)
             ttl = getattr(func, "ttl", 3600)
-            frappe.cache.set_value(func_call_key, val, expires_in_sec=ttl, user=user, shared=shared)
+            frappe.cache.set_value(
+                func_call_key, val, expires_in_sec=ttl, user=user, shared=shared
+            )
             return val
 
         return redis_cache_wrapper
@@ -241,7 +247,11 @@ def http_cache(
         @wraps(func)
         def inner(*args, **kwargs):
             ret = func(*args, **kwargs)
-            if frappe.request and frappe.request.method == "GET" and qualified_name in frappe.request.path:
+            if (
+                frappe.request
+                and frappe.request.method == "GET"
+                and qualified_name in frappe.request.path
+            ):
                 frappe.local.response_headers.set("Cache-Control", cache_headers)
             return ret
 

@@ -82,7 +82,9 @@ def add(args=None, *, ignore_permissions=False):
             description = str(args.get("description", ""))
             has_content = strip_html(description) or "<img" in description
             if not has_content:
-                args["description"] = _("Assignment for {0} {1}").format(args["doctype"], args["id"])
+                args["description"] = _("Assignment for {0} {1}").format(
+                    args["doctype"], args["id"]
+                )
 
             d = frappe.get_doc(
                 {
@@ -192,7 +194,14 @@ def close_all_assignments(doctype, id, ignore_permissions=False):
 
 @frappe.whitelist()
 def remove(doctype, id, assign_to, ignore_permissions=False):
-    return set_status(doctype, id, "", assign_to, status="Cancelled", ignore_permissions=ignore_permissions)
+    return set_status(
+        doctype,
+        id,
+        "",
+        assign_to,
+        status="Cancelled",
+        ignore_permissions=ignore_permissions,
+    )
 
 
 @frappe.whitelist()
@@ -228,10 +237,19 @@ def close(doctype: str, id: str, assign_to: str, ignore_permissions=False):
     if assign_to != frappe.session.user:
         frappe.throw(_("Only the assignee can complete this to-do."))
 
-    return set_status(doctype, id, "", assign_to, status="Closed", ignore_permissions=ignore_permissions)
+    return set_status(
+        doctype,
+        id,
+        "",
+        assign_to,
+        status="Closed",
+        ignore_permissions=ignore_permissions,
+    )
 
 
-def set_status(doctype, id, todo=None, assign_to=None, status="Cancelled", ignore_permissions=False):
+def set_status(
+    doctype, id, todo=None, assign_to=None, status="Cancelled", ignore_permissions=False
+):
     """remove from todo"""
 
     if not ignore_permissions:
@@ -296,14 +314,18 @@ def clear(doctype, id, ignore_permissions=False):
     return True
 
 
-def notify_assignment(assigned_by, allocated_to, doc_type, doc_id, action="CLOSE", description=None):
+def notify_assignment(
+    assigned_by, allocated_to, doc_type, doc_id, action="CLOSE", description=None
+):
     """
     Notify assignee that there is a change in assignment
     """
     if not (assigned_by and allocated_to and doc_type and doc_id):
         return
 
-    assigned_user = frappe.db.get_value("User", allocated_to, ["language", "enabled"], as_dict=True)
+    assigned_user = frappe.db.get_value(
+        "User", allocated_to, ["language", "enabled"], as_dict=True
+    )
 
     # return if self assigned or user disabled
     if assigned_by == allocated_to or not assigned_user.enabled:
@@ -315,16 +337,19 @@ def notify_assignment(assigned_by, allocated_to, doc_type, doc_id, action="CLOSE
     description_html = f"<div>{description}</div>" if description else None
 
     if action == "CLOSE":
-        subject = _("Your assignment on {0} {1} has been removed by {2}", lang=assigned_user.language).format(
+        subject = _(
+            "Your assignment on {0} {1} has been removed by {2}",
+            lang=assigned_user.language,
+        ).format(
             frappe.bold(_(doc_type)), get_title_html(title), frappe.bold(user_name)
         )
     else:
         user_name = frappe.bold(user_name)
         document_type = frappe.bold(_(doc_type, lang=assigned_user.language))
         title = get_title_html(title)
-        subject = _("{0} assigned a new task {1} {2} to you", lang=assigned_user.language).format(
-            user_name, document_type, title
-        )
+        subject = _(
+            "{0} assigned a new task {1} {2} to you", lang=assigned_user.language
+        ).format(user_name, document_type, title)
 
     notification_doc = {
         "type": "Assignment",

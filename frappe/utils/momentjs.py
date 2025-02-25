@@ -57,7 +57,11 @@ data = {
             "-1 - WAT 1964 -1",
             "0 - GMT",
         ],
-        "Africa/Bissau": ["-1:2:20 - LMT 1911_4_26 -1:2:20", "-1 - WAT 1975 -1", "0 - GMT"],
+        "Africa/Bissau": [
+            "-1:2:20 - LMT 1911_4_26 -1:2:20",
+            "-1 - WAT 1975 -1",
+            "0 - GMT",
+        ],
         "Africa/Blantyre": ["2:20 - LMT 1903_2 2:20", "2 - CAT"],
         "Africa/Brazzaville": ["1:1:8 - LMT 1912 1:1:8", "1 - WAT"],
         "Africa/Bujumbura": ["1:57:28 - LMT 1890 1:57:28", "2 - CAT"],
@@ -93,7 +97,11 @@ data = {
         ],
         "Africa/Djibouti": ["2:52:36 - LMT 1911_6 2:52:36", "3 - EAT"],
         "Africa/Douala": ["0:38:48 - LMT 1912 0:38:48", "1 - WAT"],
-        "Africa/El_Aaiun": ["-0:52:48 - LMT 1934_0 -0:52:48", "-1 - WAT 1976_3_14 -1", "0 - WET"],
+        "Africa/El_Aaiun": [
+            "-0:52:48 - LMT 1934_0 -0:52:48",
+            "-1 - WAT 1976_3_14 -1",
+            "0 - WET",
+        ],
         "Africa/Freetown": [
             "-0:53 - LMT 1882 -0:53",
             "-0:53 - FMT 1913_5 -0:53",
@@ -108,8 +116,16 @@ data = {
             "2 - CAT",
         ],
         "Africa/Harare": ["2:4:12 - LMT 1903_2 2:4:12", "2 - CAT"],
-        "Africa/Johannesburg": ["1:52 - LMT 1892_1_8 1:52", "1:30 - SAST 1903_2 1:30", "2 SA SAST"],
-        "Africa/Juba": ["2:6:24 - LMT 1931 2:6:24", "2 Sudan CA%sT 2000_0_15_12 2", "3 - EAT"],
+        "Africa/Johannesburg": [
+            "1:52 - LMT 1892_1_8 1:52",
+            "1:30 - SAST 1903_2 1:30",
+            "2 SA SAST",
+        ],
+        "Africa/Juba": [
+            "2:6:24 - LMT 1931 2:6:24",
+            "2 Sudan CA%sT 2000_0_15_12 2",
+            "3 - EAT",
+        ],
         "Africa/Kampala": [
             "2:9:40 - LMT 1928_6 2:9:40",
             "3 - EAT 1930 3",
@@ -117,13 +133,21 @@ data = {
             "2:45 - BEAUT 1957 2:45",
             "3 - EAT",
         ],
-        "Africa/Khartoum": ["2:10:8 - LMT 1931 2:10:8", "2 Sudan CA%sT 2000_0_15_12 2", "3 - EAT"],
+        "Africa/Khartoum": [
+            "2:10:8 - LMT 1931 2:10:8",
+            "2 Sudan CA%sT 2000_0_15_12 2",
+            "3 - EAT",
+        ],
         "Africa/Kigali": ["2:0:16 - LMT 1935_5 2:0:16", "2 - CAT"],
         "Africa/Kinshasa": ["1:1:12 - LMT 1897_10_9 1:1:12", "1 - WAT"],
         "Africa/Lagos": ["0:13:36 - LMT 1919_8 0:13:36", "1 - WAT"],
         "Africa/Libreville": ["0:37:48 - LMT 1912 0:37:48", "1 - WAT"],
         "Africa/Lome": ["0:4:52 - LMT 1893 0:4:52", "0 - GMT"],
-        "Africa/Luanda": ["0:52:56 - LMT 1892 0:52:56", "0:52:4 - AOT 1911_4_26 0:52:4", "1 - WAT"],
+        "Africa/Luanda": [
+            "0:52:56 - LMT 1892 0:52:56",
+            "0:52:4 - AOT 1911_4_26 0:52:4",
+            "1 - WAT",
+        ],
         "Africa/Lubumbashi": ["1:49:52 - LMT 1897_10_9 1:49:52", "2 - CAT"],
         "Africa/Lusaka": ["1:53:8 - LMT 1903_2 1:53:8", "2 - CAT"],
         "Africa/Malabo": ["0:35:8 - LMT 1912 0:35:8", "0 - GMT 1963_11_15", "1 - WAT"],
@@ -173,8 +197,16 @@ data = {
             "0 - GMT",
         ],
         "Africa/Ouagadougou": ["-0:6:4 - LMT 1912 -0:6:4", "0 - GMT"],
-        "Africa/Porto-Novo": ["0:10:28 - LMT 1912 0:10:28", "0 - GMT 1934_1_26", "1 - WAT"],
-        "Africa/Sao_Tome": ["0:26:56 - LMT 1884 0:26:56", "-0:36:32 - LMT 1912 -0:36:32", "0 - GMT"],
+        "Africa/Porto-Novo": [
+            "0:10:28 - LMT 1912 0:10:28",
+            "0 - GMT 1934_1_26",
+            "1 - WAT",
+        ],
+        "Africa/Sao_Tome": [
+            "0:26:56 - LMT 1884 0:26:56",
+            "-0:36:32 - LMT 1912 -0:36:32",
+            "0 - GMT",
+        ],
         "Africa/Tripoli": [
             "0:52:44 - LMT 1920 0:52:44",
             "1 Libya CE%sT 1959 1",
@@ -223,7 +255,11 @@ data = {
             "-9 US AK%sT",
         ],
         "America/Anguilla": ["-4:12:16 - LMT 1912_2_2 -4:12:16", "-4 - AST"],
-        "America/Antigua": ["-4:7:12 - LMT 1912_2_2 -4:7:12", "-5 - EST 1951 -5", "-4 - AST"],
+        "America/Antigua": [
+            "-4:7:12 - LMT 1912_2_2 -4:7:12",
+            "-5 - EST 1951 -5",
+            "-4 - AST",
+        ],
         "America/Araguaina": [
             "-3:12:48 - LMT 1914 -3:12:48",
             "-3 Brazil BR%sT 1990_8_17 -3",
@@ -393,7 +429,11 @@ data = {
             "-3 Arg AR%sT 2008_9_18 -3",
             "-3 - ART",
         ],
-        "America/Aruba": ["-4:40:24 - LMT 1912_1_12 -4:40:24", "-4:30 - ANT 1965 -4:30", "-4 - AST"],
+        "America/Aruba": [
+            "-4:40:24 - LMT 1912_1_12 -4:40:24",
+            "-4:30 - ANT 1965 -4:30",
+            "-4 - AST",
+        ],
         "America/Asuncion": [
             "-3:50:40 - LMT 1890 -3:50:40",
             "-3:50:40 - AMT 1931_9_10 -3:50:40",
@@ -433,9 +473,17 @@ data = {
             "-3:58:29 - BMT 1932 -3:58:29",
             "-4 Barb A%sT",
         ],
-        "America/Belem": ["-3:13:56 - LMT 1914 -3:13:56", "-3 Brazil BR%sT 1988_8_12 -3", "-3 - BRT"],
+        "America/Belem": [
+            "-3:13:56 - LMT 1914 -3:13:56",
+            "-3 Brazil BR%sT 1988_8_12 -3",
+            "-3 - BRT",
+        ],
         "America/Belize": ["-5:52:48 - LMT 1912_3 -5:52:48", "-6 Belize C%sT"],
-        "America/Blanc-Sablon": ["-3:48:28 - LMT 1884 -3:48:28", "-4 Canada A%sT 1970 -4", "-4 - AST"],
+        "America/Blanc-Sablon": [
+            "-3:48:28 - LMT 1884 -3:48:28",
+            "-4 Canada A%sT 1970 -4",
+            "-4 - AST",
+        ],
         "America/Boa_Vista": [
             "-4:2:40 - LMT 1914 -4:2:40",
             "-4 Brazil AM%sT 1988_8_12 -4",
@@ -477,8 +525,16 @@ data = {
             "-4 - VET 2007_11_9_03 -4",
             "-4:30 - VET",
         ],
-        "America/Cayenne": ["-3:29:20 - LMT 1911_6 -3:29:20", "-4 - GFT 1967_9 -4", "-3 - GFT"],
-        "America/Cayman": ["-5:25:32 - LMT 1890 -5:25:32", "-5:7:12 - KMT 1912_1 -5:7:12", "-5 - EST"],
+        "America/Cayenne": [
+            "-3:29:20 - LMT 1911_6 -3:29:20",
+            "-4 - GFT 1967_9 -4",
+            "-3 - GFT",
+        ],
+        "America/Cayman": [
+            "-5:25:32 - LMT 1890 -5:25:32",
+            "-5:7:12 - KMT 1912_1 -5:7:12",
+            "-5 - EST",
+        ],
         "America/Chicago": [
             "-5:50:36 - LMT 1883_10_18_12_9_24 -5:50:36",
             "-6 US C%sT 1920 -6",
@@ -518,7 +574,11 @@ data = {
             "-4 - AMT 2004_9_1 -4",
             "-4 Brazil AM%sT",
         ],
-        "America/Curacao": ["-4:35:47 - LMT 1912_1_12 -4:35:47", "-4:30 - ANT 1965 -4:30", "-4 - AST"],
+        "America/Curacao": [
+            "-4:35:47 - LMT 1912_1_12 -4:35:47",
+            "-4:30 - ANT 1965 -4:30",
+            "-4 - AST",
+        ],
         "America/Danmarkshavn": [
             "-1:14:40 - LMT 1916_6_28 -1:14:40",
             "-3 - WGT 1980_3_6_2 -3",
@@ -556,7 +616,11 @@ data = {
             "-5 US E%sT",
         ],
         "America/Dominica": ["-4:5:36 - LMT 1911_6_1_0_1 -4:5:36", "-4 - AST"],
-        "America/Edmonton": ["-7:33:52 - LMT 1906_8 -7:33:52", "-7 Edm M%sT 1987 -7", "-7 Canada M%sT"],
+        "America/Edmonton": [
+            "-7:33:52 - LMT 1906_8 -7:33:52",
+            "-7 Edm M%sT 1987 -7",
+            "-7 Canada M%sT",
+        ],
         "America/Eirunepe": [
             "-4:39:28 - LMT 1914 -4:39:28",
             "-5 Brazil AC%sT 1988_8_12 -5",
@@ -608,7 +672,11 @@ data = {
         "America/Grenada": ["-4:7 - LMT 1911_6 -4:7", "-4 - AST"],
         "America/Guadeloupe": ["-4:6:8 - LMT 1911_5_8 -4:6:8", "-4 - AST"],
         "America/Guatemala": ["-6:2:4 - LMT 1918_9_5 -6:2:4", "-6 Guat C%sT"],
-        "America/Guayaquil": ["-5:19:20 - LMT 1890 -5:19:20", "-5:14 - QMT 1931 -5:14", "-5 - ECT"],
+        "America/Guayaquil": [
+            "-5:19:20 - LMT 1890 -5:19:20",
+            "-5:14 - QMT 1931 -5:14",
+            "-5 - ECT",
+        ],
         "America/Guyana": [
             "-3:52:40 - LMT 1915_2 -3:52:40",
             "-3:45 - GBGT 1966_4_26 -3:45",
@@ -916,7 +984,11 @@ data = {
             "-5 Canada E%sT",
         ],
         "America/Montserrat": ["-4:8:52 - LMT 1911_6_1_0_1 -4:8:52", "-4 - AST"],
-        "America/Nassau": ["-5:9:30 - LMT 1912_2_2 -5:9:30", "-5 Bahamas E%sT 1976 -5", "-5 US E%sT"],
+        "America/Nassau": [
+            "-5:9:30 - LMT 1912_2_2 -5:9:30",
+            "-5 Bahamas E%sT 1976 -5",
+            "-5 US E%sT",
+        ],
         "America/New_York": [
             "-4:56:2 - LMT 1883_10_18_12_3_58 -4:56:2",
             "-5 US E%sT 1920 -5",
@@ -1142,9 +1214,17 @@ data = {
             "-3:30 Canada N%sT",
         ],
         "America/St_Kitts": ["-4:10:52 - LMT 1912_2_2 -4:10:52", "-4 - AST"],
-        "America/St_Lucia": ["-4:4 - LMT 1890 -4:4", "-4:4 - CMT 1912 -4:4", "-4 - AST"],
+        "America/St_Lucia": [
+            "-4:4 - LMT 1890 -4:4",
+            "-4:4 - CMT 1912 -4:4",
+            "-4 - AST",
+        ],
         "America/St_Thomas": ["-4:19:44 - LMT 1911_6 -4:19:44", "-4 - AST"],
-        "America/St_Vincent": ["-4:4:56 - LMT 1890 -4:4:56", "-4:4:56 - KMT 1912 -4:4:56", "-4 - AST"],
+        "America/St_Vincent": [
+            "-4:4:56 - LMT 1890 -4:4:56",
+            "-4:4:56 - KMT 1912 -4:4:56",
+            "-4 - AST",
+        ],
         "America/Swift_Current": [
             "-7:11:20 - LMT 1905_8 -7:11:20",
             "-7 Canada M%sT 1946_3_28_2 -7",
@@ -1193,7 +1273,11 @@ data = {
             "-5 Canada E%sT",
         ],
         "America/Tortola": ["-4:18:28 - LMT 1911_6 -4:18:28", "-4 - AST"],
-        "America/Vancouver": ["-8:12:28 - LMT 1884 -8:12:28", "-8 Vanc P%sT 1987 -8", "-8 Canada P%sT"],
+        "America/Vancouver": [
+            "-8:12:28 - LMT 1884 -8:12:28",
+            "-8 Vanc P%sT 1987 -8",
+            "-8 Canada P%sT",
+        ],
         "America/Whitehorse": [
             "-9:0:12 - LMT 1900_7_20 -9:0:12",
             "-9 NT_YK Y%sT 1966_6_1_2 -9",
@@ -1214,7 +1298,11 @@ data = {
             "-9 US Y%sT 1983_10_30 -9",
             "-9 US AK%sT",
         ],
-        "America/Yellowknife": ["0 - zzz 1935", "-7 NT_YK M%sT 1980 -7", "-7 Canada M%sT"],
+        "America/Yellowknife": [
+            "0 - zzz 1935",
+            "-7 NT_YK M%sT 1980 -7",
+            "-7 Canada M%sT",
+        ],
         "Antarctica/Casey": [
             "0 - zzz 1969",
             "8 - WST 2009_9_18_2 8",
@@ -1249,7 +1337,11 @@ data = {
             "10 AT EST 2010_3_4_3 11",
             "11 - MIST",
         ],
-        "Antarctica/Mawson": ["0 - zzz 1954_1_13", "6 - MAWT 2009_9_18_2 6", "5 - MAWT"],
+        "Antarctica/Mawson": [
+            "0 - zzz 1954_1_13",
+            "6 - MAWT 2009_9_18_2 6",
+            "5 - MAWT",
+        ],
         "Antarctica/McMurdo": ["0 - zzz 1956", "12 NZAQ NZ%sT"],
         "Antarctica/Palmer": [
             "0 - zzz 1965",
@@ -1335,7 +1427,11 @@ data = {
             "4 EUAsia AZ%sT 1997 4",
             "4 Azer AZ%sT",
         ],
-        "Asia/Bangkok": ["6:42:4 - LMT 1880 6:42:4", "6:42:4 - BMT 1920_3 6:42:4", "7 - ICT"],
+        "Asia/Bangkok": [
+            "6:42:4 - LMT 1880 6:42:4",
+            "6:42:4 - BMT 1920_3 6:42:4",
+            "7 - ICT",
+        ],
         "Asia/Beirut": ["2:22 - LMT 1880 2:22", "2 Lebanon EE%sT"],
         "Asia/Bishkek": [
             "4:58:24 - LMT 1924_4_2 4:58:24",
@@ -1345,7 +1441,11 @@ data = {
             "5 Kyrgyz KG%sT 2005_7_12 6",
             "6 - KGT",
         ],
-        "Asia/Brunei": ["7:39:40 - LMT 1926_2 7:39:40", "7:30 - BNT 1933 7:30", "8 - BNT"],
+        "Asia/Brunei": [
+            "7:39:40 - LMT 1926_2 7:39:40",
+            "7:30 - BNT 1933 7:30",
+            "8 - BNT",
+        ],
         "Asia/Choibalsan": [
             "7:38 - LMT 1905_7 7:38",
             "7 - ULAT 1978 7",
@@ -1353,7 +1453,11 @@ data = {
             "9 Mongol CHO%sT 2008_2_31 9",
             "8 Mongol CHO%sT",
         ],
-        "Asia/Chongqing": ["7:6:20 - LMT 1928 7:6:20", "7 - LONT 1980_4 7", "8 PRC C%sT"],
+        "Asia/Chongqing": [
+            "7:6:20 - LMT 1928 7:6:20",
+            "7 - LONT 1980_4 7",
+            "8 PRC C%sT",
+        ],
         "Asia/Colombo": [
             "5:19:24 - LMT 1880 5:19:24",
             "5:19:32 - MMT 1906 5:19:32",
@@ -1435,7 +1539,11 @@ data = {
             "9 - JST 1945_8_15 9",
             "8 HK HK%sT",
         ],
-        "Asia/Hovd": ["6:6:36 - LMT 1905_7 6:6:36", "6 - HOVT 1978 6", "7 Mongol HOV%sT"],
+        "Asia/Hovd": [
+            "6:6:36 - LMT 1905_7 6:6:36",
+            "6 - HOVT 1978 6",
+            "7 Mongol HOV%sT",
+        ],
         "Asia/Irkutsk": [
             "6:57:20 - LMT 1880 6:57:20",
             "6:57:20 - IMT 1920_0_25 6:57:20",
@@ -1462,7 +1570,11 @@ data = {
             "9:30 - CST 1964 9:30",
             "9 - EIT",
         ],
-        "Asia/Jerusalem": ["2:20:56 - LMT 1880 2:20:56", "2:20:40 - JMT 1918 2:20:40", "2 Zion I%sT"],
+        "Asia/Jerusalem": [
+            "2:20:56 - LMT 1880 2:20:56",
+            "2:20:40 - JMT 1918 2:20:40",
+            "2 Zion I%sT",
+        ],
         "Asia/Kabul": ["4:36:48 - LMT 1890 4:36:48", "4 - AFT 1945 4", "4:30 - AFT"],
         "Asia/Kamchatka": [
             "10:34:36 - LMT 1922_10_10 10:34:36",
@@ -1487,7 +1599,11 @@ data = {
             "5 - KAST 1980_4 5",
             "8 PRC C%sT",
         ],
-        "Asia/Kathmandu": ["5:41:16 - LMT 1920 5:41:16", "5:30 - IST 1986 5:30", "5:45 - NPT"],
+        "Asia/Kathmandu": [
+            "5:41:16 - LMT 1920 5:41:16",
+            "5:30 - IST 1986 5:30",
+            "5:45 - NPT",
+        ],
         "Asia/Khandyga": [
             "9:2:13 - LMT 1919_11_15 9:2:13",
             "8 - YAKT 1930_5_21 8",
@@ -1534,7 +1650,11 @@ data = {
             "8 - MYT",
         ],
         "Asia/Kuwait": ["3:11:56 - LMT 1950 3:11:56", "3 - AST"],
-        "Asia/Macau": ["7:34:20 - LMT 1912 7:34:20", "8 Macau MO%sT 1999_11_20 8", "8 PRC C%sT"],
+        "Asia/Macau": [
+            "7:34:20 - LMT 1912 7:34:20",
+            "8 Macau MO%sT 1999_11_20 8",
+            "8 PRC C%sT",
+        ],
         "Asia/Magadan": [
             "10:3:12 - LMT 1924_4_2 10:3:12",
             "10 - MAGT 1930_5_21 10",
@@ -1679,7 +1799,11 @@ data = {
             "8:30 - KST 1968_9 8:30",
             "9 ROK K%sT",
         ],
-        "Asia/Shanghai": ["8:5:57 - LMT 1928 8:5:57", "8 Shang C%sT 1949 8", "8 PRC C%sT"],
+        "Asia/Shanghai": [
+            "8:5:57 - LMT 1928 8:5:57",
+            "8 Shang C%sT 1949 8",
+            "8 PRC C%sT",
+        ],
         "Asia/Singapore": [
             "6:55:25 - LMT 1901_0_1 6:55:25",
             "6:55:25 - SMT 1905_5_1 6:55:25",
@@ -1722,15 +1846,27 @@ data = {
             "4 Iran IR%sT 1979 4",
             "3:30 Iran IR%sT",
         ],
-        "Asia/Thimphu": ["5:58:36 - LMT 1947_7_15 5:58:36", "5:30 - IST 1987_9 5:30", "6 - BTT"],
+        "Asia/Thimphu": [
+            "5:58:36 - LMT 1947_7_15 5:58:36",
+            "5:30 - IST 1987_9 5:30",
+            "6 - BTT",
+        ],
         "Asia/Tokyo": [
             "9:18:59 - LMT 1887_11_31_15",
             "9 - JST 1896 9",
             "9 - CJT 1938 9",
             "9 Japan J%sT",
         ],
-        "Asia/Ulaanbaatar": ["7:7:32 - LMT 1905_7 7:7:32", "7 - ULAT 1978 7", "8 Mongol ULA%sT"],
-        "Asia/Urumqi": ["5:50:20 - LMT 1928 5:50:20", "6 - URUT 1980_4 6", "8 PRC C%sT"],
+        "Asia/Ulaanbaatar": [
+            "7:7:32 - LMT 1905_7 7:7:32",
+            "7 - ULAT 1978 7",
+            "8 Mongol ULA%sT",
+        ],
+        "Asia/Urumqi": [
+            "5:50:20 - LMT 1928 5:50:20",
+            "6 - URUT 1980_4 6",
+            "8 PRC C%sT",
+        ],
         "Asia/Ust-Nera": [
             "9:32:54 - LMT 1919_11_15 9:32:54",
             "8 - YAKT 1930_5_21 8",
@@ -1811,7 +1947,11 @@ data = {
             "-2 - CVT 1975_10_25_2 -2",
             "-1 - CVT",
         ],
-        "Atlantic/Faroe": ["-0:27:4 - LMT 1908_0_11 -0:27:4", "0 - WET 1981", "0 EU WE%sT"],
+        "Atlantic/Faroe": [
+            "-0:27:4 - LMT 1908_0_11 -0:27:4",
+            "0 - WET 1981",
+            "0 EU WE%sT",
+        ],
         "Atlantic/Madeira": [
             "-1:7:36 - LMT 1884 -1:7:36",
             "-1:7:36 - FMT 1911_4_24 -1:7:36",
@@ -1845,7 +1985,11 @@ data = {
             "9:30 Aus CST 1971 9:30",
             "9:30 AS CST",
         ],
-        "Australia/Brisbane": ["10:12:8 - LMT 1895 10:12:8", "10 Aus EST 1971 10", "10 AQ EST"],
+        "Australia/Brisbane": [
+            "10:12:8 - LMT 1895 10:12:8",
+            "10 Aus EST 1971 10",
+            "10 AQ EST",
+        ],
         "Australia/Broken_Hill": [
             "9:25:48 - LMT 1895_1 9:25:48",
             "10 - EST 1896_7_23 10",
@@ -1861,7 +2005,11 @@ data = {
             "10 Aus EST 1971_6 10",
             "10 AT EST",
         ],
-        "Australia/Darwin": ["8:43:20 - LMT 1895_1 8:43:20", "9 - CST 1899_4 9", "9:30 Aus CST"],
+        "Australia/Darwin": [
+            "8:43:20 - LMT 1895_1 8:43:20",
+            "9 - CST 1899_4 9",
+            "9:30 Aus CST",
+        ],
         "Australia/Eucla": [
             "8:35:28 - LMT 1895_11 8:35:28",
             "8:45 Aus CWST 1943_6 8:45",
@@ -1880,10 +2028,26 @@ data = {
             "10 AQ EST 1992_6 10",
             "10 Holiday EST",
         ],
-        "Australia/Lord_Howe": ["10:36:20 - LMT 1895_1 10:36:20", "10 - EST 1981_2 10", "10:30 LH LHST"],
-        "Australia/Melbourne": ["9:39:52 - LMT 1895_1 9:39:52", "10 Aus EST 1971 10", "10 AV EST"],
-        "Australia/Perth": ["7:43:24 - LMT 1895_11 7:43:24", "8 Aus WST 1943_6 8", "8 AW WST"],
-        "Australia/Sydney": ["10:4:52 - LMT 1895_1 10:4:52", "10 Aus EST 1971 10", "10 AN EST"],
+        "Australia/Lord_Howe": [
+            "10:36:20 - LMT 1895_1 10:36:20",
+            "10 - EST 1981_2 10",
+            "10:30 LH LHST",
+        ],
+        "Australia/Melbourne": [
+            "9:39:52 - LMT 1895_1 9:39:52",
+            "10 Aus EST 1971 10",
+            "10 AV EST",
+        ],
+        "Australia/Perth": [
+            "7:43:24 - LMT 1895_11 7:43:24",
+            "8 Aus WST 1943_6 8",
+            "8 AW WST",
+        ],
+        "Australia/Sydney": [
+            "10:4:52 - LMT 1895_1 10:4:52",
+            "10 Aus EST 1971 10",
+            "10 AN EST",
+        ],
         "CET": ["1 C-Eur CE%sT"],
         "CST6CDT": ["-6 US C%sT"],
         "EET": ["2 EU EE%sT"],
@@ -2377,10 +2541,18 @@ data = {
             "-11 - PHOT 1995 -11",
             "13 - PHOT",
         ],
-        "Pacific/Fakaofo": ["-11:24:56 - LMT 1901 -11:24:56", "-11 - TKT 2011_11_30 -11", "13 - TKT"],
+        "Pacific/Fakaofo": [
+            "-11:24:56 - LMT 1901 -11:24:56",
+            "-11 - TKT 2011_11_30 -11",
+            "13 - TKT",
+        ],
         "Pacific/Fiji": ["11:55:44 - LMT 1915_9_26 11:55:44", "12 Fiji FJ%sT"],
         "Pacific/Funafuti": ["11:56:52 - LMT 1901 11:56:52", "12 - TVT"],
-        "Pacific/Galapagos": ["-5:58:24 - LMT 1931 -5:58:24", "-5 - ECT 1986 -5", "-6 - GALT"],
+        "Pacific/Galapagos": [
+            "-5:58:24 - LMT 1931 -5:58:24",
+            "-5 - ECT 1986 -5",
+            "-6 - GALT",
+        ],
         "Pacific/Gambier": ["-8:59:48 - LMT 1912_9 -8:59:48", "-9 - GAMT"],
         "Pacific/Guadalcanal": ["10:39:48 - LMT 1912_9 10:39:48", "11 - SBT"],
         "Pacific/Guam": [
@@ -2417,7 +2589,11 @@ data = {
             "-12 - KWAT 1993_7_20 -12",
             "12 - MHT",
         ],
-        "Pacific/Majuro": ["11:24:48 - LMT 1901 11:24:48", "11 - MHT 1969_9 11", "12 - MHT"],
+        "Pacific/Majuro": [
+            "11:24:48 - LMT 1901 11:24:48",
+            "11 - MHT 1969_9 11",
+            "12 - MHT",
+        ],
         "Pacific/Marquesas": ["-9:18 - LMT 1912_9 -9:18", "-9:30 - MART"],
         "Pacific/Midway": [
             "-11:49:28 - LMT 1901 -11:49:28",
@@ -2440,7 +2616,11 @@ data = {
             "-11:30 - NUT 1978_9_1 -11:30",
             "-11 - NUT",
         ],
-        "Pacific/Norfolk": ["11:11:52 - LMT 1901 11:11:52", "11:12 - NMT 1951 11:12", "11:30 - NFT"],
+        "Pacific/Norfolk": [
+            "11:11:52 - LMT 1901 11:11:52",
+            "11:12 - NMT 1951 11:12",
+            "11:30 - NFT",
+        ],
         "Pacific/Noumea": ["11:5:48 - LMT 1912_0_13 11:5:48", "11 NC NC%sT"],
         "Pacific/Pago_Pago": [
             "12:37:12 - LMT 1879_6_5 12:37:12",
@@ -3591,7 +3771,11 @@ data = {
             "1991 2007 3 1 7 3 2 1 D",
             "1991 2007 9 1 7 3 2 0 S",
         ],
-        "EUAsia": ["1981 9999 2 0 8 1 1 1 S", "1979 1995 8 0 8 1 1 0", "1996 9999 9 0 8 1 1 0"],
+        "EUAsia": [
+            "1981 9999 2 0 8 1 1 1 S",
+            "1979 1995 8 0 8 1 1 0",
+            "1996 9999 9 0 8 1 1 0",
+        ],
         "Azer": ["1997 9999 2 0 8 4 0 1 S", "1997 9999 9 0 8 5 0 0"],
         "Lebanon": [
             "1920 1920 2 28 7 0 0 1 S",
@@ -3634,7 +3818,11 @@ data = {
             "2001 2006 8 6 8 2 0 0",
             "2002 2006 2 6 8 2 0 1 S",
         ],
-        "PRC": ["1986 1986 4 4 7 0 0 1 D", "1986 1991 8 11 0 0 0 0 S", "1987 1991 3 10 0 0 0 1 D"],
+        "PRC": [
+            "1986 1986 4 4 7 0 0 1 D",
+            "1986 1991 8 11 0 0 0 0 S",
+            "1987 1991 3 10 0 0 0 1 D",
+        ],
         "Syria": [
             "1920 1923 3 15 0 2 0 1 S",
             "1920 1923 9 1 0 2 0 0",
@@ -3868,7 +4056,11 @@ data = {
             "1987 1988 4 8 0 0 0 1 D",
             "1987 1988 9 8 0 0 0 0 S",
         ],
-        "Shang": ["1940 1940 5 3 7 0 0 1 D", "1940 1941 9 1 7 0 0 0 S", "1941 1941 2 16 7 0 0 1 D"],
+        "Shang": [
+            "1940 1940 5 3 7 0 0 1 D",
+            "1940 1941 9 1 7 0 0 0 S",
+            "1941 1941 2 16 7 0 0 1 D",
+        ],
         "Taiwan": [
             "1945 1951 4 1 7 0 0 1 D",
             "1945 1951 9 1 7 0 0 0 S",
@@ -3882,7 +4074,11 @@ data = {
             "1979 1979 5 30 7 0 0 1 D",
             "1979 1979 8 30 7 0 0 0 S",
         ],
-        "E-EurAsia": ["1981 9999 2 0 8 0 0 1 S", "1979 1995 8 0 8 0 0 0", "1996 9999 9 0 8 0 0 0"],
+        "E-EurAsia": [
+            "1981 9999 2 0 8 0 0 1 S",
+            "1979 1995 8 0 8 0 0 0",
+            "1996 9999 9 0 8 0 0 0",
+        ],
         "Iran": [
             "1978 1980 2 21 7 0 0 1 D",
             "1978 1978 9 21 7 0 0 0 S",

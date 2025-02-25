@@ -23,7 +23,9 @@ class TestDocument(Document):
 class TestTracedDocument(TracedDocument):
     def __init__(self, *args, **kwargs):
         kwargs["doctype"] = "TestTracedDocument"
-        with patch("frappe.get_meta", return_value=create_mock_meta("TestTracedDocument")):
+        with patch(
+            "frappe.get_meta", return_value=create_mock_meta("TestTracedDocument")
+        ):
             super().__init__(*args, **kwargs)
 
     test_field = traced_field("test_field", forbidden_values=["forbidden"])
@@ -74,7 +76,9 @@ class TestTracedFieldContext(UnitTestCase):
         doc.test_field = "forbidden"
         self.assertEqual(doc.test_field, "forbidden")
 
-        with self.trace_fields(TestDocument, "test_field", forbidden_values=["forbidden"]):
+        with self.trace_fields(
+            TestDocument, "test_field", forbidden_values=["forbidden"]
+        ):
             # Inside context
             with self.assertRaises(AssertionError):
                 doc.test_field = "forbidden"
@@ -93,7 +97,9 @@ class TestTracedFieldContext(UnitTestCase):
             if value % 2 != 0:
                 raise ValueError("Value must be even")
 
-        with self.trace_fields(TestDocument, "number_field", custom_validation=validate_even):
+        with self.trace_fields(
+            TestDocument, "number_field", custom_validation=validate_even
+        ):
             doc.number_field = 2
             self.assertEqual(doc.number_field, 2)
 
@@ -112,7 +118,9 @@ class TestTracedFieldContext(UnitTestCase):
         frappe.flags.in_test = False
 
         try:
-            with self.trace_fields(TestDocument, test_field={"forbidden_values": ["forbidden"]}):
+            with self.trace_fields(
+                TestDocument, test_field={"forbidden_values": ["forbidden"]}
+            ):
                 with self.assertRaises(frappe.exceptions.ValidationError):
                     doc.test_field = "forbidden"
 

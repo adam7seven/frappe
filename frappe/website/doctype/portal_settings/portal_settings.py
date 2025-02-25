@@ -27,7 +27,9 @@ class PortalSettings(Document):
 
     def add_item(self, item):
         """insert new portal menu item if route is not set, or role is different"""
-        exists = [d for d in self.get("menu", []) if d.get("route") == item.get("route")]
+        exists = [
+            d for d in self.get("menu", []) if d.get("route") == item.get("route")
+        ]
         if exists and item.get("role"):
             if exists[0].role != item.get("role"):
                 exists[0].role = item.get("role")

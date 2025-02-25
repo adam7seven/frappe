@@ -264,10 +264,17 @@ def write_file(content, fname, is_private=0):
 def remove_all(dt, dn, from_delete=False, delete_permanently=False):
     """remove all files in a transaction"""
     try:
-        for fid in frappe.get_all("File", {"attached_to_doctype": dt, "attached_to_id": dn}, pluck="id"):
+        for fid in frappe.get_all(
+            "File", {"attached_to_doctype": dt, "attached_to_id": dn}, pluck="id"
+        ):
             if from_delete:
                 # If deleting a doc, directly delete files
-                frappe.delete_doc("File", fid, ignore_permissions=True, delete_permanently=delete_permanently)
+                frappe.delete_doc(
+                    "File",
+                    fid,
+                    ignore_permissions=True,
+                    delete_permanently=delete_permanently,
+                )
             else:
                 # Removes file and adds a comment in the document it is attached to
                 remove_file(
@@ -306,7 +313,10 @@ def remove_file(
             file_name = frappe.db.get_value("File", fid, "file_name")
         comment = doc.add_comment("Attachment Removed", file_name)
         frappe.delete_doc(
-            "File", fid, ignore_permissions=ignore_permissions, delete_permanently=delete_permanently
+            "File",
+            fid,
+            ignore_permissions=ignore_permissions,
+            delete_permanently=delete_permanently,
         )
 
     return comment

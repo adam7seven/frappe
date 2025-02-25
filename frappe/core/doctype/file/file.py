@@ -16,7 +16,13 @@ from frappe import _
 from frappe.database.schema import SPECIAL_CHAR_PATTERN
 from frappe.model.document import Document
 from frappe.permissions import SYSTEM_USER_ROLE, get_doctypes_with_read
-from frappe.utils import call_hook_method, cint, get_files_path, get_hook_method, get_url
+from frappe.utils import (
+    call_hook_method,
+    cint,
+    get_files_path,
+    get_hook_method,
+    get_url,
+)
 from frappe.utils.file_manager import is_safe_path
 from frappe.utils.image import optimize_image, strip_exif_data
 
@@ -390,7 +396,10 @@ class File(Document):
             return
 
         if self.file_type not in allowed_extensions.splitlines():
-            frappe.throw(_("File type of {0} is not allowed").format(self.file_type), exc=FileTypeNotAllowed)
+            frappe.throw(
+                _("File type of {0} is not allowed").format(self.file_type),
+                exc=FileTypeNotAllowed,
+            )
 
     def validate_duplicate_entry(self):
         if not self.flags.ignore_duplicate_entry_error and not self.is_folder:
@@ -416,7 +425,9 @@ class File(Document):
                         "attached_to_id": self.attached_to_id,
                     }
                 )
-            duplicate_file = frappe.db.get_value("File", filters, ["id", "file_url"], as_dict=1)
+            duplicate_file = frappe.db.get_value(
+                "File", filters, ["id", "file_url"], as_dict=1
+            )
 
             if duplicate_file:
                 duplicate_file_doc = frappe.get_cached_doc("File", duplicate_file.id)
@@ -761,7 +772,11 @@ class File(Document):
 
     def create_attachment_record(self):
         icon = ' <i class="fa fa-lock text-warning"></i>' if self.is_private else ""
-        file_url = quote(frappe.safe_encode(self.file_url), safe="/:") if self.file_url else self.file_name
+        file_url = (
+            quote(frappe.safe_encode(self.file_url), safe="/:")
+            if self.file_url
+            else self.file_name
+        )
         file_name = self.file_name or self.file_url
 
         self.add_comment_in_reference_doc(

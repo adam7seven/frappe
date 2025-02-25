@@ -32,10 +32,26 @@ class TestContact(IntegrationTestCase):
 
     def test_check_default_phone_and_mobile(self):
         phones = [
-            {"phone": "+91 0000000010", "is_primary_phone": 0, "is_primary_mobile_no": 0},
-            {"phone": "+91 0000000011", "is_primary_phone": 0, "is_primary_mobile_no": 0},
-            {"phone": "+91 0000000012", "is_primary_phone": 1, "is_primary_mobile_no": 0},
-            {"phone": "+91 0000000013", "is_primary_phone": 0, "is_primary_mobile_no": 1},
+            {
+                "phone": "+91 0000000010",
+                "is_primary_phone": 0,
+                "is_primary_mobile_no": 0,
+            },
+            {
+                "phone": "+91 0000000011",
+                "is_primary_phone": 0,
+                "is_primary_mobile_no": 0,
+            },
+            {
+                "phone": "+91 0000000012",
+                "is_primary_phone": 1,
+                "is_primary_mobile_no": 0,
+            },
+            {
+                "phone": "+91 0000000013",
+                "is_primary_phone": 0,
+                "is_primary_mobile_no": 1,
+            },
         ]
         contact = create_contact("Phone", "Mr", phones=phones)
 

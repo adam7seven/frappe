@@ -157,7 +157,9 @@ class WorkflowState(Document):
             "briefcase",
             "fullscreen",
         ]
-        style: DF.Literal["", "Primary", "Info", "Success", "Warning", "Danger", "Inverse"]
+        style: DF.Literal[
+            "", "Primary", "Info", "Success", "Warning", "Danger", "Inverse"
+        ]
         workflow_state_name: DF.Data
     # end: auto-generated types
 

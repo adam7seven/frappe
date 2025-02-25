@@ -74,7 +74,10 @@ class WebsiteTheme(Document):
 
     def on_trash(self):
         if self.is_standard_and_not_valid_user():
-            frappe.throw(_("You are not allowed to delete a standard Website Theme"), frappe.PermissionError)
+            frappe.throw(
+                _("You are not allowed to delete a standard Website Theme"),
+                frappe.PermissionError,
+            )
 
     def validate_if_customizable(self):
         if self.is_standard_and_not_valid_user():
@@ -177,10 +180,14 @@ def get_scss(website_theme):
     """
     apps_to_ignore = tuple((d.app + "/") for d in website_theme.ignored_apps)
     available_imports = get_scss_paths()
-    imports_to_include = [d for d in available_imports if not d.startswith(apps_to_ignore)]
+    imports_to_include = [
+        d for d in available_imports if not d.startswith(apps_to_ignore)
+    ]
     context = website_theme.as_dict()
     context["website_theme_scss"] = imports_to_include
-    return frappe.render_template("frappe/website/doctype/website_theme/website_theme_template.scss", context)
+    return frappe.render_template(
+        "frappe/website/doctype/website_theme/website_theme_template.scss", context
+    )
 
 
 def get_scss_paths():

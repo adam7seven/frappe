@@ -22,4 +22,6 @@ class TestInstalledApplications(IntegrationTestCase):
     def test_order_change(self):
         update_installed_apps_order(["frappe"])
         self.assertRaises(InvalidAppOrder, update_installed_apps_order, [])
-        self.assertRaises(InvalidAppOrder, update_installed_apps_order, ["frappe", "deepmind"])
+        self.assertRaises(
+            InvalidAppOrder, update_installed_apps_order, ["frappe", "deepmind"]
+        )

@@ -93,8 +93,12 @@ class PrintFormatGenerator:
         return self.get_main_html()
 
     def get_main_html(self):
-        self.context.css = frappe.render_template("templates/print_format/print_format.css", self.context)
-        return frappe.render_template("templates/print_format/print_format.html", self.context)
+        self.context.css = frappe.render_template(
+            "templates/print_format/print_format.css", self.context
+        )
+        return frappe.render_template(
+            "templates/print_format/print_format.html", self.context
+        )
 
     def get_header_footer_html(self):
         header_html = footer_html = None

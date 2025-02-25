@@ -147,7 +147,9 @@ def _(msg: str, lang: str | None = None, context: str | None = None) -> str:
     return translated_string or non_translated_string
 
 
-def _lt(msg: str, lang: str | None = None, context: str | None = None) -> "_LazyTranslate":
+def _lt(
+    msg: str, lang: str | None = None, context: str | None = None
+) -> "_LazyTranslate":
     """Lazily translate a string.
 
 
@@ -235,7 +237,9 @@ if TYPE_CHECKING:  # pragma: no cover
     lang: str
 
 
-def init(site: str, sites_path: str = ".", new_site: bool = False, force: bool = False) -> None:
+def init(
+    site: str, sites_path: str = ".", new_site: bool = False, force: bool = False
+) -> None:
     """Initialize frappe for the current site. Reset thread locals `frappe.local`"""
     if getattr(local, "initialised", None) and not force:
         return
@@ -274,7 +278,9 @@ def init(site: str, sites_path: str = ".", new_site: bool = False, force: bool =
     local.response_headers = Headers()
     local.task_id = None
 
-    local.conf = get_site_config(sites_path=sites_path, site_path=site_path, cached=bool(frappe.request))
+    local.conf = get_site_config(
+        sites_path=sites_path, site_path=site_path, cached=bool(frappe.request)
+    )
     local.lang = local.conf.lang or "en"
 
     local.module_app = None
@@ -306,12 +312,16 @@ def init(site: str, sites_path: str = ".", new_site: bool = False, force: bool =
         frappe._optimizations.register_fault_handler()
         _one_time_setup[local.conf.db_type] = True
 
-    setup_module_map(include_all_apps=not (frappe.request or frappe.job or frappe.flags.in_migrate))
+    setup_module_map(
+        include_all_apps=not (frappe.request or frappe.job or frappe.flags.in_migrate)
+    )
 
     local.initialised = True
 
 
-def connect(site: str | None = None, db_name: str | None = None, set_admin_as_user: bool = True) -> None:
+def connect(
+    site: str | None = None, db_name: str | None = None, set_admin_as_user: bool = True
+) -> None:
     """Connect to site database instance.
 
     :param site: (Deprecated) If site is given, calls `frappe.init`.
@@ -340,8 +350,12 @@ def connect(site: str | None = None, db_name: str | None = None, set_admin_as_us
             "Instead, explicitly invoke frappe.init(site) with the right config prior to calling frappe.connect(), if necessary.",
         )
 
-    assert db_name or local.conf.db_user, "site must be fully initialized, db_user missing"
-    assert db_name or local.conf.db_name, "site must be fully initialized, db_name missing"
+    assert (
+        db_name or local.conf.db_user
+    ), "site must be fully initialized, db_user missing"
+    assert (
+        db_name or local.conf.db_name
+    ), "site must be fully initialized, db_name missing"
     assert local.conf.db_password, "site must be fully initialized, db_password missing"
 
     local.db = get_db(
@@ -455,7 +469,9 @@ def print_sql(enable: bool = True) -> None:
     if frappe.conf.allow_tests and frappe.conf.developer_mode:
         cache.set_value("flag_print_sql", enable)
     else:
-        frappe.throw("`frappe.print_sql` only works in `developer_mode` with `allow_tests` enabled on site.")
+        frappe.throw(
+            "`frappe.print_sql` only works in `developer_mode` with `allow_tests` enabled on site."
+        )
 
 
 def log(msg: str) -> None:
@@ -513,7 +529,9 @@ def msgprint(
 
     def _raise_exception():
         if raise_exception:
-            if inspect.isclass(raise_exception) and issubclass(raise_exception, Exception):
+            if inspect.isclass(raise_exception) and issubclass(
+                raise_exception, Exception
+            ):
                 exc = raise_exception(msg)
             elif isinstance(raise_exception, Exception):
                 exc = raise_exception
@@ -574,7 +592,10 @@ def msgprint(
     _raise_exception()
 
 
-def toast(message: str, indicator: Literal["blue", "green", "orange", "red", "yellow"] | None = None):
+def toast(
+    message: str,
+    indicator: Literal["blue", "green", "orange", "red", "yellow"] | None = None,
+):
     frappe.msgprint(message, indicator=indicator, alert=True)
 
 
@@ -836,7 +857,9 @@ def whitelist(allow_guest=False, xss_safe=False, methods=None):
         global whitelisted, guest_methods, xss_safe_methods, allowed_http_methods_for_whitelisted_func
 
         # validate argument types only if request is present
-        in_request_or_test = lambda: getattr(local, "request", None) or local.flags.in_test  # noqa: E731
+        in_request_or_test = (
+            lambda: getattr(local, "request", None) or local.flags.in_test
+        )  # noqa: E731
 
         # get function from the unbound / bound method
         # this is needed because functions can be compared, but not methods
@@ -867,7 +890,9 @@ def is_whitelisted(method):
     is_guest = session["user"] == "Guest"
     if method not in whitelisted or (is_guest and method not in guest_methods):
         summary = _("You are not permitted to access this resource.")
-        detail = _("Function {0} is not whitelisted.").format(bold(f"{method.__module__}.{method.__name__}"))
+        detail = _("Function {0} is not whitelisted.").format(
+            bold(f"{method.__module__}.{method.__name__}")
+        )
         msg = f"<details><summary>{summary}</summary>{detail}</details>"
         throw(msg, PermissionError, title=_("Method Not Allowed"))
 
@@ -1023,14 +1048,20 @@ def has_permission(
         if doc:
             frappe.permissions.check_doctype_permission(doctype, ptype)
 
-        document_label = f"{_(doctype)} {doc if isinstance(doc, str) else doc.id}" if doc else _(doctype)
+        document_label = (
+            f"{_(doctype)} {doc if isinstance(doc, str) else doc.id}"
+            if doc
+            else _(doctype)
+        )
         frappe.flags.error_message = _("No permission for {0}").format(document_label)
         raise frappe.PermissionError
 
     return out
 
 
-def has_website_permission(doc=None, ptype="read", user=None, verbose=False, doctype=None):
+def has_website_permission(
+    doc=None, ptype="read", user=None, verbose=False, doctype=None
+):
     """Raises `frappe.PermissionError` if not permitted.
 
     :param doctype: DocType for which permission is to be check.
@@ -1074,7 +1105,9 @@ def is_table(doctype: str) -> bool:
     key = "is_table"
     tables = client_cache.get_value(key)
     if tables is None:
-        tables = db.get_values("DocType", filters={"istable": 1}, order_by=None, pluck=True)
+        tables = db.get_values(
+            "DocType", filters={"istable": 1}, order_by=None, pluck=True
+        )
         client_cache.set_value(key, tables)
     return doctype in tables
 
@@ -1100,7 +1133,9 @@ def generate_hash(txt: str | None = None, length: int = 56) -> str:
         from frappe.deprecation_dumpster import deprecation_warning
 
         deprecation_warning(
-            "unknown", "v17", "The `txt` parameter is deprecated and will be removed in a future release."
+            "unknown",
+            "v17",
+            "The `txt` parameter is deprecated and will be removed in a future release.",
         )
 
     return secrets.token_hex(math.ceil(length / 2))[:length]
@@ -1199,7 +1234,10 @@ def clear_document_cache(doctype: str, id: str | None = None) -> None:
 
 
 def get_cached_value(
-    doctype: str, id: str | dict, fieldname: str | Iterable[str] = "id", as_dict: bool = False
+    doctype: str,
+    id: str | dict,
+    fieldname: str | Iterable[str] = "id",
+    as_dict: bool = False,
 ) -> Any:
     try:
         doc = get_cached_doc(doctype, id)
@@ -1282,7 +1320,9 @@ def get_last_doc(
     for_update=False,
 ):
     """Get last created document of this type."""
-    d = get_all(doctype, filters=filters, limit_page_length=1, order_by=order_by, pluck="id")
+    d = get_all(
+        doctype, filters=filters, limit_page_length=1, order_by=order_by, pluck="id"
+    )
     if d:
         return get_doc(doctype, d[0], for_update=for_update)
     else:
@@ -1377,7 +1417,9 @@ def reload_doc(
 
     import frappe.modules
 
-    return frappe.modules.reload_doc(module, dt, dn, force=force, reset_permissions=reset_permissions)
+    return frappe.modules.reload_doc(
+        module, dt, dn, force=force, reset_permissions=reset_permissions
+    )
 
 
 @whitelist(methods=["POST", "PUT"])
@@ -1567,7 +1609,9 @@ def _load_app_hooks(app_name: str | None = None):
 
 
 def get_hooks(
-    hook: str | None = None, default: Any | None = "_KEEP_DEFAULT_LIST", app_name: str | None = None
+    hook: str | None = None,
+    default: Any | None = "_KEEP_DEFAULT_LIST",
+    app_name: str | None = None,
 ) -> _dict:
     """Get hooks via `app/hooks.py`
 
@@ -1662,7 +1706,9 @@ def get_file_items(path, raise_not_found=False, ignore_empty_lines=True):
         content = frappe.utils.strip(content)
 
         return [
-            p.strip() for p in content.splitlines() if (not ignore_empty_lines) or (p.strip() and not p.startswith("#"))
+            p.strip()
+            for p in content.splitlines()
+            if (not ignore_empty_lines) or (p.strip() and not p.startswith("#"))
         ]
     else:
         return []
@@ -1691,7 +1737,11 @@ def read_file(path, raise_not_found=False):
 def get_attr(method_string: str) -> Any:
     """Get python method object from its name."""
     app_name = method_string.split(".", 1)[0]
-    if not local.flags.in_uninstall and not local.flags.in_install and app_name not in get_installed_apps():
+    if (
+        not local.flags.in_uninstall
+        and not local.flags.in_install
+        and app_name not in get_installed_apps()
+    ):
         throw(_("App {0} is not installed").format(app_name), AppNotInstalledError)
 
     modulename = ".".join(method_string.split(".")[:-1])
@@ -1931,7 +1981,9 @@ def redirect(url):
     raise Redirect
 
 
-def redirect_to_message(title, html, http_status_code=None, context=None, indicator_color=None):
+def redirect_to_message(
+    title, html, http_status_code=None, context=None, indicator_color=None
+):
     """Redirects to /message?id=random
     Similar to respond_as_web_page, but used to 'redirect' and show message pages like success, failure, etc. with a detailed message
 
@@ -1966,7 +2018,9 @@ def build_match_conditions(doctype, as_condition=True):
     """Return match (User permissions) for given doctype as list or SQL."""
     import frappe.desk.reportview
 
-    return frappe.desk.reportview.build_match_conditions(doctype, as_condition=as_condition)
+    return frappe.desk.reportview.build_match_conditions(
+        doctype, as_condition=as_condition
+    )
 
 
 def get_list(doctype, *args, **kwargs):
@@ -2176,7 +2230,9 @@ def attach_print(
             )
         else:
             ext = ".html"
-            content = html or scrub_urls(get_print(doctype, id, **kwargs)).encode("utf-8")
+            content = html or scrub_urls(get_print(doctype, id, **kwargs)).encode(
+                "utf-8"
+            )
 
     local.flags.ignore_print_permissions = False
 
@@ -2292,7 +2348,12 @@ log_level: int | None = None
 
 
 def logger(
-    module=None, with_more_info=False, allow_site=True, filter=None, max_size=100_000, file_count=20
+    module=None,
+    with_more_info=False,
+    allow_site=True,
+    filter=None,
+    max_size=100_000,
+    file_count=20,
 ) -> "Logger":
     """Return a python logger that uses StreamHandler."""
     from frappe.utils.logger import get_logger
@@ -2311,12 +2372,15 @@ def get_desk_link(doctype, id):
     meta = get_meta(doctype)
     title = get_value(doctype, id, meta.get_title_field())
 
+
 def get_desk_link(doctype, id):
     meta = get_meta(doctype)
     title = get_value(doctype, id, meta.get_title_field())
 
     html = '<a href="/app/Form/{doctype}/{id}" style="font-weight: bold;">{doctype_local} {title_local}</a>'
-    return html.format(doctype=doctype, id=id, doctype_local=_(doctype), title_local=_(title))
+    return html.format(
+        doctype=doctype, id=id, doctype_local=_(doctype), title_local=_(title)
+    )
 
 
 def safe_eval(code, eval_globals=None, eval_locals=None):

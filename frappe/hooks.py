@@ -5,7 +5,9 @@ from . import __version__ as app_version
 app_name = "frappe"
 app_title = "Framework"
 app_publisher = "Frappe Technologies"
-app_description = "Full stack web framework with Python, Javascript, MariaDB, Redis, Node"
+app_description = (
+    "Full stack web framework with Python, Javascript, MariaDB, Redis, Node"
+)
 app_license = "MIT"
 app_logo_url = "/assets/frappe/images/frappe-framework-logo.svg"
 develop_version = "15.x.x-develop"
@@ -136,7 +138,9 @@ has_permission = {
     "Notification Settings": "frappe.desk.doctype.notification_settings.notification_settings.has_permission",
 }
 
-has_website_permission = {"Address": "frappe.contacts.doctype.address.address.has_website_permission"}
+has_website_permission = {
+    "Address": "frappe.contacts.doctype.address.address.has_website_permission"
+}
 
 jinja = {
     "methods": "frappe.utils.jinja_globals",
@@ -180,7 +184,9 @@ doc_events = {
             "frappe.social.doctype.energy_point_rule.energy_point_rule.process_energy_points",
             "frappe.automation.doctype.milestone_tracker.milestone_tracker.evaluate_milestone",
         ],
-        "after_delete": ["frappe.core.doctype.permission_log.permission_log.make_perm_log"],
+        "after_delete": [
+            "frappe.core.doctype.permission_log.permission_log.make_perm_log"
+        ],
     },
     "Event": {
         "after_insert": "frappe.integrations.doctype.google_calendar.google_calendar.insert_event_in_google_calendar",

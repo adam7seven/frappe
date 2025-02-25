@@ -158,7 +158,6 @@ std_fields = [
 ]
 
 
-
 def delete_fields(args_dict, delete=0):
     """
     Delete a field.
@@ -196,7 +195,9 @@ def delete_fields(args_dict, delete=0):
             )
         else:
             existing_fields = frappe.db.describe(dt)
-            existing_fields = (existing_fields and [e[0] for e in existing_fields]) or []
+            existing_fields = (
+                existing_fields and [e[0] for e in existing_fields]
+            ) or []
             fields_need_to_delete = set(fields) & set(existing_fields)
             if not fields_need_to_delete:
                 continue

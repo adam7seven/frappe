@@ -39,7 +39,9 @@ class WebPageView(Document):
         from frappe.query_builder.functions import Now
 
         table = frappe.qb.DocType("Web Page View")
-        frappe.db.delete(table, filters=(table.creation < (Now() - Interval(days=days))))
+        frappe.db.delete(
+            table, filters=(table.creation < (Now() - Interval(days=days)))
+        )
 
 
 @frappe.whitelist(allow_guest=True)
@@ -77,7 +79,9 @@ def make_view_log(
     if path.startswith(("api/", "app/", "assets/", "private/files/")):
         return
 
-    is_unique = visitor_id and not bool(frappe.db.exists("Web Page View", {"visitor_id": visitor_id}))
+    is_unique = visitor_id and not bool(
+        frappe.db.exists("Web Page View", {"visitor_id": visitor_id})
+    )
 
     view = frappe.new_doc("Web Page View")
     view.path = path

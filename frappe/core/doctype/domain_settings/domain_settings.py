@@ -55,7 +55,9 @@ class DomainSettings(Document):
                 frappe.get_doc(doctype="Domain", domain=domain).insert()
             if "modules" in data:
                 for module in data.get("modules"):
-                    frappe.db.set_value("Module Def", module, "restrict_to_domain", domain)
+                    frappe.db.set_value(
+                        "Module Def", module, "restrict_to_domain", domain
+                    )
 
             if "restricted_roles" in data:
                 for role in data["restricted_roles"]:

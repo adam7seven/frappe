@@ -95,7 +95,9 @@ def func_between(key: Field, value: list | tuple) -> frappe.qb:
 
 def func_is(key, value):
     "Wrapper for IS"
-    return Coalesce(key, "") != "" if value.lower() == "set" else Coalesce(key, "") == ""
+    return (
+        Coalesce(key, "") != "" if value.lower() == "set" else Coalesce(key, "") == ""
+    )
 
 
 def func_timespan(key: Field, value: str) -> frappe.qb:

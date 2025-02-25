@@ -38,10 +38,14 @@ class TestSubmissionQueue(IntegrationTestCase):
 
     def test_queue_operation(self):
         from frappe.core.doctype.doctype.test_doctype import new_doctype
-        from frappe.core.doctype.submission_queue.submission_queue import queue_submission
+        from frappe.core.doctype.submission_queue.submission_queue import (
+            queue_submission,
+        )
 
         if not frappe.db.table_exists("Test Submission Queue", cached=False):
-            doc = new_doctype("Test Submission Queue", is_submittable=True, queue_in_background=True)
+            doc = new_doctype(
+                "Test Submission Queue", is_submittable=True, queue_in_background=True
+            )
             doc.insert()
 
         d = frappe.new_doc("Test Submission Queue")

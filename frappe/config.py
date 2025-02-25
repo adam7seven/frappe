@@ -44,7 +44,9 @@ def _get_site_config(sites_path: str, site_path: str) -> _dict[str, Any]:
             try:
                 config.update(get_file_json(site_config))
             except Exception as error:
-                click.secho(f"{frappe.local.site}/site_config.json is invalid", fg="red")
+                click.secho(
+                    f"{frappe.local.site}/site_config.json is invalid", fg="red"
+                )
                 print(error)
                 raise
         elif frappe.local.site and not frappe.local.flags.new_site:
@@ -72,26 +74,44 @@ def _get_site_config(sites_path: str, site_path: str) -> _dict[str, Any]:
         raise ValueError(f"Unsupported db_type={db_type}")
 
     config["redis_queue"] = (
-        os.environ.get("FRAPPE_REDIS_QUEUE") or config.get("redis_queue") or "redis://127.0.0.1:11311"
+        os.environ.get("FRAPPE_REDIS_QUEUE")
+        or config.get("redis_queue")
+        or "redis://127.0.0.1:11311"
     )
     config["redis_cache"] = (
-        os.environ.get("FRAPPE_REDIS_CACHE") or config.get("redis_cache") or "redis://127.0.0.1:13311"
+        os.environ.get("FRAPPE_REDIS_CACHE")
+        or config.get("redis_cache")
+        or "redis://127.0.0.1:13311"
     )
-    config["db_type"] = os.environ.get("FRAPPE_DB_TYPE") or config.get("db_type") or "mariadb"
+    config["db_type"] = (
+        os.environ.get("FRAPPE_DB_TYPE") or config.get("db_type") or "mariadb"
+    )
     config["db_socket"] = os.environ.get("FRAPPE_DB_SOCKET") or config.get("db_socket")
-    config["db_host"] = os.environ.get("FRAPPE_DB_HOST") or config.get("db_host") or "127.0.0.1"
+    config["db_host"] = (
+        os.environ.get("FRAPPE_DB_HOST") or config.get("db_host") or "127.0.0.1"
+    )
     config["db_port"] = int(
-        os.environ.get("FRAPPE_DB_PORT") or config.get("db_port") or db_default_ports(config["db_type"])
+        os.environ.get("FRAPPE_DB_PORT")
+        or config.get("db_port")
+        or db_default_ports(config["db_type"])
     )
 
     # Set the user as database name if not set in config
-    config["db_user"] = os.environ.get("FRAPPE_DB_USER") or config.get("db_user") or config.get("db_name")
+    config["db_user"] = (
+        os.environ.get("FRAPPE_DB_USER")
+        or config.get("db_user")
+        or config.get("db_name")
+    )
 
     # vice versa for dbname if not defined
-    config["db_name"] = os.environ.get("FRAPPE_DB_NAME") or config.get("db_name") or config["db_user"]
+    config["db_name"] = (
+        os.environ.get("FRAPPE_DB_NAME") or config.get("db_name") or config["db_user"]
+    )
 
     # read password
-    config["db_password"] = os.environ.get("FRAPPE_DB_PASSWORD") or config.get("db_password")
+    config["db_password"] = os.environ.get("FRAPPE_DB_PASSWORD") or config.get(
+        "db_password"
+    )
 
     # Allow externally extending the config with hooks
     if extra_config := config.get("extra_config"):
@@ -108,7 +128,9 @@ def _get_site_config(sites_path: str, site_path: str) -> _dict[str, Any]:
     return config
 
 
-def get_common_site_config(sites_path: str | None = None, cached=False) -> _dict[str, Any]:
+def get_common_site_config(
+    sites_path: str | None = None, cached=False
+) -> _dict[str, Any]:
     """Return common site config as dictionary.
 
     This is useful for:

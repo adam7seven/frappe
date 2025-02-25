@@ -3,7 +3,10 @@
 import requests
 
 import frappe
-from frappe.core.doctype.scheduled_job_type.scheduled_job_type import ScheduledJobType, sync_jobs
+from frappe.core.doctype.scheduled_job_type.scheduled_job_type import (
+    ScheduledJobType,
+    sync_jobs,
+)
 from frappe.core.doctype.server_script.server_script import ServerScript
 from frappe.frappeclient import FrappeClient, FrappeException
 from frappe.tests import IntegrationTestCase, UnitTestCase
@@ -148,17 +151,22 @@ class TestServerScript(IntegrationTestCase):
         self.assertEqual(todo.status, "Closed")
 
         self.assertRaises(
-            frappe.ValidationError, frappe.get_doc(doctype="ToDo", description="validate me").insert
+            frappe.ValidationError,
+            frappe.get_doc(doctype="ToDo", description="validate me").insert,
         )
 
-        role = frappe.get_doc(doctype="Role", role_id="_Test Role 9").insert(ignore_if_duplicate=True)
+        role = frappe.get_doc(doctype="Role", role_id="_Test Role 9").insert(
+            ignore_if_duplicate=True
+        )
         role.reid("_Test Role 10")
         role.reload()
         self.assertEqual(role.disabled, 1)
         self.assertEqual(role.desk_access, 0)
 
     def test_api(self):
-        response = requests.post(get_site_url(frappe.local.site) + "/api/method/test_server_script")
+        response = requests.post(
+            get_site_url(frappe.local.site) + "/api/method/test_server_script"
+        )
         self.assertEqual(response.status_code, 200)
         self.assertEqual("hello", response.json()["message"])
 
@@ -197,7 +205,9 @@ class TestServerScript(IntegrationTestCase):
         server_script.disabled = 0
         server_script.save()
 
-        self.assertRaises(AttributeError, frappe.get_doc(doctype="ToDo", description="test me").insert)
+        self.assertRaises(
+            AttributeError, frappe.get_doc(doctype="ToDo", description="test me").insert
+        )
 
         server_script.disabled = 1
         server_script.save()
@@ -207,7 +217,9 @@ class TestServerScript(IntegrationTestCase):
         server_script.disabled = 0
         server_script.save()
 
-        self.assertRaises(AttributeError, frappe.get_doc(doctype="ToDo", description="test me").insert)
+        self.assertRaises(
+            AttributeError, frappe.get_doc(doctype="ToDo", description="test me").insert
+        )
 
         server_script.disabled = 1
         server_script.save()
@@ -359,7 +371,9 @@ frappe.qb.from_(todo).select(todo.id).where(todo.id == "{todo.id}").run()
         cron_script.cron_format = "0 0 2 1 *"  # 2nd january
         cron_script.save()
 
-        updated_cron_job_id = frappe.db.get_value("Scheduled Job Type", {"server_script": cron_script.id})
+        updated_cron_job_id = frappe.db.get_value(
+            "Scheduled Job Type", {"server_script": cron_script.id}
+        )
         updated_cron_job = frappe.get_doc("Scheduled Job Type", updated_cron_job_id)
         self.assertEqual(updated_cron_job.next_execution.day, 2)
 
@@ -372,7 +386,9 @@ frappe.qb.from_(todo).select(todo.id).where(todo.id == "{todo.id}").run()
             event_frequency="Hourly",
         ).insert()
 
-        job: ScheduledJobType = frappe.get_doc("Scheduled Job Type", {"server_script": script.id})
+        job: ScheduledJobType = frappe.get_doc(
+            "Scheduled Job Type", {"server_script": script.id}
+        )
 
         script.script_type = "API"
         script.save()

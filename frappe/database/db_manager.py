@@ -25,7 +25,9 @@ class DbManager:
     def create_database(self, target):
         if target in self.get_database_list():
             self.drop_database(target)
-        self.db.sql(f"CREATE DATABASE `{target}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+        self.db.sql(
+            f"CREATE DATABASE `{target}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+        )
 
     def drop_database(self, target):
         self.db.sql_ddl(f"DROP DATABASE IF EXISTS `{target}`")
@@ -50,7 +52,9 @@ class DbManager:
         return self.db.sql("SHOW DATABASES", pluck=True)
 
     @staticmethod
-    def restore_database(verbose: bool, target: str, source: str, user: str, password: str) -> None:
+    def restore_database(
+        verbose: bool, target: str, source: str, user: str, password: str
+    ) -> None:
         """
         Function to restore the given SQL file to the target database.
         :param target: The database to restore to.
@@ -79,10 +83,14 @@ class DbManager:
             command.extend(["cat", source, "|"])
 
         # Newer versions of MariaDB add in a line that'll break on older versions, so remove it
-        command.extend(["sed", r"'/\/\*M\{0,1\}!999999\\- enable the sandbox mode \*\//d'", "|"])
+        command.extend(
+            ["sed", r"'/\/\*M\{0,1\}!999999\\- enable the sandbox mode \*\//d'", "|"]
+        )
 
         # Remove view security definers
-        command.extend(["sed", r"'/\/\*![0-9]* DEFINER=[^ ]* SQL SECURITY DEFINER \*\//d'", "|"])
+        command.extend(
+            ["sed", r"'/\/\*![0-9]* DEFINER=[^ ]* SQL SECURITY DEFINER \*\//d'", "|"]
+        )
 
         # Generate the restore command
         bin, args, bin_name = get_command(
@@ -95,7 +103,9 @@ class DbManager:
         )
         if not bin:
             return frappe.throw(
-                _("{} not found in PATH! This is required to restore the database.").format(bin_name),
+                _(
+                    "{} not found in PATH! This is required to restore the database."
+                ).format(bin_name),
                 exc=frappe.ExecutableNotFound,
             )
         command.append(bin)

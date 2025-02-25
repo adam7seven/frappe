@@ -7,7 +7,11 @@ UI_TEST_USER = "frappe@example.com"
 
 
 def whitelist_for_tests(fn):
-    if frappe.request and not frappe.flags.in_test and not getattr(frappe.local, "dev_server", 0):
+    if (
+        frappe.request
+        and not frappe.flags.in_test
+        and not getattr(frappe.local, "dev_server", 0)
+    ):
         frappe.throw("Cannot run UI tests. Use a development server with `bench start`")
 
     return frappe.whitelist()(fn)
@@ -234,7 +238,9 @@ def create_form_tour():
 
 @whitelist_for_tests
 def create_data_for_discussions():
-    web_page = create_web_page("Test page for discussions", "test-page-discussions", False)
+    web_page = create_web_page(
+        "Test page for discussions", "test-page-discussions", False
+    )
     create_topic_and_reply(web_page)
     create_web_page("Test single thread discussion", "test-single-thread", True)
 
@@ -243,7 +249,9 @@ def create_web_page(title, route, single_thread):
     web_page = frappe.db.exists("Web Page", {"route": route})
     if web_page:
         return web_page
-    web_page = frappe.get_doc({"doctype": "Web Page", "title": title, "route": route, "published": True})
+    web_page = frappe.get_doc(
+        {"doctype": "Web Page", "title": title, "route": route, "published": True}
+    )
     web_page.save()
 
     web_page.append(
@@ -267,7 +275,8 @@ def create_web_page(title, route, single_thread):
 
 def create_topic_and_reply(web_page):
     topic = frappe.db.exists(
-        "Discussion Topic", {"reference_doctype": "Web Page", "reference_docname": web_page}
+        "Discussion Topic",
+        {"reference_doctype": "Web Page", "reference_docname": web_page},
     )
 
     if not topic:
@@ -282,7 +291,11 @@ def create_topic_and_reply(web_page):
         topic.save()
 
         reply = frappe.get_doc(
-            {"doctype": "Discussion Reply", "topic": topic.name, "reply": "This is a test reply"}
+            {
+                "doctype": "Discussion Reply",
+                "topic": topic.name,
+                "reply": "This is a test reply",
+            }
         )
 
         reply.save()
@@ -508,7 +521,9 @@ def setup_inbox():
 @whitelist_for_tests
 def setup_default_view(view, force_reroute=None):
     frappe.delete_doc_if_exists("Property Setter", "Event-main-default_view")
-    frappe.delete_doc_if_exists("Property Setter", "Event-main-force_re_route_to_default_view")
+    frappe.delete_doc_if_exists(
+        "Property Setter", "Event-main-force_re_route_to_default_view"
+    )
 
     frappe.get_doc(
         {
@@ -585,7 +600,9 @@ def create_todo(description):
 
 @whitelist_for_tests
 def create_todo_with_attachment_limit(description):
-    from frappe.custom.doctype.property_setter.property_setter import make_property_setter
+    from frappe.custom.doctype.property_setter.property_setter import (
+        make_property_setter,
+    )
 
     make_property_setter("ToDo", None, "max_attachments", 12, "int", for_doctype=True)
 
@@ -654,7 +671,9 @@ def publish_realtime(
 @whitelist_for_tests
 def publish_progress(duration=3, title=None, doctype=None, docname=None):
     # This should consider session user and only show it to current user.
-    frappe.enqueue(slow_task, duration=duration, title=title, doctype=doctype, docname=docname)
+    frappe.enqueue(
+        slow_task, duration=duration, title=title, doctype=doctype, docname=docname
+    )
 
 
 def slow_task(duration, title, doctype, docname):

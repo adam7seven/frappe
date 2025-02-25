@@ -51,4 +51,6 @@ def update_user_setting_filters(data, key, user_setting):
 
             if update:
                 data[key]["filters"] = filters
-                update_user_settings(user_setting["doctype"], json.dumps(data), for_update=True)
+                update_user_settings(
+                    user_setting["doctype"], json.dumps(data), for_update=True
+                )

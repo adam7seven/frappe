@@ -52,7 +52,9 @@ def follow_document(doctype, doc_id, user):
         frappe.toast(_("Administrator can't follow"))
         return False
 
-    if not frappe.db.get_value("User", user, "document_follow_notify", ignore=True, cache=True):
+    if not frappe.db.get_value(
+        "User", user, "document_follow_notify", ignore=True, cache=True
+    ):
         frappe.toast(_("Document follow is not enabled for this user."))
         return False
 
@@ -144,7 +146,9 @@ def get_message_for_user(frequency, user):
     valid_document_follows = []
 
     for document_follow in latest_document_follows:
-        content = get_message(document_follow.ref_docid, document_follow.ref_doctype, frequency, user)
+        content = get_message(
+            document_follow.ref_docid, document_follow.ref_doctype, frequency, user
+        )
         if content:
             message = message + content
             valid_document_follows.append(

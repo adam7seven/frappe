@@ -17,7 +17,9 @@ class Geoapify:
             "format": "json",
             "lang": self.lang,
         }
-        response = requests.get(f"{self.base_url}/v1/geocode/autocomplete", params=params)
+        response = requests.get(
+            f"{self.base_url}/v1/geocode/autocomplete", params=params
+        )
         response.raise_for_status()
 
         results = response.json()["results"]

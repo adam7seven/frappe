@@ -33,7 +33,9 @@ class WebsiteGenerator(Document):
             self.id = self.scrubbed_title()
 
     def onload(self):
-        self.get("__onload").update({"is_website_generator": True, "published": self.is_website_published()})
+        self.get("__onload").update(
+            {"is_website_generator": True, "published": self.is_website_published()}
+        )
 
     def validate(self):
         self.set_route()
@@ -97,7 +99,9 @@ class WebsiteGenerator(Document):
         self.send_indexing_request("URL_DELETED")
         # On deleting the doc, remove the page from the web_routes index
         if self.allow_website_search_indexing():
-            frappe.enqueue(remove_document_from_index, path=self.route, enqueue_after_commit=True)
+            frappe.enqueue(
+                remove_document_from_index, path=self.route, enqueue_after_commit=True
+            )
 
     def is_website_published(self):
         """Return true if published in website"""

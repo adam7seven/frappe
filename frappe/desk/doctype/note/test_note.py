@@ -20,7 +20,9 @@ class TestNote(IntegrationTestCase):
         frappe.db.delete("Note")
         frappe.db.delete("Note Seen By")
 
-        return frappe.get_doc(doctype="Note", title="test note", content="test note content").insert()
+        return frappe.get_doc(
+            doctype="Note", title="test note", content="test note content"
+        ).insert()
 
     def test_version(self):
         note = self.insert_note()

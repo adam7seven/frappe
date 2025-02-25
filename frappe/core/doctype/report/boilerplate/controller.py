@@ -24,16 +24,20 @@ def get_columns() -> list[dict]:
     One field definition per column, just like a DocType field definition.
     """
     return [
-        {{
-            "label": _("Column 1"),
-            "fieldname": "column_1",
-            "fieldtype": "Data",
-        }},
-        {{
-            "label": _("Column 2"),
-            "fieldname": "column_2",
-            "fieldtype": "Int",
-        }},
+        {
+            {
+                "label": _("Column 1"),
+                "fieldname": "column_1",
+                "fieldtype": "Data",
+            }
+        },
+        {
+            {
+                "label": _("Column 2"),
+                "fieldname": "column_2",
+                "fieldtype": "Int",
+            }
+        },
     ]
 
 

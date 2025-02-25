@@ -35,13 +35,19 @@ class PathResolver:
             return "app", TemplatePage("app", self.http_status_code)
 
         # check if the request url is in 404 list
-        if request.url and can_cache() and frappe.cache.hget("website_404", request.url):
+        if (
+            request.url
+            and can_cache()
+            and frappe.cache.hget("website_404", request.url)
+        ):
             return self.path, NotFoundPage(self.path)
 
         try:
             resolve_redirect(self.path, request.query_string)
         except frappe.Redirect as e:
-            return frappe.flags.redirect_location, RedirectPage(self.path, e.http_status_code)
+            return frappe.flags.redirect_location, RedirectPage(
+                self.path, e.http_status_code
+            )
 
         if frappe.get_hooks("website_path_resolver"):
             for handler in frappe.get_hooks("website_path_resolver"):
@@ -130,7 +136,9 @@ def resolve_redirect(path, query_string=None):
 
     redirects = frappe.get_hooks("website_redirects")
     redirects += frappe.get_all(
-        "Website Route Redirect", ["source", "target", "redirect_http_status"], order_by=None
+        "Website Route Redirect",
+        ["source", "target", "redirect_http_status"],
+        order_by=None,
     )
 
     if not redirects:
@@ -152,7 +160,9 @@ def resolve_redirect(path, query_string=None):
             frappe.flags.redirect_location = redirect_to
             status_code = rule.get("redirect_http_status") or 301
             frappe.cache.hset(
-                "website_redirects", path_to_match or "/", {"path": redirect_to, "status_code": status_code}
+                "website_redirects",
+                path_to_match or "/",
+                {"path": redirect_to, "status_code": status_code},
             )
             raise frappe.Redirect(status_code)
 
@@ -180,7 +190,8 @@ def resolve_path(path):
 def resolve_from_map(path):
     """transform dynamic route to a static one from hooks and route defined in doctype"""
     rules = [
-        Rule(r["from_route"], endpoint=r["to_route"], defaults=r.get("defaults")) for r in get_website_rules()
+        Rule(r["from_route"], endpoint=r["to_route"], defaults=r.get("defaults"))
+        for r in get_website_rules()
     ]
 
     return evaluate_dynamic_routes(rules, path) or path

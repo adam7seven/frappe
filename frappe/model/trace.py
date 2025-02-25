@@ -91,7 +91,9 @@ class TracedValue:
         """
         if value in self.forbidden_values:
             if frappe.flags.in_test:
-                frappe.throw(f"{self.field_name} cannot be set to {value}", AssertionError)
+                frappe.throw(
+                    f"{self.field_name} cannot be set to {value}", AssertionError
+                )
             else:
                 frappe.throw(f"{self.field_name} cannot be set to {value}")
 
@@ -169,4 +171,6 @@ def traced_field(*args, **kwargs):
     return TracedValue(*args, **kwargs)
 
 
-from frappe.deprecation_dumpster import model_trace_traced_field_context as traced_field_context
+from frappe.deprecation_dumpster import (
+    model_trace_traced_field_context as traced_field_context,
+)

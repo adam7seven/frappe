@@ -38,10 +38,14 @@ class Nomatim:
                 "value": json.dumps(
                     {
                         "address_line1": f'{address.get("road")} {address.get("house_number", "")}'.strip(),
-                        "city": address.get("city") or address.get("town") or address.get("village"),
+                        "city": address.get("city")
+                        or address.get("town")
+                        or address.get("village"),
                         "state": address.get("state"),
                         "pincode": address.get("postcode"),
-                        "country": frappe.db.get_value("Country", {"code": address.get("country_code")}),
+                        "country": frappe.db.get_value(
+                            "Country", {"code": address.get("country_code")}
+                        ),
                     }
                 ),
             }

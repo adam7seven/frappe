@@ -49,7 +49,9 @@ class TestEmailAttachments(IntegrationTestCase):
         self.assertEqual(file.file_name, "tést%42.txt")
 
     def test_file_with_percent_in_filename(self):
-        def make_and_check_file(index: int, literal_file_name: str, disk_file_name: str):
+        def make_and_check_file(
+            index: int, literal_file_name: str, disk_file_name: str
+        ):
             content = "abcdefghijklmnop_attachment"
             file: File = frappe.new_doc("File")  # type: ignore
             file.update(

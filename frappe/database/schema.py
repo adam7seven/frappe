@@ -135,7 +135,11 @@ class DBTable:
                 # validate length range
                 new_length = cint(col.length) or cint(frappe.db.VARCHAR_LEN)
                 if not (1 <= new_length <= 1000):
-                    frappe.throw(_("Length of {0} should be between 1 and 1000").format(col.fieldname))
+                    frappe.throw(
+                        _("Length of {0} should be between 1 and 1000").format(
+                            col.fieldname
+                        )
+                    )
 
                 current_col = self.current_columns.get(col.fieldname, {})
                 if not current_col:
@@ -248,7 +252,11 @@ class DbColumn:
                     default = frappe.db.escape(default)
             null = False
 
-        if self.unique and not for_modification and (column_def not in ("text", "longtext")):
+        if (
+            self.unique
+            and not for_modification
+            and (column_def not in ("text", "longtext"))
+        ):
             unique = True
 
         if not null:
@@ -305,14 +313,22 @@ class DbColumn:
             self.table.set_default.append(self)
 
         # nullability
-        if self.not_nullable is not None and (self.not_nullable != current_def["not_nullable"]):
+        if self.not_nullable is not None and (
+            self.not_nullable != current_def["not_nullable"]
+        ):
             self.table.change_nullability.append(self)
 
         # index should be applied or dropped irrespective of type change
-        if (current_def["index"] and not self.set_index) and column_type not in ("text", "longtext"):
+        if (current_def["index"] and not self.set_index) and column_type not in (
+            "text",
+            "longtext",
+        ):
             self.table.drop_index.append(self)
 
-        elif (not current_def["index"] and self.set_index) and column_type not in ("text", "longtext"):
+        elif (not current_def["index"] and self.set_index) and column_type not in (
+            "text",
+            "longtext",
+        ):
             self.table.add_index.append(self)
 
     def default_changed(self, current_def):
@@ -424,7 +440,15 @@ def get_definition(fieldtype, precision=None, length=None, *, options=None):
     return coltype
 
 
-def add_column(doctype, column_name, fieldtype, precision=None, length=None, default=None, not_null=False):
+def add_column(
+    doctype,
+    column_name,
+    fieldtype,
+    precision=None,
+    length=None,
+    default=None,
+    not_null=False,
+):
     frappe.db.commit()
     query = "alter table `tab{}` add column if not exists {} {}".format(
         doctype,

@@ -100,7 +100,9 @@ def dangerously_reconnect_on_connection_abort(func):
         try:
             return func(*args, **kwargs)
         except Exception as e:
-            if frappe.db.is_interface_error(e) or isinstance(e, frappe.db.OperationalError):
+            if frappe.db.is_interface_error(e) or isinstance(
+                e, frappe.db.OperationalError
+            ):
                 frappe.db.connect()
                 return func(*args, **kwargs)
             raise

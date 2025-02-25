@@ -91,7 +91,9 @@ class CommunicationEmailMixin:
             assignees = set(self.get_assignees())
             # Check and remove If user disabled notifications for incoming emails on assigned document.
             for assignee in assignees.copy():
-                if not is_email_notifications_enabled_for_type(assignee, "threads_on_assigned_document"):
+                if not is_email_notifications_enabled_for_type(
+                    assignee, "threads_on_assigned_document"
+                ):
                     assignees.remove(assignee)
             cc.update(assignees)
 
@@ -269,7 +271,9 @@ class CommunicationEmailMixin:
         if not emails:
             return []
 
-        return frappe.get_all("User", pluck="email", filters={"email": ["in", emails], "thread_notify": 0})
+        return frappe.get_all(
+            "User", pluck="email", filters={"email": ["in", emails], "thread_notify": 0}
+        )
 
     @staticmethod
     def filter_disabled_users(emails):
@@ -298,15 +302,20 @@ class CommunicationEmailMixin:
             is_inbound_mail_communcation=is_inbound_mail_communcation
         )
         cc = self.get_mail_cc_with_displayname(
-            is_inbound_mail_communcation=is_inbound_mail_communcation, include_sender=send_me_a_copy
+            is_inbound_mail_communcation=is_inbound_mail_communcation,
+            include_sender=send_me_a_copy,
         )
-        bcc = self.get_mail_bcc_with_displayname(is_inbound_mail_communcation=is_inbound_mail_communcation)
+        bcc = self.get_mail_bcc_with_displayname(
+            is_inbound_mail_communcation=is_inbound_mail_communcation
+        )
 
         if not (recipients or cc):
             return {}
 
         final_attachments = self.mail_attachments(
-            print_format=print_format, print_html=print_html, print_language=print_language
+            print_format=print_format,
+            print_html=print_html,
+            print_language=print_language,
         )
         incoming_email_account = self.get_incoming_email_account()
 

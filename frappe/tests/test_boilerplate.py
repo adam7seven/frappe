@@ -99,7 +99,11 @@ class TestBoilerPlate(unittest.TestCase):
     def test_invalid_inputs(self):
         invalid_inputs = copy.copy(self.default_user_input)
         invalid_inputs[0] = ["1nvalid Title", "valid title"]
-        invalid_inputs[3] = ["notavalidemail", "what@is@this.email", "example@example.org"]
+        invalid_inputs[3] = [
+            "notavalidemail",
+            "what@is@this.email",
+            "example@example.org",
+        ]
 
         with patch("sys.stdin", self.get_user_input_stream(invalid_inputs)):
             hooks = _get_user_inputs(self.default_hooks.app_name)
@@ -111,7 +115,8 @@ class TestBoilerPlate(unittest.TestCase):
         yaml.safe_load(github_workflow_template.format(**self.default_hooks))
 
     @unittest.skipUnless(
-        os.access(frappe.get_app_path("frappe"), os.W_OK), "Only run if frappe app paths is writable"
+        os.access(frappe.get_app_path("frappe"), os.W_OK),
+        "Only run if frappe app paths is writable",
     )
     def test_create_app(self):
         app_name = "test_app"
@@ -124,7 +129,9 @@ class TestBoilerPlate(unittest.TestCase):
 
         paths = self.get_paths(new_app_dir, app_name)
         for path in paths:
-            self.assertTrue(os.path.exists(path), msg=f"{path} should exist in {app_name} app")
+            self.assertTrue(
+                os.path.exists(path), msg=f"{path} should exist in {app_name} app"
+            )
 
         self.check_parsable_python_files(new_app_dir)
 
@@ -137,7 +144,8 @@ class TestBoilerPlate(unittest.TestCase):
         self.assertEqual(parse_as_configfile(patches_file), [])
 
     @unittest.skipUnless(
-        os.access(frappe.get_app_path("frappe"), os.W_OK), "Only run if frappe app paths is writable"
+        os.access(frappe.get_app_path("frappe"), os.W_OK),
+        "Only run if frappe app paths is writable",
     )
     def test_create_app_without_git_init(self):
         app_name = "test_app_no_git"
@@ -152,16 +160,23 @@ class TestBoilerPlate(unittest.TestCase):
         paths = self.get_paths(new_app_dir, app_name)
         for path in paths:
             if os.path.basename(path) in (self.git_folder, self.gitignore_file):
-                self.assertFalse(os.path.exists(path), msg=f"{path} shouldn't exist in {app_name} app")
+                self.assertFalse(
+                    os.path.exists(path),
+                    msg=f"{path} shouldn't exist in {app_name} app",
+                )
             else:
-                self.assertTrue(os.path.exists(path), msg=f"{path} should exist in {app_name} app")
+                self.assertTrue(
+                    os.path.exists(path), msg=f"{path} should exist in {app_name} app"
+                )
 
         self.check_parsable_python_files(new_app_dir)
 
     def get_paths(self, app_dir, app_name):
         all_paths = [os.path.join(app_dir, path) for path in self.root_paths]
         all_paths.append(os.path.join(app_dir, app_name))
-        all_paths.extend(os.path.join(app_dir, app_name, path) for path in self.paths_inside_app)
+        all_paths.extend(
+            os.path.join(app_dir, app_name, path) for path in self.paths_inside_app
+        )
 
         return all_paths
 
@@ -174,10 +189,13 @@ class TestBoilerPlate(unittest.TestCase):
                 try:
                     ast.parse(p.read())
                 except Exception as e:
-                    self.fail(f"Can't parse python file in new app: {python_file}\n" + str(e))
+                    self.fail(
+                        f"Can't parse python file in new app: {python_file}\n" + str(e)
+                    )
 
     @unittest.skipUnless(
-        os.access(frappe.get_app_path("frappe"), os.W_OK), "Only run if frappe app paths is writable"
+        os.access(frappe.get_app_path("frappe"), os.W_OK),
+        "Only run if frappe app paths is writable",
     )
     def test_new_patch_util(self):
         user_inputs = [
@@ -188,7 +206,9 @@ class TestBoilerPlate(unittest.TestCase):
             "Y",  # confirm patch folder
         ]
 
-        patches_txt = pathlib.Path(pathlib.Path(frappe.get_app_path("frappe", "patches.txt")))
+        patches_txt = pathlib.Path(
+            pathlib.Path(frappe.get_app_path("frappe", "patches.txt"))
+        )
         original_patches = patches_txt.read_text()
 
         with patch("sys.stdin", self.get_user_input_stream(user_inputs)):

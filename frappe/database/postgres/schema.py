@@ -63,9 +63,7 @@ class PostgresTable(DBTable):
                 and col.fieldtype in frappe.db.type_map
                 and frappe.db.type_map.get(col.fieldtype)[0] not in ("text", "longtext")
             ):
-                create_index_query += (
-                    f'CREATE INDEX IF NOT EXISTS "{col.fieldname}" ON `{self.table_name}`(`{col.fieldname}`);'
-                )
+                create_index_query += f'CREATE INDEX IF NOT EXISTS "{col.fieldname}" ON `{self.table_name}`(`{col.fieldname}`);'
         if create_index_query:
             # nosemgrep
             frappe.db.sql(create_index_query)
@@ -123,14 +121,14 @@ class PostgresTable(DBTable):
         create_contraint_query = ""
         for col in self.add_index:
             # if index key not exists
-            create_contraint_query += (
-                f'CREATE INDEX IF NOT EXISTS "{col.fieldname}" ON `{self.table_name}`(`{col.fieldname}`);'
-            )
+            create_contraint_query += f'CREATE INDEX IF NOT EXISTS "{col.fieldname}" ON `{self.table_name}`(`{col.fieldname}`);'
 
         for col in self.add_unique:
             # if index key not exists
             create_contraint_query += 'CREATE UNIQUE INDEX IF NOT EXISTS "unique_{index_name}" ON `{table_name}`(`{field}`);'.format(
-                index_name=col.fieldname, table_name=self.table_name, field=col.fieldname
+                index_name=col.fieldname,
+                table_name=self.table_name,
+                field=col.fieldname,
             )
 
         drop_contraint_query = ""
@@ -144,7 +142,9 @@ class PostgresTable(DBTable):
             # primary key
             if col.fieldname != "id":
                 # if index key exists
-                drop_contraint_query += f'DROP INDEX IF EXISTS "unique_{col.fieldname}" ;'
+                drop_contraint_query += (
+                    f'DROP INDEX IF EXISTS "unique_{col.fieldname}" ;'
+                )
 
         change_nullability = []
         for col in self.change_nullability:
@@ -154,25 +154,34 @@ class PostgresTable(DBTable):
             change_nullability.append(
                 f"ALTER COLUMN \"{col.fieldname}\" {'SET' if col.not_nullable else 'DROP'} NOT NULL"
             )
-            change_nullability.append(f'ALTER COLUMN "{col.fieldname}" SET DEFAULT {default}')
+            change_nullability.append(
+                f'ALTER COLUMN "{col.fieldname}" SET DEFAULT {default}'
+            )
 
             if col.not_nullable:
                 try:
                     table = frappe.qb.DocType(self.doctype)
                     frappe.qb.update(table).set(
-                        col.fieldname, col.default or get_not_null_defaults(col.fieldtype)
+                        col.fieldname,
+                        col.default or get_not_null_defaults(col.fieldtype),
                     ).where(table[col.fieldname].isnull()).run()
                 except Exception:
-                    print(f"Failed to update data in {self.table_name} for {col.fieldname}")
+                    print(
+                        f"Failed to update data in {self.table_name} for {col.fieldname}"
+                    )
                     raise
         try:
             if query:
-                final_alter_query = "ALTER TABLE `{}` {}".format(self.table_name, ", ".join(query))
+                final_alter_query = "ALTER TABLE `{}` {}".format(
+                    self.table_name, ", ".join(query)
+                )
                 # nosemgrep
                 frappe.db.sql(final_alter_query)
             if change_nullability:
                 # nosemgrep
-                frappe.db.sql(f"ALTER TABLE `{self.table_name}` {','.join(change_nullability)}")
+                frappe.db.sql(
+                    f"ALTER TABLE `{self.table_name}` {','.join(change_nullability)}"
+                )
             if create_contraint_query:
                 # nosemgrep
                 frappe.db.sql(create_contraint_query)
@@ -201,9 +210,9 @@ class PostgresTable(DBTable):
                 return "alter column `id` TYPE uuid USING id::uuid"
             else:
                 frappe.throw(
-                    _("Primary key of doctype {0} can not be changed as there are existing values.").format(
-                        self.doctype
-                    )
+                    _(
+                        "Primary key of doctype {0} can not be changed as there are existing values."
+                    ).format(self.doctype)
                 )
 
         # Reverting from UUID to VARCHAR

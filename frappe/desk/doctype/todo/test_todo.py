@@ -20,7 +20,9 @@ class UnitTestTodo(UnitTestCase):
 
 class TestToDo(IntegrationTestCase):
     def test_delete(self):
-        todo = frappe.get_doc(doctype="ToDo", description="test todo", assigned_by="Administrator").insert()
+        todo = frappe.get_doc(
+            doctype="ToDo", description="test todo", assigned_by="Administrator"
+        ).insert()
 
         frappe.db.delete("Deleted Document")
         todo.delete()
@@ -31,21 +33,28 @@ class TestToDo(IntegrationTestCase):
         self.assertEqual(todo.as_json(), deleted.data)
 
     def test_fetch(self):
-        todo = frappe.get_doc(doctype="ToDo", description="test todo", assigned_by="Administrator").insert()
+        todo = frappe.get_doc(
+            doctype="ToDo", description="test todo", assigned_by="Administrator"
+        ).insert()
         self.assertEqual(
-            todo.assigned_by_full_name, frappe.db.get_value("User", todo.assigned_by, "full_name")
+            todo.assigned_by_full_name,
+            frappe.db.get_value("User", todo.assigned_by, "full_name"),
         )
 
     def test_fetch_setup(self):
         frappe.db.delete("ToDo")
 
         todo_meta = frappe.get_meta("ToDo")
-        todo_meta.get("fields", dict(fieldname="assigned_by_full_name"))[0].fetch_from = ""
+        todo_meta.get("fields", dict(fieldname="assigned_by_full_name"))[
+            0
+        ].fetch_from = ""
         todo_meta.save()
 
         frappe.clear_cache(doctype="ToDo")
 
-        todo = frappe.get_doc(doctype="ToDo", description="test todo", assigned_by="Administrator").insert()
+        todo = frappe.get_doc(
+            doctype="ToDo", description="test todo", assigned_by="Administrator"
+        ).insert()
         self.assertFalse(todo.assigned_by_full_name)
 
         todo_meta = frappe.get_meta("ToDo")

@@ -34,7 +34,9 @@ def filelock(lock_name: str, *, timeout=30, is_global=False):
     if not is_global:
         lock_path = os.path.abspath(get_site_path(LOCKS_DIR, lock_filename))
     else:
-        lock_path = os.path.abspath(os.path.join(get_bench_path(), "config", lock_filename))
+        lock_path = os.path.abspath(
+            os.path.join(get_bench_path(), "config", lock_filename)
+        )
 
     try:
         with _StrongFileLock(lock_path, timeout=timeout):
@@ -43,7 +45,11 @@ def filelock(lock_name: str, *, timeout=30, is_global=False):
         frappe.log_error(f"Filelock: Failed to aquire {lock_path}")
 
         raise LockTimeoutError(
-            _("Failed to aquire lock: {}. Lock may be held by another process.").format(lock_name)
+            _("Failed to aquire lock: {}. Lock may be held by another process.").format(
+                lock_name
+            )
             + "<br>"
-            + _("You can manually remove the lock if you think it's safe: {}").format(lock_path)
+            + _("You can manually remove the lock if you think it's safe: {}").format(
+                lock_path
+            )
         ) from e

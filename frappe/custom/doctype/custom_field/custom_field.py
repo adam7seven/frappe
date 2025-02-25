@@ -146,7 +146,11 @@ class CustomField(Document):
 
             # remove special characters from fieldname
             self.fieldname = "".join(
-                [c for c in cstr(label).replace(" ", "_") if c.isdigit() or c.isalpha() or c == "_"]
+                [
+                    c
+                    for c in cstr(label).replace(" ", "_")
+                    if c.isdigit() or c.isalpha() or c == "_"
+                ]
             )
             self.fieldname = f"custom_{self.fieldname}"
 
@@ -172,7 +176,9 @@ class CustomField(Document):
 
             if self.is_new() and self.fieldname in fieldnames:
                 frappe.throw(
-                    _("A field with the name {0} already exists in {1}").format(frappe.bold(self.fieldname), self.dt)
+                    _("A field with the name {0} already exists in {1}").format(
+                        frappe.bold(self.fieldname), self.dt
+                    )
                 )
 
             if self.insert_after == "append":
@@ -187,7 +193,11 @@ class CustomField(Document):
             and (old_fieldtype := doc_before_save.fieldtype) != self.fieldtype
             and not CustomizeForm.allow_fieldtype_change(old_fieldtype, self.fieldtype)
         ):
-            frappe.throw(_("Fieldtype cannot be changed from {0} to {1}").format(old_fieldtype, self.fieldtype))
+            frappe.throw(
+                _("Fieldtype cannot be changed from {0} to {1}").format(
+                    old_fieldtype, self.fieldtype
+                )
+            )
 
         if not self.fieldname:
             frappe.throw(_("Fieldname not set for Custom Field"))
@@ -222,7 +232,9 @@ class CustomField(Document):
         delete_property_setter(self.dt, field_name=self.fieldname)
 
         # update doctype layouts
-        doctype_layouts = frappe.get_all("DocType Layout", filters={"document_type": self.dt}, pluck="id")
+        doctype_layouts = frappe.get_all(
+            "DocType Layout", filters={"document_type": self.dt}, pluck="id"
+        )
 
         for layout in doctype_layouts:
             layout_doc = frappe.get_doc("DocType Layout", layout)
@@ -237,14 +249,18 @@ class CustomField(Document):
     def validate_insert_after(self, meta):
         if not meta.get_field(self.insert_after):
             frappe.throw(
-                _("Insert After field '{0}' mentioned in Custom Field '{1}', with label '{2}', does not exist").format(
-                    self.insert_after, self.id, self.label
-                ),
+                _(
+                    "Insert After field '{0}' mentioned in Custom Field '{1}', with label '{2}', does not exist"
+                ).format(self.insert_after, self.id, self.label),
                 frappe.DoesNotExistError,
             )
 
         if self.fieldname == self.insert_after:
-            frappe.throw(_("Insert After cannot be set as {0}").format(meta.get_label(self.insert_after)))
+            frappe.throw(
+                _("Insert After cannot be set as {0}").format(
+                    meta.get_label(self.insert_after)
+                )
+            )
 
     def get_permission_log_options(self, event=None):
         if event != "after_delete" and self.fieldtype not in (
@@ -270,10 +286,15 @@ def get_fields_label(doctype=None):
         return frappe.msgprint(_("Custom Fields cannot be added to core DocTypes."))
 
     if meta.custom:
-        return frappe.msgprint(_("Custom Fields can only be added to a standard DocType."))
+        return frappe.msgprint(
+            _("Custom Fields can only be added to a standard DocType.")
+        )
 
     return [
-        {"value": df.fieldname or "", "label": _(df.label, context=df.parent) if df.label else ""}
+        {
+            "value": df.fieldname or "",
+            "label": _(df.label, context=df.parent) if df.label else "",
+        }
         for df in frappe.get_meta(doctype).get("fields")
     ]
 
@@ -290,7 +311,9 @@ def create_custom_field(doctype, df, ignore_validate=False, is_system_generated=
     df = frappe._dict(df)
     if not df.fieldname and df.label:
         df.fieldname = frappe.scrub(df.label)
-    if not frappe.db.get_value("Custom Field", {"dt": doctype, "fieldname": df.fieldname}):
+    if not frappe.db.get_value(
+        "Custom Field", {"dt": doctype, "fieldname": df.fieldname}
+    ):
         custom_field = frappe.get_doc(
             {
                 "doctype": "Custom Field",
@@ -332,12 +355,16 @@ def create_custom_fields(custom_fields: dict, ignore_validate=False, update=True
                 doctypes_to_update.add(doctype)
 
                 for df in fields:
-                    field = frappe.db.get_value("Custom Field", {"dt": doctype, "fieldname": df["fieldname"]})
+                    field = frappe.db.get_value(
+                        "Custom Field", {"dt": doctype, "fieldname": df["fieldname"]}
+                    )
                     if not field:
                         try:
                             df = df.copy()
                             df["owner"] = "Administrator"
-                            create_custom_field(doctype, df, ignore_validate=ignore_validate)
+                            create_custom_field(
+                                doctype, df, ignore_validate=ignore_validate
+                            )
 
                         except frappe.exceptions.DuplicateEntryError:
                             pass
@@ -370,7 +397,11 @@ def rename_fieldname(custom_field: str, fieldname: str):
     if field.is_system_generated:
         frappe.throw(_("System Generated Fields can not be renamed"))
     if frappe.db.has_column(parent_doctype, fieldname):
-        frappe.throw(_("Can not rename as column {0} is already present on DocType.").format(fieldname))
+        frappe.throw(
+            _("Can not rename as column {0} is already present on DocType.").format(
+                fieldname
+            )
+        )
     if old_fieldname == new_fieldname:
         frappe.msgprint(_("Old and new fieldnames are same."), alert=True)
         return
@@ -383,12 +414,16 @@ def rename_fieldname(custom_field: str, fieldname: str):
     field.db_set("fieldname", field.fieldname, notify=True)
     _update_fieldname_references(field, old_fieldname, new_fieldname)
 
-    frappe.msgprint(_("Custom field renamed to {0} successfully.").format(fieldname), alert=True)
+    frappe.msgprint(
+        _("Custom field renamed to {0} successfully.").format(fieldname), alert=True
+    )
     frappe.db.commit()
     frappe.clear_cache()
 
 
-def _update_fieldname_references(field: CustomField, old_fieldname: str, new_fieldname: str) -> None:
+def _update_fieldname_references(
+    field: CustomField, old_fieldname: str, new_fieldname: str
+) -> None:
     # Passwords are stored in auth table, so column name needs to be updated there.
     if field.fieldtype == "Password":
         Auth = frappe.qb.Table("__Auth")

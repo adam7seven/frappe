@@ -36,11 +36,17 @@ def is_documentation_link(word: str) -> bool:
 
 
 def contains_documentation_link(body: str) -> bool:
-    return any(is_documentation_link(word) for line in body.splitlines() for word in line.split())
+    return any(
+        is_documentation_link(word)
+        for line in body.splitlines()
+        for word in line.split()
+    )
 
 
 def check_pull_request(number: str) -> "tuple[int, str]":
-    response = requests.get(f"https://api.github.com/repos/frappe/frappe/pulls/{number}")
+    response = requests.get(
+        f"https://api.github.com/repos/frappe/frappe/pulls/{number}"
+    )
     if not response.ok:
         return 1, "Pull Request Not Found! ⚠️"
 
@@ -49,7 +55,12 @@ def check_pull_request(number: str) -> "tuple[int, str]":
     head_sha = (payload.get("head") or {}).get("sha")
     body = (payload.get("body") or "").lower()
 
-    if not title.startswith("feat") or not head_sha or "no-docs" in body or "backport" in body:
+    if (
+        not title.startswith("feat")
+        or not head_sha
+        or "no-docs" in body
+        or "backport" in body
+    ):
         return 0, "Skipping documentation checks... 🏃"
 
     if contains_documentation_link(body):

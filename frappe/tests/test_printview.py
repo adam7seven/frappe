@@ -9,12 +9,17 @@ class PrintViewTest(IntegrationTestCase):
         user = frappe.get_last_doc("User")
 
         messages_before = frappe.get_message_log()
-        ret = get_html_and_style(doc=user.as_json(), print_format="Standard", no_letterhead=1)
+        ret = get_html_and_style(
+            doc=user.as_json(), print_format="Standard", no_letterhead=1
+        )
         messages_after = frappe.get_message_log()
 
         if len(messages_after) > len(messages_before):
             new_messages = messages_after[len(messages_before) :]
-            self.fail("Print view showing error/warnings: \n" + "\n".join(str(msg) for msg in new_messages))
+            self.fail(
+                "Print view showing error/warnings: \n"
+                + "\n".join(str(msg) for msg in new_messages)
+            )
 
         # html should exist
         self.assertTrue(bool(ret["html"]))
@@ -29,4 +34,6 @@ class PrintViewTest(IntegrationTestCase):
         doc.cancel()
 
         # cancelled doc can't be printed by default
-        self.assertRaises(frappe.PermissionError, frappe.attach_print, doc.doctype, doc.name)
+        self.assertRaises(
+            frappe.PermissionError, frappe.attach_print, doc.doctype, doc.name
+        )

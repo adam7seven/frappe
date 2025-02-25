@@ -35,7 +35,9 @@ def get_change_log(user=None):
         to_version = opts["version"]
 
         if from_version != to_version:
-            app_change_log = get_change_log_for_app(app, from_version=from_version, to_version=to_version)
+            app_change_log = get_change_log_for_app(
+                app, from_version=from_version, to_version=to_version
+            )
 
             if app_change_log:
                 change_log.append(
@@ -67,7 +69,9 @@ def get_change_log_for_app(app, from_version, to_version):
     # remove pre-release part
     to_version.prerelease = None
 
-    major_version_folders = [f"v{i}" for i in range(from_version.major, to_version.major + 1)]
+    major_version_folders = [
+        f"v{i}" for i in range(from_version.major, to_version.major + 1)
+    ]
     app_change_log = []
 
     for folder in os.listdir(change_log_folder):
@@ -121,7 +125,9 @@ def get_versions():
         if versions[app]["branch"] != "master":
             branch_version = app_hooks.get("{}_version".format(versions[app]["branch"]))
             if branch_version:
-                versions[app]["branch_version"] = branch_version[0] + f" ({get_app_last_commit_ref(app)})"
+                versions[app]["branch_version"] = (
+                    branch_version[0] + f" ({get_app_last_commit_ref(app)})"
+                )
 
         try:
             versions[app]["version"] = frappe.get_attr(app + ".__version__")
@@ -182,20 +188,27 @@ def check_for_update():
 
         # Get local instance's current version or the app
         branch_version = (
-            apps[app]["branch_version"].split(" ", 1)[0] if apps[app].get("branch_version", "") else ""
+            apps[app]["branch_version"].split(" ", 1)[0]
+            if apps[app].get("branch_version", "")
+            else ""
         )
         if "develop" in branch_version:
             return updates
 
         instance_version = Version(branch_version or apps[app].get("version"))
 
-        github_version, org_name = check_release_on_github(owner, repo, instance_version)
+        github_version, org_name = check_release_on_github(
+            owner, repo, instance_version
+        )
         if not github_version or not org_name:
             continue
 
         # Compare and popup update message
         for update_type in updates:
-            if github_version.__dict__[update_type] > instance_version.__dict__[update_type]:
+            if (
+                github_version.__dict__[update_type]
+                > instance_version.__dict__[update_type]
+            ):
                 updates[update_type].append(
                     frappe._dict(
                         current_version=str(instance_version),
@@ -203,11 +216,16 @@ def check_for_update():
                         org_name=org_name,
                         app_name=app,
                         title=apps[app]["title"],
-                        security_issues=security_issues_count(owner, repo, instance_version, github_version),
+                        security_issues=security_issues_count(
+                            owner, repo, instance_version, github_version
+                        ),
                     )
                 )
                 break
-            if github_version.__dict__[update_type] < instance_version.__dict__[update_type]:
+            if (
+                github_version.__dict__[update_type]
+                < instance_version.__dict__[update_type]
+            ):
                 break
 
     add_message_to_redis(updates)
@@ -215,10 +233,14 @@ def check_for_update():
 
 
 def has_app_update_notifications() -> bool:
-    return bool(frappe.cache.sismember("changelog-update-user-set", frappe.session.user))
+    return bool(
+        frappe.cache.sismember("changelog-update-user-set", frappe.session.user)
+    )
 
 
-def parse_latest_non_beta_release(response: list, current_version: Version) -> list | None:
+def parse_latest_non_beta_release(
+    response: list, current_version: Version
+) -> list | None:
     """Parse the response JSON for all the releases and return the latest non prerelease.
 
     Args:
@@ -228,7 +250,9 @@ def parse_latest_non_beta_release(response: list, current_version: Version) -> l
     Return a json object pertaining to the latest non-beta release
     """
     version_list = [
-        release.get("tag_name").strip("v") for release in response if not release.get("prerelease")
+        release.get("tag_name").strip("v")
+        for release in response
+        if not release.get("prerelease")
     ]
 
     def prioritize_minor_update(v: str) -> Version:
@@ -262,7 +286,9 @@ def check_release_on_github(
     return None, None
 
 
-def security_issues_count(owner: str, repo: str, current_version: Version, target_version: Version) -> int:
+def security_issues_count(
+    owner: str, repo: str, current_version: Version, target_version: Version
+) -> int:
     advisories = _get_security_issues(owner, repo)
 
     def applicable(advisory) -> bool:
@@ -270,7 +296,9 @@ def security_issues_count(owner: str, repo: str, current_version: Version, targe
         # Target version is not in vulnerabe range
         for vuln in advisory["vulnerabilities"]:
             with suppress(Exception):
-                vulnerable_range = SimpleSpec(vuln["vulnerable_version_range"].replace(" ", ""))
+                vulnerable_range = SimpleSpec(
+                    vuln["vulnerable_version_range"].replace(" ", "")
+                )
                 patch_version = Version(vuln["patched_versions"].replace(" ", ""))
                 if (
                     current_version in vulnerable_range
@@ -332,7 +360,9 @@ def add_message_to_redis(update_json):
     # "changelog-update-user-set" will be a set of users
     frappe.cache.set_value("changelog-update-info", json.dumps(update_json))
     user_list = [x.name for x in frappe.get_all("User", filters={"enabled": True})]
-    system_managers = [user for user in user_list if "System Manager" in frappe.get_roles(user)]
+    system_managers = [
+        user for user in user_list if "System Manager" in frappe.get_roles(user)
+    ]
     frappe.cache.sadd("changelog-update-user-set", *system_managers)
 
 
@@ -373,11 +403,11 @@ def show_update_popup():
                         </a> {security_msg}<br>
                     """
             if release_links:
-                message = _("New {} releases for the following apps are available").format(_(update_type))
-                update_message += (
-                    "<div class='new-version-log'>{}<div class='new-version-links'>{}</div></div>".format(
-                        message, release_links
-                    )
+                message = _(
+                    "New {} releases for the following apps are available"
+                ).format(_(update_type))
+                update_message += "<div class='new-version-log'>{}<div class='new-version-links'>{}</div></div>".format(
+                    message, release_links
                 )
 
     primary_action = None

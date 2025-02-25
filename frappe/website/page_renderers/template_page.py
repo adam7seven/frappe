@@ -77,7 +77,8 @@ class TemplatePage(BaseTemplatePage):
     @staticmethod
     def get_index_path_options(search_path):
         return (
-            frappe.as_unicode(f"{search_path}{d}") for d in ("", ".html", ".md", "/index.html", "/index.md")
+            frappe.as_unicode(f"{search_path}{d}")
+            for d in ("", ".html", ".md", "/index.html", "/index.md")
         )
 
     def render(self):
@@ -110,7 +111,9 @@ class TemplatePage(BaseTemplatePage):
 
     def add_sidebar_and_breadcrumbs(self):
         if not self.context.sidebar_items:
-            self.context.sidebar_items = get_sidebar_items(self.context.website_sidebar, self.basepath)
+            self.context.sidebar_items = get_sidebar_items(
+                self.context.website_sidebar, self.basepath
+            )
 
         if self.context.add_breadcrumbs and not self.context.parents:
             parent_path = os.path.dirname(self.path)
@@ -119,12 +122,19 @@ class TemplatePage(BaseTemplatePage):
                 parent_path = os.path.dirname(parent_path)
 
             for parent_file_path in self.get_index_path_options(parent_path):
-                parent_file_path = os.path.join(self.app_path, self.file_dir, parent_file_path)
+                parent_file_path = os.path.join(
+                    self.app_path, self.file_dir, parent_file_path
+                )
                 if os.path.isfile(parent_file_path):
-                    parent_page_context = get_page_info(parent_file_path, self.app, self.file_dir)
+                    parent_page_context = get_page_info(
+                        parent_file_path, self.app, self.file_dir
+                    )
                     if parent_page_context:
                         self.context.parents = [
-                            dict(route=os.path.dirname(self.path), title=parent_page_context.title)
+                            dict(
+                                route=os.path.dirname(self.path),
+                                title=parent_page_context.title,
+                            )
                         ]
                     break
 
@@ -144,7 +154,9 @@ class TemplatePage(BaseTemplatePage):
         )
 
         if os.path.exists(os.path.join(self.app_path, self.pymodule_path)):
-            self.pymodule_name = self.app + "." + self.pymodule_path.replace(os.path.sep, ".")[:-3]
+            self.pymodule_name = (
+                self.app + "." + self.pymodule_path.replace(os.path.sep, ".")[:-3]
+            )
 
     def setup_template_source(self):
         """Setup template source, frontmatter and markdown conversion"""
@@ -176,7 +188,9 @@ class TemplatePage(BaseTemplatePage):
                 self.context[prop] = getattr(self.pymodule, prop)
 
     def set_page_properties(self):
-        self.context.base_template = self.context.base_template or get_base_template(self.path)
+        self.context.base_template = self.context.base_template or get_base_template(
+            self.path
+        )
         self.context.basepath = self.basepath
         self.context.basename = self.basename
         self.context.name = self.name
@@ -211,7 +225,9 @@ class TemplatePage(BaseTemplatePage):
             comment_tag = f"<!-- {comment} -->"
             if comment_tag in self.source:
                 self.context[context_key] = value
-                click.echo(f"\n⚠️  DEPRECATION WARNING: {comment_tag} will be deprecated on 2021-12-31.")
+                click.echo(
+                    f"\n⚠️  DEPRECATION WARNING: {comment_tag} will be deprecated on 2021-12-31."
+                )
                 click.echo(f"Please remove it from {self.template_path} in {self.app}")
 
     def run_pymodule_method(self, method_name):
@@ -235,7 +251,9 @@ class TemplatePage(BaseTemplatePage):
 
             src_modified = self.source is not self.original_source
             html = frappe.render_template(
-                self.source if src_modified else self.context.template, self.context, safe_render=safe_render
+                self.source if src_modified else self.context.template,
+                self.context,
+                safe_render=safe_render,
             )
 
         return html
@@ -246,7 +264,9 @@ class TemplatePage(BaseTemplatePage):
         )
 
     def get_raw_template(self):
-        return frappe.get_jloader().get_source(frappe.get_jenv(), self.context.template)[0]
+        return frappe.get_jloader().get_source(
+            frappe.get_jenv(), self.context.template
+        )[0]
 
     def load_colocated_files(self):
         """load co-located css/js files with the same name"""

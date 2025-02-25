@@ -152,7 +152,18 @@ class UserType(Document):
             user.set("block_modules", block_modules)
 
     def add_role_permissions_for_user_doctypes(self):
-        perms = ["read", "write", "create", "submit", "cancel", "amend", "delete", "print", "email", "share"]
+        perms = [
+            "read",
+            "write",
+            "create",
+            "submit",
+            "cancel",
+            "amend",
+            "delete",
+            "print",
+            "email",
+            "share",
+        ]
         for row in self.user_doctypes:
             docperm = add_role_permissions(row.document_type, self.role)
             values = {perm: row.get(perm, default=0) for perm in perms}
@@ -193,7 +204,9 @@ class UserType(Document):
         for doctype in ["select_doctypes", "custom_select_doctypes"]:
             for row in self.get(doctype):
                 docperm = add_role_permissions(row.document_type, self.role)
-                update_custom_docperm(docperm, {"select": 1, "read": 0, "create": 0, "write": 0})
+                update_custom_docperm(
+                    docperm, {"select": 1, "read": 0, "create": 0, "write": 0}
+                )
 
     def add_role_permissions_for_file(self):
         docperm = add_role_permissions("File", self.role)

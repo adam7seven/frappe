@@ -2,7 +2,9 @@ import json
 from urllib.parse import quote, urlencode
 
 from oauthlib.oauth2 import FatalClientError, OAuth2Error
-from oauthlib.openid.connect.core.endpoints.pre_configured import Server as WebApplicationServer
+from oauthlib.openid.connect.core.endpoints.pre_configured import (
+    Server as WebApplicationServer,
+)
 
 import frappe
 from frappe.integrations.doctype.oauth_provider_settings.oauth_provider_settings import (
@@ -52,7 +54,9 @@ def approve(*args, **kwargs):
         (
             scopes,
             frappe.flags.oauth_credentials,
-        ) = get_oauth_server().validate_authorization_request(r.url, r.method, r.get_data(), r.headers)
+        ) = get_oauth_server().validate_authorization_request(
+            r.url, r.method, r.get_data(), r.headers
+        )
 
         headers, body, status = get_oauth_server().create_authorization_response(
             uri=frappe.flags.oauth_credentials["redirect_uri"],
@@ -73,20 +77,26 @@ def approve(*args, **kwargs):
 
 @frappe.whitelist(allow_guest=True)
 def authorize(**kwargs):
-    success_url = "/api/method/frappe.integrations.oauth2.approve?" + encode_params(sanitize_kwargs(kwargs))
+    success_url = "/api/method/frappe.integrations.oauth2.approve?" + encode_params(
+        sanitize_kwargs(kwargs)
+    )
     failure_url = frappe.form_dict.get("redirect_uri", "") + "?error=access_denied"
 
     if frappe.session.user == "Guest":
         # Force login, redirect to preauth again.
         frappe.local.response["type"] = "redirect"
-        frappe.local.response["location"] = "/login?" + encode_params({"redirect-to": frappe.request.url})
+        frappe.local.response["location"] = "/login?" + encode_params(
+            {"redirect-to": frappe.request.url}
+        )
     else:
         try:
             r = frappe.request
             (
                 scopes,
                 frappe.flags.oauth_credentials,
-            ) = get_oauth_server().validate_authorization_request(r.url, r.method, r.get_data(), r.headers)
+            ) = get_oauth_server().validate_authorization_request(
+                r.url, r.method, r.get_data(), r.headers
+            )
 
             skip_auth = frappe.db.get_value(
                 "OAuth Client",
@@ -97,7 +107,9 @@ def authorize(**kwargs):
                 "OAuth Bearer Token", {"status": "Active", "user": frappe.session.user}
             )
 
-            if skip_auth or (get_oauth_settings().skip_authorization == "Auto" and unrevoked_tokens):
+            if skip_auth or (
+                get_oauth_settings().skip_authorization == "Auto" and unrevoked_tokens
+            ):
                 frappe.local.response["type"] = "redirect"
                 frappe.local.response["location"] = success_url
             else:
@@ -108,7 +120,9 @@ def authorize(**kwargs):
                 # Show Allow/Deny screen.
                 response_html_params = frappe._dict(
                     {
-                        "client_id": frappe.db.get_value("OAuth Client", kwargs["client_id"], "app_name"),
+                        "client_id": frappe.db.get_value(
+                            "OAuth Client", kwargs["client_id"], "app_name"
+                        ),
                         "success_url": success_url,
                         "failure_url": failure_url,
                         "details": scopes,
@@ -117,7 +131,9 @@ def authorize(**kwargs):
                 resp_html = frappe.render_template(
                     "templates/includes/oauth_confirmation.html", response_html_params
                 )
-                frappe.respond_as_web_page(frappe._("Confirm Access"), resp_html, primary_action=None)
+                frappe.respond_as_web_page(
+                    frappe._("Confirm Access"), resp_html, primary_action=None
+                )
         except (FatalClientError, OAuth2Error) as e:
             return generate_json_error_response(e)
 
@@ -213,7 +229,9 @@ def introspect_token(token=None, token_type_hint=None):
         if token_type_hint == "access_token":
             bearer_token = frappe.get_doc("OAuth Bearer Token", {"access_token": token})
         elif token_type_hint == "refresh_token":
-            bearer_token = frappe.get_doc("OAuth Bearer Token", {"refresh_token": token})
+            bearer_token = frappe.get_doc(
+                "OAuth Bearer Token", {"refresh_token": token}
+            )
 
         client = frappe.get_doc("OAuth Client", bearer_token.client)
 

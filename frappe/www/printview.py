@@ -83,7 +83,10 @@ def get_context(context) -> PrintContext:
     )
 
     make_access_log(
-        doctype=frappe.form_dict.doctype, document=frappe.form_dict.id, file_type="PDF", method="Print"
+        doctype=frappe.form_dict.doctype,
+        document=frappe.form_dict.id,
+        file_type="PDF",
+        method="Print",
     )
 
     return {
@@ -105,7 +108,9 @@ def get_context(context) -> PrintContext:
 def get_print_format_doc(print_format_id, meta):
     """Returns print format document"""
     if not print_format_id:
-        print_format_id = frappe.form_dict.format or meta.default_print_format or "Standard"
+        print_format_id = (
+            frappe.form_dict.format or meta.default_print_format or "Standard"
+        )
 
     if print_format_id == "Standard":
         return None
@@ -143,10 +148,16 @@ def get_rendered_template(
 
     if doc.meta.is_submittable:
         if doc.docstatus.is_draft() and not cint(print_settings.allow_print_for_draft):
-            frappe.throw(_("Not allowed to print draft documents"), frappe.PermissionError)
+            frappe.throw(
+                _("Not allowed to print draft documents"), frappe.PermissionError
+            )
 
-        if doc.docstatus.is_cancelled() and not cint(print_settings.allow_print_for_cancelled):
-            frappe.throw(_("Not allowed to print cancelled documents"), frappe.PermissionError)
+        if doc.docstatus.is_cancelled() and not cint(
+            print_settings.allow_print_for_cancelled
+        ):
+            frappe.throw(
+                _("Not allowed to print cancelled documents"), frappe.PermissionError
+            )
 
     doc.run_method("before_print", print_settings)
 
@@ -173,7 +184,9 @@ def get_rendered_template(
 
         template = None
         if hook_func := frappe.get_hooks("get_print_format_template"):
-            template = frappe.get_attr(hook_func[-1])(jenv=jenv, print_format=print_format)
+            template = frappe.get_attr(hook_func[-1])(
+                jenv=jenv, print_format=print_format
+            )
 
         if template:
             pass
@@ -209,7 +222,9 @@ def get_rendered_template(
     letter_head = frappe._dict(get_letter_head(doc, no_letterhead, letterhead) or {})
 
     if letter_head.content:
-        letter_head.content = frappe.utils.jinja.render_template(letter_head.content, {"doc": doc.as_dict()})
+        letter_head.content = frappe.utils.jinja.render_template(
+            letter_head.content, {"doc": doc.as_dict()}
+        )
         if letter_head.header_script:
             letter_head.content += f"""
                 <script>
@@ -218,7 +233,9 @@ def get_rendered_template(
             """
 
     if letter_head.footer:
-        letter_head.footer = frappe.utils.jinja.render_template(letter_head.footer, {"doc": doc.as_dict()})
+        letter_head.footer = frappe.utils.jinja.render_template(
+            letter_head.footer, {"doc": doc.as_dict()}
+        )
         if letter_head.footer_script:
             letter_head.footer += f"""
                 <script>
@@ -246,7 +263,9 @@ def get_rendered_template(
         }
     )
     hook_func = frappe.get_hooks("pdf_body_html")
-    html = frappe.get_attr(hook_func[-1])(jenv=jenv, template=template, print_format=print_format, args=args)
+    html = frappe.get_attr(hook_func[-1])(
+        jenv=jenv, template=template, print_format=print_format, args=args
+    )
 
     if cint(trigger_print):
         html += trigger_print_script
@@ -284,14 +303,20 @@ def set_title_values_for_link_and_dynamic_link_fields(
         if not meta or not meta.title_field or not meta.show_title_field_in_link:
             continue
 
-        link_title = frappe.get_cached_value(doctype, doc.get(field.fieldname), meta.title_field)
+        link_title = frappe.get_cached_value(
+            doctype, doc.get(field.fieldname), meta.title_field
+        )
         if parent_doc:
-            parent_doc.__link_titles[f"{doctype}::{doc.get(field.fieldname)}"] = link_title
+            parent_doc.__link_titles[f"{doctype}::{doc.get(field.fieldname)}"] = (
+                link_title
+            )
         elif doc:
             doc.__link_titles[f"{doctype}::{doc.get(field.fieldname)}"] = link_title
 
 
-def set_title_values_for_table_and_multiselect_fields(meta: "Meta", doc: "Document") -> None:
+def set_title_values_for_table_and_multiselect_fields(
+    meta: "Meta", doc: "Document"
+) -> None:
     for field in meta.get_table_fields():
         if not doc.get(field.fieldname):
             continue
@@ -354,7 +379,9 @@ def get_html_and_style(
 
 
 @frappe.whitelist()
-def get_rendered_raw_commands(doc: str, id: str | None = None, print_format: str | None = None) -> dict:
+def get_rendered_raw_commands(
+    doc: str, id: str | None = None, print_format: str | None = None
+) -> dict:
     """Return Rendered Raw Commands of print format, used to send directly to printer."""
 
     if isinstance(id, str):
@@ -373,7 +400,9 @@ def get_rendered_raw_commands(doc: str, id: str | None = None, print_format: str
         )
 
     return {
-        "raw_commands": get_rendered_template(doc=document, print_format=print_format, meta=document.meta)
+        "raw_commands": get_rendered_template(
+            doc=document, print_format=print_format, meta=document.meta
+        )
     }
 
 
@@ -385,7 +414,11 @@ def validate_print_permission(doc: "Document") -> None:
     if frappe.has_website_permission(doc):
         return
 
-    if (key := frappe.form_dict.key) and isinstance(key, str) and validate_key(key, doc) is not False:
+    if (
+        (key := frappe.form_dict.key)
+        and isinstance(key, str)
+        and validate_key(key, doc) is not False
+    ):
         return
 
     doc._handle_permission_failure("print")
@@ -404,13 +437,18 @@ def validate_key(key: str, doc: "Document") -> None:
             return
 
     # TODO: Deprecate this! kept it for backward compatibility
-    if frappe.get_system_settings("allow_older_web_view_links") and key == doc.get_signature():
+    if (
+        frappe.get_system_settings("allow_older_web_view_links")
+        and key == doc.get_signature()
+    ):
         return
 
     return False
 
 
-def get_letter_head(doc: "Document", no_letterhead: bool, letterhead: str | None = None) -> dict:
+def get_letter_head(
+    doc: "Document", no_letterhead: bool, letterhead: str | None = None
+) -> dict:
     if no_letterhead:
         return {}
 
@@ -436,7 +474,10 @@ def get_letter_head(doc: "Document", no_letterhead: bool, letterhead: str | None
 
 def get_print_format(doctype: str, print_format: "PrintFormat") -> str:
     if print_format.disabled:
-        frappe.throw(_("Print Format {0} is disabled").format(print_format.id), frappe.DoesNotExistError)
+        frappe.throw(
+            _("Print Format {0} is disabled").format(print_format.id),
+            frappe.DoesNotExistError,
+        )
 
     # server, find template
     module = print_format.module or frappe.db.get_value("DocType", doctype, "module")
@@ -456,7 +497,9 @@ def get_print_format(doctype: str, print_format: "PrintFormat") -> str:
         with open(path) as pffile:
             return pffile.read()
 
-    frappe.throw(_("No template found at path: {0}").format(path), frappe.TemplateNotFoundError)
+    frappe.throw(
+        _("No template found at path: {0}").format(path), frappe.TemplateNotFoundError
+    )
 
 
 def make_layout(doc: "Document", meta: "Meta", format_data=None) -> list:
@@ -582,7 +625,9 @@ def has_value(df: "DocField", doc: "Document") -> bool:
 
 
 def get_print_style(
-    style: str | None = None, print_format: Optional["PrintFormat"] = None, for_legacy: bool = False
+    style: str | None = None,
+    print_format: Optional["PrintFormat"] = None,
+    for_legacy: bool = False,
 ) -> str:
     print_settings = frappe.get_doc("Print Settings")
 
@@ -614,7 +659,9 @@ def get_print_style(
 
 
 def get_font(
-    print_settings: "PrintSettings", print_format: Optional["PrintFormat"] = None, for_legacy=False
+    print_settings: "PrintSettings",
+    print_format: Optional["PrintFormat"] = None,
+    for_legacy=False,
 ) -> str:
     default = "var(--font-stack)"
     if for_legacy:
@@ -635,7 +682,9 @@ def get_font(
     return font
 
 
-def get_visible_columns(data: list, table_meta: "Meta", df: "DocField") -> list["DocField"]:
+def get_visible_columns(
+    data: list, table_meta: "Meta", df: "DocField"
+) -> list["DocField"]:
     """Return list of visible columns based on print_hide and if all columns have value."""
     columns = []
     doc = data[0] or frappe.new_doc(df.options)
@@ -645,7 +694,9 @@ def get_visible_columns(data: list, table_meta: "Meta", df: "DocField") -> list[
     def add_column(col_df: "DocField"):
         if col_df.fieldname in hide_in_print_layout:
             return False
-        return is_visible(col_df, doc) and column_has_value(data, col_df.get("fieldname"), col_df)
+        return is_visible(col_df, doc) and column_has_value(
+            data, col_df.get("fieldname"), col_df
+        )
 
     if df.get("visible_columns"):
         # columns specified by column builder

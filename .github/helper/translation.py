@@ -41,7 +41,9 @@ for _file in files_to_scan:
 
                 if not match:
                     error_found = True
-                    print(f"\nTranslation syntax error at line number {line_number}\n{line.strip()[:100]}")
+                    print(
+                        f"\nTranslation syntax error at line number {line_number}\n{line.strip()[:100]}"
+                    )
 
                 if not error_found and not words_pattern.search(line):
                     error_found = True

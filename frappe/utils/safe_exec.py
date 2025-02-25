@@ -79,7 +79,11 @@ class FrappePrintCollector(PrintCollector):
 
 def is_safe_exec_enabled() -> bool:
     # server scripts can only be enabled via common_site_config.json
-    return bool(frappe.get_common_site_config(cached=bool(frappe.request)).get(SAFE_EXEC_CONFIG_KEY))
+    return bool(
+        frappe.get_common_site_config(cached=bool(frappe.request)).get(
+            SAFE_EXEC_CONFIG_KEY
+        )
+    )
 
 
 def safe_exec(
@@ -91,7 +95,9 @@ def safe_exec(
     script_filename: str | None = None,
 ):
     if not is_safe_exec_enabled():
-        msg = _("Server Scripts are disabled. Please enable server scripts from bench configuration.")
+        msg = _(
+            "Server Scripts are disabled. Please enable server scripts from bench configuration."
+        )
         docs_cta = _("Read the documentation to know more")
         msg += f"<br><a href='https://frappeframework.com/docs/user/en/desk/scripting/server-script'>{docs_cta}</a>"
         frappe.throw(msg, ServerScriptNotEnabled, title="Server Scripts Disabled")
@@ -188,7 +194,9 @@ def get_safe_globals():
     if "_" in form_dict:
         del frappe.local.form_dict["_"]
 
-    user = (getattr(frappe.local, "session", None) and frappe.local.session.user) or "Guest"
+    user = (
+        getattr(frappe.local, "session", None) and frappe.local.session.user
+    ) or "Guest"
 
     out = NamespaceDict(
         # make available limited methods of frappe
@@ -234,15 +242,19 @@ def get_safe_globals():
             user=user,
             get_fullname=frappe.utils.get_fullname,
             get_gravatar=frappe.utils.get_gravatar_url,
-            full_name=frappe.local.session.data.full_name
-            if getattr(frappe.local, "session", None)
-            else "Guest",
+            full_name=(
+                frappe.local.session.data.full_name
+                if getattr(frappe.local, "session", None)
+                else "Guest"
+            ),
             request=getattr(frappe.local, "request", {}),
             session=frappe._dict(
                 user=user,
-                csrf_token=frappe.local.session.data.csrf_token
-                if getattr(frappe.local, "session", None)
-                else "",
+                csrf_token=(
+                    frappe.local.session.data.csrf_token
+                    if getattr(frappe.local, "session", None)
+                    else ""
+                ),
             ),
             make_get_request=frappe.integrations.utils.make_get_request,
             make_post_request=frappe.integrations.utils.make_post_request,
@@ -406,7 +418,9 @@ def call_whitelisted_function(function, **kwargs):
 def run_script(script, **kwargs):
     """run another server script"""
 
-    return call_with_form_dict(lambda: frappe.get_doc("Server Script", script).execute_method(), kwargs)
+    return call_with_form_dict(
+        lambda: frappe.get_doc("Server Script", script).execute_method(), kwargs
+    )
 
 
 def call_with_form_dict(function, kwargs):
@@ -464,7 +478,9 @@ def get_python_builtins():
     }
 
 
-def get_hooks(hook: str | None = None, default=None, app_name: str | None = None) -> frappe._dict:
+def get_hooks(
+    hook: str | None = None, default=None, app_name: str | None = None
+) -> frappe._dict:
     """Get hooks via `app/hooks.py`
 
     :param hook: Name of the hook. Will gather all hooks for this name and return as a list.
@@ -571,7 +587,10 @@ def _validate_attribute_read(object, name):
     if isinstance(name, str) and (name in UNSAFE_ATTRIBUTES):
         raise SyntaxError(f"{name} is an unsafe attribute")
 
-    if isinstance(object, types.ModuleType | types.CodeType | types.TracebackType | types.FrameType):
+    if isinstance(
+        object,
+        types.ModuleType | types.CodeType | types.TracebackType | types.FrameType,
+    ):
         raise SyntaxError(f"Reading {object} attributes is not allowed")
 
     if name.startswith("_"):

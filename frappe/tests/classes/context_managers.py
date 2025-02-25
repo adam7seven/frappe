@@ -25,7 +25,9 @@ logger = logging.Logger(__file__)
 
 @UnitTestCase.registerAs(staticmethod)
 @contextmanager
-def freeze_time(time_to_freeze: Any, is_utc: bool = False, *args: Any, **kwargs: Any) -> None:
+def freeze_time(
+    time_to_freeze: Any, is_utc: bool = False, *args: Any, **kwargs: Any
+) -> None:
     """Temporarily: freeze time with freezegun."""
     from datetime import UTC
     from zoneinfo import ZoneInfo
@@ -37,7 +39,9 @@ def freeze_time(time_to_freeze: Any, is_utc: bool = False, *args: Any, **kwargs:
     if not is_utc:
         # Freeze time expects UTC or tzaware objects. We have neither, so convert to UTC.
         time_to_freeze = (
-            get_datetime(time_to_freeze).replace(tzinfo=ZoneInfo(get_system_timezone())).astimezone(UTC)
+            get_datetime(time_to_freeze)
+            .replace(tzinfo=ZoneInfo(get_system_timezone()))
+            .astimezone(UTC)
         )
 
     with freezegun_freeze_time(time_to_freeze, *args, **kwargs):
@@ -231,7 +235,10 @@ def trace_fields(
     # Prepare configurations
     if field_name:
         field_configs = {
-            field_name: {"forbidden_values": forbidden_values, "custom_validation": custom_validation}
+            field_name: {
+                "forbidden_values": forbidden_values,
+                "custom_validation": custom_validation,
+            }
         }
 
     # Apply traced fields
@@ -239,7 +246,11 @@ def trace_fields(
         original_attrs[f_name] = getattr(doc_class, f_name, None)
         f_forbidden_values = config.get("forbidden_values")
         f_custom_validation = config.get("custom_validation")
-        setattr(doc_class, f_name, traced_field(f_name, f_forbidden_values, f_custom_validation))
+        setattr(
+            doc_class,
+            f_name,
+            traced_field(f_name, f_forbidden_values, f_custom_validation),
+        )
 
     # Modify init method
     def new_init(self, *args, **kwargs):

@@ -2,7 +2,12 @@ import frappe
 
 
 def execute():
-    if frappe.db.count("File", filters={"attached_to_doctype": "Prepared Report", "is_private": 0}) > 10000:
+    if (
+        frappe.db.count(
+            "File", filters={"attached_to_doctype": "Prepared Report", "is_private": 0}
+        )
+        > 10000
+    ):
         frappe.db.auto_commit_on_many_writes = True
 
     files = frappe.get_all(

@@ -72,16 +72,25 @@ class TestFrappeClient(IntegrationTestCase):
     def test_get_value_by_filters(self):
         CONTENT = "test get value"
         server = FrappeClient(get_url(), "Administrator", self.PASSWORD, verify=False)
-        server.insert({"doctype": "Note", "title": "get_value", "content": CONTENT}).get("name")
+        server.insert(
+            {"doctype": "Note", "title": "get_value", "content": CONTENT}
+        ).get("name")
 
-        self.assertEqual(server.get_value("Note", "content", {"title": "get_value"}).get("content"), CONTENT)
+        self.assertEqual(
+            server.get_value("Note", "content", {"title": "get_value"}).get("content"),
+            CONTENT,
+        )
 
     def test_get_value_by_name(self):
         server = FrappeClient(get_url(), "Administrator", self.PASSWORD, verify=False)
         CONTENT = "test get value"
-        NAME = server.insert({"doctype": "Note", "title": "get_value", "content": CONTENT}).get("name")
+        NAME = server.insert(
+            {"doctype": "Note", "title": "get_value", "content": CONTENT}
+        ).get("name")
 
-        self.assertEqual(server.get_value("Note", "content", NAME).get("content"), CONTENT)
+        self.assertEqual(
+            server.get_value("Note", "content", NAME).get("content"), CONTENT
+        )
 
     def test_get_value_with_malicious_query(self):
         server = FrappeClient(get_url(), "Administrator", self.PASSWORD, verify=False)
@@ -97,13 +106,18 @@ class TestFrappeClient(IntegrationTestCase):
 
     def test_get_single(self):
         server = FrappeClient(get_url(), "Administrator", self.PASSWORD, verify=False)
-        server.set_value("Website Settings", "Website Settings", "title_prefix", "test-prefix")
+        server.set_value(
+            "Website Settings", "Website Settings", "title_prefix", "test-prefix"
+        )
         self.assertEqual(
-            server.get_value("Website Settings", "title_prefix", "Website Settings").get("title_prefix"),
+            server.get_value(
+                "Website Settings", "title_prefix", "Website Settings"
+            ).get("title_prefix"),
             "test-prefix",
         )
         self.assertEqual(
-            server.get_value("Website Settings", "title_prefix").get("title_prefix"), "test-prefix"
+            server.get_value("Website Settings", "title_prefix").get("title_prefix"),
+            "test-prefix",
         )
         frappe.db.set_single_value("Website Settings", "title_prefix", "")
 
@@ -120,7 +134,9 @@ class TestFrappeClient(IntegrationTestCase):
     def test_update_child_doc(self):
         server = FrappeClient(get_url(), "Administrator", self.PASSWORD, verify=False)
         frappe.db.delete("Contact", {"first_name": "George", "last_name": "Steevens"})
-        frappe.db.delete("Contact", {"first_name": "William", "last_name": "Shakespeare"})
+        frappe.db.delete(
+            "Contact", {"first_name": "William", "last_name": "Shakespeare"}
+        )
         frappe.db.delete("Communication", {"reference_doctype": "Event"})
         frappe.db.delete("Communication Link", {"link_doctype": "Contact"})
         frappe.db.delete("Event", {"subject": "Sing a song of sixpence"})
@@ -131,7 +147,11 @@ class TestFrappeClient(IntegrationTestCase):
         server.insert_many(
             [
                 {"doctype": "Contact", "first_name": "George", "last_name": "Steevens"},
-                {"doctype": "Contact", "first_name": "William", "last_name": "Shakespeare"},
+                {
+                    "doctype": "Contact",
+                    "first_name": "William",
+                    "last_name": "Shakespeare",
+                },
             ]
         )
 
@@ -141,7 +161,10 @@ class TestFrappeClient(IntegrationTestCase):
                 "doctype": "Event",
                 "subject": "Sing a song of sixpence",
                 "event_participants": [
-                    {"reference_doctype": "Contact", "reference_docname": "George Steevens"}
+                    {
+                        "reference_doctype": "Contact",
+                        "reference_docname": "George Steevens",
+                    }
                 ],
             }
         )
@@ -157,7 +180,9 @@ class TestFrappeClient(IntegrationTestCase):
 
         # the change should run the parent document's validations and
         # create a Communication record with the new contact
-        self.assertTrue(frappe.db.exists("Communication Link", {"link_name": "William Shakespeare"}))
+        self.assertTrue(
+            frappe.db.exists("Communication Link", {"link_name": "William Shakespeare"})
+        )
 
     def test_delete_doc(self):
         server = FrappeClient(get_url(), "Administrator", self.PASSWORD, verify=False)
@@ -175,7 +200,9 @@ class TestFrappeClient(IntegrationTestCase):
 
         api_key = frappe.db.get_value("User", "Administrator", "api_key")
         header = {"Authorization": f"token {api_key}:{generated_secret}"}
-        res = requests.post(get_url() + "/api/method/frappe.auth.get_logged_user", headers=header)
+        res = requests.post(
+            get_url() + "/api/method/frappe.auth.get_logged_user", headers=header
+        )
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual("Administrator", res.json()["message"])
@@ -183,22 +210,30 @@ class TestFrappeClient(IntegrationTestCase):
 
         header = {
             "Authorization": "Basic {}".format(
-                base64.b64encode(frappe.safe_encode(f"{api_key}:{generated_secret}")).decode()
+                base64.b64encode(
+                    frappe.safe_encode(f"{api_key}:{generated_secret}")
+                ).decode()
             )
         }
-        res = requests.post(get_url() + "/api/method/frappe.auth.get_logged_user", headers=header)
+        res = requests.post(
+            get_url() + "/api/method/frappe.auth.get_logged_user", headers=header
+        )
         self.assertEqual(res.status_code, 200)
         self.assertEqual("Administrator", res.json()["message"])
 
         # Valid api key, invalid api secret
         api_secret = "ksk&93nxoe3os"
         header = {"Authorization": f"token {api_key}:{api_secret}"}
-        res = requests.post(get_url() + "/api/method/frappe.auth.get_logged_user", headers=header)
+        res = requests.post(
+            get_url() + "/api/method/frappe.auth.get_logged_user", headers=header
+        )
         self.assertEqual(res.status_code, 401)
 
         # random api key and api secret
         api_key = "@3djdk3kld"
         api_secret = "ksk&93nxoe3os"
         header = {"Authorization": f"token {api_key}:{api_secret}"}
-        res = requests.post(get_url() + "/api/method/frappe.auth.get_logged_user", headers=header)
+        res = requests.post(
+            get_url() + "/api/method/frappe.auth.get_logged_user", headers=header
+        )
         self.assertEqual(res.status_code, 401)

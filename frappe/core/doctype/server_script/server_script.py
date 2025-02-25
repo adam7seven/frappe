@@ -18,7 +18,9 @@ from frappe.utils.safe_exec import (
 )
 
 if TYPE_CHECKING:
-    from frappe.core.doctype.scheduled_job_type.scheduled_job_type import ScheduledJobType
+    from frappe.core.doctype.scheduled_job_type.scheduled_job_type import (
+        ScheduledJobType,
+    )
 
 
 class ServerScript(Document):
@@ -79,7 +81,9 @@ class ServerScript(Document):
         rate_limit_seconds: DF.Int
         reference_doctype: DF.Link | None
         script: DF.Code
-        script_type: DF.Literal["DocType Event", "Scheduler Event", "Permission Query", "API"]
+        script_type: DF.Literal[
+            "DocType Event", "Scheduler Event", "Permission Query", "API"
+        ]
     # end: auto-generated types
 
     def validate(self):
@@ -97,7 +101,9 @@ class ServerScript(Document):
         frappe.client_cache.delete_value("server_script_map")
         if self.script_type == "Scheduler Event":
             for job in self.scheduled_jobs:
-                scheduled_job_type: ScheduledJobType = frappe.get_doc("Scheduled Job Type", job.id)
+                scheduled_job_type: ScheduledJobType = frappe.get_doc(
+                    "Scheduled Job Type", job.id
+                )
                 scheduled_job_type.stopped = True
                 scheduled_job_type.server_script = None
                 scheduled_job_type.save()
@@ -117,13 +123,20 @@ class ServerScript(Document):
         """Create or update Scheduled Job Type documents for Scheduler Event Server Scripts"""
 
         def get_scheduled_job() -> "ScheduledJobType":
-            if scheduled_script := frappe.db.get_value("Scheduled Job Type", {"server_script": self.id}):
+            if scheduled_script := frappe.db.get_value(
+                "Scheduled Job Type", {"server_script": self.id}
+            ):
                 return frappe.get_doc("Scheduled Job Type", scheduled_script)
             else:
-                return frappe.get_doc({"doctype": "Scheduled Job Type", "server_script": self.id})
+                return frappe.get_doc(
+                    {"doctype": "Scheduled Job Type", "server_script": self.id}
+                )
 
         previous_script_type = self.get_value_before_save("script_type")
-        if previous_script_type != self.script_type and previous_script_type == "Scheduler Event":
+        if (
+            previous_script_type != self.script_type
+            and previous_script_type == "Scheduler Event"
+        ):
             get_scheduled_job().update({"stopped": 1}).save()
             return
 
@@ -139,12 +152,17 @@ class ServerScript(Document):
             {
                 "method": frappe.scrub(f"{self.id}-{self.event_frequency}"),
                 "frequency": self.event_frequency,
-                "cron_format": self.cron_format if self.event_frequency == "Cron" else "",
+                "cron_format": (
+                    self.cron_format if self.event_frequency == "Cron" else ""
+                ),
                 "stopped": self.disabled,
             }
         ).save()
 
-        frappe.msgprint(_("Scheduled execution for script {0} has updated").format(self.id), alert=True)
+        frappe.msgprint(
+            _("Scheduled execution for script {0} has updated").format(self.id),
+            alert=True,
+        )
 
     def check_if_compilable_in_restricted_context(self):
         """Check compilation errors and send them back as warnings."""

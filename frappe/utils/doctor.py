@@ -47,9 +47,13 @@ def get_jobs_by_queue(site=None):
         q = get_queue(queue)
         for job in q.jobs:
             if not site:
-                jobs_per_queue[queue].append(job.kwargs.get("method") or job.description)
+                jobs_per_queue[queue].append(
+                    job.kwargs.get("method") or job.description
+                )
             elif job.kwargs["site"] == site:
-                jobs_per_queue[queue].append(job.kwargs.get("method") or job.description)
+                jobs_per_queue[queue].append(
+                    job.kwargs.get("method") or job.description
+                )
 
         consolidated_methods = {}
 
@@ -72,7 +76,9 @@ def get_pending_jobs(site=None):
         for job in q.jobs:
             method_kwargs = job.kwargs["kwargs"] if job.kwargs["kwargs"] else ""
             if job.kwargs["site"] == site:
-                jobs_per_queue[queue].append("{} {}".format(job.kwargs["method"], method_kwargs))
+                jobs_per_queue[queue].append(
+                    "{} {}".format(job.kwargs["method"], method_kwargs)
+                )
 
     return jobs_per_queue
 

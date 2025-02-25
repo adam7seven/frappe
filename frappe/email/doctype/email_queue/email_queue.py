@@ -157,7 +157,11 @@ class EmailQueue(Document):
 
         return True
 
-    def send(self, smtp_server_instance: SMTPServer = None, frappe_mail_client: FrappeMail = None):
+    def send(
+        self,
+        smtp_server_instance: SMTPServer = None,
+        frappe_mail_client: FrappeMail = None,
+    ):
         """Send emails to recipients."""
         if not self.can_send_now():
             return
@@ -208,7 +212,9 @@ class EmailQueue(Document):
 
         # Delete queue table
         (
-            frappe.qb.from_(email_queue).delete().where(email_queue.creation < (Now() - Interval(days=days)))
+            frappe.qb.from_(email_queue)
+            .delete()
+            .where(email_queue.creation < (Now() - Interval(days=days)))
         ).run()
 
         # delete child tables, note that this has potential to leave some orphan
@@ -246,7 +252,9 @@ class SendMailContext:
 
         if self.email_account_doc.service == "Frappe Mail":
             if not self.frappe_mail_client:
-                self.frappe_mail_client = self.email_account_doc.get_frappe_mail_client()
+                self.frappe_mail_client = (
+                    self.email_account_doc.get_frappe_mail_client()
+                )
         elif not self.smtp_server:
             self.smtp_server = self.email_account_doc.get_smtp_server()
 
@@ -260,7 +268,11 @@ class SendMailContext:
             if self.queue_doc.retry < get_email_retry_limit():
                 update_fields.update(
                     {
-                        "status": "Partially Sent" if self.sent_to_atleast_one_recipient else "Not Sent",
+                        "status": (
+                            "Partially Sent"
+                            if self.sent_to_atleast_one_recipient
+                            else "Not Sent"
+                        ),
                         "retry": self.queue_doc.retry + 1,
                     }
                 )
@@ -311,13 +323,19 @@ class SendMailContext:
         if not message:
             return ""
 
-        message = message.replace(self.message_placeholder("tracker"), self.get_tracker_str(recipient_email))
         message = message.replace(
-            self.message_placeholder("unsubscribe_url"), self.get_unsubscribe_str(recipient_email)
+            self.message_placeholder("tracker"), self.get_tracker_str(recipient_email)
         )
-        message = message.replace(self.message_placeholder("cc"), self.get_receivers_str())
         message = message.replace(
-            self.message_placeholder("recipient"), self.get_recipient_str(recipient_email)
+            self.message_placeholder("unsubscribe_url"),
+            self.get_unsubscribe_str(recipient_email),
+        )
+        message = message.replace(
+            self.message_placeholder("cc"), self.get_receivers_str()
+        )
+        message = message.replace(
+            self.message_placeholder("recipient"),
+            self.get_recipient_str(recipient_email),
         )
         message = self.include_attachments(message)
         return message
@@ -405,7 +423,9 @@ class SendMailContext:
             elif attachment.get("print_format_attachment") == 1:
                 attachment.pop("print_format_attachment", None)
                 print_format_file = frappe.attach_print(**attachment)
-                self._store_file(print_format_file["fname"], print_format_file["fcontent"])
+                self._store_file(
+                    print_format_file["fname"], print_format_file["fcontent"]
+                )
                 print_format_file.update({"parent": message_obj})
                 add_attachment(**print_format_file)
 
@@ -447,9 +467,11 @@ def retry_sending(queues: str | list[str]):
     # NOTE: this will probably work fine with the way current listview works (showing and selecting 20-20 records)
     # but, ideally this should be enqueued
     email_queue = frappe.qb.DocType("Email Queue")
-    frappe.qb.update(email_queue).set(email_queue.status, "Not Sent").set(email_queue.modified, now()).set(
-        email_queue.modified_by, frappe.session.user
-    ).where(email_queue.name.isin(queues) & email_queue.status == "Error").run()
+    frappe.qb.update(email_queue).set(email_queue.status, "Not Sent").set(
+        email_queue.modified, now()
+    ).set(email_queue.modified_by, frappe.session.user).where(
+        email_queue.name.isin(queues) & email_queue.status == "Error"
+    ).run()
 
 
 @frappe.whitelist()
@@ -747,7 +769,9 @@ class QueueBuilder:
         Sends email incase if it is requested to send now.
         """
         final_recipients = self.final_recipients()
-        queue_separately = (final_recipients and self.queue_separately) or len(final_recipients) > 100
+        queue_separately = (final_recipients and self.queue_separately) or len(
+            final_recipients
+        ) > 100
         if not (final_recipients + self.final_cc()):
             return []
 
@@ -787,7 +811,9 @@ class QueueBuilder:
         smtp_server_instance = None
         for r in final_recipients:
             recipients = list(set([r, *self.final_cc(), *self.bcc]))
-            q = EmailQueue.new({**queue_data, **{"recipients": recipients}}, ignore_permissions=True)
+            q = EmailQueue.new(
+                {**queue_data, **{"recipients": recipients}}, ignore_permissions=True
+            )
             if not frappe_mail_client and not smtp_server_instance:
                 email_account = q.get_email_account(raise_error=True)
 
@@ -797,7 +823,10 @@ class QueueBuilder:
                     smtp_server_instance = email_account.get_smtp_server()
 
             with suppress(Exception):
-                q.send(smtp_server_instance=smtp_server_instance, frappe_mail_client=frappe_mail_client)
+                q.send(
+                    smtp_server_instance=smtp_server_instance,
+                    frappe_mail_client=frappe_mail_client,
+                )
 
         if smtp_server_instance:
             smtp_server_instance.quit()

@@ -14,7 +14,9 @@ class UserGroup(Document):
     from typing import TYPE_CHECKING
 
     if TYPE_CHECKING:
-        from frappe.core.doctype.user_group_member.user_group_member import UserGroupMember
+        from frappe.core.doctype.user_group_member.user_group_member import (
+            UserGroupMember,
+        )
         from frappe.types import DF
 
         user_group_members: DF.TableMultiSelect[UserGroupMember]

@@ -178,10 +178,17 @@ def delete_file(path: str) -> None:
             os.remove(path)
 
 
-def remove_file_by_url(file_url: str, doctype: str | None = None, id: str | None = None) -> "Document":
+def remove_file_by_url(
+    file_url: str, doctype: str | None = None, id: str | None = None
+) -> "Document":
     if doctype and id:
         fid = frappe.db.get_value(
-            "File", {"file_url": file_url, "attached_to_doctype": doctype, "attached_to_id": id}
+            "File",
+            {
+                "file_url": file_url,
+                "attached_to_doctype": doctype,
+                "attached_to_id": id,
+            },
         )
     else:
         fid = frappe.db.get_value("File", {"file_url": file_url})

@@ -158,4 +158,6 @@ class DocField(Document):
         docstatus = f" docstatus={self.docstatus}" if self.docstatus else ""
         parent = f" parent={self.parent}" if getattr(self, "parent", None) else ""
 
-        return f"<{self.fieldtype}{doctype}: {self.fieldname}{docstatus}{parent}{unsaved}>"
+        return (
+            f"<{self.fieldtype}{doctype}: {self.fieldname}{docstatus}{parent}{unsaved}>"
+        )

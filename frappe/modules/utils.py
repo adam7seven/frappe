@@ -157,7 +157,8 @@ def sync_customizations_for_doctype(data: dict, folder: str, filename: str = "")
                 case "Custom Field":
                     for d in data[key]:
                         field = frappe.db.get_value(
-                            "Custom Field", {"dt": doc_type, "fieldname": d["fieldname"]}
+                            "Custom Field",
+                            {"dt": doc_type, "fieldname": d["fieldname"]},
                         )
                         if not field:
                             d["owner"] = "Administrator"

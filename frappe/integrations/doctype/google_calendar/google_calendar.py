@@ -254,23 +254,30 @@ def check_google_calendar(account, google_calendar):
     account.load_from_db()
     try:
         if account.google_calendar_id:
-            google_calendar.calendars().get(calendarId=account.google_calendar_id).execute()
+            google_calendar.calendars().get(
+                calendarId=account.google_calendar_id
+            ).execute()
         else:
             # If no Calendar ID create a new Calendar
             calendar = {
                 "summary": account.id,
                 "timeZone": frappe.get_system_settings("time_zone"),
             }
-            created_calendar = google_calendar.calendars().insert(body=calendar).execute()
+            created_calendar = (
+                google_calendar.calendars().insert(body=calendar).execute()
+            )
             frappe.db.set_value(
-                "Google Calendar", account.id, "google_calendar_id", created_calendar.get("id")
+                "Google Calendar",
+                account.id,
+                "google_calendar_id",
+                created_calendar.get("id"),
             )
             frappe.db.commit()
     except HttpError as err:
         frappe.throw(
-            _("Google Calendar - Could not create Calendar for {0}, error code {1}.").format(
-                account.id, err.resp.status
-            )
+            _(
+                "Google Calendar - Could not create Calendar for {0}, error code {1}."
+            ).format(account.id, err.resp.status)
         )
 
 

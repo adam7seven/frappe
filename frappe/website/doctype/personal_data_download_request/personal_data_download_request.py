@@ -76,7 +76,9 @@ def get_user_data(user):
     data = {}
     for hook in hooks:
         d = data.get(hook.get("doctype"), [])
-        d += frappe.get_all(hook.get("doctype"), {hook.get("filter_by", "owner"): user}, ["*"])
+        d += frappe.get_all(
+            hook.get("doctype"), {hook.get("filter_by", "owner"): user}, ["*"]
+        )
         if d:
             data.update({hook.get("doctype"): d})
     return json.dumps(data, indent=2, default=str)

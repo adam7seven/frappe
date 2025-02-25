@@ -42,7 +42,9 @@ def get_response_content(path=None, http_status_code=200) -> str:
     return str(response.data, "utf-8")
 
 
-def get_response_without_exception_handling(path=None, http_status_code=200) -> Response:
+def get_response_without_exception_handling(
+    path=None, http_status_code=200
+) -> Response:
     """Resolves path and renders page.
 
     Note: This doesn't do any exception handling and assumes you'll implement the exception

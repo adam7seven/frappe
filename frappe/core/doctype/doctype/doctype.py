@@ -223,7 +223,11 @@ class DocType(Document):
         check_email_append_to(self)
 
         if self.default_print_format and not self.custom:
-            frappe.throw(_("Standard DocType cannot have default print format, use Customize Form"))
+            frappe.throw(
+                _(
+                    "Standard DocType cannot have default print format, use Customize Form"
+                )
+            )
 
     def validate_field_name_conflicts(self):
         """Check if field names dont conflict with controller properties and methods"""
@@ -245,8 +249,14 @@ class DocType(Document):
             controller = Document
 
         available_objects = {x for x in dir(controller) if isinstance(x, str)}
-        property_set = {x for x in available_objects if is_a_property(getattr(controller, x, None))}
-        method_set = {x for x in available_objects if x not in property_set and callable(getattr(controller, x, None))}
+        property_set = {
+            x for x in available_objects if is_a_property(getattr(controller, x, None))
+        }
+        method_set = {
+            x
+            for x in available_objects
+            if x not in property_set and callable(getattr(controller, x, None))
+        }
 
         for docfield in self.get("fields") or []:
             if docfield.fieldtype in no_value_fields:
@@ -263,9 +273,9 @@ class DocType(Document):
 
             if conflict_type:
                 frappe.throw(
-                    _("Fieldname '{0}' conflicting with a {1} of the id {2} in {3}").format(
-                        field_label, conflict_type, field, self.id
-                    )
+                    _(
+                        "Fieldname '{0}' conflicting with a {1} of the id {2} in {3}"
+                    ).format(field_label, conflict_type, field, self.id)
                 )
 
     def set_defaults_for_single_and_table(self):
@@ -285,7 +295,11 @@ class DocType(Document):
         if not [d.fieldname for d in self.fields if d.in_list_view]:
             cnt = 0
             for d in self.fields:
-                if d.reqd and not d.hidden and d.fieldtype not in not_allowed_in_list_view:
+                if (
+                    d.reqd
+                    and not d.hidden
+                    and d.fieldtype not in not_allowed_in_list_view
+                ):
                     d.in_list_view = 1
                     cnt += 1
                     if cnt == 4:
@@ -303,15 +317,19 @@ class DocType(Document):
             if d.fieldtype == "Link" and not d.unique and not d.search_index:
                 referred_as_link = frappe.db.exists(
                     "DocType Link",
-                    {"parent": d.options, "link_doctype": self.id, "link_fieldname": d.fieldname},
+                    {
+                        "parent": d.options,
+                        "link_doctype": self.id,
+                        "link_fieldname": d.fieldname,
+                    },
                 )
                 if not referred_as_link:
                     continue
 
                 frappe.msgprint(
-                    _("{0} should be indexed because it's referred in dashboard connections").format(
-                        _(d.label, context=d.parent)
-                    ),
+                    _(
+                        "{0} should be indexed because it's referred in dashboard connections"
+                    ).format(_(d.label, context=d.parent)),
                     alert=True,
                     indicator="orange",
                 )
@@ -323,12 +341,17 @@ class DocType(Document):
 
         if not frappe.conf.get("developer_mode") and not self.custom:
             frappe.throw(
-                _("Not in Developer Mode! Set in site_config.json or make 'Custom' DocType."),
+                _(
+                    "Not in Developer Mode! Set in site_config.json or make 'Custom' DocType."
+                ),
                 CannotCreateStandardDoctypeError,
             )
 
         if self.is_virtual and self.custom:
-            frappe.throw(_("Not allowed to create custom Virtual DocType."), CannotCreateStandardDoctypeError)
+            frappe.throw(
+                _("Not allowed to create custom Virtual DocType."),
+                CannotCreateStandardDoctypeError,
+            )
 
         if frappe.conf.get("developer_mode"):
             self.owner = "Administrator"
@@ -338,7 +361,9 @@ class DocType(Document):
         """Setup query to update values for newly set fetch values"""
         try:
             old_meta = frappe.get_meta(frappe.get_doc("DocType", self.id), cached=False)
-            old_fields_to_fetch = [df.fieldname for df in old_meta.get_fields_to_fetch()]
+            old_fields_to_fetch = [
+                df.fieldname for df in old_meta.get_fields_to_fetch()
+            ]
         except frappe.DoesNotExistError:
             old_fields_to_fetch = []
 
@@ -378,7 +403,9 @@ class DocType(Document):
                         if df.not_nullable:
                             update_query += "WHERE `target`.`{fieldname}`=''"
                         else:
-                            update_query += "WHERE ifnull(`target`.`{fieldname}`, '')=''"
+                            update_query += (
+                                "WHERE ifnull(`target`.`{fieldname}`, '')=''"
+                            )
 
                     self.flags.update_fields_to_fetch_queries.append(
                         update_query.format(
@@ -410,7 +437,9 @@ class DocType(Document):
         if self.has_web_view:
             # route field must be present
             if "route" not in [d.fieldname for d in self.fields]:
-                frappe.throw(_('Field "route" is mandatory for Web Views'), title="Missing Field")
+                frappe.throw(
+                    _('Field "route" is mandatory for Web Views'), title="Missing Field"
+                )
 
             # clear website cache
             clear_cache()
@@ -430,14 +459,16 @@ class DocType(Document):
         if not self.max_attachments:
             return
 
-        total_attach_fields = len([d for d in self.fields if d.fieldtype in attachment_fieldtypes])
+        total_attach_fields = len(
+            [d for d in self.fields if d.fieldtype in attachment_fieldtypes]
+        )
         if total_attach_fields > self.max_attachments:
             self.max_attachments = total_attach_fields
             field_label = frappe.bold(self.meta.get_field("max_attachments").label)
             frappe.msgprint(
-                _("Number of attachment fields are more than {}, limit updated to {}.").format(
-                    field_label, total_attach_fields
-                ),
+                _(
+                    "Number of attachment fields are more than {}, limit updated to {}."
+                ).format(field_label, total_attach_fields),
                 title=_("Insufficient attachment limit"),
                 alert=True,
             )
@@ -473,7 +504,9 @@ class DocType(Document):
             if d.fieldtype:
                 if not getattr(d, "fieldname", None):
                     if d.label:
-                        d.fieldname = d.label.strip().lower().replace(" ", "_").strip("?")
+                        d.fieldname = (
+                            d.label.strip().lower().replace(" ", "_").strip("?")
+                        )
                         if d.fieldname in restricted:
                             d.fieldname = d.fieldname + "1"
                         if d.fieldtype == "Section Break":
@@ -483,15 +516,21 @@ class DocType(Document):
                         elif d.fieldtype == "Tab Break":
                             d.fieldname = d.fieldname + "_tab"
                     elif d.fieldtype in ("Section Break", "Column Break", "Tab Break"):
-                        d.fieldname = d.fieldtype.lower().replace(" ", "_") + "_" + str(random_string(4))
+                        d.fieldname = (
+                            d.fieldtype.lower().replace(" ", "_")
+                            + "_"
+                            + str(random_string(4))
+                        )
                     else:
                         frappe.throw(
-                            _("Row #{}: Fieldname is required").format(d.idx), title="Missing Fieldname"
+                            _("Row #{}: Fieldname is required").format(d.idx),
+                            title="Missing Fieldname",
                         )
                 else:
                     if d.fieldname in restricted:
                         frappe.throw(
-                            _("Fieldname {0} is restricted").format(d.fieldname), InvalidFieldNameError
+                            _("Fieldname {0} is restricted").format(d.fieldname),
+                            InvalidFieldNameError,
                         )
                 d.fieldname = ILLEGAL_FIELDNAME_PATTERN.sub("", d.fieldname)
 
@@ -505,7 +544,10 @@ class DocType(Document):
     def get_permission_log_options(self, event=None):
         if self.custom and event != "after_delete":
             return {
-                "fields": ("permissions", {"fields": ("fieldname", "ignore_user_permissions", "permlevel")})
+                "fields": (
+                    "permissions",
+                    {"fields": ("fieldname", "ignore_user_permissions", "permlevel")},
+                )
             }
 
         self._no_perm_log = True
@@ -584,16 +626,24 @@ class DocType(Document):
 
     def sync_global_search(self):
         """If global search settings are changed, rebuild search properties for this table"""
-        global_search_fields_before_update = [d.fieldname for d in self.before_update.fields if d.in_global_search]
+        global_search_fields_before_update = [
+            d.fieldname for d in self.before_update.fields if d.in_global_search
+        ]
         if self.before_update.show_id_in_global_search:
             global_search_fields_before_update.append("id")
 
-        global_search_fields_after_update = [d.fieldname for d in self.fields if d.in_global_search]
+        global_search_fields_after_update = [
+            d.fieldname for d in self.fields if d.in_global_search
+        ]
         if self.show_id_in_global_search:
             global_search_fields_after_update.append("id")
 
-        if set(global_search_fields_before_update) != set(global_search_fields_after_update):
-            now = (not frappe.request) or frappe.flags.in_test or frappe.flags.in_install
+        if set(global_search_fields_before_update) != set(
+            global_search_fields_after_update
+        ):
+            now = (
+                (not frappe.request) or frappe.flags.in_test or frappe.flags.in_install
+            )
             frappe.enqueue(
                 "frappe.utils.global_search.rebuild_for_doctype",
                 now=now,
@@ -617,22 +667,26 @@ class DocType(Document):
         document_cls_tag = f"class {despaced_name}(Document)"
         document_import_tag = "from frappe.model.document import Document"
         website_generator_cls_tag = f"class {despaced_name}(WebsiteGenerator)"
-        website_generator_import_tag = "from frappe.website.website_generator import WebsiteGenerator"
+        website_generator_import_tag = (
+            "from frappe.website.website_generator import WebsiteGenerator"
+        )
 
         with open(controller_path) as f:
             code = f.read()
         updated_code = code
 
-        is_website_generator_class = all([website_generator_cls_tag in code, website_generator_import_tag in code])
+        is_website_generator_class = all(
+            [website_generator_cls_tag in code, website_generator_import_tag in code]
+        )
 
         if self.has_web_view and not is_website_generator_class:
-            updated_code = updated_code.replace(document_import_tag, website_generator_import_tag).replace(
-                document_cls_tag, website_generator_cls_tag
-            )
+            updated_code = updated_code.replace(
+                document_import_tag, website_generator_import_tag
+            ).replace(document_cls_tag, website_generator_cls_tag)
         elif not self.has_web_view and is_website_generator_class:
-            updated_code = updated_code.replace(website_generator_import_tag, document_import_tag).replace(
-                website_generator_cls_tag, document_cls_tag
-            )
+            updated_code = updated_code.replace(
+                website_generator_import_tag, document_import_tag
+            ).replace(website_generator_cls_tag, document_cls_tag)
 
         if updated_code != code:
             with open(controller_path, "w") as f:
@@ -661,7 +715,9 @@ class DocType(Document):
         `doctype` property for Single type."""
 
         if self.issingle:
-            frappe.db.sql("""update tabSingles set doctype=%s where doctype=%s""", (new, old))
+            frappe.db.sql(
+                """update tabSingles set doctype=%s where doctype=%s""", (new, old)
+            )
             frappe.db.sql(
                 """update tabSingles set value=%s
                 where doctype=%s and field='id' and value = %s""",
@@ -692,11 +748,15 @@ class DocType(Document):
         for fname in os.listdir(new_path):
             if frappe.scrub(old) in fname:
                 old_file_name = os.path.join(new_path, fname)
-                new_file_name = os.path.join(new_path, fname.replace(frappe.scrub(old), frappe.scrub(new)))
+                new_file_name = os.path.join(
+                    new_path, fname.replace(frappe.scrub(old), frappe.scrub(new))
+                )
                 shutil.move(old_file_name, new_file_name)
 
         self.rename_inside_controller(new, old, new_path)
-        frappe.msgprint(_("Renamed files and replaced code in controllers, please check!"))
+        frappe.msgprint(
+            _("Renamed files and replaced code in controllers, please check!")
+        )
 
     def rename_inside_controller(self, new, old, new_path):
         for fname in (
@@ -713,7 +773,9 @@ class DocType(Document):
                     code = f.read()
                 with open(fname, "w") as f:
                     if fname.endswith(".js"):
-                        file_content = code.replace(old, new)  # replace str with full str (js controllers)
+                        file_content = code.replace(
+                            old, new
+                        )  # replace str with full str (js controllers)
 
                     elif fname.endswith(".py"):
                         new_scrub = frappe.scrub(new)
@@ -725,11 +787,15 @@ class DocType(Document):
                         # replace in one go
                         file_content = re.sub(
                             rf"{old_scrub}|{old_no_space}|{old_no_space_no_hyphen}",
-                            lambda x: new_scrub
-                            if x.group() == old_scrub
-                            else new_no_space_no_hyphen
-                            if x.group() == old_no_space_no_hyphen
-                            else new_no_space,
+                            lambda x: (
+                                new_scrub
+                                if x.group() == old_scrub
+                                else (
+                                    new_no_space_no_hyphen
+                                    if x.group() == old_no_space_no_hyphen
+                                    else new_no_space
+                                )
+                            ),
                             code,
                         )
 
@@ -756,7 +822,10 @@ class DocType(Document):
             return
 
         # check if atleast 1 record exists
-        if not (frappe.db.table_exists(self.id) and frappe.get_all(self.id, fields=["id"], limit=1, as_list=True)):
+        if not (
+            frappe.db.table_exists(self.id)
+            and frappe.get_all(self.id, fields=["id"], limit=1, as_list=True)
+        ):
             return
 
         existing_property_setter = frappe.db.get_value(
@@ -821,14 +890,18 @@ class DocType(Document):
                     remaining_field_names = [f.fieldname for f in self.fields]
 
                     for fieldname in old_field_names:
-                        field_dict = [f for f in docdict["fields"] if f["fieldname"] == fieldname]
+                        field_dict = [
+                            f for f in docdict["fields"] if f["fieldname"] == fieldname
+                        ]
                         if field_dict:
                             new_field_dicts.append(field_dict[0])
                             if fieldname in remaining_field_names:
                                 remaining_field_names.remove(fieldname)
 
                     for fieldname in remaining_field_names:
-                        field_dict = [f for f in docdict["fields"] if f["fieldname"] == fieldname]
+                        field_dict = [
+                            f for f in docdict["fields"] if f["fieldname"] == fieldname
+                        ]
                         new_field_dicts.append(field_dict[0])
 
                     docdict["fields"] = new_field_dicts
@@ -843,14 +916,18 @@ class DocType(Document):
             remaining_field_names = [f["fieldname"] for f in docdict.get("fields", [])]
 
             for fieldname in docdict.get("field_order"):
-                field_dict = [f for f in docdict.get("fields", []) if f["fieldname"] == fieldname]
+                field_dict = [
+                    f for f in docdict.get("fields", []) if f["fieldname"] == fieldname
+                ]
                 if field_dict:
                     new_field_dicts.append(field_dict[0])
                     if fieldname in remaining_field_names:
                         remaining_field_names.remove(fieldname)
 
             for fieldname in remaining_field_names:
-                field_dict = [f for f in docdict.get("fields", []) if f["fieldname"] == fieldname]
+                field_dict = [
+                    f for f in docdict.get("fields", []) if f["fieldname"] == fieldname
+                ]
                 new_field_dicts.append(field_dict[0])
 
             docdict["fields"] = new_field_dicts
@@ -923,7 +1000,9 @@ class DocType(Document):
         if self.allow_auto_repeat:
             if not frappe.db.exists(
                 "Custom Field", {"fieldname": "auto_repeat", "dt": self.id}
-            ) and not frappe.db.exists("DocField", {"fieldname": "auto_repeat", "parent": self.id}):
+            ) and not frappe.db.exists(
+                "DocField", {"fieldname": "auto_repeat", "parent": self.id}
+            ):
                 insert_after = self.fields[len(self.fields) - 1].fieldname
                 df = dict(
                     fieldname="auto_repeat",
@@ -944,12 +1023,16 @@ class DocType(Document):
 
         if not self.nsm_parent_field:
             field_label = frappe.bold(_("Parent Field (Tree)"))
-            frappe.throw(_("{0} is a mandatory field").format(field_label), frappe.MandatoryError)
+            frappe.throw(
+                _("{0} is a mandatory field").format(field_label), frappe.MandatoryError
+            )
 
         # check if field is valid
         fieldnames = [df.fieldname for df in self.fields]
         if self.nsm_parent_field and self.nsm_parent_field not in fieldnames:
-            frappe.throw(_("Parent Field must be a valid fieldname"), InvalidFieldNameError)
+            frappe.throw(
+                _("Parent Field must be a valid fieldname"), InvalidFieldNameError
+            )
 
     def add_nestedset_fields(self):
         """If is_tree is set, add parent_field, lft, rgt, is_group fields."""
@@ -1027,7 +1110,9 @@ class DocType(Document):
 
     def get_max_idx(self):
         """Returns the highest `idx`"""
-        max_idx = frappe.db.sql("""select max(idx) from `tabDocField` where parent = %s""", self.id)
+        max_idx = frappe.db.sql(
+            """select max(idx) from `tabDocField` where parent = %s""", self.id
+        )
         return max_idx and max_idx[0][0] or 0
 
     def validate_id(self, id=None):
@@ -1040,7 +1125,9 @@ class DocType(Document):
         if len(id) > max_length:
             # length(tab + <Doctype Name>) should be equal to 64 characters hence doctype should be 61 characters
             frappe.throw(
-                _("Doctype id is limited to {0} characters ({1})").format(max_length, id),
+                _("Doctype id is limited to {0} characters ({1})").format(
+                    max_length, id
+                ),
                 frappe.NameError,
             )
 
@@ -1073,7 +1160,9 @@ class DocType(Document):
 
         file = Path(get_file_path(frappe.scrub(self.module), self.doctype, self.id))
         content = json.loads(file.read_text())
-        if content.get("modified") and get_datetime(self.modified) < get_datetime(content.get("modified")):
+        if content.get("modified") and get_datetime(self.modified) < get_datetime(
+            content.get("modified")
+        ):
             frappe.msgprint(
                 _(
                     "This doctype has pending migrations, run 'bench migrate' before modifying the doctype to avoid losing changes."
@@ -1097,7 +1186,9 @@ def validate_series(dt, autoid=None, id=None):
         fieldname = dt.autoid.split("naming_series:", 1)[0] or "naming_series"
         if not dt.get("fields", {"fieldname": fieldname}):
             frappe.throw(
-                _("Fieldname called {0} must exist to enable autonaming").format(frappe.bold(fieldname)),
+                _("Fieldname called {0} must exist to enable autonaming").format(
+                    frappe.bold(fieldname)
+                ),
                 title=_("Field Missing"),
             )
 
@@ -1130,7 +1221,9 @@ def validate_series(dt, autoid=None, id=None):
             .where(doctype.id != id)
         ).run()
         if used_in:
-            frappe.throw(_("Series {0} already used in {1}").format(prefix, used_in[0][0]))
+            frappe.throw(
+                _("Series {0} already used in {1}").format(prefix, used_in[0][0])
+            )
 
     validate_empty_id(dt, autoid)
 
@@ -1176,7 +1269,9 @@ def validate_autoincrement_autoid(dt: Union[DocType, "CustomizeForm"]) -> bool:
             not is_autoid_autoincrement and autoid_before_save == "autoincrement"
         ):
             if dt.doctype == "Customize Form":
-                frappe.throw(_("Cannot change to/from autoincrement autoid in Customize Form"))
+                frappe.throw(
+                    _("Cannot change to/from autoincrement autoid in Customize Form")
+                )
 
             if frappe.get_meta(dt.id).issingle:
                 return False
@@ -1185,7 +1280,11 @@ def validate_autoincrement_autoid(dt: Union[DocType, "CustomizeForm"]) -> bool:
                 # allow changing the column type if there is no data
                 return True
 
-            frappe.throw(_("Can only change to/from Autoincrement naming rule when there is no data in the doctype"))
+            frappe.throw(
+                _(
+                    "Can only change to/from Autoincrement naming rule when there is no data in the doctype"
+                )
+            )
 
     return False
 
@@ -1194,7 +1293,9 @@ def change_id_column_type(doctype_id: str, type: str) -> None:
     """Changes id column type"""
 
     args = (
-        (doctype_id, "id", type, False, True) if (frappe.db.db_type == "postgres") else (doctype_id, "id", type, True)
+        (doctype_id, "id", type, False, True)
+        if (frappe.db.db_type == "postgres")
+        else (doctype_id, "id", type, True)
     )
 
     frappe.db.change_column_type(*args)
@@ -1202,33 +1303,46 @@ def change_id_column_type(doctype_id: str, type: str) -> None:
 
 def validate_links_table_fieldnames(meta):
     """Validate fieldnames in Links table"""
-    if not meta.links or frappe.flags.in_patch or frappe.flags.in_fixtures or frappe.flags.in_migrate:
+    if (
+        not meta.links
+        or frappe.flags.in_patch
+        or frappe.flags.in_fixtures
+        or frappe.flags.in_migrate
+    ):
         return
 
     fieldnames = tuple(field.fieldname for field in meta.fields)
     for index, link in enumerate(meta.links, 1):
-        _test_connection_query(doctype=link.link_doctype, field=link.link_fieldname, idx=index)
+        _test_connection_query(
+            doctype=link.link_doctype, field=link.link_fieldname, idx=index
+        )
 
         if not link.is_child_table:
             continue
 
         if not link.parent_doctype:
-            message = _("Document Links Row #{0}: Parent DocType is mandatory for internal links").format(index)
+            message = _(
+                "Document Links Row #{0}: Parent DocType is mandatory for internal links"
+            ).format(index)
             frappe.throw(message, frappe.ValidationError, _("Parent Missing"))
 
         if not link.table_fieldname:
-            message = _("Document Links Row #{0}: Table Fieldname is mandatory for internal links").format(index)
+            message = _(
+                "Document Links Row #{0}: Table Fieldname is mandatory for internal links"
+            ).format(index)
             frappe.throw(message, frappe.ValidationError, _("Table Fieldname Missing"))
 
         if meta.id == link.parent_doctype:
             field_exists = link.table_fieldname in fieldnames
         else:
-            field_exists = frappe.get_meta(link.parent_doctype).has_field(link.table_fieldname)
+            field_exists = frappe.get_meta(link.parent_doctype).has_field(
+                link.table_fieldname
+            )
 
         if not field_exists:
-            message = _("Document Links Row #{0}: Could not find field {1} in {2} DocType").format(
-                index, frappe.bold(link.table_fieldname), frappe.bold(meta.id)
-            )
+            message = _(
+                "Document Links Row #{0}: Could not find field {1} in {2} DocType"
+            ).format(index, frappe.bold(link.table_fieldname), frappe.bold(meta.id))
             frappe.throw(message, frappe.ValidationError, _("Invalid Table Fieldname"))
 
 
@@ -1243,7 +1357,9 @@ def _test_connection_query(doctype, field, idx):
     filters[field] = ""
 
     try:
-        frappe.get_all(doctype, filters=filters, limit=1, distinct=True, ignore_ifnull=True)
+        frappe.get_all(
+            doctype, filters=filters, limit=1, distinct=True, ignore_ifnull=True
+        )
     except Exception as e:
         frappe.clear_last_message()
         msg = _("Document Links Row #{0}: Invalid doctype or fieldname.").format(idx)
@@ -1294,7 +1410,9 @@ def validate_fields(meta: Meta):
         duplicates = list(
             filter(
                 None,
-                map(lambda df: df.fieldname == fieldname and str(df.idx) or None, fields),
+                map(
+                    lambda df: df.fieldname == fieldname and str(df.idx) or None, fields
+                ),
             )
         )
         if len(duplicates) > 1:
@@ -1309,9 +1427,15 @@ def validate_fields(meta: Meta):
         validate_column_length(fieldname)
 
     def check_illegal_mandatory(docid, d):
-        if (d.fieldtype in no_value_fields) and d.fieldtype not in table_fields and d.reqd:
+        if (
+            (d.fieldtype in no_value_fields)
+            and d.fieldtype not in table_fields
+            and d.reqd
+        ):
             frappe.throw(
-                _("{0}: Field {1} of type {2} cannot be mandatory").format(docid, d.label, d.fieldtype),
+                _("{0}: Field {1} of type {2} cannot be mandatory").format(
+                    docid, d.label, d.fieldtype
+                ),
                 IllegalMandatoryError,
             )
 
@@ -1322,9 +1446,9 @@ def validate_fields(meta: Meta):
         if d.fieldtype in ("Link", *table_fields):
             if not d.options:
                 frappe.throw(
-                    _("{0}: Options required for Link or Table type field {1} in row {2}").format(
-                        docid, d.label, d.idx
-                    ),
+                    _(
+                        "{0}: Options required for Link or Table type field {1} in row {2}"
+                    ).format(docid, d.label, d.idx),
                     DoctypeLinkError,
                 )
             if d.options == "[Select]" or d.options == d.parent:
@@ -1333,16 +1457,16 @@ def validate_fields(meta: Meta):
                 options = frappe.db.get_value("DocType", d.options, "id")
                 if not options:
                     frappe.throw(
-                        _("{0}: Options must be a valid DocType for field {1} in row {2}").format(
-                            docid, d.label, d.idx
-                        ),
+                        _(
+                            "{0}: Options must be a valid DocType for field {1} in row {2}"
+                        ).format(docid, d.label, d.idx),
                         WrongOptionsDoctypeLinkError,
                     )
                 elif options != d.options:
                     frappe.throw(
-                        _("{0}: Options {1} must be the same as doctype id {2} for the field {3}").format(
-                            docid, d.options, options, d.label
-                        ),
+                        _(
+                            "{0}: Options {1} must be the same as doctype id {2} for the field {3}"
+                        ).format(docid, d.options, options, d.label),
                         DoctypeLinkError,
                     )
                 else:
@@ -1352,24 +1476,34 @@ def validate_fields(meta: Meta):
     def check_hidden_and_mandatory(docid, d):
         if d.hidden and d.reqd and not d.default and not frappe.flags.in_migrate:
             frappe.throw(
-                _("{0}: Field {1} in row {2} cannot be hidden and mandatory without default").format(
-                    docid, d.label, d.idx
-                ),
+                _(
+                    "{0}: Field {1} in row {2} cannot be hidden and mandatory without default"
+                ).format(docid, d.label, d.idx),
                 HiddenAndMandatoryWithoutDefaultError,
             )
 
     def check_width(d):
         if d.fieldtype == "Currency" and cint(d.width) < 100:
-            frappe.throw(_("Max width for type Currency is 100px in row {0}").format(d.idx))
+            frappe.throw(
+                _("Max width for type Currency is 100px in row {0}").format(d.idx)
+            )
 
     def check_in_list_view(is_table, d):
         if d.in_list_view and (d.fieldtype in not_allowed_in_list_view):
             property_label = "In Grid View" if is_table else "In List View"
-            frappe.throw(_("'{0}' not allowed for type {1} in row {2}").format(property_label, d.fieldtype, d.idx))
+            frappe.throw(
+                _("'{0}' not allowed for type {1} in row {2}").format(
+                    property_label, d.fieldtype, d.idx
+                )
+            )
 
     def check_in_global_search(d):
         if d.in_global_search and d.fieldtype in no_value_fields:
-            frappe.throw(_("'In Global Search' not allowed for type {0} in row {1}").format(d.fieldtype, d.idx))
+            frappe.throw(
+                _("'In Global Search' not allowed for type {0} in row {1}").format(
+                    d.fieldtype, d.idx
+                )
+            )
 
     def check_dynamic_link_options(d):
         if d.fieldtype == "Dynamic Link":
@@ -1377,10 +1511,15 @@ def validate_fields(meta: Meta):
             if (
                 not doctype_pointer
                 or (doctype_pointer[0].fieldtype not in ("Link", "Select"))
-                or (doctype_pointer[0].fieldtype == "Link" and doctype_pointer[0].options != "DocType")
+                or (
+                    doctype_pointer[0].fieldtype == "Link"
+                    and doctype_pointer[0].options != "DocType"
+                )
             ):
                 frappe.throw(
-                    _("Options 'Dynamic Link' type of field must point to another Link Field with options as 'DocType'")
+                    _(
+                        "Options 'Dynamic Link' type of field must point to another Link Field with options as 'DocType'"
+                    )
                 )
 
     def check_illegal_default(d):
@@ -1388,16 +1527,16 @@ def validate_fields(meta: Meta):
             d.default = "0"
         if d.fieldtype == "Check" and cint(d.default) not in (0, 1):
             frappe.throw(
-                _("Default for 'Check' type of field {0} must be either '0' or '1'").format(
-                    frappe.bold(d.fieldname)
-                )
+                _(
+                    "Default for 'Check' type of field {0} must be either '0' or '1'"
+                ).format(frappe.bold(d.fieldname))
             )
         if d.fieldtype == "Select" and d.default:
             if not d.options:
                 frappe.throw(
-                    _("Options for {0} must be set before setting the default value.").format(
-                        frappe.bold(d.fieldname)
-                    )
+                    _(
+                        "Options for {0} must be set before setting the default value."
+                    ).format(frappe.bold(d.fieldname))
                 )
             elif d.default not in d.options.split("\n"):
                 frappe.throw(
@@ -1425,7 +1564,9 @@ def validate_fields(meta: Meta):
         if getattr(d, "unique", False):
             if d.fieldtype not in ("Data", "Link", "Read Only", "Int"):
                 frappe.throw(
-                    _("{0}: Fieldtype {1} for {2} cannot be unique").format(docid, d.fieldtype, d.label),
+                    _("{0}: Fieldtype {1} for {2} cannot be unique").format(
+                        docid, d.fieldtype, d.label
+                    ),
                     NonUniqueError,
                 )
 
@@ -1438,9 +1579,9 @@ def validate_fields(meta: Meta):
 
                 if has_non_unique_values and has_non_unique_values[0][0]:
                     frappe.throw(
-                        _("{0}: Field '{1}' cannot be set as Unique as it has non-unique values").format(
-                            docid, d.label
-                        ),
+                        _(
+                            "{0}: Field '{1}' cannot be set as Unique as it has non-unique values"
+                        ).format(docid, d.label),
                         NonUniqueError,
                     )
 
@@ -1452,7 +1593,9 @@ def validate_fields(meta: Meta):
             "Text Editor",
         ):
             frappe.throw(
-                _("{0}:Fieldtype {1} for {2} cannot be indexed").format(docid, d.fieldtype, d.label),
+                _("{0}:Fieldtype {1} for {2} cannot be indexed").format(
+                    docid, d.fieldtype, d.label
+                ),
                 CannotIndexedError,
             )
 
@@ -1476,14 +1619,19 @@ def validate_fields(meta: Meta):
             return
 
         # No value fields should not be included in search field
-        search_fields = [field.strip() for field in (meta.search_fields or "").split(",")]
+        search_fields = [
+            field.strip() for field in (meta.search_fields or "").split(",")
+        ]
         fieldtype_mapper = {
-            field.fieldname: field.fieldtype for field in filter(lambda field: field.fieldname in search_fields, fields)
+            field.fieldname: field.fieldtype
+            for field in filter(lambda field: field.fieldname in search_fields, fields)
         }
 
         for fieldname in search_fields:
             fieldname = fieldname.strip()
-            if (fieldtype_mapper.get(fieldname) in no_value_fields) or (fieldname not in fieldname_list):
+            if (fieldtype_mapper.get(fieldname) in no_value_fields) or (
+                fieldname not in fieldname_list
+            ):
                 frappe.throw(_("Search field {0} is not valid").format(fieldname))
 
     def check_title_field(meta):
@@ -1492,7 +1640,9 @@ def validate_fields(meta: Meta):
             return
 
         if meta.title_field not in fieldname_list:
-            frappe.throw(_("Title field must be a valid fieldname"), InvalidFieldNameError)
+            frappe.throw(
+                _("Title field must be a valid fieldname"), InvalidFieldNameError
+            )
 
         def _validate_title_field_pattern(pattern):
             if not pattern:
@@ -1505,7 +1655,9 @@ def validate_fields(meta: Meta):
 
                 if fieldname not in fieldname_list:
                     frappe.throw(
-                        _("{{{0}}} is not a valid fieldname pattern. It should be {{field_name}}.").format(fieldname),
+                        _(
+                            "{{{0}}} is not a valid fieldname pattern. It should be {{field_name}}."
+                        ).format(fieldname),
                         InvalidFieldNameError,
                     )
 
@@ -1521,16 +1673,22 @@ def validate_fields(meta: Meta):
 
         df = meta.get("fields", {"fieldname": meta.image_field})
         if not df:
-            frappe.throw(_("Image field must be a valid fieldname"), InvalidFieldNameError)
+            frappe.throw(
+                _("Image field must be a valid fieldname"), InvalidFieldNameError
+            )
         if df[0].fieldtype != "Attach Image":
-            frappe.throw(_("Image field must be of type Attach Image"), InvalidFieldNameError)
+            frappe.throw(
+                _("Image field must be of type Attach Image"), InvalidFieldNameError
+            )
 
     def check_is_published_field(meta):
         if not meta.is_published_field:
             return
 
         if meta.is_published_field not in fieldname_list:
-            frappe.throw(_("Is Published Field must be a valid fieldname"), InvalidFieldNameError)
+            frappe.throw(
+                _("Is Published Field must be a valid fieldname"), InvalidFieldNameError
+            )
 
     def check_website_search_field(meta):
         if not meta.get("website_search_field"):
@@ -1553,7 +1711,9 @@ def validate_fields(meta: Meta):
             return
 
         if meta.timeline_field not in fieldname_list:
-            frappe.throw(_("Timeline field must be a valid fieldname"), InvalidFieldNameError)
+            frappe.throw(
+                _("Timeline field must be a valid fieldname"), InvalidFieldNameError
+            )
 
         df = meta.get("fields", {"fieldname": meta.timeline_field})[0]
         if df.fieldtype not in ("Link", "Dynamic Link"):
@@ -1567,10 +1727,14 @@ def validate_fields(meta: Meta):
         if meta.sort_field:
             sort_fields = [meta.sort_field]
             if "," in meta.sort_field:
-                sort_fields = [d.split(maxsplit=1)[0] for d in meta.sort_field.split(",")]
+                sort_fields = [
+                    d.split(maxsplit=1)[0] for d in meta.sort_field.split(",")
+                ]
 
             for fieldname in sort_fields:
-                if fieldname not in (fieldname_list + list(default_fields) + list(child_table_fields)):
+                if fieldname not in (
+                    fieldname_list + list(default_fields) + list(child_table_fields)
+                ):
                     frappe.throw(
                         _("Sort field {0} must be a valid fieldname").format(fieldname),
                         InvalidFieldNameError,
@@ -1586,7 +1750,11 @@ def validate_fields(meta: Meta):
         ]
         for field in depends_on_fields:
             depends_on = docfield.get(field, None)
-            if depends_on and ("=" in depends_on) and DEPENDS_ON_PATTERN.match(depends_on):
+            if (
+                depends_on
+                and ("=" in depends_on)
+                and DEPENDS_ON_PATTERN.match(depends_on)
+            ):
                 frappe.throw(
                     _("Invalid {0} condition").format(frappe.unscrub(field)),
                     frappe.ValidationError,
@@ -1603,9 +1771,9 @@ def validate_fields(meta: Meta):
 
         if not link_field:
             frappe.throw(
-                _("DocType <b>{0}</b> provided for the field <b>{1}</b> must have atleast one Link field").format(
-                    doctype, docfield.fieldname
-                ),
+                _(
+                    "DocType <b>{0}</b> provided for the field <b>{1}</b> must have atleast one Link field"
+                ).format(doctype, docfield.fieldname),
                 frappe.ValidationError,
             )
 
@@ -1640,7 +1808,9 @@ def validate_fields(meta: Meta):
         if docfield.get("is_virtual"):
             return
 
-        if docfield.fieldtype == "Data" and not (docfield.oldfieldtype and docfield.oldfieldtype != "Data"):
+        if docfield.fieldtype == "Data" and not (
+            docfield.oldfieldtype and docfield.oldfieldtype != "Data"
+        ):
             if docfield.options and (docfield.options not in data_field_options):
                 df_str = frappe.bold(_(docfield.label, context=docfield.parent))
                 text_str = (
@@ -1649,9 +1819,15 @@ def validate_fields(meta: Meta):
                     + _("Only Options allowed for Data field are:")
                     + "<br>"
                 )
-                df_options_str = "<ul><li>" + "</li><li>".join(_(x) for x in data_field_options) + "</ul>"
+                df_options_str = (
+                    "<ul><li>"
+                    + "</li><li>".join(_(x) for x in data_field_options)
+                    + "</ul>"
+                )
 
-                frappe.msgprint(text_str + df_options_str, title="Invalid Data Field", alert=True)
+                frappe.msgprint(
+                    text_str + df_options_str, title="Invalid Data Field", alert=True
+                )
 
     def check_child_table_option(docfield):
         if frappe.flags.in_fixtures:
@@ -1671,7 +1847,9 @@ def validate_fields(meta: Meta):
             )
 
         if meta.is_virtual != child_doctype_meta.is_virtual:
-            error_msg = " should be virtual." if meta.is_virtual else " cannot be virtual."
+            error_msg = (
+                " should be virtual." if meta.is_virtual else " cannot be virtual."
+            )
             frappe.throw(
                 _("Child Table {0} for field {1}" + error_msg).format(
                     frappe.bold(doctype), frappe.bold(docfield.fieldname)
@@ -1680,12 +1858,18 @@ def validate_fields(meta: Meta):
             )
 
     def check_max_height(docfield):
-        if getattr(docfield, "max_height", None) and (docfield.max_height[-2:] not in ("px", "em")):
-            frappe.throw(f"Max for {frappe.bold(docfield.fieldname)} height must be in px, em, rem")
+        if getattr(docfield, "max_height", None) and (
+            docfield.max_height[-2:] not in ("px", "em")
+        ):
+            frappe.throw(
+                f"Max for {frappe.bold(docfield.fieldname)} height must be in px, em, rem"
+            )
 
     def check_no_of_ratings(docfield):
         if docfield.fieldtype == "Rating":
-            if docfield.options and (int(docfield.options) > 10 or int(docfield.options) < 3):
+            if docfield.options and (
+                int(docfield.options) > 10 or int(docfield.options) < 3
+            ):
                 frappe.throw(_("Options for Rating field can range from 3 to 10"))
 
     fields = meta.get("fields")
@@ -1777,10 +1961,19 @@ def validate_permissions(doctype, for_remove=False, alert=False):
         isimportable = cint(doctype.allow_import)
 
     def get_txt(d):
-        return _("For {0} at level {1} in {2} in row {3}").format(d.role, d.permlevel, d.parent, d.idx)
+        return _("For {0} at level {1} in {2} in row {3}").format(
+            d.role, d.permlevel, d.parent, d.idx
+        )
 
     def check_atleast_one_set(d):
-        if not d.select and not d.read and not d.write and not d.submit and not d.cancel and not d.create:
+        if (
+            not d.select
+            and not d.read
+            and not d.write
+            and not d.submit
+            and not d.cancel
+            and not d.create
+        ):
             frappe.throw(_("{0}: No basic permissions set").format(get_txt(d)))
 
     def check_double(d):
@@ -1795,7 +1988,9 @@ def validate_permissions(doctype, for_remove=False, alert=False):
 
         if has_similar:
             frappe.throw(
-                _("{0}: Only one rule allowed with the same Role, Level and {1}").format(get_txt(d), similar_because_of)
+                _(
+                    "{0}: Only one rule allowed with the same Role, Level and {1}"
+                ).format(get_txt(d), similar_because_of)
             )
 
     def check_level_zero_is_set(d):
@@ -1808,9 +2003,9 @@ def validate_permissions(doctype, for_remove=False, alert=False):
 
             if not has_zero_perm:
                 frappe.throw(
-                    _("{0}: Permission at level 0 must be set before higher levels are set").format(
-                        get_txt(d)
-                    )
+                    _(
+                        "{0}: Permission at level 0 must be set before higher levels are set"
+                    ).format(get_txt(d))
                 )
 
             for invalid in ("create", "submit", "cancel", "amend"):
@@ -1822,7 +2017,11 @@ def validate_permissions(doctype, for_remove=False, alert=False):
             frappe.throw(_("{0}: Cannot set Cancel without Submit").format(get_txt(d)))
 
         if (d.submit or d.cancel or d.amend) and not d.write:
-            frappe.throw(_("{0}: Cannot set Submit, Cancel, Amend without Write").format(get_txt(d)))
+            frappe.throw(
+                _("{0}: Cannot set Submit, Cancel, Amend without Write").format(
+                    get_txt(d)
+                )
+            )
         if d.amend and not d.write:
             frappe.throw(_("{0}: Cannot set Amend without Cancel").format(get_txt(d)))
         if d.get("import") and not d.create:
@@ -1840,13 +2039,21 @@ def validate_permissions(doctype, for_remove=False, alert=False):
 
     def check_if_submittable(d):
         if d.submit and not issubmittable:
-            frappe.throw(_("{0}: Cannot set Assign Submit if not Submittable").format(get_txt(d)))
+            frappe.throw(
+                _("{0}: Cannot set Assign Submit if not Submittable").format(get_txt(d))
+            )
         elif d.amend and not issubmittable:
-            frappe.throw(_("{0}: Cannot set Assign Amend if not Submittable").format(get_txt(d)))
+            frappe.throw(
+                _("{0}: Cannot set Assign Amend if not Submittable").format(get_txt(d))
+            )
 
     def check_if_importable(d):
         if d.get("import") and not isimportable:
-            frappe.throw(_("{0}: Cannot set import as {1} is not importable").format(get_txt(d), doctype))
+            frappe.throw(
+                _("{0}: Cannot set import as {1} is not importable").format(
+                    get_txt(d), doctype
+                )
+            )
 
     def validate_permission_for_all_role(d):
         if frappe.session.user == "Administrator":
@@ -1895,7 +2102,9 @@ def make_module_and_roles(doc, perm_fieldname="permissions"):
         ):
             frappe.get_doc(doctype="Domain", domain=doc.restrict_to_domain).insert()
 
-        if "tabModule Def" in frappe.db.get_tables() and not frappe.db.exists("Module Def", doc.module):
+        if "tabModule Def" in frappe.db.get_tables() and not frappe.db.exists(
+            "Module Def", doc.module
+        ):
             m = frappe.get_doc({"doctype": "Module Def", "id": doc.module})
             if frappe.scrub(doc.module) in frappe.local.module_app:
                 m.app_name = frappe.local.module_app[frappe.scrub(doc.module)]
@@ -1910,7 +2119,9 @@ def make_module_and_roles(doc, perm_fieldname="permissions"):
         roles = [p.role for p in doc.get("permissions") or []] + list(AUTOMATIC_ROLES)
 
         for role in list(set(roles)):
-            if frappe.db.table_exists("Role", cached=False) and not frappe.db.exists("Role", role):
+            if frappe.db.table_exists("Role", cached=False) and not frappe.db.exists(
+                "Role", role
+            ):
                 r = frappe.new_doc("Role")
                 r.id = role
                 r.desk_access = 1
@@ -1929,8 +2140,14 @@ def check_fieldname_conflicts(docfield):
     """Checks if fieldname conflicts with methods or properties"""
     doc = frappe.get_doc({"doctype": docfield.dt})
     available_objects = [x for x in dir(doc) if isinstance(x, str)]
-    property_list = [x for x in available_objects if is_a_property(getattr(type(doc), x, None))]
-    method_list = [x for x in available_objects if x not in property_list and callable(getattr(doc, x))]
+    property_list = [
+        x for x in available_objects if is_a_property(getattr(type(doc), x, None))
+    ]
+    method_list = [
+        x
+        for x in available_objects
+        if x not in property_list and callable(getattr(doc, x))
+    ]
     msg = _("Fieldname {0} conflicting with meta object").format(docfield.fieldname)
 
     if docfield.fieldname in method_list + property_list:
@@ -1950,7 +2167,9 @@ def check_email_append_to(doc):
     subject_field = get_field(doc, doc.subject_field)
 
     if doc.subject_field and not subject_field:
-        frappe.throw(_("Select a valid Subject field for creating documents from Email"))
+        frappe.throw(
+            _("Select a valid Subject field for creating documents from Email")
+        )
 
     if subject_field and subject_field.fieldtype not in [
         "Data",
@@ -1959,7 +2178,11 @@ def check_email_append_to(doc):
         "Small Text",
         "Text Editor",
     ]:
-        frappe.throw(_("Subject Field type should be Data, Text, Long Text, Small Text, Text Editor"))
+        frappe.throw(
+            _(
+                "Subject Field type should be Data, Text, Long Text, Small Text, Text Editor"
+            )
+        )
 
     # Sender Field is mandatory
     doc.sender_field = doc.sender_field.strip() if doc.sender_field else None
@@ -1987,6 +2210,8 @@ def get_row_size_utilization(doctype: str) -> float:
 
     frappe.has_permission("DocType", throw=True)
     try:
-        return flt(frappe.db.get_row_size(doctype) / frappe.db.MAX_ROW_SIZE_LIMIT * 100, 2)
+        return flt(
+            frappe.db.get_row_size(doctype) / frappe.db.MAX_ROW_SIZE_LIMIT * 100, 2
+        )
     except Exception:
         return 0.0

@@ -27,7 +27,9 @@ class WebsiteAnalytics:
             self.filters.range = "Daily"
 
         self.filters.to_date = frappe.utils.add_days(self.filters.to_date, 1)
-        self.query_filters = {"creation": ["between", [self.filters.from_date, self.filters.to_date]]}
+        self.query_filters = {
+            "creation": ["between", [self.filters.from_date, self.filters.to_date]]
+        }
         self.group_by = self.filters.group_by
 
     def run(self):
@@ -49,8 +51,18 @@ class WebsiteAnalytics:
                 "width": 500,
                 "align": "left",
             },
-            {"fieldname": "count", "label": "Page Views", "fieldtype": "Int", "width": 150},
-            {"fieldname": "unique_count", "label": "Unique Visitors", "fieldtype": "Int", "width": 150},
+            {
+                "fieldname": "count",
+                "label": "Page Views",
+                "fieldtype": "Int",
+                "width": 150,
+            },
+            {
+                "fieldname": "unique_count",
+                "label": "Unique Visitors",
+                "fieldtype": "Int",
+                "width": 150,
+            },
         ]
 
     def get_data(self):
@@ -63,7 +75,9 @@ class WebsiteAnalytics:
             frappe.qb.from_(WebPageView)
             .select(self.group_by, count_all, count_is_unique)
             .where(
-                Coalesce(WebPageView.creation, "0001-01-01")[self.filters.from_date : self.filters.to_date]
+                Coalesce(WebPageView.creation, "0001-01-01")[
+                    self.filters.from_date : self.filters.to_date
+                ]
             )
             .groupby(self.group_by)
             .orderby("count", order=frappe.qb.desc)
@@ -91,7 +105,12 @@ class WebsiteAnalytics:
                 ORDER BY creation
             """
 
-        values = (date_format, self.filters.from_date, self.filters.to_date, date_format)
+        values = (
+            date_format,
+            self.filters.from_date,
+            self.filters.to_date,
+            date_format,
+        )
 
         return query, values
 
@@ -117,7 +136,12 @@ class WebsiteAnalytics:
                 ORDER BY date
             """
 
-        values = (granularity, self.filters.from_date, self.filters.to_date, granularity)
+        values = (
+            granularity,
+            self.filters.from_date,
+            self.filters.to_date,
+            granularity,
+        )
 
         return query, values
 

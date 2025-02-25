@@ -43,7 +43,9 @@ class TestFormLoad(IntegrationTestCase):
         user.remove_roles(*user_roles)
         user.add_roles("Blogger")
 
-        blog_post_property_setter = make_property_setter("Blog Post", "published", "permlevel", 1, "Int")
+        blog_post_property_setter = make_property_setter(
+            "Blog Post", "published", "permlevel", 1, "Int"
+        )
         reset("Blog Post")
 
         # test field level permission before role level permissions are defined
@@ -102,7 +104,9 @@ class TestFormLoad(IntegrationTestCase):
         user.add_roles(*user_roles)
 
         blog_doc.delete()
-        frappe.delete_doc(blog_post_property_setter.doctype, blog_post_property_setter.name)
+        frappe.delete_doc(
+            blog_post_property_setter.doctype, blog_post_property_setter.name
+        )
 
     def test_fieldlevel_permissions_in_load_for_child_table(self):
         contact = frappe.new_doc("Contact")

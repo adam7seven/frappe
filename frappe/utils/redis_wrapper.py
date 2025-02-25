@@ -73,9 +73,22 @@ class RedisWrapper(redis.Redis):
         frappe.local.cache[key] = val
 
         with suppress(redis.exceptions.ConnectionError):
-            self.set(name=key, value=pickle.dumps(val, protocol=DEFAULT_PICKLE_PROTOCOL), ex=expires_in_sec)
+            self.set(
+                name=key,
+                value=pickle.dumps(val, protocol=DEFAULT_PICKLE_PROTOCOL),
+                ex=expires_in_sec,
+            )
 
-    def get_value(self, key, generator=None, user=None, expires=False, shared=False, *, use_local_cache=True):
+    def get_value(
+        self,
+        key,
+        generator=None,
+        user=None,
+        expires=False,
+        shared=False,
+        *,
+        use_local_cache=True,
+    ):
         """Return cache value. If not found and generator function is
                 given, call the generator.
 
@@ -194,7 +207,13 @@ class RedisWrapper(redis.Redis):
 
         # set in redis
         try:
-            super().hset(_name, key, pickle.dumps(value, protocol=DEFAULT_PICKLE_PROTOCOL), *args, **kwargs)
+            super().hset(
+                _name,
+                key,
+                pickle.dumps(value, protocol=DEFAULT_PICKLE_PROTOCOL),
+                *args,
+                **kwargs,
+            )
         except redis.exceptions.ConnectionError:
             pass
 
@@ -357,7 +376,10 @@ class RedisWrapper(redis.Redis):
 
 def setup_cache() -> RedisWrapper:
     if frappe.conf.redis_cache_sentinel_enabled:
-        sentinels = [tuple(node.split(":")) for node in frappe.conf.get("redis_cache_sentinels", [])]
+        sentinels = [
+            tuple(node.split(":"))
+            for node in frappe.conf.get("redis_cache_sentinels", [])
+        ]
         sentinel = get_sentinel_connection(
             sentinels=sentinels,
             sentinel_username=frappe.conf.get("redis_cache_sentinel_username"),
@@ -407,21 +429,26 @@ class _TrackedConnection(redis.Connection):
 
     def _enable_client_tracking(self, conn):
         try:
-            conn.send_command("CLIENT", "TRACKING", "ON", "redirect", self._invalidator_id, "NOLOOP")
+            conn.send_command(
+                "CLIENT", "TRACKING", "ON", "redirect", self._invalidator_id, "NOLOOP"
+            )
             conn.read_response()
         except ResponseError as e:
             if "client ID" in str(e) and "does not exist" in str(e):
                 # Redis restarted, there's no easy way to recover from this.
                 frappe.client_cache.healthy = False
             elif "unknown subcommand" in str(e).lower():
-                raise Exception("Redis version is not supported, upgrade to Redis 6.0 or higher.")
+                raise Exception(
+                    "Redis version is not supported, upgrade to Redis 6.0 or higher."
+                )
             else:
                 raise
 
 
 CachedValue = namedtuple("CachedValue", ["value", "expiry"])
 CacheStatistics = namedtuple(
-    "CacheStatistics", ["hits", "misses", "capacity", "used", "utilization", "hit_ratio", "healthy"]
+    "CacheStatistics",
+    ["hits", "misses", "capacity", "used", "utilization", "hit_ratio", "healthy"],
 )
 _PLACEHOLDER_VALUE = CachedValue(value=None, expiry=-1)
 
@@ -456,7 +483,9 @@ class ClientCache:
           the worst case behaviour for this policy. E.g. looping over `maxsize` items repeatedly.
     """
 
-    def __init__(self, maxsize: int = 1024, ttl=10 * 60, monitor: RedisWrapper | None = None) -> None:
+    def __init__(
+        self, maxsize: int = 1024, ttl=10 * 60, monitor: RedisWrapper | None = None
+    ) -> None:
         self.maxsize = maxsize or 1024  # Expect 1024 * 4kb objects ~ 4MB
         self.local_ttl = ttl
         # This guards writes to self.cache, reads are done without a lock.
@@ -529,7 +558,9 @@ class ClientCache:
             # Note: If our placeholder value is not present then it's possible that value we just
             # got is invalidated, so we should not store it in local cache.
             if key in self.cache:
-                self.cache[key] = CachedValue(value=val, expiry=time.monotonic() + self.local_ttl)
+                self.cache[key] = CachedValue(
+                    value=val, expiry=time.monotonic() + self.local_ttl
+                )
 
         return val
 
@@ -538,7 +569,9 @@ class ClientCache:
         self.ensure_max_size()
         self.redis.set_value(key, val, shared=True)
         with self.lock:
-            self.cache[key] = CachedValue(value=val, expiry=time.monotonic() + self.local_ttl)
+            self.cache[key] = CachedValue(
+                value=val, expiry=time.monotonic() + self.local_ttl
+            )
         # XXX: We need to tell redis that we indeed read this key we just wrote
         # This is an edge case:
         # - Client A writes a key and reads it again from local cache
@@ -618,7 +651,9 @@ class ClientCache:
             used=len(self.cache),
             healthy=self.healthy,
             utilization=round(len(self.cache) / self.maxsize, 2),
-            hit_ratio=round(self.hits / (self.hits + self.misses), 2) if self.hits else None,
+            hit_ratio=(
+                round(self.hits / (self.hits + self.misses), 2) if self.hits else None
+            ),
         )
 
     def reset_statistics(self):

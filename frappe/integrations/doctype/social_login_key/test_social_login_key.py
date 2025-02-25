@@ -6,7 +6,9 @@ from rauth import OAuth2Service
 
 import frappe
 from frappe.auth import CookieManager, LoginManager
-from frappe.integrations.doctype.social_login_key.social_login_key import BaseUrlNotSetError
+from frappe.integrations.doctype.social_login_key.social_login_key import (
+    BaseUrlNotSetError,
+)
 from frappe.tests import IntegrationTestCase, UnitTestCase
 from frappe.utils import set_request
 from frappe.utils.oauth import login_via_oauth2
@@ -44,7 +46,9 @@ class TestSocialLoginKey(IntegrationTestCase):
         mock_session.get.side_effect = github_response_for_private_email
 
         with patch.object(OAuth2Service, "get_auth_session", return_value=mock_session):
-            login_via_oauth2("github", "iwriu", {"token": "ewrwerwer"})  # Dummy code and state token
+            login_via_oauth2(
+                "github", "iwriu", {"token": "ewrwerwer"}
+            )  # Dummy code and state token
 
     def test_github_login_with_public_email(self):
         github_social_login_setup()
@@ -53,13 +57,17 @@ class TestSocialLoginKey(IntegrationTestCase):
         mock_session.get.side_effect = github_response_for_public_email
 
         with patch.object(OAuth2Service, "get_auth_session", return_value=mock_session):
-            login_via_oauth2("github", "iwriu", {"token": "ewrwerwer"})  # Dummy code and state token
+            login_via_oauth2(
+                "github", "iwriu", {"token": "ewrwerwer"}
+            )  # Dummy code and state token
 
     def test_normal_signup_and_github_login(self):
         github_social_login_setup()
 
         if not frappe.db.exists("User", TEST_GITHUB_USER):
-            user = frappe.new_doc("User", email=TEST_GITHUB_USER, first_name="GitHub Login")
+            user = frappe.new_doc(
+                "User", email=TEST_GITHUB_USER, first_name="GitHub Login"
+            )
             user.insert(ignore_permissions=True)
 
         mock_session = MagicMock()
@@ -142,7 +150,9 @@ def github_response_for_private_email(url, *args, **kwargs):
             "first_name": "Github Private",
         }
     else:
-        return_value = [{"email": "github@example.com", "primary": True, "verified": True}]
+        return_value = [
+            {"email": "github@example.com", "primary": True, "verified": True}
+        ]
 
     return MagicMock(status_code=200, json=MagicMock(return_value=return_value))
 

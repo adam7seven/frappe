@@ -171,7 +171,12 @@ class OAuthWebRequestValidator(RequestValidator):
 
             if code_challenge and not request.code_verifier:
                 if frappe.db.exists("OAuth Authorization Code", code):
-                    frappe.delete_doc("OAuth Authorization Code", code, ignore_permissions=True, force=True)
+                    frappe.delete_doc(
+                        "OAuth Authorization Code",
+                        code,
+                        ignore_permissions=True,
+                        force=True,
+                    )
                     frappe.db.commit()
                 return False
 
@@ -258,10 +263,12 @@ class OAuthWebRequestValidator(RequestValidator):
     def validate_bearer_token(self, token, scopes, request):
         # Remember to check expiration and scope membership
         otoken = frappe.get_doc("OAuth Bearer Token", token)
-        is_token_valid = (now_datetime() < otoken.expiration_time) and otoken.status != "Revoked"
-        client_scopes = frappe.db.get_value("OAuth Client", otoken.client, "scopes").split(
-            get_url_delimiter()
-        )
+        is_token_valid = (
+            now_datetime() < otoken.expiration_time
+        ) and otoken.status != "Revoked"
+        client_scopes = frappe.db.get_value(
+            "OAuth Client", otoken.client, "scopes"
+        ).split(get_url_delimiter())
         are_scopes_valid = all(scope in client_scopes for scope in scopes)
         return is_token_valid and are_scopes_valid
 
@@ -314,7 +321,9 @@ class OAuthWebRequestValidator(RequestValidator):
         - Refresh Token Grant
         """
 
-        otoken = frappe.get_doc("OAuth Bearer Token", {"refresh_token": refresh_token, "status": "Active"})
+        otoken = frappe.get_doc(
+            "OAuth Bearer Token", {"refresh_token": refresh_token, "status": "Active"}
+        )
 
         if not otoken:
             return False

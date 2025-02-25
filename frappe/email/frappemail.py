@@ -6,7 +6,11 @@ from zoneinfo import ZoneInfo
 import frappe
 from frappe import _
 from frappe.frappeclient import FrappeClient, FrappeOAuth2Client
-from frappe.utils import convert_utc_to_system_timezone, get_datetime, get_system_timezone
+from frappe.utils import (
+    convert_utc_to_system_timezone,
+    get_datetime,
+    get_system_timezone,
+)
 
 
 class FrappeMail:
@@ -25,7 +29,9 @@ class FrappeMail:
         self.api_key = api_key
         self.api_secret = api_secret
         self.access_token = access_token
-        self.client = self.get_client(self.site, self.email, self.api_key, self.api_secret, self.access_token)
+        self.client = self.get_client(
+            self.site, self.email, self.api_key, self.api_secret, self.access_token
+        )
 
     @staticmethod
     def get_client(
@@ -94,15 +100,23 @@ class FrappeMail:
         self.request("POST", endpoint=endpoint, data=data)
 
     def send_raw(
-        self, sender: str, recipients: str | list, message: str | bytes, is_newsletter: bool = False
+        self,
+        sender: str,
+        recipients: str | list,
+        message: str | bytes,
+        is_newsletter: bool = False,
     ) -> None:
         """Sends an email using the Frappe Mail API."""
 
         endpoint = "/api/method/mail.api.outbound.send_raw"
         data = {"from_": sender, "to": recipients, "is_newsletter": is_newsletter}
-        self.request("POST", endpoint=endpoint, data=data, files={"raw_message": message})
+        self.request(
+            "POST", endpoint=endpoint, data=data, files={"raw_message": message}
+        )
 
-    def pull_raw(self, limit: int = 50, last_synced_at: str | None = None) -> dict[str, str | list[str]]:
+    def pull_raw(
+        self, limit: int = 50, last_synced_at: str | None = None
+    ) -> dict[str, str | list[str]]:
         """Pulls emails for the email using the Frappe Mail API."""
 
         endpoint = "/api/method/mail.api.inbound.pull_raw"
@@ -112,7 +126,9 @@ class FrappeMail:
         data = {"email": self.email, "limit": limit, "last_synced_at": last_synced_at}
         headers = {"X-Site": frappe.utils.get_url()}
         response = self.request("GET", endpoint=endpoint, data=data, headers=headers)
-        last_synced_at = convert_utc_to_system_timezone(get_datetime(response["last_synced_at"]))
+        last_synced_at = convert_utc_to_system_timezone(
+            get_datetime(response["last_synced_at"])
+        )
 
         return {"latest_messages": response["mails"], "last_synced_at": last_synced_at}
 

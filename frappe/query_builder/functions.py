@@ -51,7 +51,9 @@ class Truncate(Function):
         super().__init__("TRUNCATE", term, decimal, **kwargs)
 
 
-GroupConcat = ImportMapper({db_type_is.MARIADB: GROUP_CONCAT, db_type_is.POSTGRES: STRING_AGG})
+GroupConcat = ImportMapper(
+    {db_type_is.MARIADB: GROUP_CONCAT, db_type_is.POSTGRES: STRING_AGG}
+)
 
 Match = ImportMapper({db_type_is.MARIADB: MATCH, db_type_is.POSTGRES: TO_TSVECTOR})
 
@@ -66,7 +68,9 @@ class _PostgresTimestamp(ArithmeticExpression):
         if isinstance(timepart, str):
             timepart = Cast(timepart, "time")
 
-        super().__init__(operator=Arithmetic.add, left=datepart, right=timepart, alias=alias)
+        super().__init__(
+            operator=Arithmetic.add, left=datepart, right=timepart, alias=alias
+        )
 
 
 CombineDatetime = ImportMapper(
@@ -129,9 +133,9 @@ class Cast_(Function):
 
 def _aggregate(function, dt, fieldname, filters, **kwargs):
     return (
-        frappe.qb.get_query(dt, filters=filters, fields=[function(PseudoColumn(fieldname))]).run(**kwargs)[0][
-            0
-        ]
+        frappe.qb.get_query(
+            dt, filters=filters, fields=[function(PseudoColumn(fieldname))]
+        ).run(**kwargs)[0][0]
         or 0
     )
 

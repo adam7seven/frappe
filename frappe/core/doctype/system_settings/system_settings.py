@@ -33,9 +33,16 @@ class SystemSettings(Document):
         bypass_restrict_ip_check_if_2fa_enabled: DF.Check
         country: DF.Link | None
         currency: DF.Link | None
-        currency_precision: DF.Literal["", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        currency_precision: DF.Literal[
+            "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
+        ]
         date_format: DF.Literal[
-            "yyyy-mm-dd", "dd-mm-yyyy", "dd/mm/yyyy", "dd.mm.yyyy", "mm/dd/yyyy", "mm-dd-yyyy"
+            "yyyy-mm-dd",
+            "dd-mm-yyyy",
+            "dd/mm/yyyy",
+            "dd.mm.yyyy",
+            "mm/dd/yyyy",
+            "mm-dd-yyyy",
         ]
         default_app: DF.Literal[None]
         deny_multiple_sessions: DF.Check
@@ -88,7 +95,9 @@ class SystemSettings(Document):
         rate_limit_email_link_login: DF.Int
         reset_password_link_expiry_duration: DF.Duration | None
         reset_password_template: DF.Link | None
-        rounding_method: DF.Literal["Banker's Rounding (legacy)", "Banker's Rounding", "Commercial Rounding"]
+        rounding_method: DF.Literal[
+            "Banker's Rounding (legacy)", "Banker's Rounding", "Commercial Rounding"
+        ]
         session_expiry: DF.Data | None
         setup_complete: DF.Check
         store_attached_pdf_document: DF.Check
@@ -119,7 +128,9 @@ class SystemSettings(Document):
             if self.two_factor_method == "SMS":
                 if not frappe.db.get_single_value("SMS Settings", "sms_gateway_url"):
                     frappe.throw(
-                        _("Please setup SMS before setting it as an authentication method, via SMS Settings")
+                        _(
+                            "Please setup SMS before setting it as an authentication method, via SMS Settings"
+                        )
                     )
             toggle_two_factor_auth(True, roles=["All"])
         else:
@@ -128,7 +139,9 @@ class SystemSettings(Document):
 
         frappe.flags.update_last_reset_password_date = False
         if self.force_user_to_reset_password and not cint(
-            frappe.db.get_single_value("System Settings", "force_user_to_reset_password")
+            frappe.db.get_single_value(
+                "System Settings", "force_user_to_reset_password"
+            )
         ):
             frappe.flags.update_last_reset_password_date = True
 
@@ -143,16 +156,22 @@ class SystemSettings(Document):
             self.link_field_results_limit = 50
             label = _(self.meta.get_label("link_field_results_limit"))
             frappe.msgprint(
-                _("{0} can not be more than {1}").format(label, 50), alert=True, indicator="yellow"
+                _("{0} can not be more than {1}").format(label, 50),
+                alert=True,
+                indicator="yellow",
             )
 
     def validate_user_pass_login(self):
         if not self.disable_user_pass_login:
             return
 
-        social_login_enabled = frappe.db.exists("Social Login Key", {"enable_social_login": 1})
+        social_login_enabled = frappe.db.exists(
+            "Social Login Key", {"enable_social_login": 1}
+        )
         ldap_enabled = frappe.db.get_single_value("LDAP Settings", "enabled")
-        login_with_email_link_enabled = frappe.db.get_single_value("System Settings", "login_with_email_link")
+        login_with_email_link_enabled = frappe.db.get_single_value(
+            "System Settings", "login_with_email_link"
+        )
 
         if not (social_login_enabled or ldap_enabled or login_with_email_link_enabled):
             frappe.throw(
@@ -163,7 +182,9 @@ class SystemSettings(Document):
 
     def validate_backup_limit(self):
         if not self.backup_limit or self.backup_limit < 1:
-            frappe.msgprint(_("Number of backups must be greater than zero."), alert=True)
+            frappe.msgprint(
+                _("Number of backups must be greater than zero."), alert=True
+            )
             self.backup_limit = 1
 
     def validate_file_extensions(self):
@@ -171,7 +192,8 @@ class SystemSettings(Document):
             return
 
         self.allowed_file_extensions = "\n".join(
-            ext.strip().upper() for ext in self.allowed_file_extensions.strip().splitlines()
+            ext.strip().upper()
+            for ext in self.allowed_file_extensions.strip().splitlines()
         )
 
     def on_update(self):
@@ -185,7 +207,9 @@ class SystemSettings(Document):
         from frappe.translate import set_default_language
 
         for df in self.meta.get("fields"):
-            if df.fieldtype not in no_value_fields and self.has_value_changed(df.fieldname):
+            if df.fieldtype not in no_value_fields and self.has_value_changed(
+                df.fieldname
+            ):
                 frappe.db.set_default(df.fieldname, self.get(df.fieldname))
 
         if self.language:

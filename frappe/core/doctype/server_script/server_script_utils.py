@@ -70,7 +70,13 @@ def get_server_script_map():
         script_map = {"permission_query": {}}
         enabled_server_scripts = frappe.get_all(
             "Server Script",
-            fields=("id", "reference_doctype", "doctype_event", "api_method", "script_type"),
+            fields=(
+                "id",
+                "reference_doctype",
+                "doctype_event",
+                "api_method",
+                "script_type",
+            ),
             filters={"disabled": 0},
         )
         for script in enabled_server_scripts:

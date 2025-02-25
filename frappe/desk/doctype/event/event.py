@@ -64,7 +64,9 @@ class Event(Document):
         color: DF.Color | None
         description: DF.TextEditor | None
         ends_on: DF.Datetime | None
-        event_category: DF.Literal["Event", "Meeting", "Call", "Sent/Received Email", "Other"]
+        event_category: DF.Literal[
+            "Event", "Meeting", "Call", "Sent/Received Email", "Other"
+        ]
         event_participants: DF.Table[EventParticipants]
         event_type: DF.Literal["Private", "Public"]
         friday: DF.Check
@@ -74,7 +76,9 @@ class Event(Document):
         google_meet_link: DF.Data | None
         monday: DF.Check
         pulled_from_google_calendar: DF.Check
-        repeat_on: DF.Literal["", "Daily", "Weekly", "Monthly", "Quarterly", "Half Yearly", "Yearly"]
+        repeat_on: DF.Literal[
+            "", "Daily", "Weekly", "Monthly", "Quarterly", "Half Yearly", "Yearly"
+        ]
         repeat_this_event: DF.Check
         repeat_till: DF.Date | None
         saturday: DF.Check
@@ -100,7 +104,11 @@ class Event(Document):
         if self.starts_on and self.ends_on:
             self.validate_from_to_dates("starts_on", "ends_on")
 
-        if self.repeat_on == "Daily" and self.ends_on and getdate(self.starts_on) != getdate(self.ends_on):
+        if (
+            self.repeat_on == "Daily"
+            and self.ends_on
+            and getdate(self.starts_on) != getdate(self.ends_on)
+        ):
             frappe.throw(_("Daily Events should finish on the Same Day."))
 
         if self.sync_with_google_calendar and not self.google_calendar:
@@ -588,7 +596,9 @@ def delete_events(ref_type, ref_id, delete_event=False):
 
 # Close events if ends_on or repeat_till is less than now_datetime
 def set_status_of_events():
-    events = frappe.get_list("Event", filters={"status": "Open"}, fields=["id", "ends_on", "repeat_till"])
+    events = frappe.get_list(
+        "Event", filters={"status": "Open"}, fields=["id", "ends_on", "repeat_till"]
+    )
     for event in events:
         if (event.ends_on and getdate(event.ends_on) < getdate(nowdate())) or (
             event.repeat_till and getdate(event.repeat_till) < getdate(nowdate())

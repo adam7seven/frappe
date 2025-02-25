@@ -27,11 +27,12 @@ class Dashboard(Document):
         cards: DF.Table[NumberCardLink]
         chart_options: DF.Code | None
         charts: DF.Table[DashboardChartLink]
+        dashboard_id: DF.Data
         is_default: DF.Check
         is_standard: DF.Check
         module: DF.Link | None
-
     # end: auto-generated types
+
     def on_update(self):
         if self.is_default:
             # make all other dashboards non-default
@@ -85,14 +86,11 @@ def get_permission_query_conditions(user):
 
     module_not_set = " ifnull(`tabDashboard`.`module`, '') = '' "
     allowed_modules = [
-        frappe.db.escape(module.get("id")) for module in get_modules_from_all_apps_for_user()
+        frappe.db.escape(module.get("module_id"))
+        for module in get_modules_from_all_apps_for_user()
     ]
     if not allowed_modules:
         return module_not_set
-
-    return f" `tabDashboard`.`module` in ({','.join(allowed_modules)}) or {module_not_set} "
-        allowed_modules=",".join(allowed_modules)
-    )
 
     return f" `tabDashboard`.`module` in ({','.join(allowed_modules)}) or {module_not_set} "
 
@@ -122,6 +120,8 @@ def get_permitted_cards(dashboard_id):
         if frappe.has_permission("Number Card", doc=card.card)
     ]
 
+
+def get_non_standard_charts_in_dashboard(dashboard):
     non_standard_charts = [
         doc.id for doc in frappe.get_list("Dashboard Chart", {"is_standard": 0})
     ]
@@ -129,8 +129,6 @@ def get_permitted_cards(dashboard_id):
         chart_link.chart
         for chart_link in dashboard.charts
         if chart_link.chart in non_standard_charts
-    ]
-        chart_link.chart for chart_link in dashboard.charts if chart_link.chart in non_standard_charts
     ]
 
 
@@ -148,12 +146,12 @@ def get_non_standard_cards_in_dashboard(dashboard):
 def get_non_standard_warning_message(non_standard_docs_map):
     message = _(
         """Please set the following documents in this Dashboard as standard first."""
+    )
+
     def get_html(docs, doctype):
         html = f"<p>{frappe.bold(doctype)}</p>"
         for doc in docs:
             html += f'<div><a href="/app/Form/{doctype}/{doc}">{doc}</a></div>'
-        html += "<br>"
-        return html
         html += "<br>"
         return html
 

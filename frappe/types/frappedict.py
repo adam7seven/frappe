@@ -39,7 +39,10 @@ class _dict(dict[_KT, _VT]):
 
     @override
     def update(
-        self, m: Mapping[_KT, _VT] | Iterable[tuple[_KT, _VT]] | None = None, /, **kwargs: _VT
+        self,
+        m: Mapping[_KT, _VT] | Iterable[tuple[_KT, _VT]] | None = None,
+        /,
+        **kwargs: _VT,
     ) -> Self:
         """update and return self -- the missing dict feature in python"""
         if m:

@@ -7,7 +7,12 @@ import frappe.defaults
 import frappe.model.meta
 from frappe.core.doctype.doctype.test_doctype import new_doctype
 from frappe.core.doctype.user_permission.user_permission import clear_user_permissions
-from frappe.core.page.permission_manager.permission_manager import add, remove, reset, update
+from frappe.core.page.permission_manager.permission_manager import (
+    add,
+    remove,
+    reset,
+    update,
+)
 from frappe.desk.form.load import getdoc
 from frappe.permissions import (
     ALL_USER_ROLE,
@@ -26,7 +31,13 @@ from frappe.tests import IntegrationTestCase
 from frappe.tests.utils import make_test_records_for_doctype
 from frappe.utils.data import now_datetime
 
-EXTRA_TEST_RECORD_DEPENDENCIES = ["Blogger", "Blog Post", "User", "Contact", "Salutation"]
+EXTRA_TEST_RECORD_DEPENDENCIES = [
+    "Blogger",
+    "Blog Post",
+    "User",
+    "Contact",
+    "Salutation",
+]
 
 
 class TestPermissions(IntegrationTestCase):
@@ -100,7 +111,9 @@ class TestPermissions(IntegrationTestCase):
         self.assertSequenceSubset(post.meta.get_search_fields(), permitted_record)
 
     def test_user_permissions_in_doc(self):
-        add_user_permission("Blog Category", "-test-blog-category-1", "test2@example.com")
+        add_user_permission(
+            "Blog Category", "-test-blog-category-1", "test2@example.com"
+        )
 
         frappe.set_user("test2@example.com")
 
@@ -113,10 +126,15 @@ class TestPermissions(IntegrationTestCase):
         self.assertTrue(get_doc_permissions(post1).get("read"))
 
     def test_user_permissions_in_report(self):
-        add_user_permission("Blog Category", "-test-blog-category-1", "test2@example.com")
+        add_user_permission(
+            "Blog Category", "-test-blog-category-1", "test2@example.com"
+        )
 
         frappe.set_user("test2@example.com")
-        names = [d.name for d in frappe.get_list("Blog Post", fields=["name", "blog_category"])]
+        names = [
+            d.name
+            for d in frappe.get_list("Blog Post", fields=["name", "blog_category"])
+        ]
 
         self.assertTrue("-test-blog-post-1" in names)
         self.assertFalse("-test-blog-post" in names)
@@ -126,7 +144,9 @@ class TestPermissions(IntegrationTestCase):
         self.assertFalse(doc.get("blog_category"))
 
         # Fetch default based on single user permission
-        add_user_permission("Blog Category", "-test-blog-category-1", "test2@example.com")
+        add_user_permission(
+            "Blog Category", "-test-blog-category-1", "test2@example.com"
+        )
 
         frappe.set_user("test2@example.com")
         doc = frappe.new_doc("Blog Post")
@@ -134,7 +154,10 @@ class TestPermissions(IntegrationTestCase):
 
         # Don't fetch default if user permissions is more than 1
         add_user_permission(
-            "Blog Category", "-test-blog-category", "test2@example.com", ignore_permissions=True
+            "Blog Category",
+            "-test-blog-category",
+            "test2@example.com",
+            ignore_permissions=True,
         )
         frappe.clear_cache()
         doc = frappe.new_doc("Blog Post")
@@ -185,7 +208,11 @@ class TestPermissions(IntegrationTestCase):
 
         # this user can't add user permissions
         self.assertRaises(
-            frappe.PermissionError, add_user_permission, "Blog Post", "-test-blog-post", "test2@example.com"
+            frappe.PermissionError,
+            add_user_permission,
+            "Blog Post",
+            "-test-blog-post",
+            "test2@example.com",
         )
 
     def test_read_if_explicit_user_permissions_are_set(self):
@@ -295,7 +322,9 @@ class TestPermissions(IntegrationTestCase):
         frappe.clear_cache(doctype="DocType")
 
     def test_user_permission_doctypes(self):
-        add_user_permission("Blog Category", "-test-blog-category-1", "test2@example.com")
+        add_user_permission(
+            "Blog Category", "-test-blog-category-1", "test2@example.com"
+        )
         add_user_permission("Blogger", "_Test Blogger 1", "test2@example.com")
 
         frappe.set_user("test2@example.com")
@@ -313,7 +342,9 @@ class TestPermissions(IntegrationTestCase):
     def if_owner_setup(self):
         update("Blog Post", "Blogger", 0, "if_owner", 1)
 
-        add_user_permission("Blog Category", "-test-blog-category-1", "test2@example.com")
+        add_user_permission(
+            "Blog Category", "-test-blog-category-1", "test2@example.com"
+        )
         add_user_permission("Blogger", "_Test Blogger 1", "test2@example.com")
 
         frappe.clear_cache(doctype="Blog Post")
@@ -347,7 +378,9 @@ class TestPermissions(IntegrationTestCase):
         doc.insert()
 
         frappe.set_user("Administrator")
-        remove_user_permission("Blog Category", "-test-blog-category", "test2@example.com")
+        remove_user_permission(
+            "Blog Category", "-test-blog-category", "test2@example.com"
+        )
 
         frappe.set_user("test2@example.com")
         doc = frappe.get_doc(doc.doctype, doc.name)
@@ -378,7 +411,9 @@ class TestPermissions(IntegrationTestCase):
         self.assertFalse(doc.has_permission("write"))
 
         frappe.set_user("Administrator")
-        remove_user_permission("Blog Category", "-test-blog-category", "test2@example.com")
+        remove_user_permission(
+            "Blog Category", "-test-blog-category", "test2@example.com"
+        )
 
         frappe.set_user("test2@example.com")
         self.assertTrue(doc.has_permission("write"))
@@ -423,7 +458,9 @@ class TestPermissions(IntegrationTestCase):
         clear_user_permissions_for_doctype("Salutation")
         clear_user_permissions_for_doctype("Contact")
 
-    def test_user_permission_is_not_applied_if_user_roles_does_not_have_permission(self):
+    def test_user_permission_is_not_applied_if_user_roles_does_not_have_permission(
+        self,
+    ):
         add_user_permission("Blog Post", "-test-blog-post-1", "test3@example.com")
         frappe.set_user("test3@example.com")
         doc = frappe.get_doc("Blog Post", "-test-blog-post-1")
@@ -442,9 +479,16 @@ class TestPermissions(IntegrationTestCase):
         # should be applicable for across all doctypes
         add_user_permission("Blogger", "_Test Blogger", "test2@example.com")
         # should be applicable only while accessing Blog Post
-        add_user_permission("Blogger", "_Test Blogger 1", "test2@example.com", applicable_for="Blog Post")
+        add_user_permission(
+            "Blogger",
+            "_Test Blogger 1",
+            "test2@example.com",
+            applicable_for="Blog Post",
+        )
         # should be applicable only while accessing User
-        add_user_permission("Blogger", "_Test Blogger 2", "test2@example.com", applicable_for="User")
+        add_user_permission(
+            "Blogger", "_Test Blogger 2", "test2@example.com", applicable_for="User"
+        )
 
         posts = frappe.get_all("Blog Post", fields=["name", "blogger"])
 
@@ -616,7 +660,9 @@ class TestPermissions(IntegrationTestCase):
         self.assertTrue(doc.name in doclist)
 
         # Website Manager should not be able to delete
-        self.assertRaises(frappe.PermissionError, frappe.delete_doc, "Blog Post", doc.name)
+        self.assertRaises(
+            frappe.PermissionError, frappe.delete_doc, "Blog Post", doc.name
+        )
 
         frappe.set_user("test2@example.com")
         frappe.delete_doc("Blog Post", "-test-blog-post-title-new-1")
@@ -630,20 +676,26 @@ class TestPermissions(IntegrationTestCase):
 
         add_user_permission("Blog Post", "-test-blog-post-1", "test2@example.com")
         add_user_permission("Blog Post", "-test-blog-post-2", "test2@example.com")
-        add_user_permission("Blog Category", "-test-blog-category-1", "test2@example.com")
+        add_user_permission(
+            "Blog Category", "-test-blog-category-1", "test2@example.com"
+        )
 
-        deleted_user_permission_count = clear_user_permissions("test2@example.com", "Blog Post")
+        deleted_user_permission_count = clear_user_permissions(
+            "test2@example.com", "Blog Post"
+        )
 
         self.assertEqual(deleted_user_permission_count, 2)
 
         blog_post_user_permission_count = frappe.db.count(
-            "User Permission", filters={"user": "test2@example.com", "allow": "Blog Post"}
+            "User Permission",
+            filters={"user": "test2@example.com", "allow": "Blog Post"},
         )
 
         self.assertEqual(blog_post_user_permission_count, 0)
 
         blog_category_user_permission_count = frappe.db.count(
-            "User Permission", filters={"user": "test2@example.com", "allow": "Blog Category"}
+            "User Permission",
+            filters={"user": "test2@example.com", "allow": "Blog Category"},
         )
 
         self.assertEqual(blog_category_user_permission_count, 1)
@@ -653,13 +705,23 @@ class TestPermissions(IntegrationTestCase):
 
     def test_child_permissions(self):
         frappe.set_user("test3@example.com")
-        self.assertIsInstance(frappe.get_list("DefaultValue", parent_doctype="User", limit=1), list)
+        self.assertIsInstance(
+            frappe.get_list("DefaultValue", parent_doctype="User", limit=1), list
+        )
 
         # frappe.get_list
         self.assertRaises(frappe.PermissionError, frappe.get_list, "DefaultValue")
-        self.assertRaises(frappe.PermissionError, frappe.get_list, "DefaultValue", parent_doctype="ToDo")
         self.assertRaises(
-            frappe.PermissionError, frappe.get_list, "DefaultValue", parent_doctype="DefaultValue"
+            frappe.PermissionError,
+            frappe.get_list,
+            "DefaultValue",
+            parent_doctype="ToDo",
+        )
+        self.assertRaises(
+            frappe.PermissionError,
+            frappe.get_list,
+            "DefaultValue",
+            parent_doctype="DefaultValue",
         )
 
         # frappe.get_doc
@@ -727,21 +789,35 @@ class TestPermissions(IntegrationTestCase):
 
         website_user = frappe.db.get_value(
             "User",
-            {"user_type": "Website User", "enabled": 1, "name": ("not in", AUTOMATIC_ROLES)},
+            {
+                "user_type": "Website User",
+                "enabled": 1,
+                "name": ("not in", AUTOMATIC_ROLES),
+            },
         )
         frappe.set_user(website_user)
         assertHasRole(GUEST_ROLE, ALL_USER_ROLE)
 
         system_user = frappe.db.get_value(
             "User",
-            {"user_type": "System User", "enabled": 1, "name": ("not in", AUTOMATIC_ROLES)},
+            {
+                "user_type": "System User",
+                "enabled": 1,
+                "name": ("not in", AUTOMATIC_ROLES),
+            },
         )
         frappe.set_user(system_user)
         assertHasRole(GUEST_ROLE, ALL_USER_ROLE, SYSTEM_USER_ROLE)
 
     def test_get_doctypes_with_read(self):
         with self.set_user("Administrator"):
-            doctype = new_doctype(permissions=[{"select": 1, "role": "_Test Role", "read": 0}]).insert().name
+            doctype = (
+                new_doctype(
+                    permissions=[{"select": 1, "role": "_Test Role", "read": 0}]
+                )
+                .insert()
+                .name
+            )
 
         with self.set_user("test@example.com"):
             self.assertNotIn(doctype, get_doctypes_with_read())
@@ -749,9 +825,15 @@ class TestPermissions(IntegrationTestCase):
     def test_overrides_work_as_expected(self):
         """custom docperms should completely override standard ones"""
         standard_role = "Desk User"
-        custom_role = frappe.new_doc("Role", role_name=frappe.generate_hash()).insert().name
+        custom_role = (
+            frappe.new_doc("Role", role_name=frappe.generate_hash()).insert().name
+        )
         with self.set_user("Administrator"):
-            doctype = new_doctype(permissions=[{"role": standard_role, "read": 1}]).insert().name
+            doctype = (
+                new_doctype(permissions=[{"role": standard_role, "read": 1}])
+                .insert()
+                .name
+            )
 
         with self.set_user("test@example.com"):
             self.assertIn(doctype, get_doctypes_with_read())

@@ -62,10 +62,17 @@ class Address(Document):
                 self.address_title = self.links[0].link_id
 
         if self.address_title:
-            self.id = cstr(self.address_title).strip() + "-" + cstr(_(self.address_type)).strip()
+            self.id = (
+                cstr(self.address_title).strip()
+                + "-"
+                + cstr(_(self.address_type)).strip()
+            )
             if frappe.db.exists("Address", self.id):
                 self.id = make_autoid(
-                    cstr(self.address_title).strip() + "-" + cstr(self.address_type).strip() + "-.#",
+                    cstr(self.address_title).strip()
+                    + "-"
+                    + cstr(self.address_type).strip()
+                    + "-.#",
                     ignore_validate=True,
                 )
         else:
@@ -98,7 +105,9 @@ class Address(Document):
         for field in preferred_fields:
             if self.get(field):
                 for link in self.links:
-                    address = get_preferred_address(link.link_doctype, link.link_id, field)
+                    address = get_preferred_address(
+                        link.link_doctype, link.link_id, field
+                    )
 
                     if address:
                         update_preferred_address(address, field)
@@ -145,7 +154,9 @@ def get_preferred_address(doctype, id, preferred_key="is_primary_address"):
 
 
 @frappe.whitelist()
-def get_default_address(doctype: str, id: str | None, sort_key: str = "is_primary_address") -> str | None:
+def get_default_address(
+    doctype: str, id: str | None, sort_key: str = "is_primary_address"
+) -> str | None:
     """Return default Address id for the given doctype, id"""
     if sort_key not in ["is_shipping_address", "is_primary_address"]:
         return None
@@ -215,7 +226,9 @@ def get_list_context(context=None):
     }
 
 
-def get_address_list(doctype, txt, filters, limit_start, limit_page_length=20, order_by=None):
+def get_address_list(
+    doctype, txt, filters, limit_start, limit_page_length=20, order_by=None
+):
     from frappe.www.list import get_list
 
     user = frappe.session.user
@@ -239,10 +252,14 @@ def has_website_permission(doc, ptype, user, verbose=False):
 
 
 def get_address_templates(address):
-    result = frappe.db.get_value("Address Template", {"country": address.get("country")}, ["id", "template"])
+    result = frappe.db.get_value(
+        "Address Template", {"country": address.get("country")}, ["id", "template"]
+    )
 
     if not result:
-        result = frappe.db.get_value("Address Template", {"is_default": 1}, ["id", "template"])
+        result = frappe.db.get_value(
+            "Address Template", {"is_default": 1}, ["id", "template"]
+        )
 
     if not result:
         frappe.throw(
@@ -259,7 +276,9 @@ def get_company_address(company):
 
     if company:
         ret.company_address = get_default_address("Company", company)
-        ret.company_address_display = render_address(ret.company_address, check_permissions=False)
+        ret.company_address_display = render_address(
+            ret.company_address, check_permissions=False
+        )
 
     return ret
 
@@ -279,7 +298,12 @@ def address_query(doctype, txt, searchfield, start, page_len, filters):
     _filters.extend([key, "=", value] for key, value in filters.items())
 
     return search_widget(
-        "Address", txt, filters=_filters, searchfield=searchfield, start=start, page_length=page_len
+        "Address",
+        txt,
+        filters=_filters,
+        searchfield=searchfield,
+        start=start,
+        page_length=page_len,
     )
 
 

@@ -59,13 +59,17 @@ class TestResourceAPIV2(FrappeAPITestCase):
 
     def test_get_list_dict(self):
         # test 4: fetch response as (not) dict
-        response = self.get(self.resource(self.DOCTYPE), {"sid": self.sid, "as_dict": True})
+        response = self.get(
+            self.resource(self.DOCTYPE), {"sid": self.sid, "as_dict": True}
+        )
         json = frappe._dict(response.json)
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(json.data, list)
         self.assertIsInstance(json.data[0], dict)
 
-        response = self.get(self.resource(self.DOCTYPE), {"sid": self.sid, "as_dict": False})
+        response = self.get(
+            self.resource(self.DOCTYPE), {"sid": self.sid, "as_dict": False}
+        )
         json = frappe._dict(response.json)
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(json.data, list)
@@ -73,7 +77,9 @@ class TestResourceAPIV2(FrappeAPITestCase):
 
     def test_get_list_fields(self):
         # test 6: fetch response with fields
-        response = self.get(self.resource(self.DOCTYPE), {"sid": self.sid, "fields": '["description"]'})
+        response = self.get(
+            self.resource(self.DOCTYPE), {"sid": self.sid, "fields": '["description"]'}
+        )
         self.assertEqual(response.status_code, 200)
         json = frappe._dict(response.json)
         self.assertIn("description", json.data[0])
@@ -179,15 +185,20 @@ class TestMethodAPIV2(FrappeAPITestCase):
     def test_404s(self):
         response = self.get(self.get_path("rest"), {"sid": self.sid})
         self.assertEqual(response.status_code, 404)
-        response = self.get(self.resource("User", "NonExistent@s.com"), {"sid": self.sid})
+        response = self.get(
+            self.resource("User", "NonExistent@s.com"), {"sid": self.sid}
+        )
         self.assertEqual(response.status_code, 404)
 
     def test_shorthand_controller_methods(self):
-        shorthand_response = self.get(self.method("User", "get_all_roles"), {"sid": self.sid})
+        shorthand_response = self.get(
+            self.method("User", "get_all_roles"), {"sid": self.sid}
+        )
         self.assertIn("Blogger", shorthand_response.json["data"])
 
         expanded_response = self.get(
-            self.method("frappe.core.doctype.user.user.get_all_roles"), {"sid": self.sid}
+            self.method("frappe.core.doctype.user.user.get_all_roles"),
+            {"sid": self.sid},
         )
         self.assertEqual(expanded_response.data, shorthand_response.data)
 
@@ -227,7 +238,9 @@ class TestMethodAPIV2(FrappeAPITestCase):
         method = "frappe.tests.test_api.test"
 
         expected_message = "Failed v2"
-        response = self.get(self.method(method), {"sid": self.sid, "message": expected_message}).json
+        response = self.get(
+            self.method(method), {"sid": self.sid, "message": expected_message}
+        ).json
 
         self.assertIsInstance(response["messages"], list)
         self.assertEqual(response["messages"][0]["message"], expected_message)
@@ -235,7 +248,8 @@ class TestMethodAPIV2(FrappeAPITestCase):
         # Cause handled failured
         with suppress_stdout():
             response = self.get(
-                self.method(method), {"sid": self.sid, "message": expected_message, "fail": True}
+                self.method(method),
+                {"sid": self.sid, "message": expected_message, "fail": True},
             ).json
         self.assertIsInstance(response["errors"], list)
         self.assertEqual(response["errors"][0]["message"], expected_message)
@@ -246,7 +260,12 @@ class TestMethodAPIV2(FrappeAPITestCase):
         with suppress_stdout():
             response = self.get(
                 self.method(method),
-                {"sid": self.sid, "message": expected_message, "fail": True, "handled": False},
+                {
+                    "sid": self.sid,
+                    "message": expected_message,
+                    "fail": True,
+                    "handled": False,
+                },
             ).json
 
         self.assertIsInstance(response["errors"], list)
@@ -256,7 +275,8 @@ class TestMethodAPIV2(FrappeAPITestCase):
     def test_add_comment(self):
         comment_txt = frappe.generate_hash()
         response = self.post(
-            self.resource("User", "Administrator", "method", "add_comment"), {"text": comment_txt}
+            self.resource("User", "Administrator", "method", "add_comment"),
+            {"text": comment_txt},
         ).json
         self.assertEqual(response["data"]["content"], comment_txt)
 
@@ -300,7 +320,8 @@ class TestReadOnlyMode(FrappeAPITestCase):
     def test_blocked_writes_v2(self):
         with suppress_stdout():
             response = self.post(
-                self.resource("ToDo"), {"description": frappe.mock("paragraph"), "sid": self.sid}
+                self.resource("ToDo"),
+                {"description": frappe.mock("paragraph"), "sid": self.sid},
             )
         self.assertEqual(response.status_code, 503)
         self.assertEqual(response.json["errors"][0]["type"], "InReadOnlyMode")

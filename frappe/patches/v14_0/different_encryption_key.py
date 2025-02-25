@@ -13,4 +13,6 @@ def execute():
     encrypted_backups_present = bool(list(backup_path.glob("*-enc*")))
 
     if encrypted_backups_present:
-        update_site_config(BACKUP_ENCRYPTION_CONFIG_KEY, frappe.local.conf.encryption_key)
+        update_site_config(
+            BACKUP_ENCRYPTION_CONFIG_KEY, frappe.local.conf.encryption_key
+        )

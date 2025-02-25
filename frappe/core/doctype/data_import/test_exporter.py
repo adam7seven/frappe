@@ -28,11 +28,20 @@ class TestExporter(IntegrationTestCase):
                 title="Test",
                 description="Test Description",
                 table_field_1=[
-                    {"child_title": "Child Title 1", "child_description": "Child Description 1"},
-                    {"child_title": "Child Title 2", "child_description": "Child Description 2"},
+                    {
+                        "child_title": "Child Title 1",
+                        "child_description": "Child Description 1",
+                    },
+                    {
+                        "child_title": "Child Title 2",
+                        "child_description": "Child Description 2",
+                    },
                 ],
                 table_field_2=[
-                    {"child_2_title": "Child Title 1", "child_2_description": "Child Description 1"},
+                    {
+                        "child_2_title": "Child Title 1",
+                        "child_2_description": "Child Description 1",
+                    },
                 ],
                 table_field_1_again=[
                     {

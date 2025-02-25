@@ -40,7 +40,9 @@ def make_test_doc(ignore_permissions=False):
 
 @contextmanager
 def make_test_image_file(private=False):
-    file_path = frappe.get_app_path("frappe", "tests/data/sample_image_for_optimization.jpg")
+    file_path = frappe.get_app_path(
+        "frappe", "tests/data/sample_image_for_optimization.jpg"
+    )
     with open(file_path, "rb") as f:
         file_content = f.read()
 
@@ -103,7 +105,9 @@ class TestFSRollbacks(IntegrationTestCase):
 
 
 class TestExtensionValidations(IntegrationTestCase):
-    @IntegrationTestCase.change_settings("System Settings", {"allowed_file_extensions": "JPG\nCSV"})
+    @IntegrationTestCase.change_settings(
+        "System Settings", {"allowed_file_extensions": "JPG\nCSV"}
+    )
     def test_allowed_extension(self):
         set_request(method="POST", path="/")
         file_name = content = frappe.generate_hash()
@@ -135,7 +139,9 @@ class TestBase64File(IntegrationTestCase):
         self.saved_file_url = _file.file_url
 
     def test_saved_content(self):
-        _file: frappe.Document = frappe.get_doc("File", {"file_url": self.saved_file_url})
+        _file: frappe.Document = frappe.get_doc(
+            "File", {"file_url": self.saved_file_url}
+        )
         content = _file.get_content()
         self.assertEqual(content, test_content1)
 
@@ -285,7 +291,9 @@ class TestSameContent(IntegrationTestCase):
         saved_file = frappe.get_doc("File", _file.name)
         file_content_decoded = saved_file.get_content(encodings=["utf-8"])
         self.assertEqual(file_content_decoded[0], "\ufeff")
-        file_content_properly_decoded = saved_file.get_content(encodings=["utf-8-sig", "utf-8"])
+        file_content_properly_decoded = saved_file.get_content(
+            encodings=["utf-8-sig", "utf-8"]
+        )
         self.assertEqual(file_content_properly_decoded, test_content1)
 
 
@@ -485,7 +493,9 @@ class TestFile(IntegrationTestCase):
 
     def test_file_url_validation(self):
         test_file: File = frappe.new_doc("File")
-        test_file.update({"file_name": "logo", "file_url": "https://frappe.io/files/frappe.png"})
+        test_file.update(
+            {"file_name": "logo", "file_url": "https://frappe.io/files/frappe.png"}
+        )
 
         self.assertIsNone(test_file.validate())
 
@@ -499,7 +509,11 @@ class TestFile(IntegrationTestCase):
 
         test_file.file_url = None
         test_file.file_name = "/usr/bin/man"
-        self.assertRaisesRegex(ValidationError, "There is some problem with the file url", test_file.validate)
+        self.assertRaisesRegex(
+            ValidationError,
+            "There is some problem with the file url",
+            test_file.validate,
+        )
 
         test_file.file_url = None
         test_file.file_name = "_file"
@@ -730,7 +744,9 @@ class TestAttachmentsAccess(IntegrationTestCase):
 
         frappe.set_user("test4@example.com")
         user_files = [file.file_name for file in get_files_in_folder("Home")["files"]]
-        user_attachments_files = [file.file_name for file in get_files_in_folder("Home/Attachments")["files"]]
+        user_attachments_files = [
+            file.file_name for file in get_files_in_folder("Home/Attachments")["files"]
+        ]
 
         self.assertIn("test_sm_standalone.txt", system_manager_files)
         self.assertNotIn("test_sm_standalone.txt", user_files)
@@ -772,7 +788,9 @@ class TestFileUtils(IntegrationTestCase):
             description='Test <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">',
         ).insert()
         filename = frappe.db.exists("File", {"attached_to_id": todo.id})
-        self.assertIn(f'<img src="{frappe.get_doc("File", filename).file_url}', todo.description)
+        self.assertIn(
+            f'<img src="{frappe.get_doc("File", filename).file_url}', todo.description
+        )
 
     def test_extract_images_from_comment(self):
         """
@@ -789,7 +807,9 @@ class TestFileUtils(IntegrationTestCase):
         )
 
         self.assertTrue(
-            frappe.db.exists("File", {"attached_to_id": test_doc.id, "is_private": is_private})
+            frappe.db.exists(
+                "File", {"attached_to_id": test_doc.id, "is_private": is_private}
+            )
         )
         self.assertRegex(comment.content, r"<img src=\"(.*)/files/pix\.png(.*)\">")
 
@@ -810,9 +830,13 @@ class TestFileUtils(IntegrationTestCase):
         ).insert(ignore_permissions=True)
 
         self.assertTrue(
-            frappe.db.exists("File", {"attached_to_id": communication.id, "is_private": is_private})
+            frappe.db.exists(
+                "File", {"attached_to_id": communication.id, "is_private": is_private}
+            )
         )
-        self.assertRegex(communication.content, r"<img src=\"(.*)/files/pix\.png(.*)\">")
+        self.assertRegex(
+            communication.content, r"<img src=\"(.*)/files/pix\.png(.*)\">"
+        )
 
     def test_broken_image(self):
         """Ensure that broken inline images don't cause errors."""
@@ -829,9 +853,14 @@ class TestFileUtils(IntegrationTestCase):
         ).insert(ignore_permissions=True)
 
         self.assertFalse(
-            frappe.db.exists("File", {"attached_to_id": communication.id, "is_private": is_private})
+            frappe.db.exists(
+                "File", {"attached_to_id": communication.id, "is_private": is_private}
+            )
         )
-        self.assertIn(f'<img src="#broken-image" alt="{get_corrupted_image_msg()}">', communication.content)
+        self.assertIn(
+            f'<img src="#broken-image" alt="{get_corrupted_image_msg()}">',
+            communication.content,
+        )
 
     def test_create_new_folder(self):
         folder = create_new_folder("test_folder", "Home")

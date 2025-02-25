@@ -127,7 +127,9 @@ class Webhook(Document):
             return _("Yes")
         try:
             doc = frappe.get_cached_doc(self.webhook_doctype, preview_document)
-            met_condition = frappe.safe_eval(self.condition, eval_locals=get_context(doc))
+            met_condition = frappe.safe_eval(
+                self.condition, eval_locals=get_context(doc)
+            )
         except Exception as e:
             frappe.local.message_log = []
             return _("Failed to evaluate conditions: {}").format(e)
@@ -173,16 +175,16 @@ def enqueue_webhook(doc, webhook) -> None:
             )
             r.raise_for_status()
             frappe.logger().debug({"webhook_success": r.text})
-            log_request(webhook.id,doc.doctype, doc.id, request_url, headers, data, r)
+            log_request(webhook.id, doc.doctype, doc.id, request_url, headers, data, r)
             break
 
         except requests.exceptions.ReadTimeout as e:
             frappe.logger().debug({"webhook_error": e, "try": i + 1})
-            log_request(webhook.id,doc.doctype, doc.id, request_url, headers, data)
+            log_request(webhook.id, doc.doctype, doc.id, request_url, headers, data)
 
         except Exception as e:
             frappe.logger().debug({"webhook_error": e, "try": i + 1})
-            log_request(webhook.id,doc.doctype, doc.id, request_url, headers, data, r)
+            log_request(webhook.id, doc.doctype, doc.id, request_url, headers, data, r)
             sleep(3 * i + 1)
             if i != 2:
                 continue

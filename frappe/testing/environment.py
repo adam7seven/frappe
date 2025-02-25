@@ -79,7 +79,9 @@ scheduler_disabled_by_user = False
 def _disable_scheduler_if_needed():
     """Disable scheduler if it's not already disabled"""
     global scheduler_disabled_by_user
-    scheduler_disabled_by_user = frappe.utils.scheduler.is_scheduler_disabled(verbose=False)
+    scheduler_disabled_by_user = frappe.utils.scheduler.is_scheduler_disabled(
+        verbose=False
+    )
     if not scheduler_disabled_by_user:
         frappe.utils.scheduler.disable_scheduler()
 
@@ -127,7 +129,9 @@ def _decorate_all_methods_and_functions_with_type_checker():
         wrapper._is_decorated_for_validate_argument_types = True
 
         if obj.__module__ != parent_module.__name__:
-            logger.debug(f"... patching {obj.__module__}.{obj.__name__} (inside {parent_module.__name__})")
+            logger.debug(
+                f"... patching {obj.__module__}.{obj.__name__} (inside {parent_module.__name__})"
+            )
         else:
             logger.debug(f"... patching {obj.__module__}.{obj.__name__}")
 
@@ -162,7 +166,9 @@ def _decorate_all_methods_and_functions_with_type_checker():
         pkg = frappe.get_module(app)
         _decorate_module(app, pkg, apps, 1, max_depth)
 
-        for _, submodule_name, _ in pkgutil.walk_packages(path=pkg.__path__, prefix=pkg.__name__ + "."):
+        for _, submodule_name, _ in pkgutil.walk_packages(
+            path=pkg.__path__, prefix=pkg.__name__ + "."
+        ):
             current_depth = len(submodule_name.split("."))
             if current_depth > max_depth:
                 continue
@@ -202,7 +208,9 @@ class IntegrationTestPreparation:
         try:
             test_module = frappe.get_module(f"{app}.tests")
             if hasattr(test_module, "global_test_dependencies"):
-                logger.info(f"Creating global test record dependencies for {category} tests on {app} ...")
+                logger.info(
+                    f"Creating global test record dependencies for {category} tests on {app} ..."
+                )
                 for doctype in test_module.global_test_dependencies:
                     logger.debug(f"Creating global test records for {doctype}")
                     make_test_records(doctype, commit=True)

@@ -31,7 +31,11 @@ from frappe.model.document import Document
 from frappe.utils.background_jobs import get_queue, get_queue_list, get_redis_conn
 from frappe.utils.caching import redis_cache
 from frappe.utils.data import add_to_date
-from frappe.utils.scheduler import get_scheduler_status, get_scheduler_tick, is_schduler_process_running
+from frappe.utils.scheduler import (
+    get_scheduler_status,
+    get_scheduler_tick,
+    is_schduler_process_running,
+)
 
 
 @contextmanager
@@ -48,7 +52,9 @@ def no_wait(func):
 
 
 def health_check(step: str):
-    assert isinstance(step, str), "Invalid usage of decorator, Usage: @health_check('step name')"
+    assert isinstance(
+        step, str
+    ), "Invalid usage of decorator, Usage: @health_check('step name')"
 
     def suppress_exception(func: Callable):
         @functools.wraps(func)
@@ -59,7 +65,9 @@ def health_check(step: str):
                 frappe.log(frappe.get_traceback())
                 # nosemgrep
                 frappe.msgprint(
-                    f"System Health check step {frappe.bold(step)} failed: {e}", alert=True, indicator="red"
+                    f"System Health check step {frappe.bold(step)} failed: {e}",
+                    alert=True,
+                    indicator="red",
                 )
 
         return wrapper
@@ -170,7 +178,8 @@ class SystemHealthReport(Document):
                     "count": len(workers),
                     "queues": queue_type,
                     "failed_jobs": sum(w.failed_job_count for w in workers),
-                    "utilization": sum(w.utilization_percent for w in workers) / len(workers),
+                    "utilization": sum(w.utilization_percent for w in workers)
+                    / len(workers),
                 },
             )
 
@@ -189,7 +198,10 @@ class SystemHealthReport(Document):
         lower_threshold = add_to_date(None, days=-7, as_datetime=True)
         # Exclude "maybe" curently executing job
         upper_threshold = add_to_date(None, minutes=-30, as_datetime=True)
-        scheduler_running = get_scheduler_status().get("status") == "active" and is_schduler_process_running()
+        scheduler_running = (
+            get_scheduler_status().get("status") == "active"
+            and is_schduler_process_running()
+        )
         self.scheduler_status = "Active" if scheduler_running else "Inactive"
 
         mariadb_query = """
@@ -232,14 +244,18 @@ class SystemHealthReport(Document):
         for job in failing_jobs:
             self.append("failing_scheduled_jobs", job)
 
-        threshold = add_to_date(None, seconds=-30 * get_scheduler_tick(), as_datetime=True)
+        threshold = add_to_date(
+            None, seconds=-30 * get_scheduler_tick(), as_datetime=True
+        )
         for job_type in frappe.get_all(
             "Scheduled Job Type",
             filters={"stopped": 0, "last_execution": ("<", threshold)},
             fields="*",
             order_by="last_execution asc",
         ):
-            job_type: ScheduledJobType = frappe.get_doc(doctype="Scheduled Job Type", **job_type)
+            job_type: ScheduledJobType = frappe.get_doc(
+                doctype="Scheduled Job Type", **job_type
+            )
             if job_type.is_event_due():
                 self.oldest_unscheduled_job = job_type.id
                 break
@@ -249,12 +265,20 @@ class SystemHealthReport(Document):
         threshold = add_to_date(None, days=-7, as_datetime=True)
         filters = {"creation": (">", threshold), "modified": (">", threshold)}
         self.total_outgoing_emails = frappe.db.count("Email Queue", filters)
-        self.pending_emails = frappe.db.count("Email Queue", {"status": "Not Sent", **filters})
-        self.failed_emails = frappe.db.count("Email Queue", {"status": "Error", **filters})
+        self.pending_emails = frappe.db.count(
+            "Email Queue", {"status": "Not Sent", **filters}
+        )
+        self.failed_emails = frappe.db.count(
+            "Email Queue", {"status": "Error", **filters}
+        )
         self.unhandled_emails = frappe.db.count("Unhandled Email", filters)
         self.handled_emails = frappe.db.count(
             "Communication",
-            {"sent_or_received": "Received", "communication_type": "Communication", **filters},
+            {
+                "sent_or_received": "Received",
+                "communication_type": "Communication",
+                **filters,
+            },
         )
 
     @health_check("Errors")
@@ -290,13 +314,17 @@ class SystemHealthReport(Document):
         self.database_version = frappe.db.sql("select version()")[0][0]
 
         if frappe.db.db_type == "mariadb":
-            self.bufferpool_size = frappe.db.sql("show variables like 'innodb_buffer_pool_size'")[0][1]
+            self.bufferpool_size = frappe.db.sql(
+                "show variables like 'innodb_buffer_pool_size'"
+            )[0][1]
             self.binary_logging = frappe.db.sql("show variables like 'log_bin'")[0][1]
 
     @health_check("Cache")
     def fetch_cache_details(self):
         self.cache_keys = len(frappe.cache.get_keys(""))
-        self.cache_memory_usage = frappe.cache.execute_command("INFO", "MEMORY").get("used_memory_human")
+        self.cache_memory_usage = frappe.cache.execute_command("INFO", "MEMORY").get(
+            "used_memory_human"
+        )
 
     @health_check("Storage")
     def fetch_storage_details(self):
@@ -311,7 +339,9 @@ class SystemHealthReport(Document):
     def fetch_user_stats(self):
         threshold = add_to_date(None, days=-30, as_datetime=True)
         self.total_users = frappe.db.count("User", {"enabled": 1})
-        self.new_users = frappe.db.count("User", {"enabled": 1, "creation": (">", threshold)})
+        self.new_users = frappe.db.count(
+            "User", {"enabled": 1, "creation": (">", threshold)}
+        )
         self.failed_logins = frappe.db.count(
             "Activity Log",
             {

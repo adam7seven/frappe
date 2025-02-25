@@ -110,13 +110,29 @@ class TestCustomField(IntegrationTestCase):
                 "custom": 1,
                 "module": "Core",
                 "fields": [
-                    {"fieldname": "section1", "fieldtype": "Section Break", "label": "Section 1"},
+                    {
+                        "fieldname": "section1",
+                        "fieldtype": "Section Break",
+                        "label": "Section 1",
+                    },
                     {"fieldname": "field1", "fieldtype": "Data", "label": "Field 1"},
                     {"fieldname": "field2", "fieldtype": "Data", "label": "Field 2"},
-                    {"fieldname": "section2", "fieldtype": "Section Break", "label": "Section 2"},
-                    {"fieldname": "column21", "fieldtype": "Column Break", "label": "Column 2.1"},
+                    {
+                        "fieldname": "section2",
+                        "fieldtype": "Section Break",
+                        "label": "Section 2",
+                    },
+                    {
+                        "fieldname": "column21",
+                        "fieldtype": "Column Break",
+                        "label": "Column 2.1",
+                    },
                     {"fieldname": "field3", "fieldtype": "Data", "label": "Field 3"},
-                    {"fieldname": "column22", "fieldtype": "Column Break", "label": "Column 2.2"},
+                    {
+                        "fieldname": "column22",
+                        "fieldtype": "Column Break",
+                        "label": "Column 2.2",
+                    },
                     {"fieldname": "field4", "fieldtype": "Data", "label": "Field 4"},
                 ],
             }

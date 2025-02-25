@@ -34,7 +34,9 @@ def report_error(status_code):
     """Build error. Show traceback in developer mode"""
     from frappe.api import ApiVersion, get_api_version
 
-    allow_traceback = is_traceback_allowed() and (status_code != 404 or frappe.conf.logging)
+    allow_traceback = is_traceback_allowed() and (
+        status_code != 404 or frappe.conf.logging
+    )
 
     traceback = frappe.utils.get_traceback()
     exc_type, exc_value, _ = sys.exc_info()
@@ -68,7 +70,9 @@ def is_traceback_allowed():
 
 def _link_error_with_message_log(error_log, exception, message_logs):
     for message in list(message_logs):
-        if message.get("__frappe_exc_id") == getattr(exception, "__frappe_exc_id", None):
+        if message.get("__frappe_exc_id") == getattr(
+            exception, "__frappe_exc_id", None
+        ):
             error_log.update(message)
             message_logs.remove(message)
             error_log.pop("raise_exception", None)
@@ -121,7 +125,9 @@ def as_raw():
         or mimetypes.guess_type(frappe.response["filename"])[0]
         or "application/unknown"
     )
-    filename = frappe.response["filename"].encode("utf-8").decode("unicode-escape", "ignore")
+    filename = (
+        frappe.response["filename"].encode("utf-8").decode("unicode-escape", "ignore")
+    )
     response.headers.add(
         "Content-Disposition",
         frappe.response.get("display_content_as", "attachment"),
@@ -149,7 +155,9 @@ def as_json():
 def as_pdf():
     response = Response()
     response.mimetype = "application/pdf"
-    filename = frappe.response["filename"].encode("utf-8").decode("unicode-escape", "ignore")
+    filename = (
+        frappe.response["filename"].encode("utf-8").decode("unicode-escape", "ignore")
+    )
     response.headers.add("Content-Disposition", None, filename=filename)
     response.data = frappe.response["filecontent"]
     return response
@@ -186,9 +194,13 @@ def _make_logs_v1():
     )
 
     if frappe.error_log and is_traceback_allowed():
-        if source := guess_exception_source(frappe.local.error_log and frappe.local.error_log[0]["exc"]):
+        if source := guess_exception_source(
+            frappe.local.error_log and frappe.local.error_log[0]["exc"]
+        ):
             response["_exc_source"] = source
-        response["exc"] = json.dumps([frappe.utils.cstr(d["exc"]) for d in frappe.local.error_log])
+        response["exc"] = json.dumps(
+            [frappe.utils.cstr(d["exc"]) for d in frappe.local.error_log]
+        )
 
     if frappe.local.message_log:
         response["_server_messages"] = json.dumps(
@@ -254,14 +266,19 @@ def json_handler(obj):
         return obj.__value__()
 
     else:
-        raise TypeError(f"""Object of type {type(obj)} with value of {obj!r} is not JSON serializable""")
+        raise TypeError(
+            f"""Object of type {type(obj)} with value of {obj!r} is not JSON serializable"""
+        )
 
 
 def as_page():
     """print web page"""
     from frappe.website.serve import get_response
 
-    return get_response(frappe.response["route"], http_status_code=frappe.response.get("http_status_code"))
+    return get_response(
+        frappe.response["route"],
+        http_status_code=frappe.response.get("http_status_code"),
+    )
 
 
 def redirect():
@@ -309,7 +326,9 @@ def send_private_file(path: str) -> Response:
         path = "/protected/" + path
         response = Response()
         response.headers["X-Accel-Redirect"] = quote(frappe.utils.encode(path))
-        response.headers["Cache-Control"] = "private,max-age=3600,stale-while-revalidate=86400"
+        response.headers["Cache-Control"] = (
+            "private,max-age=3600,stale-while-revalidate=86400"
+        )
 
     else:
         filepath = frappe.utils.get_site_path(path)

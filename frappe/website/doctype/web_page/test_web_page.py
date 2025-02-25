@@ -23,7 +23,9 @@ class TestWebPage(IntegrationTestCase):
         self.assertTrue(PathResolver("test-web-page-1").is_valid_path())
         self.assertTrue(PathResolver("test-web-page-1/test-web-page-2").is_valid_path())
         self.assertTrue(PathResolver("test-web-page-1/test-web-page-3").is_valid_path())
-        self.assertFalse(PathResolver("test-web-page-1/test-web-page-Random").is_valid_path())
+        self.assertFalse(
+            PathResolver("test-web-page-1/test-web-page-Random").is_valid_path()
+        )
 
     def test_content_type(self):
         web_page = frappe.get_doc(

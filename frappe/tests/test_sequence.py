@@ -43,7 +43,9 @@ class TestSequence(IntegrationTestCase):
         frappe.db.rollback()
 
         seq_name = self.generate_sequence_name()
-        frappe.db.create_sequence(seq_name, min_value=10, max_value=20, increment_by=5, temporary=True)
+        frappe.db.create_sequence(
+            seq_name, min_value=10, max_value=20, increment_by=5, temporary=True
+        )
         self.assertEqual(10, frappe.db.get_next_sequence_val(seq_name))
         self.assertEqual(15, frappe.db.get_next_sequence_val(seq_name))
         self.assertEqual(20, frappe.db.get_next_sequence_val(seq_name))

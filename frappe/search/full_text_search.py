@@ -107,7 +107,9 @@ class FullTextSearch:
 
         writer.commit(optimize=True)
 
-    def search(self, text: str, scope: str | None = None, limit: int = 20) -> list[frappe._dict]:
+    def search(
+        self, text: str, scope: str | None = None, limit: int = 20
+    ) -> list[frappe._dict]:
         """Search from the current index.
 
         Args:

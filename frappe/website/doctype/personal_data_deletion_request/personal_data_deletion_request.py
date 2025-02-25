@@ -7,7 +7,9 @@ import re
 import frappe
 from frappe import _
 from frappe.core.utils import find
-from frappe.desk.doctype.notification_settings.notification_settings import is_email_notifications_enabled
+from frappe.desk.doctype.notification_settings.notification_settings import (
+    is_email_notifications_enabled,
+)
 from frappe.model.document import Document
 from frappe.utils import get_datetime, get_fullname, time_diff_in_hours
 from frappe.utils.user import get_system_managers
@@ -29,7 +31,9 @@ class PersonalDataDeletionRequest(Document):
         anonymization_matrix: DF.Code | None
         deletion_steps: DF.Table[PersonalDataDeletionStep]
         email: DF.Data
-        status: DF.Literal["Pending Verification", "Pending Approval", "On Hold", "Deleted"]
+        status: DF.Literal[
+            "Pending Verification", "Pending Approval", "On Hold", "Deleted"
+        ]
     # end: auto-generated types
 
     def __init__(self, *args, **kwargs):
@@ -254,7 +258,11 @@ class PersonalDataDeletionRequest(Document):
 
         if filter_by_meta and filter_by_meta.fieldtype != "Link":
             if self.email in doc[filter_by]:
-                value = re.sub(self.full_name_regex, self.anonymization_value_map["Data"], doc[filter_by])
+                value = re.sub(
+                    self.full_name_regex,
+                    self.anonymization_value_map["Data"],
+                    doc[filter_by],
+                )
                 value = re.sub(self.email_regex, self.anon, value)
                 self.anonymize_fields_dict[filter_by] = value
 
@@ -282,13 +290,19 @@ class PersonalDataDeletionRequest(Document):
         self.full_match_doctypes = (
             doc
             for doc in self.full_match_privacy_docs
-            if filter(lambda x: x.document_type == doc and x.status == "Pending", self.deletion_steps)
+            if filter(
+                lambda x: x.document_type == doc and x.status == "Pending",
+                self.deletion_steps,
+            )
         )
 
         self.partial_match_doctypes = (
             doc
             for doc in self.partial_privacy_docs
-            if filter(lambda x: x.document_type == doc and x.status == "Pending", self.deletion_steps)
+            if filter(
+                lambda x: x.document_type == doc and x.status == "Pending",
+                self.deletion_steps,
+            )
         )
 
         for doctype in self.full_match_doctypes:

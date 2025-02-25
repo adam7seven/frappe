@@ -69,7 +69,9 @@ class SiteMigration:
     - run after migrate hooks
     """
 
-    def __init__(self, skip_failing: bool = False, skip_search_index: bool = False) -> None:
+    def __init__(
+        self, skip_failing: bool = False, skip_search_index: bool = False
+    ) -> None:
         self.skip_failing = skip_failing
         self.skip_search_index = skip_search_index
 
@@ -224,7 +226,9 @@ class SiteMigration:
                     print(f"Killed inactive database connection with PID {pid}")
                 except Exception as e:
                     # We might not have permission to do this.
-                    print(f"Failed to kill inactive database connection with PID {pid}: {e}")
+                    print(
+                        f"Failed to kill inactive database connection with PID {pid}: {e}"
+                    )
 
     def run(self, site: str):
         """Run Migrate operation on site specified. This method initializes

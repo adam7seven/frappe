@@ -34,7 +34,11 @@ def execute():
         frappe_login_key.base_url = social_login_keys.get("frappe_server_url")
         frappe_login_key.client_id = social_login_keys.get("frappe_client_id")
         frappe_login_key.client_secret = social_login_keys.get("frappe_client_secret")
-        if not (frappe_login_key.client_secret and frappe_login_key.client_id and frappe_login_key.base_url):
+        if not (
+            frappe_login_key.client_secret
+            and frappe_login_key.client_id
+            and frappe_login_key.base_url
+        ):
             frappe_login_key.enable_social_login = 0
         frappe_login_key.save()
 

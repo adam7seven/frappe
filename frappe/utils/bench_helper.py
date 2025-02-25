@@ -30,13 +30,19 @@ def FrappeClickWrapper(cls, handler):
 
             possibilities = get_close_matches(cmd_name, all_commands)
             raise click.NoSuchOption(
-                cmd_name, possibilities=possibilities, message=f"No such command: {cmd_name}."
+                cmd_name,
+                possibilities=possibilities,
+                message=f"No such command: {cmd_name}.",
             )
 
         def make_context(self, info_name, args, parent=None, **extra):
             try:
                 return super().make_context(info_name, args, parent=parent, **extra)
-            except (click.ClickException, click.exceptions.Exit, click.exceptions.Abort) as e:
+            except (
+                click.ClickException,
+                click.exceptions.Exit,
+                click.exceptions.Abort,
+            ) as e:
                 raise e
             except Exception as exc:
                 # call the handler
@@ -46,7 +52,11 @@ def FrappeClickWrapper(cls, handler):
         def invoke(self, ctx):
             try:
                 return super().invoke(ctx)
-            except (click.ClickException, click.exceptions.Exit, click.exceptions.Abort) as e:
+            except (
+                click.ClickException,
+                click.exceptions.Exit,
+                click.exceptions.Abort,
+            ) as e:
                 raise e
             except Exception as exc:
                 # call the handler
@@ -73,8 +83,12 @@ def handle_exception(cmd, info_name, exc):
 
 def main():
     commands = get_app_groups()
-    commands.update({"get-frappe-commands": get_frappe_commands, "get-frappe-help": get_frappe_help})
-    FrappeClickWrapper(click.Group, handle_exception)(commands=commands)(prog_name="bench")
+    commands.update(
+        {"get-frappe-commands": get_frappe_commands, "get-frappe-help": get_frappe_help}
+    )
+    FrappeClickWrapper(click.Group, handle_exception)(commands=commands)(
+        prog_name="bench"
+    )
 
 
 def get_app_groups() -> dict[str, click.Group | click.Command]:
@@ -86,7 +100,9 @@ def get_app_groups() -> dict[str, click.Group | click.Command]:
             commands |= app_commands
     return dict(
         frappe=click.group(
-            name="frappe", commands=commands, cls=FrappeClickWrapper(click.Group, handle_exception)
+            name="frappe",
+            commands=commands,
+            cls=FrappeClickWrapper(click.Group, handle_exception),
         )(app_group)
     )
 
@@ -94,7 +110,9 @@ def get_app_groups() -> dict[str, click.Group | click.Command]:
 def get_app_group(app: str) -> click.Group:
     if app_commands := get_app_commands(app):
         return click.group(
-            name=app, commands=app_commands, cls=FrappeClickWrapper(click.Group, handle_exception)
+            name=app,
+            commands=app_commands,
+            cls=FrappeClickWrapper(click.Group, handle_exception),
         )(app_group)
 
 
@@ -104,7 +122,9 @@ def get_app_group(app: str) -> click.Group:
 @click.option("--force", is_flag=True, default=False, help="Force")
 @click.pass_context
 def app_group(ctx, site=False, force=False, verbose=False, profile=False):
-    ctx.obj = CliCtxObj(sites=get_sites(site), force=force, verbose=verbose, profile=profile)
+    ctx.obj = CliCtxObj(
+        sites=get_sites(site), force=force, verbose=verbose, profile=profile
+    )
     if ctx.info_name == "frappe":
         ctx.info_name = ""
 

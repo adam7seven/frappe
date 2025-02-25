@@ -43,7 +43,9 @@ class RecorderConfig:
             frappe.throw("You must record one of jobs or requests")
 
     def store(self):
-        frappe.cache.set_value(RECORDER_CONFIG_FLAG, self, expires_in_sec=RECORDER_AUTO_DISABLE)
+        frappe.cache.set_value(
+            RECORDER_CONFIG_FLAG, self, expires_in_sec=RECORDER_AUTO_DISABLE
+        )
 
     @classmethod
     def retrieve(cls):
@@ -86,7 +88,9 @@ def get_current_stack_frames():
     try:
         current = inspect.currentframe()
         frames = inspect.getouterframes(current, context=10)
-        for frame, filename, lineno, function, context, index in list(reversed(frames))[:-2]:  # noqa: B007
+        for frame, filename, lineno, function, context, index in list(reversed(frames))[
+            :-2
+        ]:  # noqa: B007
             if "/apps/" in filename or SERVER_SCRIPT_FILE_PREFIX in filename:
                 yield {
                     "filename": TRACEBACK_PATH_PATTERN.sub("", filename),
@@ -123,10 +127,14 @@ def post_process():
             call["query"] = formatted_query
 
             # Collect EXPLAIN for executed query
-            if config.explain and is_query_type(formatted_query, ("select", "update", "delete")):
+            if config.explain and is_query_type(
+                formatted_query, ("select", "update", "delete")
+            ):
                 # Only SELECT/UPDATE/DELETE queries can be "EXPLAIN"ed
                 try:
-                    call["explain_result"] = frappe.db.sql(f"EXPLAIN {formatted_query}", as_dict=True)
+                    call["explain_result"] = frappe.db.sql(
+                        f"EXPLAIN {formatted_query}", as_dict=True
+                    )
                 except Exception:
                     pass
         mark_duplicates(request)
@@ -217,7 +225,11 @@ class Recorder:
             self.headers = dict(frappe.local.request.headers)
             self.form_dict = frappe.local.form_dict
             self.event_type = "HTTP Request"
-        elif self.config.record_jobs and frappe.job and self.config.jobs_filter in frappe.job.method:
+        elif (
+            self.config.record_jobs
+            and frappe.job
+            and self.config.jobs_filter in frappe.job.method
+        ):
             self.event_type = "Background Job"
             self.path = frappe.job.method
             self.cmd = None
@@ -272,8 +284,12 @@ class Recorder:
             "cmd": self.cmd,
             "time": self.time,
             "queries": len(self.calls),
-            "time_queries": float("{:0.3f}".format(sum(call["duration"] for call in self.calls))),
-            "duration": float(f"{(now_datetime() - self.time).total_seconds() * 1000:0.3f}"),
+            "time_queries": float(
+                "{:0.3f}".format(sum(call["duration"] for call in self.calls))
+            ),
+            "duration": float(
+                f"{(now_datetime() - self.time).total_seconds() * 1000:0.3f}"
+            ),
             "method": self.method,
             "event_type": self.event_type,
         }
@@ -394,7 +410,9 @@ def record_queries(func: Callable):
     @functools.wraps(func)
     def wrapped(*args, **kwargs):
         record(force=True)
-        frappe.local._recorder.path = f"Function call: {func.__module__}.{func.__qualname__}"
+        frappe.local._recorder.path = (
+            f"Function call: {func.__module__}.{func.__qualname__}"
+        )
         ret = func(*args, **kwargs)
         dump()
         Recorder._unpatch_sql()

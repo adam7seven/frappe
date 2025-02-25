@@ -11,7 +11,12 @@ import frappe
 from frappe import _
 from frappe.database.operator_map import OPERATOR_MAP
 from frappe.database.schema import SPECIAL_CHAR_PATTERN
-from frappe.database.utils import DefaultOrderBy, FilterValue, convert_to_value, get_doctype_id
+from frappe.database.utils import (
+    DefaultOrderBy,
+    FilterValue,
+    convert_to_value,
+    get_doctype_id,
+)
 from frappe.query_builder import Criterion, Field, Order, functions
 from frappe.query_builder.functions import Function, SqlFunctions
 from frappe.query_builder.utils import PseudoColumnMapper
@@ -36,7 +41,9 @@ class Engine:
         self,
         table: str | Table,
         fields: str | list | tuple | None = None,
-        filters: dict[str, FilterValue] | FilterValue | list[list | FilterValue] | None = None,
+        filters: (
+            dict[str, FilterValue] | FilterValue | list[list | FilterValue] | None
+        ) = None,
         order_by: str | None = None,
         group_by: str | None = None,
         limit: int | None = None,
@@ -114,7 +121,9 @@ class Engine:
 
     def apply_filters(
         self,
-        filters: dict[str, FilterValue] | FilterValue | list[list | FilterValue] | None = None,
+        filters: (
+            dict[str, FilterValue] | FilterValue | list[list | FilterValue] | None
+        ) = None,
     ):
         if filters is None:
             return
@@ -130,7 +139,9 @@ class Engine:
 
         elif isinstance(filters, list | tuple):
             if all(isinstance(d, FilterValue) for d in filters) and len(filters) > 0:
-                self.apply_dict_filters({"id": ("in", tuple(convert_to_value(f) for f in filters))})
+                self.apply_dict_filters(
+                    {"id": ("in", tuple(convert_to_value(f) for f in filters))}
+                )
             else:
                 for filter in filters:
                     if isinstance(filter, FilterValue | Criterion | dict):
@@ -170,7 +181,9 @@ class Engine:
 
         if not isinstance(_field, str):
             pass
-        elif not self.validate_filters and (dynamic_field := DynamicTableField.parse(field, self.doctype)):
+        elif not self.validate_filters and (
+            dynamic_field := DynamicTableField.parse(field, self.doctype)
+        ):
             # apply implicit join if link field's field is referenced
             self.query = dynamic_field.apply_join(self.query)
             _field = dynamic_field.field
@@ -280,7 +293,11 @@ class Engine:
     def sanitize_fields(self, fields: str | list | tuple):
         if isinstance(fields, list | tuple):
             return [
-                _sanitize_field(field, self.is_mariadb) if isinstance(field, str) else field
+                (
+                    _sanitize_field(field, self.is_mariadb)
+                    if isinstance(field, str)
+                    else field
+                )
                 for field in fields
             ]
         elif isinstance(fields, str):
@@ -305,7 +322,11 @@ class Engine:
         if not fields:
             return []
         fields = self.sanitize_fields(fields)
-        if isinstance(fields, list | tuple | set) and None in fields and Field not in fields:
+        if (
+            isinstance(fields, list | tuple | set)
+            and None in fields
+            and Field not in fields
+        ):
             return []
 
         if not isinstance(fields, list | tuple):
@@ -540,9 +561,13 @@ def literal_eval_(literal):
 
 
 def has_function(field):
-    _field = field.casefold() if (isinstance(field, str) and "`" not in field) else field
+    _field = (
+        field.casefold() if (isinstance(field, str) and "`" not in field) else field
+    )
     if not issubclass(type(_field), Criterion):
-        if any([f"{func}(" in _field for func in SQL_FUNCTIONS]):  # ) <- ignore this comment.
+        if any(
+            [f"{func}(" in _field for func in SQL_FUNCTIONS]
+        ):  # ) <- ignore this comment.
             return True
 
 
@@ -556,7 +581,11 @@ def get_nested_set_hierarchy_result(doctype: str, id: str, hierarchy: str) -> li
     except IndexError:
         lft, rgt = None, None
 
-    if hierarchy in ("descendants of", "not descendants of", "descendants of (inclusive)"):
+    if hierarchy in (
+        "descendants of",
+        "not descendants of",
+        "descendants of (inclusive)",
+    ):
         result = (
             frappe.qb.from_(table)
             .select(table.name)

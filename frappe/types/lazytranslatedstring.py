@@ -7,7 +7,9 @@ from frappe import _
 class _LazyTranslate:
     __slots__ = ("context", "lang", "msg")
 
-    def __init__(self, msg: str, lang: str | None = None, context: str | None = None) -> None:
+    def __init__(
+        self, msg: str, lang: str | None = None, context: str | None = None
+    ) -> None:
         self.msg = msg
         self.lang = lang
         self.context = context

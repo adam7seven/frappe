@@ -29,7 +29,11 @@ class PrintStyle(Document):
             and not frappe.flags.in_import
             and not frappe.flags.in_test
         ):
-            frappe.throw(frappe._("Standard Print Style cannot be changed. Please duplicate to edit."))
+            frappe.throw(
+                frappe._(
+                    "Standard Print Style cannot be changed. Please duplicate to edit."
+                )
+            )
 
     def on_update(self):
         self.export_doc()

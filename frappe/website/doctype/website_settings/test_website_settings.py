@@ -3,7 +3,9 @@
 
 import frappe
 from frappe.tests import IntegrationTestCase, UnitTestCase
-from frappe.website.doctype.website_settings.website_settings import get_website_settings
+from frappe.website.doctype.website_settings.website_settings import (
+    get_website_settings,
+)
 
 
 class UnitTestWebsiteSettings(UnitTestCase):
@@ -40,5 +42,8 @@ class TestWebsiteSettings(IntegrationTestCase):
     def test_redirect_setups(self):
         ws = frappe.get_doc("Website Settings")
 
-        ws.append("route_redirects", {"source": "/engineering/(*.)", "target": "/development/(*.)"})
+        ws.append(
+            "route_redirects",
+            {"source": "/engineering/(*.)", "target": "/development/(*.)"},
+        )
         self.assertRaises(frappe.ValidationError, ws.validate)

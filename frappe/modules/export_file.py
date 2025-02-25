@@ -42,16 +42,22 @@ def write_document_file(doc, record_module=None, create_init=True, folder_name=N
 
     # create folder
     if folder_name:
-        folder = create_folder(module, folder_name, doc.id, create_init, is_custom_module)
+        folder = create_folder(
+            module, folder_name, doc.id, create_init, is_custom_module
+        )
     else:
-        folder = create_folder(module, doc.doctype, doc.id, create_init, is_custom_module)
+        folder = create_folder(
+            module, doc.doctype, doc.id, create_init, is_custom_module
+        )
 
     fname = scrub(doc.id)
     write_code_files(folder, fname, doc, doc_export)
 
     # write the data file
     path = os.path.join(folder, f"{fname}.json")
-    if is_custom_module and not Path(path).resolve().is_relative_to(Path(frappe.get_site_path()).resolve()):
+    if is_custom_module and not Path(path).resolve().is_relative_to(
+        Path(frappe.get_site_path()).resolve()
+    ):
         frappe.throw("Invalid export path: " + Path(path).as_posix())
     with open(path, "w+") as txtfile:
         txtfile.write(frappe.as_json(doc_export))
@@ -65,7 +71,9 @@ def strip_default_fields(doc, doc_export):
 
     for df in doc.meta.get_table_fields():
         for d in doc_export.get(df.fieldname):
-            for fieldname in frappe.model.default_fields + frappe.model.child_table_fields:
+            for fieldname in (
+                frappe.model.default_fields + frappe.model.child_table_fields
+            ):
                 if fieldname in d:
                     del d[fieldname]
 
@@ -78,7 +86,11 @@ def write_code_files(folder, fname, doc, doc_export):
         for key, extn in doc.get_code_fields().items():
             if doc.get(key):
                 path = os.path.join(folder, fname + "." + extn)
-                if not Path(path).resolve().is_relative_to(Path(frappe.get_site_path()).resolve()):
+                if (
+                    not Path(path)
+                    .resolve()
+                    .is_relative_to(Path(frappe.get_site_path()).resolve())
+                ):
                     frappe.throw("Invalid export path: " + Path(path).as_posix())
                 with open(path, "w+") as txtfile:
                     txtfile.write(doc.get(key))

@@ -66,7 +66,11 @@ def sync_table(key, hook):
 
     # remove unused items
     items = navbar_settings.get(key)
-    items = [item for item in items if not (item.is_standard and (item.item_label not in new_standard_items))]
+    items = [
+        item
+        for item in items
+        if not (item.is_standard and (item.item_label not in new_standard_items))
+    ]
     navbar_settings.set(key, items)
 
     navbar_settings.save()

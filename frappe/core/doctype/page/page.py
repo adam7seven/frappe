@@ -48,7 +48,9 @@ class Page(Document):
             if frappe.db.exists("Page", self.id):
                 cnt = frappe.db.sql(
                     """select id from tabPage
-                    where id like "{}-%" order by id desc limit 1""".format(self.id)                    
+                    where id like "{}-%" order by id desc limit 1""".format(
+                        self.id
+                    )
                 )
                 if cnt:
                     cnt = cint(cnt[0][0].split("-")[-1]) + 1
@@ -108,7 +110,9 @@ class Page(Document):
 
     def on_trash(self):
         if not frappe.conf.developer_mode and not frappe.flags.in_migrate:
-            frappe.throw(_("Deletion of this document is only permitted in developer mode."))
+            frappe.throw(
+                _("Deletion of this document is only permitted in developer mode.")
+            )
 
         delete_custom_role("page", self.id)
         frappe.db.after_commit(self.delete_folder_with_contents)
@@ -124,7 +128,12 @@ class Page(Document):
         """Return True if `Has Role` is not set or the user is allowed."""
         from frappe.utils import has_common
 
-        allowed = [d.role for d in frappe.get_all("Has Role", fields=["role"], filters={"parent": self.id})]
+        allowed = [
+            d.role
+            for d in frappe.get_all(
+                "Has Role", fields=["role"], filters={"parent": self.id}
+            )
+        ]
 
         custom_roles = get_custom_allowed_roles("page", self.id)
         allowed.extend(custom_roles)

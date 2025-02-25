@@ -244,7 +244,9 @@ class TestNotification(IntegrationTestCase):
             trigger_notifications(None, "offset")
 
             # Check if the notification was triggered
-            self.assertEqual(1, frappe.db.count("Notification Log", {"subject": n.subject}))
+            self.assertEqual(
+                1, frappe.db.count("Notification Log", {"subject": n.subject})
+            )
 
     def test_minutes_negative_offset(self):
         from frappe.utils import add_to_date, now_datetime
@@ -274,7 +276,9 @@ class TestNotification(IntegrationTestCase):
             trigger_notifications(None, "offset")
 
             # Check if the notification was triggered
-            self.assertEqual(1, frappe.db.count("Notification Log", {"subject": n.subject}))
+            self.assertEqual(
+                1, frappe.db.count("Notification Log", {"subject": n.subject})
+            )
 
     def test_minutes_offset_validation(self):
         notification = frappe.new_doc("Notification")
@@ -428,7 +432,11 @@ class TestNotification(IntegrationTestCase):
             )
         )
 
-        self.assertTrue(frappe.db.get_value("Email Queue Recipient", {"recipient": "test_jinja@example.com"}))
+        self.assertTrue(
+            frappe.db.get_value(
+                "Email Queue Recipient", {"recipient": "test_jinja@example.com"}
+            )
+        )
 
         frappe.db.delete("User", {"email": "test_jinja@example.com"})
         frappe.db.delete("Email Queue")

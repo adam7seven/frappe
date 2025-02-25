@@ -111,7 +111,10 @@ def optimize_for_gil_contention():
 
     # Populate the cache to avoid recomputing this in future.
     _ = parse_thread_siblings()
-    os.register_at_fork(after_in_parent=increment_worker_count, after_in_child=pin_web_worker_to_one_core)
+    os.register_at_fork(
+        after_in_parent=increment_worker_count,
+        after_in_child=pin_web_worker_to_one_core,
+    )
 
 
 def increment_worker_count():
@@ -158,7 +161,9 @@ def assign_core(
     if not thread_siblings:
         return
     thread_bucket = thread_siblings[pid % len(thread_siblings)]
-    logical_core = thread_bucket[(pid % (len(thread_siblings) * len(thread_bucket))) // len(thread_siblings)]
+    logical_core = thread_bucket[
+        (pid % (len(thread_siblings) * len(thread_bucket))) // len(thread_siblings)
+    ]
     return logical_core
 
 
@@ -183,7 +188,12 @@ def parse_thread_siblings() -> list[tuple[int, int]] | None:
 
         siblings_pattern = "/sys/devices/system/cpu/cpu[0-9]*/topology/core_cpus_list"
         for path in glob.glob(siblings_pattern):
-            threads_list.add(tuple(int(cpu) for cpu in Path(path).read_text().replace("-", ",").split(",")))
+            threads_list.add(
+                tuple(
+                    int(cpu)
+                    for cpu in Path(path).read_text().replace("-", ",").split(",")
+                )
+            )
         return sorted(threads_list)
     except Exception as e:
         import frappe

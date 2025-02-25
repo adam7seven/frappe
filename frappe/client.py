@@ -423,7 +423,9 @@ def validate_link(doctype: str, docid: str, fields=None):
             or frappe.has_permission(doctype, "read", parent_doctype=parent_doctype)
         ):
             frappe.throw(
-                _("You do not have Read or Select Permissions for {}").format(frappe.bold(doctype)),
+                _("You do not have Read or Select Permissions for {}").format(
+                    frappe.bold(doctype)
+                ),
                 frappe.PermissionError,
             )
 
@@ -449,7 +451,9 @@ def validate_link(doctype: str, docid: str, fields=None):
         return values
 
     if not fields:
-        frappe.local.response_headers.set("Cache-Control", "private,max-age=1800,stale-while-revalidate=7200")
+        frappe.local.response_headers.set(
+            "Cache-Control", "private,max-age=1800,stale-while-revalidate=7200"
+        )
         return values
 
     try:
@@ -497,7 +501,9 @@ def delete_doc(doctype, id):
     """
 
     if frappe.is_table(doctype):
-        values = frappe.db.get_value(doctype, id, ["parenttype", "parent", "parentfield"])
+        values = frappe.db.get_value(
+            doctype, id, ["parenttype", "parent", "parentfield"]
+        )
         if not values:
             raise frappe.DoesNotExistError(doctype=doctype)
 

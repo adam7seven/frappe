@@ -32,7 +32,14 @@ def get_new_doc(doctype, parent_doc=None, parentfield=None, as_dict=False):
 
 
 def make_new_doc(doctype):
-    doc = frappe.get_doc({"doctype": doctype, "__islocal": 1, "owner": frappe.session.user, "docstatus": 0})
+    doc = frappe.get_doc(
+        {
+            "doctype": doctype,
+            "__islocal": 1,
+            "owner": frappe.session.user,
+            "docstatus": 0,
+        }
+    )
 
     set_user_and_static_default_values(doc)
 
@@ -65,7 +72,9 @@ def set_user_and_static_default_values(doc):
             )
             if user_default_value is not None:
                 # if fieldtype is link check if doc exists
-                if df.fieldtype != "Link" or frappe.db.exists(df.options, user_default_value):
+                if df.fieldtype != "Link" or frappe.db.exists(
+                    df.options, user_default_value
+                ):
                     doc.set(df.fieldname, user_default_value)
 
             else:
@@ -128,7 +137,9 @@ def get_static_default_value(df, doctype_user_permissions, allowed_records):
         return df.options.split("\n", 1)[0]
 
 
-def validate_value_via_user_permissions(df, doctype_user_permissions, allowed_records, user_default=None):
+def validate_value_via_user_permissions(
+    df, doctype_user_permissions, allowed_records, user_default=None
+):
     is_valid = True
     # If User Permission exists and allowed records is empty,
     # that means there are User Perms, but none applicable to this new doctype.

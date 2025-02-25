@@ -10,7 +10,9 @@ def execute():
             id=web_form.title,
             route=web_form.route,
             fields=[
-                dict(fieldname=d.fieldname, label=d.label) for d in web_form.web_form_fields if d.fieldname
+                dict(fieldname=d.fieldname, label=d.label)
+                for d in web_form.web_form_fields
+                if d.fieldname
             ],
         ).insert()
         print(doctype_layout.id)

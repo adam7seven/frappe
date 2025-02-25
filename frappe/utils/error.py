@@ -101,7 +101,11 @@ def log_error_snapshot(exception: Exception):
 def get_default_args(func):
     """Get default arguments of a function from its signature."""
     signature = inspect.signature(func)
-    return {k: v.default for k, v in signature.parameters.items() if v.default is not inspect.Parameter.empty}
+    return {
+        k: v.default
+        for k, v in signature.parameters.items()
+        if v.default is not inspect.Parameter.empty
+    }
 
 
 def raise_error_on_no_output(error_message, error_type=None, keep_quiet=None):

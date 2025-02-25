@@ -3,7 +3,11 @@
 import json
 
 import frappe
-from frappe.desk.listview import get_group_by_count, get_list_settings, set_list_settings
+from frappe.desk.listview import (
+    get_group_by_count,
+    get_list_settings,
+    set_list_settings,
+)
 from frappe.desk.reportview import get
 from frappe.tests import IntegrationTestCase
 
@@ -27,7 +31,9 @@ class TestListView(IntegrationTestCase):
         self.assertEqual(settings.disable_sidebar_stats, 0)
 
     def test_get_list_settings_with_non_default_settings(self):
-        frappe.get_doc({"doctype": "List View Settings", "name": "DocType", "disable_count": 1}).insert()
+        frappe.get_doc(
+            {"doctype": "List View Settings", "name": "DocType", "disable_count": 1}
+        ).insert()
         settings = get_list_settings("DocType")
         self.assertIsNotNone(settings)
 
@@ -46,8 +52,12 @@ class TestListView(IntegrationTestCase):
         self.assertEqual(settings.disable_sidebar_stats, 0)
 
     def test_set_list_settings_with_existing_settings(self):
-        frappe.get_doc({"doctype": "List View Settings", "name": "DocType", "disable_count": 1}).insert()
-        set_list_settings("DocType", json.dumps({"disable_count": 0, "disable_auto_refresh": 1}))
+        frappe.get_doc(
+            {"doctype": "List View Settings", "name": "DocType", "disable_count": 1}
+        ).insert()
+        set_list_settings(
+            "DocType", json.dumps({"disable_count": 0, "disable_auto_refresh": 1})
+        )
         settings = frappe.get_doc("List View Settings", "DocType")
 
         self.assertEqual(settings.disable_auto_refresh, 1)
@@ -60,14 +70,20 @@ class TestListView(IntegrationTestCase):
             frappe.delete_doc("Note", "Test created by filter with child table filter")
 
         doc = frappe.get_doc(
-            {"doctype": "Note", "title": "Test created by filter with child table filter", "public": 1}
+            {
+                "doctype": "Note",
+                "title": "Test created by filter with child table filter",
+                "public": 1,
+            }
         )
         doc.append("seen_by", {"user": "Administrator"})
         doc.insert()
 
         data = {
             d.name: d.count
-            for d in get_group_by_count("Note", '[["Note Seen By","user","=","Administrator"]]', "owner")
+            for d in get_group_by_count(
+                "Note", '[["Note Seen By","user","=","Administrator"]]', "owner"
+            )
         }
         self.assertEqual(data["Administrator"], 1)
 

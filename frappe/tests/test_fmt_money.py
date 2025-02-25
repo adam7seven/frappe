@@ -98,5 +98,9 @@ class TestFmtMoney(IntegrationTestCase):
 
     def test_fmt_with_symbol_pos(self):
         frappe.db.set_value("Currency", "JPY", "symbol_on_right", 1)
-        self.assertEqual(fmt_money(100.0, format="#,###.##", currency="JPY"), "100.00 ¥")
-        self.assertEqual(fmt_money(100.0, format="#,###.##", currency="USD"), "$ 100.00")
+        self.assertEqual(
+            fmt_money(100.0, format="#,###.##", currency="JPY"), "100.00 ¥"
+        )
+        self.assertEqual(
+            fmt_money(100.0, format="#,###.##", currency="USD"), "$ 100.00"
+        )

@@ -41,7 +41,9 @@ def user_to_str(date, date_format=None):
         date_format = get_user_date_format()
 
     try:
-        return datetime.datetime.strptime(date, dateformats[date_format]).strftime("%Y-%m-%d")
+        return datetime.datetime.strptime(date, dateformats[date_format]).strftime(
+            "%Y-%m-%d"
+        )
     except ValueError:
         raise ValueError(f"Date {date} must be in format {date_format}")
 
@@ -55,7 +57,10 @@ def parse_date(date):
         date = date.split(" ", 1)[0]
 
     # why the sorting? checking should be done in a predictable order
-    check_formats = [None, *sorted(list(dateformats), reverse=not get_user_date_format().startswith("dd"))]
+    check_formats = [
+        None,
+        *sorted(list(dateformats), reverse=not get_user_date_format().startswith("dd")),
+    ]
 
     for f in check_formats:
         try:
@@ -111,9 +116,13 @@ def get_dates_from_timegrain(from_date, to_date, timegrain="Daily"):
 
     while getdate(dates[-1]) < getdate(to_date):
         if "Weekly" == timegrain:
-            date = get_last_day_of_week(add_to_date(dates[-1], years=years, months=months, days=days))
+            date = get_last_day_of_week(
+                add_to_date(dates[-1], years=years, months=months, days=days)
+            )
         else:
-            date = get_period_ending(add_to_date(dates[-1], years=years, months=months, days=days), timegrain)
+            date = get_period_ending(
+                add_to_date(dates[-1], years=years, months=months, days=days), timegrain
+            )
         dates.append(date)
     return dates
 
@@ -135,12 +144,28 @@ def get_from_date_from_timespan(to_date, timespan):
 
 def get_period(date, interval="Monthly"):
     date = getdate(date)
-    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+    ]
     return {
         "Daily": date.strftime("%d-%m-%y"),
         "Weekly": date.strftime("%d-%m-%y"),
         "Monthly": str(months[date.month - 1]) + " " + str(date.year),
-        "Quarterly": "Quarter " + str(((date.month - 1) // 3) + 1) + " " + str(date.year),
+        "Quarterly": "Quarter "
+        + str(((date.month - 1) // 3) + 1)
+        + " "
+        + str(date.year),
         "Yearly": str(date.year),
     }[interval]
 

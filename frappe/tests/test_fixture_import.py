@@ -17,7 +17,9 @@ class TestFixtureImport(IntegrationTestCase):
 
         savedocs(doc, "Save")
 
-    def insert_dummy_data_and_export(self, DocType: str, dummy_name_list: list[str]) -> str:
+    def insert_dummy_data_and_export(
+        self, DocType: str, dummy_name_list: list[str]
+    ) -> str:
         for name in dummy_name_list:
             doc = frappe.get_doc({"doctype": DocType, "member_name": name})
             doc.insert()
@@ -34,7 +36,9 @@ class TestFixtureImport(IntegrationTestCase):
         self.create_new_doctype("temp_doctype")
 
         dummy_name_list = ["jhon", "jane"]
-        path_to_exported_fixtures = self.insert_dummy_data_and_export("temp_doctype", dummy_name_list)
+        path_to_exported_fixtures = self.insert_dummy_data_and_export(
+            "temp_doctype", dummy_name_list
+        )
         frappe.db.truncate("temp_doctype")
 
         import_doc(path_to_exported_fixtures)
@@ -59,11 +63,15 @@ class TestFixtureImport(IntegrationTestCase):
         self.create_new_doctype("temp_singles")
 
         dummy_name_list = ["Phoebe"]
-        path_to_exported_fixtures = self.insert_dummy_data_and_export("temp_singles", dummy_name_list)
+        path_to_exported_fixtures = self.insert_dummy_data_and_export(
+            "temp_singles", dummy_name_list
+        )
 
         singles_doctype = frappe.qb.DocType("Singles")
         truncate_query = (
-            frappe.qb.from_(singles_doctype).delete().where(singles_doctype.doctype == "temp_singles")
+            frappe.qb.from_(singles_doctype)
+            .delete()
+            .where(singles_doctype.doctype == "temp_singles")
         )
         truncate_query.run()
 

@@ -279,7 +279,9 @@ class TestDataImportFixtures(IntegrationTestCase):
 
     def test_Doctype_fixture_rex_with_flags(self):
         fixture = ["ToDo", {"name": r"^TDi", "flags": "L,M"}]
-        path = "Doctype_" + frappe.scrub(fixture[0]) + "_rex_with_flags_should_be_none.csv"
+        path = (
+            "Doctype_" + frappe.scrub(fixture[0]) + "_rex_with_flags_should_be_none.csv"
+        )
 
         export_csv(fixture, path)
         self.assertTrue(True)

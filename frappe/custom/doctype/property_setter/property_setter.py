@@ -119,4 +119,6 @@ def delete_property_setter(doc_type, property=None, field_name=None, row_id=None
 
     property_setters = frappe.db.get_values("Property Setter", filters)
     for ps in property_setters:
-        frappe.get_doc("Property Setter", ps).delete(ignore_permissions=True, force=True)
+        frappe.get_doc("Property Setter", ps).delete(
+            ignore_permissions=True, force=True
+        )

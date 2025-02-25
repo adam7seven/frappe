@@ -16,7 +16,15 @@ class WorkspaceShortcut(Document):
 
         color: DF.Color | None
         doc_view: DF.Literal[
-            "", "List", "Report Builder", "Dashboard", "Tree", "New", "Calendar", "Kanban", "Image"
+            "",
+            "List",
+            "Report Builder",
+            "Dashboard",
+            "Tree",
+            "New",
+            "Calendar",
+            "Kanban",
+            "Image",
         ]
         format: DF.Data | None
         icon: DF.Data | None

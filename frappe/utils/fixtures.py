@@ -67,7 +67,9 @@ def export_fixtures(app=None):
     else:
         apps = frappe.get_installed_apps()
     for app in apps:
-        fixture_auto_order = bool(next(iter(frappe.get_hooks("fixture_auto_order", app_name=app)), False))
+        fixture_auto_order = bool(
+            next(iter(frappe.get_hooks("fixture_auto_order", app_name=app)), False)
+        )
         fixtures = frappe.get_hooks("fixtures", app_name=app)
         prefix = None
         for index, fixture in enumerate(fixtures, start=1):
@@ -78,7 +80,9 @@ def export_fixtures(app=None):
                 or_filters = fixture.get("or_filters")
                 prefix = fixture.get("prefix")
                 fixture = fixture.get("doctype") or fixture.get("dt")
-            print(f"Exporting {fixture} app {app} filters {(filters if filters else or_filters)}")
+            print(
+                f"Exporting {fixture} app {app} filters {(filters if filters else or_filters)}"
+            )
             if not os.path.exists(frappe.get_app_path(app, "fixtures")):
                 os.mkdir(frappe.get_app_path(app, "fixtures"))
 

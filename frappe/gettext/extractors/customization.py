@@ -1,6 +1,10 @@
 import json
 
-from .utils import EXCLUDE_SELECT_OPTIONS, extract_messages_from_docfield, extract_messages_from_links
+from .utils import (
+    EXCLUDE_SELECT_OPTIONS,
+    extract_messages_from_docfield,
+    extract_messages_from_links,
+)
 
 
 def extract(fileobj, *args, **kwargs):
@@ -32,7 +36,11 @@ def extract(fileobj, *args, **kwargs):
         fieldname = property_setter.get("field_name")
         if property_name == "options" and fieldname not in EXCLUDE_SELECT_OPTIONS:
             message = property_setter.get("value")
-            select_options = [option for option in message.split("\n") if option and not option.isdigit()]
+            select_options = [
+                option
+                for option in message.split("\n")
+                if option and not option.isdigit()
+            ]
 
             if select_options and "icon" in select_options[0]:
                 continue

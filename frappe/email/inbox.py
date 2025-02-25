@@ -23,7 +23,9 @@ def get_email_accounts(user=None):
 
     all_accounts = ",".join(account.get("email_account") for account in accounts)
     if len(accounts) > 1:
-        email_accounts.append({"email_account": all_accounts, "email_id": "All Accounts"})
+        email_accounts.append(
+            {"email_account": all_accounts, "email_id": "All Accounts"}
+        )
     email_accounts.extend(accounts)
 
     email_accounts.extend(
@@ -54,7 +56,9 @@ def create_email_flag_queue(ids, action):
         return
 
     for name in json.loads(names or []):
-        uid, seen_status, email_account = frappe.db.get_value("Communication", id, ["uid", "seen", "email_account"])
+        uid, seen_status, email_account = frappe.db.get_value(
+            "Communication", id, ["uid", "seen", "email_account"]
+        )
         if not uid:
             uid = -1
         if not seen_status:
@@ -66,7 +70,9 @@ def create_email_flag_queue(ids, action):
 
         seen = 1 if action == "Read" else 0
         # check if states are correct
-        if (action == "Read" and seen_status == 0) or (action == "Unread" and seen_status == 1):
+        if (action == "Read" and seen_status == 0) or (
+            action == "Unread" and seen_status == 1
+        ):
             create_new = True
             email_flag_queue = frappe.db.sql(
                 """select id, action from `tabEmail Flag Queue`
@@ -77,7 +83,12 @@ def create_email_flag_queue(ids, action):
 
             for queue in email_flag_queue:
                 if queue.action != action:
-                    frappe.delete_doc("Email Flag Queue", queue.id, ignore_permissions=True, force=True)
+                    frappe.delete_doc(
+                        "Email Flag Queue",
+                        queue.id,
+                        ignore_permissions=True,
+                        force=True,
+                    )
                 elif queue.action == action:
                     # Read or Unread request for email is already available
                     create_new = False
@@ -93,7 +104,9 @@ def create_email_flag_queue(ids, action):
                     }
                 )
                 flag_queue.save(ignore_permissions=True)
-                frappe.db.set_value("Communication", id, "seen", seen, update_modified=False)
+                frappe.db.set_value(
+                    "Communication", id, "seen", seen, update_modified=False
+                )
                 mark_as_seen_unseen(id, action)
 
 
@@ -120,11 +133,15 @@ def mark_as_spam(communication: str, sender: str):
     """Set email status to spam."""
     email_rule = frappe.db.get_value("Email Rule", {"email_id": sender})
     if not email_rule:
-        frappe.get_doc({"doctype": "Email Rule", "email_id": sender, "is_spam": 1}).insert(ignore_permissions=True)
+        frappe.get_doc(
+            {"doctype": "Email Rule", "email_id": sender, "is_spam": 1}
+        ).insert(ignore_permissions=True)
     set_value("Communication", communication, "email_status", "Spam")
 
 
-def link_communication_to_document(doc, reference_doctype, reference_id, ignore_communication_links):
+def link_communication_to_document(
+    doc, reference_doctype, reference_id, ignore_communication_links
+):
     if not ignore_communication_links:
         doc.reference_doctype = reference_doctype
         doc.reference_id = reference_id

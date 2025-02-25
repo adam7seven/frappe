@@ -38,7 +38,9 @@ RQ_FAILED_JOBS_LIMIT = 1000  # Only keep these many recent failed jobs around
 RQ_RESULTS_TTL = 10 * 60
 
 RQ_MAX_JOBS = 5000  # Restart NOFORK workers after every N number of jobs
-RQ_MAX_JOBS_JITTER = 50  # Random difference in max jobs to avoid restarting at same time
+RQ_MAX_JOBS_JITTER = (
+    50  # Random difference in max jobs to avoid restarting at same time
+)
 
 
 _redis_queue_conn = None
@@ -62,7 +64,8 @@ def get_queues_timeout() -> dict[str, int]:
         "default": default_timeout,
         "long": 1500,
         **{
-            worker: config.get("timeout", default_timeout) for worker, config in custom_workers_config.items()
+            worker: config.get("timeout", default_timeout)
+            for worker, config in custom_workers_config.items()
         },
     }
 
@@ -112,7 +115,9 @@ def enqueue(
             frappe.throw(_("`job_id` paramater is required for deduplication."))
         job = get_job(job_id)
         if job and job.get_status() in (JobStatus.QUEUED, JobStatus.STARTED):
-            frappe.logger().debug(f"Not queueing job {job.id} because it is in queue already")
+            frappe.logger().debug(
+                f"Not queueing job {job.id} because it is in queue already"
+            )
             return
         elif job:
             # delete job to avoid argument issues related to job args
@@ -128,7 +133,9 @@ def enqueue(
         from frappe.deprecation_dumpster import deprecation_warning
 
         deprecation_warning(
-            "unknown", "v17", "Using enqueue with `job_id` is deprecated, use `job_id` instead."
+            "unknown",
+            "v17",
+            "Using enqueue with `job_id` is deprecated, use `job_id` instead.",
         )
 
     if not is_async and not frappe.flags.in_test:
@@ -195,7 +202,9 @@ def enqueue(
     return enqueue_call()
 
 
-def enqueue_doc(doctype, id=None, method=None, queue="default", timeout=300, now=False, **kwargs):
+def enqueue_doc(
+    doctype, id=None, method=None, queue="default", timeout=300, now=False, **kwargs
+):
     """Enqueue a method to be run on a document"""
     return enqueue(
         "frappe.utils.background_jobs.run_doc_method",
@@ -232,8 +241,12 @@ def execute_job(site, method, event, job_id, kwargs, user=None, is_async=True, r
     else:
         method_name = f"{method.__module__}.{method.__qualname__}"
 
-    actual_func_name = kwargs.get("job_type") if "run_scheduled_job" in method_name else method_name
-    setproctitle.setproctitle(f"rq: Started running {actual_func_name} at {time.time()}")
+    actual_func_name = (
+        kwargs.get("job_type") if "run_scheduled_job" in method_name else method_name
+    )
+    setproctitle.setproctitle(
+        f"rq: Started running {actual_func_name} at {time.time()}"
+    )
 
     frappe.local.job = frappe._dict(
         site=site,
@@ -245,7 +258,9 @@ def execute_job(site, method, event, job_id, kwargs, user=None, is_async=True, r
     )
 
     for before_job_task in frappe.get_hooks("before_job"):
-        frappe.call(before_job_task, method=method_name, kwargs=kwargs, transaction_type="job")
+        frappe.call(
+            before_job_task, method=method_name, kwargs=kwargs, transaction_type="job"
+        )
 
     try:
         retval = method(**kwargs)
@@ -265,7 +280,9 @@ def execute_job(site, method, event, job_id, kwargs, user=None, is_async=True, r
             frappe.destroy()
             time.sleep(retry + 1)
 
-            return execute_job(site, method, event, job_id, kwargs, is_async=is_async, retry=retry + 1)
+            return execute_job(
+                site, method, event, job_id, kwargs, is_async=is_async, retry=retry + 1
+            )
 
         else:
             frappe.log_error(title=method_name)
@@ -288,7 +305,9 @@ def execute_job(site, method, event, job_id, kwargs, user=None, is_async=True, r
             frappe.init(site, force=True)
             frappe.connect()
         for after_job_task in frappe.get_hooks("after_job"):
-            frappe.call(after_job_task, method=method_name, kwargs=kwargs, result=retval)
+            frappe.call(
+                after_job_task, method=method_name, kwargs=kwargs, result=retval
+            )
         frappe.local.job.after_job.run()
 
         if is_async:
@@ -444,6 +463,7 @@ def start_worker_pool(
     import frappe.utils.scheduler
     import frappe.utils.typing_validations  # any whitelisted method uses this
     import frappe.website.path_resolver  # all the page types and resolver
+
     # end: module pre-loading
 
     with frappe.init_site():
@@ -522,7 +542,11 @@ def get_queue_list(queue_list=None, build_queue_id=False):
             validate_queue(queue, default_queue_list)
     else:
         queue_list = default_queue_list
-    return [generate_qname(qtype) for qtype in queue_list] if build_queue_id else queue_list
+    return (
+        [generate_qname(qtype) for qtype in queue_list]
+        if build_queue_id
+        else queue_list
+    )
 
 
 def get_workers(queue=None):
@@ -568,7 +592,9 @@ def validate_queue(queue: str, default_queue_list: list | None = None) -> None:
         default_queue_list = list(get_queues_timeout())
 
     if queue not in default_queue_list:
-        frappe.throw(_("Queue should be one of {0}").format(", ".join(default_queue_list)))
+        frappe.throw(
+            _("Queue should be one of {0}").format(", ".join(default_queue_list))
+        )
 
 
 @retry(

@@ -195,7 +195,9 @@ def symlink(target, link_name, overwrite=False):
     try:
         # Pre-empt os.replace on a directory with a nicer message
         if os.path.isdir(link_name):
-            raise IsADirectoryError(f"Cannot symlink over existing directory: '{link_name}'")
+            raise IsADirectoryError(
+                f"Cannot symlink over existing directory: '{link_name}'"
+            )
         try:
             shutil.move(temp_link_name, link_name)
         except AttributeError:
@@ -255,11 +257,12 @@ def bundle(
 
     check_node_executable()
     frappe_app_path = frappe.get_app_source_path("frappe")
-    frappe.commands.popen(command, cwd=frappe_app_path, env=get_node_env(), raise_err=True)
+    frappe.commands.popen(
+        command, cwd=frappe_app_path, env=get_node_env(), raise_err=True
+    )
 
     with suppress(Exception):
         frappe.cache.flushall()
-
 
 
 def watch(apps=None):
@@ -270,7 +273,9 @@ def watch(apps=None):
     if apps:
         command += f" --apps {apps}"
 
-    live_reload = frappe.utils.cint(os.environ.get("LIVE_RELOAD", frappe.conf.live_reload))
+    live_reload = frappe.utils.cint(
+        os.environ.get("LIVE_RELOAD", frappe.conf.live_reload)
+    )
 
     if live_reload:
         command += " --live-reload"
@@ -286,7 +291,9 @@ def check_node_executable():
     if node_version.major < 18:
         click.echo(f"{warn} Please update your node version to 18")
     if not shutil.which("yarn"):
-        click.echo(f"{warn} Please install yarn using below command and try again.\nnpm install -g yarn")
+        click.echo(
+            f"{warn} Please install yarn using below command and try again.\nnpm install -g yarn"
+        )
     click.echo()
 
 
@@ -332,7 +339,9 @@ def generate_assets_map():
 
         # {app}/node_modules > assets/{app}/node_modules
         if os.path.isdir(app_node_modules):
-            symlinks[app_node_modules] = os.path.join(assets_path, app_name, "node_modules")
+            symlinks[app_node_modules] = os.path.join(
+                assets_path, app_name, "node_modules"
+            )
 
         # {app}/docs > assets/{app}_docs
         if os.path.isdir(app_docs_path):
@@ -380,8 +389,12 @@ def make_asset_dirs(hard_link=False):
     symlinks = generate_assets_map()
 
     for source, target in symlinks.items():
-        start_message = unstrip(f"{'Copying assets from' if hard_link else 'Linking'} {source} to {target}")
-        fail_message = unstrip(f"Cannot {'copy' if hard_link else 'link'} {source} to {target}")
+        start_message = unstrip(
+            f"{'Copying assets from' if hard_link else 'Linking'} {source} to {target}"
+        )
+        fail_message = unstrip(
+            f"Cannot {'copy' if hard_link else 'link'} {source} to {target}"
+        )
 
         # Used '\r' instead of '\x1b[1K\r' to print entire lines in smaller terminal sizes
         try:
@@ -391,7 +404,9 @@ def make_asset_dirs(hard_link=False):
             print(e)
             print(fail_message)
 
-    click.echo(unstrip(click.style("✔", fg="green") + " Application Assets Linked") + "\n")
+    click.echo(
+        unstrip(click.style("✔", fg="green") + " Application Assets Linked") + "\n"
+    )
 
 
 def link_assets_dir(source, target, hard_link=False):

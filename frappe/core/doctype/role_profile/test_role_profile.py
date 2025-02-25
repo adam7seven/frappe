@@ -18,7 +18,9 @@ class UnitTestRoleProfile(UnitTestCase):
 class TestRoleProfile(IntegrationTestCase):
     def test_make_new_role_profiles(self):
         frappe.delete_doc_if_exists("Role Profile", "Test 1", force=1)
-        new_role_profile = frappe.get_doc(doctype="Role Profile", role_profile="Test 1").insert()
+        new_role_profile = frappe.get_doc(
+            doctype="Role Profile", role_profile="Test 1"
+        ).insert()
 
         self.assertEqual(new_role_profile.role_profile, "Test 1")
 
@@ -45,7 +47,8 @@ class TestRoleProfile(IntegrationTestCase):
         ).insert(ignore_permissions=True, ignore_if_duplicate=True)
 
         self.assertEqual(
-            {role.role for role in random_user.roles}, {role.role for role in new_role_profile.roles}
+            {role.role for role in random_user.roles},
+            {role.role for role in new_role_profile.roles},
         )
 
         # clear roles
@@ -61,25 +64,35 @@ class TestRoleProfile(IntegrationTestCase):
         frappe.delete_doc_if_exists("Role Profile", "_Test Role Profile 1", force=1)
         frappe.delete_doc_if_exists("Role Profile", "_Test Role Profile 2", force=1)
 
-        role_profile_one = frappe.get_doc(doctype="Role Profile", role_profile="_Test Role Profile 1").insert(
-            ignore_if_duplicate=True
-        )
-        role_profile_two = frappe.get_doc(doctype="Role Profile", role_profile="_Test Role Profile 2").insert(
-            ignore_if_duplicate=True
-        )
+        role_profile_one = frappe.get_doc(
+            doctype="Role Profile", role_profile="_Test Role Profile 1"
+        ).insert(ignore_if_duplicate=True)
+        role_profile_two = frappe.get_doc(
+            doctype="Role Profile", role_profile="_Test Role Profile 2"
+        ).insert(ignore_if_duplicate=True)
 
         self.assertEqual(role_profile_one.role_profile, "_Test Role Profile 1")
         self.assertEqual(role_profile_two.role_profile, "_Test Role Profile 2")
 
         # Create new role for test
-        frappe.get_doc(doctype="Role", role_name="_Test Role 1").insert(ignore_if_duplicate=True)
-        frappe.get_doc(doctype="Role", role_name="_Test Role 2").insert(ignore_if_duplicate=True)
-        frappe.get_doc(doctype="Role", role_name="_Test Role 3").insert(ignore_if_duplicate=True)
+        frappe.get_doc(doctype="Role", role_name="_Test Role 1").insert(
+            ignore_if_duplicate=True
+        )
+        frappe.get_doc(doctype="Role", role_name="_Test Role 2").insert(
+            ignore_if_duplicate=True
+        )
+        frappe.get_doc(doctype="Role", role_name="_Test Role 3").insert(
+            ignore_if_duplicate=True
+        )
         # add role
-        role_profile_one.update({"roles": [{"role": "_Test Role 1"}, {"role": "_Test Role 2"}]})
+        role_profile_one.update(
+            {"roles": [{"role": "_Test Role 1"}, {"role": "_Test Role 2"}]}
+        )
         role_profile_one.save()
 
-        role_profile_two.update({"roles": [{"role": "_Test Role 2"}, {"role": "_Test Role 3"}]})
+        role_profile_two.update(
+            {"roles": [{"role": "_Test Role 2"}, {"role": "_Test Role 3"}]}
+        )
         role_profile_two.save()
 
         self.assertEqual(role_profile_one.roles[0].role, "_Test Role 1")
@@ -116,7 +129,8 @@ class TestRoleProfile(IntegrationTestCase):
             self.assertIn(role.role, [role.role for role in user_one.roles])
 
         self.assertEqual(
-            {role.role for role in user_two.roles}, {role.role for role in role_profile_two.roles}
+            {role.role for role in user_two.roles},
+            {role.role for role in role_profile_two.roles},
         )
 
     def test_update_role_profile(self):
@@ -134,9 +148,18 @@ class TestRoleProfile(IntegrationTestCase):
         ).insert(ignore_permissions=True, ignore_if_duplicate=True)
 
         role_profile.update(
-            {"roles": [{"role": "_Test Role 1"}, {"role": "_Test Role 3"}, {"role": "_Test Role 2"}]}
+            {
+                "roles": [
+                    {"role": "_Test Role 1"},
+                    {"role": "_Test Role 3"},
+                    {"role": "_Test Role 2"},
+                ]
+            }
         )
         role_profile.save()
 
         user.reload()
-        self.assertEqual({role.role for role in user.roles}, {role.role for role in role_profile.roles})
+        self.assertEqual(
+            {role.role for role in user.roles},
+            {role.role for role in role_profile.roles},
+        )

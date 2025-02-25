@@ -187,7 +187,9 @@ def clear_controller_cache(doctype=None):
 def get_doctype_map(doctype, id, filters=None, order_by=None):
     return frappe.client_cache.get_value(
         get_doctype_map_key(doctype, id),
-        generator=lambda: frappe.get_all(doctype, filters=filters, order_by=order_by, ignore_ddl=True),
+        generator=lambda: frappe.get_all(
+            doctype, filters=filters, order_by=order_by, ignore_ddl=True
+        ),
     )
 
 
@@ -209,7 +211,9 @@ def build_table_count_cache():
     table_rows = frappe.qb.Field("table_rows").as_("count")
     information_schema = frappe.qb.Schema("information_schema")
 
-    data = (frappe.qb.from_(information_schema.tables).select(table_name, table_rows)).run(as_dict=True)
+    data = (
+        frappe.qb.from_(information_schema.tables).select(table_name, table_rows)
+    ).run(as_dict=True)
     counts = {d.get("name").replace("tab", "", 1): d.get("count", None) for d in data}
     frappe.cache.set_value("information_schema:counts", counts)
 
@@ -226,7 +230,9 @@ def build_domain_restricted_doctype_cache(*args, **kwargs):
     ):
         return
     active_domains = frappe.get_active_domains()
-    doctypes = frappe.get_all("DocType", filters={"restrict_to_domain": ("IN", active_domains)})
+    doctypes = frappe.get_all(
+        "DocType", filters={"restrict_to_domain": ("IN", active_domains)}
+    )
     doctypes = [doc.id for doc in doctypes]
     frappe.cache.set_value("domain_restricted_doctypes", doctypes)
 
@@ -243,7 +249,9 @@ def build_domain_restricted_page_cache(*args, **kwargs):
     ):
         return
     active_domains = frappe.get_active_domains()
-    pages = frappe.get_all("Page", filters={"restrict_to_domain": ("IN", active_domains)})
+    pages = frappe.get_all(
+        "Page", filters={"restrict_to_domain": ("IN", active_domains)}
+    )
     pages = [page.id for page in pages]
     frappe.cache.set_value("domain_restricted_pages", pages)
 

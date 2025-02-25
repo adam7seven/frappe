@@ -1,5 +1,7 @@
 import frappe
-from frappe.website.doctype.website_settings.website_settings import get_website_settings
+from frappe.website.doctype.website_settings.website_settings import (
+    get_website_settings,
+)
 from frappe.website.page_renderers.base_renderer import BaseRenderer
 from frappe.website.website_components.metatags import MetaTags
 
@@ -19,7 +21,8 @@ class BaseTemplatePage(BaseRenderer):
         if frappe.local.session:
             csrf_token = frappe.local.session.data.csrf_token
             return html.replace(
-                "<!-- csrf_token -->", f'<script>frappe.csrf_token = "{csrf_token}";</script>'
+                "<!-- csrf_token -->",
+                f'<script>frappe.csrf_token = "{csrf_token}";</script>',
             )
 
         return html
@@ -38,7 +41,9 @@ class BaseTemplatePage(BaseRenderer):
     def set_base_template_if_missing(self):
         if not self.context.base_template_path:
             app_base = frappe.get_hooks("base_template")
-            self.context.base_template_path = app_base[-1] if app_base else "templates/base.html"
+            self.context.base_template_path = (
+                app_base[-1] if app_base else "templates/base.html"
+            )
 
     def set_title_with_prefix(self):
         if (
@@ -55,7 +60,9 @@ class BaseTemplatePage(BaseRenderer):
 
         # to be able to inspect the context dict
         # Use the macro "inspect" from macros.html
-        self.context.canonical = frappe.utils.get_url(frappe.utils.escape_html(self.path))
+        self.context.canonical = frappe.utils.get_url(
+            frappe.utils.escape_html(self.path)
+        )
 
         if "url_prefix" not in self.context:
             self.context.url_prefix = ""
@@ -64,7 +71,11 @@ class BaseTemplatePage(BaseRenderer):
             self.context.url_prefix += "/"
 
         self.context.path = self.path
-        self.context.pathname = getattr(frappe.local, "path", None) if hasattr(frappe, "local") else self.path
+        self.context.pathname = (
+            getattr(frappe.local, "path", None)
+            if hasattr(frappe, "local")
+            else self.path
+        )
 
     def update_website_context(self):
         # apply context from hooks

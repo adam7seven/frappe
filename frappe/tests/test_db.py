@@ -51,7 +51,9 @@ class TestDB(IntegrationTestCase):
                 }
             )
         except Exception as e:
-            self.assertTrue(frappe.db.is_statement_timeout(e), f"exepcted {e} to be timeout error")
+            self.assertTrue(
+                frappe.db.is_statement_timeout(e), f"exepcted {e} to be timeout error"
+            )
             frappe.db.rollback(save_point=savepoint)
         else:
             frappe.db.rollback(save_point=savepoint)
@@ -65,11 +67,23 @@ class TestDB(IntegrationTestCase):
         self.assertEqual(get_query_execution_timeout(), 0)
 
     def test_get_value(self):
-        self.assertEqual(frappe.db.get_value("User", {"name": ["=", "Administrator"]}), "Administrator")
-        self.assertEqual(frappe.db.get_value("User", {"name": ["like", "Admin%"]}), "Administrator")
-        self.assertNotEqual(frappe.db.get_value("User", {"name": ["!=", "Guest"]}), "Guest")
-        self.assertEqual(frappe.db.get_value("User", {"name": ["<", "Adn"]}), "Administrator")
-        self.assertEqual(frappe.db.get_value("User", {"name": ["<=", "Administrator"]}), "Administrator")
+        self.assertEqual(
+            frappe.db.get_value("User", {"name": ["=", "Administrator"]}),
+            "Administrator",
+        )
+        self.assertEqual(
+            frappe.db.get_value("User", {"name": ["like", "Admin%"]}), "Administrator"
+        )
+        self.assertNotEqual(
+            frappe.db.get_value("User", {"name": ["!=", "Guest"]}), "Guest"
+        )
+        self.assertEqual(
+            frappe.db.get_value("User", {"name": ["<", "Adn"]}), "Administrator"
+        )
+        self.assertEqual(
+            frappe.db.get_value("User", {"name": ["<=", "Administrator"]}),
+            "Administrator",
+        )
         self.assertEqual(
             frappe.db.get_value("User", {}, ["Max(name)"], order_by=None),
             frappe.db.sql("SELECT Max(name) FROM tabUser")[0][0],
@@ -80,11 +94,15 @@ class TestDB(IntegrationTestCase):
         )
         self.assertIn(
             "for update",
-            frappe.db.get_value("User", Field("name") == "Administrator", for_update=True, run=False).lower(),
+            frappe.db.get_value(
+                "User", Field("name") == "Administrator", for_update=True, run=False
+            ).lower(),
         )
         user_doctype = frappe.qb.DocType("User")
         self.assertEqual(
-            frappe.qb.from_(user_doctype).select(user_doctype.name, user_doctype.email).run(),
+            frappe.qb.from_(user_doctype)
+            .select(user_doctype.name, user_doctype.email)
+            .run(),
             frappe.db.get_values(
                 user_doctype,
                 filters={},
@@ -93,12 +111,16 @@ class TestDB(IntegrationTestCase):
             ),
         )
         self.assertEqual(
-            frappe.db.sql("""SELECT name FROM `tabUser` WHERE name > 's' ORDER BY MODIFIED DESC""")[0][0],
+            frappe.db.sql(
+                """SELECT name FROM `tabUser` WHERE name > 's' ORDER BY MODIFIED DESC"""
+            )[0][0],
             frappe.db.get_value("User", {"name": [">", "s"]}),
         )
 
         self.assertEqual(
-            frappe.db.sql("""SELECT name FROM `tabUser` WHERE name >= 't' ORDER BY MODIFIED DESC""")[0][0],
+            frappe.db.sql(
+                """SELECT name FROM `tabUser` WHERE name >= 't' ORDER BY MODIFIED DESC"""
+            )[0][0],
             frappe.db.get_value("User", {"name": [">=", "t"]}),
         )
         self.assertEqual(
@@ -125,8 +147,12 @@ class TestDB(IntegrationTestCase):
             ).lower(),
         )
         self.assertEqual(
-            frappe.db.sql("select email from tabUser where name='Administrator' order by creation DESC"),
-            frappe.db.get_values("User", filters=[["name", "=", "Administrator"]], fieldname="email"),
+            frappe.db.sql(
+                "select email from tabUser where name='Administrator' order by creation DESC"
+            ),
+            frappe.db.get_values(
+                "User", filters=[["name", "=", "Administrator"]], fieldname="email"
+            ),
         )
 
         # test multiple orderby's
@@ -135,7 +161,12 @@ class TestDB(IntegrationTestCase):
             "ORDER BY {deli}creation{deli} DESC,{deli}modified{deli} ASC,{deli}name{deli} DESC".format(
                 deli=delimiter
             ),
-            frappe.db.get_value("DocType", "DocField", order_by="creation desc, modified asc, name", run=0),
+            frappe.db.get_value(
+                "DocType",
+                "DocField",
+                order_by="creation desc, modified asc, name",
+                run=0,
+            ),
         )
 
     def test_escape(self):
@@ -153,7 +184,10 @@ class TestDB(IntegrationTestCase):
             "Datetime": datetime.datetime.now(),
             "Time": datetime.timedelta(hours=9, minutes=45, seconds=10),
         }
-        test_inputs = [{"fieldtype": fieldtype, "value": value} for fieldtype, value in values_dict.items()]
+        test_inputs = [
+            {"fieldtype": fieldtype, "value": value}
+            for fieldtype, value in values_dict.items()
+        ]
         for fieldtype in values_dict:
             create_custom_field(
                 "Print Settings",
@@ -168,7 +202,9 @@ class TestDB(IntegrationTestCase):
         for inp in test_inputs:
             fieldname = f"test_{inp['fieldtype'].lower()}"
             frappe.db.set_single_value("Print Settings", fieldname, inp["value"])
-            self.assertEqual(frappe.db.get_single_value("Print Settings", fieldname), inp["value"])
+            self.assertEqual(
+                frappe.db.get_single_value("Print Settings", fieldname), inp["value"]
+            )
 
         # teardown
         clear_custom_fields("Print Settings")
@@ -177,13 +213,23 @@ class TestDB(IntegrationTestCase):
         [[lang, date_format]] = frappe.db.get_values_from_single(
             ["language", "date_format"], None, "System Settings"
         )
-        self.assertEqual(lang, frappe.db.get_single_value("System Settings", "language"))
-        self.assertEqual(date_format, frappe.db.get_single_value("System Settings", "date_format"))
+        self.assertEqual(
+            lang, frappe.db.get_single_value("System Settings", "language")
+        )
+        self.assertEqual(
+            date_format, frappe.db.get_single_value("System Settings", "date_format")
+        )
 
     def test_singles_get_values_variant(self):
-        [[lang, date_format]] = frappe.db.get_values("System Settings", fieldname=["language", "date_format"])
-        self.assertEqual(lang, frappe.db.get_single_value("System Settings", "language"))
-        self.assertEqual(date_format, frappe.db.get_single_value("System Settings", "date_format"))
+        [[lang, date_format]] = frappe.db.get_values(
+            "System Settings", fieldname=["language", "date_format"]
+        )
+        self.assertEqual(
+            lang, frappe.db.get_single_value("System Settings", "language")
+        )
+        self.assertEqual(
+            date_format, frappe.db.get_single_value("System Settings", "date_format")
+        )
 
     def test_log_touched_tables(self):
         frappe.flags.in_migrate = True
@@ -332,7 +378,9 @@ class TestDB(IntegrationTestCase):
         # Create documents under that doctype and query them via ORM
         for _ in range(10):
             docfields = {key.lower(): random_string(10) for key in fields}
-            doc = frappe.get_doc({"doctype": test_doctype, "description": random_string(20), **docfields})
+            doc = frappe.get_doc(
+                {"doctype": test_doctype, "description": random_string(20), **docfields}
+            )
             doc.insert()
             created_docs.append(doc.name)
 
@@ -341,9 +389,19 @@ class TestDB(IntegrationTestCase):
         random_value = random_string(20)
 
         # Testing read
-        self.assertEqual(next(iter(frappe.get_all("ToDo", fields=[random_field], limit=1)[0])), random_field)
         self.assertEqual(
-            next(iter(frappe.get_all("ToDo", fields=[f"`{random_field}` as total"], limit=1)[0])), "total"
+            next(iter(frappe.get_all("ToDo", fields=[random_field], limit=1)[0])),
+            random_field,
+        )
+        self.assertEqual(
+            next(
+                iter(
+                    frappe.get_all(
+                        "ToDo", fields=[f"`{random_field}` as total"], limit=1
+                    )[0]
+                )
+            ),
+            "total",
         )
 
         # Testing read for distinct and sql functions
@@ -374,13 +432,25 @@ class TestDB(IntegrationTestCase):
             random_field,
         )
         self.assertEqual(
-            next(iter(frappe.get_all("ToDo", fields=[f"count(`{random_field}`)"], limit=1)[0])),
-            "count" if frappe.conf.db_type == "postgres" else f"count(`{random_field}`)",
+            next(
+                iter(
+                    frappe.get_all(
+                        "ToDo", fields=[f"count(`{random_field}`)"], limit=1
+                    )[0]
+                )
+            ),
+            (
+                "count"
+                if frappe.conf.db_type == "postgres"
+                else f"count(`{random_field}`)"
+            ),
         )
 
         # Testing update
         frappe.db.set_value(test_doctype, random_doc, random_field, random_value)
-        self.assertEqual(frappe.db.get_value(test_doctype, random_doc, random_field), random_value)
+        self.assertEqual(
+            frappe.db.get_value(test_doctype, random_doc, random_field), random_value
+        )
 
         # Cleanup - delete records and remove custom fields
         for doc in created_docs:
@@ -470,22 +540,31 @@ class TestDB(IntegrationTestCase):
         nested_hook_name = f"{bad_nested_hook.__module__}.{bad_nested_hook.__name__}"
 
         with self.patch_hooks(
-            {"doc_events": {"*": {"before_validate": hook_name, "on_update": nested_hook_name}}}
+            {
+                "doc_events": {
+                    "*": {"before_validate": hook_name, "on_update": nested_hook_name}
+                }
+            }
         ):
             note = frappe.new_doc("Note", title=frappe.generate_hash())
             note.insert()
-        self.assertGreater(frappe.db.transaction_writes, 0)  # This would've reset for commit/rollback
+        self.assertGreater(
+            frappe.db.transaction_writes, 0
+        )  # This would've reset for commit/rollback
 
         self.assertFalse(frappe.db._disable_transaction_control)
 
     def test_pk_collision_ignoring(self):
         # note has `name` generated from title
         for _ in range(3):
-            frappe.get_doc(doctype="Note", title="duplicate name").insert(ignore_if_duplicate=True)
+            frappe.get_doc(doctype="Note", title="duplicate name").insert(
+                ignore_if_duplicate=True
+            )
 
         with savepoint():
             self.assertRaises(
-                frappe.DuplicateEntryError, frappe.get_doc(doctype="Note", title="duplicate name").insert
+                frappe.DuplicateEntryError,
+                frappe.get_doc(doctype="Note", title="duplicate name").insert,
             )
             # recover transaction to continue other tests
             raise Exception
@@ -506,7 +585,9 @@ class TestDB(IntegrationTestCase):
 
         filters = {"doctype": dt, "name": ("like", "Admin%")}
         self.assertEqual(frappe.db.exists(filters), dn)
-        self.assertEqual(filters["doctype"], dt)  # make sure that doctype was not removed from filters
+        self.assertEqual(
+            filters["doctype"], dt
+        )  # make sure that doctype was not removed from filters
 
         self.assertEqual(frappe.db.exists(dt, [["name", "=", dn]]), dn)
 
@@ -522,9 +603,14 @@ class TestDB(IntegrationTestCase):
         self.assertIn(str(dt), str(frappe.db.last_query))
 
         before = now_datetime()
-        note = frappe.get_doc(doctype="Note", title=frappe.generate_hash(), content="something").insert()
+        note = frappe.get_doc(
+            doctype="Note", title=frappe.generate_hash(), content="something"
+        ).insert()
         after = now_datetime()
-        self.assertEqual(note.name, frappe.db.exists("Note", {"creation": ("between", (before, after))}))
+        self.assertEqual(
+            note.name,
+            frappe.db.exists("Note", {"creation": ("between", (before, after))}),
+        )
 
     def test_bulk_insert(self):
         current_count = frappe.db.count("ToDo")
@@ -537,7 +623,10 @@ class TestDB(IntegrationTestCase):
             frappe.db.bulk_insert(
                 "ToDo",
                 ["name", "description"],
-                [[f"ToDo Test Bulk Insert {i}", test_body] for i in range(number_of_values)],
+                [
+                    [f"ToDo Test Bulk Insert {i}", test_body]
+                    for i in range(number_of_values)
+                ],
                 ignore_duplicates=True,
                 chunk_size=chunk_size,
             )
@@ -548,7 +637,8 @@ class TestDB(IntegrationTestCase):
             # check if inserts were done in chunks
             expected_number_of_writes = ceil(number_of_values / chunk_size)
             self.assertEqual(
-                expected_number_of_writes, frappe.db.transaction_writes - current_transaction_writes
+                expected_number_of_writes,
+                frappe.db.transaction_writes - current_transaction_writes,
             )
 
         frappe.db.delete("ToDo", {"description": test_body})
@@ -563,19 +653,28 @@ class TestDB(IntegrationTestCase):
             ignore_duplicates=True,
         )
 
-        record_names = frappe.get_all("ToDo", filters={"description": test_body}, pluck="name")
+        record_names = frappe.get_all(
+            "ToDo", filters={"description": test_body}, pluck="name"
+        )
 
-        new_descriptions = {name: f"{test_body} - updated - {random_string(10)}" for name in record_names}
+        new_descriptions = {
+            name: f"{test_body} - updated - {random_string(10)}"
+            for name in record_names
+        }
 
         # update with same fields to update
         frappe.db.bulk_update(
-            "ToDo", {name: {"description": new_descriptions[name]} for name in record_names}
+            "ToDo",
+            {name: {"description": new_descriptions[name]} for name in record_names},
         )
 
         # check if all records were updated
         updated_records = dict(
             frappe.get_all(
-                "ToDo", filters={"name": ("in", record_names)}, fields=["name", "description"], as_list=True
+                "ToDo",
+                filters={"name": ("in", record_names)},
+                fields=["name", "description"],
+                as_list=True,
             )
         )
         self.assertDictEqual(new_descriptions, updated_records)
@@ -587,20 +686,29 @@ class TestDB(IntegrationTestCase):
         }
         frappe.db.bulk_update("ToDo", updates)
 
-        priority, status = frappe.db.get_value("ToDo", record_names[0], ["priority", "status"])
+        priority, status = frappe.db.get_value(
+            "ToDo", record_names[0], ["priority", "status"]
+        )
 
         self.assertEqual(priority, "High")
         self.assertEqual(status, "Closed")
 
         # further updates with different fields to update
-        updates = {record_names[0]: {"status": "Open"}, record_names[1]: {"priority": "Low"}}
+        updates = {
+            record_names[0]: {"status": "Open"},
+            record_names[1]: {"priority": "Low"},
+        }
         frappe.db.bulk_update("ToDo", updates)
 
-        priority, status = frappe.db.get_value("ToDo", record_names[0], ["priority", "status"])
+        priority, status = frappe.db.get_value(
+            "ToDo", record_names[0], ["priority", "status"]
+        )
         self.assertEqual(priority, "High")  # should stay the same
         self.assertEqual(status, "Open")
 
-        priority, status = frappe.db.get_value("ToDo", record_names[1], ["priority", "status"])
+        priority, status = frappe.db.get_value(
+            "ToDo", record_names[1], ["priority", "status"]
+        )
         self.assertEqual(priority, "Low")
         self.assertEqual(status, "Closed")  # should stay the same
 
@@ -619,14 +727,19 @@ class TestDB(IntegrationTestCase):
         # simple filters
         self.assertEqual((frappe.db.count("Note", [["title", "=", "note1"]])), 1)
 
-        frappe.get_doc(doctype="Note", title="note3", content="something other").insert()
+        frappe.get_doc(
+            doctype="Note", title="note3", content="something other"
+        ).insert()
 
         # List of list filters with tables
         self.assertEqual(
             (
                 frappe.db.count(
                     "Note",
-                    [["Note", "title", "like", "note%"], ["Note", "content", "like", "some%"]],
+                    [
+                        ["Note", "title", "like", "note%"],
+                        ["Note", "content", "like", "some%"],
+                    ],
                 )
             ),
             3,
@@ -669,8 +782,16 @@ class TestDB(IntegrationTestCase):
         from frappe.database.postgres.database import modify_values
 
         self.assertEqual(
-            {"a": "23", "b": 23.0, "c": 23.0345, "d": "wow", "e": ("1", "2", "3", "abc")},
-            modify_values({"a": 23, "b": 23.0, "c": 23.0345, "d": "wow", "e": [1, 2, 3, "abc"]}),
+            {
+                "a": "23",
+                "b": 23.0,
+                "c": 23.0345,
+                "d": "wow",
+                "e": ("1", "2", "3", "abc"),
+            },
+            modify_values(
+                {"a": 23, "b": 23.0, "c": 23.0345, "d": "wow", "e": [1, 2, 3, "abc"]}
+            ),
         )
         self.assertEqual(
             ["23", 23.0, 23.00004345, "wow", ("1", "2", "3", "abc")],
@@ -779,25 +900,41 @@ class TestDBSetValue(IntegrationTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.todo1 = frappe.get_doc(doctype="ToDo", description="test_set_value 1").insert()
-        cls.todo2 = frappe.get_doc(doctype="ToDo", description="test_set_value 2").insert()
+        cls.todo1 = frappe.get_doc(
+            doctype="ToDo", description="test_set_value 1"
+        ).insert()
+        cls.todo2 = frappe.get_doc(
+            doctype="ToDo", description="test_set_value 2"
+        ).insert()
 
     def test_update_single_doctype_field(self):
         value = frappe.db.get_single_value("System Settings", "deny_multiple_sessions")
         changed_value = not value
 
-        frappe.db.set_single_value("System Settings", "deny_multiple_sessions", changed_value)
-        current_value = frappe.db.get_single_value("System Settings", "deny_multiple_sessions")
+        frappe.db.set_single_value(
+            "System Settings", "deny_multiple_sessions", changed_value
+        )
+        current_value = frappe.db.get_single_value(
+            "System Settings", "deny_multiple_sessions"
+        )
         self.assertEqual(current_value, changed_value)
 
         changed_value = not current_value
-        frappe.db.set_single_value("System Settings", "deny_multiple_sessions", changed_value)
-        current_value = frappe.db.get_single_value("System Settings", "deny_multiple_sessions")
+        frappe.db.set_single_value(
+            "System Settings", "deny_multiple_sessions", changed_value
+        )
+        current_value = frappe.db.get_single_value(
+            "System Settings", "deny_multiple_sessions"
+        )
         self.assertEqual(current_value, changed_value)
 
         changed_value = not current_value
-        frappe.db.set_single_value("System Settings", "deny_multiple_sessions", changed_value)
-        current_value = frappe.db.get_single_value("System Settings", "deny_multiple_sessions")
+        frappe.db.set_single_value(
+            "System Settings", "deny_multiple_sessions", changed_value
+        )
+        current_value = frappe.db.get_single_value(
+            "System Settings", "deny_multiple_sessions"
+        )
         self.assertEqual(current_value, changed_value)
 
     def test_none_no_set_value(self):
@@ -807,7 +944,9 @@ class TestDBSetValue(IntegrationTestCase):
             frappe.db.set_value("User", "User", "middle_name", "test")
 
     def test_update_single_row_single_column(self):
-        frappe.db.set_value("ToDo", self.todo1.name, "description", "test_set_value change 1")
+        frappe.db.set_value(
+            "ToDo", self.todo1.name, "description", "test_set_value change 1"
+        )
         updated_value = frappe.db.get_value("ToDo", self.todo1.name, "description")
         self.assertEqual(updated_value, "test_set_value change 1")
 
@@ -817,7 +956,10 @@ class TestDBSetValue(IntegrationTestCase):
         single_set.assert_called_once()
 
     def test_update_single_row_multiple_columns(self):
-        description, status = "Upated by test_update_single_row_multiple_columns", "Closed"
+        description, status = (
+            "Upated by test_update_single_row_multiple_columns",
+            "Closed",
+        )
 
         frappe.db.set_value(
             "ToDo",
@@ -830,22 +972,36 @@ class TestDBSetValue(IntegrationTestCase):
         )
 
         updated_desciption, updated_status = frappe.db.get_value(
-            "ToDo", filters={"name": self.todo1.name}, fieldname=["description", "status"]
+            "ToDo",
+            filters={"name": self.todo1.name},
+            fieldname=["description", "status"],
         )
 
         self.assertEqual(description, updated_desciption)
         self.assertEqual(status, updated_status)
 
     def test_update_multiple_rows_single_column(self):
-        frappe.db.set_value("ToDo", {"description": ("like", "%test_set_value%")}, "description", "change 2")
+        frappe.db.set_value(
+            "ToDo",
+            {"description": ("like", "%test_set_value%")},
+            "description",
+            "change 2",
+        )
 
-        self.assertEqual(frappe.db.get_value("ToDo", self.todo1.name, "description"), "change 2")
-        self.assertEqual(frappe.db.get_value("ToDo", self.todo2.name, "description"), "change 2")
+        self.assertEqual(
+            frappe.db.get_value("ToDo", self.todo1.name, "description"), "change 2"
+        )
+        self.assertEqual(
+            frappe.db.get_value("ToDo", self.todo2.name, "description"), "change 2"
+        )
 
     def test_update_multiple_rows_multiple_columns(self):
         todos_to_update = frappe.get_all(
             "ToDo",
-            filters={"description": ("like", "%test_set_value%"), "status": ("!=", "Closed")},
+            filters={
+                "description": ("like", "%test_set_value%"),
+                "status": ("!=", "Closed"),
+            },
             pluck="name",
         )
 
@@ -856,7 +1012,9 @@ class TestDBSetValue(IntegrationTestCase):
         )
 
         test_result = frappe.get_all(
-            "ToDo", filters={"name": ("in", todos_to_update)}, fields=["status", "priority"]
+            "ToDo",
+            filters={"name": ("in", todos_to_update)},
+            fields=["status", "priority"],
         )
 
         self.assertTrue(all(x for x in test_result if x["status"] == "Closed"))
@@ -870,9 +1028,15 @@ class TestDBSetValue(IntegrationTestCase):
         custom_modified = datetime.datetime.fromisoformat(add_days(now(), 10))
         custom_modified_by = "user_that_doesnt_exist@example.com"
 
-        frappe.db.set_value("ToDo", todo.name, "description", updated_description, update_modified=False)
-        self.assertEqual(updated_description, frappe.db.get_value("ToDo", todo.name, "description"))
-        self.assertEqual(todo.modified, frappe.db.get_value("ToDo", todo.name, "modified"))
+        frappe.db.set_value(
+            "ToDo", todo.name, "description", updated_description, update_modified=False
+        )
+        self.assertEqual(
+            updated_description, frappe.db.get_value("ToDo", todo.name, "description")
+        )
+        self.assertEqual(
+            todo.modified, frappe.db.get_value("ToDo", todo.name, "modified")
+        )
 
         frappe.db.set_value(
             "ToDo",
@@ -911,7 +1075,9 @@ class TestDBSetValue(IntegrationTestCase):
 
         description = f"{self.todo2.description}-edit by `test_cleared_cache`"
 
-        frappe.db.set_value(self.todo2.doctype, self.todo2.name, "description", description)
+        frappe.db.set_value(
+            self.todo2.doctype, self.todo2.name, "description", description
+        )
         cached_doc = frappe.get_cached_doc(self.todo2.doctype, self.todo2.name)
         self.assertEqual(cached_doc.description, description)
 
@@ -952,7 +1118,9 @@ class TestDDLCommandsPost(IntegrationTestCase):
         self.test_table_name = new_table_name
 
     def test_describe(self) -> None:
-        self.assertSequenceEqual([("id",), ("content",)], frappe.db.describe(self.test_table_name))
+        self.assertSequenceEqual(
+            [("id",), ("content",)], frappe.db.describe(self.test_table_name)
+        )
 
     def test_change_type(self) -> None:
         from psycopg2.errors import DatatypeMismatch
@@ -981,7 +1149,9 @@ class TestDDLCommandsPost(IntegrationTestCase):
             frappe.db.rollback()
 
         # try changing from varchar to int (using cast)
-        frappe.db.change_column_type(self.test_table_name, "id", "bigint", use_cast=True)
+        frappe.db.change_column_type(
+            self.test_table_name, "id", "bigint", use_cast=True
+        )
         self.assertIn("bigint", get_table_description()[0])
 
     def test_add_index(self) -> None:
@@ -1000,7 +1170,9 @@ class TestDDLCommandsPost(IntegrationTestCase):
     def test_sequence_table_creation(self):
         from frappe.core.doctype.doctype.test_doctype import new_doctype
 
-        dt = new_doctype("autoinc_dt_seq_test", autoname="autoincrement").insert(ignore_permissions=True)
+        dt = new_doctype("autoinc_dt_seq_test", autoname="autoincrement").insert(
+            ignore_permissions=True
+        )
 
         if frappe.db.db_type == "postgres":
             self.assertTrue(
@@ -1023,11 +1195,15 @@ class TestDDLCommandsPost(IntegrationTestCase):
         user = frappe.qb.DocType("User")
         self.assertIn(
             'coalesce("name",',
-            frappe.db.get_values(user, filters={user.name: ("is", "set")}, run=False).lower(),
+            frappe.db.get_values(
+                user, filters={user.name: ("is", "set")}, run=False
+            ).lower(),
         )
         self.assertIn(
             'coalesce("name",',
-            frappe.db.get_values(user, filters={user.name: ("is", "not set")}, run=False).lower(),
+            frappe.db.get_values(
+                user, filters={user.name: ("is", "not set")}, run=False
+            ).lower(),
         )
 
 
@@ -1049,7 +1225,9 @@ class TestTransactionManagement(IntegrationTestCase):
 # Treat same DB as replica for tests, a separate connection will be opened
 class TestReplicaConnections(IntegrationTestCase):
     def test_switching_to_replica(self):
-        with patch.dict(frappe.local.conf, {"read_from_replica": 1, "replica_host": "127.0.0.1"}):
+        with patch.dict(
+            frappe.local.conf, {"read_from_replica": 1, "replica_host": "127.0.0.1"}
+        ):
 
             def db_id():
                 return id(frappe.local.db)
@@ -1081,11 +1259,15 @@ class TestConcurrency(IntegrationTestCase):
     @timeout(5, "There shouldn't be any lock wait")
     def test_skip_locking(self):
         with self.primary_connection():
-            name = frappe.db.get_value("User", "Administrator", for_update=True, skip_locked=True)
+            name = frappe.db.get_value(
+                "User", "Administrator", for_update=True, skip_locked=True
+            )
             self.assertEqual(name, "Administrator")
 
         with self.secondary_connection():
-            name = frappe.db.get_value("User", "Administrator", for_update=True, skip_locked=True)
+            name = frappe.db.get_value(
+                "User", "Administrator", for_update=True, skip_locked=True
+            )
             self.assertFalse(name)
 
     @timeout(5, "Lock timeout should have been 0")
@@ -1097,7 +1279,9 @@ class TestConcurrency(IntegrationTestCase):
         with self.secondary_connection():
             self.assertRaises(
                 frappe.QueryTimeoutError,
-                lambda: frappe.db.get_value("User", "Administrator", for_update=True, wait=False),
+                lambda: frappe.db.get_value(
+                    "User", "Administrator", for_update=True, wait=False
+                ),
             )
 
     @timeout(5, "Deletion stuck on lock timeout")
@@ -1112,7 +1296,9 @@ class TestConcurrency(IntegrationTestCase):
             n1.save()
 
         with self.secondary_connection():
-            self.assertRaises(frappe.QueryTimeoutError, frappe.delete_doc, note.doctype, note.name)
+            self.assertRaises(
+                frappe.QueryTimeoutError, frappe.delete_doc, note.doctype, note.name
+            )
 
 
 def bad_hook(*args, **kwargs):
@@ -1265,11 +1451,17 @@ class TestPostgresSchemaQueryIndependence(ExtIntegrationTestCase):
         frappe.client_cache.delete_keys("table_columns::*")
 
     def test_describe(self) -> None:
-        self.assertSequenceEqual([("col_a",), ("col_b",)], frappe.db.describe(self.test_table_name))
+        self.assertSequenceEqual(
+            [("col_a",), ("col_b",)], frappe.db.describe(self.test_table_name)
+        )
 
     def test_has_index(self) -> None:
         # should not find any index on the table in default public schema (as it is only in the alt_schema)
-        self.assertFalse(frappe.db.has_index(f"tab{self.test_table_name}", f"tab{self.test_table_name}_pkey"))
+        self.assertFalse(
+            frappe.db.has_index(
+                f"tab{self.test_table_name}", f"tab{self.test_table_name}_pkey"
+            )
+        )
 
     def test_add_index(self) -> None:
         frappe.conf["db_schema"] = "alt_schema"
@@ -1312,7 +1504,10 @@ class TestPostgresSchemaQueryIndependence(ExtIntegrationTestCase):
 
     def test_get_column_type(self):
         # should return the column type of the column in the default public schema
-        self.assertEqual(frappe.db.get_column_type(self.test_table_name, "col_a"), "character varying")
+        self.assertEqual(
+            frappe.db.get_column_type(self.test_table_name, "col_a"),
+            "character varying",
+        )
 
         # should raise an error for the column in the alt_schema
         with self.assertSqlException():
@@ -1385,7 +1580,11 @@ class TestDbConnectWithEnvCredentials(IntegrationTestCase):
             with self.assertRaises(Exception) as cm:
                 frappe.db.connect()
 
-            self.assertTrue(re.search(r"(host name|server on) [\"']iqx.local[\"']", str(cm.exception)))
+            self.assertTrue(
+                re.search(
+                    r"(host name|server on) [\"']iqx.local[\"']", str(cm.exception)
+                )
+            )
 
         # with wrong user name
         with set_env_variable("FRAPPE_DB_USER", "uname"):
@@ -1406,7 +1605,10 @@ class TestDbConnectWithEnvCredentials(IntegrationTestCase):
                 frappe.db.connect()
 
             self.assertTrue(
-                re.search(r"(password authentication failed|Access denied for)", str(cm.exception))
+                re.search(
+                    r"(password authentication failed|Access denied for)",
+                    str(cm.exception),
+                )
             )
 
         # with wrong password
@@ -1417,7 +1619,9 @@ class TestDbConnectWithEnvCredentials(IntegrationTestCase):
             with self.assertRaises(Exception) as cm:
                 frappe.db.connect()
 
-            self.assertTrue(re.search("(port 1111 failed|Errno 111)", str(cm.exception)))
+            self.assertTrue(
+                re.search("(port 1111 failed|Errno 111)", str(cm.exception))
+            )
 
         # now with configured settings without any influences from env
         # finally connect should work without any error (when no wrong credentials are given via ENV)

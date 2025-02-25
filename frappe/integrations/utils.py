@@ -9,7 +9,9 @@ import frappe
 from frappe.utils import get_request_session
 
 
-def make_request(method: str, url: str, auth=None, headers=None, data=None, json=None, params=None):
+def make_request(
+    method: str, url: str, auth=None, headers=None, data=None, json=None, params=None
+):
     auth = auth or ""
     data = data or {}
     headers = headers or {}
@@ -25,7 +27,9 @@ def make_request(method: str, url: str, auth=None, headers=None, data=None, json
         if content_type := response.headers.get("content-type"):
             if content_type == "text/plain; charset=utf-8":
                 return parse_qs(response.text)
-            elif content_type.startswith("application/") and content_type.split(";")[0].endswith("json"):
+            elif content_type.startswith("application/") and content_type.split(";")[
+                0
+            ].endswith("json"):
                 return response.json()
             elif response.text:
                 return response.text

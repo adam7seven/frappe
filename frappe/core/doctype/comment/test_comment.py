@@ -68,7 +68,9 @@ class TestComment(IntegrationTestCase):
 
         frappe.db.delete("Comment", {"reference_doctype": "Blog Post"})
 
-        add_comment_args.update(comment="pleez vizits my site http://mysite.com", comment_by="bad commentor")
+        add_comment_args.update(
+            comment="pleez vizits my site http://mysite.com", comment_by="bad commentor"
+        )
         add_comment(**add_comment_args)
 
         self.assertEqual(

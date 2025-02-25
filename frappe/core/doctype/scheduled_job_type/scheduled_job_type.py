@@ -56,12 +56,16 @@ class ScheduledJobType(Document):
 
         if self.frequency == "Cron":
             if not self.cron_format:
-                frappe.throw(_("Cron format is required for job types with Cron frequency."))
+                frappe.throw(
+                    _("Cron format is required for job types with Cron frequency.")
+                )
             try:
                 croniter(self.cron_format)
             except CroniterBadCronError:
                 frappe.throw(
-                    _("{0} is not a valid Cron expression.").format(f"<code>{self.cron_format}</code>"),
+                    _("{0} is not a valid Cron expression.").format(
+                        f"<code>{self.cron_format}</code>"
+                    ),
                     title=_("Bad Cron Expression"),
                 )
 
@@ -142,7 +146,9 @@ class ScheduledJobType(Document):
             if self.server_script:
                 script_id = frappe.db.get_value("Server Script", self.server_script)
                 if script_id:
-                    frappe.get_doc("Server Script", script_id).execute_scheduled_method()
+                    frappe.get_doc(
+                        "Server Script", script_id
+                    ).execute_scheduled_method()
             else:
                 frappe.get_attr(self.method)()
             frappe.db.commit()
@@ -153,7 +159,9 @@ class ScheduledJobType(Document):
 
     def log_status(self, status):
         # log file
-        frappe.logger("scheduler").info(f"Scheduled Job {status}: {self.method} for {frappe.local.site}")
+        frappe.logger("scheduler").info(
+            f"Scheduled Job {status}: {self.method} for {frappe.local.site}"
+        )
         self.update_scheduler_log(status)
 
     def update_scheduler_log(self, status):
@@ -170,7 +178,9 @@ class ScheduledJobType(Document):
         if frappe.debug_log:
             self.scheduler_log.db_set("debug_log", "\n".join(frappe.debug_log))
         if status == "Failed":
-            self.scheduler_log.db_set("details", frappe.get_traceback(with_context=True))
+            self.scheduler_log.db_set(
+                "details", frappe.get_traceback(with_context=True)
+            )
         if status == "Start":
             self.db_set("last_execution", now_datetime(), update_modified=False)
         frappe.db.commit()
@@ -252,7 +262,9 @@ def insert_single_event(frequency: str, event: str, cron_format: str | None = No
         }
     )
 
-    if not frappe.db.exists("Scheduled Job Type", {"method": event, "frequency": frequency, **cron_expr}):
+    if not frappe.db.exists(
+        "Scheduled Job Type", {"method": event, "frequency": frequency, **cron_expr}
+    ):
         savepoint = "scheduled_job_type_creation"
         try:
             frappe.db.savepoint(savepoint)
@@ -273,7 +285,9 @@ def clear_events(scheduler_events: dict):
 
         freq = frappe.scrub(event.frequency)
         if freq == "cron":
-            return event.method in scheduler_events.get(freq, {}).get(event.cron_format, [])
+            return event.method in scheduler_events.get(freq, {}).get(
+                event.cron_format, []
+            )
         else:
             return event.method in scheduler_events.get(freq, [])
 
@@ -284,5 +298,7 @@ def clear_events(scheduler_events: dict):
 
 def on_doctype_update():
     frappe.db.add_unique(
-        "Scheduled Job Type", ["frequency", "cron_format", "method"], constraint_id="unique_scheduled_job"
+        "Scheduled Job Type",
+        ["frequency", "cron_format", "method"],
+        constraint_id="unique_scheduled_job",
     )

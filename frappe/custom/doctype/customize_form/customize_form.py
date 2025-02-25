@@ -125,7 +125,11 @@ class CustomizeForm(Document):
             frappe.throw(_("Single DocTypes cannot be customized."))
 
         if meta.custom:
-            frappe.throw(_("Only standard DocTypes are allowed to be customized from Customize Form."))
+            frappe.throw(
+                _(
+                    "Only standard DocTypes are allowed to be customized from Customize Form."
+                )
+            )
 
     def load_properties(self, meta):
         """
@@ -205,7 +209,9 @@ class CustomizeForm(Document):
             return
 
         if self.label != current.translated_text:
-            frappe.db.set_value("Translation", current.id, "translated_text", self.label)
+            frappe.db.set_value(
+                "Translation", current.id, "translated_text", self.label
+            )
             frappe.translate.clear_cache()
 
     def clear_existing_doc(self):
@@ -241,7 +247,9 @@ class CustomizeForm(Document):
             except Exception as e:
                 if frappe.db.is_db_table_size_limit(e):
                     frappe.throw(
-                        _("You have hit the row size limit on database table: {0}").format(
+                        _(
+                            "You have hit the row size limit on database table: {0}"
+                        ).format(
                             "<a href='https://docs.erpnext.com/docs/v14/user/manual/en/customize-erpnext/articles/maximum-number-of-fields-in-a-form'>"
                             "Maximum Number of Fields in a Form</a>"
                         ),
@@ -282,7 +290,9 @@ class CustomizeForm(Document):
         new_order = [df.fieldname for df in self.fields]
         existing_order = getattr(meta, "field_order", None)
         default_order = [
-            fieldname for fieldname, df in meta._fields.items() if not getattr(df, "is_custom_field", False)
+            fieldname
+            for fieldname, df in meta._fields.items()
+            if not getattr(df, "is_custom_field", False)
         ]
 
         if new_order == default_order:
@@ -317,7 +327,9 @@ class CustomizeForm(Document):
                 if not self.allow_property_change(prop, meta_df, df):
                     continue
 
-                self.make_property_setter(prop, df.get(prop), prop_type, fieldname=df.fieldname)
+                self.make_property_setter(
+                    prop, df.get(prop), prop_type, fieldname=df.fieldname
+                )
 
     def allow_property_change(self, prop, meta_df, df):
         if prop == "fieldtype":
@@ -328,7 +340,9 @@ class CustomizeForm(Document):
             new_value_length = cint(df.get(prop))
 
             if new_value_length and (old_value_length > new_value_length):
-                self.check_length_for_fieldtypes.append({"df": df, "old_value": meta_df[0].get(prop)})
+                self.check_length_for_fieldtypes.append(
+                    {"df": df, "old_value": meta_df[0].get(prop)}
+                )
                 self.validate_fieldtype_length()
             else:
                 self.flags.update_db = True
@@ -339,17 +353,29 @@ class CustomizeForm(Document):
                 {"parent": self.doc_type, "fieldname": df.fieldname},
                 "allow_on_submit",
             ):
-                frappe.msgprint(_("Row {0}: Not allowed to enable Allow on Submit for standard fields").format(df.idx))
+                frappe.msgprint(
+                    _(
+                        "Row {0}: Not allowed to enable Allow on Submit for standard fields"
+                    ).format(df.idx)
+                )
                 return False
 
         elif prop == "reqd" and (
             (
-                frappe.db.get_value("DocField", {"parent": self.doc_type, "fieldname": df.fieldname}, "reqd")
+                frappe.db.get_value(
+                    "DocField",
+                    {"parent": self.doc_type, "fieldname": df.fieldname},
+                    "reqd",
+                )
                 == 1
             )
             and (df.get(prop) == 0)
         ):
-            frappe.msgprint(_("Row {0}: Not allowed to disable Mandatory for standard fields").format(df.idx))
+            frappe.msgprint(
+                _(
+                    "Row {0}: Not allowed to disable Mandatory for standard fields"
+                ).format(df.idx)
+            )
             return False
 
         elif (
@@ -358,7 +384,11 @@ class CustomizeForm(Document):
             and df.fieldtype != "Attach Image"
             and df.fieldtype in no_value_fields
         ):
-            frappe.msgprint(_("'In List View' not allowed for type {0} in row {1}").format(df.fieldtype, df.idx))
+            frappe.msgprint(
+                _("'In List View' not allowed for type {0} in row {1}").format(
+                    df.fieldtype, df.idx
+                )
+            )
             return False
 
         elif (
@@ -382,7 +412,9 @@ class CustomizeForm(Document):
             == 1
         ):
             # if docfield has read_only checked and user is trying to make it editable, don't allow it
-            frappe.msgprint(_("You cannot unset 'Read Only' for field {0}").format(df.label))
+            frappe.msgprint(
+                _("You cannot unset 'Read Only' for field {0}").format(df.label)
+            )
             return False
 
         elif prop == "options" and df.get("fieldtype") not in ALLOWED_OPTIONS_CHANGE:
@@ -390,10 +422,14 @@ class CustomizeForm(Document):
             return False
 
         elif prop == "translatable" and not supports_translation(df.get("fieldtype")):
-            frappe.msgprint(_("You can't set 'Translatable' for field {0}").format(df.label))
+            frappe.msgprint(
+                _("You can't set 'Translatable' for field {0}").format(df.label)
+            )
             return False
 
-        elif prop == "in_global_search" and df.in_global_search != meta_df[0].get("in_global_search"):
+        elif prop == "in_global_search" and df.in_global_search != meta_df[0].get(
+            "in_global_search"
+        ):
             self.flags.rebuild_doctype_for_global_search = True
 
         return True
@@ -444,7 +480,9 @@ class CustomizeForm(Document):
         if has_custom:
             # save the order of the actions and links
             self.make_property_setter(
-                property_name, json.dumps([d.id for d in self.get(fieldname)]), "Small Text"
+                property_name,
+                json.dumps([d.id for d in self.get(fieldname)]),
+                "Small Text",
             )
         else:
             delete_property_setter(self.doc_type, property=property_name)
@@ -454,7 +492,9 @@ class CustomizeForm(Document):
         Clear rows that do not appear in `items`. These have been removed by the user.
         """
         if items:
-            frappe.db.delete(doctype, dict(parent=self.doc_type, custom=1, id=("not in", items)))
+            frappe.db.delete(
+                doctype, dict(parent=self.doc_type, custom=1, id=("not in", items))
+            )
         else:
             frappe.db.delete(doctype, dict(parent=self.doc_type, custom=1))
 
@@ -463,7 +503,9 @@ class CustomizeForm(Document):
             if is_standard_or_system_generated_field(df):
                 continue
 
-            if not frappe.db.exists("Custom Field", {"dt": self.doc_type, "fieldname": df.fieldname}):
+            if not frappe.db.exists(
+                "Custom Field", {"dt": self.doc_type, "fieldname": df.fieldname}
+            ):
                 self.add_custom_field(df, i)
                 self.flags.update_db = True
             else:
@@ -501,7 +543,9 @@ class CustomizeForm(Document):
         for prop in docfield_properties:
             if df.get(prop) != custom_field.get(prop):
                 if prop == "fieldtype":
-                    self.validate_fieldtype_change(df, meta_df[0].get(prop), df.get(prop))
+                    self.validate_fieldtype_change(
+                        df, meta_df[0].get(prop), df.get(prop)
+                    )
                 if prop == "in_global_search":
                     self.flags.rebuild_doctype_for_global_search = True
 
@@ -523,13 +567,17 @@ class CustomizeForm(Document):
 
     def delete_custom_fields(self):
         meta = frappe.get_meta(self.doc_type)
-        fields_to_remove = {df.fieldname for df in meta.get("fields")} - {df.fieldname for df in self.get("fields")}
+        fields_to_remove = {df.fieldname for df in meta.get("fields")} - {
+            df.fieldname for df in self.get("fields")
+        }
         for fieldname in fields_to_remove:
             df = meta.get("fields", {"fieldname": fieldname})[0]
             if not is_standard_or_system_generated_field(df):
                 frappe.delete_doc("Custom Field", df.id)
 
-    def make_property_setter(self, prop, value, property_type, fieldname=None, apply_on=None, row_id=None):
+    def make_property_setter(
+        self, prop, value, property_type, fieldname=None, apply_on=None, row_id=None
+    ):
         delete_property_setter(self.doc_type, prop, fieldname, row_id)
 
         property_value = self.get_existing_property_value(prop, fieldname)
@@ -564,7 +612,9 @@ class CustomizeForm(Document):
             )
         else:
             if frappe.db.has_column("DocType", property_name):
-                property_value = frappe.db.get_value("DocType", self.doc_type, property_name)
+                property_value = frappe.db.get_value(
+                    "DocType", self.doc_type, property_name
+                )
             else:
                 property_value = None
 
@@ -582,14 +632,18 @@ class CustomizeForm(Document):
             # Ignore fieldtype check validation if new field type has unspecified maxlength
             # Changes like DATA to TEXT, where new_value_lenth equals 0 will not be validated
             if new_value_length and (old_value_length > new_value_length):
-                self.check_length_for_fieldtypes.append({"df": df, "old_value": old_value})
+                self.check_length_for_fieldtypes.append(
+                    {"df": df, "old_value": old_value}
+                )
                 self.validate_fieldtype_length()
             else:
                 self.flags.update_db = True
 
         else:
             frappe.throw(
-                _("Fieldtype cannot be changed from {0} to {1} in row {2}").format(old_value, new_value, df.idx)
+                _("Fieldtype cannot be changed from {0} to {1} in row {2}").format(
+                    old_value, new_value, df.idx
+                )
             )
 
     def validate_fieldtype_length(self):
@@ -606,13 +660,15 @@ class CustomizeForm(Document):
                 as_dict=True,
             )
             label = df.label
-            links_str = ", ".join(frappe.utils.get_link_to_form(self.doc_type, doc.id) for doc in docs)
+            links_str = ", ".join(
+                frappe.utils.get_link_to_form(self.doc_type, doc.id) for doc in docs
+            )
 
             if docs:
                 frappe.throw(
-                    _("Value for field {0} is too long in {1}. Length should be lesser than {2} characters").format(
-                        frappe.bold(label), links_str, frappe.bold(max_length)
-                    ),
+                    _(
+                        "Value for field {0} is too long in {1}. Length should be lesser than {2} characters"
+                    ).format(frappe.bold(label), links_str, frappe.bold(max_length)),
                     title=_("Data Too Long"),
                     is_minimizable=len(docs) > 1,
                 )

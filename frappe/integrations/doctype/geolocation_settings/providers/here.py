@@ -29,7 +29,9 @@ class Here:
         for result in results:
             address = result["address"]
             py_country = pycountry.countries.get(alpha_3=address.get("countryCode"))
-            frappe_country = frappe.db.get_value("Country", {"code": py_country.alpha_2.lower()})
+            frappe_country = frappe.db.get_value(
+                "Country", {"code": py_country.alpha_2.lower()}
+            )
             yield {
                 "label": address["label"],
                 "value": json.dumps(

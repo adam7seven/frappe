@@ -157,7 +157,9 @@ class TestEvent(IntegrationTestCase):
         )
         self.assertFalse(bool(list(filter(lambda e: e.id == ev.id, ev_list2))))
 
-        ev_list3 = get_events("2015-02-01", "2015-02-01", "Administrator", for_reminder=True)
+        ev_list3 = get_events(
+            "2015-02-01", "2015-02-01", "Administrator", for_reminder=True
+        )
         self.assertTrue(bool(list(filter(lambda e: e.id == ev.id, ev_list3))))
 
     def test_quaterly_repeat(self):
@@ -174,30 +176,46 @@ class TestEvent(IntegrationTestCase):
         )
         ev.insert()
         # Test Quaterly months
-        ev_list = get_events("2023-02-17", "2023-02-17", "Administrator", for_reminder=True)
+        ev_list = get_events(
+            "2023-02-17", "2023-02-17", "Administrator", for_reminder=True
+        )
         self.assertTrue(bool(list(filter(lambda e: e.id == ev.id, ev_list))))
 
-        ev_list1 = get_events("2023-05-17", "2023-05-17", "Administrator", for_reminder=True)
+        ev_list1 = get_events(
+            "2023-05-17", "2023-05-17", "Administrator", for_reminder=True
+        )
         self.assertTrue(bool(list(filter(lambda e: e.id == ev.id, ev_list1))))
 
-        ev_list2 = get_events("2023-08-17", "2023-08-17", "Administrator", for_reminder=True)
+        ev_list2 = get_events(
+            "2023-08-17", "2023-08-17", "Administrator", for_reminder=True
+        )
         self.assertTrue(bool(list(filter(lambda e: e.id == ev.id, ev_list2))))
 
-        ev_list3 = get_events("2023-11-17", "2023-11-17", "Administrator", for_reminder=True)
+        ev_list3 = get_events(
+            "2023-11-17", "2023-11-17", "Administrator", for_reminder=True
+        )
         self.assertTrue(bool(list(filter(lambda e: e.id == ev.id, ev_list3))))
 
         # Test before event start date and after event end date
-        ev_list4 = get_events("2022-11-17", "2022-11-17", "Administrator", for_reminder=True)
+        ev_list4 = get_events(
+            "2022-11-17", "2022-11-17", "Administrator", for_reminder=True
+        )
         self.assertFalse(bool(list(filter(lambda e: e.id == ev.id, ev_list4))))
 
-        ev_list4 = get_events("2024-02-17", "2024-02-17", "Administrator", for_reminder=True)
+        ev_list4 = get_events(
+            "2024-02-17", "2024-02-17", "Administrator", for_reminder=True
+        )
         self.assertFalse(bool(list(filter(lambda e: e.id == ev.id, ev_list4))))
 
         # Test months that aren't part of the quarterly cycle
-        ev_list4 = get_events("2023-12-17", "2023-12-17", "Administrator", for_reminder=True)
+        ev_list4 = get_events(
+            "2023-12-17", "2023-12-17", "Administrator", for_reminder=True
+        )
         self.assertFalse(bool(list(filter(lambda e: e.id == ev.id, ev_list4))))
 
-        ev_list4 = get_events("2023-03-17", "2023-03-17", "Administrator", for_reminder=True)
+        ev_list4 = get_events(
+            "2023-03-17", "2023-03-17", "Administrator", for_reminder=True
+        )
         self.assertFalse(bool(list(filter(lambda e: e.id == ev.id, ev_list4))))
 
     def test_half_yearly_repeat(self):
@@ -214,22 +232,34 @@ class TestEvent(IntegrationTestCase):
         )
         ev.insert()
         # Test Half Yearly months
-        ev_list = get_events("2023-02-17", "2023-02-17", "Administrator", for_reminder=True)
+        ev_list = get_events(
+            "2023-02-17", "2023-02-17", "Administrator", for_reminder=True
+        )
         self.assertTrue(bool(list(filter(lambda e: e.id == ev.id, ev_list))))
 
-        ev_list1 = get_events("2023-08-17", "2023-08-17", "Administrator", for_reminder=True)
+        ev_list1 = get_events(
+            "2023-08-17", "2023-08-17", "Administrator", for_reminder=True
+        )
         self.assertTrue(bool(list(filter(lambda e: e.id == ev.id, ev_list1))))
 
         # Test before event start date and after event end date
-        ev_list4 = get_events("2022-08-17", "2022-08-17", "Administrator", for_reminder=True)
+        ev_list4 = get_events(
+            "2022-08-17", "2022-08-17", "Administrator", for_reminder=True
+        )
         self.assertFalse(bool(list(filter(lambda e: e.id == ev.id, ev_list4))))
 
-        ev_list4 = get_events("2024-02-17", "2024-02-17", "Administrator", for_reminder=True)
+        ev_list4 = get_events(
+            "2024-02-17", "2024-02-17", "Administrator", for_reminder=True
+        )
         self.assertFalse(bool(list(filter(lambda e: e.id == ev.id, ev_list4))))
 
         # Test months that aren't part of the half yearly cycle
-        ev_list4 = get_events("2023-12-17", "2023-12-17", "Administrator", for_reminder=True)
+        ev_list4 = get_events(
+            "2023-12-17", "2023-12-17", "Administrator", for_reminder=True
+        )
         self.assertFalse(bool(list(filter(lambda e: e.id == ev.id, ev_list4))))
 
-        ev_list4 = get_events("2023-05-17", "2023-05-17", "Administrator", for_reminder=True)
+        ev_list4 = get_events(
+            "2023-05-17", "2023-05-17", "Administrator", for_reminder=True
+        )
         self.assertFalse(bool(list(filter(lambda e: e.id == ev.id, ev_list4))))

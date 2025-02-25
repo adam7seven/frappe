@@ -39,7 +39,10 @@ class TestGlobalSearch(IntegrationTestCase):
 
         for text in phrases:
             frappe.get_doc(
-                doctype="Event", subject=text, repeat_on="Monthly", starts_on=now_datetime()
+                doctype="Event",
+                subject=text,
+                repeat_on="Monthly",
+                starts_on=now_datetime(),
             ).insert()
 
         global_search.sync_global_search()
@@ -93,7 +96,8 @@ class TestGlobalSearch(IntegrationTestCase):
         test_subject = event.subject
         results = global_search.search(test_subject)
         self.assertTrue(
-            any(r["name"] == event_name for r in results), msg="Failed to search document by exact name"
+            any(r["name"] == event_name for r in results),
+            msg="Failed to search document by exact name",
         )
 
         frappe.delete_doc("Event", event_name)
@@ -121,7 +125,9 @@ class TestGlobalSearch(IntegrationTestCase):
         ]
 
         for text in phrases:
-            doc = frappe.get_doc({"doctype": "Event", "subject": text, "starts_on": now_datetime()})
+            doc = frappe.get_doc(
+                {"doctype": "Event", "subject": text, "starts_on": now_datetime()}
+            )
             doc.insert()
 
         global_search.sync_global_search()
@@ -191,7 +197,9 @@ class TestGlobalSearch(IntegrationTestCase):
             field_as_text = ""
             for field in doc.meta.fields:
                 if field.fieldname == "description":
-                    field_as_text = global_search.get_formatted_value(doc.description, field)
+                    field_as_text = global_search.get_formatted_value(
+                        doc.description, field
+                    )
 
             self.assertEqual(case["result"], field_as_text)
 
@@ -202,6 +210,7 @@ class TestGlobalSearch(IntegrationTestCase):
         results = global_search.web_search("unsubscribe")
         self.assertTrue("Unsubscribe" in results[0].content)
         results = global_search.web_search(
-            text="unsubscribe", scope='manufacturing" UNION ALL SELECT 1,2,3,4,doctype from __global_search'
+            text="unsubscribe",
+            scope='manufacturing" UNION ALL SELECT 1,2,3,4,doctype from __global_search',
         )
         self.assertTrue(results == [])

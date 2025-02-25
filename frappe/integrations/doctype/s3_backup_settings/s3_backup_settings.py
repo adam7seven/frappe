@@ -63,7 +63,9 @@ class S3BackupSettings(Document):
             error_code = e.response["Error"]["Code"]
             bucket_name = frappe.bold(self.bucket)
             if error_code == "403":
-                msg = _("Do not have permission to access bucket {0}.").format(bucket_name)
+                msg = _("Do not have permission to access bucket {0}.").format(
+                    bucket_name
+                )
             elif error_code == "404":
                 msg = _("Bucket {0} not found.").format(bucket_name)
             else:
@@ -150,23 +152,29 @@ def backup_to_s3():
             backup_path_private_files=None,
             force=True,
         )
-        db_filename = os.path.join(get_backups_path(), os.path.basename(backup.backup_path_db))
-        site_config = os.path.join(get_backups_path(), os.path.basename(backup.backup_path_conf))
+        db_filename = os.path.join(
+            get_backups_path(), os.path.basename(backup.backup_path_db)
+        )
+        site_config = os.path.join(
+            get_backups_path(), os.path.basename(backup.backup_path_conf)
+        )
         if backup_files:
-            files_filename = os.path.join(get_backups_path(), os.path.basename(backup.backup_path_files))
+            files_filename = os.path.join(
+                get_backups_path(), os.path.basename(backup.backup_path_files)
+            )
             private_files = os.path.join(
                 get_backups_path(), os.path.basename(backup.backup_path_private_files)
             )
     else:
         if backup_files:
-            db_filename, site_config, files_filename, private_files = get_latest_backup_file(
-                with_files=backup_files
+            db_filename, site_config, files_filename, private_files = (
+                get_latest_backup_file(with_files=backup_files)
             )
 
             if not files_filename or not private_files:
                 generate_files_backup()
-                db_filename, site_config, files_filename, private_files = get_latest_backup_file(
-                    with_files=backup_files
+                db_filename, site_config, files_filename, private_files = (
+                    get_latest_backup_file(with_files=backup_files)
                 )
 
         else:

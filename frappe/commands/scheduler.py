@@ -74,11 +74,25 @@ def disable_scheduler(context: CliCtxObj):
 
 @click.command("scheduler")
 @click.option("--site", help="site name")
-@click.argument("state", type=click.Choice(["pause", "resume", "disable", "enable", "status"]))
-@click.option("--format", "-f", default="text", type=click.Choice(["json", "text"]), help="Output format")
+@click.argument(
+    "state", type=click.Choice(["pause", "resume", "disable", "enable", "status"])
+)
+@click.option(
+    "--format",
+    "-f",
+    default="text",
+    type=click.Choice(["json", "text"]),
+    help="Output format",
+)
 @click.option("--verbose", "-v", is_flag=True, help="Verbose output")
 @pass_context
-def scheduler(context: CliCtxObj, state: str, format: str, verbose: bool = False, site: str | None = None):
+def scheduler(
+    context: CliCtxObj,
+    state: str,
+    format: str,
+    verbose: bool = False,
+    site: str | None = None,
+):
     """Control scheduler state."""
     import frappe
     from frappe.utils.scheduler import is_scheduler_inactive, toggle_scheduler
@@ -94,7 +108,9 @@ def scheduler(context: CliCtxObj, state: str, format: str, verbose: bool = False
         match state:
             case "status":
                 frappe.connect()
-                status = "disabled" if is_scheduler_inactive(verbose=verbose) else "enabled"
+                status = (
+                    "disabled" if is_scheduler_inactive(verbose=verbose) else "enabled"
+                )
                 return print(output[format].format(status=status, site=site))
             case "pause" | "resume":
                 from frappe.installer import update_site_config
@@ -127,7 +143,9 @@ def set_maintenance_mode(context: CliCtxObj, state, site=None):
         frappe.destroy()
 
 
-@click.command("doctor")  # Passing context always gets a site and if there is no use site it breaks
+@click.command(
+    "doctor"
+)  # Passing context always gets a site and if there is no use site it breaks
 @click.option("--site", help="site name")
 @pass_context
 def doctor(context: CliCtxObj, site=None):
@@ -199,7 +217,9 @@ def start_scheduler():
     type=click.Choice(["round_robin", "random"]),
     help="Dequeuing strategy to use",
 )
-def start_worker(queue, quiet=False, rq_username=None, rq_password=None, burst=False, strategy=None):
+def start_worker(
+    queue, quiet=False, rq_username=None, rq_password=None, burst=False, strategy=None
+):
     """Start a background worker"""
     from frappe.utils.background_jobs import start_worker
 
@@ -219,7 +239,9 @@ def start_worker(queue, quiet=False, rq_username=None, rq_password=None, burst=F
     type=str,
     help="Queue to consume from. Multiple queues can be specified using comma-separated string. If not specified all queues are consumed.",
 )
-@click.option("--num-workers", type=int, default=2, help="Number of workers to spawn in pool.")
+@click.option(
+    "--num-workers", type=int, default=2, help="Number of workers to spawn in pool."
+)
 @click.option("--quiet", is_flag=True, default=False, help="Hide Log Outputs")
 @click.option("--burst", is_flag=True, default=False, help="Run Worker in Burst mode.")
 def start_worker_pool(queue, quiet=False, num_workers=2, burst=False):

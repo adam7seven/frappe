@@ -59,7 +59,9 @@ class NamingSeries:
     def validate(self):
         if "." not in self.series:
             frappe.throw(
-                _("Invalid naming series {}: dot (.) missing").format(frappe.bold(self.series)),
+                _("Invalid naming series {}: dot (.) missing").format(
+                    frappe.bold(self.series)
+                ),
                 exc=InvalidNamingSeriesError,
             )
 
@@ -113,7 +115,9 @@ class NamingSeries:
                 # because of function signature requirement
                 return str(count).zfill(digits)
 
-            generated_names.append(parse_naming_series(self.series, doc=doc, number_generator=fake_counter))
+            generated_names.append(
+                parse_naming_series(self.series, doc=doc, number_generator=fake_counter)
+            )
         return generated_names
 
     def update_counter(self, new_count: int) -> None:
@@ -125,7 +129,11 @@ class NamingSeries:
         if frappe.db.get_value("Series", prefix, "name", order_by="name") is None:
             frappe.qb.into(Series).insert(prefix, 0).columns("name", "current").run()
 
-        (frappe.qb.update(Series).set(Series.current, cint(new_count)).where(Series.name == prefix)).run()
+        (
+            frappe.qb.update(Series)
+            .set(Series.current, cint(new_count))
+            .where(Series.name == prefix)
+        ).run()
 
     def get_current_value(self) -> int:
         prefix = self.get_prefix()
@@ -165,7 +173,10 @@ def set_new_name(doc):
             try:
                 UUID(doc.name)
             except ValueError:
-                frappe.throw(_("Invalid value specified for UUID: {}").format(doc.name), InvalidUUIDValue)
+                frappe.throw(
+                    _("Invalid value specified for UUID: {}").format(doc.name),
+                    InvalidUUIDValue,
+                )
         return
 
     if getattr(doc, "amended_from", None):
@@ -291,7 +302,11 @@ def _get_timestamp_prefix():
     ts = int(time.time() * 10)  # time in deciseconds
     # we ~~don't need~~ can't get ordering over entire lifetime, so we wrap the time.
     ts = ts % (32**4)
-    ts_part = base64.b32hexencode(ts.to_bytes(length=5, byteorder="big")).decode()[-3:].lower()
+    ts_part = (
+        base64.b32hexencode(ts.to_bytes(length=5, byteorder="big"))
+        .decode()[-3:]
+        .lower()
+    )
 
     # First character is from request/job specific UUID, all documents created in this "session" will
     # have same prefix. This avoids collision between parallel jobs with reasonable probabililistic
@@ -401,16 +416,22 @@ def getseries(key, digits):
     # series created ?
     # Using frappe.qb as frappe.get_values does not allow order_by=None
     series = DocType("Series")
-    current = (frappe.qb.from_(series).where(series.name == key).for_update().select("current")).run()
+    current = (
+        frappe.qb.from_(series).where(series.name == key).for_update().select("current")
+    ).run()
 
     if current and current[0][0] is not None:
         current = current[0][0]
         # yes, update it
-        frappe.db.sql("UPDATE `tabSeries` SET `current` = `current` + 1 WHERE `name`=%s", (key,))
+        frappe.db.sql(
+            "UPDATE `tabSeries` SET `current` = `current` + 1 WHERE `name`=%s", (key,)
+        )
         current = cint(current) + 1
     else:
         # no, create it
-        frappe.db.sql("INSERT INTO `tabSeries` (`name`, `current`) VALUES (%s, 1)", (key,))
+        frappe.db.sql(
+            "INSERT INTO `tabSeries` (`name`, `current`) VALUES (%s, 1)", (key,)
+        )
         current = 1
     return ("%0" + str(digits) + "d") % current
 
@@ -457,10 +478,17 @@ def revert_series_if_last(key, name, doc=None):
 
     count = cint(name.replace(prefix, ""))
     series = DocType("Series")
-    current = (frappe.qb.from_(series).where(series.name == prefix).for_update().select("current")).run()
+    current = (
+        frappe.qb.from_(series)
+        .where(series.name == prefix)
+        .for_update()
+        .select("current")
+    ).run()
 
     if current and current[0][0] == count:
-        frappe.db.sql("UPDATE `tabSeries` SET `current` = `current` - 1 WHERE `name`=%s", prefix)
+        frappe.db.sql(
+            "UPDATE `tabSeries` SET `current` = `current` - 1 WHERE `name`=%s", prefix
+        )
 
 
 def get_default_naming_series(doctype: str) -> str | None:
@@ -485,26 +513,42 @@ def validate_name(doctype: str, name: int | str):
             frappe.db.set_next_sequence_val(doctype, name, is_val_used=True)
             return name
 
-        frappe.throw(_("Invalid name type (integer) for varchar name column"), frappe.NameError)
+        frappe.throw(
+            _("Invalid name type (integer) for varchar name column"), frappe.NameError
+        )
 
     if name.startswith("New " + doctype):
         frappe.throw(
-            _("There were some errors setting the name, please contact the administrator"), frappe.NameError
+            _(
+                "There were some errors setting the name, please contact the administrator"
+            ),
+            frappe.NameError,
         )
     name = name.strip()
 
-    if not frappe.get_meta(doctype).get("issingle") and (doctype == name) and (name != "DocType"):
-        frappe.throw(_("Name of {0} cannot be {1}").format(doctype, name), frappe.NameError)
+    if (
+        not frappe.get_meta(doctype).get("issingle")
+        and (doctype == name)
+        and (name != "DocType")
+    ):
+        frappe.throw(
+            _("Name of {0} cannot be {1}").format(doctype, name), frappe.NameError
+        )
 
     special_characters = "<>"
     if re.findall(f"[{special_characters}]+", name):
         message = ", ".join(f"'{c}'" for c in special_characters)
-        frappe.throw(_("Name cannot contain special characters like {0}").format(message), frappe.NameError)
+        frappe.throw(
+            _("Name cannot contain special characters like {0}").format(message),
+            frappe.NameError,
+        )
 
     return name
 
 
-def append_number_if_name_exists(doctype, value, fieldname="name", separator="-", filters=None):
+def append_number_if_name_exists(
+    doctype, value, fieldname="name", separator="-", filters=None
+):
     if not filters:
         filters = dict()
     filters.update({fieldname: value})
@@ -533,7 +577,10 @@ def append_number_if_name_exists(doctype, value, fieldname="name", separator="-"
 
 def _set_amended_name(doc):
     amend_naming_rule = frappe.db.get_value(
-        "Amended Document Naming Settings", {"document_type": doc.doctype}, "action", cache=True
+        "Amended Document Naming Settings",
+        {"document_type": doc.doctype},
+        "action",
+        cache=True,
     )
     if not amend_naming_rule:
         amend_naming_rule = frappe.db.get_single_value(

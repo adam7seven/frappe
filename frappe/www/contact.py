@@ -37,8 +37,15 @@ def send_message(sender, message, subject="Website Query"):
     message = escape_html(message)
 
     with suppress(frappe.OutgoingEmailError):
-        if forward_to_email := frappe.db.get_single_value("Contact Us Settings", "forward_to_email"):
-            frappe.sendmail(recipients=forward_to_email, reply_to=sender, content=message, subject=subject)
+        if forward_to_email := frappe.db.get_single_value(
+            "Contact Us Settings", "forward_to_email"
+        ):
+            frappe.sendmail(
+                recipients=forward_to_email,
+                reply_to=sender,
+                content=message,
+                subject=subject,
+            )
 
         reply = _(
             """Thank you for reaching out to us. We will get back to you at the earliest.

@@ -84,13 +84,21 @@ class TypeExporter:
             existing_block_start = code.find(first_line)
             existing_block_end = code.find(last_line) + len(last_line)
 
-            code = code[:existing_block_start] + new_code + "\n\n" + code[existing_block_end:].lstrip("\n")
+            code = (
+                code[:existing_block_start]
+                + new_code
+                + "\n\n"
+                + code[existing_block_end:].lstrip("\n")
+            )
         elif class_definition in code:  # Add just after class definition
             # Regex by default will only match till line ends, span end is when we need to stop
             if class_def := re.search(rf"class {despaced_id}\(.*", code):  # )
                 class_definition_end = class_def.span()[1] + 1
                 code = (
-                    code[:class_definition_end] + new_code + "\n\n" + code[class_definition_end:].lstrip("\n")
+                    code[:class_definition_end]
+                    + new_code
+                    + "\n\n"
+                    + code[class_definition_end:].lstrip("\n")
                 )
 
         if self._validate_code(code):
@@ -125,7 +133,12 @@ class TypeExporter:
 
     def _create_fields_code_block(self):
         return "\n".join(
-            sorted([field_template.format(field=field, type=typehint) for field, typehint in self.field_types.items()])
+            sorted(
+                [
+                    field_template.format(field=field, type=typehint)
+                    for field, typehint in self.field_types.items()
+                ]
+            )
         )
 
     def _create_imports_block(self) -> str:

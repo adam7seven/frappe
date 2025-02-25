@@ -111,7 +111,14 @@ class FrappeClient:
             headers=self.headers,
         )
 
-    def get_list(self, doctype, fields='["id"]', filters=None, limit_start=0, limit_page_length=None):
+    def get_list(
+        self,
+        doctype,
+        fields='["id"]',
+        filters=None,
+        limit_start=0,
+        limit_page_length=None,
+    ):
         """Return list of records of a particular type."""
         if not isinstance(fields, str):
             fields = json.dumps(fields)
@@ -124,7 +131,10 @@ class FrappeClient:
             params["limit_start"] = limit_start
             params["limit_page_length"] = limit_page_length
         res = self.session.get(
-            self.url + "/api/resource/" + doctype, params=params, verify=self.verify, headers=self.headers
+            self.url + "/api/resource/" + doctype,
+            params=params,
+            verify=self.verify,
+            headers=self.headers,
         )
         return self.post_process(res)
 
@@ -268,7 +278,15 @@ class FrappeClient:
         }
         return self.post_request(params)
 
-    def migrate_doctype(self, doctype, filters=None, update=None, verbose=1, exclude=None, preprocess=None):
+    def migrate_doctype(
+        self,
+        doctype,
+        filters=None,
+        update=None,
+        verbose=1,
+        exclude=None,
+        preprocess=None,
+    ):
         """Migrate records from another doctype"""
         meta = frappe.get_meta(doctype)
         tables = {}

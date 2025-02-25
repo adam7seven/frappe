@@ -137,16 +137,18 @@ def _download_multi_pdf(
                 )
             except Exception:
                 if task_id:
-                    frappe.publish_realtime(task_id=task_id, message={"message": "Failed"})
+                    frappe.publish_realtime(
+                        task_id=task_id, message={"message": "Failed"}
+                    )
 
             # Publish progress
             if task_id:
                 frappe.publish_progress(
                     percent=(idx + 1) / total_docs * 100,
                     title=_("PDF Generation in Progress"),
-                    description=_("{0}/{1} complete | Please leave this tab open until completion.").format(
-                        idx + 1, total_docs
-                    ),
+                    description=_(
+                        "{0}/{1} complete | Please leave this tab open until completion."
+                    ).format(idx + 1, total_docs),
                     task_id=task_id,
                 )
 
@@ -208,7 +210,9 @@ def _download_multi_pdf(
                 }
             )
             _file.save()
-            frappe.publish_realtime(f"task_complete:{task_id}", message={"file_url": _file.unique_url})
+            frappe.publish_realtime(
+                f"task_complete:{task_id}", message={"file_url": _file.unique_url}
+            )
         else:
             frappe.local.response.filecontent = merged_pdf.getvalue()
             frappe.local.response.type = "pdf"
@@ -219,7 +223,13 @@ from frappe.deprecation_dumpster import read_multi_pdf
 
 @frappe.whitelist(allow_guest=True)
 def download_pdf(
-    doctype: str, id: str, format=None, doc=None, no_letterhead=0, language=None, letterhead=None
+    doctype: str,
+    id: str,
+    format=None,
+    doc=None,
+    no_letterhead=0,
+    language=None,
+    letterhead=None,
 ):
     doc = doc or frappe.get_doc(doctype, id)
     validate_print_permission(doc)
@@ -235,7 +245,9 @@ def download_pdf(
             no_letterhead=no_letterhead,
         )
 
-    frappe.local.response.filename = "{id}.pdf".format(id=id.replace(" ", "-").replace("/", "-"))
+    frappe.local.response.filename = "{id}.pdf".format(
+        id=id.replace(" ", "-").replace("/", "-")
+    )
     frappe.local.response.filecontent = pdf_file
     frappe.local.response.type = "pdf"
 
@@ -279,7 +291,9 @@ def print_by_server(
             output=output,
         )
         if not file_path:
-            file_path = os.path.join("/", "tmp", f"frappe-pdf-{frappe.generate_hash()}.pdf")
+            file_path = os.path.join(
+                "/", "tmp", f"frappe-pdf-{frappe.generate_hash()}.pdf"
+            )
         output.write(open(file_path, "wb"))
         conn.printFile(print_settings.printer_id, file_path, id, {})
     except OSError as e:

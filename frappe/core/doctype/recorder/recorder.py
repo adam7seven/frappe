@@ -141,7 +141,9 @@ def _add_index(table, column):
         for_doctype=False,  # Applied on docfield
     )
     frappe.msgprint(
-        _("Index created successfully on column {0} of doctype {1}").format(column, doctype),
+        _("Index created successfully on column {0} of doctype {1}").format(
+            column, doctype
+        ),
         alert=True,
         realtime=True,
     )
@@ -182,7 +184,9 @@ def _optimize(recorder_id):
 
     suggested_indexes = index_suggestions.most_common(3)
     suggested_indexes = [
-        idx for idx in suggested_indexes if idx[1] > total_duration * PERCENT_DURATION_THRESHOLD_OVERALL
+        idx
+        for idx in suggested_indexes
+        if idx[1] > total_duration * PERCENT_DURATION_THRESHOLD_OVERALL
     ]
 
     if not suggested_indexes:
@@ -194,10 +198,16 @@ def _optimize(recorder_id):
         return
 
     data = frappe.cache.hget(RECORDER_REQUEST_HASH, record.id)
-    data["suggested_indexes"] = [{"table": idx[0][0], "column": idx[0][1]} for idx in suggested_indexes]
+    data["suggested_indexes"] = [
+        {"table": idx[0][0], "column": idx[0][1]} for idx in suggested_indexes
+    ]
     frappe.cache.hset(RECORDER_REQUEST_HASH, record.id, data)
     frappe.publish_realtime("recorder-analysis-complete", user=frappe.session.user)
-    frappe.msgprint(_("Query analysis complete. Check suggested indexes."), realtime=True, alert=True)
+    frappe.msgprint(
+        _("Query analysis complete. Check suggested indexes."),
+        realtime=True,
+        alert=True,
+    )
 
 
 def _optimize_query(query):

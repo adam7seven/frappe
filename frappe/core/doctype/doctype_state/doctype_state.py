@@ -15,7 +15,16 @@ class DocTypeState(Document):
         from frappe.types import DF
 
         color: DF.Literal[
-            "Blue", "Cyan", "Gray", "Green", "Light Blue", "Orange", "Pink", "Purple", "Red", "Yellow"
+            "Blue",
+            "Cyan",
+            "Gray",
+            "Green",
+            "Light Blue",
+            "Orange",
+            "Pink",
+            "Purple",
+            "Red",
+            "Yellow",
         ]
         custom: DF.Check
         parent: DF.Data

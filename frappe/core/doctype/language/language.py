@@ -20,11 +20,24 @@ class Language(Document):
 
         based_on: DF.Link | None
         date_format: DF.Literal[
-            "", "yyyy-mm-dd", "dd-mm-yyyy", "dd/mm/yyyy", "dd.mm.yyyy", "mm/dd/yyyy", "mm-dd-yyyy"
+            "",
+            "yyyy-mm-dd",
+            "dd-mm-yyyy",
+            "dd/mm/yyyy",
+            "dd.mm.yyyy",
+            "mm/dd/yyyy",
+            "mm-dd-yyyy",
         ]
         enabled: DF.Check
         first_day_of_the_week: DF.Literal[
-            "", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+            "",
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
         ]
         flag: DF.Data | None
         language_code: DF.Data
@@ -63,7 +76,12 @@ class Language(Document):
         should be updated.
         """
         users = frappe.get_all("User", filters={"language": self.id}, pluck="id")
-        for key in ("date_format", "time_format", "number_format", "first_day_of_the_week"):
+        for key in (
+            "date_format",
+            "time_format",
+            "number_format",
+            "first_day_of_the_week",
+        ):
             if self.has_value_changed(key):
                 for user in users:
                     if new_value := self.get(key):

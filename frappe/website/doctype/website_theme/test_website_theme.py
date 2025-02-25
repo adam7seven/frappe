@@ -56,7 +56,9 @@ class TestWebsiteTheme(IntegrationTestCase):
 
     def test_imports_to_ignore(self):
         with website_theme_fixture(ignored_apps=[{"app": "frappe"}]) as theme:
-            self.assertTrue('@import "frappe/public/scss/website"' not in theme.theme_scss)
+            self.assertTrue(
+                '@import "frappe/public/scss/website"' not in theme.theme_scss
+            )
 
     def test_backup_files(self):
         with website_theme_fixture(custom_scss="body { font-size: 16.5px; }") as theme:

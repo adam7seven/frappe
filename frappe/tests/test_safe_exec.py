@@ -37,17 +37,24 @@ class TestSafeExec(IntegrationTestCase):
         for code, result in TEST_CASES.items():
             self.assertEqual(frappe.safe_eval(code), result)
 
-        self.assertRaises(AttributeError, frappe.safe_eval, "frappe.utils.os.path", get_safe_globals())
+        self.assertRaises(
+            AttributeError, frappe.safe_eval, "frappe.utils.os.path", get_safe_globals()
+        )
 
         # Doc/dict objects
         user = frappe.new_doc("User")
         user.user_type = "System User"
         user.enabled = 1
-        self.assertTrue(frappe.safe_eval("user_type == 'System User'", eval_locals=user.as_dict()))
-        self.assertEqual(
-            "System User Test", frappe.safe_eval("user_type + ' Test'", eval_locals=user.as_dict())
+        self.assertTrue(
+            frappe.safe_eval("user_type == 'System User'", eval_locals=user.as_dict())
         )
-        self.assertEqual(1, frappe.safe_eval("int(enabled)", eval_locals=user.as_dict()))
+        self.assertEqual(
+            "System User Test",
+            frappe.safe_eval("user_type + ' Test'", eval_locals=user.as_dict()),
+        )
+        self.assertEqual(
+            1, frappe.safe_eval("int(enabled)", eval_locals=user.as_dict())
+        )
 
     def test_safe_eval_wal(self):
         self.assertRaises(SyntaxError, frappe.safe_eval, "(x := (40+2))")
@@ -55,12 +62,16 @@ class TestSafeExec(IntegrationTestCase):
     def test_sql(self):
         _locals = dict(out=None)
         safe_exec(
-            """out = frappe.db.sql("select name from tabDocType where name='DocType'")""", None, _locals
+            """out = frappe.db.sql("select name from tabDocType where name='DocType'")""",
+            None,
+            _locals,
         )
         self.assertEqual(_locals["out"][0][0], "DocType")
 
         self.assertRaises(
-            frappe.PermissionError, safe_exec, 'frappe.db.sql("update tabToDo set description=NULL")'
+            frappe.PermissionError,
+            safe_exec,
+            'frappe.db.sql("update tabToDo set description=NULL")',
         )
 
     def test_query_builder(self):
@@ -73,11 +84,17 @@ class TestSafeExec(IntegrationTestCase):
         self.assertEqual(frappe.db.sql("SELECT Max(name) FROM tabUser"), _locals["out"])
 
     def test_safe_query_builder(self):
-        self.assertRaises(frappe.PermissionError, safe_exec, """frappe.qb.from_("User").delete().run()""")
+        self.assertRaises(
+            frappe.PermissionError,
+            safe_exec,
+            """frappe.qb.from_("User").delete().run()""",
+        )
 
     def test_call(self):
         # call non whitelisted method
-        self.assertRaises(frappe.PermissionError, safe_exec, """frappe.call("frappe.get_user")""")
+        self.assertRaises(
+            frappe.PermissionError, safe_exec, """frappe.call("frappe.get_user")"""
+        )
 
         # call whitelisted method
         safe_exec("""frappe.call("ping")""")
@@ -85,7 +102,9 @@ class TestSafeExec(IntegrationTestCase):
     def test_enqueue(self):
         # enqueue non whitelisted method
         self.assertRaises(
-            frappe.PermissionError, safe_exec, """frappe.enqueue("frappe.get_user", now=True)"""
+            frappe.PermissionError,
+            safe_exec,
+            """frappe.enqueue("frappe.get_user", now=True)""",
         )
 
         # enqueue whitelisted method
@@ -94,7 +113,13 @@ class TestSafeExec(IntegrationTestCase):
     def test_ensure_getattrable_globals(self):
         def check_safe(objects):
             for obj in objects:
-                if isinstance(obj, types.ModuleType | types.CodeType | types.TracebackType | types.FrameType):
+                if isinstance(
+                    obj,
+                    types.ModuleType
+                    | types.CodeType
+                    | types.TracebackType
+                    | types.FrameType,
+                ):
                     self.fail(f"{obj} wont work in safe exec.")
                 elif isinstance(obj, dict):
                     check_safe(obj.values())
@@ -103,7 +128,9 @@ class TestSafeExec(IntegrationTestCase):
 
     def test_unsafe_objects(self):
         unsafe_global = {"frappe": frappe}
-        self.assertRaises(SyntaxError, safe_exec, """frappe.msgprint("Hello")""", unsafe_global)
+        self.assertRaises(
+            SyntaxError, safe_exec, """frappe.msgprint("Hello")""", unsafe_global
+        )
 
     def test_attrdict(self):
         # jinja
@@ -141,4 +168,6 @@ class TestJinjaGlobals(IntegrationTestCase):
         self.assertIsNot(first.globals, second.globals)
         self.assertIsNot(first.filters, second.filters)
         self.assertIsNot(first.globals["frappe"], second.globals["frappe"])
-        self.assertIsNot(first.globals["frappe"]["form_dict"], second.globals["frappe"]["form_dict"])
+        self.assertIsNot(
+            first.globals["frappe"]["form_dict"], second.globals["frappe"]["form_dict"]
+        )

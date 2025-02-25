@@ -44,7 +44,10 @@ class TestDashboardConnections(IntegrationTestCase):
         )
         mars.append(
             "child_table",
-            {"title": "Mars", "test_doctype_b_with_test_child_table_with_link_to_doctype_a": "Earth"},
+            {
+                "title": "Mars",
+                "test_doctype_b_with_test_child_table_with_link_to_doctype_a": "Earth",
+            },
         )
         mars.insert()
 
@@ -68,7 +71,9 @@ class TestDashboardConnections(IntegrationTestCase):
             return_value=get_dashboard_for_test_doctype_a_with_test_child_table_with_link_to_doctype_b(),
         ):
             self.assertEqual(
-                get_open_count("Test Doctype A With Child Table With Link To Doctype B", "Mars"),
+                get_open_count(
+                    "Test Doctype A With Child Table With Link To Doctype B", "Mars"
+                ),
                 expected_open_count,
             )
 
@@ -95,7 +100,10 @@ class TestDashboardConnections(IntegrationTestCase):
         )
         pluto.append(
             "child_table",
-            {"title": "Pluto", "test_doctype_a_with_test_child_table_with_link_to_doctype_b": "Saturn"},
+            {
+                "title": "Pluto",
+                "test_doctype_a_with_test_child_table_with_link_to_doctype_b": "Saturn",
+            },
         )
         pluto.insert()
 
@@ -118,21 +126,33 @@ class TestDashboardConnections(IntegrationTestCase):
             return_value=get_dashboard_for_test_doctype_a_with_test_child_table_with_link_to_doctype_b(),
         ):
             self.assertEqual(
-                get_open_count("Test Doctype A With Child Table With Link To Doctype B", "Saturn"),
+                get_open_count(
+                    "Test Doctype A With Child Table With Link To Doctype B", "Saturn"
+                ),
                 expected_open_count,
             )
 
     def test_external_doctype_link_with_dashboard_override(self):
         # add a custom links
         todo = TestCustomizeForm().get_customize_form("ToDo")
-        todo.append("links", dict(link_doctype="Test Doctype D", link_fieldname="doclink", group="Test"))
-        todo.append("links", dict(link_doctype="Test Doctype E", link_fieldname="todo", group="Test"))
+        todo.append(
+            "links",
+            dict(link_doctype="Test Doctype D", link_fieldname="doclink", group="Test"),
+        )
+        todo.append(
+            "links",
+            dict(link_doctype="Test Doctype E", link_fieldname="todo", group="Test"),
+        )
         todo.run_method("save_customization")
 
         # create a test doc
         todo_doc = frappe.get_doc(doctype="ToDo", description="test").insert()
-        frappe.get_doc(doctype="Test Doctype D", title="d-001", doclink=todo_doc.name).insert()
-        frappe.get_doc(doctype="Test Doctype E", title="e-001", todo=todo_doc.name).insert()
+        frappe.get_doc(
+            doctype="Test Doctype D", title="d-001", doclink=todo_doc.name
+        ).insert()
+        frappe.get_doc(
+            doctype="Test Doctype E", title="e-001", todo=todo_doc.name
+        ).insert()
 
         connections = get_open_count("ToDo", todo_doc.name)["count"]
         self.assertEqual(len(connections["external_links_found"]), 2)
@@ -141,7 +161,9 @@ class TestDashboardConnections(IntegrationTestCase):
         with self.patch_hooks(
             {
                 "override_doctype_dashboards": {
-                    "ToDo": ["frappe.tests.test_dashboard_connections.get_dashboard_for_todo"]
+                    "ToDo": [
+                        "frappe.tests.test_dashboard_connections.get_dashboard_for_todo"
+                    ]
                 }
             }
         ):
@@ -182,7 +204,15 @@ def create_test_child_table_with_link_to_doctype_a():
     new_doctype(
         "Test Child Table With Link To Doctype A",
         istable=1,
-        fields=[{"fieldname": "title", "fieldtype": "Data", "label": "Title", "reqd": 1, "unique": 1}],
+        fields=[
+            {
+                "fieldname": "title",
+                "fieldtype": "Data",
+                "label": "Title",
+                "reqd": 1,
+                "unique": 1,
+            }
+        ],
         custom=False,
         autoname="field:title",
         naming_rule="By fieldname",
@@ -193,7 +223,15 @@ def create_test_child_table_with_link_to_doctype_b():
     new_doctype(
         "Test Child Table With Link To Doctype B",
         istable=1,
-        fields=[{"fieldname": "title", "fieldtype": "Data", "label": "Title", "reqd": 1, "unique": 1}],
+        fields=[
+            {
+                "fieldname": "title",
+                "fieldtype": "Data",
+                "label": "Title",
+                "reqd": 1,
+                "unique": 1,
+            }
+        ],
         custom=False,
         autoname="field:title",
         naming_rule="By fieldname",
@@ -211,8 +249,10 @@ def add_links_in_child_tables():
                 "fieldname": "test_doctype_a_with_test_child_table_with_link_to_doctype_b",
                 "fieldtype": "Link",
                 "in_list_view": 1,
-                "label": "Test Doctype A With Child Table With Link To Doctype B" or "Doctype to Link",
-                "options": "Test Doctype A With Child Table With Link To Doctype B" or "Doctype to Link",
+                "label": "Test Doctype A With Child Table With Link To Doctype B"
+                or "Doctype to Link",
+                "options": "Test Doctype A With Child Table With Link To Doctype B"
+                or "Doctype to Link",
             },
         )
         test_child_table_with_link_to_doctype_a.save()
@@ -227,8 +267,10 @@ def add_links_in_child_tables():
                 "fieldname": "test_doctype_b_with_test_child_table_with_link_to_doctype_a",
                 "fieldtype": "Link",
                 "in_list_view": 1,
-                "label": "Test Doctype B With Child Table With Link To Doctype A" or "Doctype to Link",
-                "options": "Test Doctype B With Child Table With Link To Doctype A" or "Doctype to Link",
+                "label": "Test Doctype B With Child Table With Link To Doctype A"
+                or "Doctype to Link",
+                "options": "Test Doctype B With Child Table With Link To Doctype A"
+                or "Doctype to Link",
             },
         )
         test_child_table_with_link_to_doctype_b.save()
@@ -294,7 +336,10 @@ def get_dashboard_for_test_doctype_a_with_test_child_table_with_link_to_doctype_
             ],
         },
         "transactions": [
-            {"label": "Reference", "items": ["Test Doctype B With Child Table With Link To Doctype A"]},
+            {
+                "label": "Reference",
+                "items": ["Test Doctype B With Child Table With Link To Doctype A"],
+            },
         ],
     }
 

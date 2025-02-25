@@ -73,8 +73,13 @@ class MariaDBTable(DBTable):
         for col in self.columns.values():
             col.build_for_alter_table(self.current_columns.get(col.fieldname.lower()))
 
-        add_column_query = [f"ADD COLUMN `{col.fieldname}` {col.get_definition()}" for col in self.add_column]
-        columns_to_modify = set(self.change_type + self.set_default + self.change_nullability)
+        add_column_query = [
+            f"ADD COLUMN `{col.fieldname}` {col.get_definition()}"
+            for col in self.add_column
+        ]
+        columns_to_modify = set(
+            self.change_type + self.set_default + self.change_nullability
+        )
         modify_column_query = [
             f"MODIFY `{col.fieldname}` {col.get_definition(for_modification=True)}"
             for col in columns_to_modify
@@ -83,12 +88,17 @@ class MariaDBTable(DBTable):
             modify_column_query.append(alter_pk)
 
         modify_column_query.extend(
-            [f"ADD UNIQUE INDEX IF NOT EXISTS {col.fieldname} (`{col.fieldname}`)" for col in self.add_unique]
+            [
+                f"ADD UNIQUE INDEX IF NOT EXISTS {col.fieldname} (`{col.fieldname}`)"
+                for col in self.add_unique
+            ]
         )
         add_index_query = [
             f"ADD INDEX `{col.fieldname}_index`(`{col.fieldname}`)"
             for col in self.add_index
-            if not frappe.db.get_column_index(self.table_name, col.fieldname, unique=False)
+            if not frappe.db.get_column_index(
+                self.table_name, col.fieldname, unique=False
+            )
         ]
 
         if self.meta.sort_field == "modified" and not frappe.db.get_column_index(
@@ -122,13 +132,21 @@ class MariaDBTable(DBTable):
                 try:
                     table = frappe.qb.DocType(self.doctype)
                     frappe.qb.update(table).set(
-                        col.fieldname, col.default or get_not_null_defaults(col.fieldtype)
+                        col.fieldname,
+                        col.default or get_not_null_defaults(col.fieldtype),
                     ).where(table[col.fieldname].isnull()).run()
                 except Exception:
-                    print(f"Failed to update data in {self.table_name} for {col.fieldname}")
+                    print(
+                        f"Failed to update data in {self.table_name} for {col.fieldname}"
+                    )
                     raise
         try:
-            for query_parts in [add_column_query, modify_column_query, add_index_query, drop_index_query]:
+            for query_parts in [
+                add_column_query,
+                modify_column_query,
+                add_index_query,
+                drop_index_query,
+            ]:
                 if query_parts:
                     query_body = ", ".join(query_parts)
                     query = f"ALTER TABLE `{self.table_name}` {query_body}"
@@ -159,9 +177,9 @@ class MariaDBTable(DBTable):
                 return "modify id uuid"
             else:
                 frappe.throw(
-                    _("Primary key of doctype {0} can not be changed as there are existing values.").format(
-                        self.doctype
-                    )
+                    _(
+                        "Primary key of doctype {0} can not be changed as there are existing values."
+                    ).format(self.doctype)
                 )
 
         # Reverting from UUID to VARCHAR

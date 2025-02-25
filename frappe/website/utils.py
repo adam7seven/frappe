@@ -21,7 +21,9 @@ from frappe.utils import (
     md_to_html,
 )
 
-FRONTMATTER_PATTERN = re.compile(r"^\s*(?:---|\+\+\+)(.*?)(?:---|\+\+\+)\s*(.+)$", re.S | re.M)
+FRONTMATTER_PATTERN = re.compile(
+    r"^\s*(?:---|\+\+\+)(.*?)(?:---|\+\+\+)\s*(.+)$", re.S | re.M
+)
 H1_TAG_PATTERN = re.compile("<h1>([^<]*)")
 IMAGE_TAG_PATTERN = re.compile(r"""<img[^>]*src\s?=\s?['"]([^'"]*)['"]""")
 CLEANUP_PATTERN_1 = re.compile(r'[~!@#$%^&*+()<>,."\'\?]')
@@ -114,7 +116,9 @@ def get_home_page():
 
             # portal default
             if not home_page:
-                home_page = frappe.db.get_single_value("Portal Settings", "default_portal_home")
+                home_page = frappe.db.get_single_value(
+                    "Portal Settings", "default_portal_home"
+                )
 
         # by hooks
         if not home_page:
@@ -167,7 +171,12 @@ def get_home_page_via_hooks():
 
 
 def get_boot_data():
-    from frappe.locale import get_date_format, get_first_day_of_the_week, get_number_format, get_time_format
+    from frappe.locale import (
+        get_date_format,
+        get_first_day_of_the_week,
+        get_number_format,
+        get_time_format,
+    )
 
     return {
         "lang": frappe.local.lang or "en",
@@ -300,7 +309,9 @@ def get_full_index(route=None, app=None):
                                 added.append(child_route)
 
                     # add remaining pages not in index.txt
-                    _children = sorted(children, key=lambda x: os.path.basename(x.route))
+                    _children = sorted(
+                        children, key=lambda x: os.path.basename(x.route)
+                    )
 
                     for child_route in _children:
                         if child_route not in new_children:
@@ -336,7 +347,9 @@ def extract_title(source, path):
             os.path.basename(
                 path.rsplit(
                     ".",
-                )[0].rstrip("/")
+                )[
+                    0
+                ].rstrip("/")
             )
             .replace("_", " ")
             .replace("-", " ")
@@ -443,7 +456,9 @@ def get_sidebar_items(parent_sidebar, basepath=None):
     look_for_sidebar_json = hooks[0] if hooks else frappe.flags.look_for_sidebar
 
     if basepath and look_for_sidebar_json:
-        sidebar_items = get_sidebar_items_from_sidebar_file(basepath, look_for_sidebar_json)
+        sidebar_items = get_sidebar_items_from_sidebar_file(
+            basepath, look_for_sidebar_json
+        )
 
     if not sidebar_items and parent_sidebar:
         sidebar_items = frappe.get_all(
@@ -531,7 +546,9 @@ def cache_html(func):
     def cache_html_decorator(*args, **kwargs):
         cache_key = f"{WEBSITE_PAGE_CACHE_PREFIX}{args[0].path}"
 
-        cache_headers = {"Cache-Control": "private,max-age=300,stale-while-revalidate=10800"}
+        cache_headers = {
+            "Cache-Control": "private,max-age=300,stale-while-revalidate=10800"
+        }
         no_cache = frappe.request and frappe.request.cache_control.no_cache
         if can_cache(no_cache):
             html = None
@@ -560,14 +577,18 @@ def build_response(path, data, http_status_code, headers: dict | None = None):
     response = Response()
     response.data = set_content_type(response, data, path)
     response.status_code = http_status_code
-    response.headers["X-Page-Name"] = cstr(cstr(path).encode("ascii", errors="xmlcharrefreplace"))
+    response.headers["X-Page-Name"] = cstr(
+        cstr(path).encode("ascii", errors="xmlcharrefreplace")
+    )
     response.headers["X-From-Cache"] = frappe.local.response.from_cache or False
 
     add_preload_for_bundled_assets(response)
 
     if headers:
         for key, val in headers.items():
-            response.headers[key] = cstr(cstr(val).encode("ascii", errors="xmlcharrefreplace"))
+            response.headers[key] = cstr(
+                cstr(val).encode("ascii", errors="xmlcharrefreplace")
+            )
 
     return response
 
@@ -593,8 +614,14 @@ def set_content_type(response, data, path):
 
 
 def add_preload_for_bundled_assets(response):
-    links = [f"<{css}>; rel=preload; as=style" for css in frappe.local.preload_assets["style"]]
-    links.extend(f"<{js}>; rel=preload; as=script" for js in frappe.local.preload_assets["script"])
+    links = [
+        f"<{css}>; rel=preload; as=style"
+        for css in frappe.local.preload_assets["style"]
+    ]
+    links.extend(
+        f"<{js}>; rel=preload; as=script"
+        for js in frappe.local.preload_assets["script"]
+    )
 
     version = get_build_version()
     links.extend(

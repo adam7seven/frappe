@@ -214,13 +214,21 @@ class EMail:
 
             self.msg_alternative.attach(msg_related)
         else:
-            self.msg_alternative.attach(MIMEText(message, "html", "utf-8", policy=policy.SMTP))
+            self.msg_alternative.attach(
+                MIMEText(message, "html", "utf-8", policy=policy.SMTP)
+            )
 
     def set_html_as_text(self, html):
         """Set plain text from HTML"""
         self.set_text(to_markdown(html))
 
-    def set_message(self, message, mime_type="text/html", as_attachment=0, filename="attachment.html"):
+    def set_message(
+        self,
+        message,
+        mime_type="text/html",
+        as_attachment=0,
+        filename="attachment.html",
+    ):
         """Append the message with MIME content to the root node (as attachment)"""
         from email.mime.text import MIMEText
 
@@ -241,7 +249,15 @@ class EMail:
 
         self.add_attachment(_file.file_name, content)
 
-    def add_attachment(self, fname, fcontent, content_type=None, parent=None, content_id=None, inline=False):
+    def add_attachment(
+        self,
+        fname,
+        fcontent,
+        content_type=None,
+        parent=None,
+        content_id=None,
+        inline=False,
+    ):
         """add attachment"""
 
         if not parent:
@@ -539,7 +555,9 @@ def replace_filename_with_cid(message):
 
         content_id = random_string(10)
 
-        inline_images.append({"filename": filename, "filecontent": filecontent, "content_id": content_id})
+        inline_images.append(
+            {"filename": filename, "filecontent": filecontent, "content_id": content_id}
+        )
 
         message = re.sub(
             f"""embed=['"]{re.escape(img_path)}['"]""",

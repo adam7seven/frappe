@@ -49,7 +49,9 @@ class TokenCache(Document):
         if token_type not in ["bearer", "mac"]:
             frappe.throw(_("Received an invalid token type."))
         # 'Bearer' or 'MAC'
-        token_type = token_type.title() if token_type == "bearer" else token_type.upper()
+        token_type = (
+            token_type.title() if token_type == "bearer" else token_type.upper()
+        )
 
         self.token_type = token_type
         self.access_token = cstr(data.get("access_token", ""))
@@ -74,8 +76,12 @@ class TokenCache(Document):
 
     def get_expires_in(self):
         system_timezone = ZoneInfo(get_system_timezone())
-        modified: datetime.datetime = get_datetime(self.modified).replace(tzinfo=system_timezone)
-        expiry_utc = modified.astimezone(datetime.timezone.utc) + datetime.timedelta(seconds=self.expires_in)
+        modified: datetime.datetime = get_datetime(self.modified).replace(
+            tzinfo=system_timezone
+        )
+        expiry_utc = modified.astimezone(datetime.timezone.utc) + datetime.timedelta(
+            seconds=self.expires_in
+        )
         now_utc = datetime.datetime.now(datetime.timezone.utc)
         return cint((expiry_utc - now_utc).total_seconds())
 

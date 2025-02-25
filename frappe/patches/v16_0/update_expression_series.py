@@ -11,7 +11,9 @@ from frappe.utils import cstr
 
 def execute():
     Series = DocType("Series")
-    doctypes = frappe.get_all("DocType", filters={"naming_rule": "expression"}, fields=["name", "autoname"])
+    doctypes = frappe.get_all(
+        "DocType", filters={"naming_rule": "expression"}, fields=["name", "autoname"]
+    )
     uniq_exprs = set()
 
     def get_param_value_for_word_match(doc):
@@ -54,16 +56,24 @@ def execute():
                 for doc in docs:
                     _doc = frappe.get_doc(doctype.name, doc.name)
                     expr = doctype.autoname[7 : doctype.autoname.find("{#")]
-                    key = BRACED_PARAMS_WORD_PATTERN.sub(get_param_value_for_word_match(_doc), expr)
+                    key = BRACED_PARAMS_WORD_PATTERN.sub(
+                        get_param_value_for_word_match(_doc), expr
+                    )
                     uniq_exprs.add(key)
 
-    current = (frappe.qb.from_(Series).select("*").where(Series.name == "")).run(as_dict=True)
+    current = (frappe.qb.from_(Series).select("*").where(Series.name == "")).run(
+        as_dict=True
+    )
     if current:
         current = current[0].get("current")
 
         for uniq_expr in uniq_exprs:
-            expr_exists = (frappe.qb.from_(Series).select("*").where(Series.name == uniq_expr)).run(
-                as_dict=True
-            )
+            expr_exists = (
+                frappe.qb.from_(Series).select("*").where(Series.name == uniq_expr)
+            ).run(as_dict=True)
             if not expr_exists:
-                (frappe.qb.into(Series).columns("name", "current").insert(uniq_expr, current + 1)).run()
+                (
+                    frappe.qb.into(Series)
+                    .columns("name", "current")
+                    .insert(uniq_expr, current + 1)
+                ).run()

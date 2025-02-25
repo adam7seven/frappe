@@ -7,9 +7,9 @@ def execute():
 
     Sessions = frappe.qb.DocType("Sessions")
 
-    current_sessions = (frappe.qb.from_(Sessions).select(Sessions.sid, Sessions.sessiondata)).run(
-        as_dict=True
-    )
+    current_sessions = (
+        frappe.qb.from_(Sessions).select(Sessions.sid, Sessions.sessiondata)
+    ).run(as_dict=True)
 
     for i, session in enumerate(current_sessions):
         try:
@@ -19,6 +19,8 @@ def execute():
             continue
 
         (
-            frappe.qb.update(Sessions).where(Sessions.sid == session.sid).set(Sessions.sessiondata, new_data)
+            frappe.qb.update(Sessions)
+            .where(Sessions.sid == session.sid)
+            .set(Sessions.sessiondata, new_data)
         ).run()
         update_progress_bar("Patching sessions", i, len(current_sessions))

@@ -14,7 +14,9 @@ class OAuthClient(Document):
     from typing import TYPE_CHECKING
 
     if TYPE_CHECKING:
-        from frappe.integrations.doctype.oauth_client_role.oauth_client_role import OAuthClientRole
+        from frappe.integrations.doctype.oauth_client_role.oauth_client_role import (
+            OAuthClientRole,
+        )
         from frappe.types import DF
 
         allowed_roles: DF.TableMultiSelect[OAuthClientRole]
@@ -38,9 +40,9 @@ class OAuthClient(Document):
         self.add_default_role()
 
     def validate_grant_and_response(self):
-        if (self.grant_type == "Authorization Code" and self.response_type != "Code") or (
-            self.grant_type == "Implicit" and self.response_type != "Token"
-        ):
+        if (
+            self.grant_type == "Authorization Code" and self.response_type != "Code"
+        ) or (self.grant_type == "Implicit" and self.response_type != "Token"):
             frappe.throw(
                 _(
                     "Combination of Grant Type (<code>{0}</code>) and Response Type (<code>{1}</code>) not allowed"

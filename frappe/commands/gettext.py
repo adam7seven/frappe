@@ -27,7 +27,9 @@ def generate_pot_file(context: CliCtxObj, app: str | None = None):
 )
 @click.option("--locale", help="Compile transaltions only for this locale. eg: de")
 @pass_context
-def compile_translations(context: CliCtxObj, app: str | None = None, locale: str | None = None, force=False):
+def compile_translations(
+    context: CliCtxObj, app: str | None = None, locale: str | None = None, force=False
+):
     from frappe.gettext.translate import compile_translations as _compile_translations
 
     if not app:
@@ -36,7 +38,10 @@ def compile_translations(context: CliCtxObj, app: str | None = None, locale: str
     _compile_translations(app, locale, force=force)
 
 
-@click.command("migrate-csv-to-po", help="Translation: migrate from CSV files (old) to PO files (new)")
+@click.command(
+    "migrate-csv-to-po",
+    help="Translation: migrate from CSV files (old) to PO files (new)",
+)
 @click.option("--app", help="Only migrate for this app. eg: frappe")
 @click.option("--locale", help="Compile translations only for this locale. eg: de")
 @pass_context
@@ -57,7 +62,9 @@ You might want to run generate-pot-file first.""",
 @click.option("--app", help="Only update for this app. eg: frappe")
 @click.option("--locale", help="Update PO files only for this locale. eg: de")
 @pass_context
-def update_po_files(context: CliCtxObj, app: str | None = None, locale: str | None = None):
+def update_po_files(
+    context: CliCtxObj, app: str | None = None, locale: str | None = None
+):
     from frappe.gettext.translate import update_po
 
     if not app:

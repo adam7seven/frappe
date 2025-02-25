@@ -70,7 +70,9 @@ def discover_all_tests(apps: list[str], runner) -> "TestRunner":
 
 
 @debug_timer
-def discover_doctype_tests(doctypes: list[str], runner, app: str, force: bool = False) -> "TestRunner":
+def discover_doctype_tests(
+    doctypes: list[str], runner, app: str, force: bool = False
+) -> "TestRunner":
     """Discover tests for the specified doctype(s)"""
     if isinstance(doctypes, str):
         doctypes = [doctypes]
@@ -94,7 +96,9 @@ def discover_doctype_tests(doctypes: list[str], runner, app: str, force: bool = 
             _add_module_tests(runner, _app, test_module)
         except Exception as e:
             logger.error(f"Error discovering tests for {doctype}: {e!s}")
-            raise TestRunnerError(f"Failed to discover tests for {doctype}: {e!s}") from e
+            raise TestRunnerError(
+                f"Failed to discover tests for {doctype}: {e!s}"
+            ) from e
     return runner
 
 
@@ -110,7 +114,9 @@ def discover_module_tests(modules: list[str], runner, app: str) -> "TestRunner":
             if app is None:
                 _app = module_app
             elif app != module_app:
-                raise TestRunnerError(f"Mismatch between specified app '{app}' and module app '{module_app}'")
+                raise TestRunnerError(
+                    f"Mismatch between specified app '{app}' and module app '{module_app}'"
+                )
             _add_module_tests(runner, _app, module)
     except Exception as e:
         logger.error(f"Error discovering tests for {module}: {e!s}")
@@ -121,7 +127,9 @@ def discover_module_tests(modules: list[str], runner, app: str) -> "TestRunner":
 def _add_module_tests(runner, app: str, module: str):
     module = importlib.import_module(module)
     if runner.cfg.case:
-        test_suite = unittest.TestLoader().loadTestsFromTestCase(getattr(module, runner.cfg.case))
+        test_suite = unittest.TestLoader().loadTestsFromTestCase(
+            getattr(module, runner.cfg.case)
+        )
     else:
         test_suite = unittest.TestLoader().loadTestsFromModule(module)
 
@@ -135,7 +143,9 @@ def _add_module_tests(runner, app: str, module: str):
                 category = "unit"
             case _:
                 category = "unspecified-category"
-                if any(b.__name__ == "FrappeTestCase" for b in test.__class__.__bases__):
+                if any(
+                    b.__name__ == "FrappeTestCase" for b in test.__class__.__bases__
+                ):
                     from frappe.deprecation_dumpster import deprecation_warning
 
                     deprecation_warning(
@@ -144,7 +154,10 @@ def _add_module_tests(runner, app: str, module: str):
                         "accurate categorization of FrappeTestCase will be removed from this runner",
                     )
                     category = "old-frappe-test-class-category"
-        if runner.cfg.selected_categories and category not in runner.cfg.selected_categories:
+        if (
+            runner.cfg.selected_categories
+            and category not in runner.cfg.selected_categories
+        ):
             continue
         runner.per_app_categories[app][category].addTest(test)
 

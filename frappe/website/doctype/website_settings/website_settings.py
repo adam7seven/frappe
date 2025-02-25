@@ -80,7 +80,8 @@ class WebsiteSettings(Document):
 
         if self.home_page and not PathResolver(self.home_page).is_valid_path():
             frappe.msgprint(
-                _("Invalid Home Page") + " (Standard pages - home, login, products, blog, about, contact)"
+                _("Invalid Home Page")
+                + " (Standard pages - home, login, products, blog, about, contact)"
             )
             self.home_page = ""
 
@@ -88,12 +89,16 @@ class WebsiteSettings(Document):
         """validate url in top bar items"""
         for top_bar_item in self.get("top_bar_items"):
             if top_bar_item.parent_label:
-                parent_label_item = self.get("top_bar_items", {"label": top_bar_item.parent_label})
+                parent_label_item = self.get(
+                    "top_bar_items", {"label": top_bar_item.parent_label}
+                )
 
                 if not parent_label_item:
                     # invalid item
                     frappe.throw(
-                        _("{0} does not exist in row {1}").format(top_bar_item.parent_label, top_bar_item.idx)
+                        _("{0} does not exist in row {1}").format(
+                            top_bar_item.parent_label, top_bar_item.idx
+                        )
                     )
 
                 elif not parent_label_item[0] or parent_label_item[0].url:
@@ -108,12 +113,16 @@ class WebsiteSettings(Document):
         """validate url in top bar items"""
         for footer_item in self.get("footer_items"):
             if footer_item.parent_label:
-                parent_label_item = self.get("footer_items", {"label": footer_item.parent_label})
+                parent_label_item = self.get(
+                    "footer_items", {"label": footer_item.parent_label}
+                )
 
                 if not parent_label_item:
                     # invalid item
                     frappe.throw(
-                        _("{0} does not exist in row {1}").format(footer_item.parent_label, footer_item.idx)
+                        _("{0} does not exist in row {1}").format(
+                            footer_item.parent_label, footer_item.idx
+                        )
                     )
 
                 elif not parent_label_item[0] or parent_label_item[0].url:
@@ -125,7 +134,9 @@ class WebsiteSettings(Document):
                     )
 
     def validate_google_settings(self):
-        if self.enable_google_indexing and not frappe.db.get_single_value("Google Settings", "enable"):
+        if self.enable_google_indexing and not frappe.db.get_single_value(
+            "Google Settings", "enable"
+        ):
             frappe.throw(_("Enable Google API in Google Settings."))
 
     def validate_redirects(self):
@@ -136,7 +147,9 @@ class WebsiteSettings(Document):
                 re.sub(source, row.target, "")
             except Exception as e:
                 if not frappe.flags.in_migrate:
-                    frappe.throw(_("Invalid redirect regex in row #{}: {}").format(idx, str(e)))
+                    frappe.throw(
+                        _("Invalid redirect regex in row #{}: {}").format(idx, str(e))
+                    )
 
     def on_update(self):
         self.clear_cache()
@@ -158,7 +171,9 @@ class WebsiteSettings(Document):
 
         if not self.indexing_refresh_token:
             button_label = frappe.bold(_("Allow API Indexing Access"))
-            raise frappe.ValidationError(_("Click on {0} to generate Refresh Token.").format(button_label))
+            raise frappe.ValidationError(
+                _("Click on {0} to generate Refresh Token.").format(button_label)
+            )
 
         oauth_obj = GoogleOAuth("indexing")
         res = oauth_obj.refresh_access_token(

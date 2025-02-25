@@ -326,13 +326,17 @@ def get_blog_categories():
 
 
 def clear_blog_cache():
-    for blog in frappe.db.get_list("Blog Post", fields=["route"], pluck="route", filters={"published": True}):
+    for blog in frappe.db.get_list(
+        "Blog Post", fields=["route"], pluck="route", filters={"published": True}
+    ):
         clear_cache(blog)
 
     clear_cache("writers")
 
 
-def get_blog_list(doctype, txt=None, filters=None, limit_start=0, limit_page_length=20, order_by=None):
+def get_blog_list(
+    doctype, txt=None, filters=None, limit_start=0, limit_page_length=20, order_by=None
+):
     conditions = []
     if filters and filters.get("blog_category"):
         category = filters.get("blog_category")
@@ -342,14 +346,18 @@ def get_blog_list(doctype, txt=None, filters=None, limit_start=0, limit_page_len
         )
 
     if filters and filters.get("blogger"):
-        conditions.append("t1.blogger={}".format(frappe.db.escape(filters.get("blogger"))))
+        conditions.append(
+            "t1.blogger={}".format(frappe.db.escape(filters.get("blogger")))
+        )
 
     if category:
         conditions.append("t1.blog_category={}".format(frappe.db.escape(category)))
 
     if txt:
         conditions.append(
-            "(t1.content like {0} or t1.title like {0})".format(frappe.db.escape("%" + txt + "%"))
+            "(t1.content like {0} or t1.title like {0})".format(
+                frappe.db.escape("%" + txt + "%")
+            )
         )
 
     if conditions:

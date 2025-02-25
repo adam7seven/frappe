@@ -36,6 +36,9 @@ def get_custom_blocks_for_user(doctype, txt, searchfield, start, page_len, filte
     return (
         condition_query.select(customHTMLBlock.name).where(
             (customHTMLBlock.private == 0)
-            | ((customHTMLBlock.owner == frappe.session.user) & (customHTMLBlock.private == 1))
+            | (
+                (customHTMLBlock.owner == frappe.session.user)
+                & (customHTMLBlock.private == 1)
+            )
         )
     ).run()

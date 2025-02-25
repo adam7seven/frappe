@@ -107,6 +107,7 @@ def copy_doc(doctype: str, id: str, ignore_no_copy: bool = True):
 
     return copy.as_dict(no_private_properties=True, no_nulls=True)
 
+
 def update_doc(doctype: str, id: str):
     data = frappe.form_dict
 

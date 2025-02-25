@@ -94,8 +94,14 @@ class TestRecorder(IntegrationTestCase):
 
     def test_multiple_queries(self):
         queries = [
-            {"mariadb": "SELECT * FROM tabDocType", "postgres": 'SELECT * FROM "tabDocType"'},
-            {"mariadb": "SELECT COUNT(*) FROM tabDocType", "postgres": 'SELECT COUNT(*) FROM "tabDocType"'},
+            {
+                "mariadb": "SELECT * FROM tabDocType",
+                "postgres": 'SELECT * FROM "tabDocType"',
+            },
+            {
+                "mariadb": "SELECT COUNT(*) FROM tabDocType",
+                "postgres": 'SELECT COUNT(*) FROM "tabDocType"',
+            },
             {"mariadb": "COMMIT", "postgres": "COMMIT"},
         ]
 
@@ -114,7 +120,10 @@ class TestRecorder(IntegrationTestCase):
             self.assertEqual(
                 call["query"],
                 sqlparse.format(
-                    query[sql_dialect].strip(), keyword_case="upper", reindent=True, strip_comments=True
+                    query[sql_dialect].strip(),
+                    keyword_case="upper",
+                    reindent=True,
+                    strip_comments=True,
                 ),
             )
 
