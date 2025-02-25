@@ -24,7 +24,7 @@
     "gender",
     "phone",
     "mobile_no",
-    "company_name",
+    "company_id",
     "image",
     "sb_00",
     "google_contacts",
@@ -240,7 +240,7 @@
       "read_only": 1
     },
     {
-      "fieldname": "company_name",
+      "fieldname": "company_id",
       "fieldtype": "Data",
       "label": "Company Name"
     },
@@ -260,8 +260,8 @@
   "modified": "2024-03-23 16:01:30.937045",
   "modified_by": "Administrator",
   "module": "Contacts",
-  "name": "Contact",
-  "name_case": "Title Case",
+  "id": "Contact",
+  "id_case": "Title Case",
   "naming_rule": "By script",
   "owner": "Administrator",
   "permissions": [

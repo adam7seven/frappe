@@ -19,7 +19,7 @@
   "modified": "2024-03-23 16:03:37.726490",
   "modified_by": "Administrator",
   "module": "Contacts",
-  "name": "Salutation",
+  "id": "Salutation",
   "owner": "Administrator",
   "permissions": [
     {

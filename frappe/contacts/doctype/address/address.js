@@ -8,12 +8,12 @@ frappe.ui.form.on("Address", {
 			if (
 				frappe.dynamic_link &&
 				frappe.dynamic_link.doc &&
-				frappe.dynamic_link.doc.name == last_doc.docid
+				frappe.dynamic_link.doc.id == last_doc.docid
 			) {
 				frm.set_value("links", "");
 				frm.add_child("links", {
 					link_doctype: frappe.dynamic_link.doctype,
-					link_name: frappe.dynamic_link.doc[frappe.dynamic_link.fieldname],
+					link_id: frappe.dynamic_link.doc[frappe.dynamic_link.fieldname],
 				});
 			}
 		}
@@ -32,9 +32,9 @@ frappe.ui.form.on("Address", {
 			for (let i in frm.doc.links) {
 				let link = frm.doc.links[i];
 				frm.add_custom_button(
-					__("{0}: {1}", [__(link.link_doctype), __(link.link_name)]),
+					__("{0}: {1}", [__(link.link_doctype), __(link.link_id)]),
 					function () {
-						frappe.set_route("Form", link.link_doctype, link.link_name);
+						frappe.set_route("Form", link.link_doctype, link.link_id);
 					},
 					__("Links")
 				);
@@ -45,7 +45,7 @@ frappe.ui.form.on("Address", {
 		// clear linked customer / supplier / sales partner on saving...
 		if (frm.doc.links) {
 			frm.doc.links.forEach(function (d) {
-				frappe.model.remove_from_locals(d.link_doctype, d.link_name);
+				frappe.model.remove_from_locals(d.link_doctype, d.link_id);
 			});
 		}
 	},
@@ -57,13 +57,13 @@ frappe.ui.form.on("Address", {
 				if (
 					frappe.dynamic_link &&
 					frappe.dynamic_link.doc &&
-					frappe.dynamic_link.doc.name == last_doc.docid
+					frappe.dynamic_link.doc.id == last_doc.docid
 				) {
 					for (let i in frm.doc.links) {
 						let link = frm.doc.links[i];
 						if (
 							last_doc.doctype == link.link_doctype &&
-							last_doc.docid == link.link_name
+							last_doc.docid == link.link_id
 						) {
 							frappe.set_route("Form", last_doc.doctype, last_doc.docid);
 						}

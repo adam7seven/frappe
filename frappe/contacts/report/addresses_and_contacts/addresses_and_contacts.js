@@ -12,13 +12,13 @@ frappe.query_reports["Addresses And Contacts"] = {
 			get_query: function () {
 				return {
 					filters: {
-						name: ["in", "Contact, Address"],
+						id: ["in", "Contact, Address"],
 					},
 				};
 			},
 		},
 		{
-			fieldname: "reference_name",
+			fieldname: "reference_id",
 			label: __("Entity Name"),
 			fieldtype: "Dynamic Link",
 			get_options: function () {

@@ -10,8 +10,8 @@ def load_address_and_contact(doc, key=None) -> None:
     from frappe.contacts.doctype.address.address import get_address_display_list
     from frappe.contacts.doctype.contact.contact import get_contact_display_list
 
-    doc.set_onload("addr_list", get_address_display_list(doc.doctype, doc.name))
-    doc.set_onload("contact_list", get_contact_display_list(doc.doctype, doc.name))
+    doc.set_onload("addr_list", get_address_display_list(doc.doctype, doc.id))
+    doc.set_onload("contact_list", get_contact_display_list(doc.doctype, doc.id))
 
 
 def has_permission(doc, ptype, user):
@@ -21,16 +21,16 @@ def has_permission(doc, ptype, user):
         return True
 
     # True if any one is True or all are empty
-    names = []
+    ids = []
     for df in links.get("permitted_links") + links.get("not_permitted_links"):
         doctype = df.options
-        name = doc.get(df.fieldname)
-        names.append(name)
+        id = doc.get(df.fieldname)
+        ids.append(id)
 
-        if name and frappe.has_permission(doctype, ptype, doc=name):
+        if id and frappe.has_permission(doctype, ptype, doc=id):
             return True
 
-    if not any(names):
+    if not any(ids):
         return True
     return False
 
@@ -83,21 +83,21 @@ def get_permitted_and_not_permitted_links(doctype):
 
 def delete_contact_and_address(doctype: str, docid: str) -> None:
     for parenttype in ("Contact", "Address"):
-        for name in frappe.get_all(
+        for id in frappe.get_all(
             "Dynamic Link",
             filters={
                 "parenttype": parenttype,
                 "link_doctype": doctype,
-                "link_name": docid,
+                "link_id": docid,
             },
             pluck="parent",
         ):
-            doc = frappe.get_doc(parenttype, name)
+            doc = frappe.get_doc(parenttype, id)
             if len(doc.links) == 1:
                 doc.delete()
             else:
                 for link in doc.links:
-                    if link.link_doctype == doctype and link.link_name == docid:
+                    if link.link_doctype == doctype and link.link_id == docid:
                         doc.remove(link)
                         doc.save()
                         break
@@ -136,7 +136,7 @@ def set_link_title(doc):
     if not doc.links:
         return
     for link in doc.links:
-        linked_doc = frappe.get_doc(link.link_doctype, link.link_name)
+        linked_doc = frappe.get_doc(link.link_doctype, link.link_id)
         doc_title = linked_doc.get_title()
         if link.link_title != doc_title:
-            link.link_title = doc_title or link.link_name
+            link.link_title = doc_title or link.link_id
