@@ -1861,7 +1861,7 @@ msgstr "Drucken von Entwürfen erlauben"
 msgid "Allow Read On All Link Options"
 msgstr "Lesen alle Verknüpfungsoptionen zulassen"
 
-#. Label of the allow_rename (Check) field in DocType 'DocType'
+#. Label of the allow_reid (Check) field in DocType 'DocType'
 #: frappe/core/doctype/doctype/doctype.json
 msgid "Allow Rename"
 msgstr "Umbenennen zulassen"

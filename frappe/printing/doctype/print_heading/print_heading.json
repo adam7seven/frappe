@@ -1,7 +1,7 @@
 {
   "actions": [],
   "allow_import": 1,
-  "allow_rename": 1,
+  "allow_reid": 1,
   "autoid": "field:print_heading",
   "creation": "2013-01-10 16:34:24",
   "doctype": "DocType",

@@ -1,7 +1,7 @@
 {
   "actions": [],
   "allow_import": 1,
-  "allow_rename": 1,
+  "allow_reid": 1,
   "autoid": "field:currency_name",
   "creation": "2013-01-28 10:06:02",
   "description": "Currency list stores the currency value, its symbol and fraction unit",

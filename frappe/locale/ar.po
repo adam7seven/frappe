@@ -1724,7 +1724,7 @@ msgstr "السماح بالطباعة للمسودة"
 msgid "Allow Read On All Link Options"
 msgstr "السماح للقراءة على كل خيارات الارتباط"
 
-#. Label of the allow_rename (Check) field in DocType 'DocType'
+#. Label of the allow_reid (Check) field in DocType 'DocType'
 #: frappe/core/doctype/doctype/doctype.json
 msgid "Allow Rename"
 msgstr "السماح بإعادة التسمية"

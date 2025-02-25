@@ -87,7 +87,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 		}
 	}
 	can_rename() {
-		return this.frm.perm[0].write && this.frm.meta.allow_rename && !this.frm.doc.__islocal;
+		return this.frm.perm[0].write && this.frm.meta.allow_reid && !this.frm.doc.__islocal;
 	}
 	show_unchanged_document_alert() {
 		frappe.show_alert({

@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "allow_rename": 1,
+  "allow_reid": 1,
   "autoid": "field:salutation",
   "creation": "2017-04-10 12:17:58.071915",
   "doctype": "DocType",

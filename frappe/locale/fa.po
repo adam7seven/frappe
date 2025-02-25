@@ -1715,7 +1715,7 @@ msgstr "اجازه چاپ برای پیش‌نویس"
 msgid "Allow Read On All Link Options"
 msgstr "اجازه خواندن در همه گزینه‌های پیوند"
 
-#. Label of the allow_rename (Check) field in DocType 'DocType'
+#. Label of the allow_reid (Check) field in DocType 'DocType'
 #: frappe/core/doctype/doctype/doctype.json
 msgid "Allow Rename"
 msgstr "اجازه تغییر نام"

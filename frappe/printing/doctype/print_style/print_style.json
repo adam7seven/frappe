@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "allow_rename": 1,
+  "allow_reid": 1,
   "autoid": "field:print_style_name",
   "creation": "2017-08-17 01:25:56.910716",
   "doctype": "DocType",

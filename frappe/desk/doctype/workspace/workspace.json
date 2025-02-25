@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "allow_rename": 1,
+  "allow_reid": 1,
   "autoid": "field:label",
   "beta": 1,
   "creation": "2020-01-23 13:45:59.470592",

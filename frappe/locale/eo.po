@@ -1716,7 +1716,7 @@ msgstr "crwdns91090:0crwdne91090:0"
 msgid "Allow Read On All Link Options"
 msgstr "crwdns128150:0crwdne128150:0"
 
-#. Label of the allow_rename (Check) field in DocType 'DocType'
+#. Label of the allow_reid (Check) field in DocType 'DocType'
 #: frappe/core/doctype/doctype/doctype.json
 msgid "Allow Rename"
 msgstr "crwdns128152:0crwdne128152:0"

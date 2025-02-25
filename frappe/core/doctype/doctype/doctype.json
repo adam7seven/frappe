@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "allow_rename": 1,
+  "allow_reid": 1,
   "autoid": "Prompt",
   "creation": "2013-02-18 13:36:19",
   "description": "DocType is a Table / Form in the application.",
@@ -20,7 +20,7 @@
     "autoid",
     "column_break_nexu",
     "title_field",
-    "allow_rename",
+    "allow_reid",
     "settings_tab",
     "sb0",
     "module",
@@ -278,10 +278,10 @@
     },
     {
       "default": "1",
-      "fieldname": "allow_rename",
+      "fieldname": "allow_reid",
       "fieldtype": "Check",
       "label": "Allow Rename",
-      "oldfieldname": "allow_rename",
+      "oldfieldname": "allow_reid",
       "oldfieldtype": "Check"
     },
     {

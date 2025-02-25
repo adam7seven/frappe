@@ -398,7 +398,7 @@ def validate_rename(
         if not (ignore_permissions or frappe.permissions.has_permission(**kwargs)):
             frappe.throw(_("You need write permission on {0} {1} to merge").format(doctype, new))
 
-    if not force and not ignore_permissions and not meta.allow_rename:
+    if not force and not ignore_permissions and not meta.allow_reid:
         frappe.throw(_("{0} not allowed to be renamed").format(_(doctype)))
 
     # validate naming like it's done in doc.py

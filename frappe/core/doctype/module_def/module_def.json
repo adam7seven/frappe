@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "allow_rename": 1,
+  "allow_reid": 1,
   "autoid": "field:module_name",
   "creation": "2013-01-10 16:34:03",
   "doctype": "DocType",

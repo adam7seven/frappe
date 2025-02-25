@@ -105,7 +105,7 @@ class DocType(Document):
         allow_events_in_timeline: DF.Check
         allow_guest_to_view: DF.Check
         allow_import: DF.Check
-        allow_rename: DF.Check
+        allow_reid: DF.Check
         autoid: DF.Data | None
         beta: DF.Check
         color: DF.Data | None

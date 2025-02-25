@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "allow_rename": 1,
+  "allow_reid": 1,
   "autoid": "hash",
   "creation": "2022-01-14 13:40:49.487646",
   "doctype": "DocType",
