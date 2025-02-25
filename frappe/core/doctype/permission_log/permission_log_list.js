@@ -1,5 +1,5 @@
 frappe.listview_settings["Permission Log"] = {
-	hide_name_column: true,
+	hide_id_column: true,
 
 	onload(listview) {
 		if (listview.list_view_settings) {

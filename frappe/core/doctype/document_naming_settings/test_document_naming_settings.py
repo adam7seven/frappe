@@ -38,7 +38,7 @@ class TestNamingSeries(IntegrationTestCase):
                 is_submittable=1,
             )
             .insert()
-            .name
+            .id
         )
 
     def setUp(self):
@@ -101,16 +101,16 @@ class TestNamingSeries(IntegrationTestCase):
         submittable_doc.cancel()
 
         amended_doc = frappe.get_doc(
-            doctype=self.ns_doctype, some_fieldname="test doc with submit", amended_from=submittable_doc.name
+            doctype=self.ns_doctype, some_fieldname="test doc with submit", amended_from=submittable_doc.id
         ).insert()
 
-        self.assertIn(submittable_doc.name, amended_doc.name)
+        self.assertIn(submittable_doc.id, amended_doc.id)
         amended_doc.delete()
 
         self.dns.default_amend_naming = "Default Naming"
         self.dns.update_amendment_rule()
 
         new_amended_doc = frappe.get_doc(
-            doctype=self.ns_doctype, some_fieldname="test doc with submit", amended_from=submittable_doc.name
+            doctype=self.ns_doctype, some_fieldname="test doc with submit", amended_from=submittable_doc.id
         ).insert()
-        self.assertNotIn(submittable_doc.name, new_amended_doc.name)
+        self.assertNotIn(submittable_doc.id, new_amended_doc.id)

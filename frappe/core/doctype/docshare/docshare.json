@@ -10,7 +10,7 @@
   "field_order": [
     "user",
     "share_doctype",
-    "share_name",
+    "share_id",
     "read",
     "write",
     "share",
@@ -37,7 +37,7 @@
       "search_index": 1
     },
     {
-      "fieldname": "share_name",
+      "fieldname": "share_id",
       "fieldtype": "Dynamic Link",
       "in_list_view": 1,
       "label": "Document Name",
@@ -89,7 +89,7 @@
   "modified": "2024-03-23 16:03:21.134272",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "DocShare",
+  "id": "DocShare",
   "naming_rule": "Random",
   "owner": "Administrator",
   "permissions": [

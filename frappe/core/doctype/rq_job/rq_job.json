@@ -111,7 +111,7 @@
   "modified": "2024-03-23 16:03:37.325708",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "RQ Job",
+  "id": "RQ Job",
   "naming_rule": "By fieldname",
   "owner": "Administrator",
   "permissions": [

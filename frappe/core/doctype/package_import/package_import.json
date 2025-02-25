@@ -37,7 +37,7 @@
   "modified": "2024-03-23 16:03:33.422131",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "Package Import",
+  "id": "Package Import",
   "naming_rule": "Expression",
   "owner": "Administrator",
   "permissions": [

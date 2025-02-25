@@ -33,9 +33,9 @@ class RolePermissionforPageandReport(Document):
         args = self.get_args()
         self.set("roles", [])
 
-        name = frappe.db.get_value("Custom Role", args, "name")
-        if name:
-            doc = frappe.get_doc("Custom Role", name)
+        id = frappe.db.get_value("Custom Role", args, "id")
+        if id:
+            doc = frappe.get_doc("Custom Role", id)
             roles = doc.roles
         else:
             roles = self.get_standard_roles()
@@ -67,15 +67,15 @@ class RolePermissionforPageandReport(Document):
     def update_custom_roles(self):
         args = self.get_args()
         roles = self.get_roles()
-        name = frappe.db.get_value("Custom Role", args, "name")
+        id = frappe.db.get_value("Custom Role", args, "id")
 
         args.update({"doctype": "Custom Role", "roles": roles})
 
         if self.report:
             args.update({"ref_doctype": frappe.db.get_value("Report", self.report, "ref_doctype")})
 
-        if name:
-            custom_role = frappe.get_doc("Custom Role", name)
+        if id:
+            custom_role = frappe.get_doc("Custom Role", id)
             custom_role.set("roles", roles)
             custom_role.save()
         else:
@@ -86,15 +86,15 @@ class RolePermissionforPageandReport(Document):
             # intentionally written update query in frappe.db.sql instead of frappe.db.set_value
             frappe.db.sql(
                 """update `tabReport` set prepared_report = %s
-				where name = %s""",
+				where id = %s""",
                 (self.enable_prepared_report, self.report),
             )
 
     def get_args(self, row=None):
-        name = self.page if self.set_role_for == "Page" else self.report
+        id = self.page if self.set_role_for == "Page" else self.report
         check_for_field = self.set_role_for.replace(" ", "_").lower()
 
-        return {check_for_field: name}
+        return {check_for_field: id}
 
     def get_roles(self):
         return [{"role": data.role, "parenttype": "Custom Role"} for data in self.roles if data.role != ALL_USER_ROLE]

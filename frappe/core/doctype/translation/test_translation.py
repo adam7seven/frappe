@@ -124,4 +124,4 @@ def create_translation(lang, source_string, new_translation) -> str:
     doc.translated_text = new_translation
     doc.save()
 
-    return doc.name
+    return doc.id

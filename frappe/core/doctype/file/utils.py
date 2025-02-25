@@ -31,7 +31,7 @@ def make_home_folder() -> None:
     frappe.get_doc(
         {
             "doctype": "File",
-            "folder": home.name,
+            "folder": home.id,
             "is_folder": 1,
             "is_attachments_folder": 1,
             "file_name": "Attachments",
@@ -47,7 +47,7 @@ def setup_folder_path(filename: str, new_parent: str) -> None:
     if file.is_folder:
         from frappe.model.rename_doc import rename_doc
 
-        rename_doc("File", file.name, file.get_name_based_on_parent_folder(), ignore_permissions=True)
+        rename_doc("File", file.id, file.get_name_based_on_parent_folder(), ignore_permissions=True)
 
 
 def get_extension(
@@ -167,11 +167,9 @@ def delete_file(path: str) -> None:
             os.remove(path)
 
 
-def remove_file_by_url(file_url: str, doctype: str | None = None, name: str | None = None) -> "Document":
-    if doctype and name:
-        fid = frappe.db.get_value(
-            "File", {"file_url": file_url, "attached_to_doctype": doctype, "attached_to_name": name}
-        )
+def remove_file_by_url(file_url: str, doctype: str | None = None, id: str | None = None) -> "Document":
+    if doctype and id:
+        fid = frappe.db.get_value("File", {"file_url": file_url, "attached_to_doctype": doctype, "attached_to_id": id})
     else:
         fid = frappe.db.get_value("File", {"file_url": file_url})
 
@@ -255,17 +253,17 @@ def extract_images_from_html(doc: "Document", content: str, is_private: bool = F
 
         if doc.meta.istable:
             doctype = doc.parenttype
-            name = doc.parent
+            id = doc.parent
         else:
             doctype = doc.doctype
-            name = doc.name
+            id = doc.id
 
         _file = frappe.get_doc(
             {
                 "doctype": "File",
                 "file_name": filename,
                 "attached_to_doctype": doctype,
-                "attached_to_name": name,
+                "attached_to_id": id,
                 "content": content,
                 "decode": False,
                 "is_private": is_private,
@@ -303,7 +301,7 @@ def update_existing_file_docs(doc: "File") -> None:
         .set(file_doctype.file_url, doc.file_url)
         .set(file_doctype.is_private, doc.is_private)
         .where(file_doctype.content_hash == doc.content_hash)
-        .where(file_doctype.name != doc.name)
+        .where(file_doctype.id != doc.id)
     ).run()
 
 
@@ -327,7 +325,7 @@ def attach_files_to_document(doc: "Document", event) -> None:
             "File",
             {
                 "file_url": value,
-                "attached_to_name": doc.name,
+                "attached_to_id": doc.id,
                 "attached_to_doctype": doc.doctype,
                 "attached_to_field": df.fieldname,
             },
@@ -338,7 +336,7 @@ def attach_files_to_document(doc: "Document", event) -> None:
             "File",
             {
                 "file_url": value,
-                "attached_to_name": None,
+                "attached_to_id": None,
                 "attached_to_doctype": None,
                 "attached_to_field": None,
             },
@@ -349,7 +347,7 @@ def attach_files_to_document(doc: "Document", event) -> None:
                 "File",
                 unattached_file,
                 field={
-                    "attached_to_name": doc.name,
+                    "attached_to_id": doc.id,
                     "attached_to_doctype": doc.doctype,
                     "attached_to_field": df.fieldname,
                     "is_private": cint(value.startswith("/private")),
@@ -360,7 +358,7 @@ def attach_files_to_document(doc: "Document", event) -> None:
         file: File = frappe.get_doc(
             doctype="File",
             file_url=value,
-            attached_to_name=doc.name,
+            attached_to_id=doc.id,
             attached_to_doctype=doc.doctype,
             attached_to_field=df.fieldname,
             folder="Home/Attachments",
@@ -371,12 +369,12 @@ def attach_files_to_document(doc: "Document", event) -> None:
             doc.log_error("Error Attaching File")
 
 
-def relink_files(doc, fieldname, temp_doc_name):
+def relink_files(doc, fieldname, temp_doc_id):
     """
-    Relink files attached to incorrect document name to the new document name
-    by check if file with temp name exists that was created in last 60 minutes
+    Relink files attached to incorrect document id to the new document id
+    by check if file with temp id exists that was created in last 60 minutes
     """
-    if not temp_doc_name:
+    if not temp_doc_id:
         return
     from frappe.utils.data import add_to_date, now_datetime
 
@@ -384,7 +382,7 @@ def relink_files(doc, fieldname, temp_doc_name):
         "File",
         {
             "file_url": doc.get(fieldname),
-            "attached_to_name": temp_doc_name,
+            "attached_to_id": temp_doc_id,
             "attached_to_doctype": doc.doctype,
             "attached_to_field": fieldname,
             "creation": (
@@ -399,21 +397,21 @@ def relink_files(doc, fieldname, temp_doc_name):
             "File",
             mislinked_file,
             field={
-                "attached_to_name": doc.name,
+                "attached_to_id": doc.id,
             },
         )
         return
 
 
 def relink_mismatched_files(doc: "Document") -> None:
-    if not doc.get("__temporary_name", None):
+    if not doc.get("__temporary_id", None):
         return
     attach_fields = doc.meta.get("fields", {"fieldtype": ["in", ["Attach", "Attach Image"]]})
     for df in attach_fields:
         if doc.get(df.fieldname):
-            relink_files(doc, df.fieldname, doc.__temporary_name)
-    # delete temporary name after relinking is done
-    doc.delete_key("__temporary_name")
+            relink_files(doc, df.fieldname, doc.__temporary_id)
+    # delete temporary id after relinking is done
+    doc.delete_key("__temporary_id")
 
 
 def decode_file_content(content: bytes) -> bytes:
@@ -424,10 +422,10 @@ def decode_file_content(content: bytes) -> bytes:
     return safe_b64decode(content)
 
 
-def find_file_by_url(path: str, name: str | None = None) -> Optional["File"]:
+def find_file_by_url(path: str, id: str | None = None) -> Optional["File"]:
     filters = {"file_url": str(path)}
-    if name:
-        filters["name"] = str(name)
+    if id:
+        filters["id"] = str(id)
 
     files = frappe.get_all("File", filters=filters, fields="*")
 

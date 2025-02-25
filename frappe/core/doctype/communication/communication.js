@@ -22,9 +22,9 @@ frappe.ui.form.on("Communication", {
 		// this field is not to be edited directly anyway, so setting it as read only
 		frm.set_df_property("content", "read_only", 1);
 
-		if (frm.doc.reference_doctype && frm.doc.reference_name) {
-			frm.add_custom_button(__(frm.doc.reference_name), function () {
-				frappe.set_route("Form", frm.doc.reference_doctype, frm.doc.reference_name);
+		if (frm.doc.reference_doctype && frm.doc.reference_id) {
+			frm.add_custom_button(__(frm.doc.reference_id), function () {
+				frappe.set_route("Form", frm.doc.reference_doctype, frm.doc.reference_id);
 			});
 		} else {
 			// if an unlinked communication, set email field
@@ -150,27 +150,27 @@ frappe.ui.form.on("Communication", {
 					fieldtype: "Dynamic Link",
 					options: "reference_doctype",
 					label: __("Reference Name"),
-					fieldname: "reference_name",
+					fieldname: "reference_id",
 				},
 			],
 		});
 		d.set_value("reference_doctype", frm.doc.reference_doctype);
-		d.set_value("reference_name", frm.doc.reference_name);
+		d.set_value("reference_id", frm.doc.reference_id);
 		d.set_primary_action(__("Relink"), function () {
 			var values = d.get_values();
 			if (values) {
 				frappe.confirm(
 					__("Are you sure you want to relink this communication to {0}?", [
-						values["reference_name"],
+						values["reference_id"],
 					]),
 					function () {
 						d.hide();
 						frappe.call({
 							method: "frappe.email.relink",
 							args: {
-								name: frm.doc.name,
+								id: frm.doc.id,
 								reference_doctype: values["reference_doctype"],
-								reference_name: values["reference_name"],
+								reference_id: values["reference_id"],
 							},
 							callback: function () {
 								frm.refresh();
@@ -202,7 +202,7 @@ frappe.ui.form.on("Communication", {
 					get_query: function () {
 						return {
 							filters: {
-								name: ["!=", frm.doc.email_account],
+								id: ["!=", frm.doc.email_account],
 								enable_incoming: ["=", 1],
 							},
 						};
@@ -215,7 +215,7 @@ frappe.ui.form.on("Communication", {
 				frappe.call({
 					method: "frappe.email.inbox.move_email",
 					args: {
-						communication: frm.doc.name,
+						communication: frm.doc.id,
 						email_account: values.email_account,
 					},
 					freeze: true,
@@ -235,7 +235,7 @@ frappe.ui.form.on("Communication", {
 		return frappe.call({
 			method: "frappe.email.inbox.create_email_flag_queue",
 			args: {
-				names: [frm.doc.name],
+				ids: [frm.doc.id],
 				action: action,
 				flag: flag,
 			},
@@ -252,7 +252,7 @@ frappe.ui.form.on("Communication", {
 		return frappe.call({
 			method: "frappe.email.inbox.mark_as_closed_open",
 			args: {
-				communication: frm.doc.name,
+				communication: frm.doc.id,
 				status: status,
 			},
 			freeze: true,
@@ -334,7 +334,7 @@ frappe.ui.form.on("Communication", {
 		frappe.call({
 			method: "frappe.email.inbox.mark_as_spam",
 			args: {
-				communication: frm.doc.name,
+				communication: frm.doc.id,
 				sender: frm.doc.sender,
 			},
 			freeze: true,
@@ -348,7 +348,7 @@ frappe.ui.form.on("Communication", {
 		frappe.call({
 			method: "frappe.email.inbox.mark_as_trash",
 			args: {
-				communication: frm.doc.name,
+				communication: frm.doc.id,
 			},
 			freeze: true,
 			callback: function (r) {

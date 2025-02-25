@@ -14,7 +14,7 @@ frappe.ui.form.on("Document Naming Rule", {
 		frappe.validated = false;
 		frappe.warn(
 			__("Are you sure?"),
-			__("Updating counter may lead to document name conflicts if not done properly"),
+			__("Updating counter may lead to document id conflicts if not done properly"),
 			() => {
 				frm.skip_before_save = true;
 				frm.save();

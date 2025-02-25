@@ -6,7 +6,7 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 from frappe.tests.test_query_builder import db_type_is, run_only_if
 from frappe.utils import format_duration, getdate
 
-doctype_name = "DocType for Import"
+doctype_id = "DocType for Import"
 
 
 class UnitTestDataImport(UnitTestCase):
@@ -23,17 +23,17 @@ class TestImporter(IntegrationTestCase):
     def setUpClass(cls):
         super().setUpClass()
         create_doctype_if_not_exists(
-            doctype_name,
+            doctype_id,
         )
 
     def test_data_import_from_file(self):
         import_file = get_import_file("sample_import_file")
-        data_import = self.get_importer(doctype_name, import_file)
+        data_import = self.get_importer(doctype_id, import_file)
         data_import.start_import()
 
-        doc1 = frappe.get_doc(doctype_name, "Test")
-        doc2 = frappe.get_doc(doctype_name, "Test 2")
-        doc3 = frappe.get_doc(doctype_name, "Test 3")
+        doc1 = frappe.get_doc(doctype_id, "Test")
+        doc2 = frappe.get_doc(doctype_id, "Test 2")
+        doc3 = frappe.get_doc(doctype_id, "Test 3")
 
         self.assertEqual(doc1.description, "test description")
         self.assertEqual(doc1.number, 1)
@@ -61,7 +61,7 @@ class TestImporter(IntegrationTestCase):
 
     def test_data_validation_semicolon_success(self):
         import_file = get_import_file("sample_import_file_semicolon")
-        data_import = self.get_importer(doctype_name, import_file, update=True, use_sniffer=True)
+        data_import = self.get_importer(doctype_id, import_file, update=True, use_sniffer=True)
 
         doc = data_import.get_preview_from_template().get("data", [{}])
 
@@ -72,7 +72,7 @@ class TestImporter(IntegrationTestCase):
     def test_data_validation_semicolon_failure(self):
         import_file = get_import_file("sample_import_file_semicolon")
 
-        data_import = self.get_importer_semicolon(doctype_name, import_file, use_sniffer=True)
+        data_import = self.get_importer_semicolon(doctype_id, import_file, use_sniffer=True)
         doc = data_import.get_preview_from_template().get("data", [{}])
         # if semicolon delimiter detection fails, and falls back to comma,
         # column number will be less than 15 -> 2 (+1 id)
@@ -80,7 +80,7 @@ class TestImporter(IntegrationTestCase):
 
     def test_data_import_preview(self):
         import_file = get_import_file("sample_import_file")
-        data_import = self.get_importer(doctype_name, import_file)
+        data_import = self.get_importer(doctype_id, import_file)
         preview = data_import.get_preview_from_template()
 
         self.assertEqual(len(preview.data), 4)
@@ -90,7 +90,7 @@ class TestImporter(IntegrationTestCase):
     @run_only_if(db_type_is.MARIADB)
     def test_data_import_without_mandatory_values(self):
         import_file = get_import_file("sample_import_file_without_mandatory")
-        data_import = self.get_importer(doctype_name, import_file)
+        data_import = self.get_importer(doctype_id, import_file)
         frappe.clear_messages()
         data_import.start_import()
         data_import.reload()
@@ -98,7 +98,7 @@ class TestImporter(IntegrationTestCase):
         import_log = frappe.get_all(
             "Data Import Log",
             fields=["row_indexes", "success", "messages", "exception", "docid"],
-            filters={"data_import": data_import.name},
+            filters={"data_import": data_import.id},
             order_by="log_index",
         )
 
@@ -116,7 +116,7 @@ class TestImporter(IntegrationTestCase):
 
     def test_data_import_update(self):
         existing_doc = frappe.get_doc(
-            doctype=doctype_name,
+            doctype=doctype_id,
             title=frappe.generate_hash(length=8),
             table_field_1=[{"child_title": "child title to update"}],
         )
@@ -124,26 +124,26 @@ class TestImporter(IntegrationTestCase):
         frappe.db.commit()
 
         import_file = get_import_file("sample_import_file_for_update")
-        data_import = self.get_importer(doctype_name, import_file, update=True)
+        data_import = self.get_importer(doctype_id, import_file, update=True)
         i = Importer(data_import.reference_doctype, data_import=data_import)
 
         # update child table id in template date
-        i.import_file.raw_data[1][4] = existing_doc.table_field_1[0].name
+        i.import_file.raw_data[1][4] = existing_doc.table_field_1[0].id
 
         # uppercase to check if autoid field isn't replaced in mariadb
         if frappe.db.db_type == "mariadb":
-            i.import_file.raw_data[1][0] = existing_doc.name.upper()
+            i.import_file.raw_data[1][0] = existing_doc.id.upper()
         else:
-            i.import_file.raw_data[1][0] = existing_doc.name
+            i.import_file.raw_data[1][0] = existing_doc.id
 
         i.import_file.parse_data_from_template()
         i.import_data()
 
-        updated_doc = frappe.get_doc(doctype_name, existing_doc.name)
+        updated_doc = frappe.get_doc(doctype_id, existing_doc.id)
         self.assertEqual(existing_doc.title, updated_doc.title)
         self.assertEqual(updated_doc.description, "test description")
         self.assertEqual(updated_doc.table_field_1[0].child_title, "child title")
-        self.assertEqual(updated_doc.table_field_1[0].name, existing_doc.table_field_1[0].name)
+        self.assertEqual(updated_doc.table_field_1[0].id, existing_doc.table_field_1[0].id)
         self.assertEqual(updated_doc.table_field_1[0].child_description, "child description")
         self.assertEqual(updated_doc.table_field_1_again[0].child_title, "child title again")
 
@@ -173,21 +173,21 @@ class TestImporter(IntegrationTestCase):
         return data_import
 
 
-def create_doctype_if_not_exists(doctype_name, force=False):
+def create_doctype_if_not_exists(doctype_id, force=False):
     if force:
-        frappe.delete_doc_if_exists("DocType", doctype_name)
-        frappe.delete_doc_if_exists("DocType", "Child 1 of " + doctype_name)
-        frappe.delete_doc_if_exists("DocType", "Child 2 of " + doctype_name)
+        frappe.delete_doc_if_exists("DocType", doctype_id)
+        frappe.delete_doc_if_exists("DocType", "Child 1 of " + doctype_id)
+        frappe.delete_doc_if_exists("DocType", "Child 2 of " + doctype_id)
 
-    if frappe.db.exists("DocType", doctype_name):
+    if frappe.db.exists("DocType", doctype_id):
         return
 
     # Child Table 1
-    table_1_name = "Child 1 of " + doctype_name
+    table_1_name = "Child 1 of " + doctype_id
     frappe.get_doc(
         {
             "doctype": "DocType",
-            "name": table_1_name,
+            "id": table_1_name,
             "module": "Custom",
             "custom": 1,
             "istable": 1,
@@ -202,11 +202,11 @@ def create_doctype_if_not_exists(doctype_name, force=False):
     ).insert()
 
     # Child Table 2
-    table_2_name = "Child 2 of " + doctype_name
+    table_2_name = "Child 2 of " + doctype_id
     frappe.get_doc(
         {
             "doctype": "DocType",
-            "name": table_2_name,
+            "id": table_2_name,
             "module": "Custom",
             "custom": 1,
             "istable": 1,
@@ -228,7 +228,7 @@ def create_doctype_if_not_exists(doctype_name, force=False):
     frappe.get_doc(
         {
             "doctype": "DocType",
-            "name": doctype_name,
+            "id": doctype_id,
             "module": "Custom",
             "custom": 1,
             "autoid": "field:title",

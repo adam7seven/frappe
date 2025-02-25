@@ -127,7 +127,7 @@ class DataExporter:
 
     def build_response(self):
         self.writer = UnicodeWriter()
-        self.name_field = "parent" if self.parent_doctype != self.doctype else "name"
+        self.id_field = "parent" if self.parent_doctype != self.doctype else "id"
 
         if self.template:
             self.add_main_header()
@@ -179,7 +179,7 @@ class DataExporter:
         self.writer.writerow([_("Notes:")])
         self.writer.writerow([_("Please do not change the template headings.")])
         self.writer.writerow([_("First data column must be blank.")])
-        self.writer.writerow([_('If you are uploading new records, leave the "name" (ID) column blank.')])
+        self.writer.writerow([_('If you are uploading new records, leave the "id" (ID) column blank.')])
         self.writer.writerow([_('If you are uploading new records, "Naming Series" becomes mandatory, if present.')])
         self.writer.writerow(
             [
@@ -190,7 +190,7 @@ class DataExporter:
         )
         self.writer.writerow([_("For updating, you can update only selective columns.")])
         self.writer.writerow([_("You can only upload upto 5000 records in one go. (may be less in some cases)")])
-        if self.name_field == "parent":
+        if self.id_field == "parent":
             self.writer.writerow([_('"Parent" signifies the parent table in which this row must be added')])
             self.writer.writerow(
                 [_('If you are updating, please select "Overwrite" else existing rows will not be deleted.')]
@@ -204,9 +204,9 @@ class DataExporter:
         table_name = "tab" + dt
 
         for f in frappe.db.get_table_columns_description(table_name):
-            field = meta.get_field(f.name)
-            if f.name in ["owner", "creation"]:
-                std_field = next((x for x in frappe.model.std_fields if x["fieldname"] == f.name), None)
+            field = meta.get_field(f.id)
+            if f.id in ["owner", "creation"]:
+                std_field = next((x for x in frappe.model.std_fields if x["fieldname"] == f.id), None)
                 if std_field:
                     field = frappe._dict(
                         {
@@ -219,7 +219,7 @@ class DataExporter:
                         }
                     )
 
-            if field and ((self.select_columns and f.name in self.select_columns[dt]) or not self.select_columns):
+            if field and ((self.select_columns and f.id in self.select_columns[dt]) or not self.select_columns):
                 tablecolumns.append(field)
 
         tablecolumns.sort(key=lambda a: int(a.idx))
@@ -228,7 +228,7 @@ class DataExporter:
 
         if dt == self.doctype:
             if (meta.get("autoid") and meta.get("autoid").lower() == "prompt") or (self.with_data):
-                self._append_name_column()
+                self._append_id_column()
 
             # if importing only child table for new record, add parent field
             if meta.get("istable") and not self.with_data:
@@ -240,7 +240,7 @@ class DataExporter:
                             "label": "Parent",
                             "fieldtype": "Data",
                             "reqd": 1,
-                            "info": _("Parent is the name of the document to which the data will get added to."),
+                            "info": _("Parent is the id of the document to which the data will get added to."),
                         }
                     ),
                     True,
@@ -251,7 +251,7 @@ class DataExporter:
             _column_start_end = frappe._dict(start=len(self.columns))
 
             if self.with_data:
-                self._append_name_column(dt)
+                self._append_id_column(dt)
 
         for docfield in tablecolumns:
             self.append_field_column(docfield, True)
@@ -264,7 +264,7 @@ class DataExporter:
         if len(self.columns) - _column_start_end.start == 1:
             self.append_empty_field_column()
 
-        # append DocType name
+        # append DocType id
         self.tablerow[_column_start_end.start + 1] = dt
 
         if parentfield:
@@ -288,7 +288,7 @@ class DataExporter:
         if (
             self.select_columns
             and docfield.fieldname not in self.select_columns.get(docfield.parent, [])
-            and docfield.fieldname != "name"
+            and docfield.fieldname != "id"
         ):
             return
 
@@ -366,26 +366,26 @@ class DataExporter:
 
         for doc in self.data:
             op = self.docs_to_export.get("op")
-            names = self.docs_to_export.get("name")
+            ids = self.docs_to_export.get("id")
 
-            if names and op:
-                if op == "=" and doc.name not in names:
+            if ids and op:
+                if op == "=" and doc.id not in ids:
                     continue
-                elif op == "!=" and doc.name in names:
+                elif op == "!=" and doc.id in ids:
                     continue
-            elif names:
+            elif ids:
                 try:
                     sflags = self.docs_to_export.get("flags", "I,U").upper()
                     flags = 0
                     for a in re.split(r"\W+", sflags):
                         flags = flags | reflags.get(a, 0)
 
-                    c = re.compile(names, flags)
-                    m = c.match(doc.name)
+                    c = re.compile(ids, flags)
+                    m = c.match(doc.id)
                     if not m:
                         continue
                 except Exception:
-                    if doc.name not in names:
+                    if doc.id not in ids:
                         continue
             # add main table
             rows = []
@@ -401,7 +401,7 @@ class DataExporter:
                     data_row = (
                         frappe.qb.from_(child_doctype_table)
                         .select("*")
-                        .where(child_doctype_table.parent == doc.name)
+                        .where(child_doctype_table.parent == doc.id)
                         .where(child_doctype_table.parentfield == c["parentfield"])
                         .orderby(child_doctype_table.idx)
                     )
@@ -414,7 +414,7 @@ class DataExporter:
         d = doc.copy()
         meta = frappe.get_meta(dt)
         if self.all_doctypes:
-            d.name = f'"{d.name}"'
+            d.id = f'"{d.id}"'
 
         if len(rows) < rowidx + 1:
             rows.append([""] * (len(self.columns) + 1))
@@ -453,11 +453,11 @@ class DataExporter:
 
         provide_binary_file(self.doctype, "xlsx", xlsx_file.getvalue())
 
-    def _append_name_column(self, dt=None):
+    def _append_id_column(self, dt=None):
         self.append_field_column(
             frappe._dict(
                 {
-                    "fieldname": "name" if dt else self.name_field,
+                    "fieldname": "id" if dt else self.id_field,
                     "parent": dt or "",
                     "label": "ID",
                     "fieldtype": "Data",

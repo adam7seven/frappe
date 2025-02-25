@@ -616,7 +616,7 @@
   "modified": "2025-01-30 14:58:19.746600",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "DocField",
+  "id": "DocField",
   "naming_rule": "Random",
   "owner": "Administrator",
   "permissions": [],

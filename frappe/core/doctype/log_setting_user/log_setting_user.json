@@ -23,7 +23,7 @@
   "modified": "2024-03-23 16:03:29.303855",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "Log Setting User",
+  "id": "Log Setting User",
   "owner": "Administrator",
   "permissions": [],
   "sort_field": "creation",

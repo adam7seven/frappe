@@ -20,7 +20,7 @@
   "modified": "2024-03-23 16:04:00.597980",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "User Group",
+  "id": "User Group",
   "naming_rule": "Set by user",
   "owner": "Administrator",
   "permissions": [

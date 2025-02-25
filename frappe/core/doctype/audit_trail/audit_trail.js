@@ -9,11 +9,11 @@ frappe.ui.form.on("Audit Trail", {
 			prev_route[0] == "Form" &&
 			!prev_route.includes("Audit Trail")
 		) {
-			frm.set_value("doctype_name", prev_route[1]);
+			frm.set_value("doctype_id", prev_route[1]);
 			frm.set_value("document", prev_route[2]);
 			frm.set_value("start_date", "");
 			frm.set_value("end_date", "");
-			if (frm.doc.doctype_name && frm.doc.document)
+			if (frm.doc.doctype_id && frm.doc.document)
 				frm.events.get_audit_trail_for_document(frm);
 		}
 
@@ -21,7 +21,7 @@ frappe.ui.form.on("Audit Trail", {
 
 		frm.disable_save();
 
-		frm.set_query("doctype_name", () => {
+		frm.set_query("doctype_id", () => {
 			return {
 				filters: {
 					track_changes: 1,
@@ -54,25 +54,21 @@ frappe.ui.form.on("Audit Trail", {
 			frm.refresh_fields();
 		}
 
-		frappe.db
-			.get_value(frm.doc.doctype_name, frm.doc.document, "creation")
-			.then((creation) => {
-				if (frappe.datetime.obj_to_str(creation) < frm.doc.start_date) {
-					frm.doc.document = "";
-					frm.refresh_fields();
-				}
-			});
+		frappe.db.get_value(frm.doc.doctype_id, frm.doc.document, "creation").then((creation) => {
+			if (frappe.datetime.obj_to_str(creation) < frm.doc.start_date) {
+				frm.doc.document = "";
+				frm.refresh_fields();
+			}
+		});
 	},
 
 	end_date(frm) {
-		frappe.db
-			.get_value(frm.doc.doctype_name, frm.doc.document, "creation")
-			.then((creation) => {
-				if (frappe.datetime.obj_to_str(creation) > frm.doc.end_date) {
-					frm.doc.document = "";
-					frm.refresh_fields();
-				}
-			});
+		frappe.db.get_value(frm.doc.doctype_id, frm.doc.document, "creation").then((creation) => {
+			if (frappe.datetime.obj_to_str(creation) > frm.doc.end_date) {
+				frm.doc.document = "";
+				frm.refresh_fields();
+			}
+		});
 	},
 
 	get_audit_trail_for_document(frm) {
@@ -80,17 +76,17 @@ frappe.ui.form.on("Audit Trail", {
 			doc: frm.doc,
 			method: "compare_document",
 			callback: function (r) {
-				let document_names = r.message[0];
+				let document_ids = r.message[0];
 				let changed_fields = r.message[1];
-				frm.events.render_changed_fields(frm, document_names, changed_fields);
+				frm.events.render_changed_fields(frm, document_ids, changed_fields);
 				frm.events.render_rows_added_or_removed(frm, changed_fields);
 			},
 		});
 	},
 
-	render_changed_fields(frm, document_names, changed_fields) {
+	render_changed_fields(frm, document_ids, changed_fields) {
 		let render_dict = {
-			documents: document_names,
+			documents: document_ids,
 			changed: changed_fields.changed,
 			row_changed: changed_fields.row_changed,
 		};

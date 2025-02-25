@@ -126,7 +126,7 @@
   "modified": "2024-09-25 17:23:31.599897",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "Permission Log",
+  "id": "Permission Log",
   "naming_rule": "Random",
   "owner": "Administrator",
   "permissions": [

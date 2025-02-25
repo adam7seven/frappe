@@ -3,7 +3,7 @@ frappe.listview_settings["Deleted Document"] = {
 		const action = () => {
 			const selected_docs = doclist.get_checked_items();
 			if (selected_docs.length > 0) {
-				let docids = selected_docs.map((doc) => doc.name);
+				let docids = selected_docs.map((doc) => doc.id);
 				frappe.call({
 					method: "frappe.core.doctype.deleted_document.deleted_document.bulk_restore",
 					args: { docids },

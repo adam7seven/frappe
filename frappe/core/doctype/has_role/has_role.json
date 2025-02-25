@@ -23,7 +23,7 @@
   "modified": "2024-03-23 16:03:27.291168",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "Has Role",
+  "id": "Has Role",
   "owner": "Administrator",
   "permissions": [],
   "sort_field": "creation",

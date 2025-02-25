@@ -21,7 +21,7 @@
   "modified": "2024-03-23 16:04:00.948988",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "User Role Profile",
+  "id": "User Role Profile",
   "owner": "Administrator",
   "permissions": [],
   "sort_field": "creation",

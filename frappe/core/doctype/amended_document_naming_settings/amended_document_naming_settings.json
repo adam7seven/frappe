@@ -32,7 +32,7 @@
   "modified": "2024-03-23 16:01:27.410335",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "Amended Document Naming Settings",
+  "id": "Amended Document Naming Settings",
   "owner": "Administrator",
   "permissions": [],
   "sort_field": "creation",

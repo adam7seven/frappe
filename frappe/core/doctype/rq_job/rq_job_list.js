@@ -1,5 +1,5 @@
 frappe.listview_settings["RQ Job"] = {
-	hide_name_column: true,
+	hide_id_column: true,
 
 	onload(listview) {
 		if (!has_common(frappe.user_roles, ["Administrator", "System Manager"])) return;

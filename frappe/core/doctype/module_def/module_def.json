@@ -142,7 +142,7 @@
   "modified": "2024-09-18 12:39:19.512528",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "Module Def",
+  "id": "Module Def",
   "naming_rule": "By fieldname",
   "owner": "Administrator",
   "permissions": [
@@ -174,7 +174,7 @@
       "select": 1
     }
   ],
-  "show_name_in_global_search": 1,
+  "show_id_in_global_search": 1,
   "sort_field": "creation",
   "sort_order": "DESC",
   "states": [],

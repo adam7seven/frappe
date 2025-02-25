@@ -1,5 +1,5 @@
 frappe.listview_settings["Recorder"] = {
-	hide_name_column: true,
+	hide_id_column: true,
 
 	onload(listview) {
 		listview.page.sidebar.remove();

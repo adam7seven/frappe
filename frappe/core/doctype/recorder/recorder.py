@@ -44,7 +44,7 @@ class Recorder(Document):
     # end: auto-generated types
 
     def load_from_db(self):
-        request_data = get_recorder_data(self.name)
+        request_data = get_recorder_data(self.id)
         if not request_data:
             raise frappe.DoesNotExistError
         request = serialize_request(request_data)
@@ -101,7 +101,7 @@ def serialize_request(request):
             i["stack"] = frappe.as_json(i["stack"])
             i["explain_result"] = frappe.as_json(i["explain_result"])
     request.update(
-        name=request.get("uuid"),
+        id=request.get("uuid"),
         number_of_queries=request.get("queries"),
         time_in_queries=request.get("time_queries"),
         request_headers=frappe.as_json(request.get("headers", {}), indent=4),
@@ -126,7 +126,7 @@ def add_indexes(indexes):
 
 
 def _add_index(table, column):
-    doctype = get_doctype_name(table)
+    doctype = get_doctype_id(table)
     frappe.db.add_index(doctype, [column])
     make_property_setter(
         doctype,
@@ -166,7 +166,7 @@ def _optimize(recorder_id):
             idx / len(record.sql_queries) * 100,
             title="Analyzing Queries",
             doctype=record.doctype,
-            docid=record.name,
+            docid=record.id,
             description=f"Analyzing query: {query[:140]}",
         )
         if captured_query.duration < total_duration * PERCENT_DURATION_THRESHOLD_QUERY:
@@ -189,9 +189,9 @@ def _optimize(recorder_id):
         )
         return
 
-    data = frappe.cache.hget(RECORDER_REQUEST_HASH, record.name)
+    data = frappe.cache.hget(RECORDER_REQUEST_HASH, record.id)
     data["suggested_indexes"] = [{"table": idx[0][0], "column": idx[0][1]} for idx in suggested_indexes]
-    frappe.cache.hset(RECORDER_REQUEST_HASH, record.name, data)
+    frappe.cache.hset(RECORDER_REQUEST_HASH, record.id, data)
     frappe.publish_realtime("recorder-analysis-complete", user=frappe.session.user)
     frappe.msgprint(_("Query analysis complete. Check suggested indexes."), realtime=True, alert=True)
 
@@ -203,7 +203,7 @@ def _optimize_query(query):
     # Note: Two passes are required here because we first need basic data to understand which
     # columns need to be analyzed to get accurate cardinality.
     for table in tables:
-        doctype = get_doctype_name(table)
+        doctype = get_doctype_id(table)
         stats = _fetch_table_stats(doctype, columns=[])
         if not stats:
             return
@@ -216,7 +216,7 @@ def _optimize_query(query):
         tablewise_columns[idx.table].append(idx.column)
 
     for table in tables:
-        doctype = get_doctype_name(table)
+        doctype = get_doctype_id(table)
         stats = _fetch_table_stats(doctype, columns=tablewise_columns[table])
         if not stats:
             return
@@ -294,5 +294,5 @@ def _get_column_cardinality(table, column):
     return frappe.db.sql(f"select count(distinct {column}) from {table}")[0][0]
 
 
-def get_doctype_name(table_name: str) -> str:
+def get_doctype_id(table_name: str) -> str:
     return table_name.removeprefix("tab")

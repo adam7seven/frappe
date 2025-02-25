@@ -14,7 +14,7 @@ frappe.ui.form.on("Recorder", {
 		frm.trigger("format_grid");
 		frm.add_custom_button(__("Suggest Optimizations"), () => {
 			frappe.xcall("frappe.core.doctype.recorder.recorder.optimize", {
-				recorder_id: frm.doc.name,
+				recorder_id: frm.doc.id,
 			});
 		});
 

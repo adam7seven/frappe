@@ -12,7 +12,7 @@ frappe.query_reports["Database Storage Usage By Tables"] = {
 					fields: [
 						{
 							label: "Select a DocType",
-							fieldname: "doctype_name",
+							fieldname: "doctype_id",
 							fieldtype: "Link",
 							options: "DocType",
 							get_query: function () {
@@ -28,13 +28,13 @@ frappe.query_reports["Database Storage Usage By Tables"] = {
 						frappe.call({
 							method: "frappe.core.report.database_storage_usage_by_tables.database_storage_usage_by_tables.optimize_doctype",
 							args: {
-								doctype_name: values.doctype_name,
+								doctype_id: values.doctype_id,
 							},
 							callback: function (r) {
 								if (!r.exec) {
 									frappe.show_alert(
 										__(
-											`${values.doctype_name} has been added to queue for optimization`
+											`${values.doctype_id} has been added to queue for optimization`
 										)
 									);
 								}

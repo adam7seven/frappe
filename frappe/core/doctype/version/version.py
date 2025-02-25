@@ -46,7 +46,7 @@ class Version(Document):
         if diff:
             self.set_impersonator(diff)
             self.ref_doctype = new.doctype
-            self.docid = new.name
+            self.docid = new.id
             self.data = frappe.as_json(diff, indent=None, separators=(",", ":"))
             return True
         else:
@@ -64,7 +64,7 @@ class Version(Document):
         }
         self.set_impersonator(data)
         self.ref_doctype = doc.doctype
-        self.docid = doc.name
+        self.docid = doc.id
         self.data = frappe.as_json(data, indent=None, separators=(",", ":"))
         return True
 
@@ -81,7 +81,7 @@ def get_diff(old, new, for_child=False, compare_cancelled=False):
                     "changed"    : [[fieldname1, old, new], [fieldname2, old, new]],
                     "added"      : [[table_fieldname1, {dict}], ],
                     "removed"    : [[table_fieldname1, {dict}], ],
-                    "row_changed": [[table_fieldname1, row_name1, row_index,
+                    "row_changed": [[table_fieldname1, row_id1, row_index,
                             [[child_fieldname1, old, new],
                             [child_fieldname2, old, new]], ]
                     ],
@@ -107,7 +107,7 @@ def get_diff(old, new, for_child=False, compare_cancelled=False):
 
     if not for_child:
         amended_from = new.get("amended_from")
-        old_row_name_field = "_amended_from" if (amended_from and amended_from == old.name) else "name"
+        old_row_id_field = "_amended_from" if (amended_from and amended_from == old.id) else "id"
 
     for df in new.meta.fields:
         if df.fieldtype in no_value_fields and df.fieldtype not in table_fields:
@@ -116,32 +116,32 @@ def get_diff(old, new, for_child=False, compare_cancelled=False):
         old_value, new_value = old.get(df.fieldname), new.get(df.fieldname)
 
         if not for_child and df.fieldtype in table_fields:
-            old_rows_by_name = {}
+            old_rows_by_id = {}
             for d in old_value:
-                old_rows_by_name[d.name] = d
+                old_rows_by_id[d.id] = d
 
             found_rows = set()
 
             # check rows for additions, changes
             for i, d in enumerate(new_value):
-                old_row_name = getattr(d, old_row_name_field, None)
+                old_row_id = getattr(d, old_row_id_field, None)
                 if compare_cancelled:
                     if amended_from:
                         if len(old_value) > i:
-                            old_row_name = old_value[i].name
+                            old_row_id = old_value[i].id
 
-                if old_row_name and old_row_name in old_rows_by_name:
-                    found_rows.add(old_row_name)
+                if old_row_id and old_row_id in old_rows_by_id:
+                    found_rows.add(old_row_id)
 
-                    diff = get_diff(old_rows_by_name[old_row_name], d, for_child=True)
+                    diff = get_diff(old_rows_by_id[old_row_id], d, for_child=True)
                     if diff and diff.changed:
-                        out.row_changed.append((df.fieldname, i, d.name, diff.changed))
+                        out.row_changed.append((df.fieldname, i, d.id, diff.changed))
                 else:
                     out.added.append([df.fieldname, d.as_dict()])
 
             # check for deletions
             for d in old_value:
-                if d.name not in found_rows:
+                if d.id not in found_rows:
                     out.removed.append([df.fieldname, d.as_dict()])
 
         elif old_value != new_value:
@@ -159,13 +159,13 @@ def get_diff(old, new, for_child=False, compare_cancelled=False):
 
                         # Show title field value if field is Link and show_title_field_in_link is True
                         if link_meta.show_title_field_in_link and (
-                            (title_field := link_meta.get_title_field()) != "name"
+                            (title_field := link_meta.get_title_field()) != "id"
                         ):
                             old_title_val, new_title_val = "", ""
                             result = frappe.db.get_values(
                                 field_meta.options,
-                                {"name": ("in", (old_value, new_value))},
-                                ["name", title_field],
+                                {"id": ("in", (old_value, new_value))},
+                                ["id", title_field],
                             )
                             for r in result:
                                 if r[0] == old_value:
@@ -176,9 +176,9 @@ def get_diff(old, new, for_child=False, compare_cancelled=False):
                             continue
                 out.changed.append((df.fieldname, old_value, new_value))
 
-    # name & docstatus
+    # id & docstatus
     if not for_child:
-        for key in ("name", "docstatus"):
+        for key in ("id", "docstatus"):
             old_value = getattr(old, key)
             new_value = getattr(new, key)
 

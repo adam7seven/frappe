@@ -116,7 +116,7 @@
   "modified": "2024-12-20 10:18:19.174608",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "Prepared Report",
+  "id": "Prepared Report",
   "naming_rule": "Random",
   "owner": "Administrator",
   "permissions": [

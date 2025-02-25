@@ -21,8 +21,8 @@ class DeletedDocument(Document):
 
         data: DF.Code | None
         deleted_doctype: DF.Data | None
-        deleted_name: DF.Data | None
-        new_name: DF.ReadOnly | None
+        deleted_id: DF.Data | None
+        new_id: DF.ReadOnly | None
         restored: DF.Check
     # end: auto-generated types
 
@@ -38,11 +38,11 @@ class DeletedDocument(Document):
 
 
 @frappe.whitelist()
-def restore(name, alert=True):
-    deleted = frappe.get_doc("Deleted Document", name)
+def restore(id, alert=True):
+    deleted = frappe.get_doc("Deleted Document", id)
 
     if deleted.restored:
-        frappe.throw(_("Document {0} Already Restored").format(name), exc=frappe.DocumentAlreadyRestored)
+        frappe.throw(_("Document {0} Already Restored").format(id), exc=frappe.DocumentAlreadyRestored)
 
     doc = frappe.get_doc(json.loads(deleted.data))
 
@@ -58,9 +58,9 @@ def restore(name, alert=True):
                 doc.set(workflow_state_fieldname, None)
         doc.insert()
 
-    doc.add_comment("Edit", _("restored {0} as {1}").format(deleted.deleted_name, doc.name))
+    doc.add_comment("Edit", _("restored {0} as {1}").format(deleted.deleted_id, doc.id))
 
-    deleted.new_name = doc.name
+    deleted.new_id = doc.id
     deleted.restored = 1
     deleted.db_update()
 

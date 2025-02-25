@@ -52,7 +52,7 @@ class UserPermission(Document):
                 "user": self.user,
                 "applicable_for": cstr(self.applicable_for),
                 "apply_to_all_doctypes": self.apply_to_all_doctypes,
-                "name": ["!=", self.name],
+                "id": ["!=", self.id],
             },
             limit=1,
         )
@@ -65,7 +65,7 @@ class UserPermission(Document):
         if self.is_default:
             overlap_exists = frappe.get_all(
                 self.doctype,
-                filters={"allow": self.allow, "user": self.user, "is_default": 1, "name": ["!=", self.name]},
+                filters={"allow": self.allow, "user": self.user, "is_default": 1, "id": ["!=", self.id]},
                 or_filters={
                     "applicable_for": cstr(self.applicable_for),
                     "apply_to_all_doctypes": 1,
@@ -73,7 +73,7 @@ class UserPermission(Document):
                 limit=1,
             )
         if overlap_exists:
-            ref_link = frappe.get_desk_link(self.doctype, overlap_exists[0].name)
+            ref_link = frappe.get_desk_link(self.doctype, overlap_exists[0].id)
             frappe.throw(_("{0} has already assigned default value for {1}.").format(ref_link, self.allow))
 
     def get_permission_log_options(self, event=None):
@@ -105,7 +105,7 @@ def get_user_permissions(user=None):
 
     out = {}
 
-    def add_doc_to_perm(perm, doc_name, is_default):
+    def add_doc_to_perm(perm, doc_id, is_default):
         # group rules for each type
         # for example if allow is "Customer", then build all allowed customers
         # in a list
@@ -113,7 +113,7 @@ def get_user_permissions(user=None):
             out[perm.allow] = []
 
         out[perm.allow].append(
-            frappe._dict({"doc": doc_name, "applicable_for": perm.get("applicable_for"), "is_default": is_default})
+            frappe._dict({"doc": doc_id, "applicable_for": perm.get("applicable_for"), "is_default": is_default})
         )
 
     try:
@@ -187,7 +187,7 @@ def check_applicable_doc_perm(user, doctype, docid):
     applicable = []
     doc_exists = frappe.get_all(
         "User Permission",
-        fields=["name"],
+        fields=["id"],
         filters={
             "user": user,
             "allow": doctype,

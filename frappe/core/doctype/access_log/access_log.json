@@ -17,7 +17,7 @@
     "file_type",
     "method",
     "report_information_section",
-    "report_name",
+    "report_id",
     "filters",
     "show_report",
     "raw_information_log_section",
@@ -63,7 +63,7 @@
       "read_only": 1
     },
     {
-      "fieldname": "report_name",
+      "fieldname": "report_id",
       "fieldtype": "Data",
       "label": "Report Name",
       "read_only": 1
@@ -105,7 +105,7 @@
       "read_only": 1
     },
     {
-      "depends_on": "report_name",
+      "depends_on": "report_id",
       "fieldname": "show_report",
       "fieldtype": "Button",
       "label": "Show Report"
@@ -134,7 +134,7 @@
   "modified": "2024-03-23 16:01:26.702078",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "Access Log",
+  "id": "Access Log",
   "naming_rule": "Random",
   "owner": "Administrator",
   "permissions": [

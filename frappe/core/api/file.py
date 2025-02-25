@@ -14,20 +14,20 @@ def unzip_file(name: str):
 
 
 @frappe.whitelist()
-def get_attached_images(doctype: str, names: list[str] | str) -> frappe._dict:
-    """Return list of image urls attached in form `{name: ['image.jpg', 'image.png']}`."""
+def get_attached_images(doctype: str, ids: list[str] | str) -> frappe._dict:
+    """Return list of image urls attached in form `{id: ['image.jpg', 'image.png']}`."""
 
-    if isinstance(names, str):
-        names = json.loads(names)
+    if isinstance(ids, str):
+        ids = json.loads(ids)
 
     img_urls = frappe.db.get_list(
         "File",
         filters={
             "attached_to_doctype": doctype,
-            "attached_to_name": ("in", names),
+            "attached_to_id": ("in", ids),
             "is_folder": 0,
         },
-        fields=["file_url", "attached_to_name as docid"],
+        fields=["file_url", "attached_to_id as docid"],
     )
 
     out = frappe._dict()
@@ -43,14 +43,14 @@ def get_files_in_folder(folder: str, start: int = 0, page_length: int = 20) -> d
     attachment_folder = frappe.db.get_value(
         "File",
         "Home/Attachments",
-        ["name", "file_name", "file_url", "is_folder", "modified"],
+        ["id", "file_name", "file_url", "is_folder", "modified"],
         as_dict=1,
     )
 
     files = frappe.get_list(
         "File",
         {"folder": folder},
-        ["name", "file_name", "file_url", "is_folder", "modified"],
+        ["id", "file_name", "file_url", "is_folder", "modified"],
         start=start,
         page_length=page_length + 1,
     )
@@ -69,12 +69,12 @@ def get_files_by_search_text(text: str) -> list[dict]:
     text = "%" + cstr(text).lower() + "%"
     return frappe.get_list(
         "File",
-        fields=["name", "file_name", "file_url", "is_folder", "modified"],
+        fields=["id", "file_name", "file_url", "is_folder", "modified"],
         filters={"is_folder": False},
         or_filters={
             "file_name": ("like", text),
             "file_url": text,
-            "name": ("like", text),
+            "id": ("like", text),
         },
         order_by="creation desc",
         limit=20,
@@ -108,7 +108,7 @@ def move_file(file_list: list[File | dict] | str, new_parent: str, old_parent: s
 
     # will check for permission on each file & update parent
     for file_obj in file_list:
-        setup_folder_path(file_obj.get("name"), new_parent)
+        setup_folder_path(file_obj.get("id"), new_parent)
 
     # recalculate sizes
     frappe.get_doc("File", old_parent).save()

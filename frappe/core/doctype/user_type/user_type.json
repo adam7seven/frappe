@@ -112,7 +112,7 @@
   "modified": "2024-03-23 16:04:01.336002",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "User Type",
+  "id": "User Type",
   "naming_rule": "Set by user",
   "owner": "Administrator",
   "permissions": [

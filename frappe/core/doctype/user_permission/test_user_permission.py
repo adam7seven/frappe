@@ -35,24 +35,24 @@ class TestUserPermission(IntegrationTestCase):
 
     def test_default_user_permission_validation(self):
         user = create_user("test_default_permission@example.com")
-        param = get_params(user, "User", user.name, is_default=1)
+        param = get_params(user, "User", user.id, is_default=1)
         add_user_permissions(param)
         # create a duplicate entry with default
         perm_user = create_user("test_user_perm@example.com")
-        param = get_params(user, "User", perm_user.name, is_default=1)
+        param = get_params(user, "User", perm_user.id, is_default=1)
         self.assertRaises(frappe.ValidationError, add_user_permissions, param)
 
     def test_default_user_permission_corectness(self):
         user = create_user("test_default_corectness_permission_1@example.com")
-        param = get_params(user, "User", user.name, is_default=1, hide_descendants=1)
+        param = get_params(user, "User", user.id, is_default=1, hide_descendants=1)
         add_user_permissions(param)
         # create a duplicate entry with default
         perm_user = create_user("test_default_corectness2@example.com")
         test_blog = make_test_blog()
-        param = get_params(perm_user, "Blog Post", test_blog.name, is_default=1, hide_descendants=1)
+        param = get_params(perm_user, "Blog Post", test_blog.id, is_default=1, hide_descendants=1)
         add_user_permissions(param)
-        frappe.db.delete("User Permission", filters={"for_value": test_blog.name})
-        frappe.delete_doc("Blog Post", test_blog.name)
+        frappe.db.delete("User Permission", filters={"for_value": test_blog.id})
+        frappe.delete_doc("Blog Post", test_blog.id)
 
     def test_default_user_permission(self):
         frappe.set_user("Administrator")
@@ -76,13 +76,13 @@ class TestUserPermission(IntegrationTestCase):
     def test_apply_to_all(self):
         """Create User permission for User having access to all applicable Doctypes"""
         user = create_user("test_bulk_creation_update@example.com")
-        param = get_params(user, "User", user.name)
+        param = get_params(user, "User", user.id)
         is_created = add_user_permissions(param)
         self.assertEqual(is_created, 1)
 
     def test_for_apply_to_all_on_update_from_apply_all(self):
         user = create_user("test_bulk_creation_update@example.com")
-        param = get_params(user, "User", user.name)
+        param = get_params(user, "User", user.id)
 
         # Initially create User Permission document with apply_to_all checked
         is_created = add_user_permissions(param)
@@ -96,10 +96,10 @@ class TestUserPermission(IntegrationTestCase):
     def test_for_applicable_on_update_from_apply_to_all(self):
         """Update User Permission from all to some applicable Doctypes"""
         user = create_user("test_bulk_creation_update@example.com")
-        param = get_params(user, "User", user.name, applicable=["Comment", "Contact"])
+        param = get_params(user, "User", user.id, applicable=["Comment", "Contact"])
 
         # Initially create User Permission document with apply_to_all checked
-        is_created = add_user_permissions(get_params(user, "User", user.name))
+        is_created = add_user_permissions(get_params(user, "User", user.id))
 
         self.assertEqual(is_created, 1)
 
@@ -121,10 +121,10 @@ class TestUserPermission(IntegrationTestCase):
     def test_for_apply_to_all_on_update_from_applicable(self):
         """Update User Permission from some to all applicable Doctypes"""
         user = create_user("test_bulk_creation_update@example.com")
-        param = get_params(user, "User", user.name)
+        param = get_params(user, "User", user.id)
 
         # create User permissions that with applicable
-        is_created = add_user_permissions(get_params(user, "User", user.name, applicable=["Comment", "Contact"]))
+        is_created = add_user_permissions(get_params(user, "User", user.id, applicable=["Comment", "Contact"]))
 
         self.assertEqual(is_created, 1)
 
@@ -162,32 +162,32 @@ class TestUserPermission(IntegrationTestCase):
                 "doctype": "Person",
                 "person_name": "Child",
                 "is_group": 0,
-                "parent_person": parent_record.name,
+                "parent_person": parent_record.id,
             }
         ).insert()
 
-        add_user_permissions(get_params(user, "Person", parent_record.name))
+        add_user_permissions(get_params(user, "Person", parent_record.id))
 
         # check if adding perm on a group record, makes child record visible
-        self.assertTrue(has_user_permission(frappe.get_doc("Person", parent_record.name), user.name))
-        self.assertTrue(has_user_permission(frappe.get_doc("Person", child_record.name), user.name))
+        self.assertTrue(has_user_permission(frappe.get_doc("Person", parent_record.id), user.id))
+        self.assertTrue(has_user_permission(frappe.get_doc("Person", child_record.id), user.id))
 
         #  give access of Parent DocType to Blogger role
         add_permission("Person", "Blogger")
-        frappe.set_user(user.name)
+        frappe.set_user(user.id)
         visible_names = frappe.get_list(
             doctype="Person",
             pluck="person_name",
         )
 
-        user_permission = frappe.get_doc("User Permission", {"allow": "Person", "for_value": parent_record.name})
+        user_permission = frappe.get_doc("User Permission", {"allow": "Person", "for_value": parent_record.id})
         user_permission.hide_descendants = 1
         user_permission.save(ignore_permissions=True)
 
         # check if adding perm on a group record with hide_descendants enabled,
         # hides child records
-        self.assertTrue(has_user_permission(frappe.get_doc("Person", parent_record.name), user.name))
-        self.assertFalse(has_user_permission(frappe.get_doc("Person", child_record.name), user.name))
+        self.assertTrue(has_user_permission(frappe.get_doc("Person", parent_record.id), user.id))
+        self.assertFalse(has_user_permission(frappe.get_doc("Person", child_record.id), user.id))
 
         visible_names_after_hide_descendants = frappe.get_list(
             "Person",
@@ -301,7 +301,7 @@ def create_user(email, *roles):
 def get_params(user, doctype, docid, is_default=0, hide_descendants=0, applicable=None):
     """Return param to insert"""
     param = {
-        "user": user.name,
+        "user": user.id,
         "doctype": doctype,
         "docid": docid,
         "is_default": is_default,
@@ -318,9 +318,9 @@ def get_params(user, doctype, docid, is_default=0, hide_descendants=0, applicabl
 def get_exists_param(user, applicable=None):
     """param to check existing Document"""
     param = {
-        "user": user.name,
+        "user": user.id,
         "allow": "User",
-        "for_value": user.name,
+        "for_value": user.id,
     }
     if applicable:
         param.update({"applicable_for": applicable})

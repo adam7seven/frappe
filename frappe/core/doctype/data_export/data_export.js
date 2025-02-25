@@ -14,7 +14,7 @@ frappe.ui.form.on("Data Export", {
 				filters: {
 					issingle: 0,
 					istable: 0,
-					name: ["in", frappe.boot.user.can_export],
+					id: ["in", frappe.boot.user.can_export],
 				},
 			};
 		});

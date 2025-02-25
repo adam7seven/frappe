@@ -47,7 +47,7 @@ class Comment(Document):
         ip_address: DF.Data | None
         published: DF.Check
         reference_doctype: DF.Link | None
-        reference_name: DF.DynamicLink | None
+        reference_id: DF.DynamicLink | None
         reference_owner: DF.Data | None
         seen: DF.Check
         subject: DF.Text | None
@@ -56,7 +56,7 @@ class Comment(Document):
     no_feed_on_delete = True
 
     def after_insert(self):
-        notify_mentions(self.reference_doctype, self.reference_name, self.content)
+        notify_mentions(self.reference_doctype, self.reference_id, self.content)
         self.notify_change("add")
 
     def validate(self):
@@ -90,21 +90,21 @@ class Comment(Document):
             "docinfo_update",
             {"doc": self.as_dict(), "key": key, "action": action},
             doctype=self.reference_doctype,
-            docid=self.reference_name,
+            docid=self.reference_id,
             after_commit=True,
         )
 
     def remove_comment_from_cache(self):
         _comments = get_comments_from_parent(self)
         for c in list(_comments):
-            if c.get("name") == self.name:
+            if c.get("id") == self.id:
                 _comments.remove(c)
 
-        update_comments_in_parent(self.reference_doctype, self.reference_name, _comments)
+        update_comments_in_parent(self.reference_doctype, self.reference_id, _comments)
 
 
 def on_doctype_update():
-    frappe.db.add_index("Comment", ["reference_doctype", "reference_name"])
+    frappe.db.add_index("Comment", ["reference_doctype", "reference_id"])
 
 
 def update_comment_in_doc(doc):
@@ -118,7 +118,7 @@ def update_comment_in_doc(doc):
             {
                     "comment": [String],
                     "by": [user],
-                    "name": [Comment Document name]
+                    "id": [Comment Document id]
             }"""
 
     # only comments get updates, not likes, assignments etc.
@@ -128,12 +128,12 @@ def update_comment_in_doc(doc):
     def get_truncated(content):
         return (content[:97] + "...") if len(content) > 100 else content
 
-    if doc.reference_doctype and doc.reference_name and doc.content:
+    if doc.reference_doctype and doc.reference_id and doc.content:
         _comments = get_comments_from_parent(doc)
 
         updated = False
         for c in _comments:
-            if c.get("name") == doc.name:
+            if c.get("id") == doc.id:
                 c["comment"] = get_truncated(doc.content)
                 updated = True
 
@@ -143,11 +143,11 @@ def update_comment_in_doc(doc):
                     "comment": get_truncated(doc.content),
                     # "comment_email" for Comment and "sender" for Communication
                     "by": getattr(doc, "comment_email", None) or getattr(doc, "sender", None) or doc.owner,
-                    "name": doc.name,
+                    "id": doc.id,
                 }
             )
 
-        update_comments_in_parent(doc.reference_doctype, doc.reference_name, _comments)
+        update_comments_in_parent(doc.reference_doctype, doc.reference_id, _comments)
 
 
 def get_comments_from_parent(doc):
@@ -159,7 +159,7 @@ def get_comments_from_parent(doc):
         if is_virtual_doctype(doc.reference_doctype):
             _comments = "[]"
         else:
-            _comments = frappe.db.get_value(doc.reference_doctype, doc.reference_name, "_comments") or "[]"
+            _comments = frappe.db.get_value(doc.reference_doctype, doc.reference_id, "_comments") or "[]"
 
     except Exception as e:
         if frappe.db.is_missing_table_or_column(e):
@@ -174,13 +174,13 @@ def get_comments_from_parent(doc):
         return []
 
 
-def update_comments_in_parent(reference_doctype, reference_name, _comments):
+def update_comments_in_parent(reference_doctype, reference_id, _comments):
     """Updates `_comments` property in parent Document with given dict.
 
     :param _comments: Dict of comments."""
     if (
         not reference_doctype
-        or not reference_name
+        or not reference_id
         or frappe.db.get_value("DocType", reference_doctype, "issingle")
         or is_virtual_doctype(reference_doctype)
     ):
@@ -189,8 +189,8 @@ def update_comments_in_parent(reference_doctype, reference_name, _comments):
     try:
         # use sql, so that we do not mess with the timestamp
         frappe.db.sql(
-            f"""update `tab{reference_doctype}` set `_comments`=%s where name=%s""",  # nosec
-            (json.dumps(_comments[-100:]), reference_name),
+            f"""update `tab{reference_doctype}` set `_comments`=%s where id=%s""",  # nosec
+            (json.dumps(_comments[-100:]), reference_id),
         )
 
     except Exception as e:
@@ -205,5 +205,5 @@ def update_comments_in_parent(reference_doctype, reference_name, _comments):
             return
 
         # Clear route cache
-        if route := frappe.get_cached_value(reference_doctype, reference_name, "route"):
+        if route := frappe.get_cached_value(reference_doctype, reference_id, "route"):
             clear_cache(route)

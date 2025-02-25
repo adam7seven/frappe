@@ -105,7 +105,7 @@ class DataImport(Document):
         if is_scheduler_inactive() and not run_now:
             frappe.throw(_("Scheduler is inactive. Cannot import data."), title=_("Scheduler Inactive"))
 
-        job_id = f"data_import||{self.name}"
+        job_id = f"data_import||{self.id}"
 
         if not is_job_enqueued(job_id):
             enqueue(
@@ -114,7 +114,7 @@ class DataImport(Document):
                 timeout=10000,
                 event="data_import",
                 job_id=job_id,
-                data_import=self.name,
+                data_import=self.id,
                 now=run_now,
             )
             return True
@@ -131,7 +131,7 @@ class DataImport(Document):
         return Importer(self.reference_doctype, data_import=self, use_sniffer=self.use_csv_sniffer)
 
     def on_trash(self):
-        frappe.db.delete("Data Import Log", {"data_import": self.name})
+        frappe.db.delete("Data Import Log", {"data_import": self.id})
 
 
 @frappe.whitelist()
@@ -160,7 +160,7 @@ def start_import(data_import):
     finally:
         frappe.flags.in_import = False
 
-    frappe.publish_realtime("data_import_refresh", {"data_import": data_import.name})
+    frappe.publish_realtime("data_import_refresh", {"data_import": data_import.id})
 
 
 @frappe.whitelist()
@@ -168,7 +168,7 @@ def download_template(doctype, export_fields=None, export_records=None, export_f
     """
     Download template from Exporter
             :param doctype: Document Type
-            :param export_fields=None: Fields to export as dict {'Sales Invoice': ['name', 'customer'], 'Sales Invoice Item': ['item_code']}
+            :param export_fields=None: Fields to export as dict {'Sales Invoice': ['id', 'customer'], 'Sales Invoice Item': ['item_code']}
             :param export_records=None: One of 'all', 'by_filter', 'blank_template'
             :param export_filters: Filter dict
             :param file_type: File type to export into
@@ -190,32 +190,32 @@ def download_template(doctype, export_fields=None, export_records=None, export_f
 
 
 @frappe.whitelist()
-def download_errored_template(data_import_name):
-    data_import = frappe.get_doc("Data Import", data_import_name)
+def download_errored_template(data_import_id):
+    data_import = frappe.get_doc("Data Import", data_import_id)
     data_import.export_errored_rows()
 
 
 @frappe.whitelist()
-def download_import_log(data_import_name):
-    data_import = frappe.get_doc("Data Import", data_import_name)
+def download_import_log(data_import_id):
+    data_import = frappe.get_doc("Data Import", data_import_id)
     data_import.download_import_log()
 
 
 @frappe.whitelist()
-def get_import_status(data_import_name):
+def get_import_status(data_import_id):
     import_status = {}
 
-    data_import = frappe.get_doc("Data Import", data_import_name)
+    data_import = frappe.get_doc("Data Import", data_import_id)
     import_status["status"] = data_import.status
 
     logs = frappe.get_all(
         "Data Import Log",
         fields=["count(*) as count", "success"],
-        filters={"data_import": data_import_name},
+        filters={"data_import": data_import_id},
         group_by="success",
     )
 
-    total_payload_count = frappe.db.get_value("Data Import", data_import_name, "payload_count")
+    total_payload_count = frappe.db.get_value("Data Import", data_import_id, "payload_count")
 
     for log in logs:
         if log.get("success"):
@@ -279,7 +279,7 @@ def import_doc(path, pre_process=None, sort=False):
             raise NotImplementedError("Only .json files can be imported")
 
 
-def export_json(doctype, path, filters=None, or_filters=None, name=None, order_by="creation asc"):
+def export_json(doctype, path, filters=None, or_filters=None, id=None, order_by="creation asc"):
     def post_process(out):
         # Note on Tree DocTypes:
         # The tree structure is maintained in the database via the fields "lft"
@@ -299,7 +299,7 @@ def export_json(doctype, path, filters=None, or_filters=None, name=None, order_b
                             "docstatus",
                             "doctype",
                             "modified",
-                            "name",
+                            "id",
                             "parent",
                             "parentfield",
                             "parenttype",
@@ -308,20 +308,20 @@ def export_json(doctype, path, filters=None, or_filters=None, name=None, order_b
                                 del child[key]
 
     out = []
-    if name:
-        out.append(frappe.get_doc(doctype, name).as_dict())
+    if id:
+        out.append(frappe.get_doc(doctype, id).as_dict())
     elif frappe.db.get_value("DocType", doctype, "issingle"):
         out.append(frappe.get_doc(doctype).as_dict())
     else:
         for doc in frappe.get_all(
             doctype,
-            fields=["name"],
+            fields=["id"],
             filters=filters,
             or_filters=or_filters,
             limit_page_length=0,
             order_by=order_by,
         ):
-            out.append(frappe.get_doc(doctype, doc.name).as_dict())
+            out.append(frappe.get_doc(doctype, doc.id).as_dict())
     post_process(out)
 
     dirname = os.path.dirname(path)

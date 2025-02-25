@@ -68,7 +68,7 @@ class SubmissionQueue(Document):
     def update_job_id(self, job_id):
         frappe.db.set_value(
             self.doctype,
-            self.name,
+            self.id,
             {"job_id": job_id},
             update_modified=False,
         )
@@ -95,7 +95,7 @@ class SubmissionQueue(Document):
             getattr(to_be_queued_doc, _action)()
             add_data_to_monitor(
                 doctype=to_be_queued_doc.doctype,
-                docid=to_be_queued_doc.name,
+                docid=to_be_queued_doc.id,
                 action=_action,
                 execution_time=time_diff_in_seconds(now(), self.created_at),
                 enqueued_by=self.enqueued_by,
@@ -106,13 +106,13 @@ class SubmissionQueue(Document):
             frappe.db.rollback()
 
         values["ended_at"] = now()
-        frappe.db.set_value(self.doctype, self.name, values, update_modified=False)
+        frappe.db.set_value(self.doctype, self.id, values, update_modified=False)
         self.notify(values["status"], action_for_queuing)
 
     def notify(self, submission_status: str, action: str):
         if submission_status == "Failed":
             doctype = self.doctype
-            docid = self.name
+            docid = self.id
             message = _("Action {0} failed on {1} {2}. View it {3}")
         else:
             doctype = self.ref_doctype
@@ -143,7 +143,7 @@ class SubmissionQueue(Document):
             notification_doc = {
                 "type": "Alert",
                 "document_type": doctype,
-                "document_name": docid,
+                "document_id": docid,
                 "subject": message.format(*message_replacements, "here"),
             }
 
@@ -166,13 +166,13 @@ class SubmissionQueue(Document):
 def queue_submission(doc: Document, action: str, alert: bool = True):
     queue = frappe.new_doc("Submission Queue")
     queue.ref_doctype = doc.doctype
-    queue.ref_docid = doc.name
+    queue.ref_docid = doc.id
     queue.insert(doc, action)
 
     if alert:
         frappe.msgprint(
             _("Queued for Submission. You can track the progress over {0}.").format(
-                f"<a href='/app/submission-queue/{queue.name}'><b>here</b></a>"
+                f"<a href='/app/submission-queue/{queue.id}'><b>here</b></a>"
             ),
             indicator="green",
             alert=True,
@@ -187,7 +187,7 @@ def get_latest_submissions(doctype, docid):
     latest_submission = frappe.db.get_value(
         "Submission Queue",
         filters={"ref_doctype": doctype, "ref_docid": docid},
-        fieldname=["name", "exception", "status"],
+        fieldname=["id", "exception", "status"],
     )
 
     out = None

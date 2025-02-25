@@ -24,7 +24,7 @@ frappe.ui.form.on("DocType", {
 	after_save: function (frm) {
 		if (
 			frappe.form_builder &&
-			frappe.form_builder.doctype === frm.doc.name &&
+			frappe.form_builder.doctype === frm.doc.id &&
 			frappe.form_builder.store
 		) {
 			frappe.form_builder.store.fetch();
@@ -36,7 +36,7 @@ frappe.ui.form.on("DocType", {
 			if (doc.custom && frappe.session.user != "Administrator") {
 				return {
 					query: "frappe.core.doctype.role.role.role_query",
-					filters: [["Role", "name", "!=", "All"]],
+					filters: [["Role", "id", "!=", "All"]],
 				};
 			}
 		});
@@ -52,10 +52,10 @@ frappe.ui.form.on("DocType", {
 
 		if (!frm.is_new() && !frm.doc.istable) {
 			const button_text = frm.doc.issingle
-				? __("Go to {0}", [__(frm.doc.name)])
-				: __("Go to {0} List", [__(frm.doc.name)]);
+				? __("Go to {0}", [__(frm.doc.id)])
+				: __("Go to {0} List", [__(frm.doc.id)]);
 			frm.add_custom_button(button_text, () => {
-				window.open(`/app/${frappe.router.slug(frm.doc.name)}`);
+				window.open(`/app/${frappe.router.slug(frm.doc.id)}`);
 			});
 		}
 
@@ -119,7 +119,7 @@ frappe.ui.form.on("DocType", {
 	},
 
 	setup_default_views: (frm) => {
-		frappe.model.set_default_views_for_doctype(frm.doc.name, frm);
+		frappe.model.set_default_views_for_doctype(frm.doc.id, frm);
 	},
 
 	on_tab_change: (frm) => {
@@ -152,7 +152,7 @@ frappe.ui.form.on("DocField", {
 });
 
 function render_form_builder(frm) {
-	if (frappe.form_builder && frappe.form_builder.doctype === frm.doc.name) {
+	if (frappe.form_builder && frappe.form_builder.doctype === frm.doc.id) {
 		frappe.form_builder.setup_page_actions();
 		frappe.form_builder.store.fetch();
 		return;
@@ -161,7 +161,7 @@ function render_form_builder(frm) {
 	if (frappe.form_builder) {
 		frappe.form_builder.wrapper = $(frm.fields_dict["form_builder"].wrapper);
 		frappe.form_builder.frm = frm;
-		frappe.form_builder.doctype = frm.doc.name;
+		frappe.form_builder.doctype = frm.doc.id;
 		frappe.form_builder.customize = false;
 		frappe.form_builder.init(true);
 		frappe.form_builder.store.fetch();
@@ -170,7 +170,7 @@ function render_form_builder(frm) {
 			frappe.form_builder = new frappe.ui.FormBuilder({
 				wrapper: $(frm.fields_dict["form_builder"].wrapper),
 				frm: frm,
-				doctype: frm.doc.name,
+				doctype: frm.doc.id,
 				customize: false,
 			});
 		});

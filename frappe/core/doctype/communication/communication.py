@@ -12,7 +12,7 @@ from frappe import _
 from frappe.automation.doctype.assignment_rule.assignment_rule import (
     apply as apply_assignment_rule,
 )
-from frappe.contacts.doctype.contact.contact import get_contact_name
+from frappe.contacts.doctype.contact.contact import get_contact_id
 from frappe.core.doctype.comment.comment import update_comment_in_doc
 from frappe.core.doctype.communication.email import validate_email
 from frappe.core.doctype.communication.mixins import CommunicationEmailMixin
@@ -78,7 +78,7 @@ class Communication(Document, CommunicationEmailMixin):
         read_receipt: DF.Check
         recipients: DF.Code | None
         reference_doctype: DF.Link | None
-        reference_name: DF.DynamicLink | None
+        reference_id: DF.DynamicLink | None
         reference_owner: DF.ReadOnly | None
         seen: DF.Check
         send_after: DF.Datetime | None
@@ -108,7 +108,7 @@ class Communication(Document, CommunicationEmailMixin):
             and self.uid
             and self.uid != -1
         ):
-            email_flag_queue = frappe.db.get_value("Email Flag Queue", {"communication": self.name, "is_completed": 0})
+            email_flag_queue = frappe.db.get_value("Email Flag Queue", {"communication": self.id, "is_completed": 0})
             if email_flag_queue:
                 return
 
@@ -116,7 +116,7 @@ class Communication(Document, CommunicationEmailMixin):
                 {
                     "doctype": "Email Flag Queue",
                     "action": "Read",
-                    "communication": self.name,
+                    "communication": self.id,
                     "uid": self.uid,
                     "email_account": self.email_account,
                 }
@@ -153,9 +153,9 @@ class Communication(Document, CommunicationEmailMixin):
             self.mark_email_as_spam()
 
     def validate_reference(self):
-        if self.reference_doctype and self.reference_name:
+        if self.reference_doctype and self.reference_id:
             if not self.reference_owner:
-                self.reference_owner = frappe.db.get_value(self.reference_doctype, self.reference_name, "owner")
+                self.reference_owner = frappe.db.get_value(self.reference_doctype, self.reference_id, "owner")
 
             # prevent communication against a child table
             if frappe.get_meta(self.reference_doctype).istable:
@@ -170,7 +170,7 @@ class Communication(Document, CommunicationEmailMixin):
                 circular_linking = False
                 doc = get_parent_doc(self)
                 while doc.reference_doctype == "Communication":
-                    if get_parent_doc(doc).name == self.name:
+                    if get_parent_doc(doc).id == self.id:
                         circular_linking = True
                         break
                     doc = get_parent_doc(doc)
@@ -182,11 +182,11 @@ class Communication(Document, CommunicationEmailMixin):
                     )
 
     def after_insert(self):
-        if not (self.reference_doctype and self.reference_name):
+        if not (self.reference_doctype and self.reference_id):
             return
 
         if self.reference_doctype == "Communication" and self.sent_or_received == "Sent":
-            frappe.db.set_value("Communication", self.reference_name, "status", "Replied")
+            frappe.db.set_value("Communication", self.reference_id, "status", "Replied")
 
         self.notify_change("add")
 
@@ -278,9 +278,9 @@ class Communication(Document, CommunicationEmailMixin):
     def get_attachments(self):
         return frappe.get_all(
             "File",
-            fields=["name", "file_name", "file_url", "is_private"],
+            fields=["id", "file_name", "file_url", "is_private"],
             filters={
-                "attached_to_name": self.name,
+                "attached_to_id": self.id,
                 "attached_to_doctype": self.DOCTYPE,
             },
         )
@@ -290,12 +290,12 @@ class Communication(Document, CommunicationEmailMixin):
             "docinfo_update",
             {"doc": self.as_dict(), "key": "communications", "action": action},
             doctype=self.reference_doctype,
-            docid=self.reference_name,
+            docid=self.reference_id,
             after_commit=True,
         )
 
     def set_status(self):
-        if self.reference_doctype and self.reference_name:
+        if self.reference_doctype and self.reference_id:
             self.status = "Linked"
         else:
             self.status = "Open"
@@ -313,9 +313,9 @@ class Communication(Document, CommunicationEmailMixin):
             self.email_status = "Spam"
 
     @classmethod
-    def find(cls, name, ignore_error=False):
+    def find(cls, id, ignore_error=False):
         try:
-            return frappe.get_doc(cls.DOCTYPE, name)
+            return frappe.get_doc(cls.DOCTYPE, id)
         except frappe.DoesNotExistError:
             if ignore_error:
                 return
@@ -323,11 +323,11 @@ class Communication(Document, CommunicationEmailMixin):
 
     @classmethod
     def find_one_by_filters(cls, *, order_by=None, **kwargs):
-        name = frappe.db.get_value(cls.DOCTYPE, kwargs, order_by=order_by)
-        return cls.find(name) if name else None
+        id = frappe.db.get_value(cls.DOCTYPE, kwargs, order_by=order_by)
+        return cls.find(id) if id else None
 
     def update_db(self, **kwargs):
-        frappe.db.set_value(self.DOCTYPE, self.name, kwargs)
+        frappe.db.set_value(self.DOCTYPE, self.id, kwargs)
 
     def set_sender_full_name(self):
         if not self.sender_full_name and self.sender:
@@ -362,7 +362,7 @@ class Communication(Document, CommunicationEmailMixin):
     def set_delivery_status(self, commit=False):
         """Look into the status of Email Queue linked to this Communication and set the Delivery Status of this Communication"""
         delivery_status = None
-        status_counts = Counter(frappe.get_all("Email Queue", pluck="status", filters={"communication": self.name}))
+        status_counts = Counter(frappe.get_all("Email Queue", pluck="status", filters={"communication": self.id}))
         if self.sent_or_received == "Received":
             return
 
@@ -400,7 +400,7 @@ class Communication(Document, CommunicationEmailMixin):
 
             if not self.reference_doctype:
                 self.reference_doctype = doctype
-                self.reference_name = docid
+                self.reference_id = docid
 
     # Timeline Links
     def set_timeline_links(self):
@@ -412,23 +412,23 @@ class Communication(Document, CommunicationEmailMixin):
             [self.sender, self.recipients, self.cc, self.bcc], auto_create_contact=create_contact_enabled
         )
 
-        for contact_name in contacts:
-            self.add_link("Contact", contact_name)
+        for contact_id in contacts:
+            self.add_link("Contact", contact_id)
 
             # link contact's dynamic links to communication
-            add_contact_links_to_communication(self, contact_name)
+            add_contact_links_to_communication(self, contact_id)
 
     def deduplicate_timeline_links(self):
         if not self.timeline_links:
             return
 
-        unique_links = {(link.link_doctype, link.link_name) for link in self.timeline_links}
+        unique_links = {(link.link_doctype, link.link_id) for link in self.timeline_links}
         self.timeline_links = []
-        for doctype, name in unique_links:
-            self.add_link(doctype, name)
+        for doctype, id in unique_links:
+            self.add_link(doctype, id)
 
-    def add_link(self, link_doctype, link_name, autosave=False):
-        self.append("timeline_links", {"link_doctype": link_doctype, "link_name": link_name})
+    def add_link(self, link_doctype, link_id, autosave=False):
+        self.append("timeline_links", {"link_doctype": link_doctype, "link_id": link_id})
 
         if autosave:
             self.save(ignore_permissions=True)
@@ -436,9 +436,9 @@ class Communication(Document, CommunicationEmailMixin):
     def get_links(self):
         return self.timeline_links
 
-    def remove_link(self, link_doctype, link_name, autosave=False, ignore_permissions=True):
+    def remove_link(self, link_doctype, link_id, autosave=False, ignore_permissions=True):
         for l in list(self.timeline_links):
-            if l.link_doctype == link_doctype and l.link_name == link_name:
+            if l.link_doctype == link_doctype and l.link_id == link_id:
                 self.timeline_links.remove(l)
 
         if autosave:
@@ -447,19 +447,19 @@ class Communication(Document, CommunicationEmailMixin):
 
 def on_doctype_update():
     """Add indexes in `tabCommunication`"""
-    frappe.db.add_index("Communication", ["reference_doctype", "reference_name"])
+    frappe.db.add_index("Communication", ["reference_doctype", "reference_id"])
     frappe.db.add_index("Communication", ["status", "communication_type"])
     frappe.db.add_index("Communication", ["message_id(140)"])
 
 
 def has_permission(doc, ptype, user=None, debug=False):
     if ptype == "read":
-        if doc.reference_doctype == "Communication" and doc.reference_name == doc.name:
+        if doc.reference_doctype == "Communication" and doc.reference_id == doc.id:
             return True
 
-        if doc.reference_doctype and doc.reference_name:
+        if doc.reference_doctype and doc.reference_id:
             return frappe.has_permission(
-                doc.reference_doctype, ptype="read", doc=doc.reference_name, user=user, debug=debug
+                doc.reference_doctype, ptype="read", doc=doc.reference_id, user=user, debug=debug
             )
 
     return True
@@ -492,24 +492,24 @@ def get_contacts(email_strings: list[str], auto_create_contact=False) -> list[st
     contacts = []
     for email in email_addrs:
         email = get_email_without_link(email)
-        contact_name = get_contact_name(email)
+        contact_id = get_contact_id(email)
 
-        if not contact_name and email and auto_create_contact:
+        if not contact_id and email and auto_create_contact:
             email_parts = email.split("@")
             first_name = frappe.unscrub(email_parts[0])
 
             try:
-                contact_name = f"{first_name}-{email_parts[1]}" if first_name == "Contact" else first_name
-                contact = frappe.get_doc({"doctype": "Contact", "first_name": contact_name, "name": contact_name})
+                contact_id = f"{first_name}-{email_parts[1]}" if first_name == "Contact" else first_name
+                contact = frappe.get_doc({"doctype": "Contact", "first_name": contact_id, "id": contact_id})
                 contact.add_email(email_id=email, is_primary=True)
                 contact.insert(ignore_permissions=True)
-                contact_name = contact.name
+                contact_id = contact.id
             except Exception:
-                contact_name = None
+                contact_id = None
                 contact.log_error("Unable to add contact")
 
-        if contact_name:
-            contacts.append(contact_name)
+        if contact_id:
+            contacts.append(contact_id)
 
     return contacts
 
@@ -524,16 +524,16 @@ def get_emails(email_strings: list[str]) -> list[str]:
     return email_addrs
 
 
-def add_contact_links_to_communication(communication, contact_name):
+def add_contact_links_to_communication(communication, contact_id):
     contact_links = frappe.get_all(
         "Dynamic Link",
-        filters={"parenttype": "Contact", "parent": contact_name},
-        fields=["link_doctype", "link_name"],
+        filters={"parenttype": "Contact", "parent": contact_id},
+        fields=["link_doctype", "link_id"],
     )
 
     if contact_links:
         for contact_link in contact_links:
-            communication.add_link(contact_link.link_doctype, contact_link.link_name)
+            communication.add_link(contact_link.link_doctype, contact_link.link_id)
 
 
 def parse_email(email_strings):
@@ -644,8 +644,8 @@ def set_avg_response_time(parent, communication):
         # avg response time for all the responses
         communications = frappe.get_list(
             "Communication",
-            filters={"reference_doctype": parent.doctype, "reference_name": parent.name},
-            fields=["sent_or_received", "name", "creation"],
+            filters={"reference_doctype": parent.doctype, "reference_id": parent.id},
+            fields=["sent_or_received", "id", "creation"],
             order_by="creation",
         )
 

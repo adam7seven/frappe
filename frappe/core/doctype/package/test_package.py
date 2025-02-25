@@ -53,14 +53,14 @@ class TestPackage(IntegrationTestCase):
         ) as f:
             doctype = json.loads(f.read())
             self.assertEqual(doctype["doctype"], "DocType")
-            self.assertEqual(doctype["name"], "Test DocType for Package")
+            self.assertEqual(doctype["id"], "Test DocType for Package")
             self.assertEqual(doctype["fields"][0]["fieldname"], "test_field")
 
 
 def make_test_package():
     if not frappe.db.exists("Package", "Test Package"):
         frappe.get_doc(
-            doctype="Package", name="Test Package", package_name="test-package", readme="# Test Package"
+            doctype="Package", id="Test Package", package_name="test-package", readme="# Test Package"
         ).insert()
 
 
@@ -79,7 +79,7 @@ def make_test_doctype():
     if not frappe.db.exists("DocType", "Test DocType for Package"):
         frappe.get_doc(
             doctype="DocType",
-            name="Test DocType for Package",
+            id="Test DocType for Package",
             custom=1,
             module="Test Module for Package",
             autoid="Prompt",
@@ -91,7 +91,7 @@ def make_test_server_script():
     if not frappe.db.exists("Server Script", "Test Script for Package"):
         frappe.get_doc(
             doctype="Server Script",
-            name="Test Script for Package",
+            id="Test Script for Package",
             module="Test Module for Package",
             script_type="DocType Event",
             reference_doctype="Test DocType for Package",

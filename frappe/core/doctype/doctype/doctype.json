@@ -68,13 +68,13 @@
     "icon",
     "color",
     "show_preview_popup",
-    "show_name_in_global_search",
+    "show_id_in_global_search",
     "email_settings_sb",
     "default_email_template",
     "column_break_51",
     "email_append_to",
     "sender_field",
-    "sender_name_field",
+    "sender_id_field",
     "subject_field",
     "fields_tab",
     "fields_section",
@@ -280,7 +280,7 @@
       "default": "1",
       "fieldname": "allow_reid",
       "fieldtype": "Check",
-      "label": "Allow Rename",
+      "label": "Allow Reid",
       "oldfieldname": "allow_reid",
       "oldfieldtype": "Check"
     },
@@ -374,9 +374,9 @@
     },
     {
       "default": "0",
-      "fieldname": "show_name_in_global_search",
+      "fieldname": "show_id_in_global_search",
       "fieldtype": "Check",
-      "label": "Make \"name\" searchable in Global Search"
+      "label": "Make \"id\" searchable in Global Search"
     },
     {
       "fieldname": "permissions",
@@ -656,7 +656,7 @@
     },
     {
       "depends_on": "email_append_to",
-      "fieldname": "sender_name_field",
+      "fieldname": "sender_id_field",
       "fieldtype": "Data",
       "label": "Sender Name Field"
     },
@@ -774,7 +774,7 @@
   "modified": "2025-02-20 19:05:52.119679",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "DocType",
+  "id": "DocType",
   "naming_rule": "Set by user",
   "owner": "Administrator",
   "permissions": [
@@ -802,7 +802,7 @@
   ],
   "route": "doctype",
   "search_fields": "module",
-  "show_name_in_global_search": 1,
+  "show_id_in_global_search": 1,
   "sort_field": "creation",
   "sort_order": "DESC",
   "states": [],

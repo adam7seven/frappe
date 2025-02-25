@@ -41,19 +41,19 @@ class TestDocType(IntegrationTestCase):
     def tearDown(self):
         frappe.db.rollback()
 
-    def test_validate_name(self):
+    def test_validate_id(self):
         self.assertRaises(frappe.NameError, new_doctype("_Some DocType").insert)
         self.assertRaises(frappe.NameError, new_doctype("8Some DocType").insert)
         self.assertRaises(frappe.NameError, new_doctype("Some (DocType)").insert)
         self.assertRaises(
             frappe.NameError,
-            new_doctype("Some Doctype with a name whose length is more than 61 characters").insert,
+            new_doctype("Some Doctype with a id whose length is more than 61 characters").insert,
         )
-        for name in ("Some DocType", "Some_DocType", "Some-DocType"):
-            if frappe.db.exists("DocType", name):
-                frappe.delete_doc("DocType", name)
+        for id in ("Some DocType", "Some_DocType", "Some-DocType"):
+            if frappe.db.exists("DocType", id):
+                frappe.delete_doc("DocType", id)
 
-            doc = new_doctype(name).insert()
+            doc = new_doctype(id).insert()
             doc.delete()
 
     def test_making_sequence_on_change(self):
@@ -65,11 +65,11 @@ class TestDocType(IntegrationTestCase):
         dt.autoid = "autoincrement"
         dt.save()
 
-        # check if name type has been changed
+        # check if id type has been changed
         self.assertEqual(
             frappe.db.sql(
                 f"""select data_type FROM information_schema.columns
-				where column_name = 'name' and table_name = 'tab{self._testMethodName}'"""
+				where column_name = 'id' and table_name = 'tab{self._testMethodName}'"""
             )[0][0],
             "bigint",
         )
@@ -93,11 +93,11 @@ class TestDocType(IntegrationTestCase):
         dt.autoid = autoid
         dt.save()
 
-        # check if name type has changed
+        # check if id type has changed
         self.assertEqual(
             frappe.db.sql(
                 f"""select data_type FROM information_schema.columns
-				where column_name = 'name' and table_name = 'tab{self._testMethodName}'"""
+				where column_name = 'id' and table_name = 'tab{self._testMethodName}'"""
             )[0][0],
             "varchar" if frappe.db.db_type == "mariadb" else "character varying",
         )
@@ -112,9 +112,9 @@ class TestDocType(IntegrationTestCase):
         doc1 = frappe.new_doc("With_Unique")
         doc2 = frappe.new_doc("With_Unique")
         doc1.some_fieldname = "Something"
-        doc1.name = "one"
+        doc1.id = "one"
         doc2.some_fieldname = "Something"
-        doc2.name = "two"
+        doc2.id = "two"
 
         doc1.insert()
         self.assertRaises(frappe.UniqueValidationError, doc2.insert)
@@ -131,7 +131,7 @@ class TestDocType(IntegrationTestCase):
         doc = new_doctype("Test Search Fields")
         doc.search_fields = "some_fieldname"
         doc.insert()
-        self.assertEqual(doc.name, "Test Search Fields")
+        self.assertEqual(doc.id, "Test Search Fields")
 
         # check if invalid fieldname is allowed or not
         doc.search_fields = "some_fieldname_1"
@@ -206,12 +206,12 @@ class TestDocType(IntegrationTestCase):
                     {"label": "Field 4", "fieldname": "field_4", "fieldtype": "Data"},
                 ],
                 "permissions": [{"role": "System Manager", "read": 1}],
-                "name": "Test Field Order DocType",
+                "id": "Test Field Order DocType",
                 "__islocal": 1,
             }
         )
 
-        path = get_file_path(test_doctype.module, test_doctype.doctype, test_doctype.name)
+        path = get_file_path(test_doctype.module, test_doctype.doctype, test_doctype.id)
         initial_fields_order = ["field_1", "field_2", "field_3", "field_4"]
 
         frappe.delete_doc_if_exists("DocType", "Test Field Order DocType")
@@ -242,7 +242,7 @@ class TestDocType(IntegrationTestCase):
             self.assertFalse(test_doctype_json.get("field_order"))
 
             # make sure that migrate/sync is backwards compatible without field_order
-            frappe.reload_doctype(test_doctype.name, force=True)
+            frappe.reload_doctype(test_doctype.id, force=True)
             test_doctype.reload()
 
             # assert that field_order list is being created with the default order again
@@ -276,7 +276,7 @@ class TestDocType(IntegrationTestCase):
                 txtfile.write(frappe.as_json(test_doctype_json))
 
             # assert that reordering `field_order` from json file is reflected in DocType upon migrate/sync
-            frappe.reload_doctype(test_doctype.name, force=True)
+            frappe.reload_doctype(test_doctype.id, force=True)
             test_doctype.reload()
             self.assertListEqual(
                 [f.fieldname for f in test_doctype.fields], ["field_3", "field_4", "field_1", "field_2"]
@@ -314,14 +314,14 @@ class TestDocType(IntegrationTestCase):
 
         self.assertRaises(UniqueFieldnameError, doc.insert)
 
-    def test_fieldname_is_not_name(self):
+    def test_fieldname_is_not_id(self):
         doc = new_doctype("Test Name Field")
         field_1 = doc.append("fields", {})
         field_1.label = "Name"
         field_1.fieldtype = "Data"
         doc.insert()
-        self.assertEqual(doc.fields[1].fieldname, "name1")
-        doc.fields[1].fieldname = "name"
+        self.assertEqual(doc.fields[1].fieldname, "id1")
+        doc.fields[1].fieldname = "id"
         self.assertRaises(InvalidFieldNameError, doc.save)
 
     def test_illegal_mandatory_validation(self):
@@ -398,12 +398,12 @@ class TestDocType(IntegrationTestCase):
 
         data_doc = frappe.new_doc("Test Doctype")
         data_doc.some_fieldname = "Data1"
-        data_doc.test_linked_doctype = data_link_doc.name
+        data_doc.test_linked_doctype = data_link_doc.id
         data_doc.insert()
         data_doc.save()
         data_doc.submit()
 
-        docs = get_submitted_linked_docs(link_doc.name, data_link_doc.name)
+        docs = get_submitted_linked_docs(link_doc.id, data_link_doc.id)
         dump_docs = json.dumps(docs.get("docs"))
         cancel_all_linked_docs(dump_docs)
         data_link_doc.cancel()
@@ -472,19 +472,19 @@ class TestDocType(IntegrationTestCase):
 
         data_doc_2 = frappe.new_doc("Test Doctype 1")
         data_doc_2.some_fieldname = "Data1"
-        data_doc_2.test_linked_doctype_a = data_link_doc_1.name
+        data_doc_2.test_linked_doctype_a = data_link_doc_1.id
         data_doc_2.insert()
         data_doc_2.save()
         data_doc_2.submit()
 
         data_doc = frappe.new_doc("Test Doctype 2")
         data_doc.some_fieldname = "Data1"
-        data_doc.test_linked_doctype_a = data_link_doc_1.name
+        data_doc.test_linked_doctype_a = data_link_doc_1.id
         data_doc.insert()
         data_doc.save()
         data_doc.submit()
 
-        docs = get_submitted_linked_docs(link_doc.name, data_link_doc_1.name)
+        docs = get_submitted_linked_docs(link_doc.id, data_link_doc_1.id)
         dump_docs = json.dumps(docs.get("docs"))
 
         cancel_all_linked_docs(dump_docs, ignore_doctypes_on_cancel_all=["Test Doctype 2"])
@@ -588,7 +588,7 @@ class TestDocType(IntegrationTestCase):
 
         dt.save(ignore_permissions=True)
 
-        dt_data = frappe.get_doc({"doctype": dt.name, "some_fieldname": "test data"}).insert(ignore_permissions=True)
+        dt_data = frappe.get_doc({"doctype": dt.id, "some_fieldname": "test data"}).insert(ignore_permissions=True)
 
         dt.autoid = "autoincrement"
 
@@ -629,7 +629,7 @@ class TestDocType(IntegrationTestCase):
         doc.insert()
         doc.save()
 
-        test_json = frappe.get_doc("Test Json Doctype", doc.name)
+        test_json = frappe.get_doc("Test Json Doctype", doc.id)
 
         if isinstance(test_json.test_json_field, str):
             test_json.test_json_field = json.loads(test_json.test_json_field)
@@ -682,8 +682,8 @@ class TestDocType(IntegrationTestCase):
     @patch.dict(frappe.conf, {"developer_mode": 1})
     def test_custom_field_deletion(self):
         """Custom child tables whose doctype doesn't exist should be auto deleted."""
-        doctype = new_doctype(custom=0).insert().name
-        child = new_doctype(custom=0, istable=1).insert().name
+        doctype = new_doctype(custom=0).insert().id
+        child = new_doctype(custom=0, istable=1).insert().id
 
         field = "abc"
         create_custom_fields({doctype: [{"fieldname": field, "fieldtype": "Table", "options": child}]})
@@ -698,7 +698,7 @@ class TestDocType(IntegrationTestCase):
 
         custom_field = "customfield"
 
-        doctype = new_doctype(custom=0).insert().name
+        doctype = new_doctype(custom=0).insert().id
 
         # Create property setter and custom field
         field = "some_fieldname"
@@ -723,7 +723,7 @@ class TestDocType(IntegrationTestCase):
             self.assertEqual(original_doc.get(f), restored_doc.get(f))
 
         # Check form load of restored doctype
-        getdoc(doctype, restored_doc.name)
+        getdoc(doctype, restored_doc.id)
 
         # ensure meta - property setter
         self.assertEqual(frappe.get_meta(doctype).get_field(field).default, "DELETETHIS")
@@ -735,12 +735,12 @@ class TestDocType(IntegrationTestCase):
         doctype = new_doctype(custom=0).insert()
         frappe.db.commit()
 
-        delete_controllers(doctype.name, doctype.module)
+        delete_controllers(doctype.id, doctype.module)
         job = frappe.enqueue(remove_orphan_doctypes)
         wait_for_completion(job)
 
         frappe.db.rollback()
-        self.assertFalse(frappe.db.exists("DocType", doctype.name))
+        self.assertFalse(frappe.db.exists("DocType", doctype.id))
 
     def test_not_in_list_view_for_not_allowed_mandatory_field(self):
         doctype = new_doctype(
@@ -762,7 +762,7 @@ class TestDocType(IntegrationTestCase):
 
         self.assertFalse(doctype.fields[0].in_list_view)
         self.assertTrue(doctype.fields[1].in_list_view)
-        frappe.delete_doc("DocType", doctype.name)
+        frappe.delete_doc("DocType", doctype.id)
 
     def test_no_recursive_fetch(self):
         recursive_dt = new_doctype(
@@ -782,17 +782,17 @@ class TestDocType(IntegrationTestCase):
             fields=[{"fieldname": "some_fieldname", "fieldtype": "Data", "set_only_once": 1}],
             is_submittable=1,
         ).insert()
-        doc = frappe.new_doc(doctype.name, some_fieldname="something").insert()
+        doc = frappe.new_doc(doctype.id, some_fieldname="something").insert()
         doc.save()
         doc.submit()
-        frappe.get_meta(doctype.name).as_dict()
+        frappe.get_meta(doctype.id).as_dict()
 
     def test_row_compression(self):
         if frappe.db.db_type != "mariadb":
             return
 
-        compressed_dt = new_doctype(row_format="Compressed").insert().name
-        dynamic_dt = new_doctype().insert().name
+        compressed_dt = new_doctype(row_format="Compressed").insert().id
+        dynamic_dt = new_doctype().insert().id
 
         information_schema = frappe.qb.Schema("information_schema")
 
@@ -813,7 +813,7 @@ class TestDocType(IntegrationTestCase):
 
 
 def new_doctype(
-    name: str | None = None,
+    id: str | None = None,
     unique: bool = False,
     depends_on: str = "",
     fields: list[dict] | None = None,
@@ -821,9 +821,9 @@ def new_doctype(
     default: str | None = None,
     **kwargs,
 ) -> "DocType":
-    if not name:
+    if not id:
         # Test prefix is required to avoid coverage
-        name = "Test " + "".join(random.sample(string.ascii_lowercase, 10))
+        id = "Test " + "".join(random.sample(string.ascii_lowercase, 10))
 
     doc = frappe.get_doc(
         {
@@ -846,7 +846,7 @@ def new_doctype(
                     "read": 1,
                 }
             ],
-            "name": name,
+            "id": id,
             **kwargs,
         }
     )

@@ -46,7 +46,7 @@ frappe.ui.form.on("Domain Settings", {
 		let map = {},
 			list = [];
 		(frm.doc.active_domains || []).map((row) => {
-			map[row.domain] = row.name;
+			map[row.domain] = row.id;
 			list.push(row.domain);
 		});
 

@@ -198,7 +198,7 @@
   "modified": "2025-01-14 17:36:22.389195",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "Data Import",
+  "id": "Data Import",
   "naming_rule": "Expression",
   "owner": "Administrator",
   "permissions": [

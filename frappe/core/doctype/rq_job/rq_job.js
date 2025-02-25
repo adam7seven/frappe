@@ -18,7 +18,7 @@ frappe.ui.form.on("RQ Job", {
 					() => {
 						frappe
 							.xcall("frappe.core.doctype.rq_job.rq_job.stop_job", {
-								job_id: frm.doc.name,
+								job_id: frm.doc.id,
 							})
 							.then((r) => {
 								frappe.show_alert(__("Job Stopped Successfully"));

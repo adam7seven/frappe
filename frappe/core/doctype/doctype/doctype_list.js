@@ -5,7 +5,7 @@ frappe.listview_settings["DocType"] = {
 
 	new_doctype_dialog(args) {
 		const {
-			doctype_name = "",
+			doctype_id = "",
 			doctype_module = "",
 			is_submittable = 0,
 			is_child = 0,
@@ -20,10 +20,10 @@ frappe.listview_settings["DocType"] = {
 		let fields = [
 			{
 				label: __("Name"),
-				fieldname: "name",
+				fieldname: "id",
 				fieldtype: "Data",
 				reqd: 1,
-				default: doctype_name,
+				default: doctype_id,
 			},
 			{ fieldtype: "Column Break" },
 			{
@@ -124,7 +124,7 @@ frappe.listview_settings["DocType"] = {
 						fields: [{ fieldtype: "Section Break" }],
 					})
 					.then((doc) => {
-						frappe.set_route("Form", "DocType", doc.name);
+						frappe.set_route("Form", "DocType", doc.id);
 					});
 			},
 			secondary_action_label: __("Cancel"),

@@ -5,7 +5,7 @@ from frappe.core.doctype.data_import.exporter import Exporter
 from frappe.core.doctype.data_import.test_importer import create_doctype_if_not_exists
 from frappe.tests import IntegrationTestCase, UnitTestCase
 
-doctype_name = "DocType for Export"
+doctype_id = "DocType for Export"
 
 
 class UnitTestDataImport(UnitTestCase):
@@ -19,12 +19,12 @@ class UnitTestDataImport(UnitTestCase):
 
 class TestExporter(IntegrationTestCase):
 	def setUp(self):
-		create_doctype_if_not_exists(doctype_name)
+		create_doctype_if_not_exists(doctype_id)
 
 	def test_exports_specified_fields(self):
-		if not frappe.db.exists(doctype_name, "Test"):
+		if not frappe.db.exists(doctype_id, "Test"):
 			doc = frappe.get_doc(
-				doctype=doctype_name,
+				doctype=doctype_id,
 				title="Test",
 				description="Test Description",
 				table_field_1=[
@@ -42,13 +42,13 @@ class TestExporter(IntegrationTestCase):
 				],
 			).insert()
 		else:
-			doc = frappe.get_doc(doctype_name, "Test")
+			doc = frappe.get_doc(doctype_id, "Test")
 
 		e = Exporter(
-			doctype_name,
+			doctype_id,
 			export_fields={
-				doctype_name: ["title", "description", "number", "another_number"],
-				"table_field_1": ["name", "child_title", "child_description"],
+				doctype_id: ["title", "description", "number", "another_number"],
+				"table_field_1": ["id", "child_title", "child_description"],
 				"table_field_2": ["child_2_date", "child_2_number"],
 				"table_field_1_again": [
 					"child_title",
@@ -81,29 +81,29 @@ class TestExporter(IntegrationTestCase):
 			],
 		)
 
-		table_field_1_row_1_name = doc.table_field_1[0].name
-		table_field_1_row_2_name = doc.table_field_1[1].name
+		table_field_1_row_1_id = doc.table_field_1[0].id
+		table_field_1_row_2_id = doc.table_field_1[1].id
 		# fmt: off
 		self.assertEqual(
 			csv_array[1],
-			["Test", "Test Description", 0, 0, table_field_1_row_1_name, "Child Title 1", "Child Description 1", None, 0, "Child Title 1 Again", None, 0, 0]
+			["Test", "Test Description", 0, 0, table_field_1_row_1_id, "Child Title 1", "Child Description 1", None, 0, "Child Title 1 Again", None, 0, 0]
 		)
 		self.assertEqual(
 			csv_array[2],
-			["", "", "", "", table_field_1_row_2_name, "Child Title 2", "Child Description 2", "", "", "", "", "", ""],
+			["", "", "", "", table_field_1_row_2_id, "Child Title 2", "Child Description 2", "", "", "", "", "", ""],
 		)
 		# fmt: on
 		self.assertEqual(len(csv_array), 3)
 
 	def test_export_csv_response(self):
 		e = Exporter(
-			doctype_name,
-			export_fields={doctype_name: ["title", "description"]},
+			doctype_id,
+			export_fields={doctype_id: ["title", "description"]},
 			export_data=True,
 			file_type="CSV",
 		)
 		e.build_response()
 
 		self.assertTrue(frappe.response["result"])
-		self.assertEqual(frappe.response["doctype"], doctype_name)
+		self.assertEqual(frappe.response["doctype"], doctype_id)
 		self.assertEqual(frappe.response["type"], "csv")

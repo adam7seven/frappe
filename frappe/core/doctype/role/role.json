@@ -77,7 +77,7 @@
   "modified": "2024-09-19 17:07:08.672124",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "Role",
+  "id": "Role",
   "naming_rule": "By fieldname",
   "owner": "Administrator",
   "permissions": [

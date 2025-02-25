@@ -25,7 +25,7 @@
     "user_image",
     "roles_permissions_tab",
     "sb1",
-    "role_profile_name",
+    "role_profile_id",
     "role_profiles",
     "roles_html",
     "roles",
@@ -229,7 +229,7 @@
       "read_only": 1
     },
     {
-      "fieldname": "role_profile_name",
+      "fieldname": "role_profile_id",
       "fieldtype": "Link",
       "hidden": 1,
       "label": "Role Profile",
@@ -891,7 +891,7 @@
   "modified": "2024-12-31 19:35:17.052698",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "User",
+  "id": "User",
   "owner": "Administrator",
   "permissions": [
     {
@@ -921,7 +921,7 @@
   "quick_entry": 1,
   "route": "user",
   "search_fields": "full_name",
-  "show_name_in_global_search": 1,
+  "show_id_in_global_search": 1,
   "sort_field": "creation",
   "sort_order": "DESC",
   "states": [],

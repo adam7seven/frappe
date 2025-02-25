@@ -27,7 +27,7 @@
   "modified": "2024-05-14 17:43:57.231051",
   "modified_by": "Administrator",
   "module": "Core",
-  "name": "Recorder Suggested Index",
+  "id": "Recorder Suggested Index",
   "owner": "Administrator",
   "permissions": [],
   "sort_field": "creation",

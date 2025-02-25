@@ -35,7 +35,7 @@ def make_test_doc(ignore_permissions=False):
     d.description = "Test"
     d.assigned_by = frappe.session.user
     d.save(ignore_permissions)
-    return d.doctype, d.name
+    return d.doctype, d.id
 
 
 @contextmanager
@@ -53,7 +53,7 @@ def make_test_image_file(private=False):
         }
     ).insert()
     # remove those flags
-    _test_file: File = frappe.get_doc("File", test_file.name)
+    _test_file: File = frappe.get_doc("File", test_file.id)
 
     try:
         yield _test_file
@@ -79,7 +79,7 @@ class TestSimpleFile(IntegrationTestCase):
                 "doctype": "File",
                 "file_name": "test1.txt",
                 "attached_to_doctype": self.attached_to_doctype,
-                "attached_to_name": self.attached_to_docid,
+                "attached_to_id": self.attached_to_docid,
                 "content": self.test_content,
             }
         )
@@ -124,7 +124,7 @@ class TestBase64File(IntegrationTestCase):
                 "doctype": "File",
                 "file_name": "test_base64.txt",
                 "attached_to_doctype": self.attached_to_doctype,
-                "attached_to_name": self.attached_to_docid,
+                "attached_to_id": self.attached_to_docid,
                 "content": self.test_content,
                 "decode": True,
             }
@@ -148,7 +148,7 @@ class TestSameFileName(IntegrationTestCase):
                 "doctype": "File",
                 "file_name": "testing.txt",
                 "attached_to_doctype": self.attached_to_doctype,
-                "attached_to_name": self.attached_to_docid,
+                "attached_to_id": self.attached_to_docid,
                 "content": self.test_content1,
             }
         )
@@ -158,7 +158,7 @@ class TestSameFileName(IntegrationTestCase):
                 "doctype": "File",
                 "file_name": "testing.txt",
                 "attached_to_doctype": self.attached_to_doctype,
-                "attached_to_name": self.attached_to_docid,
+                "attached_to_id": self.attached_to_docid,
                 "content": self.test_content2,
             }
         )
@@ -211,7 +211,7 @@ class TestSameContent(IntegrationTestCase):
                 "doctype": "File",
                 "file_name": self.orig_filename,
                 "attached_to_doctype": self.attached_to_doctype1,
-                "attached_to_name": self.attached_to_docid1,
+                "attached_to_id": self.attached_to_docid1,
                 "content": self.test_content1,
             }
         )
@@ -222,7 +222,7 @@ class TestSameContent(IntegrationTestCase):
                 "doctype": "File",
                 "file_name": self.dup_filename,
                 "attached_to_doctype": self.attached_to_doctype2,
-                "attached_to_name": self.attached_to_docid2,
+                "attached_to_id": self.attached_to_docid2,
                 "content": self.test_content2,
             }
         )
@@ -242,7 +242,7 @@ class TestSameContent(IntegrationTestCase):
                 "doctype": "File",
                 "file_name": "test-attachment",
                 "attached_to_doctype": doctype,
-                "attached_to_name": docid,
+                "attached_to_id": docid,
                 "content": "test",
             }
         )
@@ -254,7 +254,7 @@ class TestSameContent(IntegrationTestCase):
                 "doctype": "File",
                 "file_name": "test-attachment",
                 "attached_to_doctype": doctype,
-                "attached_to_name": docid,
+                "attached_to_id": docid,
                 "content": "test2",
             }
         )
@@ -270,13 +270,13 @@ class TestSameContent(IntegrationTestCase):
                 "doctype": "File",
                 "file_name": "utf8bom.txt",
                 "attached_to_doctype": self.attached_to_doctype1,
-                "attached_to_name": self.attached_to_docid1,
+                "attached_to_id": self.attached_to_docid1,
                 "content": utf8_bom_content,
                 "decode": False,
             }
         )
         _file.save()
-        saved_file = frappe.get_doc("File", _file.name)
+        saved_file = frappe.get_doc("File", _file.id)
         file_content_decoded = saved_file.get_content(encodings=["utf-8"])
         self.assertEqual(file_content_decoded[0], "\ufeff")
         file_content_properly_decoded = saved_file.get_content(encodings=["utf-8-sig", "utf-8"])
@@ -298,7 +298,7 @@ class TestFile(IntegrationTestCase):
     def delete_test_data(self):
         test_file_data = frappe.get_all(
             "File",
-            pluck="name",
+            pluck="id",
             filters={"is_home_folder": 0, "is_attachments_folder": 0},
             order_by="creation desc",
         )
@@ -310,15 +310,15 @@ class TestFile(IntegrationTestCase):
             {
                 "doctype": "File",
                 "file_name": "file_copy.txt",
-                "attached_to_name": "",
+                "attached_to_id": "",
                 "attached_to_doctype": "",
-                "folder": self.get_folder("Test Folder 1", "Home").name,
+                "folder": self.get_folder("Test Folder 1", "Home").id,
                 "content": "Testing file copy example.",
             }
         )
         _file.save()
         self.saved_folder = _file.folder
-        self.saved_name = _file.name
+        self.saved_name = _file.id
         self.saved_filename = get_files_path(_file.file_name)
 
     def get_folder(self, folder_name, parent_folder="Home"):
@@ -335,26 +335,26 @@ class TestFile(IntegrationTestCase):
         folder = self.get_folder("Test Folder 2", "Home")
 
         file = frappe.get_doc("File", {"file_name": "file_copy.txt"})
-        move_file([{"name": file.name}], folder.name, file.folder)
+        move_file([{"id": file.id}], folder.id, file.folder)
         file = frappe.get_doc("File", {"file_name": "file_copy.txt"})
 
         self.assertEqual(_("Home/Test Folder 2"), file.folder)
 
     def test_folder_depth(self):
         result1 = self.get_folder("d1", "Home")
-        self.assertEqual(result1.name, "Home/d1")
+        self.assertEqual(result1.id, "Home/d1")
         result2 = self.get_folder("d2", "Home/d1")
-        self.assertEqual(result2.name, "Home/d1/d2")
+        self.assertEqual(result2.id, "Home/d1/d2")
         result3 = self.get_folder("d3", "Home/d1/d2")
-        self.assertEqual(result3.name, "Home/d1/d2/d3")
+        self.assertEqual(result3.id, "Home/d1/d2/d3")
         result4 = self.get_folder("d4", "Home/d1/d2/d3")
         _file = frappe.get_doc(
             {
                 "doctype": "File",
                 "file_name": "folder_copy.txt",
-                "attached_to_name": "",
+                "attached_to_id": "",
                 "attached_to_doctype": "",
-                "folder": result4.name,
+                "folder": result4.id,
                 "content": "Testing folder copy example",
             }
         )
@@ -367,15 +367,15 @@ class TestFile(IntegrationTestCase):
             {
                 "doctype": "File",
                 "file_name": "folder_copy.txt",
-                "attached_to_name": "",
+                "attached_to_id": "",
                 "attached_to_doctype": "",
-                "folder": folder.name,
+                "folder": folder.id,
                 "content": "Testing folder copy example",
             }
         )
         _file.save()
 
-        move_file([{"name": folder.name}], "Home/Test Folder 1", folder.folder)
+        move_file([{"id": folder.id}], "Home/Test Folder 1", folder.folder)
 
         file = frappe.get_doc("File", {"file_name": "folder_copy.txt"})
         file_copy_txt = frappe.get_value("File", {"file_name": "file_copy.txt"})
@@ -400,9 +400,9 @@ class TestFile(IntegrationTestCase):
             {
                 "doctype": "File",
                 "file_name": "folder_copy.txt",
-                "attached_to_name": "",
+                "attached_to_id": "",
                 "attached_to_doctype": "",
-                "folder": folder.name,
+                "folder": folder.id,
                 "content": "Testing folder copy example",
             }
         )
@@ -420,7 +420,7 @@ class TestFile(IntegrationTestCase):
                 "doctype": "File",
                 "file_name": "file1.txt",
                 "attached_to_doctype": attached_to_doctype1,
-                "attached_to_name": attached_to_docid1,
+                "attached_to_id": attached_to_docid1,
                 "is_private": 1,
                 "content": test_content1,
             }
@@ -431,7 +431,7 @@ class TestFile(IntegrationTestCase):
                 "doctype": "File",
                 "file_name": "file2.txt",
                 "attached_to_doctype": attached_to_doctype2,
-                "attached_to_name": attached_to_docid2,
+                "attached_to_id": attached_to_docid2,
                 "is_private": 1,
                 "content": test_content1,
             }
@@ -444,7 +444,7 @@ class TestFile(IntegrationTestCase):
         file1.is_private = 0
         file1.save()
 
-        file2 = frappe.get_doc("File", file2.name)
+        file2 = frappe.get_doc("File", file2.id)
 
         self.assertEqual(file1.is_private, file2.is_private, 0)
         self.assertEqual(file1.file_url, file2.file_url)
@@ -551,7 +551,7 @@ class TestFile(IntegrationTestCase):
         ).insert(ignore_permissions=True)
 
         self.assertListEqual(
-            [file.file_name for file in unzip_file(test_file.name)],
+            [file.file_name for file in unzip_file(test_file.id)],
             ["css_asset.css", "image.jpg", "js_asset.min.js"],
         )
 
@@ -610,7 +610,7 @@ class TestAttachment(IntegrationTestCase):
         super().setUpClass()
         frappe.get_doc(
             doctype="DocType",
-            name=cls.test_doctype,
+            id=cls.test_doctype,
             module="Custom",
             custom=1,
             fields=[
@@ -638,7 +638,7 @@ class TestAttachment(IntegrationTestCase):
                 "file_name": "test_attach.txt",
                 "file_url": file.file_url,
                 "attached_to_doctype": self.test_doctype,
-                "attached_to_name": doc.name,
+                "attached_to_id": doc.id,
                 "attached_to_field": "attachment",
             },
         )
@@ -658,7 +658,7 @@ class TestAttachmentsAccess(IntegrationTestCase):
             "File",
             file_name="test_user_attachment.txt",
             attached_to_doctype=self.attached_to_doctype,
-            attached_to_name=self.attached_to_docid,
+            attached_to_id=self.attached_to_docid,
             content="Testing User",
             is_private=1,
         ).insert()
@@ -676,7 +676,7 @@ class TestAttachmentsAccess(IntegrationTestCase):
             "File",
             file_name="test_sm_attachment.txt",
             attached_to_doctype=self.attached_to_doctype,
-            attached_to_name=self.attached_to_docid,
+            attached_to_id=self.attached_to_docid,
             content="Testing System Manager",
             is_private=1,
         ).insert()
@@ -719,16 +719,16 @@ class TestFileUtils(IntegrationTestCase):
             doctype="ToDo",
             description='Test <img src="data:image/png;filename=pix.png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">',
         ).insert()
-        self.assertTrue(frappe.db.exists("File", {"attached_to_name": todo.name, "is_private": is_private}))
+        self.assertTrue(frappe.db.exists("File", {"attached_to_id": todo.id, "is_private": is_private}))
         self.assertRegex(todo.description, r"<img src=\"(.*)/files/pix\.png(.*)\">")
-        self.assertListEqual(get_attached_images("ToDo", [todo.name])[todo.name], ["/private/files/pix.png"])
+        self.assertListEqual(get_attached_images("ToDo", [todo.id])[todo.id], ["/private/files/pix.png"])
 
         # without filename in data URI
         todo = frappe.get_doc(
             doctype="ToDo",
             description='Test <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">',
         ).insert()
-        filename = frappe.db.exists("File", {"attached_to_name": todo.name})
+        filename = frappe.db.exists("File", {"attached_to_id": todo.id})
         self.assertIn(f'<img src="{frappe.get_doc("File", filename).file_url}', todo.description)
 
     def test_extract_images_from_comment(self):
@@ -739,13 +739,13 @@ class TestFileUtils(IntegrationTestCase):
         test_doc = frappe.get_doc(doctype="ToDo", description="comment test").insert()
         comment = add_comment(
             "ToDo",
-            test_doc.name,
+            test_doc.id,
             '<div class="ql-editor read-mode"><img src="data:image/png;filename=pix.png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="></div>',
             frappe.session.user,
             frappe.session.user,
         )
 
-        self.assertTrue(frappe.db.exists("File", {"attached_to_name": test_doc.name, "is_private": is_private}))
+        self.assertTrue(frappe.db.exists("File", {"attached_to_id": test_doc.id, "is_private": is_private}))
         self.assertRegex(comment.content, r"<img src=\"(.*)/files/pix\.png(.*)\">")
 
     def test_extract_images_from_communication(self):
@@ -764,7 +764,7 @@ class TestFileUtils(IntegrationTestCase):
             sender="sender@test.com",
         ).insert(ignore_permissions=True)
 
-        self.assertTrue(frappe.db.exists("File", {"attached_to_name": communication.name, "is_private": is_private}))
+        self.assertTrue(frappe.db.exists("File", {"attached_to_id": communication.id, "is_private": is_private}))
         self.assertRegex(communication.content, r"<img src=\"(.*)/files/pix\.png(.*)\">")
 
     def test_broken_image(self):
@@ -781,7 +781,7 @@ class TestFileUtils(IntegrationTestCase):
             sender="sender@test.com",
         ).insert(ignore_permissions=True)
 
-        self.assertFalse(frappe.db.exists("File", {"attached_to_name": communication.name, "is_private": is_private}))
+        self.assertFalse(frappe.db.exists("File", {"attached_to_id": communication.id, "is_private": is_private}))
         self.assertIn(f'<img src="#broken-image" alt="{get_corrupted_image_msg()}">', communication.content)
 
     def test_create_new_folder(self):
@@ -844,7 +844,7 @@ class TestGuestFileAndAttachments(IntegrationTestCase):
         frappe.db.delete("File", {"is_folder": 0})
         frappe.get_doc(
             doctype="DocType",
-            name="Test For Attachment",
+            id="Test For Attachment",
             module="Custom",
             custom=1,
             fields=[
@@ -880,7 +880,7 @@ class TestGuestFileAndAttachments(IntegrationTestCase):
                     "file_name": "test_private_guest_attachment.txt",
                     "file_url": f.file_url,
                     "attached_to_doctype": "Test For Attachment",
-                    "attached_to_name": d.name,
+                    "attached_to_id": d.id,
                     "attached_to_field": "attachment",
                 },
             )
@@ -909,7 +909,7 @@ class TestGuestFileAndAttachments(IntegrationTestCase):
             "File",
             file_name="test_private_guest_attachment.txt",
             attached_to_doctype=self.attached_to_doctype,
-            attached_to_name=self.attached_to_docid,
+            attached_to_id=self.attached_to_docid,
             content="Private Attachment",
             is_private=1,
         ).insert(ignore_permissions=True)

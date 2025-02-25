@@ -24,7 +24,7 @@ frappe.listview_settings["Data Import"] = {
 		};
 		let status = doc.status;
 
-		if (imports_in_progress.includes(doc.name)) {
+		if (imports_in_progress.includes(doc.id)) {
 			status = "In Progress";
 		}
 		return [__(status), colors[status], "status,=," + doc.status];
@@ -37,5 +37,5 @@ frappe.listview_settings["Data Import"] = {
 			}[value];
 		},
 	},
-	hide_name_column: true,
+	hide_id_column: true,
 };
