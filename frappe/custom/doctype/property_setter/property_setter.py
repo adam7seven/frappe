@@ -25,20 +25,20 @@ class PropertySetter(Document):
         module: DF.Link | None
         property: DF.Data
         property_type: DF.Data | None
-        row_name: DF.Data | None
+        row_id: DF.Data | None
         value: DF.SmallText | None
     # end: auto-generated types
 
     def autoid(self):
-        self.name = "{doctype}-{field}-{property}".format(
-            doctype=self.doc_type, field=self.field_name or self.row_name or "main", property=self.property
+        self.id = "{doctype}-{field}-{property}".format(
+            doctype=self.doc_type, field=self.field_name or self.row_id or "main", property=self.property
         )
 
     def validate(self):
         self.validate_fieldtype_change()
 
         if self.is_new():
-            delete_property_setter(self.doc_type, self.property, self.field_name, self.row_name)
+            delete_property_setter(self.doc_type, self.property, self.field_name, self.row_id)
         frappe.clear_cache(doctype=self.doc_type)
 
     def on_trash(self):
@@ -95,7 +95,7 @@ def make_property_setter(
     return property_setter
 
 
-def delete_property_setter(doc_type, property=None, field_name=None, row_name=None):
+def delete_property_setter(doc_type, property=None, field_name=None, row_id=None):
     """delete other property setters on this, if this is new"""
     filters = {"doc_type": doc_type}
     if property:
@@ -103,8 +103,8 @@ def delete_property_setter(doc_type, property=None, field_name=None, row_name=No
 
     if field_name:
         filters["field_name"] = field_name
-    if row_name:
-        filters["row_name"] = row_name
+    if row_id:
+        filters["row_id"] = row_id
 
     property_setters = frappe.db.get_values("Property Setter", filters)
     for ps in property_setters:

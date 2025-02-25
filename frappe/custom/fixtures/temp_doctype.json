@@ -1,7 +1,7 @@
 {
   "docstatus": 0,
   "doctype": "DocType",
-  "name": "new-doctype-2",
+  "id": "new-doctype-2",
   "__islocal": 1,
   "__unsaved": 1,
   "owner": "Administrator",
@@ -28,7 +28,7 @@
   "sort_order": "DESC",
   "document_type": "",
   "show_preview_popup": 0,
-  "show_name_in_global_search": 0,
+  "show_id_in_global_search": 0,
   "email_append_to": 0,
   "read_only": 0,
   "in_create": 0,
@@ -40,7 +40,7 @@
     {
       "docstatus": 0,
       "doctype": "DocPerm",
-      "name": "new-docperm-2",
+      "id": "new-docperm-2",
       "__islocal": 1,
       "__unsaved": 1,
       "owner": "Administrator",
@@ -67,13 +67,13 @@
       "role": "System Manager"
     }
   ],
-  "__newname": "temp_doctype",
+  "__newid": "temp_doctype",
   "module": "Custom",
   "fields": [
     {
       "docstatus": 0,
       "doctype": "DocField",
-      "name": "new-docfield-1",
+      "id": "new-docfield-1",
       "__islocal": 1,
       "__unsaved": 1,
       "owner": "Administrator",
@@ -114,12 +114,12 @@
       "parenttype": "DocType",
       "idx": 1,
       "__unedited": false,
-      "label": "member_name"
+      "label": "member_id"
     },
     {
       "docstatus": 0,
       "doctype": "DocField",
-      "name": "new-docfield-2",
+      "id": "new-docfield-2",
       "__islocal": 1,
       "__unsaved": 1,
       "owner": "Administrator",

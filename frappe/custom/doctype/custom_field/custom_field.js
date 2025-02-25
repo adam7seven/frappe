@@ -10,7 +10,7 @@ frappe.ui.form.on("Custom Field", {
 			var filters = [
 				["DocType", "issingle", "=", 0],
 				["DocType", "custom", "=", 0],
-				["DocType", "name", "not in", frappe.model.core_doctypes_list],
+				["DocType", "id", "not in", frappe.model.core_doctypes_list],
 				["DocType", "restrict_to_domain", "in", frappe.boot.active_domains],
 			];
 			if (frappe.session.user !== "Administrator") {
@@ -127,7 +127,7 @@ frappe.ui.form.on("Custom Field", {
 							.xcall(
 								"frappe.custom.doctype.custom_field.custom_field.rename_fieldname",
 								{
-									custom_field: frm.doc.name,
+									custom_field: frm.doc.id,
 									fieldname: data.fieldname,
 								}
 							)

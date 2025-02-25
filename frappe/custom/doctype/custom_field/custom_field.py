@@ -121,11 +121,11 @@ class CustomField(Document):
 
     def autoid(self):
         self.set_fieldname()
-        self.name = self.dt + "-" + self.fieldname
+        self.id = self.dt + "-" + self.fieldname
 
     def set_fieldname(self):
         restricted = (
-            "name",
+            "id",
             "parent",
             "creation",
             "modified",
@@ -172,7 +172,7 @@ class CustomField(Document):
 
             if self.is_new() and self.fieldname in fieldnames:
                 frappe.throw(
-                    _("A field with the name {0} already exists in {1}").format(frappe.bold(self.fieldname), self.dt)
+                    _("A field with the id {0} already exists in {1}").format(frappe.bold(self.fieldname), self.dt)
                 )
 
             if self.insert_after == "append":
@@ -222,7 +222,7 @@ class CustomField(Document):
         delete_property_setter(self.dt, field_name=self.fieldname)
 
         # update doctype layouts
-        doctype_layouts = frappe.get_all("DocType Layout", filters={"document_type": self.dt}, pluck="name")
+        doctype_layouts = frappe.get_all("DocType Layout", filters={"document_type": self.dt}, pluck="id")
 
         for layout in doctype_layouts:
             layout_doc = frappe.get_doc("DocType Layout", layout)
@@ -238,7 +238,7 @@ class CustomField(Document):
         if not meta.get_field(self.insert_after):
             frappe.throw(
                 _("Insert After field '{0}' mentioned in Custom Field '{1}', with label '{2}', does not exist").format(
-                    self.insert_after, self.name, self.label
+                    self.insert_after, self.id, self.label
                 ),
                 frappe.DoesNotExistError,
             )

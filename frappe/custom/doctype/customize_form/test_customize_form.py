@@ -46,7 +46,7 @@ class TestCustomizeForm(IntegrationTestCase):
         frappe.clear_cache(doctype="Event")
 
     def tearDown(self):
-        frappe.delete_doc("Custom Field", self.field.name)
+        frappe.delete_doc("Custom Field", self.field.id)
         frappe.db.commit()
         frappe.clear_cache(doctype="Event")
 
@@ -133,21 +133,21 @@ class TestCustomizeForm(IntegrationTestCase):
 
     def test_save_customization_custom_field_property(self):
         d = self.get_customize_form("Event")
-        self.assertEqual(frappe.db.get_value("Custom Field", self.field.name, "reqd"), 0)
+        self.assertEqual(frappe.db.get_value("Custom Field", self.field.id, "reqd"), 0)
 
         custom_field = d.get("fields", {"fieldname": self.field.fieldname})[0]
         custom_field.reqd = 1
         custom_field.no_copy = 1
         d.run_method("save_customization")
-        self.assertEqual(frappe.db.get_value("Custom Field", self.field.name, "reqd"), 1)
-        self.assertEqual(frappe.db.get_value("Custom Field", self.field.name, "no_copy"), 1)
+        self.assertEqual(frappe.db.get_value("Custom Field", self.field.id, "reqd"), 1)
+        self.assertEqual(frappe.db.get_value("Custom Field", self.field.id, "no_copy"), 1)
 
         custom_field = d.get("fields", {"is_custom_field": True})[0]
         custom_field.reqd = 0
         custom_field.no_copy = 0
         d.run_method("save_customization")
-        self.assertEqual(frappe.db.get_value("Custom Field", self.field.name, "reqd"), 0)
-        self.assertEqual(frappe.db.get_value("Custom Field", self.field.name, "no_copy"), 0)
+        self.assertEqual(frappe.db.get_value("Custom Field", self.field.id, "reqd"), 0)
+        self.assertEqual(frappe.db.get_value("Custom Field", self.field.id, "no_copy"), 0)
 
     def test_save_customization_new_field(self):
         d = self.get_customize_form("Event")
@@ -182,7 +182,7 @@ class TestCustomizeForm(IntegrationTestCase):
         d.get("fields").remove(custom_field)
         d.run_method("save_customization")
 
-        self.assertEqual(frappe.db.get_value("Custom Field", custom_field.name), None)
+        self.assertEqual(frappe.db.get_value("Custom Field", custom_field.id), None)
 
         make_test_records_for_doctype("Custom Field")
 
@@ -242,14 +242,14 @@ class TestCustomizeForm(IntegrationTestCase):
         d = self.get_customize_form("Notification Log")
 
         new_document_length = 255
-        document_name = d.get("fields", {"fieldname": "document_name"})[0]
-        document_name.length = new_document_length
+        document_id = d.get("fields", {"fieldname": "document_id"})[0]
+        document_id.length = new_document_length
         d.run_method("save_customization")
 
         self.assertEqual(
             frappe.db.get_value(
                 "Property Setter",
-                {"doc_type": "Notification Log", "property": "length", "field_name": "document_name"},
+                {"doc_type": "Notification Log", "property": "length", "field_name": "document_id"},
                 "value",
             ),
             str(new_document_length),
@@ -259,7 +259,7 @@ class TestCustomizeForm(IntegrationTestCase):
             """SELECT character_maximum_length
 			FROM information_schema.columns
 			WHERE table_name = 'tabNotification Log'
-			AND column_name = 'document_name'"""
+			AND column_name = 'document_id'"""
         )[0][0]
 
         self.assertEqual(length, new_document_length)
@@ -289,12 +289,12 @@ class TestCustomizeForm(IntegrationTestCase):
             event = frappe.get_meta("Event")
 
             # check links exist
-            self.assertTrue([d.name for d in event.links if d.link_doctype == testdt_name])
-            self.assertTrue([d.name for d in event.links if d.link_doctype == testdt_name1])
+            self.assertTrue([d.id for d in event.links if d.link_doctype == testdt_name])
+            self.assertTrue([d.id for d in event.links if d.link_doctype == testdt_name1])
 
             # check order
             order = json.loads(event.links_order)
-            self.assertListEqual(order, [d.name for d in event.links])
+            self.assertListEqual(order, [d.id for d in event.links])
 
             # remove the link
             d = self.get_customize_form("Event")
@@ -303,7 +303,7 @@ class TestCustomizeForm(IntegrationTestCase):
 
             frappe.clear_cache()
             event = frappe.get_meta("Event")
-            self.assertFalse([d.name for d in (event.links or []) if d.link_doctype == testdt_name])
+            self.assertFalse([d.id for d in (event.links or []) if d.link_doctype == testdt_name])
         finally:
             testdt.delete()
             testdt1.delete()
@@ -331,8 +331,8 @@ class TestCustomizeForm(IntegrationTestCase):
         user_group = frappe.get_meta("User Group")
 
         # check links exist
-        self.assertTrue([d.name for d in user_group.links if d.link_doctype == "User Group Member"])
-        self.assertTrue([d.name for d in user_group.links if d.parent_doctype == "User Group"])
+        self.assertTrue([d.id for d in user_group.links if d.link_doctype == "User Group Member"])
+        self.assertTrue([d.id for d in user_group.links if d.parent_doctype == "User Group"])
 
         # remove the link
         d = self.get_customize_form("User Group")
@@ -341,7 +341,7 @@ class TestCustomizeForm(IntegrationTestCase):
 
         frappe.clear_cache()
         user_group = frappe.get_meta("Event")
-        self.assertFalse([d.name for d in (user_group.links or []) if d.link_doctype == "User Group Member"])
+        self.assertFalse([d.id for d in (user_group.links or []) if d.link_doctype == "User Group Member"])
 
     def test_custom_action(self):
         test_route = "/app/List/DocType"

@@ -80,7 +80,7 @@
   "modified": "2024-03-23 16:01:29.862624",
   "modified_by": "Administrator",
   "module": "Custom",
-  "name": "Client Script",
+  "id": "Client Script",
   "naming_rule": "Set by user",
   "owner": "Administrator",
   "permissions": [

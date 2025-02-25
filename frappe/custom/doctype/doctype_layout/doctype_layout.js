@@ -21,29 +21,29 @@ frappe.ui.form.on("DocType Layout", {
 
 	async document_type(frm) {
 		if (frm.doc.document_type) {
-			// refreshing the doctype fields resets the new name input field;
-			// once the fields are set, reset the name to the original input
+			// refreshing the doctype fields resets the new id input field;
+			// once the fields are set, reset the id to the original input
 			if (frm.is_new()) {
-				const document_name = frm.doc.__newname || frm.doc.name;
+				const document_id = frm.doc.__newid || frm.doc.id;
 			}
 
 			frm.set_value("fields", []);
 			await frm.events.sync_fields(frm, false);
 
 			if (frm.is_new()) {
-				frm.doc.__newname = document_name; // eslint-disable-line
-				frm.refresh_field("__newname");
+				frm.doc.__newid = document_id; // eslint-disable-line
+				frm.refresh_field("__newid");
 			}
 		}
 	},
 
 	add_buttons(frm) {
 		if (!frm.is_new()) {
-			frm.add_custom_button(__("Go to {0} List", [frm.doc.name]), () => {
-				window.open(`/app/${frappe.router.slug(frm.doc.name)}`);
+			frm.add_custom_button(__("Go to {0} List", [frm.doc.id]), () => {
+				window.open(`/app/${frappe.router.slug(frm.doc.id)}`);
 			});
 
-			frm.add_custom_button(__("Sync {0} Fields", [frm.doc.name]), async () => {
+			frm.add_custom_button(__("Sync {0} Fields", [frm.doc.id]), async () => {
 				await frm.events.sync_fields(frm, true);
 			});
 		}
