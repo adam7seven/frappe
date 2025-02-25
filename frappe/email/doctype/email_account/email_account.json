@@ -715,7 +715,7 @@
   "modified": "2024-12-30 11:25:58.427173",
   "modified_by": "Administrator",
   "module": "Email",
-  "name": "Email Account",
+  "id": "Email Account",
   "naming_rule": "By fieldname",
   "owner": "Administrator",
   "permissions": [

@@ -418,7 +418,7 @@ class Email:
             self.subject = self.subject.decode("utf-8", "replace")
 
         # Convert non-string (e.g. None)
-        # Truncate to 140 chars (can be used as a document name)
+        # Truncate to 140 chars (can be used as a document id)
         self.subject = str(self.subject).strip()[:140] or "No Subject"
 
     def set_from(self):
@@ -564,7 +564,7 @@ class Email:
                         "doctype": "File",
                         "file_name": unquote(attachment["fname"]),
                         "attached_to_doctype": doc.doctype,
-                        "attached_to_name": doc.name,
+                        "attached_to_id": doc.id,
                         "is_private": 1,
                         "content": attachment["fcontent"],
                     }
@@ -573,7 +573,7 @@ class Email:
                 saved_attachments.append(_file)
 
                 if attachment["fname"] in self.cid_map:
-                    self.cid_map[_file.name] = self.cid_map[attachment["fname"]]
+                    self.cid_map[_file.id] = self.cid_map[attachment["fname"]]
 
             except MaxFileSizeReachedError:
                 # WARNING: bypass max file size exception
@@ -637,18 +637,18 @@ class InboundMail(Email):
         data["doctype"] = "Communication"
 
         if self.parent_communication():
-            data["in_reply_to"] = self.parent_communication().name
+            data["in_reply_to"] = self.parent_communication().id
 
         append_to = self.append_to if self.email_account.use_imap else self.email_account.append_to
 
         if self.reference_document():
             data["reference_doctype"] = self.reference_document().doctype
-            data["reference_name"] = self.reference_document().name
+            data["reference_id"] = self.reference_document().id
         elif append_to and append_to != "Communication":
-            reference_name = self._create_reference_document(append_to)
-            if reference_name:
+            reference_id = self._create_reference_document(append_to)
+            if reference_id:
                 data["reference_doctype"] = append_to
-                data["reference_name"] = reference_name
+                data["reference_id"] = reference_id
 
         if self.is_notification():
             # Disable notifications for notification.
@@ -674,8 +674,8 @@ class InboundMail(Email):
         # replace inline images
         content = self.content
         for file in attachments:
-            if self.cid_map.get(file.name):
-                content = content.replace(f"cid:{self.cid_map[file.name]}", file.unique_url)
+            if self.cid_map.get(file.id):
+                content = content.replace(f"cid:{self.cid_map[file.id]}", file.unique_url)
         return content
 
     def is_notification(self):
@@ -723,7 +723,7 @@ class InboundMail(Email):
         Here are the cases to handle:
         1. If mail is a reply to already sent mail, then we can get parent communicaion from
                 Email Queue record or message_id on communication.
-        2. Sometimes we send communication name in message-ID directly, use that to get parent communication.
+        2. Sometimes we send communication id in message-ID directly, use that to get parent communication.
         3. Sender sent a reply but reply is on top of what (s)he sent before,
                 then parent record exists directly in communication.
         """
@@ -761,8 +761,8 @@ class InboundMail(Email):
         parent = self.parent_email_queue() or self.parent_communication()
 
         if parent and parent.reference_doctype:
-            reference_doctype, reference_name = parent.reference_doctype, parent.reference_name
-            reference_document = self.get_doc(reference_doctype, reference_name, ignore_error=True)
+            reference_doctype, reference_id = parent.reference_doctype, parent.reference_id
+            reference_document = self.get_doc(reference_doctype, reference_id, ignore_error=True)
 
         if not reference_document and self.email_account.append_to:
             reference_document = self.match_record_by_subject_and_sender(self.email_account.append_to)
@@ -770,7 +770,7 @@ class InboundMail(Email):
         self._reference_document = reference_document or ""
         return self._reference_document
 
-    def get_reference_name_from_subject(self):
+    def get_reference_id_from_subject(self):
         """
         Ex: "Re: Your email (#OPP-2020-2334343)"
         """
@@ -780,7 +780,7 @@ class InboundMail(Email):
         """Find a record in the given doctype that matches with email subject and sender.
 
         Cases:
-        1. Sometimes record name is part of subject. We can get document by parsing name from subject
+        1. Sometimes record id is part of subject. We can get document by parsing id from subject
         2. Find by matching sender and subject
         3. Find by matching subject alone (Special case)
                 Ex: when a System User is using Outlook and replies to an email from their own client,
@@ -792,10 +792,10 @@ class InboundMail(Email):
 
         NOTE: We consider not to match by subject if match record is very old.
         """
-        name = self.get_reference_name_from_subject()
+        id = self.get_reference_id_from_subject()
         email_fields = self.get_email_fields(doctype)
 
-        record = self.get_doc(doctype, name, ignore_error=True) if name else None
+        record = self.get_doc(doctype, id, ignore_error=True) if id else None
 
         if not record:
             subject = self.clean_subject(self.subject)
@@ -808,8 +808,8 @@ class InboundMail(Email):
             if not (len(subject) > 10 and is_system_user(self.from_email)):
                 filters[email_fields.sender_field] = self.from_email
 
-            name = frappe.db.get_value(self.email_account.append_to, filters=filters)
-            record = self.get_doc(doctype, name, ignore_error=True) if name else None
+            id = frappe.db.get_value(self.email_account.append_to, filters=filters)
+            record = self.get_doc(doctype, id, ignore_error=True) if id else None
         return record
 
     def _create_reference_document(self, doctype):
@@ -830,7 +830,7 @@ class InboundMail(Email):
 
         try:
             parent.insert(ignore_permissions=True)
-            return parent.name
+            return parent.id
         except frappe.DuplicateEntryError:
             # try and find matching parent
             return frappe.db.get_value(doctype, {email_fields.sender_field: self.from_email})
@@ -852,7 +852,7 @@ class InboundMail(Email):
     @staticmethod
     def get_users_linked_to_account(email_account):
         """Get list of users who linked to Email account."""
-        users = frappe.get_all("User Email", filters={"email_account": email_account.name}, fields=["parent"])
+        users = frappe.get_all("User Email", filters={"email_account": email_account.id}, fields=["parent"])
         return list({user.get("parent") for user in users})
 
     @staticmethod
@@ -876,10 +876,10 @@ class InboundMail(Email):
         return fields
 
     @staticmethod
-    def get_document(self, doctype, name):
+    def get_document(self, doctype, id):
         """Is same as frappe.get_doc but suppresses the DoesNotExist error."""
         try:
-            return frappe.get_doc(doctype, name)
+            return frappe.get_doc(doctype, id)
         except frappe.DoesNotExistError:
             return None
 
@@ -894,7 +894,7 @@ class InboundMail(Email):
             "sender": self.from_email,
             "recipients": self.mail.get("To"),
             "cc": self.mail.get("CC"),
-            "email_account": self.email_account.name,
+            "email_account": self.email_account.id,
             "communication_medium": "Email",
             "uid": self.uid,
             "message_id": self.message_id,

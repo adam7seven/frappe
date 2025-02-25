@@ -40,7 +40,7 @@
   "modified": "2024-03-23 16:03:24.266714",
   "modified_by": "Administrator",
   "module": "Email",
-  "name": "Email Group Member",
+  "id": "Email Group Member",
   "naming_rule": "Random",
   "owner": "Administrator",
   "permissions": [

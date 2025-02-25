@@ -162,7 +162,7 @@
   "modified": "2024-12-04 23:26:20.993971",
   "modified_by": "Administrator",
   "module": "Email",
-  "name": "Email Domain",
+  "id": "Email Domain",
   "naming_rule": "By fieldname",
   "owner": "Administrator",
   "permissions": [

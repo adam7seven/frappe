@@ -76,7 +76,7 @@
   "modified": "2024-09-25 15:24:37.576084",
   "modified_by": "Administrator",
   "module": "Email",
-  "name": "Email Group",
+  "id": "Email Group",
   "naming_rule": "By fieldname",
   "owner": "Administrator",
   "permissions": [
@@ -95,7 +95,7 @@
     }
   ],
   "quick_entry": 1,
-  "show_name_in_global_search": 1,
+  "show_id_in_global_search": 1,
   "sort_field": "creation",
   "sort_order": "DESC",
   "states": [],

@@ -9,8 +9,8 @@ frappe.ui.form.on("Auto Email Report", {
 				var w = window.open(
 					frappe.urllib.get_full_url(
 						"/api/method/frappe.email.doctype.auto_email_report.auto_email_report.download?" +
-							"name=" +
-							encodeURIComponent(frm.doc.name)
+							"id=" +
+							encodeURIComponent(frm.doc.id)
 					)
 				);
 				if (!w) {
@@ -21,7 +21,7 @@ frappe.ui.form.on("Auto Email Report", {
 			frm.add_custom_button(__("Send Now"), function () {
 				frappe.call({
 					method: "frappe.email.doctype.auto_email_report.auto_email_report.send_now",
-					args: { name: frm.doc.name },
+					args: { id: frm.doc.id },
 					callback: function () {
 						frappe.msgprint(__("Scheduled to send"));
 					},

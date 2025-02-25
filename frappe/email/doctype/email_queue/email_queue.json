@@ -15,7 +15,7 @@
     "error",
     "message_id",
     "reference_doctype",
-    "reference_name",
+    "reference_id",
     "communication",
     "send_after",
     "priority",
@@ -81,7 +81,7 @@
       "read_only": 1
     },
     {
-      "fieldname": "reference_name",
+      "fieldname": "reference_id",
       "fieldtype": "Data",
       "label": "Reference DocName",
       "read_only": 1,
@@ -157,7 +157,7 @@
   "modified": "2025-02-20 19:21:09.652451",
   "modified_by": "Administrator",
   "module": "Email",
-  "name": "Email Queue",
+  "id": "Email Queue",
   "naming_rule": "Random",
   "owner": "Administrator",
   "permissions": [

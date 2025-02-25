@@ -199,7 +199,7 @@ frappe.ui.form.on("Email Account", {
 				frappe.dom.freeze(__("Pulling emails..."));
 				frm.call({
 					method: "pull_emails",
-					args: { email_account: frm.doc.name },
+					args: { email_account: frm.doc.id },
 				}).then((r) => {
 					frappe.dom.unfreeze();
 					if (!(r._server_messages && r._server_messages.length)) {
