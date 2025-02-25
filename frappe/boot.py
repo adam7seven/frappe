@@ -9,10 +9,7 @@ import os
 import frappe
 import frappe.defaults
 import frappe.desk.desk_page
-from frappe.core.doctype.navbar_settings.navbar_settings import (
-    get_app_logo,
-    get_navbar_settings,
-)
+from frappe.core.doctype.navbar_settings.navbar_settings import get_app_logo, get_navbar_settings
 from frappe.desk.doctype.changelog_feed.changelog_feed import get_changelog_feed_items
 from frappe.desk.doctype.form_tour.form_tour import get_onboarding_ui_tours
 from frappe.desk.doctype.route_history.route_history import frequently_visited_links
@@ -50,8 +47,8 @@ def get_bootinfo():
     bootinfo.sysdefaults = frappe.defaults.get_defaults()
     bootinfo.server_date = frappe.utils.nowdate()
 
-    if frappe.session["user"] != "Guest":
-        bootinfo.user_info = get_user_info()
+	if frappe.session["user"] != "Guest":
+		bootinfo.user_info = get_user_info()
 
     bootinfo.modules = {}
     bootinfo.module_list = []
@@ -95,73 +92,118 @@ def get_bootinfo():
         bootinfo.lang = str(bootinfo.lang)
     bootinfo.versions = {k: v["version"] for k, v in get_versions().items()}
 
-    bootinfo.error_report_email = frappe.conf.error_report_email
-    bootinfo.calendars = sorted(frappe.get_hooks("calendars"))
-    bootinfo.treeviews = frappe.get_hooks("treeviews") or []
-    bootinfo.lang_dict = get_lang_dict()
-    bootinfo.success_action = get_success_action()
-    bootinfo.update(get_email_accounts(user=frappe.session.user))
-    bootinfo.energy_points_enabled = is_energy_point_enabled()
-    bootinfo.website_tracking_enabled = is_tracking_enabled()
-    bootinfo.sms_gateway_enabled = bool(
-        frappe.db.get_single_value("SMS Settings", "sms_gateway_url")
-    )
-    bootinfo.points = get_energy_points(frappe.session.user)
-    bootinfo.frequently_visited_links = frequently_visited_links()
-    bootinfo.link_preview_doctypes = get_link_preview_doctypes()
-    bootinfo.additional_filters_config = get_additional_filters_from_hooks()
-    bootinfo.desk_settings = get_desk_settings()
-    bootinfo.app_logo_url = get_app_logo()
-    bootinfo.link_title_doctypes = get_link_title_doctypes()
-    bootinfo.translated_doctypes = get_translated_doctypes()
-    bootinfo.subscription_conf = add_subscription_conf()
-    bootinfo.marketplace_apps = get_marketplace_apps()
-    bootinfo.changelog_feed = get_changelog_feed_items()
+	bootinfo.error_report_email = frappe.conf.error_report_email
+	bootinfo.calendars = sorted(frappe.get_hooks("calendars"))
+	bootinfo.treeviews = frappe.get_hooks("treeviews") or []
+	bootinfo.lang_dict = get_lang_dict()
+	bootinfo.success_action = get_success_action()
+	bootinfo.update(get_email_accounts(user=frappe.session.user))
+	bootinfo.energy_points_enabled = is_energy_point_enabled()
+	bootinfo.website_tracking_enabled = is_tracking_enabled()
+	bootinfo.sms_gateway_enabled = bool(frappe.db.get_single_value("SMS Settings", "sms_gateway_url"))
+	bootinfo.points = get_energy_points(frappe.session.user)
+	bootinfo.frequently_visited_links = frequently_visited_links()
+	bootinfo.link_preview_doctypes = get_link_preview_doctypes()
+	bootinfo.additional_filters_config = get_additional_filters_from_hooks()
+	bootinfo.desk_settings = get_desk_settings()
+	bootinfo.app_logo_url = get_app_logo()
+	bootinfo.link_title_doctypes = get_link_title_doctypes()
+	bootinfo.translated_doctypes = get_translated_doctypes()
+	bootinfo.subscription_conf = add_subscription_conf()
+	bootinfo.marketplace_apps = get_marketplace_apps()
+	bootinfo.changelog_feed = get_changelog_feed_items()
+	bootinfo.enable_address_autocompletion = frappe.db.get_single_value(
+		"Geolocation Settings", "enable_address_autocompletion"
+	)
 
-    if sentry_dsn := get_sentry_dsn():
-        bootinfo.sentry_dsn = sentry_dsn
+	if sentry_dsn := get_sentry_dsn():
+		bootinfo.sentry_dsn = sentry_dsn
 
-    return bootinfo
+	return bootinfo
 
 
 def get_letter_heads():
-    letter_heads = {}
+	letter_heads = {}
 
-    if not frappe.has_permission("Letter Head"):
-        return letter_heads
-    for letter_head in frappe.get_list(
-        "Letter Head", fields=["id", "content", "footer"]
-    ):
-        letter_heads.setdefault(
-            letter_head.id,
-            {"header": letter_head.content, "footer": letter_head.footer},
-        )
+	if not frappe.has_permission("Letter Head"):
+		return letter_heads
+	for letter_head in frappe.get_list("Letter Head", fields=["id", "content", "footer"]):
+		letter_heads.setdefault(
+			letter_head.id, {"header": letter_head.content, "footer": letter_head.footer}
+		)
 
     return letter_heads
 
 
 def load_conf_settings(bootinfo):
-    from frappe.core.api.file import get_max_file_size
+	from frappe.core.api.file import get_max_file_size
 
-    bootinfo.max_file_size = get_max_file_size()
-    for key in (
-        "developer_mode",
-        "socketio_port",
-        "file_watcher_port",
-        "fc_communication_secret",
-    ):
-        if key in frappe.conf:
-            bootinfo[key] = frappe.conf.get(key)
+	bootinfo.max_file_size = get_max_file_size()
+	for key in ("developer_mode", "socketio_port", "file_watcher_port", "fc_communication_secret"):
+		if key in frappe.conf:
+			bootinfo[key] = frappe.conf.get(key)
 
 
 def load_desktop_data(bootinfo):
     from frappe.desk.desktop import get_workspace_sidebar_items
 
-    bootinfo.allowed_workspaces = get_workspace_sidebar_items().get("pages")
-    bootinfo.module_wise_workspaces = get_controller(
-        "Workspace"
-    ).get_module_wise_workspaces()
-    bootinfo.dashboards = frappe.get_all("Dashboard")
+	bootinfo.sidebar_pages = get_workspace_sidebar_items()
+	allowed_pages = [d.id for d in bootinfo.sidebar_pages.get("pages")]
+	bootinfo.module_wise_workspaces = get_controller("Workspace").get_module_wise_workspaces()
+	bootinfo.dashboards = frappe.get_all("Dashboard")
+	bootinfo.app_data = []
+
+	Workspace = frappe.qb.DocType("Workspace")
+	Module = frappe.qb.DocType("Module Def")
+
+	for app_name in frappe.get_installed_apps():
+		# get app details from app_info (/apps)
+		apps = frappe.get_hooks("add_to_apps_screen", app_name=app_name)
+		app_info = {}
+		if apps:
+			app_info = apps[0]
+			has_permission = app_info.get("has_permission")
+			if has_permission and not frappe.get_attr(has_permission)():
+				continue
+
+		workspaces = [
+			r[0]
+			for r in (
+				frappe.qb.from_(Workspace)
+				.inner_join(Module)
+				.on(Workspace.module == Module.id)
+				.select(Workspace.id)
+				.where(Module.app_name == app_name)
+				.run()
+			)
+			if r[0] in allowed_pages
+		]
+
+		bootinfo.app_data.append(
+			dict(
+				app_name=app_info.get("name") or app_name,
+				app_title=app_info.get("title")
+				or (
+					(
+						frappe.get_hooks("app_title", app_name=app_name)
+						and frappe.get_hooks("app_title", app_name=app_name)[0]
+					)
+					or ""
+				)
+				or app_name,
+				app_route=(
+					frappe.get_hooks("app_home", app_name=app_name)
+					and frappe.get_hooks("app_home", app_name=app_name)[0]
+				)
+				or (workspaces and "/app/" + frappe.utils.slug(workspaces[0]))
+				or "",
+				app_logo_url=app_info.get("logo")
+				or frappe.get_hooks("app_logo_url", app_name=app_name)
+				or frappe.get_hooks("app_logo_url", app_name="frappe"),
+				modules=[m.id for m in frappe.get_all("Module Def", dict(app_name=app_name))],
+				workspaces=workspaces,
+			)
+		)
 
 
 def get_allowed_pages(cache=False):
@@ -277,9 +319,9 @@ def get_user_pages_or_reports(parent, cache=False):
             if is_report:
                 has_role[r.id] |= {"ref_doctype": r.ref_doctype}
 
-    if is_report:
-        if not has_permission("Report", raise_exception=False):
-            return {}
+	if is_report:
+		if not has_permission("Report", print_logs=False):
+			return {}
 
         reports = frappe.get_list(
             "Report",
@@ -311,10 +353,7 @@ def get_user_info():
     user_info = frappe._dict()
     add_user_info(frappe.session.user, user_info)
 
-    if frappe.session.user == "Administrator" and user_info.Administrator.email:
-        user_info[user_info.Administrator.email] = user_info.Administrator
-
-    return user_info
+	return user_info
 
 
 def get_user(bootinfo):
@@ -363,29 +402,6 @@ def load_print_css(bootinfo, print_settings):
     )
 
 
-def get_unseen_notes():
-    note = DocType("Note")
-    nsb = DocType("Note Seen By").as_("nsb")
-
-    return (
-        frappe.qb.from_(note)
-        .select(note.id, note.title, note.content, note.notify_on_every_login)
-        .where(
-            (note.notify_on_login == 1)
-            & (note.expire_notification_on > frappe.utils.now())
-            & (
-                ParameterizedValueWrapper(frappe.session.user).notin(
-                    SubQuery(
-                        frappe.qb.from_(nsb)
-                        .select(nsb.user)
-                        .where(nsb.parent == note.id)
-                    )
-                )
-            )
-        )
-    ).run(as_dict=1)
-
-
 def get_success_action():
     return frappe.get_all("Success Action", fields=["*"])
 
@@ -428,9 +444,9 @@ def add_layouts(bootinfo):
 
 
 def get_desk_settings():
-    from frappe.core.doctype.user.user import desk_properties
+	from frappe.core.doctype.user.user import desk_properties
 
-    return frappe.get_value("User", frappe.session.user, desk_properties, as_dict=True)
+	return frappe.get_value("User", frappe.session.user, desk_properties, as_dict=True)
 
 
 def get_notification_settings():
@@ -494,8 +510,8 @@ def get_marketplace_apps():
     apps = []
     cache_key = "frappe_marketplace_apps"
 
-    if frappe.conf.developer_mode or not on_frappecloud():
-        return apps
+	if frappe.conf.developer_mode or not on_frappecloud():
+		return apps
 
     def get_apps_from_fc():
         remote_site = frappe.conf.frappecloud_url or "frappecloud.com"
@@ -503,28 +519,26 @@ def get_marketplace_apps():
         request = requests.get(request_url, timeout=2.0)
         return request.json()["message"]
 
-    try:
-        apps = frappe.cache().get_value(cache_key, get_apps_from_fc, shared=True)
-        installed_apps = set(frappe.get_installed_apps())
-        apps = [app for app in apps if app["id"] not in installed_apps]
-    except Exception:
-        # Don't retry for a day
-        frappe.cache().set_value(
-            cache_key, apps, shared=True, expires_in_sec=24 * 60 * 60
-        )
+	try:
+		apps = frappe.cache.get_value(cache_key, get_apps_from_fc, shared=True)
+		installed_apps = set(frappe.get_installed_apps())
+		apps = [app for app in apps if app["id"] not in installed_apps]
+	except Exception:
+		# Don't retry for a day
+		frappe.cache.set_value(cache_key, apps, shared=True, expires_in_sec=24 * 60 * 60)
 
     return apps
 
 
 def add_subscription_conf():
-    try:
-        return frappe.conf.subscription
-    except Exception:
-        return ""
+	try:
+		return frappe.conf.subscription
+	except Exception:
+		return ""
 
 
 def get_sentry_dsn():
-    if not frappe.get_system_settings("enable_telemetry"):
-        return
+	if not frappe.get_system_settings("enable_telemetry"):
+		return
 
-    return os.getenv("FRAPPE_SENTRY_DSN")
+	return os.getenv("FRAPPE_SENTRY_DSN")

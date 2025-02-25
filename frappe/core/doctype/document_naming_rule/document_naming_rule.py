@@ -20,17 +20,17 @@ class DocumentNamingRule(Document):
         )
         from frappe.types import DF
 
-        conditions: DF.Table[DocumentNamingRuleCondition]
-        counter: DF.Int
-        disabled: DF.Check
-        document_type: DF.Link
-        prefix: DF.Data
-        prefix_digits: DF.Int
-        priority: DF.Int
+		conditions: DF.Table[DocumentNamingRuleCondition]
+		counter: DF.Int
+		disabled: DF.Check
+		document_type: DF.Link
+		prefix: DF.Data
+		prefix_digits: DF.Int
+		priority: DF.Int
+	# end: auto-generated types
 
-    # end: auto-generated types
-    def validate(self):
-        self.validate_fields_in_conditions()
+	def validate(self):
+		self.validate_fields_in_conditions()
 
     def clear_doctype_map(self):
         frappe.cache_manager.clear_doctype_map(self.doctype, self.document_type)

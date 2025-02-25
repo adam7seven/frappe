@@ -40,6 +40,7 @@ class S3BackupSettings(Document):
 		send_email_for_successful_backup: DF.Check
 
 	# end: auto-generated types
+
 	def validate(self):
 		if not self.enabled:
 			return

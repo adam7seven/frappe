@@ -1,8 +1,8 @@
 frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.ControlData {
-    static html_element = "select";
-    static trigger_change_on_input_event = false;
-    make_input() {
-        super.make_input();
+	static html_element = "select";
+	static trigger_change_on_input_event = false;
+	make_input() {
+		super.make_input();
 
         const is_xs_input = this.df.input_class && this.df.input_class.includes("input-xs");
         this.set_icon(is_xs_input);
@@ -71,15 +71,15 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
         }
         this.last_options = JSON.stringify(options);
 
-        if (this.$input) {
-            var selected = this.$input.find(":selected").val();
-            this.$input.empty();
-            frappe.ui.form.add_options(
-                this.$input,
-                options || [],
-                this.df.sort_options,
-                this.df.context || this.df.parent || this.doctype
-            );
+		if (this.$input) {
+			var selected = this.$input.find(":selected").val();
+			this.$input.empty();
+			frappe.ui.form.add_options(
+				this.$input,
+				options || [],
+				this.df.sort_options,
+				this.df.context || this.df.parent || this.doctype
+			);
 
             if (value === undefined && selected) {
                 this.$input.val(selected);
@@ -124,7 +124,7 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
             return result;
         }
 
-        //如果选项中包含逗号，则按逗号隔开
+        //���ѡ���а������ţ��򰴶��Ÿ��
         for (var i = 0; i < option_list.length; i++) {
             var opt = option_list[i];
             var comma_index = opt.indexOf(",")
@@ -140,15 +140,15 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
 };
 
 frappe.ui.form.add_options = function (input, options_list, sort, doctype) {
-    let $select = $(input);
-    if (!Array.isArray(options_list)) {
-        return $select;
-    }
+	let $select = $(input);
+	if (!Array.isArray(options_list)) {
+		return $select;
+	}
 
-    let options = options_list.map((raw_option) => parse_option(raw_option, doctype));
-    if (sort) {
-        options = options.sort((a, b) => cstr(a.label).localeCompare(cstr(b.label)));
-    }
+	let options = options_list.map((raw_option) => parse_option(raw_option, doctype));
+	if (sort) {
+		options = options.sort((a, b) => cstr(a.label).localeCompare(cstr(b.label)));
+	}
 
     options
         .map((option) =>
@@ -187,10 +187,10 @@ frappe.ui.form.add_options = function (input, options_list, sort, doctype) {
 })(jQuery);
 
 function parse_option(v, doctype) {
-    let value = null;
-    let label = null;
-    let is_disabled = false;
-    let is_selected = false;
+	let value = null;
+	let label = null;
+	let is_disabled = false;
+	let is_selected = false;
 
     if (!is_null(v)) {
         const is_value_null = is_null(v.value);
@@ -198,14 +198,14 @@ function parse_option(v, doctype) {
         is_disabled = Boolean(v.disabled);
         is_selected = Boolean(v.selected);
 
-        if (is_value_null && is_label_null && typeof v !== "object") {
-            value = v;
-            label = __(v, null, doctype);
-        } else {
-            value = is_value_null ? "" : v.value;
-            label = is_label_null ? __(value, null, doctype) : __(v.label, null, doctype);
-        }
-    }
+		if (is_value_null && is_label_null && typeof v !== "object") {
+			value = v;
+			label = __(v, null, doctype);
+		} else {
+			value = is_value_null ? "" : v.value;
+			label = is_label_null ? __(value, null, doctype) : __(v.label, null, doctype);
+		}
+	}
 
     return {
         value,

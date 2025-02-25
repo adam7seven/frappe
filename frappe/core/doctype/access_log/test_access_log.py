@@ -14,20 +14,29 @@ from frappe.core.doctype.data_import.data_import import export_csv
 from frappe.core.doctype.user.user import generate_keys
 
 # imports - standard imports
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase, UnitTestCase
 from frappe.utils import cstr, get_site_url
 
 
-class TestAccessLog(FrappeTestCase):
-    def setUp(self):
-        # generate keys for current user to send requests for the following tests
-        generate_keys(frappe.session.user)
-        frappe.db.commit()
-        generated_secret = frappe.utils.password.get_decrypted_password(
-            "User", frappe.session.user, fieldname="api_secret"
-        )
-        api_key = frappe.db.get_value("User", "Administrator", "api_key")
-        self.header = {"Authorization": f"token {api_key}:{generated_secret}"}
+class UnitTestAccessLog(UnitTestCase):
+	"""
+	Unit tests for AccessLog.
+	Use this class for testing individual functions and methods.
+	"""
+
+	pass
+
+
+class TestAccessLog(IntegrationTestCase):
+	def setUp(self):
+		# generate keys for current user to send requests for the following tests
+		generate_keys(frappe.session.user)
+		frappe.db.commit()
+		generated_secret = frappe.utils.password.get_decrypted_password(
+			"User", frappe.session.user, fieldname="api_secret"
+		)
+		api_key = frappe.db.get_value("User", "Administrator", "api_key")
+		self.header = {"Authorization": f"token {api_key}:{generated_secret}"}
 
         self.test_html_template = """
 			<!DOCTYPE html>

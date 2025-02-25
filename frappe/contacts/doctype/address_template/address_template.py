@@ -16,25 +16,21 @@ class AddressTemplate(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        country: DF.Link
-        is_default: DF.Check
-        template: DF.Code | None
+		country: DF.Link
+		is_default: DF.Check
+		template: DF.Code | None
+	# end: auto-generated types
 
-    # end: auto-generated types
-    def validate(self):
-        validate_template(self.template)
+	def validate(self):
+		validate_template(self.template)
 
         if not self.template:
             self.template = get_default_address_template()
 
-        if not self.is_default and not self._get_previous_default():
-            self.is_default = 1
-            if frappe.db.get_single_value("System Settings", "setup_complete"):
-                frappe.msgprint(
-                    _(
-                        "Setting this Address Template as default as there is no other default"
-                    )
-                )
+		if not self.is_default and not self._get_previous_default():
+			self.is_default = 1
+			if frappe.get_system_settings("setup_complete"):
+				frappe.msgprint(_("Setting this Address Template as default as there is no other default"))
 
     def on_update(self):
         if self.is_default and (previous_default := self._get_previous_default()):

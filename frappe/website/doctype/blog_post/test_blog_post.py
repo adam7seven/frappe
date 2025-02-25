@@ -6,19 +6,28 @@ from bs4 import BeautifulSoup
 
 import frappe
 from frappe.custom.doctype.customize_form.customize_form import reset_customization
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase, UnitTestCase
 from frappe.utils import random_string, set_request
 from frappe.website.doctype.blog_post.blog_post import get_blog_list
 from frappe.website.serve import get_response
 from frappe.website.utils import clear_website_cache
 from frappe.website.website_generator import WebsiteGenerator
 
-test_dependencies = ["Blog Post"]
+EXTRA_TEST_RECORD_DEPENDENCIES = ["Blog Post"]
 
 
-class TestBlogPost(FrappeTestCase):
-    def setUp(self):
-        reset_customization("Blog Post")
+class UnitTestBlogPost(UnitTestCase):
+	"""
+	Unit tests for BlogPost.
+	Use this class for testing individual functions and methods.
+	"""
+
+	pass
+
+
+class TestBlogPost(IntegrationTestCase):
+	def setUp(self):
+		reset_customization("Blog Post")
 
     def tearDown(self):
         if hasattr(frappe.local, "request"):
@@ -66,12 +75,10 @@ class TestBlogPost(FrappeTestCase):
         blog_page_response = get_response()
         blog_page_html = frappe.safe_decode(blog_page_response.get_data())
 
-        # On blog post page find link to the category page
-        soup = BeautifulSoup(blog_page_html, "html.parser")
-        category_page_link = next(
-            iter(soup.find_all("a", href=re.compile(blog.blog_category)))
-        )
-        category_page_url = category_page_link["href"]
+		# On blog post page find link to the category page
+		soup = BeautifulSoup(blog_page_html, "html.parser")
+		category_page_link = next(iter(soup.find_all("a", href=re.compile(blog.blog_category))))
+		category_page_url = category_page_link["href"]
 
         cached_value = frappe.db.value_cache.get(("DocType", "Blog Post", "id"))
         frappe.db.value_cache[("DocType", "Blog Post", "id")] = (("Blog Post",),)
@@ -92,9 +99,9 @@ class TestBlogPost(FrappeTestCase):
         # Create some Blog Posts for a Blog Category
         category_title, blogs, BLOG_COUNT = "List Category", [], 4
 
-        for _ in range(BLOG_COUNT):
-            blog = make_test_blog(category_title)
-            blogs.append(blog)
+		for _ in range(BLOG_COUNT):
+			blog = make_test_blog(category_title)
+			blogs.append(blog)
 
         filters = frappe._dict({"blog_category": scrub(category_title)})
         # Assert that get_blog_list returns results as expected
@@ -192,22 +199,18 @@ def scrub(text):
 
 
 def make_test_blog(category_title="Test Blog Category"):
-    category_id = scrub(category_title)
-    if not frappe.db.exists("Blog Category", category_id):
-        frappe.get_doc(dict(doctype="Blog Category", title=category_title)).insert()
-    if not frappe.db.exists("Blogger", "test-blogger"):
-        frappe.get_doc(
-            dict(doctype="Blogger", short_name="test-blogger", full_name="Test Blogger")
-        ).insert()
+	category_id = scrub(category_title)
+	if not frappe.db.exists("Blog Category", category_id):
+		frappe.get_doc(doctype="Blog Category", title=category_title).insert()
+	if not frappe.db.exists("Blogger", "test-blogger"):
+		frappe.get_doc(doctype="Blogger", short_id="test-blogger", full_name="Test Blogger").insert()
 
-    return frappe.get_doc(
-        dict(
-            doctype="Blog Post",
-            blog_category=category_id,
-            blogger="test-blogger",
-            title=random_string(20),
-            route=random_string(20),
-            content=random_string(20),
-            published=1,
-        )
-    ).insert()
+	return frappe.get_doc(
+		doctype="Blog Post",
+		blog_category=category_id,
+		blogger="test-blogger",
+		title=random_string(20),
+		route=random_string(20),
+		content=random_string(20),
+		published=1,
+	).insert()

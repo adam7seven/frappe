@@ -53,8 +53,8 @@ $.extend(frappe.perm, {
     _get_perm: (doctype, doc) => {
         let perm = [{ read: 0, permlevel: 0 }];
 
-        let meta = frappe.get_doc("DocType", doctype);
-        const user = frappe.session.user;
+		let meta = frappe.get_meta(doctype);
+		const user = frappe.session.user;
 
         if (user === "Administrator" || frappe.user_roles.includes("Administrator")) {
             perm[0].read = 1;
@@ -191,25 +191,25 @@ $.extend(frappe.perm, {
             perm = frappe.perm.get_perm(doc.doctype, doc);
         }
 
-        if (!perm) {
-            let is_hidden = df && (cint(df.hidden) || cint(df.hidden_due_to_dependency));
-            let is_read_only = df && (cint(df.read_only) || cint(df.is_virtual));
-            return is_hidden ? "None" : is_read_only ? "Read" : "Write";
-        }
+		if (!perm) {
+			let is_hidden = df && (cint(df.hidden) || cint(df.hidden_due_to_dependency));
+			let is_read_only = df && (cint(df.read_only) || cint(df.is_virtual));
+			return is_hidden ? "None" : is_read_only ? "Read" : "Write";
+		}
 
         if (!df.permlevel) df.permlevel = 0;
         let p = perm[df.permlevel];
         let status = "None";
 
-        // permission
-        if (p) {
-            if (p.write && !df.disabled && !df.is_virtual) {
-                status = "Write";
-            } else if (p.read) {
-                status = "Read";
-            }
-        }
-        if (explain) console.log("By Permission:" + status);
+		// permission
+		if (p) {
+			if (p.write && !df.disabled && !df.is_virtual) {
+				status = "Write";
+			} else if (p.read) {
+				status = "Read";
+			}
+		}
+		if (explain) console.log("By Permission:" + status);
 
         // hidden
         if (cint(df.hidden)) status = "None";
@@ -235,18 +235,18 @@ $.extend(frappe.perm, {
         }
         if (explain) console.log("By Allow on Submit:" + status);
 
-        // workflow state
-        if (status === "Read" && cur_frm && cur_frm.state_fieldname) {
-            // fields updated by workflow must be read-only
-            if (
-                cint(cur_frm.read_only) ||
-                cur_frm.states.update_fields.includes(df.fieldname) ||
-                df.fieldname == cur_frm.state_fieldname
-            ) {
-                status = "Read";
-            }
-        }
-        if (explain) console.log("By Workflow:" + status);
+		// workflow state
+		if (status === "Read" && cur_frm && cur_frm.state_fieldname) {
+			// fields updated by workflow must be read-only
+			if (
+				cint(cur_frm.read_only) ||
+				cur_frm.states.update_fields.includes(df.fieldname) ||
+				df.fieldname == cur_frm.state_fieldname
+			) {
+				status = "Read";
+			}
+		}
+		if (explain) console.log("By Workflow:" + status);
 
         // read only field is checked
         if (status === "Write" && (cint(df.read_only) || df.fieldtype === "Read Only")) {

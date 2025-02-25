@@ -17,17 +17,17 @@ def get_notification_config():
 
 
 def get_things_todo(as_list=False):
-    """Returns a count of incomplete todos"""
-    data = frappe.get_list(
-        "ToDo",
-        fields=["id", "description"] if as_list else "count(*)",
-        filters=[["ToDo", "status", "=", "Open"]],
-        or_filters=[
-            ["ToDo", "allocated_to", "=", frappe.session.user],
-            ["ToDo", "assigned_by", "=", frappe.session.user],
-        ],
-        as_list=True,
-    )
+	"""Return a count of incomplete ToDos."""
+	data = frappe.get_list(
+		"ToDo",
+		fields=["id", "description"] if as_list else "count(*)",
+		filters=[["ToDo", "status", "=", "Open"]],
+		or_filters=[
+			["ToDo", "allocated_to", "=", frappe.session.user],
+			["ToDo", "assigned_by", "=", frappe.session.user],
+		],
+		as_list=True,
+	)
 
     if as_list:
         return data
@@ -35,9 +35,9 @@ def get_things_todo(as_list=False):
 
 
 def get_todays_events(as_list: bool = False):
-    """Returns a count of todays events in calendar"""
-    from frappe.desk.doctype.event.event import get_events
-    from frappe.utils import nowdate
+	"""Return a count of today's events in calendar."""
+	from frappe.desk.doctype.event.event import get_events
+	from frappe.utils import nowdate
 
     today = nowdate()
     events = get_events(today, today)

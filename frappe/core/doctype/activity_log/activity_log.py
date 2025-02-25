@@ -33,8 +33,8 @@ class ActivityLog(Document):
         timeline_doctype: DF.Link | None
         timeline_id: DF.DynamicLink | None
         user: DF.Link | None
-
     # end: auto-generated types
+
     def before_insert(self):
         self.full_name = strip_html(get_fullname(self.user))
         self.date = now()
@@ -51,16 +51,16 @@ class ActivityLog(Document):
         if self.reference_doctype and self.reference_id:
             self.status = "Linked"
 
-    def set_ip_address(self):
-        if self.operation in ("Login", "Logout"):
-            self.ip_address = frappe.local.request_ip
+	def set_ip_address(self):
+		if self.operation in ("Login", "Logout"):
+			self.ip_address = frappe.local.request_ip
 
-    @staticmethod
-    def clear_old_logs(days=None):
-        if not days:
-            days = 90
-        doctype = DocType("Activity Log")
-        frappe.db.delete(doctype, filters=(doctype.modified < (Now() - Interval(days=days))))
+	@staticmethod
+	def clear_old_logs(days=None):
+		if not days:
+			days = 90
+		doctype = DocType("Activity Log")
+		frappe.db.delete(doctype, filters=(doctype.creation < (Now() - Interval(days=days))))
 
 
 def on_doctype_update():

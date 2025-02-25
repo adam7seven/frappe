@@ -78,10 +78,10 @@ def build_missing_files():
 def get_assets_link(frappe_head) -> str:
     import requests
 
-    tag = getoutput(
-        r"cd ../apps/frappe && git show-ref --tags -d | grep %s | sed -e 's,.*"
-        r" refs/tags/,,' -e 's/\^{}//'" % frappe_head
-    )
+	tag = getoutput(
+		r"cd ../apps/frappe && git show-ref --tags -d | grep {} | sed -e 's,.*"
+		r" refs/tags/,,' -e 's/\^{{}}//'".format(frappe_head)
+	)
 
     if tag:
         # if tag exists, download assets from github release
@@ -134,12 +134,11 @@ def setup_assets(assets_archive):
     return directories_created
 
 
-def download_frappe_assets(verbose=True):
-    """Downloads and sets up Frappe assets if they exist based on the current
-    commit HEAD.
-    Returns True if correctly setup else returns False.
-    """
-    frappe_head = getoutput("cd ../apps/frappe && git rev-parse HEAD")
+def download_frappe_assets(verbose=True) -> bool:
+	"""Download and set up Frappe assets if they exist based on the current commit HEAD.
+	Return True if correctly setup else return False.
+	"""
+	frappe_head = getoutput("cd ../apps/frappe && git rev-parse HEAD")
 
     if not frappe_head:
         return False
@@ -179,9 +178,9 @@ def symlink(target, link_name, overwrite=False):
     if not overwrite:
         return os.symlink(target, link_name)
 
-    # Create link to target with temporary filename
-    while True:
-        temp_link_name = f"tmp{frappe.generate_hash()}"
+	# Create link to target with temporary filename
+	while True:
+		temp_link_name = f"tmp{frappe.generate_hash()}"
 
         # os.* functions mimic as closely as possible system functions
         # The POSIX symlink() returns EEXIST if link_name already exists
@@ -192,19 +191,19 @@ def symlink(target, link_name, overwrite=False):
         except FileExistsError:
             pass
 
-    # Replace link_name with temp_link_name
-    try:
-        # Pre-empt os.replace on a directory with a nicer message
-        if os.path.isdir(link_name):
-            raise IsADirectoryError(f"Cannot symlink over existing directory: '{link_name}'")
-        try:
-            shutil.move(temp_link_name, link_name)
-        except AttributeError:
-            os.renames(temp_link_name, link_name)
-    except Exception:
-        if os.path.islink(temp_link_name):
-            os.remove(temp_link_name)
-        raise
+	# Replace link_name with temp_link_name
+	try:
+		# Pre-empt os.replace on a directory with a nicer message
+		if os.path.isdir(link_name):
+			raise IsADirectoryError(f"Cannot symlink over existing directory: '{link_name}'")
+		try:
+			shutil.move(temp_link_name, link_name)
+		except AttributeError:
+			os.renames(temp_link_name, link_name)
+	except Exception:
+		if os.path.islink(temp_link_name):
+			os.remove(temp_link_name)
+		raise
 
 
 def setup():
@@ -221,13 +220,14 @@ def setup():
 
 
 def bundle(
-    mode,
-    apps=None,
-    hard_link=False,
-    verbose=False,
-    skip_frappe=False,
-    files=None,
-    save_metafiles=False,
+	mode,
+	apps=None,
+	hard_link=False,
+	verbose=False,
+	skip_frappe=False,
+	files=None,
+	save_metafiles=False,
+	using_cached=False,
 ):
     """concat / minify js files"""
     setup()
@@ -245,7 +245,10 @@ def bundle(
     if files:
         command += " --files {files}".format(files=",".join(files))
 
-    command += " --run-build-command"
+	if using_cached:
+		command += " --using-cached"
+	else:
+		command += " --run-build-command"
 
     if save_metafiles:
         command += " --save-metafiles"
@@ -254,8 +257,9 @@ def bundle(
     frappe_app_path = frappe.get_app_source_path("frappe")
     frappe.commands.popen(command, cwd=frappe_app_path, env=get_node_env(), raise_err=True)
 
-    with suppress(Exception):
-        frappe.cache.flushall()
+	with suppress(Exception):
+		frappe.cache.flushall()
+
 
 
 def watch(apps=None):
@@ -375,17 +379,17 @@ def make_asset_dirs(hard_link=False):
     clear_broken_symlinks()
     symlinks = generate_assets_map()
 
-    for source, target in symlinks.items():
-        start_message = unstrip(f"{'Copying assets from' if hard_link else 'Linking'} {source} to {target}")
-        fail_message = unstrip(f"Cannot {'copy' if hard_link else 'link'} {source} to {target}")
+	for source, target in symlinks.items():
+		start_message = unstrip(f"{'Copying assets from' if hard_link else 'Linking'} {source} to {target}")
+		fail_message = unstrip(f"Cannot {'copy' if hard_link else 'link'} {source} to {target}")
 
-        # Used '\r' instead of '\x1b[1K\r' to print entire lines in smaller terminal sizes
-        try:
-            print(start_message, end="\r")
-            link_assets_dir(source, target, hard_link=hard_link)
-        except Exception as e:
-            print(e)
-            print(fail_message)
+		# Used '\r' instead of '\x1b[1K\r' to print entire lines in smaller terminal sizes
+		try:
+			print(start_message, end="\r")
+			link_assets_dir(source, target, hard_link=hard_link)
+		except Exception as e:
+			print(e)
+			print(fail_message)
 
     click.echo(unstrip(click.style("✔", fg="green") + " Application Assets Linked") + "\n")
 
@@ -407,9 +411,9 @@ def link_assets_dir(source, target, hard_link=False):
 
 
 def scrub_html_template(content):
-    """Returns HTML content with removed whitespace and comments"""
-    # remove whitespace to a single space
-    content = WHITESPACE_PATTERN.sub(" ", content)
+	"""Return HTML content with removed whitespace and comments."""
+	# remove whitespace to a single space
+	content = WHITESPACE_PATTERN.sub(" ", content)
 
     # strip comments
     content = HTML_COMMENT_PATTERN.sub("", content)
@@ -418,7 +422,7 @@ def scrub_html_template(content):
 
 
 def html_to_js_template(path, content):
-    """returns HTML template content as Javascript code, adding it to `frappe.templates`"""
-    return """frappe.templates["{key}"] = '{content}';\n""".format(
-        key=path.rsplit("/", 1)[-1][:-5], content=scrub_html_template(content)
-    )
+	"""Return HTML template content as Javascript code, by adding it to `frappe.templates`."""
+	return """frappe.templates["{key}"] = '{content}';\n""".format(
+		key=path.rsplit("/", 1)[-1][:-5], content=scrub_html_template(content)
+	)

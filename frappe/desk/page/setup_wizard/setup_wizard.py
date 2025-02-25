@@ -106,66 +106,66 @@ def process_setup_stages(stages, user_input, is_background_task=False):
 
 
 def update_global_settings(args):  # nosemgrep
-    if args.language and args.language != "English":
-        set_default_language(get_language_code(args.lang))
-        frappe.db.commit()
-    frappe.clear_cache()
+	if args.language and args.language != "English":
+		set_default_language(get_language_code(args.lang))
+		frappe.db.commit()
+	frappe.clear_cache()
 
-    update_system_settings(args)
-    create_or_update_user(args)
-    set_timezone(args)
+	update_system_settings(args)
+	create_or_update_user(args)
+	set_timezone(args)
 
 
 def run_post_setup_complete(args):  # nosemgrep
-    disable_future_access()
-    frappe.db.commit()
-    frappe.clear_cache()
-    # HACK: due to race condition sometimes old doc stays in cache.
-    # Remove this when we have reliable cache reset for docs
-    frappe.get_cached_doc("System Settings") and frappe.get_doc("System Settings")
+	disable_future_access()
+	frappe.db.commit()
+	frappe.clear_cache()
+	# HACK: due to race condition sometimes old doc stays in cache.
+	# Remove this when we have reliable cache reset for docs
+	frappe.get_cached_doc("System Settings") and frappe.get_doc("System Settings")
 
 
 def run_setup_success(args):  # nosemgrep
-    for hook in frappe.get_hooks("setup_wizard_success"):
-        frappe.get_attr(hook)(args)
-    install_fixtures.install()
+	for hook in frappe.get_hooks("setup_wizard_success"):
+		frappe.get_attr(hook)(args)
+	install_fixtures.install()
 
 
 def get_stages_hooks(args):  # nosemgrep
-    stages = []
-    for method in frappe.get_hooks("setup_wizard_stages"):
-        stages += frappe.get_attr(method)(args)
-    return stages
+	stages = []
+	for method in frappe.get_hooks("setup_wizard_stages"):
+		stages += frappe.get_attr(method)(args)
+	return stages
 
 
 def get_setup_complete_hooks(args):  # nosemgrep
-    return [
-        {
-            "status": "Executing method",
-            "fail_msg": "Failed to execute method",
-            "tasks": [
-                {
-                    "fn": frappe.get_attr(method),
-                    "args": args,
-                    "fail_msg": "Failed to execute method",
-                }
-            ],
-        }
-        for method in frappe.get_hooks("setup_wizard_complete")
-    ]
+	return [
+		{
+			"status": "Executing method",
+			"fail_msg": "Failed to execute method",
+			"tasks": [
+				{
+					"fn": frappe.get_attr(method),
+					"args": args,
+					"fail_msg": "Failed to execute method",
+				}
+			],
+		}
+		for method in frappe.get_hooks("setup_wizard_complete")
+	]
 
 
 def handle_setup_exception(args):  # nosemgrep
-    frappe.db.rollback()
-    if args:
-        traceback = frappe.get_traceback(with_context=True)
-        print(traceback)
-        for hook in frappe.get_hooks("setup_wizard_exception"):
-            frappe.get_attr(hook)(traceback, args)
+	frappe.db.rollback()
+	if args:
+		traceback = frappe.get_traceback(with_context=True)
+		print(traceback)
+		for hook in frappe.get_hooks("setup_wizard_exception"):
+			frappe.get_attr(hook)(traceback, args)
 
 
 def update_system_settings(args):  # nosemgrep
-    number_format = get_country_info(args.get("country")).get("number_format", "#,###.##")
+	number_format = get_country_info(args.get("country")).get("number_format", "#,###.##")
 
     # replace these as float number formats, as they have 0 precision
     # and are currency number formats and not for floats
@@ -174,65 +174,65 @@ def update_system_settings(args):  # nosemgrep
     elif number_format == "#,###":
         number_format = "#,###.##"
 
-    system_settings = frappe.get_doc("System Settings", "System Settings")
-    system_settings.update(
-        {
-            "country": args.get("country"),
-            "language": get_language_code(args.get("language")) or "en",
-            "time_zone": args.get("timezone"),
-            "currency": args.get("currency"),
-            "float_precision": 3,
-            "rounding_method": "Banker's Rounding",
-            "date_format": frappe.db.get_value("Country", args.get("country"), "date_format"),
-            "time_format": frappe.db.get_value("Country", args.get("country"), "time_format"),
-            "number_format": number_format,
-            "enable_scheduler": 1 if not frappe.flags.in_test else 0,
-            "backup_limit": 3,  # Default for downloadable backups
-            "enable_telemetry": cint(args.get("enable_telemetry")),
-        }
-    )
-    system_settings.save()
-    if args.get("enable_telemetry"):
-        frappe.db.set_default("session_recording_start", now())
+	system_settings = frappe.get_doc("System Settings", "System Settings")
+	system_settings.update(
+		{
+			"country": args.get("country"),
+			"language": get_language_code(args.get("language")) or "en",
+			"time_zone": args.get("timezone"),
+			"currency": args.get("currency"),
+			"float_precision": 3,
+			"rounding_method": "Banker's Rounding",
+			"date_format": frappe.db.get_value("Country", args.get("country"), "date_format"),
+			"time_format": frappe.db.get_value("Country", args.get("country"), "time_format"),
+			"number_format": number_format,
+			"enable_scheduler": 1 if not frappe.flags.in_test else 0,
+			"backup_limit": 3,  # Default for downloadable backups
+			"enable_telemetry": cint(args.get("enable_telemetry")),
+		}
+	)
+	system_settings.save()
+	if args.get("enable_telemetry"):
+		frappe.db.set_default("session_recording_start", now())
 
 
 def create_or_update_user(args):  # nosemgrep
-    email = args.get("email")
-    if not email:
-        return
+	email = args.get("email")
+	if not email:
+		return
 
-    first_name, last_name = args.get("full_name", ""), ""
-    if " " in first_name:
-        first_name, last_name = first_name.split(" ", 1)
+	first_name, last_name = args.get("full_name", ""), ""
+	if " " in first_name:
+		first_name, last_name = first_name.split(" ", 1)
 
-    if user := frappe.db.get_value("User", email, ["first_name", "last_name"], as_dict=True):
-        if user.first_name != first_name or user.last_name != last_name:
-            (
-                frappe.qb.update("User")
-                .set("first_name", first_name)
-                .set("last_name", last_name)
-                .set("full_name", args.get("full_name"))
-            ).run()
-    else:
-        _mute_emails, frappe.flags.mute_emails = frappe.flags.mute_emails, True
+	if user := frappe.db.get_value("User", email, ["first_name", "last_name"], as_dict=True):
+		if user.first_name != first_name or user.last_name != last_name:
+			(
+				frappe.qb.update("User")
+				.set("first_name", first_name)
+				.set("last_name", last_name)
+				.set("full_name", args.get("full_name"))
+			).run()
+	else:
+		_mute_emails, frappe.flags.mute_emails = frappe.flags.mute_emails, True
 
-        user = frappe.new_doc("User")
-        user.update(
-            {
-                "email": email,
-                "first_name": first_name,
-                "last_name": last_name,
-            }
-        )
-        user.append_roles(*_get_default_roles())
-        user.append_roles("System Manager")
-        user.flags.no_welcome_mail = True
-        user.insert()
+		user = frappe.new_doc("User")
+		user.update(
+			{
+				"email": email,
+				"first_name": first_name,
+				"last_name": last_name,
+			}
+		)
+		user.append_roles(*_get_default_roles())
+		user.append_roles("System Manager")
+		user.flags.no_welcome_mail = True
+		user.insert()
 
-        frappe.flags.mute_emails = _mute_emails
+		frappe.flags.mute_emails = _mute_emails
 
-    if args.get("password"):
-        update_password(email, args.get("password"))
+	if args.get("password"):
+		update_password(email, args.get("password"))
 
 
 def set_timezone(args):  # nosemgrep
@@ -322,13 +322,6 @@ def load_languages():
 
 
 @frappe.whitelist()
-def load_country():
-    from frappe.sessions import get_geo_ip_country
-
-    return get_geo_ip_country(frappe.local.request_ip) if frappe.local.request_ip else None
-
-
-@frappe.whitelist()
 def load_user_details():
     return {
         "full_name": frappe.cache.hget("full_name", "signup"),
@@ -337,12 +330,12 @@ def load_user_details():
 
 
 def prettify_args(args):  # nosemgrep
-    # remove attachments
-    for key, val in args.items():
-        if isinstance(val, str) and "data:image" in val:
-            filename = val.split("data:image", 1)[0].strip(", ")
-            size = round((len(val) * 3 / 4) / 1048576.0, 2)
-            args[key] = f"Image Attached: '{filename}' of size {size} MB"
+	# remove attachments
+	for key, val in args.items():
+		if isinstance(val, str) and "data:image" in val:
+			filename = val.split("data:image", 1)[0].strip(", ")
+			size = round((len(val) * 3 / 4) / 1048576.0, 2)
+			args[key] = f"Image Attached: '{filename}' of size {size} MB"
 
     pretty_args = []
     pretty_args.extend(f"{key} = {args[key]}" for key in sorted(args))
@@ -350,8 +343,8 @@ def prettify_args(args):  # nosemgrep
 
 
 def email_setup_wizard_exception(traceback, args):  # nosemgrep
-    if not frappe.conf.setup_wizard_exception_email:
-        return
+	if not frappe.conf.setup_wizard_exception_email:
+		return
 
     pretty_args = prettify_args(args)
     message = """
@@ -395,9 +388,9 @@ def email_setup_wizard_exception(traceback, args):  # nosemgrep
 
 
 def log_setup_wizard_exception(traceback, args):  # nosemgrep
-    with open("../logs/setup-wizard.log", "w+") as setup_log:
-        setup_log.write(traceback)
-        setup_log.write(json.dumps(args))
+	with open("../logs/setup-wizard.log", "w+") as setup_log:
+		setup_log.write(traceback)
+		setup_log.write(json.dumps(args))
 
 
 def get_language_code(lang):

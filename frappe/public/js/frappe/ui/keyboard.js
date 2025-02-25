@@ -187,6 +187,7 @@ frappe.ui.keys.off = function (key, page) {
 frappe.ui.keys.add_shortcut({
 	shortcut: "ctrl+s",
 	action: function (e) {
+		document.activeElement?.blur();
 		frappe.app.trigger_primary_action();
 		e.preventDefault();
 		return false;
@@ -206,12 +207,13 @@ frappe.ui.keys.add_shortcut({
 });
 
 frappe.ui.keys.add_shortcut({
-	shortcut: "ctrl+h",
+	shortcut: "ctrl+k",
 	action: function (e) {
+		$("#navbar-search").focus();
 		e.preventDefault();
-		$(".navbar-home img").click();
+		return false;
 	},
-	description: __("Navigate Home"),
+	description: __("Open Awesomebar"),
 });
 
 frappe.ui.keys.add_shortcut({
@@ -255,19 +257,25 @@ frappe.ui.keys.on("enter", function (e) {
 });
 
 frappe.ui.keys.on("ctrl+down", function (e) {
-	var grid_row = frappe.ui.form.get_open_grid_form();
-	grid_row &&
+	const grid_row = frappe.ui.form.get_open_grid_form();
+	if (grid_row?.has_next()) {
 		grid_row.toggle_view(false, function () {
 			grid_row.open_next();
 		});
+	} else {
+		e.preventDefault();
+	}
 });
 
 frappe.ui.keys.on("ctrl+up", function (e) {
-	var grid_row = frappe.ui.form.get_open_grid_form();
-	grid_row &&
+	const grid_row = frappe.ui.form.get_open_grid_form();
+	if (grid_row?.has_prev()) {
 		grid_row.toggle_view(false, function () {
 			grid_row.open_prev();
 		});
+	} else {
+		e.preventDefault();
+	}
 });
 
 frappe.ui.keys.add_shortcut({

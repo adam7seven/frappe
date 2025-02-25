@@ -15,8 +15,7 @@ def unzip_file(id: str):
 
 @frappe.whitelist()
 def get_attached_images(doctype: str, ids: list[str] | str) -> frappe._dict:
-    """get list of image urls attached in form
-    returns {id: ['image.jpg', 'image.png']}"""
+	"""Return list of image urls attached in form `{id: ['image.jpg', 'image.png']}`."""
 
     if isinstance(ids, str):
         ids = json.loads(ids)
@@ -77,7 +76,7 @@ def get_files_by_search_text(text: str) -> list[dict]:
             "file_url": text,
             "id": ("like", text),
         },
-        order_by="modified desc",
+        order_by="creation desc",
         limit=20,
     )
 

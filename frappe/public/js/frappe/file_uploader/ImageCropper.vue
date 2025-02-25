@@ -6,11 +6,18 @@
 		<div class="image-cropper-actions">
 			<div>
 				<div class="btn-group" v-if="fixed_aspect_ratio == null">
-					<button v-for="button in aspect_ratio_buttons" type="button" class="btn btn-default btn-sm" :class="{
-						active: isNaN(aspect_ratio)
-							? isNaN(button.value)
-							: button.value === aspect_ratio,
-					}" :key="button.label" @click="aspect_ratio = button.value">
+					<button
+						v-for="button in aspect_ratio_buttons"
+						type="button"
+						class="btn btn-default btn-sm"
+						:class="{
+							active: isNaN(aspect_ratio)
+								? isNaN(button.value)
+								: button.value === aspect_ratio,
+						}"
+						:key="button.label"
+						@click="aspect_ratio = button.value"
+					>
 						{{ button.label }}
 					</button>
 				</div>
@@ -119,7 +126,6 @@
 
 <style scoped>
 @import "cropperjs/dist/cropper.min.css";
-
 img {
 	display: block;
 	max-width: 100%;

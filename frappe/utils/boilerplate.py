@@ -8,12 +8,14 @@ import os
 import pathlib
 import re
 import textwrap
+from pathlib import Path
 
 import click
 import git
 import requests
 
 import frappe
+from frappe.utils.change_log import get_app_branch
 
 APP_TITLE_PATTERN = re.compile(r"^(?![\W])[^\d_\s][\w -]+$", flags=re.UNICODE)
 
@@ -37,38 +39,37 @@ def _get_user_inputs(app_name):
     hooks.app_name = app_name
     app_title = hooks.app_name.replace("_", " ").title()
 
-    new_app_config = {
-        "app_title": {
-            "prompt": "App Title",
-            "default": app_title,
-            "validator": is_valid_title,
-        },
-        "app_description": {"prompt": "App Description"},
-        "app_publisher": {"prompt": "App Publisher"},
-        "app_email": {"prompt": "App Email", "validator": is_valid_email},
-        "app_license": {
-            "prompt": "App License",
-            "default": "mit",
-            "type": click.Choice(get_license_options()),
-        },
-        "create_github_workflow": {
-            "prompt": "Create GitHub Workflow action for unittests",
-            "default": False,
-            "type": bool,
-        },
-    }
+	new_app_config = {
+		"app_title": {
+			"prompt": "App Title",
+			"default": app_title,
+			"validator": is_valid_title,
+		},
+		"app_description": {"prompt": "App Description"},
+		"app_publisher": {"prompt": "App Publisher"},
+		"app_email": {"prompt": "App Email", "validator": is_valid_email},
+		"app_license": {
+			"prompt": "App License",
+			"default": "mit",
+			"type": click.Choice(get_license_options()),
+		},
+		"create_github_workflow": {
+			"prompt": "Create GitHub Workflow action for unittests",
+			"default": False,
+			"type": bool,
+		},
+		"branch_name": {"prompt": "Branch Name", "default": get_app_branch("frappe")},
+	}
 
     for property, config in new_app_config.items():
         value = None
         input_type = config.get("type", str)
 
-        while value is None:
-            if input_type == bool:
-                value = click.confirm(config["prompt"], default=config.get("default"))
-            else:
-                value = click.prompt(
-                    config["prompt"], default=config.get("default"), type=input_type
-                )
+		while value is None:
+			if input_type is bool:
+				value = click.confirm(config["prompt"], default=config.get("default"))
+			else:
+				value = click.prompt(config["prompt"], default=config.get("default"), type=input_type)
 
             if validator_function := config.get("validator"):
                 if not validator_function(value):
@@ -99,59 +100,53 @@ def is_valid_title(title) -> bool:
 
 
 def get_license_options() -> list[str]:
-    url = "https://api.github.com/licenses"
-    try:
-        res = requests.get(url=url)
-    except requests.exceptions.RequestException:
-        return ["agpl-3.0", "gpl-3.0", "mit", "custom"]
+	url = "https://api.github.com/licenses"
+	try:
+		res = requests.get(url=url)
+	except requests.exceptions.RequestException:
+		return ["agpl-3.0", "gpl-3.0", "mit", "custom"]
 
-    if res.status_code == 200:
-        res = res.json()
-        ids = [r.get("spdx_id") for r in res]
-        return [licencse.lower() for licencse in ids]
+	if res.status_code == 200:
+		res = res.json()
+		ids = [r.get("spdx_id") for r in res]
+		return [licencse.lower() for licencse in ids]
 
     return ["agpl-3.0", "gpl-3.0", "mit", "custom"]
 
 
 def get_license_text(license_name: str) -> str:
-    url = f"https://api.github.com/licenses/{license_name.lower()}"
-    try:
-        res = requests.get(url=url)
-    except requests.exceptions.RequestException:
-        return "No license text found"
-    if res.status_code == 200:
-        res = res.json()
-        return res.get("body")
-    return license_name
+	url = f"https://api.github.com/licenses/{license_name.lower()}"
+	try:
+		res = requests.get(url=url)
+	except requests.exceptions.RequestException:
+		return "No license text found"
+	if res.status_code == 200:
+		res = res.json()
+		return res.get("body")
+	return license_name
+
+
+def copy_from_frappe(rel_path: str, new_app_path: str):
+	"""Copy files from frappe app to new app."""
+	src = Path(frappe.get_app_path("frappe", "..")) / rel_path
+	target = Path(new_app_path) / rel_path
+	Path(target).write_text(Path(src).read_text())
 
 
 def _create_app_boilerplate(dest, hooks, no_git=False):
-    frappe.create_folder(
-        os.path.join(
-            dest, hooks.app_name, hooks.app_name, frappe.scrub(hooks.app_title)
-        ),
-        with_init=True,
-    )
-    frappe.create_folder(
-        os.path.join(dest, hooks.app_name, hooks.app_name, "templates"), with_init=True
-    )
-    frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "www"))
-    frappe.create_folder(
-        os.path.join(dest, hooks.app_name, hooks.app_name, "templates", "pages"),
-        with_init=True,
-    )
-    frappe.create_folder(
-        os.path.join(dest, hooks.app_name, hooks.app_name, "templates", "includes")
-    )
-    frappe.create_folder(
-        os.path.join(dest, hooks.app_name, hooks.app_name, "config"), with_init=True
-    )
-    frappe.create_folder(
-        os.path.join(dest, hooks.app_name, hooks.app_name, "public", "css")
-    )
-    frappe.create_folder(
-        os.path.join(dest, hooks.app_name, hooks.app_name, "public", "js")
-    )
+	frappe.create_folder(
+		os.path.join(dest, hooks.app_name, hooks.app_name, frappe.scrub(hooks.app_title)),
+		with_init=True,
+	)
+	frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "templates"), with_init=True)
+	frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "www"))
+	frappe.create_folder(
+		os.path.join(dest, hooks.app_name, hooks.app_name, "templates", "pages"), with_init=True
+	)
+	frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "templates", "includes"))
+	frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "config"), with_init=True)
+	frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "public", "css"))
+	frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "public", "js"))
 
     # add .gitkeep file so that public folder is committed to git
     # this is needed because if public doesn't exist, bench build doesn't symlink the apps assets
@@ -168,27 +163,26 @@ def _create_app_boilerplate(dest, hooks, no_git=False):
     with open(os.path.join(dest, hooks.app_name, "pyproject.toml"), "w") as f:
         f.write(frappe.as_unicode(pyproject_template.format(**hooks)))
 
-    with open(os.path.join(dest, hooks.app_name, "README.md"), "w") as f:
-        f.write(
-            frappe.as_unicode(
-                f"## {hooks.app_title}\n\n{hooks.app_description}\n\n#### License\n\n{hooks.app_license}"
-            )
-        )
-    license_body = get_license_text(license_name=hooks.app_license)
-    with open(os.path.join(dest, hooks.app_name, "license.txt"), "w") as f:
-        f.write(frappe.as_unicode(license_body))
+	with open(os.path.join(dest, hooks.app_name, ".pre-commit-config.yaml"), "w") as f:
+		f.write(frappe.as_unicode(precommit_template.format(**hooks)))
 
-    with open(
-        os.path.join(dest, hooks.app_name, hooks.app_name, "modules.txt"), "w"
-    ) as f:
-        f.write(frappe.as_unicode(hooks.app_title))
+	license_body = get_license_text(license_name=hooks.app_license)
+	with open(os.path.join(dest, hooks.app_name, "license.txt"), "w") as f:
+		f.write(frappe.as_unicode(license_body))
 
-    # These values could contain quotes and can break string declarations
-    # So escaping them before setting variables in setup.py and hooks.py
-    for key in ("app_publisher", "app_description", "app_license"):
-        hooks[key] = (
-            hooks[key].replace("\\", "\\\\").replace("'", "\\'").replace('"', '\\"')
-        )
+	with open(
+		os.path.join(dest, hooks.app_name, hooks.app_name, frappe.scrub(hooks.app_title), ".frappe"), "w"
+	) as f:
+		f.write("")
+
+	from frappe.deprecation_dumpster import boilerplate_modules_txt
+
+	boilerplate_modules_txt(dest, hooks.app_name, hooks.app_title)
+
+	# These values could contain quotes and can break string declarations
+	# So escaping them before setting variables in setup.py and hooks.py
+	for key in ("app_publisher", "app_description", "app_license"):
+		hooks[key] = hooks[key].replace("\\", "\\\\").replace("'", "\\'").replace('"', '\\"')
 
     with open(os.path.join(dest, hooks.app_name, hooks.app_name, "hooks.py"), "w") as f:
         f.write(frappe.as_unicode(hooks_template.format(**hooks)))
@@ -200,19 +194,26 @@ def _create_app_boilerplate(dest, hooks, no_git=False):
 
     app_directory = os.path.join(dest, hooks.app_name)
 
-    if hooks.create_github_workflow:
-        _create_github_workflow_files(dest, hooks)
+	copy_from_frappe(".editorconfig", app_directory)
+	copy_from_frappe(".eslintrc", app_directory)
 
-    if not no_git:
-        with open(os.path.join(dest, hooks.app_name, ".gitignore"), "w") as f:
-            f.write(
-                frappe.as_unicode(gitignore_template.format(app_name=hooks.app_name))
-            )
+	if hooks.create_github_workflow:
+		_create_github_workflow_files(dest, hooks)
+		hooks.readme_ci_section = readme_ci_section
+	else:
+		hooks.readme_ci_section = ""
 
-        # initialize git repository
-        app_repo = git.Repo.init(app_directory, initial_branch="develop")
-        app_repo.git.add(A=True)
-        app_repo.index.commit("feat: Initialize App")
+	with open(os.path.join(dest, hooks.app_name, "README.md"), "w") as f:
+		f.write(frappe.as_unicode(readme_template.format(**hooks)))
+
+	if not no_git:
+		with open(os.path.join(dest, hooks.app_name, ".gitignore"), "w") as f:
+			f.write(frappe.as_unicode(gitignore_template.format(app_name=hooks.app_name)))
+
+		# initialize git repository
+		app_repo = git.Repo.init(app_directory, initial_branch=hooks.branch_name)
+		app_repo.git.add(A=True)
+		app_repo.index.commit("feat: Initialize App")
 
     print(f"'{hooks.app_name}' created at {app_directory}")
 
@@ -224,6 +225,10 @@ def _create_github_workflow_files(dest, hooks):
     ci_workflow = workflows_path / "ci.yml"
     with open(ci_workflow, "w") as f:
         f.write(github_workflow_template.format(**hooks))
+
+	linter_workflow = workflows_path / "linter.yml"
+	with open(linter_workflow, "w") as f:
+		f.write(linter_workflow_template)
 
 
 PATCH_TEMPLATE = textwrap.dedent(
@@ -305,8 +310,8 @@ class PatchCreator:
         if self.patch_file.exists():
             raise Exception(f"Patch {self.patch_file} already exists")
 
-        *path, _filename = self.patch_file.relative_to(self.app_dir.parents[0]).parts
-        dotted_path = ".".join([*path, self.patch_file.stem])
+		*path, _filename = self.patch_file.relative_to(self.app_dir.parents[0]).parts
+		dotted_path = ".".join([*path, self.patch_file.stem])
 
         patches_txt = self.app_dir / "patches.txt"
         existing_patches = patches_txt.read_text()
@@ -358,6 +363,41 @@ build-backend = "flit_core.buildapi"
 # These dependencies are only installed when developer mode is enabled
 [tool.bench.dev-dependencies]
 # package_name = "~=1.1.0"
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "F",
+    "E",
+    "W",
+    "I",
+    "UP",
+    "B",
+]
+ignore = [
+    "B017", # assertRaises(Exception) - should be more specific
+    "B018", # useless expression, not assigned to anything
+    "B023", # function doesn't bind loop variable - will have last iteration's value
+    "B904", # raise inside except without from
+    "E101", # indentation contains mixed spaces and tabs
+    "E402", # module level import not at top of file
+    "E501", # line too long
+    "E741", # ambiguous variable name
+    "F401", # "unused" imports
+    "F403", # can't detect undefined names from * import
+    "F405", # can't detect undefined names from * import
+    "F722", # syntax error in forward type annotation
+    "W191", # indentation contains tabs
+]
+typing-modules = ["frappe.types.DF"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "tab"
+docstring-code-format = true
 """
 
 hooks_template = """app_name = "{app_name}"
@@ -431,6 +471,9 @@ app_license = "{app_license}"
 
 # automatically create page for each record of this doctype
 # website_generators = ["Web Page"]
+
+# automatically load and sync documents of this doctype from downstream apps
+# importable_doctypes = [doctype_1]
 
 # Jinja
 # ----------
@@ -606,25 +649,73 @@ app_license = "{app_license}"
 
 """
 
-gitignore_template = """.DS_Store
+gitignore_template = """# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
 *.pyc
-*.egg-info
-*.swp
-tags
-node_modules
-__pycache__"""
+*.py~
 
-github_workflow_template = """
-name: CI
+# Distribution / packaging
+.Python
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+tags
+MANIFEST
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# IDEs and editors
+.vscode/
+.vs/
+.idea/
+.kdev4/
+*.kdev4
+*.DS_Store
+*.swp
+*.comp.js
+.wnf-lang-status
+*debug.log
+
+# Helix Editor
+.helix/
+
+# Aider AI Chat
+.aider*
+"""
+
+github_workflow_template = """name: CI
 
 on:
   push:
     branches:
-      - develop
+      - {branch_name}
   pull_request:
 
 concurrency:
-  group: develop-{app_name}-${{{{ github.event.number }}}}
+  group: {branch_name}-{app_name}-${{{{ github.event.number }}}}
   cancel-in-progress: true
 
 jobs:
@@ -693,7 +784,9 @@ jobs:
             ${{{{ runner.os }}}}-yarn-
 
       - name: Install MariaDB Client
-        run: sudo apt-get install mariadb-client-10.6
+        run: |
+          sudo apt update
+          sudo apt-get install mariadb-client-10.6
 
       - name: Setup
         run: |
@@ -728,3 +821,179 @@ patches_template = """[pre_model_sync]
 
 [post_model_sync]
 # Patches added in this section will be executed after doctypes are migrated"""
+
+
+precommit_template = """exclude: 'node_modules|.git'
+default_stages: [commit]
+fail_fast: false
+
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0
+    hooks:
+      - id: trailing-whitespace
+        files: "{app_name}.*"
+        exclude: ".*json$|.*txt$|.*csv|.*md|.*svg"
+      - id: check-yaml
+      - id: check-merge-conflict
+      - id: check-ast
+      - id: check-json
+      - id: check-toml
+      - id: check-yaml
+      - id: debug-statements
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.2.0
+    hooks:
+      - id: ruff
+        name: "Run ruff linter and apply fixes"
+        args: ["--fix"]
+
+      - id: ruff-format
+        name: "Format Python code"
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v2.7.1
+    hooks:
+      - id: prettier
+        types_or: [javascript, vue, scss]
+        # Ignore any files that might contain jinja / bundles
+        exclude: |
+            (?x)^(
+                {app_name}/public/dist/.*|
+                .*node_modules.*|
+                .*boilerplate.*|
+                {app_name}/templates/includes/.*|
+                {app_name}/public/js/lib/.*
+            )$
+
+
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v8.44.0
+    hooks:
+      - id: eslint
+        types_or: [javascript]
+        args: ['--quiet']
+        # Ignore any files that might contain jinja / bundles
+        exclude: |
+            (?x)^(
+                {app_name}/public/dist/.*|
+                cypress/.*|
+                .*node_modules.*|
+                .*boilerplate.*|
+                {app_name}/templates/includes/.*|
+                {app_name}/public/js/lib/.*
+            )$
+
+ci:
+    autoupdate_schedule: weekly
+    skip: []
+    submodules: false
+"""
+
+linter_workflow_template = """name: Linters
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linter:
+    name: 'Frappe Linter'
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: pip
+      - uses: pre-commit/action@v3.0.0
+
+      - name: Download Semgrep rules
+        run: git clone --depth 1 https://github.com/frappe/semgrep-rules.git frappe-semgrep-rules
+
+      - name: Run Semgrep rules
+        run: |
+          pip install semgrep
+          semgrep ci --config ./frappe-semgrep-rules/rules --config r/python.lang.correctness
+
+  deps-vulnerable-check:
+    name: 'Vulnerable Dependency Check'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - uses: actions/checkout@v4
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/*requirements.txt', '**/pyproject.toml', '**/setup.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
+
+      - name: Install and run pip-audit
+        run: |
+          pip install pip-audit
+          cd ${GITHUB_WORKSPACE}
+          pip-audit --desc on .
+"""
+
+readme_template = """### {app_title}
+
+{app_description}
+
+### Installation
+
+You can install this app using the [bench](https://github.com/frappe/bench) CLI:
+
+```bash
+cd $PATH_TO_YOUR_BENCH
+bench get-app $URL_OF_THIS_REPO --branch {branch_name}
+bench install-app {app_name}
+```
+
+### Contributing
+
+This app uses `pre-commit` for code formatting and linting. Please [install pre-commit](https://pre-commit.com/#installation) and enable it for this repository:
+
+```bash
+cd apps/{app_name}
+pre-commit install
+```
+
+Pre-commit is configured to use the following tools for checking and formatting your code:
+
+- ruff
+- eslint
+- prettier
+- pyupgrade
+{readme_ci_section}
+### License
+
+{app_license}
+"""
+
+readme_ci_section = """### CI
+
+This app can use GitHub Actions for CI. The following workflows are configured:
+
+- CI: Installs this app and runs unit tests on every push to `develop` branch.
+- Linters: Runs [Frappe Semgrep Rules](https://github.com/frappe/semgrep-rules) and [pip-audit](https://pypi.org/project/pip-audit/) on every pull request.
+
+"""

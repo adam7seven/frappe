@@ -49,10 +49,8 @@ class Exporter:
             self.data = []
         self.add_data()
 
-    def get_all_exportable_fields(self):
-        child_table_fields = [
-            df.fieldname for df in self.meta.fields if df.fieldtype in table_fieldtypes
-        ]
+	def get_all_exportable_fields(self):
+		child_table_fields = [df.fieldname for df in self.meta.fields if df.fieldtype in table_fieldtypes]
 
         meta = frappe.get_meta(self.doctype)
         exportable_fields = frappe._dict({})
@@ -117,33 +115,28 @@ class Exporter:
         table_fields = [f for f in self.exportable_fields if f != self.doctype]
         data = self.get_data_as_docs()
 
-        if not frappe.permissions.can_export(self.doctype):
-            if frappe.permissions.can_export(self.doctype, is_owner=True):
-                for doc in data:
-                    if doc.get("owner") != frappe.session.user:
-                        raise frappe.PermissionError(
-                            _("You are not allowed to export {} doctype").format(
-                                self.doctype
-                            )
-                        )
-            else:
-                raise frappe.PermissionError(
-                    _("You are not allowed to export {} doctype").format(self.doctype)
-                )
+		if not frappe.permissions.can_export(self.doctype):
+			if frappe.permissions.can_export(self.doctype, is_owner=True):
+				for doc in data:
+					if doc.get("owner") != frappe.session.user:
+						raise frappe.PermissionError(
+							_("You are not allowed to export {} doctype").format(self.doctype)
+						)
+			else:
+				raise frappe.PermissionError(
+					_("You are not allowed to export {} doctype").format(self.doctype)
+				)
 
-        for doc in data:
-            rows = []
-            rows = self.add_data_row(self.doctype, None, doc, rows, 0)
-
-            if table_fields:
-                # add child table data
-                for f in table_fields:
-                    for i, child_row in enumerate(doc.get(f, [])):
-                        table_df = self.meta.get_field(f)
-                        child_doctype = table_df.options
-                        rows = self.add_data_row(
-                            child_doctype, child_row.parentfield, child_row, rows, i
-                        )
+		for doc in data:
+			rows = []
+			rows = self.add_data_row(self.doctype, None, doc, rows, 0)
+			if table_fields:
+				# add child table data
+				for f in table_fields:
+					for i, child_row in enumerate(doc.get(f, [])):
+						table_df = self.meta.get_field(f)
+						child_doctype = table_df.options
+						rows = self.add_data_row(child_doctype, child_row.parentfield, child_row, rows, i)
 
             yield from rows
 
@@ -162,12 +155,13 @@ class Exporter:
                     continue
                 value = doc.get(df.fieldname, None)
 
-                if df.fieldtype == "Duration":
-                    value = flt(value or 0)
-                    value = format_duration(value, df.hide_days)
+				if df.fieldtype == "Duration":
+					value = format_duration(flt(value), df.hide_days)
 
-                row[i] = value
-        return rows
+				if df.fieldtype == "Text Editor" and value:
+					value = frappe.core.utils.html2text(value)
+				row[i] = value
+		return rows
 
     def get_data_as_docs(self):
         def format_column_id(df):

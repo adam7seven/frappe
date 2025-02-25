@@ -34,12 +34,12 @@ class Role(Document):
     def after_insert(self):
         frappe.cache.hdel("roles", "Administrator")
 
-    def validate(self):
-        if self.disabled:
-            self.disable_role()
-        else:
-            self.set_desk_properties()
-        self.validate_homepage()
+	def validate(self):
+		if self.disabled:
+			self.disable_role()
+		else:
+			self.set_desk_properties()
+		self.validate_homepage()
 
     def disable_role(self):
         if self.id in STANDARD_ROLES:
@@ -115,12 +115,10 @@ def get_user_info(users, field="email"):
 
 
 def get_users(role):
-    return [
-        d.parent
-        for d in frappe.get_all(
-            "Has Role", filters={"role": role, "parenttype": "User"}, fields=["parent"]
-        )
-    ]
+	return [
+		d.parent
+		for d in frappe.get_all("Has Role", filters={"role": role, "parenttype": "User"}, fields=["parent"])
+	]
 
 
 # searches for active employees

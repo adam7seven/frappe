@@ -3,7 +3,7 @@
 
 import json
 import typing
-from urllib.parse import quote
+from urllib.parse import quote_plus
 
 import frappe
 import frappe.defaults
@@ -12,7 +12,7 @@ import frappe.utils
 from frappe import _, _dict
 from frappe.desk.form.document_follow import is_document_followed
 from frappe.model.utils.user_settings import get_user_settings
-from frappe.permissions import get_doc_permissions
+from frappe.permissions import check_doctype_permission, get_doc_permissions, has_permission
 from frappe.utils.data import cstr
 from frappe.utils.html_utils import clean_email_html
 
@@ -21,28 +21,32 @@ if typing.TYPE_CHECKING:
 
 
 @frappe.whitelist()
-def getdoc(doctype, id, user=None):
-    """
-    Loads a doclist for a given document. This method is called directly from the client.
-    Requries "doctype", "id" as form variables.
-    Will also call the "onload" method on the document.
-    """
+def getdoc(doctype, id):
+	"""
+	Loads a doclist for a given document. This method is called directly from the client.
+	Requries "doctype", "id" as form variables.
+	Will also call the "onload" method on the document.
+	"""
 
     if not (doctype and id):
         raise Exception("doctype and id required!")
 
-    try:
-        doc = frappe.get_doc(doctype, id)
-    except frappe.DoesNotExistError:
-        frappe.clear_last_message()
-        return []
+	try:
+		doc = frappe.get_doc(doctype, id)
+	except frappe.DoesNotExistError:
+		check_doctype_permission(doctype)
+		frappe.clear_last_message()
+		return []
 
-    if not doc.has_permission("read"):
-        frappe.flags.error_message = _("Insufficient Permission for {0}").format(frappe.bold(_(doctype) + " " + name))
-        raise frappe.PermissionError(("read", doctype, name))
+	doc.check_permission("read")
 
-    run_onload(doc)
-    doc.apply_fieldlevel_read_permissions()
+	# Replace cache if stale one exists
+	# PERF: This should be eventually removed completely when we are sure about caching correctness
+	if (key := frappe.can_cache_doc((doctype, id))) and frappe.cache.exists(key):
+		frappe._set_document_in_cache(key, doc)
+
+	run_onload(doc)
+	doc.apply_fieldlevel_read_permissions()
 
     # add file list
     doc.add_viewed()
@@ -92,10 +96,9 @@ def get_meta_bundle(doctype):
 def get_docinfo(doc=None, doctype=None, id=None):
     from frappe.share import _get_users as get_docshares
 
-    if not doc:
-        doc = frappe.get_doc(doctype, id)
-        if not doc.has_permission("read"):
-            raise frappe.PermissionError
+	if not doc:
+		doc = frappe.get_doc(doctype, id)
+		doc.check_permission("read")
 
     all_communications = _get_communications(doc.doctype, doc.id, limit=21)
     automated_messages = [msg for msg in all_communications if msg["communication_type"] == "Automated Message"]
@@ -187,24 +190,23 @@ def get_attachments(dt, dn):
 
 
 def get_versions(doc: "Document") -> list[dict]:
-    if not doc.meta.track_changes:
-        return []
-    return frappe.get_all(
-        "Version",
-        filters=dict(ref_doctype=doc.doctype, docid=doc.id),
-        fields=["id", "owner", "creation", "data"],
-        limit=10,
-        order_by="creation desc",
-    )
+	if not doc.meta.track_changes:
+		return []
+	return frappe.get_all(
+		"Version",
+		filters=dict(ref_doctype=doc.doctype, docid=str(doc.id)),
+		fields=["id", "owner", "creation", "data"],
+		limit=10,
+		order_by="creation desc",
+	)
 
 
 @frappe.whitelist()
 def get_communications(doctype, id, start=0, limit=20):
     from frappe.utils import cint
 
-    doc = frappe.get_doc(doctype, id)
-    if not doc.has_permission("read"):
-        raise frappe.PermissionError
+	doc = frappe.get_doc(doctype, id)
+	doc.check_permission("read")
 
     return _get_communications(doctype, id, cint(start), cint(limit))
 
@@ -244,75 +246,77 @@ def get_comments(doctype: str, id: str, comment_type: str | list[str] = "Comment
 
 
 def get_point_logs(doctype, docid):
-    return frappe.get_all(
-        "Energy Point Log",
-        filters={
-            "reference_doctype": doctype,
-            "reference_id": docid,
-            "type": ["!=", "Review"],
-        },
-        fields=["*"],
-    )
+	from frappe.social.doctype.energy_point_settings.energy_point_settings import is_energy_point_enabled
+
+	if not is_energy_point_enabled():
+		return []
+
+	return frappe.get_all(
+		"Energy Point Log",
+		filters={"reference_doctype": doctype, "reference_id": docid, "type": ["!=", "Review"]},
+		fields=["*"],
+	)
 
 
-def _get_communications(doctype, name, start=0, limit=20):
-    communications = get_communication_data(doctype, name, start, limit)
-    for c in communications:
-        if c.communication_type in ("Communication", "Automated Message"):
-            clean_email_html(c.content)
-            c.attachments = json.dumps(
-                frappe.get_all(
-                    "File",
-                    fields=["file_url", "is_private"],
-                    filters={"attached_to_doctype": "Communication", "attached_to_id": c.id},
-                )
-            )
+def _get_communications(doctype, id, start=0, limit=20):
+	communications = get_communication_data(doctype, id, start, limit)
+	for c in communications:
+		if c.communication_type in ("Communication", "Automated Message"):
+			c.attachments = json.dumps(
+				frappe.get_all(
+					"File",
+					fields=["file_url", "is_private"],
+					filters={"attached_to_doctype": "Communication", "attached_to_id": c.id},
+				)
+			)
 
     return communications
 
 
-def get_communication_data(doctype, id, start=0, limit=20, after=None, fields=None, group_by=None, as_dict=True):
-    """Returns list of communications for a given document"""
-    if not fields:
-        fields = """
-            C.id, C.communication_type, C.communication_medium,
-            C.comment_type, C.communication_date, C.content,
-            C.sender, C.sender_full_name, C.cc, C.bcc,
-            C.creation AS creation, C.subject, C.delivery_status,
-            C._liked_by, C.reference_doctype, C.reference_id,
-            C.read_by_recipient, C.rating, C.recipients
-        """
+def get_communication_data(
+	doctype, id, start=0, limit=20, after=None, fields=None, group_by=None, as_dict=True
+):
+	"""Return list of communications for a given document."""
+	if not fields:
+		fields = """
+			C.id, C.communication_type, C.communication_medium,
+			C.communication_date, C.content,
+			C.sender, C.sender_full_name, C.cc, C.bcc,
+			C.creation AS creation, C.subject, C.delivery_status,
+			C._liked_by, C.reference_doctype, C.reference_id,
+			C.read_by_recipient, C.recipients
+		"""
 
-    conditions = ""
-    if after:
-        # find after a particular date
-        conditions += f"""
-            AND C.communication_date > {after}
-        """
+	conditions = ""
+	if after:
+		# find after a particular date
+		conditions += f"""
+			AND C.communication_date > {after}
+		"""
 
     if doctype == "User":
         conditions += """
             AND NOT (C.reference_doctype='User' AND C.communication_type='Communication')
         """
 
-    # communications linked to reference_doctype
-    part1 = f"""
-        SELECT {fields}
-        FROM `tabCommunication` as C
-        WHERE C.communication_type IN ('Communication', 'Feedback', 'Automated Message')
-        AND (C.reference_doctype = %(doctype)s AND C.reference_id = %(id)s)
-        {conditions}
-    """
+	# communications linked to reference_doctype
+	part1 = f"""
+		SELECT {fields}
+		FROM `tabCommunication` as C
+		WHERE C.communication_type IN ('Communication', 'Automated Message')
+		AND (C.reference_doctype = %(doctype)s AND C.reference_id = %(id)s)
+		{conditions}
+	"""
 
-    # communications linked in Timeline Links
-    part2 = f"""
-        SELECT {fields}
-        FROM `tabCommunication` as C
-        INNER JOIN `tabCommunication Link` ON C.id=`tabCommunication Link`.parent
-        WHERE C.communication_type IN ('Communication', 'Feedback', 'Automated Message')
-        AND `tabCommunication Link`.link_doctype = %(doctype)s AND `tabCommunication Link`.link_id = %(id)s
-        {conditions}
-    """
+	# communications linked in Timeline Links
+	part2 = f"""
+		SELECT {fields}
+		FROM `tabCommunication` as C
+		INNER JOIN `tabCommunication Link` ON C.id=`tabCommunication Link`.parent
+		WHERE C.communication_type IN ('Communication', 'Automated Message')
+		AND `tabCommunication Link`.link_doctype = %(doctype)s AND `tabCommunication Link`.link_id = %(id)s
+		{conditions}
+	"""
 
     return frappe.db.sql(
         """
@@ -370,31 +374,30 @@ def get_view_logs(doc: "Document") -> list[dict]:
 
 
 def get_tags(doctype: str, id: str) -> str:
-    tags = frappe.get_all(
-        "Tag Link",
-        filters={"document_type": doctype, "document_id": id},
-        fields=["tag"],
-        pluck="tag",
-    )
+	from frappe.desk.doctype.tag_link.tag_link import has_tags
+
+	if not has_tags(doctype):
+		return ""
+
+	tags = frappe.get_all(
+		"Tag Link",
+		filters={"document_type": doctype, "document_id": id},
+		fields=["tag"],
+		pluck="tag",
+	)
 
     return ",".join(tags)
 
 
 def get_document_email(doctype, id):
-    email = get_automatic_email_link()
-    if not email:
-        return None
+	from frappe.email.doctype.email_account.email_account import get_automatic_email_link
 
-    email = email.split("@")
-    return f"{email[0]}+{quote(doctype)}={quote(cstr(id))}@{email[1]}"
+	email = get_automatic_email_link()
+	if not email:
+		return None
 
-
-def get_automatic_email_link():
-    return frappe.db.get_value(
-        "Email Account",
-        {"enable_incoming": 1, "enable_automatic_linking": 1},
-        "email_id",
-    )
+	email = email.split("@")
+	return f"{email[0]}+{quote_plus(doctype)}={quote_plus(cstr(id))}@{email[1]}"
 
 
 def get_additional_timeline_content(doctype, docid):
@@ -424,20 +427,18 @@ def get_title_values_for_link_and_dynamic_link_fields(doc, link_fields=None):
         meta = frappe.get_meta(doc.doctype)
         link_fields = meta.get_link_fields() + meta.get_dynamic_link_fields()
 
-    for field in link_fields:
-        link_docid = getattr(doc, field.fieldname, None)
-
-        if not link_docid:
-            continue
+	for field in link_fields:
+		if not (doc_fieldvalue := getattr(doc, field.fieldname, None)):
+			continue
 
         doctype = field.options if field.fieldtype == "Link" else doc.get(field.options)
 
-        meta = frappe.get_meta(doctype)
-        if not meta or not (meta.title_field and meta.show_title_field_in_link):
-            continue
+		meta = frappe.get_meta(doctype)
+		if not meta or not meta.title_field or not meta.show_title_field_in_link:
+			continue
 
-        link_title = frappe.db.get_value(doctype, link_docid, meta.title_field, cache=True, order_by=None)
-        link_titles.update({doctype + "::" + link_docid: link_title})
+		link_title = frappe.db.get_value(doctype, doc_fieldvalue, meta.title_field, cache=True, order_by=None)
+		link_titles.update({doctype + "::" + doc_fieldvalue: link_title or doc_fieldvalue})
 
     return link_titles
 

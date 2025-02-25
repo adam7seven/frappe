@@ -21,19 +21,19 @@ class GoogleContacts(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        authorization_code: DF.Password | None
-        email_id: DF.Data
-        enable: DF.Check
-        last_sync_on: DF.Datetime | None
-        next_sync_token: DF.Password | None
-        pull_from_google_contacts: DF.Check
-        push_to_google_contacts: DF.Check
-        refresh_token: DF.Password | None
+		authorization_code: DF.Password | None
+		email_id: DF.Data
+		enable: DF.Check
+		last_sync_on: DF.Datetime | None
+		next_sync_token: DF.Password | None
+		pull_from_google_contacts: DF.Check
+		push_to_google_contacts: DF.Check
+		refresh_token: DF.Password | None
+	# end: auto-generated types
 
-    # end: auto-generated types
-    def validate(self):
-        if not frappe.db.get_single_value("Google Settings", "enable"):
-            frappe.throw(_("Enable Google API in Google Settings."))
+	def validate(self):
+		if not frappe.db.get_single_value("Google Settings", "enable"):
+			frappe.throw(_("Enable Google API in Google Settings."))
 
     def get_access_token(self):
         if not self.refresh_token:
@@ -59,10 +59,8 @@ def authorize_access(g_contact, reauthorize=False, code=None):
     contact = frappe.get_doc("Google Contacts", g_contact)
     contact.check_permission("write")
 
-    oauth_code = code or contact.get_password(
-        "authorization_code", raise_exception=False
-    )
-    oauth_obj = GoogleOAuth("contacts")
+	oauth_code = code or contact.get_password("authorization_code", raise_exception=False)
+	oauth_obj = GoogleOAuth("contacts")
 
     if not oauth_code or reauthorize:
         return oauth_obj.get_authentication_url(
@@ -79,11 +77,9 @@ def authorize_access(g_contact, reauthorize=False, code=None):
 
 
 def get_google_contacts_object(g_contact):
-    """
-    Returns an object of Google Calendar along with Google Calendar doc.
-    """
-    account = frappe.get_doc("Google Contacts", g_contact)
-    oauth_obj = GoogleOAuth("contacts")
+	"""Return an object of Google Calendar along with Google Calendar doc."""
+	account = frappe.get_doc("Google Contacts", g_contact)
+	oauth_obj = GoogleOAuth("contacts")
 
     google_contacts = oauth_obj.get_google_service_object(
         account.get_access_token(),
@@ -194,19 +190,17 @@ def sync_contacts_from_google_contacts(g_contact):
                     }
                 )
 
-                for email in connection.get("emailAddresses", []):
-                    contact.add_email(
-                        email_id=email.get("value"),
-                        is_primary=1 if email.get("metadata").get("primary") else 0,
-                    )
+				for email in connection.get("emailAddresses", []):
+					contact.add_email(
+						email_id=email.get("value"),
+						is_primary=1 if email.get("metadata").get("primary") else 0,
+					)
 
-                for phone in connection.get("phoneNumbers", []):
-                    contact.add_phone(
-                        phone=phone.get("value"),
-                        is_primary_phone=(
-                            1 if phone.get("metadata").get("primary") else 0
-                        ),
-                    )
+				for phone in connection.get("phoneNumbers", []):
+					contact.add_phone(
+						phone=phone.get("value"),
+						is_primary_phone=1 if phone.get("metadata").get("primary") else 0,
+					)
 
                 contact.insert(ignore_permissions=True)
 

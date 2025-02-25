@@ -19,10 +19,20 @@
 			</div>
 
 			<div class="flex config-area">
-				<label v-if="is_optimizable" class="frappe-checkbox"><input type="checkbox" :checked="optimize"
-						@change="emit('toggle_optimize')" />{{ __("Optimize") }}</label>
-				<label class="frappe-checkbox"><input type="checkbox" :checked="file.private"
-						@change="emit('toggle_private')" />{{ __("Private") }}</label>
+				<label v-if="allow_toggle_optimize" class="frappe-checkbox"
+					><input
+						type="checkbox"
+						:checked="optimize"
+						@change="emit('toggle_optimize')"
+					/>{{ __("Optimize") }}</label
+				>
+				<label v-if="allow_toggle_private" class="frappe-checkbox"
+					><input
+						type="checkbox"
+						:checked="file.private"
+						@change="emit('toggle_private')"
+					/>{{ __("Private") }}</label
+				>
 			</div>
 			<div>
 				<span v-if="file.error_message" class="file-error text-danger">
@@ -36,10 +46,18 @@
 			<div v-if="uploaded" v-html="frappe.utils.icon('solid-success', 'lg')"></div>
 			<div v-if="file.failed" v-html="frappe.utils.icon('solid-error', 'lg')"></div>
 			<div class="file-action-buttons">
-				<button v-if="is_cropable" class="btn btn-crop muted" @click="emit('toggle_image_cropper')"
-					v-html="frappe.utils.icon('crop', 'md')"></button>
-				<button v-if="!uploaded && !file.uploading && !file.failed" class="btn muted" @click="emit('remove')"
-					v-html="frappe.utils.icon('delete', 'md')"></button>
+				<button
+					v-if="is_cropable"
+					class="btn btn-crop muted"
+					@click="emit('toggle_image_cropper')"
+					v-html="frappe.utils.icon('crop', 'md')"
+				></button>
+				<button
+					v-if="!uploaded && !file.uploading && !file.failed"
+					class="btn muted"
+					@click="emit('remove')"
+					v-html="frappe.utils.icon('delete', 'md')"
+				></button>
 			</div>
 		</div>
 	</div>
@@ -52,59 +70,71 @@
 	// emits
 	let emit = defineEmits(["toggle_optimize", "toggle_private", "toggle_image_cropper", "remove"]);
 
-	// props
-	const props = defineProps({
-		file: Object,
-	});
+// props
+const props = defineProps({
+	file: Object,
+	allow_toggle_private: {
+		default: true,
+	},
+	allow_toggle_optimize: {
+		default: true,
+	},
+});
 
 	// variables
 	let src = ref(null);
 	let optimize = ref(props.file.optimize);
 
-	// computed
-	let file_size = computed(() => {
-		return frappe.form.formatters.FileSize(props.file.file_obj.size);
-	});
-	let is_private = computed(() => {
-		return props.file.doc ? props.file.doc.is_private : props.file.private;
-	});
-	let uploaded = computed(() => {
-		return props.file.request_succeeded;
-	});
-	let is_image = computed(() => {
-		return props.file.file_obj.type.startsWith("image");
-	});
-	let is_optimizable = computed(() => {
-		let is_svg = props.file.file_obj.type == "image/svg+xml";
-		return is_image.value && !is_svg && !uploaded.value && !props.file.failed;
-	});
-	let is_cropable = computed(() => {
-		let croppable_types = ["image/jpeg", "image/png"];
-		return (
-			!uploaded.value &&
-			!props.file.uploading &&
-			!props.file.failed &&
-			croppable_types.includes(props.file.file_obj.type)
-		);
-	});
-	let progress = computed(() => {
-		let value = Math.round((props.file.progress * 100) / props.file.total);
-		if (isNaN(value)) {
-			value = 0;
-		}
-		return value;
-	});
+// computed
+let file_size = computed(() => {
+	return frappe.form.formatters.FileSize(props.file.file_obj.size);
+});
+let is_private = computed(() => {
+	return props.file.doc ? props.file.doc.is_private : props.file.private;
+});
+let uploaded = computed(() => {
+	return props.file.request_succeeded;
+});
+let is_image = computed(() => {
+	return props.file.file_obj.type.startsWith("image");
+});
+let allow_toggle_optimize = computed(() => {
+	let is_svg = props.file.file_obj.type == "image/svg+xml";
+	return (
+		props.allow_toggle_optimize &&
+		is_image.value &&
+		!is_svg &&
+		!uploaded.value &&
+		!props.file.failed
+	);
+});
+let is_cropable = computed(() => {
+	let croppable_types = ["image/jpeg", "image/png"];
+	return (
+		!uploaded.value &&
+		!props.file.uploading &&
+		!props.file.failed &&
+		croppable_types.includes(props.file.file_obj.type)
+	);
+});
+let progress = computed(() => {
+	let value = Math.round((props.file.progress * 100) / props.file.total);
+	if (isNaN(value)) {
+		value = 0;
+	}
+	return value;
+});
 
-	// mounted
-	onMounted(() => {
-		if (is_image.value) {
-			if (window.FileReader) {
-				let fr = new FileReader();
-				fr.onload = () => (src.value = fr.result);
-				fr.readAsDataURL(props.file.file_obj);
-			}
+// mounted
+onMounted(() => {
+	if (is_image.value) {
+		if (window.FileReader) {
+			let fr = new FileReader();
+			fr.onload = () => (src.value = fr.result);
+			fr.readAsDataURL(props.file.file_obj);
 		}
-	});
+	}
+});
 </script>
 
 <style scoped>

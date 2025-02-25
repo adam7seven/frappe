@@ -20,13 +20,13 @@ def add_random_children(
     if rows > 1:
         nrows = random.randrange(1, rows)
 
-    for _ in range(nrows):
-        d = {}
-        for key, val in randomize.items():
-            if isinstance(val[0], str):
-                d[key] = get_random(*val)
-            else:
-                d[key] = random.randrange(*val)
+	for _ in range(nrows):
+		d = {}
+		for key, val in randomize.items():
+			if isinstance(val[0], str):
+				d[key] = get_random(*val)
+			else:
+				d[key] = random.randrange(*val)
 
         if unique:
             if not doc.get(fieldname, {unique: d[unique]}):
@@ -36,13 +36,10 @@ def add_random_children(
 
 
 def get_random(doctype: str, filters: dict | None = None, doc: bool = False):
-    condition = []
-    if filters:
-        condition.extend(
-            "{}='{}'".format(key, str(val).replace("'", "'"))
-            for key, val in filters.items()
-        )
-    condition = " where " + " and ".join(condition) if condition else ""
+	condition = []
+	if filters:
+		condition.extend("{}='{}'".format(key, str(val).replace("'", "'")) for key, val in filters.items())
+	condition = " where " + " and ".join(condition) if condition else ""
 
     out = frappe.db.multisql(
         {
@@ -53,7 +50,7 @@ def get_random(doctype: str, filters: dict | None = None, doc: bool = False):
         }
     )
 
-    out = out and out[0][0] or None
+	out = (out and out[0][0]) or None
 
     if doc and out:
         return frappe.get_doc(doctype, out)

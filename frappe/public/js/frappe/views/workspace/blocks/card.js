@@ -32,7 +32,7 @@ export default class Card extends Block {
 
 		if (this.data && this.data.card_id) {
 			let has_data = this.make("card", this.data.card_id, "links");
-			if (!has_data) return;
+			if (!has_data) return this.wrapper;
 		}
 
 		if (!this.readOnly) {

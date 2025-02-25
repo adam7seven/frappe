@@ -137,10 +137,10 @@ def generate_report(prepared_report):
 
 @dangerously_reconnect_on_connection_abort
 def _save_error(instance, error):
-    instance.reload()
-    instance.status = "Error"
-    instance.error_message = error
-    instance.save(ignore_permissions=True)
+	instance.reload()
+	instance.status = "Error"
+	instance.error_message = error
+	instance.save(ignore_permissions=True)
 
 
 def update_job_id(prepared_report):
@@ -209,21 +209,18 @@ def get_completed_prepared_report(filters, user, report_id):
 
 
 def expire_stalled_report():
-    frappe.db.set_value(
-        "Prepared Report",
-        {
-            "status": "Started",
-            "modified": (
-                "<",
-                add_to_date(now(), seconds=-FAILURE_THRESHOLD, as_datetime=True),
-            ),
-        },
-        {
-            "status": "Failed",
-            "error_message": frappe._("Report timed out."),
-        },
-        update_modified=False,
-    )
+	frappe.db.set_value(
+		"Prepared Report",
+		{
+			"status": "Started",
+			"creation": ("<", add_to_date(now(), seconds=-FAILURE_THRESHOLD, as_datetime=True)),
+		},
+		{
+			"status": "Failed",
+			"error_message": frappe._("Report timed out."),
+		},
+		update_modified=False,
+	)
 
 
 @frappe.whitelist()

@@ -3,12 +3,13 @@ import os
 from . import __version__ as app_version
 
 app_name = "frappe"
-app_title = "Frappe Framework"
+app_title = "Framework"
 app_publisher = "Frappe Technologies"
 app_description = "Full stack web framework with Python, Javascript, MariaDB, Redis, Node"
 app_license = "MIT"
 app_logo_url = "/assets/frappe/images/frappe-framework-logo.svg"
 develop_version = "15.x.x-develop"
+app_home = "/app/build"
 
 app_email = "developers@frappe.io"
 
@@ -19,14 +20,14 @@ page_js = {"setup-wizard": "public/js/frappe/setup_wizard.js"}
 
 # website
 app_include_js = [
-    "libs.bundle.js",
-    "desk.bundle.js",
-    "list.bundle.js",
-    "form.bundle.js",
-    "controls.bundle.js",
-    "report.bundle.js",
-    "telemetry.bundle.js",
-    "billing.bundle.js",
+	"libs.bundle.js",
+	"desk.bundle.js",
+	"list.bundle.js",
+	"form.bundle.js",
+	"controls.bundle.js",
+	"report.bundle.js",
+	"telemetry.bundle.js",
+	"billing.bundle.js",
 ]
 
 app_include_css = [
@@ -34,8 +35,8 @@ app_include_css = [
     "report.bundle.css",
 ]
 app_include_icons = [
-    "frappe/icons/timeless/icons.svg",
-    "frappe/icons/espresso/icons.svg",
+	"/assets/frappe/icons/timeless/icons.svg",
+	"/assets/frappe/icons/espresso/icons.svg",
 ]
 
 doctype_js = {
@@ -44,8 +45,11 @@ doctype_js = {
 }
 
 web_include_js = ["website_script.js"]
-
 web_include_css = []
+web_include_icons = [
+	"/assets/frappe/icons/timeless/icons.svg",
+	"/assets/frappe/icons/espresso/icons.svg",
+]
 
 email_css = ["email.bundle.css"]
 
@@ -146,123 +150,130 @@ jinja = {
 standard_queries = {"User": "frappe.core.doctype.user.user.user_query"}
 
 doc_events = {
-    "*": {
-        "on_update": [
-            "frappe.desk.notifications.clear_doctype_notifications",
-            "frappe.workflow.doctype.workflow_action.workflow_action.process_workflow_actions",
-            "frappe.core.doctype.file.utils.attach_files_to_document",
-            "frappe.automation.doctype.assignment_rule.assignment_rule.apply",
-            "frappe.automation.doctype.assignment_rule.assignment_rule.update_due_date",
-            "frappe.core.doctype.user_type.user_type.apply_permissions_for_non_standard_user_type",
-        ],
-        "after_reid": "frappe.desk.notifications.clear_doctype_notifications",
-        "on_cancel": [
-            "frappe.desk.notifications.clear_doctype_notifications",
-            "frappe.workflow.doctype.workflow_action.workflow_action.process_workflow_actions",
-            "frappe.automation.doctype.assignment_rule.assignment_rule.apply",
-        ],
-        "on_trash": [
-            "frappe.desk.notifications.clear_doctype_notifications",
-            "frappe.workflow.doctype.workflow_action.workflow_action.process_workflow_actions",
-        ],
-        "on_update_after_submit": [
-            "frappe.workflow.doctype.workflow_action.workflow_action.process_workflow_actions",
-            "frappe.automation.doctype.assignment_rule.assignment_rule.apply",
-            "frappe.automation.doctype.assignment_rule.assignment_rule.update_due_date",
-            "frappe.core.doctype.file.utils.attach_files_to_document",
-        ],
-        "on_change": [
-            "frappe.social.doctype.energy_point_rule.energy_point_rule.process_energy_points",
-            "frappe.automation.doctype.milestone_tracker.milestone_tracker.evaluate_milestone",
-        ],
-    },
-    "Event": {
-        "after_insert": "frappe.integrations.doctype.google_calendar.google_calendar.insert_event_in_google_calendar",
-        "on_update": "frappe.integrations.doctype.google_calendar.google_calendar.update_event_in_google_calendar",
-        "on_trash": "frappe.integrations.doctype.google_calendar.google_calendar.delete_event_from_google_calendar",
-    },
-    "Contact": {
-        "after_insert": "frappe.integrations.doctype.google_contacts.google_contacts.insert_contacts_to_google_contacts",
-        "on_update": "frappe.integrations.doctype.google_contacts.google_contacts.update_contacts_to_google_contacts",
-    },
-    "DocType": {
-        "on_update": "frappe.cache_manager.build_domain_restriced_doctype_cache",
-    },
-    "Page": {
-        "on_update": "frappe.cache_manager.build_domain_restriced_page_cache",
-    },
+	"*": {
+		"on_update": [
+			"frappe.desk.notifications.clear_doctype_notifications",
+			"frappe.workflow.doctype.workflow_action.workflow_action.process_workflow_actions",
+			"frappe.core.doctype.file.utils.attach_files_to_document",
+			"frappe.automation.doctype.assignment_rule.assignment_rule.apply",
+			"frappe.automation.doctype.assignment_rule.assignment_rule.update_due_date",
+			"frappe.core.doctype.user_type.user_type.apply_permissions_for_non_standard_user_type",
+			"frappe.core.doctype.permission_log.permission_log.make_perm_log",
+		],
+		"after_rename": "frappe.desk.notifications.clear_doctype_notifications",
+		"on_cancel": [
+			"frappe.desk.notifications.clear_doctype_notifications",
+			"frappe.workflow.doctype.workflow_action.workflow_action.process_workflow_actions",
+			"frappe.automation.doctype.assignment_rule.assignment_rule.apply",
+		],
+		"on_trash": [
+			"frappe.desk.notifications.clear_doctype_notifications",
+			"frappe.workflow.doctype.workflow_action.workflow_action.process_workflow_actions",
+		],
+		"on_update_after_submit": [
+			"frappe.workflow.doctype.workflow_action.workflow_action.process_workflow_actions",
+			"frappe.automation.doctype.assignment_rule.assignment_rule.apply",
+			"frappe.automation.doctype.assignment_rule.assignment_rule.update_due_date",
+			"frappe.core.doctype.file.utils.attach_files_to_document",
+		],
+		"on_change": [
+			"frappe.social.doctype.energy_point_rule.energy_point_rule.process_energy_points",
+			"frappe.automation.doctype.milestone_tracker.milestone_tracker.evaluate_milestone",
+		],
+		"after_delete": ["frappe.core.doctype.permission_log.permission_log.make_perm_log"],
+	},
+	"Event": {
+		"after_insert": "frappe.integrations.doctype.google_calendar.google_calendar.insert_event_in_google_calendar",
+		"on_update": "frappe.integrations.doctype.google_calendar.google_calendar.update_event_in_google_calendar",
+		"on_trash": "frappe.integrations.doctype.google_calendar.google_calendar.delete_event_from_google_calendar",
+	},
+	"Contact": {
+		"after_insert": "frappe.integrations.doctype.google_contacts.google_contacts.insert_contacts_to_google_contacts",
+		"on_update": "frappe.integrations.doctype.google_contacts.google_contacts.update_contacts_to_google_contacts",
+	},
+	"DocType": {
+		"on_update": "frappe.cache_manager.build_domain_restricted_doctype_cache",
+	},
+	"Page": {
+		"on_update": "frappe.cache_manager.build_domain_restricted_page_cache",
+	},
 }
 
 scheduler_events = {
-    "cron": {
-        # 15 minutes
-        "0/15 * * * *": [
-            "frappe.oauth.delete_oauth2_data",
-            "frappe.website.doctype.web_page.web_page.check_publish_status",
-            "frappe.twofactor.delete_all_barcodes_for_users",
-            "frappe.email.doctype.email_account.email_account.notify_unreplied",
-            "frappe.utils.global_search.sync_global_search",
-            "frappe.deferred_insert.save_to_db",
-            "frappe.automation.doctype.reminder.reminder.send_reminders",
-        ],
-        # 10 minutes
-        "0/10 * * * *": [
-            "frappe.email.doctype.email_account.email_account.pull",
-        ],
-        # Hourly but offset by 30 minutes
-        "30 * * * *": [
-            "frappe.core.doctype.prepared_report.prepared_report.expire_stalled_report",
-        ],
-        # Daily but offset by 45 minutes
-        "45 0 * * *": [
-            "frappe.core.doctype.log_settings.log_settings.run_log_clean_up",
-        ],
-    },
-    "all": [
-        "frappe.email.queue.flush",
-        "frappe.monitor.flush",
-    ],
-    "hourly": [
-        "frappe.model.utils.link_count.update_link_count",
-        "frappe.model.utils.user_settings.sync_user_settings",
-        "frappe.desk.page.backups.backups.delete_downloadable_backups",
-        "frappe.desk.form.document_follow.send_hourly_updates",
-        "frappe.integrations.doctype.google_calendar.google_calendar.sync",
-        "frappe.email.doctype.newsletter.newsletter.send_scheduled_email",
-        "frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.process_data_deletion_request",
-    ],
-    "daily": [
-        "frappe.desk.notifications.clear_notifications",
-        "frappe.desk.doctype.event.event.send_event_digest",
-        "frappe.sessions.clear_expired_sessions",
-        "frappe.email.doctype.notification.notification.trigger_daily_alerts",
-        "frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.remove_unverified_record",
-        "frappe.desk.form.document_follow.send_daily_updates",
-        "frappe.social.doctype.energy_point_settings.energy_point_settings.allocate_review_points",
-        "frappe.integrations.doctype.google_contacts.google_contacts.sync",
-        "frappe.automation.doctype.auto_repeat.auto_repeat.make_auto_repeat_entry",
-        "frappe.automation.doctype.auto_repeat.auto_repeat.set_auto_repeat_as_completed",
-    ],
-    "daily_long": [
-        "frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backups_daily",
-        "frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_daily",
-        "frappe.email.doctype.auto_email_report.auto_email_report.send_daily",
-        "frappe.integrations.doctype.google_drive.google_drive.daily_backup",
-    ],
-    "weekly_long": [
-        "frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backups_weekly",
-        "frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_weekly",
-        "frappe.desk.form.document_follow.send_weekly_updates",
-        "frappe.utils.change_log.check_for_update",
-        "frappe.social.doctype.energy_point_log.energy_point_log.send_weekly_summary",
-        "frappe.integrations.doctype.google_drive.google_drive.weekly_backup",
-        "frappe.desk.doctype.changelog_feed.changelog_feed.fetch_changelog_feed",
-    ],
-    "monthly": [
-        "frappe.email.doctype.auto_email_report.auto_email_report.send_monthly",
-        "frappe.social.doctype.energy_point_log.energy_point_log.send_monthly_summary",
-    ],
-    "monthly_long": ["frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_monthly"],
+	"cron": {
+		# 5 minutes
+		"0/5 * * * *": [
+			"frappe.email.doctype.notification.notification.trigger_offset_alerts",
+		],
+		# 15 minutes
+		"0/15 * * * *": [
+			"frappe.oauth.delete_oauth2_data",
+			"frappe.website.doctype.web_page.web_page.check_publish_status",
+			"frappe.twofactor.delete_all_barcodes_for_users",
+			"frappe.email.doctype.email_account.email_account.notify_unreplied",
+			"frappe.utils.global_search.sync_global_search",
+			"frappe.deferred_insert.save_to_db",
+			"frappe.automation.doctype.reminder.reminder.send_reminders",
+		],
+		# 10 minutes
+		"0/10 * * * *": [
+			"frappe.email.doctype.email_account.email_account.pull",
+		],
+		# Hourly but offset by 30 minutes
+		"30 * * * *": [
+			"frappe.core.doctype.prepared_report.prepared_report.expire_stalled_report",
+		],
+		# Daily but offset by 45 minutes
+		"45 0 * * *": [
+			"frappe.core.doctype.log_settings.log_settings.run_log_clean_up",
+		],
+	},
+	"all": [
+		"frappe.email.queue.flush",
+		"frappe.monitor.flush",
+	],
+	"hourly": [
+		"frappe.model.utils.link_count.update_link_count",
+		"frappe.model.utils.user_settings.sync_user_settings",
+		"frappe.desk.page.backups.backups.delete_downloadable_backups",
+		"frappe.desk.form.document_follow.send_hourly_updates",
+		"frappe.integrations.doctype.google_calendar.google_calendar.sync",
+		"frappe.email.doctype.newsletter.newsletter.send_scheduled_email",
+		"frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.process_data_deletion_request",
+	],
+	"daily": [
+		"frappe.desk.notifications.clear_notifications",
+		"frappe.desk.doctype.event.event.send_event_digest",
+		"frappe.sessions.clear_expired_sessions",
+		"frappe.email.doctype.notification.notification.trigger_daily_alerts",
+		"frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.remove_unverified_record",
+		"frappe.desk.form.document_follow.send_daily_updates",
+		"frappe.social.doctype.energy_point_settings.energy_point_settings.allocate_review_points",
+		"frappe.integrations.doctype.google_contacts.google_contacts.sync",
+		"frappe.automation.doctype.auto_repeat.auto_repeat.make_auto_repeat_entry",
+	],
+	"daily_long": [
+		"frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backups_daily",
+		"frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_daily",
+		"frappe.email.doctype.auto_email_report.auto_email_report.send_daily",
+		"frappe.integrations.doctype.google_drive.google_drive.daily_backup",
+	],
+	"weekly_long": [
+		"frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backups_weekly",
+		"frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_weekly",
+		"frappe.desk.form.document_follow.send_weekly_updates",
+		"frappe.utils.change_log.check_for_update",
+		"frappe.social.doctype.energy_point_log.energy_point_log.send_weekly_summary",
+		"frappe.integrations.doctype.google_drive.google_drive.weekly_backup",
+		"frappe.desk.doctype.changelog_feed.changelog_feed.fetch_changelog_feed",
+	],
+	"monthly": [
+		"frappe.email.doctype.auto_email_report.auto_email_report.send_monthly",
+		"frappe.social.doctype.energy_point_log.energy_point_log.send_monthly_summary",
+	],
+	"monthly_long": [
+		"frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_monthly"
+	],
 }
 
 sounds = [
@@ -371,48 +382,49 @@ global_search_doctypes = {
 }
 
 override_whitelisted_methods = {
-    # Legacy File APIs
-    "frappe.utils.file_manager.download_file": "download_file",
-    "frappe.core.doctype.file.file.download_file": "download_file",
-    "frappe.core.doctype.file.file.unzip_file": "frappe.core.api.file.unzip_file",
-    "frappe.core.doctype.file.file.get_attached_images": "frappe.core.api.file.get_attached_images",
-    "frappe.core.doctype.file.file.get_files_in_folder": "frappe.core.api.file.get_files_in_folder",
-    "frappe.core.doctype.file.file.get_files_by_search_text": "frappe.core.api.file.get_files_by_search_text",
-    "frappe.core.doctype.file.file.get_max_file_size": "frappe.core.api.file.get_max_file_size",
-    "frappe.core.doctype.file.file.create_new_folder": "frappe.core.api.file.create_new_folder",
-    "frappe.core.doctype.file.file.move_file": "frappe.core.api.file.move_file",
-    "frappe.core.doctype.file.file.zip_files": "frappe.core.api.file.zip_files",
-    # Legacy (& Consistency) OAuth2 APIs
-    "frappe.www.login.login_via_google": "frappe.integrations.oauth2_logins.login_via_google",
-    "frappe.www.login.login_via_github": "frappe.integrations.oauth2_logins.login_via_github",
-    "frappe.www.login.login_via_facebook": "frappe.integrations.oauth2_logins.login_via_facebook",
-    "frappe.www.login.login_via_frappe": "frappe.integrations.oauth2_logins.login_via_frappe",
-    "frappe.www.login.login_via_office365": "frappe.integrations.oauth2_logins.login_via_office365",
-    "frappe.www.login.login_via_salesforce": "frappe.integrations.oauth2_logins.login_via_salesforce",
-    "frappe.www.login.login_via_fairlogin": "frappe.integrations.oauth2_logins.login_via_fairlogin",
+	# Legacy File APIs
+	"frappe.utils.file_manager.download_file": "download_file",
+	"frappe.core.doctype.file.file.download_file": "download_file",
+	"frappe.core.doctype.file.file.unzip_file": "frappe.core.api.file.unzip_file",
+	"frappe.core.doctype.file.file.get_attached_images": "frappe.core.api.file.get_attached_images",
+	"frappe.core.doctype.file.file.get_files_in_folder": "frappe.core.api.file.get_files_in_folder",
+	"frappe.core.doctype.file.file.get_files_by_search_text": "frappe.core.api.file.get_files_by_search_text",
+	"frappe.core.doctype.file.file.get_max_file_size": "frappe.core.api.file.get_max_file_size",
+	"frappe.core.doctype.file.file.create_new_folder": "frappe.core.api.file.create_new_folder",
+	"frappe.core.doctype.file.file.move_file": "frappe.core.api.file.move_file",
+	"frappe.core.doctype.file.file.zip_files": "frappe.core.api.file.zip_files",
+	# Legacy (& Consistency) OAuth2 APIs
+	"frappe.www.login.login_via_google": "frappe.integrations.oauth2_logins.login_via_google",
+	"frappe.www.login.login_via_github": "frappe.integrations.oauth2_logins.login_via_github",
+	"frappe.www.login.login_via_facebook": "frappe.integrations.oauth2_logins.login_via_facebook",
+	"frappe.www.login.login_via_frappe": "frappe.integrations.oauth2_logins.login_via_frappe",
+	"frappe.www.login.login_via_office365": "frappe.integrations.oauth2_logins.login_via_office365",
+	"frappe.www.login.login_via_salesforce": "frappe.integrations.oauth2_logins.login_via_salesforce",
+	"frappe.www.login.login_via_fairlogin": "frappe.integrations.oauth2_logins.login_via_fairlogin",
 }
 
 ignore_links_on_delete = [
-    "Communication",
-    "ToDo",
-    "DocShare",
-    "Email Unsubscribe",
-    "Activity Log",
-    "File",
-    "Version",
-    "Document Follow",
-    "Comment",
-    "View Log",
-    "Tag Link",
-    "Notification Log",
-    "Email Queue",
-    "Document Share Key",
-    "Integration Request",
-    "Unhandled Email",
-    "Webhook Request Log",
-    "Workspace",
-    "Route History",
-    "Access Log",
+	"Communication",
+	"ToDo",
+	"DocShare",
+	"Email Unsubscribe",
+	"Activity Log",
+	"File",
+	"Version",
+	"Document Follow",
+	"Comment",
+	"View Log",
+	"Tag Link",
+	"Notification Log",
+	"Email Queue",
+	"Document Share Key",
+	"Integration Request",
+	"Unhandled Email",
+	"Webhook Request Log",
+	"Workspace",
+	"Route History",
+	"Access Log",
+	"Permission Log",
 ]
 
 # Request Hooks
@@ -423,28 +435,28 @@ before_request = [
 ]
 
 after_request = [
-    "frappe.monitor.stop",
+	"frappe.monitor.stop",
 ]
 
 # Background Job Hooks
 before_job = [
-    "frappe.recorder.record",
-    "frappe.monitor.start",
+	"frappe.recorder.record",
+	"frappe.monitor.start",
 ]
 
 if os.getenv("FRAPPE_SENTRY_DSN") and (
-    os.getenv("ENABLE_SENTRY_DB_MONITORING")
-    or os.getenv("SENTRY_TRACING_SAMPLE_RATE")
-    or os.getenv("SENTRY_PROFILING_SAMPLE_RATE")
+	os.getenv("ENABLE_SENTRY_DB_MONITORING")
+	or os.getenv("SENTRY_TRACING_SAMPLE_RATE")
+	or os.getenv("SENTRY_PROFILING_SAMPLE_RATE")
 ):
-    before_request.append("frappe.utils.sentry.set_sentry_context")
-    before_job.append("frappe.utils.sentry.set_sentry_context")
+	before_request.append("frappe.utils.sentry.set_sentry_context")
+	before_job.append("frappe.utils.sentry.set_sentry_context")
 
 after_job = [
-    "frappe.recorder.dump",
-    "frappe.monitor.stop",
-    "frappe.utils.file_lock.release_document_locks",
-    "frappe.utils.background_jobs.flush_telemetry",
+	"frappe.recorder.dump",
+	"frappe.monitor.stop",
+	"frappe.utils.file_lock.release_document_locks",
+	"frappe.utils.background_jobs.flush_telemetry",
 ]
 
 extend_bootinfo = [
@@ -457,110 +469,116 @@ get_changelog_feed = "frappe.desk.doctype.changelog_feed.changelog_feed.get_feed
 export_python_type_annotations = True
 
 standard_navbar_items = [
-    {
-        "item_label": "My Profile",
-        "item_type": "Route",
-        "route": "/app/user-profile",
-        "is_standard": 1,
-    },
-    {
-        "item_label": "My Settings",
-        "item_type": "Action",
-        "action": "frappe.ui.toolbar.route_to_user()",
-        "is_standard": 1,
-    },
-    {
-        "item_label": "Session Defaults",
-        "item_type": "Action",
-        "action": "frappe.ui.toolbar.setup_session_defaults()",
-        "is_standard": 1,
-    },
-    {
-        "item_label": "Reload",
-        "item_type": "Action",
-        "action": "frappe.ui.toolbar.clear_cache()",
-        "is_standard": 1,
-    },
-    {
-        "item_label": "View Website",
-        "item_type": "Action",
-        "action": "frappe.ui.toolbar.view_website()",
-        "is_standard": 1,
-    },
-    {
-        "item_label": "Apps",
-        "item_type": "Route",
-        "route": "/apps",
-        "is_standard": 1,
-    },
-    {
-        "item_label": "Toggle Full Width",
-        "item_type": "Action",
-        "action": "frappe.ui.toolbar.toggle_full_width()",
-        "is_standard": 1,
-    },
-    {
-        "item_label": "Toggle Theme",
-        "item_type": "Action",
-        "action": "new frappe.ui.ThemeSwitcher().show()",
-        "is_standard": 1,
-    },
-    {
-        "item_type": "Separator",
-        "is_standard": 1,
-        "item_label": "",
-    },
-    {
-        "item_label": "Log out",
-        "item_type": "Action",
-        "action": "frappe.app.logout()",
-        "is_standard": 1,
-    },
+	{
+		"item_label": "User Settings",
+		"item_type": "Action",
+		"action": "frappe.ui.toolbar.route_to_user()",
+		"is_standard": 1,
+	},
+	{
+		"item_label": "Workspace Settings",
+		"item_type": "Action",
+		"action": "frappe.quick_edit('Workspace Settings')",
+		"is_standard": 1,
+	},
+	{
+		"item_label": "Session Defaults",
+		"item_type": "Action",
+		"action": "frappe.ui.toolbar.setup_session_defaults()",
+		"is_standard": 1,
+	},
+	{
+		"item_label": "Reload",
+		"item_type": "Action",
+		"action": "frappe.ui.toolbar.clear_cache()",
+		"is_standard": 1,
+	},
+	{
+		"item_label": "View Website",
+		"item_type": "Action",
+		"action": "frappe.ui.toolbar.view_website()",
+		"is_standard": 1,
+	},
+	{
+		"item_label": "Apps",
+		"item_type": "Route",
+		"route": "/apps",
+		"is_standard": 1,
+	},
+	{
+		"item_label": "Toggle Full Width",
+		"item_type": "Action",
+		"action": "frappe.ui.toolbar.toggle_full_width()",
+		"is_standard": 1,
+	},
+	{
+		"item_label": "Toggle Theme",
+		"item_type": "Action",
+		"action": "new frappe.ui.ThemeSwitcher().show()",
+		"is_standard": 1,
+	},
+	{
+		"item_type": "Separator",
+		"is_standard": 1,
+		"item_label": "",
+	},
+	{
+		"item_label": "Log out",
+		"item_type": "Action",
+		"action": "frappe.app.logout()",
+		"is_standard": 1,
+	},
 ]
 
 standard_help_items = [
-    {
-        "item_label": "About",
-        "item_type": "Action",
-        "action": "frappe.ui.toolbar.show_about()",
-        "is_standard": 1,
-    },
-    {
-        "item_label": "Keyboard Shortcuts",
-        "item_type": "Action",
-        "action": "frappe.ui.toolbar.show_shortcuts(event)",
-        "is_standard": 1,
-    },
-    {
-        "item_label": "Frappe Support",
-        "item_type": "Route",
-        "route": "https://frappe.io/support",
-        "is_standard": 1,
-    },
+	{
+		"item_label": "About",
+		"item_type": "Action",
+		"action": "frappe.ui.toolbar.show_about()",
+		"is_standard": 1,
+	},
+	{
+		"item_label": "Keyboard Shortcuts",
+		"item_type": "Action",
+		"action": "frappe.ui.toolbar.show_shortcuts(event)",
+		"is_standard": 1,
+	},
+	{
+		"item_label": "System Health",
+		"item_type": "Route",
+		"route": "/app/system-health-report",
+		"is_standard": 1,
+	},
+	{
+		"item_label": "Frappe Support",
+		"item_type": "Route",
+		"route": "https://frappe.io/support",
+		"is_standard": 1,
+	},
 ]
 
 # log doctype cleanups to automatically add in log settings
 default_log_clearing_doctypes = {
-    "Error Log": 14,
-    "Email Queue": 30,
-    "Scheduled Job Log": 7,
-    "Submission Queue": 7,
-    "Prepared Report": 14,
-    "Webhook Request Log": 30,
-    "Unhandled Email": 30,
-    "Reminder": 30,
-    "Integration Request": 90,
-    "Activity Log": 90,
-    "Route History": 90,
+	"Error Log": 14,
+	"Email Queue": 30,
+	"Scheduled Job Log": 7,
+	"Submission Queue": 7,
+	"Prepared Report": 14,
+	"Webhook Request Log": 30,
+	"Unhandled Email": 30,
+	"Reminder": 30,
+	"Integration Request": 90,
+	"Activity Log": 90,
+	"Route History": 90,
 }
 
 # These keys will not be erased when doing frappe.clear_cache()
 persistent_cache_keys = [
-    "changelog-*",  # version update notifications
-    "insert_queue_for_*",  # Deferred Insert
-    "recorder-*",  # Recorder
-    "global_search_queue",
-    "monitor-transactions",
-    "rate-limit-counter-*",
-    "rl:*",
+	"changelog-*",  # version update notifications
+	"insert_queue_for_*",  # Deferred Insert
+	"recorder-*",  # Recorder
+	"global_search_queue",
+	"monitor-transactions",
+	"rate-limit-counter-*",
+	"rl:*",
 ]

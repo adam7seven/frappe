@@ -1,4 +1,5 @@
 import frappe
+from frappe.utils.caching import site_cache
 
 METATAGS = ("title", "description", "image", "author", "published_on")
 
@@ -50,24 +51,25 @@ class MetaTags:
             self.tags["datePublished"] = self.tags["published_on"]
             del self.tags["published_on"]
 
-    def set_metatags_from_website_route_meta(self):
-        """
-        Get meta tags from Website Route meta
-        they can override the defaults set above
-        """
-        route = self.path
-        if route == "":
-            # homepage
-            route = frappe.db.get_single_value("Website Settings", "home_page")
+	def set_metatags_from_website_route_meta(self):
+		"""
+		Get meta tags from Website Route meta
+		they can override the defaults set above
+		"""
+		route = self.path
+		if route == "":
+			# homepage
+			route = frappe.get_website_settings("home_page")
 
-        route_exists = (
-            route
-            and not route.endswith((".js", ".css"))
-            and frappe.db.exists("Website Route Meta", route)
-        )
+		route_exists = route and not route.endswith((".js", ".css")) and has_meta_tags(route)
 
-        if route_exists:
-            website_route_meta = frappe.get_doc("Website Route Meta", route)
-            for meta_tag in website_route_meta.meta_tags:
-                d = meta_tag.get_meta_dict()
-                self.tags.update(d)
+		if route_exists:
+			website_route_meta = frappe.get_doc("Website Route Meta", route)
+			for meta_tag in website_route_meta.meta_tags:
+				d = meta_tag.get_meta_dict()
+				self.tags.update(d)
+
+
+@site_cache(ttl=10 * 60, maxsize=16)
+def has_meta_tags(route):
+	return bool(frappe.db.exists("Website Route Meta", route))

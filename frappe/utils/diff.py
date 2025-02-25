@@ -7,11 +7,9 @@ from frappe.utils.data import cstr
 
 
 @frappe.whitelist()
-def get_version_diff(
-    from_version: int | str, to_version: int | str, fieldname: str = "script"
-) -> list[str]:
-    before, before_timestamp = _get_value_from_version(from_version, fieldname)
-    after, after_timestamp = _get_value_from_version(to_version, fieldname)
+def get_version_diff(from_version: int | str, to_version: int | str, fieldname: str = "script") -> list[str]:
+	before, before_timestamp = _get_value_from_version(from_version, fieldname)
+	after, after_timestamp = _get_value_from_version(to_version, fieldname)
 
     if not (before and after):
         return ["Values not available for diff"]
@@ -64,6 +62,6 @@ def version_query(doctype, txt, searchfield, start, page_len, filters):
         filters=version_filters,
         limit_start=start,
         limit_page_length=page_len,
-        order_by="modified desc",
+        order_by="creation desc",
     )
     return [(d.id, pretty_date(d.modified), d.modified, d.owner) for d in results]

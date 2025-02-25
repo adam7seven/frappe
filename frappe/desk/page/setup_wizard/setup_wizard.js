@@ -216,8 +216,8 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 		fail_msg = fail_msg
 			? fail_msg
 			: frappe.last_response.setup_wizard_failure_message
-				? frappe.last_response.setup_wizard_failure_message
-				: __("Failed to complete setup");
+			? frappe.last_response.setup_wizard_failure_message
+			: __("Failed to complete setup");
 
 		this.update_setup_message(__("Could not start up: ") + fail_msg);
 
@@ -397,7 +397,6 @@ frappe.setup.slides_settings = [
 				fieldtype: "Select",
 				reqd: 1,
 			},
-			{ fieldtype: "Column Break" },
 			{
 				fieldname: "currency",
 				label: __("Currency"),

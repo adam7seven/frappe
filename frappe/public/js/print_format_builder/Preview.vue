@@ -39,67 +39,67 @@
 	let doc_select = ref(null);
 	let preview_type = ref(null);
 
-	// methods
-	function refresh() {
-		iframe.value?.contentWindow.location.reload();
-	}
-	function get_default_docid() {
-		return frappe.db.get_list(doctype.value, { limit: 1 }).then((doc) => {
-			return doc.length > 0 ? doc[0].id : null;
-		});
-	}
-	// computed
-	let doctype = computed(() => {
-		return print_format.value.doc_type;
+// methods
+function refresh() {
+	iframe.value?.contentWindow.location.reload();
+}
+function get_default_docid() {
+	return frappe.db.get_list(doctype.value, { limit: 1 }).then((doc) => {
+		return doc.length > 0 ? doc[0].id : null;
 	});
-	let url = computed(() => {
-		if (!docid.value) return null;
-		let params = new URLSearchParams();
-		params.append("doctype", doctype.value);
-		params.append("id", docid.value);
-		params.append("print_format", print_format.value.id);
+}
+// computed
+let doctype = computed(() => {
+	return print_format.value.doc_type;
+});
+let url = computed(() => {
+	if (!docid.value) return null;
+	let params = new URLSearchParams();
+	params.append("doctype", doctype.value);
+	params.append("id", docid.value);
+	params.append("print_format", print_format.value.id);
 
-		if (store.value.letterhead) {
-			params.append("letterhead", store.value.letterhead.id);
-		}
-		let _url =
-			type.value == "PDF" ? `/api/method/frappe.utils.weasyprint.download_pdf` : "/printpreview";
-		return `${_url}?${params.toString()}`;
-	});
+	if (store.value.letterhead) {
+		params.append("letterhead", store.value.letterhead.id);
+	}
+	let _url =
+		type.value == "PDF" ? `/api/method/frappe.utils.weasyprint.download_pdf` : "/printpreview";
+	return `${_url}?${params.toString()}`;
+});
 
-	// mounted
-	onMounted(() => {
-		doc_select.value = frappe.ui.form.make_control({
-			parent: doc_select_ref.value,
-			df: {
-				label: __("Select {0}", [__(doctype.value)]),
-				fieldname: "docid",
-				fieldtype: "Link",
-				options: doctype.value,
-				change: () => {
-					docid.value = doc_select.value.get_value();
-				},
+// mounted
+onMounted(() => {
+	doc_select.value = frappe.ui.form.make_control({
+		parent: doc_select_ref.value,
+		df: {
+			label: __("Select {0}", [__(doctype.value)]),
+			fieldname: "docid",
+			fieldtype: "Link",
+			options: doctype.value,
+			change: () => {
+				docid.value = doc_select.value.get_value();
 			},
-			render_input: true,
-		});
-		preview_type.value = frappe.ui.form.make_control({
-			parent: preview_type_ref.value,
-			df: {
-				label: __("Preview type"),
-				fieldname: "docid",
-				fieldtype: "Select",
-				options: ["PDF", "HTML"],
-				change: () => {
-					type.value = preview_type.value.get_value();
-				},
-			},
-			render_input: true,
-		});
-		preview_type.value.set_value(type.value);
-		get_default_docid().then((doc_id) => {
-			doc_id && doc_select.value.set_value(doc_id);
-		});
+		},
+		render_input: true,
 	});
+	preview_type.value = frappe.ui.form.make_control({
+		parent: preview_type_ref.value,
+		df: {
+			label: __("Preview type"),
+			fieldname: "docid",
+			fieldtype: "Select",
+			options: ["PDF", "HTML"],
+			change: () => {
+				type.value = preview_type.value.get_value();
+			},
+		},
+		render_input: true,
+	});
+	preview_type.value.set_value(type.value);
+	get_default_docid().then((doc_id) => {
+		doc_id && doc_select.value.set_value(doc_id);
+	});
+});
 </script>
 
 <style scoped>

@@ -185,15 +185,11 @@ def update_move_node(doc: Document, parent_field: str):
 
 
 @frappe.whitelist()
-def rebuild_tree(doctype, parent_field=None):
-    """Call rebuild_node for all root nodes.
-
-    The `parent_field` parameter is ignored and will be removed in v16+ (kept for backward compatibility).
-    """
-
-    # Check for perm if called from client-side
-    if frappe.request and frappe.local.form_dict.cmd == "rebuild_tree":
-        frappe.only_for("System Manager")
+def rebuild_tree(doctype: str) -> None:
+	"""Call rebuild_node for all root nodes."""
+	# Check for perm if called from client-side
+	if frappe.request and frappe.local.form_dict.cmd == "rebuild_tree":
+		frappe.only_for("System Manager")
 
     meta = frappe.get_meta(doctype)
     if not meta.has_field("lft") or not meta.has_field("rgt"):
@@ -291,6 +287,8 @@ def remove_subtree(doctype: str, id: str, throw=True):
 
     frappe.clear_document_cache(doctype)
 
+	frappe.clear_document_cache(doctype)
+
 
 class NestedSet(Document):
     def __setup__(self):
@@ -363,8 +361,8 @@ class NestedSet(Document):
             update_modified=False,
         )
 
-        if merge:
-            rebuild_tree(self.doctype, parent_field)
+		if merge:
+			rebuild_tree(self.doctype)
 
     def validate_one_root(self):
         if not self.get(self.nsm_parent_field):

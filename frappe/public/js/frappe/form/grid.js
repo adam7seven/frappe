@@ -24,24 +24,27 @@ export default class Grid {
         this.fieldinfo = {};
         this.doctype = this.df.options;
 
-        if (this.doctype) {
-            this.meta = frappe.get_meta(this.doctype);
-        }
-        this.fields_map = {};
-        this.template = null;
-        this.multiple_set = false;
-        if (
-            this.frm &&
-            this.frm.meta.__form_grid_templates &&
-            this.frm.meta.__form_grid_templates[this.df.fieldname]
-        ) {
-            this.template = this.frm.meta.__form_grid_templates[this.df.fieldname];
-        }
-        this.filter = {};
-        this.is_grid = true;
-        this.debounced_refresh = this.refresh.bind(this);
-        this.debounced_refresh = frappe.utils.debounce(this.debounced_refresh, 100);
-    }
+		this.sticky_row_sum = 71;
+		this.sticky_rows = [];
+
+		if (this.doctype) {
+			this.meta = frappe.get_meta(this.doctype);
+		}
+		this.fields_map = {};
+		this.template = null;
+		this.multiple_set = false;
+		if (
+			this.frm &&
+			this.frm.meta.__form_grid_templates &&
+			this.frm.meta.__form_grid_templates[this.df.fieldname]
+		) {
+			this.template = this.frm.meta.__form_grid_templates[this.df.fieldname];
+		}
+		this.filter = {};
+		this.is_grid = true;
+		this.debounced_refresh = this.refresh.bind(this);
+		this.debounced_refresh = frappe.utils.debounce(this.debounced_refresh, 100);
+	}
 
     get perm() {
         return this.control?.perm || this.frm?.perm || this.df.perm;
@@ -59,62 +62,57 @@ export default class Grid {
         }
     }
 
-    make() {
-        let template = `
-            <div class="grid-field">
-                <label class="control-label">${__(this.df.label || "")}</label>
-                <span class="help"></span>
-                <p class="text-muted small grid-description"></p>
-                <div class="grid-custom-buttons"></div>
-                <div class="form-grid-container">
-                    <div class="form-grid">
-                        <div class="grid-heading-row"></div>
-                        <div class="grid-body">
-                            <div class="rows"></div>
-                            <div class="grid-empty text-center">
-                                <img
-                                    src="/assets/frappe/images/ui-states/grid-empty-state.svg"
-                                    alt="Grid Empty State"
-                                    class="grid-empty-illustration"
-                                >
-                                ${__("No Data")}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="small form-clickable-section grid-footer">
-                    <div class="flex justify-between">
-                        <div class="grid-buttons">
-                            <button type="button" class="btn btn-xs btn-danger grid-remove-rows hidden"
-                                data-action="delete_rows">
-                                ${__("Delete")}
-                            </button>
-                            <button type="button" class="btn btn-xs btn-danger grid-remove-all-rows hidden"
-                                data-action="delete_all_rows">
-                                ${__("Delete All")}
-                            </button>
-                            <!-- hack to allow firefox include this in tabs -->
-                            <button type="button" class="btn btn-xs btn-secondary grid-add-row">
-                                ${__("Add Row")}
-                            </button>
-                            <button type="button" class="grid-add-multiple-rows btn btn-xs btn-secondary hidden">
-                                ${__("Add Multiple")}</a>
-                            </button>
-                        </div>
-                        <div class="grid-pagination">
-                        </div>
-                        <div class="grid-bulk-actions text-right">
-                            <button type="button" class="grid-download btn btn-xs btn-secondary hidden">
-                                ${__("Download")}
-                            </button>
-                            <button type="button" class="grid-upload btn btn-xs btn-secondary hidden">
-                                ${__("Upload")}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
+	make() {
+		let template = `
+			<div class="grid-field">
+				<label class="control-label">${__(this.df.label || "")}</label>
+				<span class="help"></span>
+				<p class="text-muted small grid-description"></p>
+				<div class="grid-custom-buttons"></div>
+				<div class="form-grid-container">
+					<div class="form-grid">
+						<div class="grid-heading-row"></div>
+						<div class="grid-body">
+							<div class="rows"></div>
+							<div class="grid-empty text-center text-extra-muted">
+								${__("No rows")}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="small form-clickable-section grid-footer">
+					<div class="flex justify-between">
+						<div class="grid-buttons">
+							<button type="button" class="btn btn-xs btn-danger grid-remove-rows hidden"
+								data-action="delete_rows">
+								${__("Delete")}
+							</button>
+							<button type="button" class="btn btn-xs btn-danger grid-remove-all-rows hidden"
+								data-action="delete_all_rows">
+								${__("Delete All")}
+							</button>
+							<!-- hack to allow firefox include this in tabs -->
+							<button type="button" class="btn btn-xs btn-secondary grid-add-row">
+								${__("Add Row")}
+							</button>
+							<button type="button" class="grid-add-multiple-rows btn btn-xs btn-secondary hidden">
+								${__("Add Multiple")}</a>
+							</button>
+						</div>
+						<div class="grid-pagination">
+						</div>
+						<div class="grid-bulk-actions text-right">
+							<button type="button" class="grid-download btn btn-xs btn-secondary hidden">
+								${__("Download")}
+							</button>
+							<button type="button" class="grid-upload btn btn-xs btn-secondary hidden">
+								${__("Upload")}
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		`;
 
         this.wrapper = $(template).appendTo(this.parent);
         $(this.parent).addClass("form-group");
@@ -123,9 +121,8 @@ export default class Grid {
 
         frappe.utils.bind_actions_with_object(this.wrapper, this);
 
-        this.form_grid = this.wrapper.find(".form-grid");
-
-        this.setup_add_row();
+		this.form_grid = this.wrapper.find(".form-grid");
+		this.setup_add_row();
 
         this.setup_grid_pagination();
         this.update_idx_and_id();
@@ -136,20 +133,20 @@ export default class Grid {
         this.remove_rows_button = this.grid_buttons.find(".grid-remove-rows");
         this.remove_all_rows_button = this.grid_buttons.find(".grid-remove-all-rows");
 
-        this.setup_allow_bulk_edit();
-        this.setup_check();
-        if (this.df.on_setup) {
-            this.df.on_setup(this);
-        }
-    }
-    set_grid_description() {
-        let description_wrapper = $(this.parent).find(".grid-description");
-        if (this.df.description) {
-            description_wrapper.html(__(this.df.description));
-        } else {
-            description_wrapper.hide();
-        }
-    }
+		this.setup_allow_bulk_edit();
+		this.setup_check();
+		if (this.df.on_setup) {
+			this.df.on_setup(this);
+		}
+	}
+	set_grid_description() {
+		let description_wrapper = $(this.parent).find(".grid-description");
+		if (this.df.description) {
+			description_wrapper.html(__(this.df.description));
+		} else {
+			description_wrapper.hide();
+		}
+	}
 
     update_idx_and_id() {
         this.data.forEach((d, ri) => {
@@ -322,25 +319,30 @@ export default class Grid {
         this.remove_all_rows_button.toggleClass("hidden", !show_delete_all_btn);
     }
 
-    get_selected() {
-        return (this.grid_rows || [])
-            .map((row) => {
-                return row.doc.__checked ? row.doc.id : null;
-            })
-            .filter((d) => {
-                return d;
-            });
-    }
+	debounced_refresh_remove_rows_button = frappe.utils.debounce(
+		this.refresh_remove_rows_button,
+		100
+	);
 
-    get_selected_children() {
-        return (this.data || [])
-            .map((row) => {
-                return row.__checked ? row : 0;
-            })
-            .filter((d) => {
-                return d;
-            });
-    }
+	get_selected() {
+		return (this.grid_rows || [])
+			.map((row) => {
+				return row.doc.__checked ? row.doc.id : null;
+			})
+			.filter((d) => {
+				return d;
+			});
+	}
+
+	get_selected_children() {
+		return (this.data || [])
+			.map((row) => {
+				return row.__checked ? row : 0;
+			})
+			.filter((d) => {
+				return d;
+			});
+	}
 
     reset_grid() {
         this.visible_columns = [];
@@ -950,22 +952,18 @@ export default class Grid {
                     ? _df
                     : this.fields_map[_df.fieldname];
 
-            if (this.editable_fields && this.editable_fields.length > 0) {
-                df = Object.assign(df, _df);
-            }
-
-            if (
-                df &&
-                !df.hidden &&
-                (this.editable_fields || df.in_list_view) &&
-                ((this.frm && this.frm.get_perm(df.permlevel, "read")) || !this.frm) &&
-                !frappe.model.layout_fields.includes(df.fieldtype)
-            ) {
-                if (df.columns) {
-                    df.colsize = df.columns;
-                } else {
-                    this.update_default_colsize(df);
-                }
+			if (
+				df &&
+				!df.hidden &&
+				(this.editable_fields || df.in_list_view) &&
+				((this.frm && this.frm.get_perm(df.permlevel, "read")) || !this.frm) &&
+				!frappe.model.layout_fields.includes(df.fieldtype)
+			) {
+				if (df.columns) {
+					df.colsize = df.columns;
+				} else {
+					this.update_default_colsize(df);
+				}
 
                 // attach formatter on refresh
                 if (
@@ -980,11 +978,10 @@ export default class Grid {
                     }
                 }
 
-                total_colsize += df.colsize;
-                if (total_colsize > 11) return false;
-                this.visible_columns.push([df, df.colsize]);
-            }
-        }
+				total_colsize += df.colsize;
+				this.visible_columns.push([df, df.colsize]);
+			}
+		}
 
         // redistribute if total-col size is less than 12
         var passes = 0;
@@ -1029,21 +1026,22 @@ export default class Grid {
     setup_user_defined_columns() {
         if (!this.frm) return;
 
-        let user_settings = frappe.get_user_settings(this.frm.doctype, "GridView");
-        if (user_settings && user_settings[this.doctype] && user_settings[this.doctype].length) {
-            this.user_defined_columns = user_settings[this.doctype]
-                .map((row) => {
-                    let column = frappe.meta.get_docfield(this.doctype, row.fieldname);
+		let user_settings = frappe.get_user_settings(this.frm.doctype, "GridView");
+		if (user_settings && user_settings[this.doctype] && user_settings[this.doctype].length) {
+			this.user_defined_columns = user_settings[this.doctype]
+				.map((row) => {
+					let column = frappe.meta.get_docfield(this.doctype, row.fieldname);
 
-                    if (column) {
-                        column.in_list_view = 1;
-                        column.columns = row.columns;
-                        return column;
-                    }
-                })
-                .filter(Boolean);
-        }
-    }
+					if (column) {
+						column.in_list_view = 1;
+						column.columns = row.columns;
+						column.sticky = row.sticky;
+						return column;
+					}
+				})
+				.filter(Boolean);
+		}
+	}
 
     is_editable() {
         return this.display_status == "Write" && !this.static_rows;
@@ -1085,11 +1083,11 @@ export default class Grid {
         this.multiple_set = true;
     }
 
-    setup_allow_bulk_edit() {
-        let me = this;
-        if (this.frm && this.frm.get_docfield(this.df.fieldname)?.allow_bulk_edit) {
-            // download
-            this.setup_download();
+	setup_allow_bulk_edit() {
+		let me = this;
+		if (this.frm && this.frm.get_docfield(this.df.fieldname)?.allow_bulk_edit) {
+			// download
+			this.setup_download();
 
             const value_formatter_map = {
                 Date: (val) => (val ? frappe.datetime.user_to_str(val) : val),
@@ -1099,34 +1097,34 @@ export default class Grid {
                 Currency: (val) => flt(val),
             };
 
-            // upload
-            frappe.flags.no_socketio = true;
-            $(this.wrapper)
-                .find(".grid-upload")
-                .removeClass("hidden")
-                .on("click", () => {
-                    new frappe.ui.FileUploader({
-                        as_dataurl: true,
-                        allow_multiple: false,
-                        restrictions: {
-                            allowed_file_types: [".csv"],
-                        },
-                        on_success(file) {
-                            var data = frappe.utils.csv_to_array(
-                                frappe.utils.get_decoded_string(file.dataurl)
-                            );
-                            // row #2 contains fieldnames;
-                            var fieldnames = data[2];
-                            me.frm.clear_table(me.df.fieldname);
-                            $.each(data, (i, row) => {
-                                if (i > 6) {
-                                    var blank_row = true;
-                                    $.each(row, function (ci, value) {
-                                        if (value) {
-                                            blank_row = false;
-                                            return false;
-                                        }
-                                    });
+			// upload
+			frappe.flags.no_socketio = true;
+			$(this.wrapper)
+				.find(".grid-upload")
+				.removeClass("hidden")
+				.on("click", () => {
+					new frappe.ui.FileUploader({
+						as_dataurl: true,
+						allow_multiple: false,
+						restrictions: {
+							allowed_file_types: [".csv"],
+						},
+						on_success(file) {
+							var data = frappe.utils.csv_to_array(
+								frappe.utils.get_decoded_string(file.dataurl)
+							);
+							// row #2 contains fieldnames;
+							var fieldnames = data[2];
+							me.frm.clear_table(me.df.fieldname);
+							$.each(data, (i, row) => {
+								if (i > 6) {
+									var blank_row = true;
+									$.each(row, function (ci, value) {
+										if (value) {
+											blank_row = false;
+											return false;
+										}
+									});
 
                                     if (!blank_row) {
                                         var d = me.frm.add_child(me.df.fieldname);
@@ -1211,21 +1209,21 @@ export default class Grid {
             });
     }
 
-    add_custom_button(label, click, position = "bottom") {
-        // add / unhide a custom button
-        const $wrapper = position === "top" ? this.grid_custom_buttons : this.grid_buttons;
-        let $btn = this.custom_buttons[label];
-        if (!$btn) {
-            $btn = $(`<button type="button" class="btn btn-secondary btn-xs btn-custom">`)
-                .html(__(label))
-                .prependTo($wrapper)
-                .on("click", click);
-            this.custom_buttons[label] = $btn;
-        } else {
-            $btn.removeClass("hidden");
-        }
-        return $btn;
-    }
+	add_custom_button(label, click, position = "bottom") {
+		// add / unhide a custom button
+		const $wrapper = position === "top" ? this.grid_custom_buttons : this.grid_buttons;
+		let $btn = this.custom_buttons[label];
+		if (!$btn) {
+			$btn = $(`<button type="button" class="btn btn-secondary btn-xs btn-custom">`)
+				.html(__(label))
+				.prependTo($wrapper)
+				.on("click", click);
+			this.custom_buttons[label] = $btn;
+		} else {
+			$btn.removeClass("hidden");
+		}
+		return $btn;
+	}
 
     clear_custom_buttons() {
         // hide all custom buttons
@@ -1238,14 +1236,14 @@ export default class Grid {
             return;
         }
 
-        for (let row of this.grid_rows) {
-            let docfield = row?.docfields?.find((d) => d.fieldname === fieldname);
-            if (docfield) {
-                docfield[property] = value;
-            } else {
-                throw `field ${fieldname} not found`;
-            }
-        }
+		for (let row of this.grid_rows) {
+			let docfield = row?.docfields?.find((d) => d.fieldname === fieldname);
+			if (docfield) {
+				docfield[property] = value;
+			} else {
+				throw `field ${fieldname} not found`;
+			}
+		}
 
         // update the parent too (for new rows)
         this.docfields.find((d) => d.fieldname === fieldname)[property] = value;

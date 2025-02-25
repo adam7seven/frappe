@@ -60,13 +60,13 @@
 		return df;
 	}, {});
 
-	watch(
-		() => props.value,
-		(value) => {
-			if (value) [doctype.value, fieldname.value] = value.split(".") || ["", ""];
-		},
-		{ immediate: true }
-	);
+watch(
+	() => props.value,
+	(value) => {
+		if (value) [doctype.value, fieldname.value] = value.split(".") || ["", ""];
+	},
+	{ immediate: true }
+);
 
 	watch([() => doctype.value, () => fieldname.value], ([doctype_value, fieldname_value]) => {
 		let [doctype_id, field_name] = props.value?.split(".") || ["", ""];

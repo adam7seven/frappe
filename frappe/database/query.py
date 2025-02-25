@@ -1,7 +1,8 @@
 import re
 from ast import literal_eval
+from functools import lru_cache
 from types import BuiltinFunctionType
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeAlias
 
 import sqlparse
 from pypika.queries import QueryBuilder, Table
@@ -10,7 +11,7 @@ import frappe
 from frappe import _
 from frappe.database.operator_map import OPERATOR_MAP
 from frappe.database.schema import SPECIAL_CHAR_PATTERN
-from frappe.database.utils import DefaultOrderBy, get_doctype_id
+from frappe.database.utils import DefaultOrderBy, FilterValue, convert_to_value, get_doctype_id
 from frappe.query_builder import Criterion, Field, Order, functions
 from frappe.query_builder.functions import Function, SqlFunctions
 from frappe.query_builder.utils import PseudoColumnMapper
@@ -31,30 +32,28 @@ TABLE_NAME_PATTERN = re.compile(r"^[\w -]*$", flags=re.ASCII)
 
 
 class Engine:
-    def get_query(
-        self,
-        table: str | Table,
-        fields: list | tuple | None = None,
-        filters: (
-            dict[str, str | int] | str | int | list[list | str | int] | None
-        ) = None,
-        order_by: str | None = None,
-        group_by: str | None = None,
-        limit: int | None = None,
-        offset: int | None = None,
-        distinct: bool = False,
-        for_update: bool = False,
-        update: bool = False,
-        into: bool = False,
-        delete: bool = False,
-        *,
-        validate_filters: bool = False,
-        skip_locked: bool = False,
-        wait: bool = True,
-    ) -> QueryBuilder:
-        self.is_mariadb = frappe.db.db_type == "mariadb"
-        self.is_postgres = frappe.db.db_type == "postgres"
-        self.validate_filters = validate_filters
+	def get_query(
+		self,
+		table: str | Table,
+		fields: str | list | tuple | None = None,
+		filters: dict[str, FilterValue] | FilterValue | list[list | FilterValue] | None = None,
+		order_by: str | None = None,
+		group_by: str | None = None,
+		limit: int | None = None,
+		offset: int | None = None,
+		distinct: bool = False,
+		for_update: bool = False,
+		update: bool = False,
+		into: bool = False,
+		delete: bool = False,
+		*,
+		validate_filters: bool = False,
+		skip_locked: bool = False,
+		wait: bool = True,
+	) -> QueryBuilder:
+		self.is_mariadb = frappe.db.db_type == "mariadb"
+		self.is_postgres = frappe.db.db_type == "postgres"
+		self.validate_filters = validate_filters
 
         if isinstance(table, Table):
             self.table = table
@@ -86,8 +85,8 @@ class Engine:
         if distinct:
             self.query = self.query.distinct()
 
-        if for_update:
-            self.query = self.query.for_update(skip_locked=skip_locked, nowait=not wait)
+		if for_update:
+			self.query = self.query.for_update(skip_locked=skip_locked, nowait=not wait)
 
         if group_by:
             self.query = self.query.groupby(group_by)
@@ -113,17 +112,15 @@ class Engine:
             else:
                 self.query = self.query.select(field)
 
-    def apply_filters(
-        self,
-        filters: (
-            dict[str, str | int] | str | int | list[list | str | int] | None
-        ) = None,
-    ):
-        if filters is None:
-            return
+	def apply_filters(
+		self,
+		filters: dict[str, FilterValue] | FilterValue | list[list | FilterValue] | None = None,
+	):
+		if filters is None:
+			return
 
-        if isinstance(filters, str | int):
-            filters = {"id": str(filters)}
+		if isinstance(filters, FilterValue):
+			filters = {"id": convert_to_value(filters)}
 
         if isinstance(filters, Criterion):
             self.query = self.query.where(filters)
@@ -131,15 +128,15 @@ class Engine:
         elif isinstance(filters, dict):
             self.apply_dict_filters(filters)
 
-        elif isinstance(filters, list | tuple):
-            if all(isinstance(d, str | int) for d in filters) and len(filters) > 0:
-                self.apply_dict_filters({"id": ("in", filters)})
-            else:
-                for filter in filters:
-                    if isinstance(filter, str | int | Criterion | dict):
-                        self.apply_filters(filter)
-                    elif isinstance(filter, list | tuple):
-                        self.apply_list_filters(filter)
+		elif isinstance(filters, list | tuple):
+			if all(isinstance(d, FilterValue) for d in filters) and len(filters) > 0:
+				self.apply_dict_filters({"id": ("in", tuple(convert_to_value(f) for f in filters))})
+			else:
+				for filter in filters:
+					if isinstance(filter, FilterValue | Criterion | dict):
+						self.apply_filters(filter)
+					elif isinstance(filter, list | tuple):
+						self.apply_list_filters(filter)
 
     def apply_list_filters(self, filter: list):
         if len(filter) == 2:
@@ -152,39 +149,37 @@ class Engine:
             doctype, field, operator, value = filter
             self._apply_filter(field, value, operator, doctype)
 
-    def apply_dict_filters(self, filters: dict[str, str | int | list]):
-        for field, value in filters.items():
-            operator = "="
-            if isinstance(value, list | tuple):
-                operator, value = value
+	def apply_dict_filters(self, filters: dict[str, FilterValue | list]):
+		for field, value in filters.items():
+			operator = "="
+			if isinstance(value, list | tuple):
+				operator, value = value
 
             self._apply_filter(field, value, operator)
 
-    def _apply_filter(
-        self,
-        field: str,
-        value: str | int | list | None,
-        operator: str = "=",
-        doctype: str | None = None,
-    ):
-        _field = field
-        _value = value
-        _operator = operator
+	def _apply_filter(
+		self,
+		field: str,
+		value: FilterValue | list | set | None,
+		operator: str = "=",
+		doctype: str | None = None,
+	):
+		_field = field
+		_value = value
+		_operator = operator
 
-        if not isinstance(_field, str):
-            pass
-        elif not self.validate_filters and (
-            dynamic_field := DynamicTableField.parse(field, self.doctype)
-        ):
-            # apply implicit join if link field's field is referenced
-            self.query = dynamic_field.apply_join(self.query)
-            _field = dynamic_field.field
-        elif self.validate_filters and SPECIAL_CHAR_PATTERN.search(_field):
-            frappe.throw(_("Invalid filter: {0}").format(_field))
-        elif not doctype or doctype == self.doctype:
-            _field = self.table[field]
-        elif doctype:
-            _field = frappe.qb.DocType(doctype)[field]
+		if not isinstance(_field, str):
+			pass
+		elif not self.validate_filters and (dynamic_field := DynamicTableField.parse(field, self.doctype)):
+			# apply implicit join if link field's field is referenced
+			self.query = dynamic_field.apply_join(self.query)
+			_field = dynamic_field.field
+		elif self.validate_filters and SPECIAL_CHAR_PATTERN.search(_field):
+			frappe.throw(_("Invalid filter: {0}").format(_field))
+		elif not doctype or doctype == self.doctype:
+			_field = self.table[field]
+		elif doctype:
+			_field = frappe.qb.DocType(doctype)[field]
 
         # apply implicit join if child table is referenced
         if doctype and doctype != self.doctype:
@@ -195,11 +190,10 @@ class Engine:
                     (table.parent == self.table.id) & (table.parenttype == self.doctype)
                 )
 
-        if isinstance(_value, bool):
-            _value = int(_value)
+		_value = convert_to_value(_value)
 
-        elif not _value and isinstance(_value, list | tuple):
-            _value = ("",)
+		if not _value and isinstance(_value, list | tuple | set):
+			_value = ("",)
 
         # Nested set
         if _operator in OPERATOR_MAP["nested_set"]:
@@ -227,11 +221,11 @@ class Engine:
         else:
             self.query = self.query.where(operator_fn(_field, _value))
 
-    def get_function_object(self, field: str) -> "Function":
-        """Expects field to look like 'SUM(*)' or 'id' or something similar. Returns PyPika Function object"""
-        func = field.split("(", maxsplit=1)[0].capitalize()
-        args_start, args_end = len(func) + 1, field.index(")")
-        args = field[args_start:args_end].split(",")
+	def get_function_object(self, field: str) -> "Function":
+		"""Return PyPika Function object. Expect field to look like 'SUM(*)' or 'id' or something similar."""
+		func = field.split("(", maxsplit=1)[0].capitalize()
+		args_start, args_end = len(func) + 1, field.index(")")
+		args = field[args_start:args_end].split(",")
 
         _, alias = field.split(" as ") if " as " in field else (None, None)
 
@@ -259,17 +253,17 @@ class Engine:
                                 ),
                             )
 
-                field = (
-                    (
-                        Field(initial_fields)
-                        if "`" not in initial_fields
-                        else PseudoColumnMapper(initial_fields)
-                    )
-                    if not has_primitive_operator
-                    else field
-                )
-            else:
-                field = initial_fields
+				field = (
+					(
+						Field(initial_fields)
+						if "`" not in initial_fields
+						else PseudoColumnMapper(initial_fields)
+					)
+					if not has_primitive_operator
+					else field
+				)
+			else:
+				field = initial_fields
 
             _args.append(field)
 
@@ -283,23 +277,15 @@ class Engine:
             # Fall back for functions not present in `SqlFunctions``
             return Function(func, *_args, alias=alias or None)
 
-    def sanitize_fields(self, fields: str | list | tuple):
-        def _sanitize_field(field: str):
-            if not isinstance(field, str):
-                return field
-            stripped_field = sqlparse.format(
-                field, strip_comments=True, keyword_case="lower"
-            )
-            if self.is_mariadb:
-                return MARIADB_SPECIFIC_COMMENT.sub("", stripped_field)
-            return stripped_field
-
-        if isinstance(fields, list | tuple):
-            return [_sanitize_field(field) for field in fields]
-        elif isinstance(fields, str):
-            return _sanitize_field(fields)
-
-        return fields
+	def sanitize_fields(self, fields: str | list | tuple):
+		if isinstance(fields, list | tuple):
+			return [
+				_sanitize_field(field, self.is_mariadb) if isinstance(field, str) else field
+				for field in fields
+			]
+		elif isinstance(fields, str):
+			return _sanitize_field(fields, self.is_mariadb)
+		return fields
 
     def parse_string_field(self, field: str):
         if field == "*":
@@ -315,19 +301,15 @@ class Engine:
             return self.table[field].as_(alias)
         return self.table[field]
 
-    def parse_fields(self, fields: str | list | tuple | None) -> list:
-        if not fields:
-            return []
-        fields = self.sanitize_fields(fields)
-        if (
-            isinstance(fields, list | tuple | set)
-            and None in fields
-            and Field not in fields
-        ):
-            return []
+	def parse_fields(self, fields: str | list | tuple | None) -> list:
+		if not fields:
+			return []
+		fields = self.sanitize_fields(fields)
+		if isinstance(fields, list | tuple | set) and None in fields and Field not in fields:
+			return []
 
-        if not isinstance(fields, list | tuple):
-            fields = [fields]
+		if not isinstance(fields, list | tuple):
+			fields = [fields]
 
         def parse_field(field: str):
             if has_function(field):
@@ -536,18 +518,18 @@ class ChildQuery:
         self.parent_doctype = parent_doctype
         self.doctype = field.options
 
-    def get_query(self, parent_ids=None) -> QueryBuilder:
-        filters = {
-            "parenttype": self.parent_doctype,
-            "parentfield": self.fieldname,
-            "parent": ["in", parent_ids],
-        }
-        return frappe.qb.get_query(
-            self.doctype,
-            fields=[*self.fields, "parent", "parentfield"],
-            filters=filters,
-            order_by="idx asc",
-        )
+	def get_query(self, parent_ids=None) -> QueryBuilder:
+		filters = {
+			"parenttype": self.parent_doctype,
+			"parentfield": self.fieldname,
+			"parent": ["in", parent_ids],
+		}
+		return frappe.qb.get_query(
+			self.doctype,
+			fields=[*self.fields, "parent", "parentfield"],
+			filters=filters,
+			order_by="idx asc",
+		)
 
 
 def literal_eval_(literal):
@@ -558,12 +540,10 @@ def literal_eval_(literal):
 
 
 def has_function(field):
-    _field = (
-        field.casefold() if (isinstance(field, str) and "`" not in field) else field
-    )
-    if not issubclass(type(_field), Criterion):
-        if any([f"{func}(" in _field for func in SQL_FUNCTIONS]):
-            return True
+	_field = field.casefold() if (isinstance(field, str) and "`" not in field) else field
+	if not issubclass(type(_field), Criterion):
+		if any([f"{func}(" in _field for func in SQL_FUNCTIONS]):  # ) <- ignore this comment.
+			return True
 
 
 def get_nested_set_hierarchy_result(doctype: str, id: str, hierarchy: str) -> list[str]:
@@ -576,29 +556,37 @@ def get_nested_set_hierarchy_result(doctype: str, id: str, hierarchy: str) -> li
     except IndexError:
         lft, rgt = None, None
 
-    if hierarchy in (
-        "descendants of",
-        "not descendants of",
-        "descendants of (inclusive)",
-    ):
-        result = (
-            frappe.qb.from_(table)
-            .select(table.id)
-            .where(table.lft > lft)
-            .where(table.rgt < rgt)
-            .orderby(table.lft, order=Order.asc)
-            .run(pluck=True)
-        )
-        if hierarchy == "descendants of (inclusive)":
-            result += [id]
-    else:
-        # Get ancestor elements of a DocType with a tree structure
-        result = (
-            frappe.qb.from_(table)
-            .select(table.id)
-            .where(table.lft < lft)
-            .where(table.rgt > rgt)
-            .orderby(table.lft, order=Order.desc)
-            .run(pluck=True)
-        )
-    return result
+	if hierarchy in ("descendants of", "not descendants of", "descendants of (inclusive)"):
+		result = (
+			frappe.qb.from_(table)
+			.select(table.name)
+			.where(table.lft > lft)
+			.where(table.rgt < rgt)
+			.orderby(table.lft, order=Order.asc)
+			.run(pluck=True)
+		)
+		if hierarchy == "descendants of (inclusive)":
+			result += [id]
+	else:
+		# Get ancestor elements of a DocType with a tree structure
+		result = (
+			frappe.qb.from_(table)
+			.select(table.name)
+			.where(table.lft < lft)
+			.where(table.rgt > rgt)
+			.orderby(table.lft, order=Order.desc)
+			.run(pluck=True)
+		)
+	return result
+
+
+@lru_cache(maxsize=1024)
+def _sanitize_field(field: str, is_mariadb):
+	if field == "*" or not SPECIAL_CHAR_PATTERN.match(field):
+		# Skip checking if there are no special characters
+		return field
+
+	stripped_field = sqlparse.format(field, strip_comments=True, keyword_case="lower")
+	if is_mariadb:
+		return MARIADB_SPECIFIC_COMMENT.sub("", stripped_field)
+	return stripped_field

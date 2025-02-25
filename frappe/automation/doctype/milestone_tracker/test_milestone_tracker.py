@@ -2,24 +2,29 @@
 # License: MIT. See LICENSE
 import frappe
 import frappe.cache_manager
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
-class TestMilestoneTracker(FrappeTestCase):
-    def test_milestone(self):
-        frappe.db.delete("Milestone Tracker")
+class UnitTestMilestoneTracker(UnitTestCase):
+	"""
+	Unit tests for MilestoneTracker.
+	Use this class for testing individual functions and methods.
+	"""
 
-        frappe.cache.delete_key("milestone_tracker_map")
+	pass
 
-        milestone_tracker = frappe.get_doc(
-            dict(
-                doctype="Milestone Tracker", document_type="ToDo", track_field="status"
-            )
-        ).insert()
 
-        todo = frappe.get_doc(
-            dict(doctype="ToDo", description="test milestone", status="Open")
-        ).insert()
+class TestMilestoneTracker(IntegrationTestCase):
+	def test_milestone(self):
+		frappe.db.delete("Milestone Tracker")
+
+		frappe.cache_manager.clear_doctype_map("Milestone Tracker")
+
+		milestone_tracker = frappe.get_doc(
+			doctype="Milestone Tracker", document_type="ToDo", track_field="status"
+		).insert()
+
+		todo = frappe.get_doc(doctype="ToDo", description="test milestone", status="Open").insert()
 
         milestones = frappe.get_all(
             "Milestone",
@@ -34,12 +39,12 @@ class TestMilestoneTracker(FrappeTestCase):
         todo.status = "Closed"
         todo.save()
 
-        milestones = frappe.get_all(
-            "Milestone",
-            fields=["track_field", "value", "milestone_tracker"],
-            filters=dict(reference_type=todo.doctype, reference_id=todo.id),
-            order_by="modified desc",
-        )
+		milestones = frappe.get_all(
+			"Milestone",
+			fields=["track_field", "value", "milestone_tracker"],
+			filters=dict(reference_type=todo.doctype, reference_id=todo.id),
+			order_by="creation desc",
+		)
 
         self.assertEqual(len(milestones), 2)
         self.assertEqual(milestones[0].track_field, "status")

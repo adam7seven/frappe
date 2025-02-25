@@ -13,9 +13,10 @@ import frappe.utils
 from frappe import _, is_whitelisted, ping
 from frappe.core.doctype.server_script.server_script_utils import get_server_script_map
 from frappe.monitor import add_data_to_monitor
+from frappe.permissions import check_doctype_permission
 from frappe.utils import cint
 from frappe.utils.csvutils import build_csv_response
-from frappe.utils.deprecations import deprecation_warning
+from frappe.utils.deprecations import deprecated
 from frappe.utils.image import optimize_image
 from frappe.utils.response import build_response
 
@@ -24,19 +25,19 @@ if TYPE_CHECKING:
     from frappe.core.doctype.user.user import User
 
 ALLOWED_MIMETYPES = (
-    "image/png",
-    "image/jpeg",
-    "application/pdf",
-    "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "application/vnd.ms-excel",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    "application/vnd.oasis.opendocument.text",
-    "application/vnd.oasis.opendocument.spreadsheet",
-    "text/plain",
-    "video/quicktime",
-    "video/mp4",
-    "text/csv",
+	"image/png",
+	"image/jpeg",
+	"application/pdf",
+	"application/msword",
+	"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+	"application/vnd.ms-excel",
+	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+	"application/vnd.oasis.opendocument.text",
+	"application/vnd.oasis.opendocument.spreadsheet",
+	"text/plain",
+	"video/quicktime",
+	"video/mp4",
+	"text/csv",
 )
 
 
@@ -102,12 +103,8 @@ def is_valid_http_method(method):
 
     http_method = frappe.local.request.method
 
-    if http_method not in frappe.allowed_http_methods_for_whitelisted_func[method]:
-        throw_permission_error()
-
-
-def throw_permission_error():
-    frappe.throw(_("Not permitted"), frappe.PermissionError)
+	if http_method not in frappe.allowed_http_methods_for_whitelisted_func[method]:
+		frappe.throw_permission_error()
 
 
 @frappe.whitelist(allow_guest=True)
@@ -127,59 +124,17 @@ def web_logout():
     )
 
 
-@frappe.whitelist()
-def uploadfile():
-    deprecation_warning(
-        "uploadfile is deprecated and will be removed in v16. Use upload_file instead.",
-    )
-    ret = None
-    check_write_permission(frappe.form_dict.doctype, frappe.form_dict.docid)
-
-    try:
-        if frappe.form_dict.get("from_form"):
-            try:
-                ret = frappe.get_doc(
-                    {
-                        "doctype": "File",
-                        "attached_to_id": frappe.form_dict.docid,
-                        "attached_to_doctype": frappe.form_dict.doctype,
-                        "attached_to_field": frappe.form_dict.docfield,
-                        "file_url": frappe.form_dict.file_url,
-                        "file_name": frappe.form_dict.filename,
-                        "is_private": frappe.utils.cint(frappe.form_dict.is_private),
-                        "content": frappe.form_dict.filedata,
-                        "decode": True,
-                    }
-                )
-                ret.save()
-            except frappe.DuplicateEntryError:
-                # ignore pass
-                ret = None
-                frappe.db.rollback()
-        else:
-            if frappe.form_dict.get("method"):
-                method = frappe.get_attr(frappe.form_dict.method)
-                is_whitelisted(method)
-                ret = method()
-    except Exception:
-        frappe.errprint(frappe.utils.get_traceback())
-        frappe.response["http_status_code"] = 500
-        ret = None
-
-    return ret
-
-
 @frappe.whitelist(allow_guest=True)
 def upload_file():
-    user = None
-    if frappe.session.user == "Guest":
-        if frappe.get_system_settings("allow_guests_to_upload_files"):
-            ignore_permissions = True
-        else:
-            raise frappe.PermissionError
-    else:
-        user: "User" = frappe.get_doc("User", frappe.session.user)
-        ignore_permissions = False
+	user = None
+	if frappe.session.user == "Guest":
+		if frappe.get_system_settings("allow_guests_to_upload_files"):
+			ignore_permissions = True
+		else:
+			raise frappe.PermissionError
+	else:
+		user: User = frappe.get_doc("User", frappe.session.user)
+		ignore_permissions = False
 
     files = frappe.request.files
     is_private = frappe.form_dict.is_private
@@ -193,17 +148,17 @@ def upload_file():
     optimize = frappe.form_dict.optimize
     content = None
 
-    if library_file := frappe.form_dict.get("library_file_name"):
-        frappe.has_permission("File", doc=library_file, throw=True)
-        doc = frappe.get_value(
-            "File",
-            frappe.form_dict.library_file_name,
-            ["is_private", "file_url", "file_name"],
-            as_dict=True,
-        )
-        is_private = doc.is_private
-        file_url = doc.file_url
-        filename = doc.file_name
+	if library_file := frappe.form_dict.get("library_file_name"):
+		frappe.has_permission("File", doc=library_file, throw=True)
+		doc = frappe.get_value(
+			"File",
+			frappe.form_dict.library_file_name,
+			["is_private", "file_url", "file_name"],
+			as_dict=True,
+		)
+		is_private = doc.is_private
+		file_url = doc.file_url
+		filename = doc.file_name
 
     if not ignore_permissions:
         check_write_permission(doctype, docid)
@@ -222,14 +177,14 @@ def upload_file():
                 args["max_height"] = int(frappe.form_dict.max_height)
             content = optimize_image(**args)
 
-    frappe.local.uploaded_file_url = file_url
-    frappe.local.uploaded_file = content
-    frappe.local.uploaded_filename = filename
+	frappe.local.uploaded_file_url = file_url
+	frappe.local.uploaded_file = content
+	frappe.local.uploaded_filename = filename
 
-    if content is not None and (frappe.session.user == "Guest" or (user and not user.has_desk_access())):
-        filetype = guess_type(filename)[0]
-        if filetype not in ALLOWED_MIMETYPES:
-            frappe.throw(_("You can only upload JPG, PNG, PDF, TXT, CSV or Microsoft documents."))
+	if content is not None and (frappe.session.user == "Guest" or (user and not user.has_desk_access())):
+		filetype = guess_type(filename)[0]
+		if filetype not in ALLOWED_MIMETYPES:
+			frappe.throw(_("You can only upload JPG, PNG, PDF, TXT, CSV or Microsoft documents."))
 
     if method:
         method = frappe.get_attr(method)
@@ -252,18 +207,22 @@ def upload_file():
 
 
 def check_write_permission(doctype: str | None = None, id: str | None = None):
-    check_doctype = doctype and not id
-    if doctype and id:
-        try:
-            doc = frappe.get_doc(doctype, id)
-            doc.check_permission("write")
-        except frappe.DoesNotExistError:
-            # doc has not been inserted yet, id is set to "new-some-doctype"
-            # If doc inserts fine then only this attachment will be linked see file/utils.py:relink_mismatched_files
-            return
+	if not doctype:
+		return
 
-    if check_doctype:
-        frappe.has_permission(doctype, "write", throw=True)
+	if not id:
+		frappe.has_permission(doctype, "write", throw=True)
+		return
+
+	try:
+		doc = frappe.get_doc(doctype, id)
+	except frappe.DoesNotExistError:
+		# doc has not been inserted yet, id is set to "new-some-doctype"
+		# If doc inserts fine then only this attachment will be linked see file/utils.py:relink_mismatched_files
+		check_doctype_permission(doctype, "write")
+		return
+
+	doc.check_permission("write")
 
 
 @frappe.whitelist(allow_guest=True)
@@ -272,13 +231,13 @@ def download_file(file_url: str):
     Download file using token and REST API. Valid session or
     token is required to download private files.
 
-    Method : GET
-    Endpoints : download_file, frappe.core.doctype.file.file.download_file
-    URL Params : file_name = /path/to/file relative to site path
-    """
-    file: "File" = frappe.get_doc("File", {"file_url": file_url})
-    if not file.is_downloadable():
-        raise frappe.PermissionError
+	Method : GET
+	Endpoints : download_file, frappe.core.doctype.file.file.download_file
+	URL Params : file_name = /path/to/file relative to site path
+	"""
+	file: File = frappe.get_doc("File", {"file_url": file_url})
+	if not file.is_downloadable():
+		raise frappe.PermissionError
 
     frappe.local.response.filename = os.path.basename(file_url)
     frappe.local.response.filecontent = file.get_content()
@@ -286,13 +245,19 @@ def download_file(file_url: str):
 
 
 def get_attr(cmd):
-    """get method object from cmd"""
-    if "." in cmd:
-        method = frappe.get_attr(cmd)
-    else:
-        deprecation_warning(f"Calling shorthand for {cmd} is deprecated, please specify full path in RPC call.")
-        method = globals()[cmd]
-    return method
+	"""get method object from cmd"""
+	if "." in cmd:
+		method = frappe.get_attr(cmd)
+	else:
+		from frappe.deprecation_dumpster import deprecation_warning
+
+		deprecation_warning(
+			"unknown",
+			"v17",
+			f"Calling shorthand for {cmd} is deprecated, please specify full path in RPC call.",
+		)
+		method = globals()[cmd]
+	return method
 
 
 def run_doc_method(method, docs=None, dt=None, dn=None, arg=None, args=None):
@@ -313,8 +278,10 @@ def run_doc_method(method, docs=None, dt=None, dn=None, arg=None, args=None):
         doc._original_modified = doc.modified
         doc.check_if_latest()
 
-    if not doc or not doc.has_permission("read"):
-        throw_permission_error()
+	if not doc:
+		frappe.throw_permission_error()
+
+	doc.check_permission("read")
 
     try:
         args = frappe.parse_json(args)
@@ -351,5 +318,4 @@ def run_doc_method(method, docs=None, dt=None, dn=None, arg=None, args=None):
     add_data_to_monitor(methodname=method)
 
 
-# for backwards compatibility
-runserverobj = run_doc_method
+runserverobj = deprecated(run_doc_method)

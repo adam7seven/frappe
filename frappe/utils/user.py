@@ -27,23 +27,23 @@ class UserPermissions:
         self.id = id or frappe.session.get("user")
         self.roles = []
 
-        self.all_read = []
-        self.can_create = []
-        self.can_select = []
-        self.can_read = []
-        self.can_write = []
-        self.can_submit = []
-        self.can_cancel = []
-        self.can_delete = []
-        self.can_search = []
-        self.can_get_report = []
-        self.can_import = []
-        self.can_export = []
-        self.can_print = []
-        self.can_email = []
-        self.allow_modules = []
-        self.in_create = []
-        self.setup_user()
+		self.all_read = []
+		self.can_create = []
+		self.can_select = []
+		self.can_read = []
+		self.can_write = []
+		self.can_submit = []
+		self.can_cancel = []
+		self.can_delete = []
+		self.can_search = []
+		self.can_get_report = []
+		self.can_import = []
+		self.can_export = []
+		self.can_print = []
+		self.can_email = []
+		self.allow_modules = []
+		self.in_create = []
+		self.setup_user()
 
     def setup_user(self):
         def get_user_doc():
@@ -143,11 +143,11 @@ class UserPermissions:
                     else:
                         self.can_read.append(dt)
 
-            if p.get("submit"):
-                self.can_submit.append(dt)
+			if p.get("submit"):
+				self.can_submit.append(dt)
 
-            if p.get("cancel"):
-                self.can_cancel.append(dt)
+			if p.get("cancel"):
+				self.can_cancel.append(dt)
 
             if p.get("delete"):
                 self.can_delete.append(dt)
@@ -214,27 +214,28 @@ class UserPermissions:
             self.build_permissions()
         return self.can_read
 
-    def load_user(self):
-        d = frappe.db.get_value(
-            "User",
-            self.id,
-            [
-                "creation",
-                "desk_theme",
-                "document_follow_notify",
-                "email",
-                "email_signature",
-                "first_name",
-                "language",
-                "last_name",
-                "mute_sounds",
-                "send_me_a_copy",
-                "user_type",
-                "onboarding_status",
-                "default_workspace",
-            ],
-            as_dict=True,
-        )
+	def load_user(self):
+		d = frappe.db.get_value(
+			"User",
+			self.id,
+			[
+				"creation",
+				"desk_theme",
+				"code_editor_type",
+				"document_follow_notify",
+				"email",
+				"email_signature",
+				"first_name",
+				"language",
+				"last_name",
+				"mute_sounds",
+				"send_me_a_copy",
+				"user_type",
+				"onboarding_status",
+				"default_workspace",
+			],
+			as_dict=True,
+		)
 
         if not self.can_read:
             self.build_permissions()
@@ -291,22 +292,22 @@ def get_user_fullname(user: str) -> str:
 
 
 def get_fullname_and_avatar(user: str) -> _dict:
-    first_name, last_name, avatar, id = frappe.db.get_value(
-        "User", user, ["first_name", "last_name", "user_image", "id"], order_by=None
-    )
-    return _dict(
-        {
-            "fullname": " ".join(list(filter(None, [first_name, last_name]))),
-            "avatar": avatar,
-            "id": id,
-        }
-    )
+	first_name, last_name, avatar, id = frappe.get_cached_value(
+		"User", user, ["first_name", "last_name", "user_image", "id"]
+	)
+	return _dict(
+		{
+			"fullname": " ".join(list(filter(None, [first_name, last_name]))),
+			"avatar": avatar,
+			"id": id,
+		}
+	)
 
 
 def get_system_managers(only_id: bool = False) -> list[str]:
-    """returns all system manager's user details"""
-    HasRole = DocType("Has Role")
-    User = DocType("User")
+	"""Return all system manager's user details."""
+	HasRole = DocType("Has Role")
+	User = DocType("User")
 
     if only_id:
         fields = [User.id]
@@ -340,11 +341,11 @@ def add_role(user: str, role: str) -> None:
 
 
 def add_system_manager(
-    email: str,
-    first_name: str | None = None,
-    last_name: str | None = None,
-    send_welcome_email: bool = False,
-    password: str | None = None,
+	email: str,
+	first_name: str | None = None,
+	last_name: str | None = None,
+	send_welcome_email: bool = False,
+	password: str | None = None,
 ) -> "User":
     # add user
     user = frappe.new_doc("User")

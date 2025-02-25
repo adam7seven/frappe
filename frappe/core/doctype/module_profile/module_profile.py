@@ -14,13 +14,13 @@ class ModuleProfile(Document):
         from frappe.core.doctype.block_module.block_module import BlockModule
         from frappe.types import DF
 
-        block_modules: DF.Table[BlockModule]
+		block_modules: DF.Table[BlockModule]
+	# end: auto-generated types
 
-    # end: auto-generated types
-    def onload(self):
-        from frappe.config import get_modules_from_all_apps
+	def onload(self):
+		from frappe.utils.modules import get_modules_from_all_apps
 
-        self.set_onload(
-            "all_modules",
-            sorted(m.get("module_id") for m in get_modules_from_all_apps()),
-        )
+		self.set_onload("all_modules", sorted(m.get("module_name") for m in get_modules_from_all_apps()))
+
+	def get_permission_log_options(self, event=None):
+		return {"fields": ["block_modules"]}

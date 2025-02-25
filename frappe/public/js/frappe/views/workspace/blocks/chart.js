@@ -33,7 +33,7 @@ export default class Chart extends Block {
 
 		if (this.data && this.data.chart_id) {
 			let has_data = this.make("chart", this.data.chart_id);
-			if (!has_data) return;
+			if (!has_data) return this.wrapper;
 		}
 
 		if (!this.readOnly) {

@@ -11,17 +11,25 @@ from frappe.custom.doctype.customize_form.customize_form import reset_customizat
 from frappe.desk.query_report import add_total_row, run, save_report
 from frappe.desk.reportview import delete_report
 from frappe.desk.reportview import save_report as _save_report
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase, UnitTestCase
 
-test_records = frappe.get_test_records("Report")
-test_dependencies = ["User"]
+EXTRA_TEST_RECORD_DEPENDENCIES = ["User"]
 
 
-class TestReport(FrappeTestCase):
-    @classmethod
-    def setUpClass(cls) -> None:
-        cls.enable_safe_exec()
-        return super().setUpClass()
+class UnitTestReport(UnitTestCase):
+	"""
+	Unit tests for Report.
+	Use this class for testing individual functions and methods.
+	"""
+
+	pass
+
+
+class TestReport(IntegrationTestCase):
+	@classmethod
+	def setUpClass(cls) -> None:
+		cls.enterClassContext(cls.enable_safe_exec())
+		return super().setUpClass()
 
     def test_report_builder(self):
         if frappe.db.exists("Report", "User Activity Report"):
@@ -243,16 +251,12 @@ class TestReport(FrappeTestCase):
         self.assertNotEqual(report.is_permitted(), True)
         frappe.set_user("Administrator")
 
-    # test for the `_format` method if report data doesn't have sort_by parameter
-    def test_format_method(self):
-        if frappe.db.exists("Report", "User Activity Report Without Sort"):
-            frappe.delete_doc("Report", "User Activity Report Without Sort")
-        with open(
-            os.path.join(
-                os.path.dirname(__file__), "user_activity_report_without_sort.json"
-            )
-        ) as f:
-            frappe.get_doc(json.loads(f.read())).insert()
+	# test for the `_format` method if report data doesn't have sort_by parameter
+	def test_format_method(self):
+		if frappe.db.exists("Report", "User Activity Report Without Sort"):
+			frappe.delete_doc("Report", "User Activity Report Without Sort")
+		with open(os.path.join(os.path.dirname(__file__), "user_activity_report_without_sort.json")) as f:
+			frappe.get_doc(json.loads(f.read())).insert()
 
         report = frappe.get_doc("Report", "User Activity Report Without Sort")
         columns, data = report.get_data()

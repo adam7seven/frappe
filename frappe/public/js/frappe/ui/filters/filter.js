@@ -52,7 +52,24 @@ frappe.ui.Filter = class {
 			"Markdown Editor": ["Between", "Timespan", ">", "<", ">=", "<=", "in", "not in"],
 			Password: ["Between", "Timespan", ">", "<", ">=", "<=", "in", "not in"],
 			Rating: ["like", "not like", "Between", "in", "not in", "Timespan"],
+			Int: ["like", "not like", "Between", "in", "not in", "Timespan"],
 			Float: ["like", "not like", "Between", "in", "not in", "Timespan"],
+			Percent: ["like", "not like", "Between", "in", "not in", "Timespan"],
+		};
+
+		this.special_condition_labels = {
+			Date: {
+				"<": __("Before"),
+				">": __("After"),
+				"<=": __("On or Before"),
+				">=": __("On or After"),
+			},
+			Datetime: {
+				"<": __("Before"),
+				">": __("After"),
+				"<=": __("On or Before"),
+				">=": __("On or After"),
+			},
 		};
 
 		this.special_condition_labels = {
@@ -301,6 +318,10 @@ frappe.ui.Filter = class {
 		this.field = f;
 		if (old_text && f.fieldtype === old_fieldtype) {
 			this.field.set_value(old_text);
+		}
+
+		if (Array.isArray(old_text) && df.fieldtype !== old_fieldtype) {
+			this.field.set_value(this.value);
 		}
 
 		this.bind_filter_field_events();
@@ -606,7 +627,17 @@ frappe.ui.filter_utils = {
 
 	get_timespan_options(periods) {
 		const period_map = {
-			Last: ["7 Days", "14 Days", "30 Days", "Week", "Month", "Quarter", "6 months", "Year"],
+			Last: [
+				"7 Days",
+				"14 Days",
+				"30 Days",
+				"90 Days",
+				"Week",
+				"Month",
+				"Quarter",
+				"6 months",
+				"Year",
+			],
 			This: ["Week", "Month", "Quarter", "Year"],
 			Next: ["7 Days", "14 Days", "30 Days", "Week", "Month", "Quarter", "6 months", "Year"],
 		};

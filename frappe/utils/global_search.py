@@ -538,16 +538,18 @@ def search(text, start=0, limit=20, doctype=""):
 
         results.extend(result)
 
-    # sort results based on allowed_doctype's priority
-    for doctype in allowed_doctypes:
-        for r in results:
-            if r.doctype == doctype and r.rank > 0.0:
-                try:
-                    meta = frappe.get_meta(r.doctype)
-                    if meta.image_field:
-                        r.image = frappe.db.get_value(r.doctype, r.id, meta.image_field)
-                except Exception:
-                    frappe.clear_messages()
+	# sort results based on allowed_doctype's priority
+	for doctype in allowed_doctypes:
+		for r in results:
+			if r.doctype == doctype and r.rank > 0.0:
+				try:
+					meta = frappe.get_meta(r.doctype)
+					if meta.image_field:
+						r.image = frappe.db.get_value(r.doctype, r.id, meta.image_field)
+					if meta.title_field:
+						r.title = frappe.db.get_value(r.doctype, r.id, meta.title_field)
+				except Exception:
+					frappe.clear_messages()
 
                 sorted_results.extend([r])
 
@@ -579,13 +581,11 @@ def web_search(text: str, scope: str | None = None, start: int = 0, limit: int =
             [published_condition, scope_condition]
         )
 
-        # https://mariadb.com/kb/en/library/full-text-index-overview/#in-boolean-mode
-        mariadb_conditions += "MATCH(`content`) AGAINST ({} IN BOOLEAN MODE)".format(
-            frappe.db.escape("+" + text + "*")
-        )
-        postgres_conditions += (
-            f'TO_TSVECTOR("content") @@ PLAINTO_TSQUERY({frappe.db.escape(text)})'
-        )
+		# https://mariadb.com/kb/en/library/full-text-index-overview/#in-boolean-mode
+		mariadb_conditions += "MATCH(`content`) AGAINST ({} IN BOOLEAN MODE)".format(
+			frappe.db.escape("+" + text + "*")
+		)
+		postgres_conditions += f'TO_TSVECTOR("content") @@ PLAINTO_TSQUERY({frappe.db.escape(text)})'
 
         values = {
             "scope": "".join([scope, "%"]) if scope else "",

@@ -35,27 +35,27 @@ def get_context(context):
 
 @redis_cache(ttl=6 * 60 * 60)
 def get_public_pages_from_doctypes():
-    """Return pages from doctypes that are publicly accessible."""
+	"""Return pages from doctypes that are publicly accessible."""
 
-    routes = {}
-    doctypes_with_web_view = get_doctypes_with_web_view()
+	routes = {}
+	doctypes_with_web_view = get_doctypes_with_web_view()
 
-    robot_parser_instance = None
-    if robots_txt := frappe.db.get_single_value("Website Settings", "robots_txt"):
-        robot_parser_instance = robotparser.RobotFileParser()
-        robot_parser_instance.parse(robots_txt.splitlines())
+	robot_parser_instance = None
+	if robots_txt := frappe.db.get_single_value("Website Settings", "robots_txt"):
+		robot_parser_instance = robotparser.RobotFileParser()
+		robot_parser_instance.parse(robots_txt.splitlines())
 
-    for doctype in doctypes_with_web_view:
-        controller = get_controller(doctype)
-        meta = frappe.get_meta(doctype)
+	for doctype in doctypes_with_web_view:
+		controller = get_controller(doctype)
+		meta = frappe.get_meta(doctype)
 
-        if not meta.allow_guest_to_view:
-            continue
+		if not meta.allow_guest_to_view:
+			continue
 
-        condition_field = meta.is_published_field or controller.website.condition_field
+		condition_field = meta.is_published_field or controller.website.condition_field
 
-        if not condition_field:
-            continue
+		if not condition_field:
+			continue
 
         try:
             res = frappe.get_all(

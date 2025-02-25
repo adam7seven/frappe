@@ -4,6 +4,7 @@
 from os.path import abspath, splitext
 from os.path import exists as path_exists
 from os.path import join as join_path
+from pathlib import Path
 from typing import Optional
 
 import frappe
@@ -23,39 +24,40 @@ class WebsiteTheme(Document):
             WebsiteThemeIgnoreApp,
         )
 
-        background_color: DF.Link | None
-        button_gradients: DF.Check
-        button_rounded_corners: DF.Check
-        button_shadows: DF.Check
-        custom: DF.Check
-        custom_overrides: DF.Code | None
-        custom_scss: DF.Code | None
-        dark_color: DF.Link | None
-        font_properties: DF.Data | None
-        font_size: DF.Data | None
-        google_font: DF.Data | None
-        ignored_apps: DF.Table[WebsiteThemeIgnoreApp]
-        js: DF.Code | None
-        light_color: DF.Link | None
-        module: DF.Link
-        primary_color: DF.Link | None
-        text_color: DF.Link | None
-        theme: DF.Data
-        theme_scss: DF.Code | None
-        theme_url: DF.Data | None
+		background_color: DF.Link | None
+		button_gradients: DF.Check
+		button_rounded_corners: DF.Check
+		button_shadows: DF.Check
+		custom: DF.Check
+		custom_overrides: DF.Code | None
+		custom_scss: DF.Code | None
+		dark_color: DF.Link | None
+		font_properties: DF.Data | None
+		font_size: DF.Data | None
+		google_font: DF.Data | None
+		ignored_apps: DF.Table[WebsiteThemeIgnoreApp]
+		js: DF.Code | None
+		light_color: DF.Link | None
+		module: DF.Link
+		primary_color: DF.Link | None
+		text_color: DF.Link | None
+		theme: DF.Data
+		theme_scss: DF.Code | None
+		theme_url: DF.Data | None
+	# end: auto-generated types
 
-    # end: auto-generated types
-    def validate(self):
-        self.validate_if_customizable()
-        self.generate_bootstrap_theme()
+	def validate(self):
+		self.validate_if_customizable()
+		self.generate_bootstrap_theme()
 
-    def on_update(self):
-        if (
-            not self.custom
-            and frappe.local.conf.get("developer_mode")
-            and not (frappe.flags.in_import or frappe.flags.in_test)
-        ):
-            self.export_doc()
+	def on_update(self):
+		if (
+			not self.custom
+			and frappe.local.conf.get("developer_mode")
+			and not frappe.flags.in_import
+			and not frappe.flags.in_test
+		):
+			self.export_doc()
 
         self.clear_cache_if_current_theme()
 
@@ -70,12 +72,9 @@ class WebsiteTheme(Document):
             )
         )
 
-    def on_trash(self):
-        if self.is_standard_and_not_valid_user():
-            frappe.throw(
-                _("You are not allowed to delete a standard Website Theme"),
-                frappe.PermissionError,
-            )
+	def on_trash(self):
+		if self.is_standard_and_not_valid_user():
+			frappe.throw(_("You are not allowed to delete a standard Website Theme"), frappe.PermissionError)
 
     def validate_if_customizable(self):
         if self.is_standard_and_not_valid_user():
@@ -134,9 +133,15 @@ class WebsiteTheme(Document):
     def delete_old_theme_files(self, folder_path):
         import os
 
-        for fname in os.listdir(folder_path):
-            if fname.startswith(frappe.scrub(self.id) + "_") and fname.endswith(".css"):
-                os.remove(os.path.join(folder_path, fname))
+		theme_files: list[Path] = []
+		for fname in os.listdir(folder_path):
+			if fname.startswith(frappe.scrub(self.id) + "_") and fname.endswith(".css"):
+				theme_files.append(Path(folder_path) / fname)
+
+		theme_files.sort(key=lambda f: f.stat().st_mtime, reverse=True)
+		# Keep 3 recent files
+		for old_file in theme_files[2:]:
+			old_file.unlink()
 
     @frappe.whitelist()
     def set_as_default(self):
@@ -155,31 +160,27 @@ class WebsiteTheme(Document):
 
 
 def get_active_theme() -> Optional["WebsiteTheme"]:
-    if website_theme := frappe.get_website_settings("website_theme"):
-        try:
-            return frappe.get_cached_doc("Website Theme", website_theme)
-        except frappe.DoesNotExistError:
-            frappe.clear_last_message()
-            pass
+	if website_theme := frappe.get_website_settings("website_theme"):
+		try:
+			return frappe.client_cache.get_doc("Website Theme", website_theme)
+		except frappe.DoesNotExistError:
+			frappe.clear_last_message()
+			pass
 
 
 def get_scss(website_theme):
     """
     Render `website_theme_template.scss` with the values defined in Website Theme.
 
-    params:
-    website_theme - instance of a Website Theme
-    """
-    apps_to_ignore = tuple((d.app + "/") for d in website_theme.ignored_apps)
-    available_imports = get_scss_paths()
-    imports_to_include = [
-        d for d in available_imports if not d.startswith(apps_to_ignore)
-    ]
-    context = website_theme.as_dict()
-    context["website_theme_scss"] = imports_to_include
-    return frappe.render_template(
-        "frappe/website/doctype/website_theme/website_theme_template.scss", context
-    )
+	params:
+	website_theme - instance of a Website Theme
+	"""
+	apps_to_ignore = tuple((d.app + "/") for d in website_theme.ignored_apps)
+	available_imports = get_scss_paths()
+	imports_to_include = [d for d in available_imports if not d.startswith(apps_to_ignore)]
+	context = website_theme.as_dict()
+	context["website_theme_scss"] = imports_to_include
+	return frappe.render_template("frappe/website/doctype/website_theme/website_theme_template.scss", context)
 
 
 def get_scss_paths():

@@ -217,21 +217,14 @@ def return_link_expired_page(doc, doc_workflow_state):
     )
 
 
-def update_completed_workflow_actions(
-    doc, user=None, workflow=None, workflow_state=None
-):
-    allowed_roles = get_allowed_roles(user, workflow, workflow_state)
-    # There is no transaction leading upto this state
-    # so no older actions to complete
-    if not allowed_roles:
-        return
-    if workflow_action := get_workflow_action_by_role(doc, allowed_roles):
-        update_completed_workflow_actions_using_role(user, workflow_action)
-    else:
-        # backwards compatibility
-        # for workflow actions saved using user
-        clear_old_workflow_actions_using_user(doc, user)
-        update_completed_workflow_actions_using_user(doc, user)
+def update_completed_workflow_actions(doc, user=None, workflow=None, workflow_state=None):
+	allowed_roles = get_allowed_roles(user, workflow, workflow_state)
+	# There is no transaction leading upto this state
+	# so no older actions to complete
+	if not allowed_roles:
+		return
+	if workflow_action := get_workflow_action_by_role(doc, allowed_roles):
+		update_completed_workflow_actions_using_role(user, workflow_action)
 
 
 def get_allowed_roles(user, workflow, workflow_state):
@@ -283,52 +276,12 @@ def update_completed_workflow_actions_using_role(user=None, workflow_action=None
     ).run()
 
 
-def clear_old_workflow_actions_using_user(doc, user=None):
-    user = user if user else frappe.session.user
-
-    if frappe.db.has_column("Workflow Action", "user"):
-        frappe.db.delete(
-            "Workflow Action",
-            {
-                "reference_id": doc.get("id"),
-                "reference_doctype": doc.get("doctype"),
-                "status": "Open",
-                "user": ("!=", user),
-            },
-        )
-
-
-def update_completed_workflow_actions_using_user(doc, user=None):
-    user = user or frappe.session.user
-
-    if frappe.db.has_column("Workflow Action", "user"):
-        WorkflowAction = DocType("Workflow Action")
-        (
-            frappe.qb.update(WorkflowAction)
-            .set(WorkflowAction.status, "Completed")
-            .set(WorkflowAction.completed_by, user)
-            .where(
-                (WorkflowAction.reference_id == doc.get("id"))
-                & (WorkflowAction.reference_doctype == doc.get("doctype"))
-                & (WorkflowAction.status == "Open")
-                & (WorkflowAction.user == user)
-            )
-        ).run()
-
-
 def get_next_possible_transitions(workflow_id, state, doc=None):
-    transitions = frappe.get_all(
-        "Workflow Transition",
-        fields=[
-            "allowed",
-            "action",
-            "state",
-            "allow_self_approval",
-            "next_state",
-            "condition",
-        ],
-        filters=[["parent", "=", workflow_id], ["state", "=", state]],
-    )
+	transitions = frappe.get_all(
+		"Workflow Transition",
+		fields=["allowed", "action", "state", "allow_self_approval", "next_state", "condition"],
+		filters=[["parent", "=", workflow_id], ["state", "=", state]],
+	)
 
     transitions_to_return = []
 
@@ -497,37 +450,37 @@ def get_common_email_args(doc):
     doctype = doc.get("doctype")
     docid = doc.get("id")
 
-    email_template = get_email_template_from_workflow(doc)
-    if email_template:
-        subject = email_template.get("subject")
-        response = email_template.get("message")
-    else:
-        subject = _("Workflow Action") + f" on {doctype}: {docid}"
-        response = get_link_to_form(doctype, docid, f"{doctype}: {docid}")
+	email_template = get_email_template_from_workflow(doc)
+	if email_template:
+		subject = email_template.get("subject")
+		response = email_template.get("message")
+	else:
+		subject = _("Workflow Action") + f" on {doctype}: {docid}"
+		response = get_link_to_form(doctype, docid, f"{doctype}: {docid}")
 
-    print_format = doc.meta.default_print_format
-    lang = doc.get("language") or (
-        frappe.get_cached_value("Print Format", print_format, "default_print_language")
-        if print_format
-        else None
-    )
+	print_format = doc.meta.default_print_format
+	lang = doc.get("language") or (
+		frappe.get_cached_value("Print Format", print_format, "default_print_language")
+		if print_format
+		else None
+	)
 
-    return {
-        "template": "workflow_action",
-        "header": "Workflow Action",
-        "attachments": [
-            frappe.attach_print(
-                doctype,
-                docid,
-                file_id=docid,
-                doc=doc,
-                lang=lang,
-                print_format=print_format,
-            )
-        ],
-        "subject": subject,
-        "message": response,
-    }
+	return {
+		"template": "workflow_action",
+		"header": "Workflow Action",
+		"attachments": [
+			frappe.attach_print(
+				doctype,
+				docid,
+				file_name=docid,
+				doc=doc,
+				lang=lang,
+				print_format=print_format,
+			)
+		],
+		"subject": subject,
+		"message": response,
+	}
 
 
 def get_email_template_from_workflow(doc):
@@ -540,9 +493,12 @@ def get_email_template_from_workflow(doc):
         "next_action_email_template",
     )
 
-    if not template_id:
-        return
-    return get_email_template(template_id, doc)
+	if not template_id:
+		return
+
+	if isinstance(doc, Document):
+		doc = doc.as_dict()
+	return get_email_template(template_id, doc)
 
 
 def get_state_optional_field_value(workflow_id, state):

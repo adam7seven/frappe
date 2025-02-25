@@ -273,9 +273,9 @@ def set_desktop_icons(visible_list, ignore_duplicate=True):
     if the desktop icon does not exist and the id is a DocType, then will create
     an icon for the doctype"""
 
-    # clear all custom only if setup is not complete
-    if not int(frappe.defaults.get_defaults().setup_complete or 0):
-        frappe.db.delete("Desktop Icon", {"standard": 0})
+	# clear all custom only if setup is not complete
+	if not frappe.defaults.get_defaults().get("setup_complete", 0):
+		frappe.db.delete("Desktop Icon", {"standard": 0})
 
     # set standard as blocked and hidden if setting first active domain
     if not frappe.flags.keep_desktop_icons:

@@ -48,15 +48,10 @@ export default class ShortcutWidget extends Widget {
                 frappe.open_in_new_tab = true;
             }
 
-            if (this.type == "URL") {
-                if (frappe.open_in_new_tab) {
-                    window.open(this.url, "_blank");
-                    frappe.open_in_new_tab = false;
-                } else {
-                    window.location.href = this.url;
-                }
-                return;
-            }
+			if (this.type == "URL") {
+				window.open(this.url, "_blank");
+				return;
+			}
 
             frappe.set_route(route);
         });
@@ -71,23 +66,27 @@ export default class ShortcutWidget extends Widget {
 
         this.widget.addClass("shortcut-widget-box");
 
-        // Make it tabbable
-        this.widget.attr({
-            role: "link",
-            tabindex: 0,
-            "aria-label": this.label,
-        });
+		// Make it tabbable
+		this.widget.attr({
+			role: "link",
+			tabindex: 0,
+			"aria-label": this.label,
+		});
 
-        let filters = frappe.utils.process_filter_expression(this.stats_filter);
+		let filters = frappe.utils.process_filter_expression(this.stats_filter);
 
-        if (this.type == "DocType" && this.doc_view != "New" && filters) {
-            frappe.db
-                .count(this.link_to, {
-                    filters: filters,
-                })
-                .then((count) => this.set_count(count));
-        }
-    }
+		if (
+			this.type == "DocType" &&
+			this.doc_view != "New" &&
+			!frappe.boot.single_types.includes(this.link_to)
+		) {
+			frappe.db
+				.count(this.link_to, {
+					filters: filters || [],
+				})
+				.then((count) => this.set_count(count));
+		}
+	}
 
     set_count(count) {
         const get_label = () => {
@@ -97,12 +96,12 @@ export default class ShortcutWidget extends Widget {
             return count;
         };
 
-        this.action_area.empty();
-        const label = get_label();
-        let color = this.color && count ? this.color.toLowerCase() : "gray";
-        $(
-            `<div class="indicator-pill no-indicator-dot ellipsis ${color}">${__(label)}</div>`
-        ).appendTo(this.action_area);
+		this.action_area.empty();
+		const label = get_label();
+		let color = this.color && count ? this.color.toLowerCase() : "gray";
+		$(
+			`<div class="indicator-pill no-indicator-dot ellipsis ${color}">${__(label)}</div>`
+		).appendTo(this.action_area);
 
         $(frappe.utils.icon("es-line-arrow-up-right", "xs", "", "", "ml-2")).appendTo(
             this.action_area

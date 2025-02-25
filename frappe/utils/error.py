@@ -8,6 +8,7 @@ from collections import Counter
 from contextlib import suppress
 
 import frappe
+from frappe.monitor import add_data_to_monitor
 
 EXCLUDE_EXCEPTIONS = (
     frappe.AuthenticationError,
@@ -84,46 +85,52 @@ def log_error(
 
 
 def log_error_snapshot(exception: Exception):
-    if isinstance(exception, EXCLUDE_EXCEPTIONS) or _is_ldap_exception(exception):
-        return
+	if isinstance(exception, EXCLUDE_EXCEPTIONS) or _is_ldap_exception(exception):
+		return
 
     logger = frappe.logger(with_more_info=True)
 
-    try:
-        log_error(title=str(exception), defer_insert=True)
-        logger.error("New Exception collected in error log")
-    except Exception as e:
-        logger.error(f"Could not take error snapshot: {e}", exc_info=True)
+	try:
+		log_error(title=str(exception), defer_insert=True)
+		logger.error("New Exception collected in error log")
+		add_data_to_monitor(exception=exception.__class__.__name__)
+	except Exception as e:
+		logger.error(f"Could not take error snapshot: {e}", exc_info=True)
 
 
 def get_default_args(func):
-    """Get default arguments of a function from its signature."""
-    signature = inspect.signature(func)
-    return {
-        k: v.default
-        for k, v in signature.parameters.items()
-        if v.default is not inspect.Parameter.empty
-    }
+	"""Get default arguments of a function from its signature."""
+	signature = inspect.signature(func)
+	return {k: v.default for k, v in signature.parameters.items() if v.default is not inspect.Parameter.empty}
 
 
 def raise_error_on_no_output(error_message, error_type=None, keep_quiet=None):
     """Decorate any function to throw error incase of missing output.
 
-    TODO: Remove keep_quiet flag after testing and fixing sendmail flow.
+	:param error_message: error message to raise
+	:param error_type: type of error to raise
+	:param keep_quiet: control error raising with external factor.
+	:type error_message: str
+	:type error_type: Exception Class
+	:type keep_quiet: function
 
-    :param error_message: error message to raise
-    :param error_type: type of error to raise
-    :param keep_quiet: control error raising with external factor.
-    :type error_message: str
-    :type error_type: Exception Class
-    :type keep_quiet: function
+	---
+	Example:
 
-    >>> @raise_error_on_no_output("Ingradients missing")
-    ... def get_indradients(_raise_error=1):
-    ...     return
-    >>> get_ingradients()
-    `Exception Name`: Ingradients missing
-    """
+	```py
+	@raise_error_on_no_output("Ingredients are missing")
+	def get_ingredients(_raise_error=1):
+	    return
+
+
+	# this will raise an Exception with message "Ingredients are missing"
+	ingredients = get_ingredients()
+	```
+
+	---
+
+	TODO: Remove keep_quiet flag after testing and fixing sendmail flow.
+	"""
 
     def decorator_raise_error_on_no_output(func):
         @functools.wraps(func)
@@ -154,23 +161,23 @@ def guess_exception_source(exception: str) -> str | None:
 
     E.g.
 
-    - For unhandled exception last python file from apps folder is responsible.
-    - For frappe.throws the exception source is possibly present after skipping frappe.throw frames
-    - For server script the file name contains SERVER_SCRIPT_FILE_PREFIX
+	- For unhandled exception last python file from apps folder is responsible.
+	- For frappe.throws the exception source is possibly present after skipping frappe.throw frames
+	- For server script the file name contains SERVER_SCRIPT_FILE_PREFIX
 
-    """
-    from frappe.utils.safe_exec import SERVER_SCRIPT_FILE_PREFIX
+	"""
+	from frappe.utils.safe_exec import SERVER_SCRIPT_FILE_PREFIX
 
-    with suppress(Exception):
-        installed_apps = frappe.get_installed_apps()
-        app_priority = {app: installed_apps.index(app) for app in installed_apps}
+	with suppress(Exception):
+		installed_apps = frappe.get_installed_apps()
+		app_priority = {app: installed_apps.index(app) for app in installed_apps}
 
-        APP_NAME_REGEX = re.compile(r".*File.*apps/(?P<app_name>\w+)/\1/")
+		APP_NAME_REGEX = re.compile(r".*File.*apps/(?P<app_name>\w+)/\1/")
 
-        apps = Counter()
-        for line in reversed(exception.splitlines()):
-            if SERVER_SCRIPT_FILE_PREFIX in line:
-                return "Server Script"
+		apps = Counter()
+		for line in reversed(exception.splitlines()):
+			if SERVER_SCRIPT_FILE_PREFIX in line:
+				return "Server Script"
 
             if matches := APP_NAME_REGEX.match(line):
                 app_name = matches.group("app_name")

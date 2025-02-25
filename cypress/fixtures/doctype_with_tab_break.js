@@ -48,7 +48,7 @@ export default {
 	],
 	quick_entry: 1,
 	autoid: "format: Test-{####}",
-	sort_field: "modified",
+	sort_field: "creation",
 	sort_order: "ASC",
 	track_changes: 1,
 };

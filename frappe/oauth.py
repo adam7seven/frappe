@@ -6,7 +6,6 @@ from http import cookies
 from urllib.parse import unquote, urljoin, urlparse
 
 import jwt
-import pytz
 from oauthlib.openid import RequestValidator
 
 import frappe
@@ -170,13 +169,11 @@ class OAuthWebRequestValidator(RequestValidator):
                 "OAuth Authorization Code", code, "code_challenge"
             )
 
-            if code_challenge and not request.code_verifier:
-                if frappe.db.exists("OAuth Authorization Code", code):
-                    frappe.delete_doc(
-                        "OAuth Authorization Code", code, ignore_permissions=True
-                    )
-                    frappe.db.commit()
-                return False
+			if code_challenge and not request.code_verifier:
+				if frappe.db.exists("OAuth Authorization Code", code):
+					frappe.delete_doc("OAuth Authorization Code", code, ignore_permissions=True, force=True)
+					frappe.db.commit()
+				return False
 
             if code_challenge_method == "s256":
                 m = hashlib.sha256()
@@ -258,22 +255,15 @@ class OAuthWebRequestValidator(RequestValidator):
 
     # Protected resource request
 
-    def validate_bearer_token(self, token, scopes, request):
-        # Remember to check expiration and scope membership
-        otoken = frappe.get_doc("OAuth Bearer Token", token)
-        is_token_valid = (
-            now_datetime() < otoken.expiration_time
-        ) and otoken.status != "Revoked"
-        client_scopes = frappe.db.get_value(
-            "OAuth Client", otoken.client, "scopes"
-        ).split(get_url_delimiter())
-        are_scopes_valid = True
-        for scp in scopes:
-            are_scopes_valid = (
-                are_scopes_valid and True if scp in client_scopes else False
-            )
-
-        return is_token_valid and are_scopes_valid
+	def validate_bearer_token(self, token, scopes, request):
+		# Remember to check expiration and scope membership
+		otoken = frappe.get_doc("OAuth Bearer Token", token)
+		is_token_valid = (now_datetime() < otoken.expiration_time) and otoken.status != "Revoked"
+		client_scopes = frappe.db.get_value("OAuth Client", otoken.client, "scopes").split(
+			get_url_delimiter()
+		)
+		are_scopes_valid = all(scope in client_scopes for scope in scopes)
+		return is_token_valid and are_scopes_valid
 
     # Token refresh request
 
@@ -324,9 +314,7 @@ class OAuthWebRequestValidator(RequestValidator):
         - Refresh Token Grant
         """
 
-        otoken = frappe.get_doc(
-            "OAuth Bearer Token", {"refresh_token": refresh_token, "status": "Active"}
-        )
+		otoken = frappe.get_doc("OAuth Bearer Token", {"refresh_token": refresh_token, "status": "Active"})
 
         if not otoken:
             return False
@@ -421,15 +409,15 @@ class OAuthWebRequestValidator(RequestValidator):
         :param request: The HTTP Request (oauthlib.common.Request)
         :rtype: True or False
 
-        Method is used by:
-        - OpenIDConnectAuthCode
-        - OpenIDConnectImplicit
-        - OpenIDConnectHybrid
-        """
-        if request.prompt == "login":
-            return False
-        else:
-            return True
+		Method is used by:
+		- OpenIDConnectAuthCode
+		- OpenIDConnectImplicit
+		- OpenIDConnectHybrid
+		"""
+		if request.prompt == "login":
+			return False
+		else:
+			return True
 
     def validate_silent_login(self, request):
         """Ensure session user has authorized silent OpenID login.

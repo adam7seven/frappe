@@ -3,13 +3,22 @@
 import frappe
 from frappe.core.doctype.user.user import get_system_users
 from frappe.desk.form.assign_to import add as assign_task
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
-class TestNotificationLog(FrappeTestCase):
-    def test_assignment(self):
-        todo = get_todo()
-        user = get_user()
+class UnitTestNotificationLog(UnitTestCase):
+	"""
+	Unit tests for NotificationLog.
+	Use this class for testing individual functions and methods.
+	"""
+
+	pass
+
+
+class TestNotificationLog(IntegrationTestCase):
+	def test_assignment(self):
+		todo = get_todo()
+		user = get_user()
 
         assign_task(
             {
@@ -38,9 +47,9 @@ class TestNotificationLog(FrappeTestCase):
         )
         self.assertEqual(log_type, "Share")
 
-        email = get_last_email_queue()
-        content = f"Subject: {frappe.utils.get_fullname(frappe.session.user)} shared a document ToDo"
-        self.assertTrue(content in email.message)
+		email = get_last_email_queue()
+		content = f"Subject: {frappe.utils.get_fullname(frappe.session.user)} shared a document ToDo"
+		self.assertTrue(content in email.message)
 
 
 def get_last_email_queue():

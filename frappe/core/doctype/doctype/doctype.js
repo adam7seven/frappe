@@ -51,15 +51,12 @@ frappe.ui.form.on("DocType", {
 		}
 
 		if (!frm.is_new() && !frm.doc.istable) {
-			if (frm.doc.issingle) {
-				frm.add_custom_button(__("Go to {0}", [__(frm.doc.id)]), () => {
-					window.open(`/app/${frappe.router.slug(frm.doc.id)}`);
-				});
-			} else {
-				frm.add_custom_button(__("Go to {0} List", [__(frm.doc.id)]), () => {
-					window.open(`/app/${frappe.router.slug(frm.doc.id)}`);
-				});
-			}
+			const button_text = frm.doc.issingle
+				? __("Go to {0}", [__(frm.doc.id)])
+				: __("Go to {0} List", [__(frm.doc.id)]);
+			frm.add_custom_button(button_text, () => {
+				window.open(`/app/${frappe.router.slug(frm.doc.id)}`);
+			});
 		}
 
 		const customize_form_link = `<a href="/app/customize-form">${__("Customize Form")}</a>`;
@@ -68,7 +65,7 @@ frappe.ui.form.on("DocType", {
 			frm.set_read_only();
 			frm.dashboard.clear_comment();
 			frm.dashboard.add_comment(
-				__("DocTypes can not be modified, please use {0} instead", [customize_form_link]),
+				__("DocTypes cannot be modified, please use {0} instead", [customize_form_link]),
 				"blue",
 				true
 			);
@@ -77,10 +74,6 @@ frappe.ui.form.on("DocType", {
 			let msg = __(
 				"This site is running in developer mode. Any change made here will be updated in code."
 			);
-			msg += "<br>";
-			msg += __("If you just want to customize for your site, use {0} instead.", [
-				customize_form_link,
-			]);
 			frm.dashboard.add_comment(msg, "yellow", true);
 		}
 
@@ -127,6 +120,20 @@ frappe.ui.form.on("DocType", {
 
 	setup_default_views: (frm) => {
 		frappe.model.set_default_views_for_doctype(frm.doc.id, frm);
+	},
+
+	on_tab_change: (frm) => {
+		let current_tab = frm.get_active_tab().label;
+
+		if (current_tab === "Form") {
+			frm.footer.wrapper.hide();
+			frm.form_wrapper.find(".form-message").hide();
+			frm.form_wrapper.addClass("mb-1");
+		} else {
+			frm.footer.wrapper.show();
+			frm.form_wrapper.find(".form-message").show();
+			frm.form_wrapper.removeClass("mb-1");
+		}
 	},
 
 	on_tab_change: (frm) => {

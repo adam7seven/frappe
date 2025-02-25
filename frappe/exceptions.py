@@ -11,6 +11,12 @@ class SiteNotSpecifiedError(Exception):
         super(Exception, self).__init__(self.message)
 
 
+class DatabaseModificationError(Exception):
+	"""Error raised when attempting to modify the database in a read-only document context."""
+
+	pass
+
+
 class UrlSchemeNotSupported(Exception):
     pass
 
@@ -50,6 +56,10 @@ class PermissionError(Exception):
 class DoesNotExistError(ValidationError):
     http_status_code = 404
 
+	def __init__(self, *args, doctype=None):
+		super().__init__(*args)
+		self.doctype = doctype
+
 
 class PageDoesNotExistError(ValidationError):
     http_status_code = 404
@@ -76,8 +86,8 @@ class RequestToken(Exception):
 
 
 class Redirect(Exception):
-    def __init__(self, http_status_code: int = 301):
-        self.http_status_code = http_status_code
+	def __init__(self, http_status_code: int = 301):
+		self.http_status_code = http_status_code
 
 
 class CSRFTokenError(Exception):
@@ -134,7 +144,7 @@ class InvalidSignatureError(ValidationError):
 
 
 class RateLimitExceededError(ValidationError):
-    http_status_code = 429
+	http_status_code = 429
 
 
 class CannotChangeConstantError(ValidationError):
@@ -308,14 +318,8 @@ class LinkExpired(ValidationError):
     message = "The link has expired"
 
 
-class InvalidKeyError(ValidationError):
-    http_status_code = 401
-    title = "Invalid Key"
-    message = "The document key is invalid"
-
-
 class CommandFailedError(Exception):
-    def __init__(self, message: str, out: str, err: str):
-        super().__init__(message)
-        self.out = out
-        self.err = err
+	def __init__(self, message: str, out: str, err: str):
+		super().__init__(message)
+		self.out = out
+		self.err = err

@@ -21,14 +21,12 @@ from frappe.utils import get_fullname
 @frappe.whitelist()
 @frappe.read_only()
 def get_notifications():
-    out = {
-        "open_count_doctype": {},
-        "targets": {},
-    }
-    if frappe.flags.in_install or not frappe.db.get_single_value(
-        "System Settings", "setup_complete"
-    ):
-        return out
+	out = {
+		"open_count_doctype": {},
+		"targets": {},
+	}
+	if frappe.flags.in_install or not frappe.get_system_settings("setup_complete"):
+		return out
 
     config = get_notification_config()
 
@@ -76,10 +74,10 @@ def get_notifications_for_doctypes(config, notification_count):
                     else:
                         result = frappe.get_attr(condition)()
 
-                except frappe.PermissionError:
-                    frappe.clear_messages()
-                    pass
-                    # frappe.msgprint("Permission Error in notifications for {0}".format(d))
+				except frappe.PermissionError:
+					frappe.clear_messages()
+					pass
+				# frappe.msgprint("Permission Error in notifications for {0}".format(d))
 
                 except Exception as e:
                     # OperationalError: (1412, 'Table definition has changed, please retry transaction')
@@ -158,11 +156,10 @@ def clear_notifications(user=None):
     for_module = list(config.get("for_module")) if config.get("for_module") else []
     groups = for_doctype + for_module
 
-    for id in groups:
-        if user:
-            frappe.cache.hdel("notification_count:" + id, user)
-        else:
-            frappe.cache.delete_key("notification_count:" + id)
+	if user:
+		frappe.cache.hdel_names([f"notification_count:{id}" for id in groups], user)
+	else:
+		frappe.cache.delete_value([f"notification_count:{id}" for id in groups])
 
 
 def clear_notification_config(user):
@@ -385,11 +382,11 @@ def get_dynamic_link_filters(doctype, links, fieldname):
 
     doctype_value, doctype_fieldname = dynamic_link
 
-    meta = frappe.get_meta(doctype)
-    if not meta.has_field(doctype_fieldname):
-        return
+	meta = frappe.get_meta(doctype)
+	if not meta.has_field(doctype_fieldname):
+		return
 
-    return {doctype_fieldname: doctype_value}
+	return {doctype_fieldname: doctype_value}
 
 
 def notify_mentions(ref_doctype, ref_id, content):

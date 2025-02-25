@@ -62,17 +62,11 @@ def get_emails_sent_today(email_account=None):
     return frappe.db.sql(q, q_args)[0][0]
 
 
-def get_unsubscribe_message(
-    unsubscribe_message: str, expose_recipients: str
-) -> "frappe._dict[str, str]":
-    unsubscribe_message = unsubscribe_message or _("Unsubscribe")
-    unsubscribe_link = (
-        f'<a href="<!--unsubscribe_url-->" target="_blank">{unsubscribe_message}</a>'
-    )
-    unsubscribe_html = _("{0} to stop receiving emails of this type").format(
-        unsubscribe_link
-    )
-    html = f"""<div class="email-unsubscribe">
+def get_unsubscribe_message(unsubscribe_message: str, expose_recipients: str) -> "frappe._dict[str, str]":
+	unsubscribe_message = unsubscribe_message or _("Unsubscribe")
+	unsubscribe_link = f'<a href="<!--unsubscribe_url-->" target="_blank">{unsubscribe_message}</a>'
+	unsubscribe_html = _("{0} to stop receiving emails of this type").format(unsubscribe_link)
+	html = f"""<div class="email-unsubscribe">
 			<!--cc_message-->
 			<div>
 				{unsubscribe_html}
@@ -134,15 +128,15 @@ def return_unsubscribed_page(email, doctype, id):
 
 
 def flush():
-    """flush email queue, every time: called from scheduler.
+	"""flush email queue, every time: called from scheduler.
 
-    This should not be called outside of background jobs.
-    """
-    from frappe.email.doctype.email_queue.email_queue import EmailQueue
+	This should not be called outside of background jobs.
+	"""
+	from frappe.email.doctype.email_queue.email_queue import EmailQueue
 
-    # To avoid running jobs inside unit tests
-    if frappe.are_emails_muted():
-        msgprint(_("Emails are muted"))
+	# To avoid running jobs inside unit tests
+	if frappe.are_emails_muted():
+		msgprint(_("Emails are muted"))
 
     if cint(frappe.db.get_default("suspend_email_queue")) == 1:
         return

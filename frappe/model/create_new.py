@@ -32,14 +32,7 @@ def get_new_doc(doctype, parent_doc=None, parentfield=None, as_dict=False):
 
 
 def make_new_doc(doctype):
-    doc = frappe.get_doc(
-        {
-            "doctype": doctype,
-            "__islocal": 1,
-            "owner": frappe.session.user,
-            "docstatus": 0,
-        }
-    )
+	doc = frappe.get_doc({"doctype": doctype, "__islocal": 1, "owner": frappe.session.user, "docstatus": 0})
 
     set_user_and_static_default_values(doc)
 
@@ -67,23 +60,21 @@ def set_user_and_static_default_values(doc):
                 doctype_user_permissions, df.parent, with_default_doc=True
             )
 
-            user_default_value = get_user_default_value(
-                df, defaults, doctype_user_permissions, allowed_records, default_doc
-            )
-            if user_default_value is not None:
-                # if fieldtype is link check if doc exists
-                if not df.fieldtype == "Link" or frappe.db.exists(
-                    df.options, user_default_value
-                ):
-                    doc.set(df.fieldname, user_default_value)
+			user_default_value = get_user_default_value(
+				df, defaults, doctype_user_permissions, allowed_records, default_doc
+			)
+			if user_default_value is not None:
+				# if fieldtype is link check if doc exists
+				if df.fieldtype != "Link" or frappe.db.exists(df.options, user_default_value):
+					doc.set(df.fieldname, user_default_value)
 
-            else:
-                if df.fieldname != doc.meta.title_field:
-                    static_default_value = get_static_default_value(
-                        df, doctype_user_permissions, allowed_records
-                    )
-                    if static_default_value is not None:
-                        doc.set(df.fieldname, static_default_value)
+			else:
+				if df.fieldname != doc.meta.title_field:
+					static_default_value = get_static_default_value(
+						df, doctype_user_permissions, allowed_records
+					)
+					if static_default_value is not None:
+						doc.set(df.fieldname, static_default_value)
 
 
 def get_user_default_value(
@@ -137,12 +128,10 @@ def get_static_default_value(df, doctype_user_permissions, allowed_records):
         return df.options.split("\n", 1)[0]
 
 
-def validate_value_via_user_permissions(
-    df, doctype_user_permissions, allowed_records, user_default=None
-):
-    is_valid = True
-    # If User Permission exists and allowed records is empty,
-    # that means there are User Perms, but none applicable to this new doctype.
+def validate_value_via_user_permissions(df, doctype_user_permissions, allowed_records, user_default=None):
+	is_valid = True
+	# If User Permission exists and allowed records is empty,
+	# that means there are User Perms, but none applicable to this new doctype.
 
     if user_permissions_exist(df, doctype_user_permissions) and allowed_records:
         # If allowed records is not empty,

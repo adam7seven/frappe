@@ -18,11 +18,11 @@ class GlobalSearchSettings(Document):
         )
         from frappe.types import DF
 
-        allowed_in_global_search: DF.Table[GlobalSearchDocType]
+		allowed_in_global_search: DF.Table[GlobalSearchDocType]
+	# end: auto-generated types
 
-    # end: auto-generated types
-    def validate(self):
-        dts, core_dts, repeated_dts = [], [], []
+	def validate(self):
+		dts, core_dts, repeated_dts = [], [], []
 
         for dt in self.allowed_in_global_search:
             if dt.document_type in dts:

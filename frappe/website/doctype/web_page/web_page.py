@@ -34,45 +34,43 @@ class WebPage(WebsiteGenerator):
         from frappe.types import DF
         from frappe.website.doctype.web_page_block.web_page_block import WebPageBlock
 
-        breadcrumbs: DF.Code | None
-        content_type: DF.Literal[
-            "Rich Text", "Markdown", "HTML", "Page Builder", "Slideshow"
-        ]
-        context_script: DF.Code | None
-        css: DF.Code | None
-        dynamic_route: DF.Check
-        dynamic_template: DF.Check
-        enable_comments: DF.Check
-        end_date: DF.Datetime | None
-        full_width: DF.Check
-        header: DF.HTMLEditor | None
-        idx: DF.Int
-        insert_style: DF.Check
-        javascript: DF.Code | None
-        main_section: DF.TextEditor | None
-        main_section_html: DF.HTMLEditor | None
-        main_section_md: DF.MarkdownEditor | None
-        meta_description: DF.SmallText | None
-        meta_image: DF.AttachImage | None
-        meta_title: DF.Data | None
-        module: DF.Link | None
-        page_blocks: DF.Table[WebPageBlock]
-        published: DF.Check
-        route: DF.Data | None
-        show_sidebar: DF.Check
-        show_title: DF.Check
-        slideshow: DF.Link | None
-        start_date: DF.Datetime | None
-        text_align: DF.Literal["Left", "Center", "Right"]
-        title: DF.Data
-        website_sidebar: DF.Link | None
+		breadcrumbs: DF.Code | None
+		content_type: DF.Literal["Rich Text", "Markdown", "HTML", "Page Builder", "Slideshow"]
+		context_script: DF.Code | None
+		css: DF.Code | None
+		dynamic_route: DF.Check
+		dynamic_template: DF.Check
+		enable_comments: DF.Check
+		end_date: DF.Datetime | None
+		full_width: DF.Check
+		header: DF.HTMLEditor | None
+		idx: DF.Int
+		insert_style: DF.Check
+		javascript: DF.Code | None
+		main_section: DF.TextEditor | None
+		main_section_html: DF.HTMLEditor | None
+		main_section_md: DF.MarkdownEditor | None
+		meta_description: DF.SmallText | None
+		meta_image: DF.AttachImage | None
+		meta_title: DF.Data | None
+		module: DF.Link | None
+		page_blocks: DF.Table[WebPageBlock]
+		published: DF.Check
+		route: DF.Data | None
+		show_sidebar: DF.Check
+		show_title: DF.Check
+		slideshow: DF.Link | None
+		start_date: DF.Datetime | None
+		text_align: DF.Literal["Left", "Center", "Right"]
+		title: DF.Data
+		website_sidebar: DF.Link | None
+	# end: auto-generated types
 
-    # end: auto-generated types
-    def validate(self):
-        self.validate_dates()
-        self.set_route()
-        if not self.dynamic_route:
-            self.route = quoted(self.route)
+	def validate(self):
+		self.validate_dates()
+		self.set_route()
+		if not self.dynamic_route:
+			self.route = quoted(self.route)
 
     def get_context(self, context):
         context.main_section = get_html_content_based_on_type(
@@ -123,39 +121,39 @@ class WebPage(WebsiteGenerator):
 
         return context
 
-    def render_dynamic(self, context):
-        # dynamic
-        is_jinja = (
-            context.dynamic_template
-            or "<!-- jinja -->" in context.main_section
-            or ("{{" in context.main_section)
-        )
-        if is_jinja:
-            frappe.flags.web_block_scripts = {}
-            frappe.flags.web_block_styles = {}
-            try:
-                context["main_section"] = render_template(context.main_section, context)
-                if "<!-- static -->" not in context.main_section:
-                    context["no_cache"] = 1
-            except TemplateSyntaxError:
-                raise
-            finally:
-                frappe.flags.web_block_scripts = {}
-                frappe.flags.web_block_styles = {}
+	def render_dynamic(self, context):
+		# dynamic
+		is_jinja = (
+			context.dynamic_template
+			or "<!-- jinja -->" in context.main_section
+			or ("{{" in context.main_section)
+		)
+		if is_jinja:
+			frappe.flags.web_block_scripts = {}
+			frappe.flags.web_block_styles = {}
+			try:
+				context["main_section"] = render_template(context.main_section, context)
+				if "<!-- static -->" not in context.main_section:
+					context["no_cache"] = 1
+			except TemplateSyntaxError:
+				raise
+			finally:
+				frappe.flags.web_block_scripts = {}
+				frappe.flags.web_block_styles = {}
 
-    def set_breadcrumbs(self, context):
-        """Build breadcrumbs template"""
-        if self.breadcrumbs:
-            context.parents = frappe.safe_eval(self.breadcrumbs, {"_": _})
-        if "no_breadcrumbs" not in context:
-            if "<!-- no-breadcrumbs -->" in context.main_section:
-                context.no_breadcrumbs = 1
+	def set_breadcrumbs(self, context):
+		"""Build breadcrumbs template"""
+		if self.breadcrumbs:
+			context.parents = frappe.safe_eval(self.breadcrumbs, {"_": _})
+		if "no_breadcrumbs" not in context:
+			if "<!-- no-breadcrumbs -->" in context.main_section:
+				context.no_breadcrumbs = 1
 
-    def set_title_and_header(self, context):
-        """Extract and set title and header from content or context."""
-        if "no_header" not in context:
-            if "<!-- no-header -->" in context.main_section:
-                context.no_header = 1
+	def set_title_and_header(self, context):
+		"""Extract and set title and header from content or context."""
+		if "no_header" not in context:
+			if "<!-- no-header -->" in context.main_section:
+				context.no_header = 1
 
         if not context.title:
             context.title = extract_title(context.main_section, context.path_name)
@@ -258,7 +256,7 @@ def check_publish_status():
 
 
 def get_web_blocks_html(blocks):
-    """Converts a list of blocks into Raw HTML and extracts out their scripts for deduplication"""
+	"""Convert a list of blocks into Raw HTML and extract out their scripts for deduplication."""
 
     out = frappe._dict(html="", scripts={}, styles={})
     extracted_scripts = {}

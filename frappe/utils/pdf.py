@@ -10,6 +10,8 @@ from urllib.parse import parse_qs, urlparse
 
 import cssutils
 import pdfkit
+
+pdfkit.source.unicode = str  # NOTE: upstream bug; PYTHONOPTIMIZE=1 optimized this away
 from bs4 import BeautifulSoup
 from packaging.version import Version
 from pypdf import PdfReader, PdfWriter
@@ -20,6 +22,8 @@ from frappe.core.doctype.file.utils import find_file_by_url
 from frappe.utils import cstr, scrub_urls
 from frappe.utils.caching import redis_cache
 from frappe.utils.jinja_globals import bundled_asset, is_rtl
+
+cssutils.log.setLog(frappe.logger("cssutils"))
 
 PDF_CONTENT_ERRORS = [
     "ContentNotFoundError",
@@ -59,10 +63,10 @@ def pdf_body_html(template, args, **kwargs):
 
 
 def _guess_template_error_line_number(template) -> int | None:
-    """Guess line on which exception occured from current traceback."""
-    with contextlib.suppress(Exception):
-        import sys
-        import traceback
+	"""Guess line on which exception occurred from current traceback."""
+	with contextlib.suppress(Exception):
+		import sys
+		import traceback
 
         _, _, tb = sys.exc_info()
 
@@ -72,9 +76,7 @@ def _guess_template_error_line_number(template) -> int | None:
 
 
 def pdf_footer_html(soup, head, content, styles, html_id, css):
-    return pdf_header_html(
-        soup=soup, head=head, content=content, styles=styles, html_id=html_id, css=css
-    )
+	return pdf_header_html(soup=soup, head=head, content=content, styles=styles, html_id=html_id, css=css)
 
 
 def get_pdf(html, options=None, output: PdfWriter | None = None):
@@ -87,9 +89,9 @@ def get_pdf(html, options=None, output: PdfWriter | None = None):
     if Version(get_wkhtmltopdf_version()) > Version("0.12.3"):
         options.update({"disable-smart-shrinking": ""})
 
-    try:
-        # Set filename property to false, so no file is actually created
-        filedata = pdfkit.from_string(html, options=options or {}, verbose=True)
+	try:
+		# Set filename property to false, so no file is actually created
+		filedata = pdfkit.from_string(html, options=options or {}, verbose=True)
 
         # create in-memory binary streams from filedata and create a PdfReader object
         reader = PdfReader(io.BytesIO(filedata))
@@ -126,9 +128,9 @@ def get_pdf(html, options=None, output: PdfWriter | None = None):
 
 
 def get_file_data_from_writer(writer_obj):
-    # https://docs.python.org/3/library/io.html
-    stream = io.BytesIO()
-    writer_obj.write(stream)
+	# https://docs.python.org/3/library/io.html
+	stream = io.BytesIO()
+	writer_obj.write(stream)
 
     # Change the stream position to start of the stream
     stream.seek(0)
@@ -141,17 +143,17 @@ def prepare_options(html, options):
     if not options:
         options = {}
 
-    options.update(
-        {
-            "print-media-type": None,
-            "background": None,
-            "images": None,
-            "quiet": None,
-            # 'no-outline': None,
-            "encoding": "UTF-8",
-            # 'load-error-handling': 'ignore'
-        }
-    )
+	options.update(
+		{
+			"print-media-type": None,
+			"background": None,
+			"images": None,
+			"quiet": None,
+			# 'no-outline': None,
+			"encoding": "UTF-8",
+			# 'load-error-handling': 'ignore'
+		}
+	)
 
     if not options.get("margin-right"):
         options["margin-right"] = "15mm"
@@ -162,9 +164,9 @@ def prepare_options(html, options):
     html, html_options = read_options_from_html(html)
     options.update(html_options or {})
 
-    # cookies
-    options.update(get_cookie_options())
-    html = inline_private_images(html)
+	# cookies
+	options.update(get_cookie_options())
+	html = inline_private_images(html)
 
     # page size
     pdf_page_size = (
@@ -283,7 +285,7 @@ def _get_base64_image(src):
         mime_type = mimetypes.guess_type(path)[0]
         if mime_type is None or not mime_type.startswith("image/"):
             return
-        filename = query.get("fid") and query["fid"][0] or None
+        filename = (query.get("fid") and query["fid"][0]) or None
         file = find_file_by_url(path, name=filename)
         if not file or not file.is_private:
             return
@@ -297,7 +299,7 @@ def _get_base64_image(src):
 
 
 def prepare_header_footer(soup: BeautifulSoup):
-    options = {}
+	options = {}
 
     head = soup.find("head").contents
     styles = soup.find_all("style")
@@ -305,15 +307,15 @@ def prepare_header_footer(soup: BeautifulSoup):
     print_css = bundled_asset("print.bundle.css").lstrip("/")
     css = frappe.read_file(os.path.join(frappe.local.sites_path, print_css))
 
-    # extract header and footer
-    for html_id in ("header-html", "footer-html"):
-        if content := soup.find(id=html_id):
-            content = content.extract()
-            # `header/footer-html` are extracted, rendered as html
-            # and passed in wkhtmltopdf options (as '--header/footer-html')
-            # Remove instances of them from main content for render_template
-            for tag in soup.find_all(id=html_id):
-                tag.extract()
+	# extract header and footer
+	for html_id in ("header-html", "footer-html"):
+		if content := soup.find(id=html_id):
+			content = content.extract()
+			# `header/footer-html` are extracted, rendered as html
+			# and passed in wkhtmltopdf options (as '--header/footer-html')
+			# Remove instances of them from main content for render_template
+			for tag in soup.find_all(id=html_id):
+				tag.extract()
 
             toggle_visible_pdf(content)
             id_map = {
@@ -365,11 +367,11 @@ def toggle_visible_pdf(soup):
 @frappe.whitelist()
 @redis_cache(ttl=60 * 60)
 def is_wkhtmltopdf_valid():
-    try:
-        output = subprocess.check_output(["wkhtmltopdf", "--version"])
-        return "qt" in output.decode("utf-8").lower()
-    except Exception:
-        return False
+	try:
+		output = subprocess.check_output(["wkhtmltopdf", "--version"])
+		return "qt" in output.decode("utf-8").lower()
+	except Exception:
+		return False
 
 
 def get_wkhtmltopdf_version():

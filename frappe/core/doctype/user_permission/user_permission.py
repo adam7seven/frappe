@@ -20,18 +20,18 @@ class UserPermission(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        allow: DF.Link
-        applicable_for: DF.Link | None
-        apply_to_all_doctypes: DF.Check
-        for_value: DF.DynamicLink
-        hide_descendants: DF.Check
-        is_default: DF.Check
-        user: DF.Link
+		allow: DF.Link
+		applicable_for: DF.Link | None
+		apply_to_all_doctypes: DF.Check
+		for_value: DF.DynamicLink
+		hide_descendants: DF.Check
+		is_default: DF.Check
+		user: DF.Link
+	# end: auto-generated types
 
-    # end: auto-generated types
-    def validate(self):
-        self.validate_user_permission()
-        self.validate_default_permission()
+	def validate(self):
+		self.validate_user_permission()
+		self.validate_default_permission()
 
     def on_update(self):
         frappe.cache.hdel("user_permissions", self.user)
@@ -91,6 +91,9 @@ class UserPermission(Document):
                 )
             )
 
+	def get_permission_log_options(self, event=None):
+		pass
+
 
 def send_user_permissions(bootinfo):
     bootinfo.user["user_permissions"] = get_user_permissions()
@@ -134,20 +137,14 @@ def get_user_permissions(user=None):
             )
         )
 
-    try:
-        for perm in frappe.get_all(
-            "User Permission",
-            fields=[
-                "allow",
-                "for_value",
-                "applicable_for",
-                "is_default",
-                "hide_descendants",
-            ],
-            filters=dict(user=user),
-        ):
-            meta = frappe.get_meta(perm.allow)
-            add_doc_to_perm(perm, perm.for_value, perm.is_default)
+	try:
+		for perm in frappe.get_all(
+			"User Permission",
+			fields=["allow", "for_value", "applicable_for", "is_default", "hide_descendants"],
+			filters=dict(user=user),
+		):
+			meta = frappe.get_meta(perm.allow)
+			add_doc_to_perm(perm, perm.for_value, perm.is_default)
 
             if meta.is_nested_set() and not perm.hide_descendants:
                 decendants = frappe.db.get_descendants(perm.allow, perm.for_value)
@@ -201,13 +198,11 @@ def get_applicable_for_doctype_list(
 
 
 def get_permitted_documents(doctype):
-    """Returns permitted documents from the given doctype for the session user"""
-    # sort permissions in a way to make the first permission in the list to be default
-    user_perm_list = sorted(
-        get_user_permissions().get(doctype, []),
-        key=lambda x: x.get("is_default"),
-        reverse=True,
-    )
+	"""Return permitted documents from the given doctype for the session user."""
+	# sort permissions in a way to make the first permission in the list to be default
+	user_perm_list = sorted(
+		get_user_permissions().get(doctype, []), key=lambda x: x.get("is_default"), reverse=True
+	)
 
     return [d.get("doc") for d in user_perm_list if d.get("doc")]
 

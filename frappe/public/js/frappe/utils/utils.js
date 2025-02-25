@@ -36,108 +36,94 @@ Object.defineProperty(Object.prototype, "setDefault", {
 
 // Pluralize
 String.prototype.plural = function (revert) {
-    const plural = {
-        "(quiz)$": "$1zes",
-        "^(ox)$": "$1en",
-        "([m|l])ouse$": "$1ice",
-        "(matr|vert|ind)ix|ex$": "$1ices",
-        "(x|ch|ss|sh)$": "$1es",
-        "([^aeiouy]|qu)y$": "$1ies",
-        "(hive)$": "$1s",
-        "(?:([^f])fe|([lr])f)$": "$1$2ves",
-        "(shea|lea|loa|thie)f$": "$1ves",
-        sis$: "ses",
-        "([ti])um$": "$1a",
-        "(tomat|potat|ech|her|vet)o$": "$1oes",
-        "(bu)s$": "$1ses",
-        "(alias)$": "$1es",
-        "(octop)us$": "$1i",
-        "(ax|test)is$": "$1es",
-        "(us)$": "$1es",
-        "([^s]+)$": "$1s",
-    };
+	const plural = {
+		"(quiz)$": "$1zes",
+		"^(ox)$": "$1en",
+		"([m|l])ouse$": "$1ice",
+		"(matr|vert|ind)ix|ex$": "$1ices",
+		"(x|ch|ss|sh)$": "$1es",
+		"([^aeiouy]|qu)y$": "$1ies",
+		"(hive)$": "$1s",
+		"(?:([^f])fe|([lr])f)$": "$1$2ves",
+		"(shea|lea|loa|thie)f$": "$1ves",
+		sis$: "ses",
+		"([ti])um$": "$1a",
+		"(tomat|potat|ech|her|vet)o$": "$1oes",
+		"(bu)s$": "$1ses",
+		"(alias)$": "$1es",
+		"(octop)us$": "$1i",
+		"(ax|test)is$": "$1es",
+		"(us)$": "$1es",
+		"(f)oot$": "$1eet",
+		"(g)oose$": "$1eese",
+		"(sex)$": "$1es",
+		"(child)$": "$1ren",
+		"(m)an$": "$1en",
+		"(t)ooth$": "$1eeth",
+		"(pe)rson$": "$1ople",
+		"([^s]+)$": "$1s",
+	};
 
-    const singular = {
-        "(quiz)zes$": "$1",
-        "(matr)ices$": "$1ix",
-        "(vert|ind)ices$": "$1ex",
-        "^(ox)en$": "$1",
-        "(alias)es$": "$1",
-        "(octop|vir)i$": "$1us",
-        "(cris|ax|test)es$": "$1is",
-        "(shoe)s$": "$1",
-        "(o)es$": "$1",
-        "(bus)es$": "$1",
-        "([m|l])ice$": "$1ouse",
-        "(x|ch|ss|sh)es$": "$1",
-        "(m)ovies$": "$1ovie",
-        "(s)eries$": "$1eries",
-        "([^aeiouy]|qu)ies$": "$1y",
-        "([lr])ves$": "$1f",
-        "(tive)s$": "$1",
-        "(hive)s$": "$1",
-        "(li|wi|kni)ves$": "$1fe",
-        "(shea|loa|lea|thie)ves$": "$1f",
-        "(^analy)ses$": "$1sis",
-        "((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$": "$1$2sis",
-        "([ti])a$": "$1um",
-        "(n)ews$": "$1ews",
-        "(h|bl)ouses$": "$1ouse",
-        "(corpse)s$": "$1",
-        "(us)es$": "$1",
-        s$: "",
-    };
+	const singular = {
+		"(quiz)zes$": "$1",
+		"(matr)ices$": "$1ix",
+		"(vert|ind)ices$": "$1ex",
+		"^(ox)en$": "$1",
+		"(alias)es$": "$1",
+		"(octop|vir)i$": "$1us",
+		"(cris|ax|test)es$": "$1is",
+		"(shoe)s$": "$1",
+		"(o)es$": "$1",
+		"(bus)es$": "$1",
+		"([m|l])ice$": "$1ouse",
+		"(x|ch|ss|sh)es$": "$1",
+		"(m)ovies$": "$1ovie",
+		"(s)eries$": "$1eries",
+		"([^aeiouy]|qu)ies$": "$1y",
+		"([lr])ves$": "$1f",
+		"(tive)s$": "$1",
+		"(hive)s$": "$1",
+		"(li|wi|kni)ves$": "$1fe",
+		"(shea|loa|lea|thie)ves$": "$1f",
+		"(^analy)ses$": "$1sis",
+		"((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$": "$1$2sis",
+		"([ti])a$": "$1um",
+		"(n)ews$": "$1ews",
+		"(h|bl)ouses$": "$1ouse",
+		"(corpse)s$": "$1",
+		"(us)es$": "$1",
+		"(f)eet$": "$1oot",
+		"(g)eese$": "$1oose",
+		"(sex)es$": "$1",
+		"(child)ren$": "$1",
+		"(m)en$": "$1an",
+		"(t)eeth$": "$1ooth",
+		"(pe)ople$": "$1rson",
+		s$: "",
+	};
 
-    const irregular = {
-        move: "moves",
-        foot: "feet",
-        goose: "geese",
-        sex: "sexes",
-        child: "children",
-        man: "men",
-        tooth: "teeth",
-        person: "people",
-    };
-
-    const uncountable = [
-        "sheep",
-        "fish",
-        "deer",
-        "moose",
-        "series",
-        "species",
-        "money",
-        "rice",
-        "information",
-        "equipment",
-    ];
+	const uncountable = [
+		"sheep",
+		"fish",
+		"deer",
+		"moose",
+		"series",
+		"species",
+		"money",
+		"rice",
+		"information",
+		"equipment",
+	];
 
     // save some time in the case that singular and plural are the same
     if (uncountable.indexOf(this.toLowerCase()) >= 0) return this;
 
-    // check for irregular forms
-    let word;
-    let pattern;
-    let replace;
-    for (word in irregular) {
-        if (revert) {
-            pattern = new RegExp(irregular[word] + "$", "i");
-            replace = word;
-        } else {
-            pattern = new RegExp(word + "$", "i");
-            replace = irregular[word];
-        }
-        if (pattern.test(this)) return this.replace(pattern, replace);
-    }
+	// check for matches using regular expressions
+	const array = revert ? singular : plural;
 
-    let array;
-    if (revert) array = singular;
-    else array = plural;
-
-    // check for matches using regular expressions
-    let reg;
-    for (reg in array) {
-        pattern = new RegExp(reg, "i");
+	let reg;
+	for (reg in array) {
+		const pattern = new RegExp(reg, "i");
 
         if (pattern.test(this)) return this.replace(pattern, array[reg]);
     }
@@ -255,37 +241,37 @@ Object.assign(frappe.utils, {
         return out.join(newline);
     },
 
-    escape_html: function (txt) {
-        if (!txt) return "";
-        let escape_html_mapping = {
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#39;",
-            "`": "&#x60;",
-            "=": "&#x3D;",
-        };
+	escape_html: function (txt) {
+		if (!txt) return "";
+		let escape_html_mapping = {
+			"&": "&amp;",
+			"<": "&lt;",
+			">": "&gt;",
+			'"': "&quot;",
+			"'": "&#39;",
+			"`": "&#x60;",
+			"=": "&#x3D;",
+		};
 
-        return String(txt).replace(/[&<>"'`=]/g, (char) => escape_html_mapping[char] || char);
-    },
+		return String(txt).replace(/[&<>"'`=]/g, (char) => escape_html_mapping[char] || char);
+	},
 
-    unescape_html: function (txt) {
-        let unescape_html_mapping = {
-            "&amp;": "&",
-            "&lt;": "<",
-            "&gt;": ">",
-            "&quot;": '"',
-            "&#39;": "'",
-            "&#x60;": "`",
-            "&#x3D;": "=",
-        };
+	unescape_html: function (txt) {
+		let unescape_html_mapping = {
+			"&amp;": "&",
+			"&lt;": "<",
+			"&gt;": ">",
+			"&quot;": '"',
+			"&#39;": "'",
+			"&#x60;": "`",
+			"&#x3D;": "=",
+		};
 
-        return String(txt).replace(
-            /&amp;|&lt;|&gt;|&quot;|&#39;|&#x60;|&#x3D;/g,
-            (char) => unescape_html_mapping[char] || char
-        );
-    },
+		return String(txt).replace(
+			/&amp;|&lt;|&gt;|&quot;|&#39;|&#x60;|&#x3D;/g,
+			(char) => unescape_html_mapping[char] || char
+		);
+	},
 
     html2text: function (html) {
         const parser = new DOMParser();
@@ -316,18 +302,21 @@ Object.assign(frappe.utils, {
             '<p><a class="text-muted btn btn-default toggle-blockquote" style="padding: 2px 7px 0px; line-height: 1;"> \
 					• • • \
 				</a></p>'
-        );
-        return content.html();
-    },
-    scroll_to: function (
-        element,
-        animate = true,
-        additional_offset,
-        element_to_be_scrolled,
-        callback,
-        highlight_element = false
-    ) {
-        if (frappe.flags.disable_auto_scroll) return;
+			);
+		return content.html();
+	},
+	scroll_page_to_top() {
+		$(".main-section").scrollTop(0);
+	},
+	scroll_to: function (
+		element,
+		animate = true,
+		additional_offset,
+		element_to_be_scrolled,
+		callback,
+		highlight_element = false
+	) {
+		if (frappe.flags.disable_auto_scroll) return;
 
         element_to_be_scrolled = element_to_be_scrolled || $("html, body");
         let scroll_top = 0;
@@ -493,50 +482,50 @@ Object.assign(frappe.utils, {
                 return false;
         }
 
-        // test regExp if not null
-        return "" !== val ? regExp.test(val) : false;
-    },
-    guess_style: function (text, default_style, _colour) {
-        var style = default_style || "default";
-        var colour = "gray";
-        if (text) {
-            text = cstr(text);
-            if (has_words(["Pending", "Review", "Medium", "Not Approved"], text)) {
-                style = "warning";
-                colour = "orange";
-            } else if (
-                has_words(["Open", "Urgent", "High", "Failed", "Rejected", "Error"], text)
-            ) {
-                style = "danger";
-                colour = "red";
-            } else if (
-                has_words(
-                    [
-                        "Closed",
-                        "Finished",
-                        "Converted",
-                        "Completed",
-                        "Complete",
-                        "Confirmed",
-                        "Approved",
-                        "Yes",
-                        "Active",
-                        "Available",
-                        "Paid",
-                        "Success",
-                    ],
-                    text
-                )
-            ) {
-                style = "success";
-                colour = "green";
-            } else if (has_words(["Submitted"], text)) {
-                style = "info";
-                colour = "blue";
-            }
-        }
-        return _colour ? colour : style;
-    },
+		// test regExp if not null
+		return "" !== val ? regExp.test(val) : false;
+	},
+	guess_style: function (text, default_style, _colour) {
+		var style = default_style || "default";
+		var colour = "gray";
+		if (text) {
+			text = cstr(text);
+			if (has_words(["Pending", "Review", "Medium", "Not Approved"], text)) {
+				style = "warning";
+				colour = "orange";
+			} else if (
+				has_words(["Open", "Urgent", "High", "Failed", "Rejected", "Error"], text)
+			) {
+				style = "danger";
+				colour = "red";
+			} else if (
+				has_words(
+					[
+						"Closed",
+						"Finished",
+						"Converted",
+						"Completed",
+						"Complete",
+						"Confirmed",
+						"Approved",
+						"Yes",
+						"Active",
+						"Available",
+						"Paid",
+						"Success",
+					],
+					text
+				)
+			) {
+				style = "success";
+				colour = "green";
+			} else if (has_words(["Submitted"], text)) {
+				style = "info";
+				colour = "blue";
+			}
+		}
+		return _colour ? colour : style;
+	},
 
     guess_colour: function (text) {
         return frappe.utils.guess_style(text, null, true);
@@ -829,17 +818,17 @@ Object.assign(frappe.utils, {
         return /\.(mov|mp4|mkv|webm)$/i.test(filename);
     },
 
-    play_sound: function (name) {
+    play_sound: function (id) {
         try {
             if (frappe.boot.user.mute_sounds) {
                 return;
             }
 
-            var audio = $("#sound-" + name)[0];
+            var audio = $("#sound-" + id)[0];
             audio.volume = audio.getAttribute("volume");
             audio.play();
         } catch (e) {
-            console.log("Cannot play sound", name, e);
+            console.log("Cannot play sound", id, e);
             // pass
         }
     },
@@ -937,41 +926,44 @@ Object.assign(frappe.utils, {
     get_route_label(route_str) {
         let route = route_str.split("/");
 
-        if (route[2] === "Report" || route[0] === "query-report") {
-            return __("{0} Report", [__(route[3]) || __(route[1])]);
-        }
-        if (route[0] === "List") {
-            return __("{0} List", [__(route[1])]);
-        }
-        if (route[0] === "modules") {
-            return __("{0} Modules", [__(route[1])]);
-        }
-        if (route[0] === "dashboard") {
-            return __("{0} Dashboard", [__(route[1])]);
-        }
-        return __(frappe.utils.to_title_case(__(route[0]), true));
-    },
-    report_column_total: function (values, column, type) {
-        if (column.column.disable_total) {
-            return "";
-        } else if (values.length > 0) {
-            if (column.column.fieldtype == "Percent" || type === "mean") {
-                return values.reduce((a, b) => flt(a) + flt(b)) / values.length;
-            } else if (column.column.fieldtype == "Int") {
-                return values.reduce((a, b) => cint(a) + cint(b));
-            } else if (frappe.model.is_numeric_field(column.column.fieldtype)) {
-                return values.reduce((a, b) => flt(a) + flt(b));
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
-    },
-    setup_search($wrapper, el_class, text_class, data_attr) {
-        const $search_input = $wrapper.find('[data-element="search"]').show();
-        $search_input.focus().val("");
-        const $elements = $wrapper.find(el_class).show();
+		if (route[2] === "Report" || route[0] === "query-report") {
+			return (__(route[3]) || __(route[1])).bold() + " " + __("Report");
+		}
+		if (route[0] === "List") {
+			return __(route[1]).bold() + " " + __("List");
+		}
+		if (route[0] === "modules") {
+			return __(route[1]).bold() + " " + __("Module");
+		}
+		if (route[0] === "Workspaces") {
+			return __(route[1]).bold() + " " + __("Workspace");
+		}
+		if (route[0] === "dashboard") {
+			return __(route[1]).bold() + " " + __("Dashboard");
+		}
+		return __(frappe.utils.to_title_case(__(route[0]), true));
+	},
+	report_column_total: function (values, column, type) {
+		if (column.column.disable_total) {
+			return "";
+		} else if (values.length > 0) {
+			if (column.column.fieldtype == "Percent" || type === "mean") {
+				return values.reduce((a, b) => flt(a) + flt(b)) / values.length;
+			} else if (column.column.fieldtype == "Int") {
+				return values.reduce((a, b) => cint(a) + cint(b));
+			} else if (frappe.model.is_numeric_field(column.column.fieldtype)) {
+				return values.reduce((a, b) => flt(a) + flt(b));
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	},
+	setup_search($wrapper, el_class, text_class, data_attr) {
+		const $search_input = $wrapper.find('[data-element="search"]').show();
+		$search_input.focus().val("");
+		const $elements = $wrapper.find(el_class).show();
 
         $search_input.off("keyup").on("keyup", () => {
             let text_filter = $search_input.val().toLowerCase();
@@ -1190,15 +1182,15 @@ Object.assign(frappe.utils, {
         };
     },
 
-    get_number_system: function (country) {
-        if (["Bangladesh", "India", "Myanmar", "Pakistan"].includes(country)) {
-            return number_systems.indian;
-        } else if (country == "Nepal") {
-            return number_systems.nepalese;
-        } else {
-            return number_systems.default;
-        }
-    },
+	get_number_system: function (country) {
+		if (["Bangladesh", "India", "Myanmar", "Pakistan"].includes(country)) {
+			return number_systems.indian;
+		} else if (country == "Nepal") {
+			return number_systems.nepalese;
+		} else {
+			return number_systems.default;
+		}
+	},
 
     map_defaults: {
         center: [19.08, 72.8961],
@@ -1215,28 +1207,26 @@ Object.assign(frappe.utils, {
         let size_class = "";
         let is_espresso = icon_name.startsWith("es-");
 
-        icon_name = is_espresso ? `${"#" + icon_name}` : `${"#icon-" + icon_name}`;
-        if (typeof size == "object") {
-            icon_style += ` width: ${size.width}; height: ${size.height}`;
-        } else {
-            size_class = `icon-${size}`;
-        }
-        return `<svg class="${
-            is_espresso
-                ? icon_name.startsWith("es-solid")
-                    ? "es-icon es-solid"
-                    : "es-icon es-line"
-                : "icon"
-        } ${svg_class} ${size_class}" style="${icon_style}" aria-hidden="true">
+		icon_name = is_espresso ? `${"#" + icon_name}` : `${"#icon-" + icon_name}`;
+		if (typeof size == "object") {
+			icon_style += ` width: ${size.width}; height: ${size.height}`;
+		} else {
+			size_class = `icon-${size}`;
+		}
+		return `<svg class="${
+			is_espresso
+				? icon_name.startsWith("es-solid")
+					? "es-icon es-solid"
+					: "es-icon es-line"
+				: "icon"
+		} ${svg_class} ${size_class}" style="${icon_style}" aria-hidden="true">
 			<use class="${icon_class}" href="${icon_name}"></use>
 		</svg>`;
     },
 
-    flag(country_code) {
-        return `<img
-		src="https://flagcdn.com/${country_code}.svg"
-		width="20" height="15">`;
-    },
+	flag(country_code) {
+		return `<img loading="lazy" src="https://flagcdn.com/${country_code}.svg" width="20" height="15">`;
+	},
 
     make_chart(wrapper, custom_options = {}) {
         let chart_args = {
@@ -1278,58 +1268,61 @@ Object.assign(frappe.utils, {
             } else if (type === "doctype") {
                 let doctype_slug = frappe.router.slug(item.doctype);
 
-                if (frappe.model.is_single(item.doctype)) {
-                    route = doctype_slug;
-                } else {
-                    switch (item.doc_view) {
-                        case "List":
-                            if (item.filters) {
-                                frappe.route_options = item.filters;
-                            }
-                            route = `${doctype_slug}/view/list`;
-                            break;
-                        case "Tree":
-                            route = `${doctype_slug}/view/tree`;
-                            break;
-                        case "Report Builder":
-                            route = `${doctype_slug}/view/report`;
-                            break;
-                        case "Dashboard":
-                            route = `${doctype_slug}/view/dashboard`;
-                            break;
-                        case "New":
-                            route = `${doctype_slug}/new`;
-                            break;
-                        case "Calendar":
-                            route = `${doctype_slug}/view/calendar/default`;
-                            break;
-                        case "Kanban":
-                            route = `${doctype_slug}/view/kanban`;
-                            if (item.kanban_board) {
-                                route += `/${item.kanban_board}`;
-                            }
-                            break;
-                        default:
-                            route = doctype_slug;
-                    }
-                }
-            } else if (type === "report") {
-                if (item.is_query_report) {
-                    route = "query-report/" + item.id;
-                } else if (!item.is_query_report && item.report_ref_doctype) {
-                    route =
-                        frappe.router.slug(item.report_ref_doctype) + "/view/report/" + item.id;
-                } else {
-                    route = "/report/" + item.id;
-                }
-            } else if (type === "page") {
-                route = item.id;
-            } else if (type === "dashboard") {
-                route = `dashboard-view/${item.id}`;
-            }
-        } else {
-            route = item.route;
-        }
+				if (frappe.model.is_single(item.doctype)) {
+					route = doctype_slug;
+				} else {
+					switch (item.doc_view) {
+						case "List":
+							if (item.filters) {
+								frappe.route_options = item.filters;
+							}
+							route = `${doctype_slug}/view/list`;
+							break;
+						case "Tree":
+							route = `${doctype_slug}/view/tree`;
+							break;
+						case "Report Builder":
+							route = `${doctype_slug}/view/report`;
+							break;
+						case "Dashboard":
+							route = `${doctype_slug}/view/dashboard`;
+							break;
+						case "New":
+							route = `${doctype_slug}/new`;
+							break;
+						case "Calendar":
+							route = `${doctype_slug}/view/calendar/default`;
+							break;
+						case "Kanban":
+							route = `${doctype_slug}/view/kanban`;
+							if (item.kanban_board) {
+								route += `/${item.kanban_board}`;
+							}
+							break;
+						case "Image":
+							route = `${doctype_slug}/view/image`;
+							break;
+						default:
+							route = doctype_slug;
+					}
+				}
+			} else if (type === "report") {
+				if (item.is_query_report) {
+					route = "query-report/" + item.id;
+				} else if (!item.is_query_report && item.report_ref_doctype) {
+					route =
+						frappe.router.slug(item.report_ref_doctype) + "/view/report/" + item.id;
+				} else {
+					route = "report/" + item.id;
+				}
+			} else if (type === "page") {
+				route = item.id;
+			} else if (type === "dashboard") {
+				route = `dashboard-view/${item.id}`;
+			}
+		} else {
+			route = item.route;
+		}
 
         if (item.route_options) {
             route +=
@@ -1355,36 +1348,36 @@ Object.assign(frappe.utils, {
          *	max_no_of_decimals - max number of decimals of the shortened number
          */
 
-        // return number if total digits is lesser than min_length
-        const len = String(number).match(/\d/g).length;
-        if (len < min_length) {
-            return number.toString();
-        }
+		// return number if total digits is lesser than min_length
+		const len = String(number).match(/\d/g).length;
+		if (len < min_length) {
+			return number.toString();
+		}
 
-        const number_system = this.get_number_system(country);
-        let x = Math.abs(Math.round(number));
+		const number_system = this.get_number_system(country);
+		let x = Math.abs(Math.round(number));
 
-        // if rounding was sufficient to get below min_length, return the rounded number
-        const x_string = x.toString();
-        if (x_string.length < min_length) {
-            return x_string;
-        }
+		// if rounding was sufficient to get below min_length, return the rounded number
+		const x_string = x.toString();
+		if (x_string.length < min_length) {
+			return x_string;
+		}
 
-        for (const map of number_system) {
-            if (x >= map.divisor) {
-                let result = number / map.divisor;
-                const no_of_decimals = this.get_number_of_decimals(result);
-                /*
-                    If no_of_decimals is greater than max_no_of_decimals,
-                    round the number to max_no_of_decimals
-                */
-                result =
-                    no_of_decimals > max_no_of_decimals
-                        ? result.toFixed(max_no_of_decimals)
-                        : result;
-                return result + " " + map.symbol;
-            }
-        }
+		for (const map of number_system) {
+			if (x >= map.divisor) {
+				let result = number / map.divisor;
+				const no_of_decimals = this.get_number_of_decimals(result);
+				/*
+					If no_of_decimals is greater than max_no_of_decimals,
+					round the number to max_no_of_decimals
+				*/
+				result =
+					no_of_decimals > max_no_of_decimals
+						? result.toFixed(max_no_of_decimals)
+						: result;
+				return result + " " + map.symbol;
+			}
+		}
 
         return number.toFixed(max_no_of_decimals);
     },
@@ -1593,18 +1586,18 @@ Object.assign(frappe.utils, {
         }
     },
 
-    only_allow_num_decimal(input) {
-        input.on("input", (e) => {
-            let self = $(e.target);
-            self.val(self.val().replace(/[^0-9.\-]/g, ""));
-            if (
-                (e.which != 46 || self.val().indexOf(".") != -1) &&
-                (e.which < 48 || e.which > 57)
-            ) {
-                e.preventDefault();
-            }
-        });
-    },
+	only_allow_num_decimal(input) {
+		input.on("input", (e) => {
+			let self = $(e.target);
+			self.val(self.val().replace(/[^0-9.\-]/g, ""));
+			if (
+				(e.which != 46 || self.val().indexOf(".") != -1) &&
+				(e.which < 48 || e.which > 57)
+			) {
+				e.preventDefault();
+			}
+		});
+	},
 
     string_to_boolean(string) {
         switch (string.toLowerCase().trim()) {
@@ -1706,76 +1699,119 @@ Object.assign(frappe.utils, {
             const private_prop = "$_" + prop + "_$";
             obj[private_prop] = obj[prop];
 
-            Object.defineProperty(obj, prop, {
-                get: function () {
-                    return obj[private_prop];
-                },
-                set: function (value) {
-                    callback();
-                    obj[private_prop] = value;
-                },
-            });
-        },
-    },
-    generate_tracking_url() {
-        frappe.prompt(
-            [
-                {
-                    fieldname: "url",
-                    label: __("Web Page URL"),
-                    fieldtype: "Data",
-                    options: "URL",
-                    reqd: 1,
-                    default: localStorage.getItem("tracker_url:url"),
-                },
-                {
-                    fieldname: "source",
-                    label: __("Source"),
-                    fieldtype: "Data",
-                    default: localStorage.getItem("tracker_url:source"),
-                },
-                {
-                    fieldname: "campaign",
-                    label: __("Campaign"),
-                    fieldtype: "Link",
-                    ignore_link_validation: 1,
-                    options: "Marketing Campaign",
-                    default: localStorage.getItem("tracker_url:campaign"),
-                },
-                {
-                    fieldname: "medium",
-                    label: __("Medium"),
-                    fieldtype: "Data",
-                    default: localStorage.getItem("tracker_url:medium"),
-                },
-            ],
-            function (data) {
-                let url = data.url;
-                localStorage.setItem("tracker_url:url", data.url);
+			Object.defineProperty(obj, prop, {
+				get: function () {
+					return obj[private_prop];
+				},
+				set: function (value) {
+					callback();
+					obj[private_prop] = value;
+				},
+			});
+		},
+	},
+	generate_tracking_url() {
+		frappe.prompt(
+			[
+				{
+					fieldname: "url",
+					label: __("Web Page URL"),
+					fieldtype: "Data",
+					options: "URL",
+					reqd: 1,
+					default: localStorage.getItem("tracker_url:url"),
+				},
+				{
+					fieldname: "source",
+					label: __("Source"),
+					fieldtype: "Link",
+					reqd: 1,
+					options: "UTM Source",
+					description: "The referrer (e.g. google, newsletter)",
+					default: localStorage.getItem("tracker_url:source"),
+				},
+				{
+					fieldname: "campaign",
+					label: __("Campaign"),
+					fieldtype: "Link",
+					ignore_link_validation: 1,
+					options: "UTM Campaign",
+					default: localStorage.getItem("tracker_url:campaign"),
+				},
+				{
+					fieldname: "medium",
+					label: __("Medium"),
+					fieldtype: "Link",
+					options: "UTM Medium",
+					description: "Marketing medium (e.g. cpc, banner, email)",
+					default: localStorage.getItem("tracker_url:medium"),
+				},
+				{
+					fieldname: "content",
+					label: __("Content"),
+					fieldtype: "Data",
+					description: "Use to differentiate ad variants (e.g. A/B testing)",
+					default: localStorage.getItem("tracker_url:content"),
+				},
+			],
+			async function (data) {
+				let url = data.url;
+				localStorage.setItem("tracker_url:url", data.url);
 
-                if (data.source) {
-                    url += "?source=" + data.source;
-                    localStorage.setItem("tracker_url:source", data.source);
-                }
-                if (data.campaign) {
-                    url += "&campaign=" + data.campaign;
-                    localStorage.setItem("tracker_url:campaign", data.campaign);
-                }
-                if (data.medium) {
-                    url += "&medium=" + data.medium.toLowerCase();
-                    localStorage.setItem("tracker_url:medium", data.medium);
-                }
+				const { message } = await frappe.db.get_value("UTM Source", data.source, "slug");
+				url += "?utm_source=" + encodeURIComponent(message.slug || data.source);
+				localStorage.setItem("tracker_url:source", data.source);
+				if (data.campaign) {
+					const { message } = await frappe.db.get_value(
+						"UTM Campaign",
+						data.campaign,
+						"slug"
+					);
+					url += "&utm_campaign=" + encodeURIComponent(message.slug || data.campaign);
+					localStorage.setItem("tracker_url:campaign", data.campaign);
+				}
+				if (data.medium) {
+					const { message } = await frappe.db.get_value(
+						"UTM Medium",
+						data.medium,
+						"slug"
+					);
+					url += "&utm_medium=" + encodeURIComponent(message.slug || data.medium);
+					localStorage.setItem("tracker_url:medium", data.medium);
+				}
+				if (data.content) {
+					url += "&utm_content=" + encodeURIComponent(data.content);
+					localStorage.setItem("tracker_url:content", data.content);
+				}
 
                 frappe.utils.copy_to_clipboard(url);
 
-                frappe.msgprint(
-                    __("Tracking URL generated and copied to clipboard") +
-                        ": <br>" +
-                        `<a href="${url}">${url.bold()}</a>`,
-                    __("Here's your tracking URL")
-                );
-            },
-            __("Generate Tracking URL")
-        );
-    },
+				frappe.msgprint(
+					__("Tracking URL generated and copied to clipboard") +
+						": <br>" +
+						`<a href="${url}">${url.bold()}</a>`,
+					__("Here's your tracking URL")
+				);
+			},
+			__("Generate Tracking URL")
+		);
+	},
+
+	/**
+	 * Checks if a value is empty.
+	 *
+	 * Returns false for: "hello", 0, 1, 3.1415, {"a": 1}, [1, 2, 3]
+	 * Returns true for: "", null, undefined, {}, []
+	 *
+	 * @param {*} value - The value to check.
+	 * @returns {boolean} - Returns `true` if the value is empty, `false` otherwise.
+	 */
+	is_empty(value) {
+		if (!value && value !== 0) return true;
+
+		if (typeof value === "object")
+			return (Array.isArray(value) ? value : Object.keys(value)).length === 0;
+
+		return false;
+	},
 });

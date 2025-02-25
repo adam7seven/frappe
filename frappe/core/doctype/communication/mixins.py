@@ -2,11 +2,11 @@ import frappe
 from frappe import _
 from frappe.core.utils import get_parent_doc
 from frappe.desk.doctype.notification_settings.notification_settings import (
-    is_email_notifications_enabled_for_type,
+	is_email_notifications_enabled_for_type,
 )
 from frappe.desk.doctype.todo.todo import ToDo
 from frappe.email.doctype.email_account.email_account import EmailAccount
-from frappe.utils import get_formatted_email, get_url, parse_addr
+from frappe.utils import cstr, get_formatted_email, get_url, parse_addr
 
 
 class CommunicationEmailMixin:
@@ -31,11 +31,11 @@ class CommunicationEmailMixin:
             + self.bcc_list(exclude_displayname=exclude_displayname)
         )
 
-    def get_email_with_displayname(self, email_address):
-        """Returns email address after adding displayname."""
-        display_name, email = parse_addr(email_address)
-        if display_name and display_name != email:
-            return email_address
+	def get_email_with_displayname(self, email_address):
+		"""Return email address after adding displayname."""
+		display_name, email = parse_addr(email_address)
+		if display_name and display_name != email:
+			return email_address
 
         # emailid to emailid with display name map.
         email_map = {
@@ -83,19 +83,17 @@ class CommunicationEmailMixin:
                 sender = frappe.db.get_value("User", frappe.session.user, "email")
             cc.append(sender)
 
-        if is_inbound_mail_communcation:
-            # inform parent document owner incase communication is created through inbound mail
-            if doc_owner := self.get_owner():
-                cc.append(doc_owner)
-            cc = set(cc) - {self.sender_mailid}
-            assignees = set(self.get_assignees())
-            # Check and remove If user disabled notifications for incoming emails on assigned document.
-            for assignee in assignees.copy():
-                if not is_email_notifications_enabled_for_type(
-                    assignee, "threads_on_assigned_document"
-                ):
-                    assignees.remove(assignee)
-            cc.update(assignees)
+		if is_inbound_mail_communcation:
+			# inform parent document owner incase communication is created through inbound mail
+			if doc_owner := self.get_owner():
+				cc.append(doc_owner)
+			cc = set(cc) - {self.sender_mailid}
+			assignees = set(self.get_assignees())
+			# Check and remove If user disabled notifications for incoming emails on assigned document.
+			for assignee in assignees.copy():
+				if not is_email_notifications_enabled_for_type(assignee, "threads_on_assigned_document"):
+					assignees.remove(assignee)
+			cc.update(assignees)
 
         cc = set(cc) - set(self.filter_thread_notification_disbled_users(cc))
         cc = cc - set(
@@ -161,18 +159,16 @@ class CommunicationEmailMixin:
     def mail_sender_fullname(self):
         email_account = self.get_outgoing_email_account()
         if not self.sender_full_name:
-            return (email_account and email_account.name) or _("Notification")
+            return (email_account and email_account.id) or _("Notification")
         return self.sender_full_name
 
     def get_mail_sender_with_displayname(self):
         return get_formatted_email(self.mail_sender_fullname(), mail=self.mail_sender())
 
-    def get_content(self, print_format=None):
-        if print_format and frappe.db.get_single_value(
-            "System Settings", "attach_view_link"
-        ):
-            return self.content + self.get_attach_link(print_format)
-        return self.content
+	def get_content(self, print_format=None):
+		if print_format and frappe.get_system_settings("attach_view_link"):
+			return cstr(self.content) + self.get_attach_link(print_format)
+		return self.content
 
     def get_attach_link(self, print_format):
         """Returns public link for the attachment via `templates/emails/print_link.html`."""
@@ -212,8 +208,8 @@ class CommunicationEmailMixin:
             )
         return self._incoming_email_account
 
-    def mail_attachments(self, print_format=None, print_html=None, print_language=None):
-        final_attachments = []
+	def mail_attachments(self, print_format=None, print_html=None, print_language=None):
+		final_attachments = []
 
         if print_format or print_html:
             d = {
@@ -273,9 +269,7 @@ class CommunicationEmailMixin:
         if not emails:
             return []
 
-        return frappe.get_all(
-            "User", pluck="email", filters={"email": ["in", emails], "thread_notify": 0}
-        )
+		return frappe.get_all("User", pluck="email", filters={"email": ["in", emails], "thread_notify": 0})
 
     @staticmethod
     def filter_disabled_users(emails):
@@ -287,77 +281,81 @@ class CommunicationEmailMixin:
             "User", pluck="email", filters={"email": ["in", emails], "enabled": 0}
         )
 
-    def sendmail_input_dict(
-        self,
-        print_html=None,
-        print_format=None,
-        send_me_a_copy=None,
-        print_letterhead=None,
-        is_inbound_mail_communcation=None,
-        print_language=None,
-    ) -> dict:
-        outgoing_email_account = self.get_outgoing_email_account()
-        if not outgoing_email_account:
-            return {}
+	def sendmail_input_dict(
+		self,
+		print_html=None,
+		print_format=None,
+		send_me_a_copy=None,
+		print_letterhead=None,
+		is_inbound_mail_communcation=None,
+		print_language=None,
+	) -> dict:
+		outgoing_email_account = self.get_outgoing_email_account()
+		if not outgoing_email_account:
+			return {}
 
-        recipients = self.get_mail_recipients_with_displayname(
-            is_inbound_mail_communcation=is_inbound_mail_communcation
-        )
-        cc = self.get_mail_cc_with_displayname(
-            is_inbound_mail_communcation=is_inbound_mail_communcation,
-            include_sender=send_me_a_copy,
-        )
-        bcc = self.get_mail_bcc_with_displayname(
-            is_inbound_mail_communcation=is_inbound_mail_communcation
-        )
+		recipients = self.get_mail_recipients_with_displayname(
+			is_inbound_mail_communcation=is_inbound_mail_communcation
+		)
+		cc = self.get_mail_cc_with_displayname(
+			is_inbound_mail_communcation=is_inbound_mail_communcation, include_sender=send_me_a_copy
+		)
+		bcc = self.get_mail_bcc_with_displayname(is_inbound_mail_communcation=is_inbound_mail_communcation)
 
         if not (recipients or cc):
             return {}
 
-        final_attachments = self.mail_attachments(
-            print_format=print_format,
-            print_html=print_html,
-            print_language=print_language,
-        )
-        incoming_email_account = self.get_incoming_email_account()
-        return {
-            "recipients": recipients,
-            "cc": cc,
-            "bcc": bcc,
-            "expose_recipients": "header",
-            "sender": self.get_mail_sender_with_displayname(),
-            "reply_to": incoming_email_account and incoming_email_account.email_id,
-            "subject": self.subject,
-            "content": self.get_content(print_format=print_format),
-            "reference_doctype": self.reference_doctype,
-            "reference_id": self.reference_id,
-            "attachments": final_attachments,
-            "message_id": self.message_id,
-            "unsubscribe_message": self.get_unsubscribe_message(),
-            "delayed": True,
-            "communication": self.id,
-            "read_receipt": self.read_receipt,
-            "is_notification": (self.sent_or_received == "Received" and True) or False,
-            "print_letterhead": print_letterhead,
-            "send_after": self.send_after,
-        }
+		final_attachments = self.mail_attachments(
+			print_format=print_format, print_html=print_html, print_language=print_language
+		)
+		incoming_email_account = self.get_incoming_email_account()
 
-    def send_email(
-        self,
-        print_html=None,
-        print_format=None,
-        send_me_a_copy=None,
-        print_letterhead=None,
-        is_inbound_mail_communcation=None,
-        print_language=None,
-        now=False,
-    ):
-        if input_dict := self.sendmail_input_dict(
-            print_html=print_html,
-            print_format=print_format,
-            send_me_a_copy=send_me_a_copy,
-            print_letterhead=print_letterhead,
-            is_inbound_mail_communcation=is_inbound_mail_communcation,
-            print_language=print_language,
-        ):
-            frappe.sendmail(now=now, **input_dict)
+		reply_to = None
+
+		# If this is a reply to an existing email, set reply_to as the sender of the reply
+		if self.in_reply_to:
+			reply_to = self.get_mail_sender_with_displayname()
+		elif incoming_email_account:
+			reply_to = incoming_email_account.email_id
+
+		return {
+			"recipients": recipients,
+			"cc": cc,
+			"bcc": bcc,
+			"expose_recipients": "header",
+			"sender": self.get_mail_sender_with_displayname(),
+			"reply_to": reply_to,
+			"subject": self.subject,
+			"content": self.get_content(print_format=print_format),
+			"reference_doctype": self.reference_doctype,
+			"reference_id": self.reference_id,
+			"attachments": final_attachments,
+			"message_id": self.message_id,
+			"unsubscribe_message": self.get_unsubscribe_message(),
+			"delayed": True,
+			"communication": self.id,
+			"read_receipt": self.read_receipt,
+			"is_notification": (self.sent_or_received == "Received"),
+			"print_letterhead": print_letterhead,
+			"send_after": self.send_after,
+		}
+
+	def send_email(
+		self,
+		print_html=None,
+		print_format=None,
+		send_me_a_copy=None,
+		print_letterhead=None,
+		is_inbound_mail_communcation=None,
+		print_language=None,
+		now=False,
+	):
+		if input_dict := self.sendmail_input_dict(
+			print_html=print_html,
+			print_format=print_format,
+			send_me_a_copy=send_me_a_copy,
+			print_letterhead=print_letterhead,
+			is_inbound_mail_communcation=is_inbound_mail_communcation,
+			print_language=print_language,
+		):
+			frappe.sendmail(now=now, **input_dict)

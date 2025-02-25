@@ -4,14 +4,14 @@ export default class BulkOperations {
         this.doctype = doctype;
     }
 
-    print(docs) {
-        const print_settings = frappe.model.get_doc(":Print Settings", "Print Settings");
-        const allow_print_for_draft = cint(print_settings.allow_print_for_draft);
-        const is_submittable = frappe.model.is_submittable(this.doctype);
-        const allow_print_for_cancelled = cint(print_settings.allow_print_for_cancelled);
-        const letterheads = this.get_letterhead_options();
-        const MAX_PRINT_LIMIT = 500;
-        const BACKGROUND_PRINT_THRESHOLD = 25;
+	print(docs) {
+		const print_settings = frappe.model.get_doc(":Print Settings", "Print Settings");
+		const allow_print_for_draft = cint(print_settings.allow_print_for_draft);
+		const is_submittable = frappe.model.is_submittable(this.doctype);
+		const allow_print_for_cancelled = cint(print_settings.allow_print_for_cancelled);
+		const letterheads = this.get_letterhead_options();
+		const MAX_PRINT_LIMIT = 500;
+		const BACKGROUND_PRINT_THRESHOLD = 25;
 
         const valid_docs = docs
             .filter((doc) => {
@@ -37,60 +37,60 @@ export default class BulkOperations {
             return;
         }
 
-        if (valid_docs.length > MAX_PRINT_LIMIT) {
-            frappe.msgprint(
-                __("You can only print upto {0} documents at a time", [MAX_PRINT_LIMIT])
-            );
-            return;
-        }
+		if (valid_docs.length > MAX_PRINT_LIMIT) {
+			frappe.msgprint(
+				__("You can only print upto {0} documents at a time", [MAX_PRINT_LIMIT])
+			);
+			return;
+		}
 
-        const dialog = new frappe.ui.Dialog({
-            title: __("Print Documents"),
-            fields: [
-                {
-                    fieldtype: "Select",
-                    label: __("Letter Head"),
-                    fieldname: "letter_sel",
-                    options: letterheads,
-                    default: letterheads[0],
-                },
-                {
-                    fieldtype: "Select",
-                    label: __("Print Format"),
-                    fieldname: "print_sel",
-                    options: frappe.meta.get_print_formats(this.doctype),
-                    default: frappe.get_meta(this.doctype).default_print_format,
-                },
-                {
-                    fieldtype: "Select",
-                    label: __("Page Size"),
-                    fieldname: "page_size",
-                    options: frappe.meta.get_print_sizes(),
-                    default: print_settings.pdf_page_size,
-                },
-                {
-                    fieldtype: "Float",
-                    label: __("Page Height (in mm)"),
-                    fieldname: "page_height",
-                    depends_on: 'eval:doc.page_size == "Custom"',
-                    default: print_settings.pdf_page_height,
-                },
-                {
-                    fieldtype: "Float",
-                    label: __("Page Width (in mm)"),
-                    fieldname: "page_width",
-                    depends_on: 'eval:doc.page_size == "Custom"',
-                    default: print_settings.pdf_page_width,
-                },
-                {
-                    fieldtype: "Check",
-                    label: __("Background Print (required for >25 documents)"),
-                    fieldname: "background_print",
-                    default: valid_docs.length > BACKGROUND_PRINT_THRESHOLD,
-                    read_only: valid_docs.length > BACKGROUND_PRINT_THRESHOLD,
-                },
-            ],
-        });
+		const dialog = new frappe.ui.Dialog({
+			title: __("Print Documents"),
+			fields: [
+				{
+					fieldtype: "Select",
+					label: __("Letter Head"),
+					fieldname: "letter_sel",
+					options: letterheads,
+					default: letterheads[0],
+				},
+				{
+					fieldtype: "Select",
+					label: __("Print Format"),
+					fieldname: "print_sel",
+					options: frappe.meta.get_print_formats(this.doctype),
+					default: frappe.get_meta(this.doctype).default_print_format,
+				},
+				{
+					fieldtype: "Select",
+					label: __("Page Size"),
+					fieldname: "page_size",
+					options: frappe.meta.get_print_sizes(),
+					default: print_settings.pdf_page_size,
+				},
+				{
+					fieldtype: "Float",
+					label: __("Page Height (in mm)"),
+					fieldname: "page_height",
+					depends_on: 'eval:doc.page_size == "Custom"',
+					default: print_settings.pdf_page_height,
+				},
+				{
+					fieldtype: "Float",
+					label: __("Page Width (in mm)"),
+					fieldname: "page_width",
+					depends_on: 'eval:doc.page_size == "Custom"',
+					default: print_settings.pdf_page_width,
+				},
+				{
+					fieldtype: "Check",
+					label: __("Background Print (required for >25 documents)"),
+					fieldname: "background_print",
+					default: valid_docs.length > BACKGROUND_PRINT_THRESHOLD,
+					read_only: valid_docs.length > BACKGROUND_PRINT_THRESHOLD,
+				},
+			],
+		});
 
         dialog.set_primary_action(__("Print"), (args) => {
             if (!args) return;
@@ -392,7 +392,7 @@ export default class BulkOperations {
                 if (typeof new_df.options === "string") {
                     options = new_df.options.split("\n");
 
-                    //如果选项中包含逗号，则按逗号隔开
+                    //���ѡ���а������ţ��򰴶��Ÿ��
                     if (df.options_has_label) {
                         for (var i = 0; i < options.length; i++) {
                             var opt = options[i];

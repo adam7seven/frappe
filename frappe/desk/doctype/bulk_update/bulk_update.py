@@ -19,18 +19,17 @@ class BulkUpdate(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        condition: DF.SmallText | None
-        document_type: DF.Link
-        field: DF.Literal[None]
-        limit: DF.Int
-        update_value: DF.SmallText
+		condition: DF.SmallText | None
+		document_type: DF.Link
+		field: DF.Literal[None]
+		limit: DF.Int
+		update_value: DF.SmallText
+	# end: auto-generated types
 
-    # end: auto-generated types
-
-    @frappe.whitelist()
-    def bulk_update(self):
-        self.check_permission("write")
-        limit = self.limit if self.limit and cint(self.limit) < 500 else 500
+	@frappe.whitelist()
+	def bulk_update(self):
+		self.check_permission("write")
+		limit = self.limit if self.limit and cint(self.limit) < 500 else 500
 
         condition = ""
         if self.condition:
@@ -48,36 +47,31 @@ class BulkUpdate(Document):
 
 
 @frappe.whitelist()
-def submit_cancel_or_update_docs(
-    doctype, docids, action="submit", data=None, task_id=None
-):
-    if isinstance(docids, str):
-        docids = frappe.parse_json(docids)
+def submit_cancel_or_update_docs(doctype, docids, action="submit", data=None, task_id=None):
+	if isinstance(docids, str):
+		docids = frappe.parse_json(docids)
 
-    if len(docids) < 20:
-        return _bulk_action(doctype, docids, action, data, task_id)
-    elif len(docids) <= 500:
-        frappe.msgprint(_("Bulk operation is enqueued in background."), alert=True)
-        frappe.enqueue(
-            _bulk_action,
-            doctype=doctype,
-            docids=docids,
-            action=action,
-            data=data,
-            task_id=task_id,
-            queue="short",
-            timeout=1000,
-        )
-    else:
-        frappe.throw(
-            _("Bulk operations only support up to 500 documents."),
-            title=_("Too Many Documents"),
-        )
+	if len(docids) < 20:
+		return _bulk_action(doctype, docids, action, data, task_id)
+	elif len(docids) <= 500:
+		frappe.msgprint(_("Bulk operation is enqueued in background."), alert=True)
+		frappe.enqueue(
+			_bulk_action,
+			doctype=doctype,
+			docids=docids,
+			action=action,
+			data=data,
+			task_id=task_id,
+			queue="short",
+			timeout=1000,
+		)
+	else:
+		frappe.throw(_("Bulk operations only support up to 500 documents."), title=_("Too Many Documents"))
 
 
 def _bulk_action(doctype, docids, action, data, task_id=None):
-    if data:
-        data = frappe.parse_json(data)
+	if data:
+		data = frappe.parse_json(data)
 
     failed = []
     num_documents = len(docids)
@@ -117,7 +111,4 @@ def _bulk_action(doctype, docids, action, data, task_id=None):
     return failed
 
 
-@deprecated
-def show_progress(docids, message, i, description):
-    n = len(docids)
-    frappe.publish_progress(float(i) * 100 / n, title=message, description=description)
+from frappe.deprecation_dumpster import show_progress

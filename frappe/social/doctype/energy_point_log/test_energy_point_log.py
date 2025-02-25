@@ -1,22 +1,32 @@
 # Copyright (c) 2019, Frappe Technologies and Contributors
 # License: MIT. See LICENSE
 import frappe
+from frappe.cache_manager import clear_doctype_map
 from frappe.desk.form.assign_to import add as assign_to
 from frappe.desk.page.user_profile.user_profile import get_energy_points_heatmap_data
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase, UnitTestCase
 from frappe.utils.testutils import add_custom_field, clear_custom_fields
 
 from .energy_point_log import create_review_points_log, review
 from .energy_point_log import get_energy_points as _get_energy_points
 
 
-class TestEnergyPointLog(FrappeTestCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        settings = frappe.get_single("Energy Point Settings")
-        settings.enabled = 1
-        settings.save()
+class UnitTestEnergyPointLog(UnitTestCase):
+	"""
+	Unit tests for EnergyPointLog.
+	Use this class for testing individual functions and methods.
+	"""
+
+	pass
+
+
+class TestEnergyPointLog(IntegrationTestCase):
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		settings = frappe.get_single("Energy Point Settings")
+		settings.enabled = 1
+		settings.save()
 
     @classmethod
     def tearDownClass(cls):
@@ -24,14 +34,14 @@ class TestEnergyPointLog(FrappeTestCase):
         settings.enabled = 0
         settings.save()
 
-    def setUp(self):
-        frappe.cache.delete_value("energy_point_rule_map")
+	def setUp(self):
+		clear_doctype_map("Energy Point Rule")
 
-    def tearDown(self):
-        frappe.set_user("Administrator")
-        frappe.db.delete("Energy Point Log")
-        frappe.db.delete("Energy Point Rule")
-        frappe.cache.delete_value("energy_point_rule_map")
+	def tearDown(self):
+		frappe.set_user("Administrator")
+		frappe.db.delete("Energy Point Log")
+		frappe.db.delete("Energy Point Rule")
+		clear_doctype_map("Energy Point Rule")
 
     def test_user_energy_point(self):
         frappe.set_user("test@example.com")
@@ -412,7 +422,7 @@ def create_a_todo(description=None):
 
 
 def get_points(user, point_type="energy_points"):
-    return _get_energy_points(user).get(point_type) or 0
+	return _get_energy_points(user).get(point_type, 0)
 
 
 def assign_users_to_todo(todo_id, users):

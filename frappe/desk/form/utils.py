@@ -81,14 +81,12 @@ def update_comment(id, content):
 
 
 @frappe.whitelist()
-def get_next(
-    doctype, value, prev, filters=None, sort_order="desc", sort_field="modified"
-):
-    prev = int(prev)
-    if not filters:
-        filters = []
-    if isinstance(filters, str):
-        filters = json.loads(filters)
+def get_next(doctype, value, prev, filters=None, sort_order="desc", sort_field="creation"):
+	prev = int(prev)
+	if not filters:
+		filters = []
+	if isinstance(filters, str):
+		filters = json.loads(filters)
 
     # # condition based on sort order
     condition = ">" if sort_order.lower() == "asc" else "<"

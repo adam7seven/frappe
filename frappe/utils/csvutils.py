@@ -2,12 +2,14 @@
 # License: MIT. See LICENSE
 import csv
 import json
+from csv import Sniffer
 from io import StringIO
 
 import requests
 
 import frappe
 from frappe import _, msgprint
+from frappe.core.doctype.file.file import FILE_ENCODING_OPTIONS
 from frappe.utils import cint, comma_or, cstr, flt
 from frappe.utils.data import get_select_options
 
@@ -38,33 +40,55 @@ def read_csv_content_from_attached_file(doc):
         )
 
 
-def read_csv_content(fcontent):
-    if not isinstance(fcontent, str):
-        decoded = False
-        for encoding in ["utf-8", "windows-1250", "windows-1252"]:
-            try:
-                fcontent = str(fcontent, encoding)
-                decoded = True
-                break
-            except UnicodeDecodeError:
-                continue
+def read_csv_content(fcontent, use_sniffer: bool = False):
+	if not isinstance(fcontent, str):
+		decoded = False
+		for encoding in FILE_ENCODING_OPTIONS:
+			try:
+				fcontent = str(fcontent, encoding)
+				decoded = True
+				break
+			except UnicodeDecodeError:
+				continue
 
-        if not decoded:
-            frappe.msgprint(
-                _("Unknown file encoding. Tried utf-8, windows-1250, windows-1252."),
-                raise_exception=True,
-            )
+		if not decoded:
+			frappe.msgprint(
+				_("Unknown file encoding. Tried to use: {0}").format(", ".join(FILE_ENCODING_OPTIONS)),
+				raise_exception=True,
+			)
 
-    fcontent = fcontent.encode("utf-8")
-    content = [frappe.safe_decode(line) for line in fcontent.splitlines(True)]
+	fcontent = fcontent.encode("utf-8")
+	content = [frappe.safe_decode(line) for line in fcontent.splitlines(True)]
+	dialect = csv.get_dialect("excel")
 
-    try:
-        rows = []
-        for row in csv.reader(content):
-            r = []
-            for val in row:
-                # decode everything
-                val = val.strip()
+	if use_sniffer:
+		sniffer = Sniffer()
+		# Don't need to use whole csv, if more than 20 rows, use just first 20
+		sample_content = content[:20] if len(content) > 20 else content
+		# only testing for most common delimiter types, this later can be extended
+		# init default dialect, to avoid lint errors
+		try:
+			# csv by default uses excel dialect, which is not always correct
+			dialect = sniffer.sniff(
+				sample="\n".join(sample_content), delimiters=frappe.flags.delimiter_options
+			)
+		except csv.Error:
+			# if sniff fails, show alert on user interface. Fall back to use default dialect (excel)
+			frappe.msgprint(
+				_(
+					"Delimiter detection failed. Try to enable custom delimiters and adjust the delimiter options as per your data."
+				),
+				indicator="orange",
+				alert=True,
+			)
+
+	try:
+		rows = []
+		for row in csv.reader(content, dialect=dialect):
+			r = []
+			for val in row:
+				# decode everything
+				val = val.strip()
 
                 if val == "":
                     # reason: in maraidb strict config, one cannot have blank strings for non string datatypes
@@ -133,15 +157,13 @@ def check_record(d):
             if docfield.reqd and (val == "" or val is None):
                 frappe.msgprint(_("{0} is required").format(docfield.label), raise_exception=1)
 
-            if docfield.fieldtype == "Select" and val and docfield.options:
-                options = get_select_options(docfield.options, docfield.options_has_label)
-                if val not in options:
-                    frappe.throw(
-                        _("{0} must be one of {1}").format(
-                            _(docfield.label, context=docfield.parent),
-                            comma_or(options),
-                        )
-                    )
+			if docfield.fieldtype == "Select" and val and docfield.options:
+				if val not in docfield.options.split("\n"):
+					frappe.throw(
+						_("{0} must be one of {1}").format(
+							_(docfield.label, context=docfield.parent), comma_or(docfield.options.split("\n"))
+						)
+					)
 
             if val and docfield.fieldtype == "Date":
                 d[key] = parse_date(val)

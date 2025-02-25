@@ -17,20 +17,21 @@ class SMSSettings(Document):
         from frappe.core.doctype.sms_parameter.sms_parameter import SMSParameter
         from frappe.types import DF
 
-        message_parameter: DF.Data
-        parameters: DF.Table[SMSParameter]
-        receiver_parameter: DF.Data
-        sms_gateway_url: DF.SmallText
-        use_post: DF.Check
-    # end: auto-generated types
-    pass
+		message_parameter: DF.Data
+		parameters: DF.Table[SMSParameter]
+		receiver_parameter: DF.Data
+		sms_gateway_url: DF.SmallText
+		use_post: DF.Check
+	# end: auto-generated types
+
+	pass
 
 
 def validate_receiver_nos(receiver_list):
-    validated_receiver_list = []
-    for d in receiver_list:
-        if not d:
-            continue
+	validated_receiver_list = []
+	for d in receiver_list:
+		if not d:
+			continue
 
         # remove invalid character
         for x in [" ", "-", "(", ")"]:
@@ -46,9 +47,9 @@ def validate_receiver_nos(receiver_list):
 
 @frappe.whitelist()
 def get_contact_number(contact_id, ref_doctype, ref_id):
-    "returns mobile number of the contact"
-    number = frappe.db.sql(
-        """select mobile_no, phone from tabContact
+	"Return mobile number of the given contact."
+	number = frappe.db.sql(
+		"""select mobile_no, phone from tabContact
 		where id=%s
 			and exists(
 				select id from `tabDynamic Link` where link_doctype=%s and link_id=%s
@@ -57,12 +58,12 @@ def get_contact_number(contact_id, ref_doctype, ref_id):
         (contact_id, ref_doctype, ref_id),
     )
 
-    return number and (number[0][0] or number[0][1]) or ""
+	return (number and (number[0][0] or number[0][1])) or ""
 
 
 @frappe.whitelist()
 def send_sms(receiver_list, msg, sender_name="", success_msg=True):
-    import json
+	import json
 
     if isinstance(receiver_list, str):
         receiver_list = json.loads(receiver_list)
@@ -102,11 +103,11 @@ def send_via_gateway(arg):
         if 200 <= status < 300:
             success_list.append(d)
 
-    if len(success_list) > 0:
-        args.update(arg)
-        create_sms_log(args, success_list)
-        if arg.get("success_msg"):
-            frappe.msgprint(_("SMS sent successfully"))
+	if len(success_list) > 0:
+		args.update(arg)
+		create_sms_log(args, success_list)
+		if arg.get("success_msg"):
+			frappe.msgprint(_("SMS sent successfully"))
 
 
 def get_headers(sms_settings=None):

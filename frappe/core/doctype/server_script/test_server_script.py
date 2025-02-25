@@ -3,9 +3,10 @@
 import requests
 
 import frappe
-from frappe.core.doctype.scheduled_job_type.scheduled_job_type import sync_jobs
+from frappe.core.doctype.scheduled_job_type.scheduled_job_type import ScheduledJobType, sync_jobs
+from frappe.core.doctype.server_script.server_script import ServerScript
 from frappe.frappeclient import FrappeClient, FrappeException
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase, UnitTestCase
 from frappe.utils import get_site_url
 
 scripts = [
@@ -83,79 +84,83 @@ frappe.db.commit()
         script="""
 frappe.db.add_index("Todo", ["color", "date"])
 """,
-    ),
-    dict(
-        id="test_before_reid",
-        script_type="DocType Event",
-        doctype_event="After Reid",
-        reference_doctype="Role",
-        script="""
+	),
+	dict(
+		id="test_before_reid",
+		script_type="DocType Event",
+		doctype_event="After Reid",
+		reference_doctype="Role",
+		script="""
 doc.desk_access =0
 doc.save()
 """,
-    ),
-    dict(
-        id="test_after_reid",
-        script_type="DocType Event",
-        doctype_event="After Reid",
-        reference_doctype="Role",
-        script="""
+	),
+	dict(
+		id="test_after_reid",
+		script_type="DocType Event",
+		doctype_event="After Reid",
+		reference_doctype="Role",
+		script="""
 doc.disabled =1
 doc.save()
 """,
-    ),
+	),
 ]
 
 
-class TestServerScript(FrappeTestCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        frappe.db.truncate("Server Script")
-        frappe.get_doc("User", "Administrator").add_roles("Script Manager")
-        for script in scripts:
-            script_doc = frappe.get_doc(doctype="Server Script")
-            script_doc.update(script)
-            script_doc.insert()
-        cls.enable_safe_exec()
-        frappe.db.commit()
-        return super().setUpClass()
+class UnitTestServerScript(UnitTestCase):
+	"""
+	Unit tests for ServerScript.
+	Use this class for testing individual functions and methods.
+	"""
 
-    @classmethod
-    def tearDownClass(cls):
-        frappe.db.commit()
-        frappe.db.truncate("Server Script")
-        frappe.cache.delete_value("server_script_map")
+	pass
 
-    def setUp(self):
-        frappe.cache.delete_value("server_script_map")
 
-    def test_doctype_event(self):
-        todo = frappe.get_doc(dict(doctype="ToDo", description="hello")).insert()
-        self.assertEqual(todo.status, "Open")
+class TestServerScript(IntegrationTestCase):
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		frappe.db.truncate("Server Script")
+		frappe.get_doc("User", "Administrator").add_roles("Script Manager")
+		for script in scripts:
+			script_doc = frappe.get_doc(doctype="Server Script")
+			script_doc.update(script)
+			script_doc.insert()
+		cls.enterClassContext(cls.enable_safe_exec())
+		frappe.db.commit()
+		return super().setUpClass()
 
-        todo = frappe.get_doc(dict(doctype="ToDo", description="test todo")).insert()
-        self.assertEqual(todo.status, "Closed")
+	@classmethod
+	def tearDownClass(cls):
+		frappe.db.commit()
+		frappe.db.truncate("Server Script")
+		frappe.client_cache.delete_value("server_script_map")
 
-        self.assertRaises(
-            frappe.ValidationError,
-            frappe.get_doc(dict(doctype="ToDo", description="validate me")).insert,
-        )
+	def setUp(self):
+		frappe.client_cache.delete_value("server_script_map")
 
-        role = frappe.get_doc(doctype="Role", id="_Test Role 9").insert(
-            ignore_if_duplicate=True
-        )
-        role.reid("_Test Role 10")
-        role.reload()
-        self.assertEqual(role.disabled, 1)
-        self.assertEqual(role.desk_access, 0)
+	def test_doctype_event(self):
+		todo = frappe.get_doc(doctype="ToDo", description="hello").insert()
+		self.assertEqual(todo.status, "Open")
 
-    def test_api(self):
-        response = requests.post(
-            get_site_url(frappe.local.site) + "/api/method/test_server_script"
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual("hello", response.json()["message"])
+		todo = frappe.get_doc(doctype="ToDo", description="test todo").insert()
+		self.assertEqual(todo.status, "Closed")
+
+		self.assertRaises(
+			frappe.ValidationError, frappe.get_doc(doctype="ToDo", description="validate me").insert
+		)
+
+		role = frappe.get_doc(doctype="Role", role_id="_Test Role 9").insert(ignore_if_duplicate=True)
+		role.reid("_Test Role 10")
+		role.reload()
+		self.assertEqual(role.disabled, 1)
+		self.assertEqual(role.desk_access, 0)
+
+	def test_api(self):
+		response = requests.post(get_site_url(frappe.local.site) + "/api/method/test_server_script")
+		self.assertEqual(response.status_code, 200)
+		self.assertEqual("hello", response.json()["message"])
 
     def test_api_return(self):
         self.assertEqual(
@@ -192,10 +197,7 @@ class TestServerScript(FrappeTestCase):
         server_script.disabled = 0
         server_script.save()
 
-        self.assertRaises(
-            AttributeError,
-            frappe.get_doc(dict(doctype="ToDo", description="test me")).insert,
-        )
+		self.assertRaises(AttributeError, frappe.get_doc(doctype="ToDo", description="test me").insert)
 
         server_script.disabled = 1
         server_script.save()
@@ -205,10 +207,7 @@ class TestServerScript(FrappeTestCase):
         server_script.disabled = 0
         server_script.save()
 
-        self.assertRaises(
-            AttributeError,
-            frappe.get_doc(dict(doctype="ToDo", description="test me")).insert,
-        )
+		self.assertRaises(AttributeError, frappe.get_doc(doctype="ToDo", description="test me").insert)
 
         server_script.disabled = 1
         server_script.save()
@@ -252,39 +251,39 @@ frappe.qb.from_(todo).select(todo.id).where(todo.id == "{todo.id}").run()
         script.save()
         script.execute_method()
 
-    def test_scripts_all_the_way_down(self):
-        # why not
-        script = frappe.get_doc(
-            doctype="Server Script",
-            id="test_nested_scripts_1",
-            script_type="API",
-            api_method="test_nested_scripts_1",
-            script="""log("nothing")""",
-        )
-        script.insert()
-        script.execute_method()
+	def test_scripts_all_the_way_down(self):
+		# why not
+		script = frappe.get_doc(
+			doctype="Server Script",
+			id="test_nested_scripts_1",
+			script_type="API",
+			api_method="test_nested_scripts_1",
+			script="""log("nothing")""",
+		)
+		script.insert()
+		script.execute_method()
 
-        script = frappe.get_doc(
-            doctype="Server Script",
-            id="test_nested_scripts_2",
-            script_type="API",
-            api_method="test_nested_scripts_2",
-            script="""frappe.call("test_nested_scripts_1")""",
-        )
-        script.insert()
-        script.execute_method()
+		script = frappe.get_doc(
+			doctype="Server Script",
+			id="test_nested_scripts_2",
+			script_type="API",
+			api_method="test_nested_scripts_2",
+			script="""frappe.call("test_nested_scripts_1")""",
+		)
+		script.insert()
+		script.execute_method()
 
-    def test_server_script_rate_limiting(self):
-        script1 = frappe.get_doc(
-            doctype="Server Script",
-            id="rate_limited_server_script",
-            script_type="API",
-            enable_rate_limit=1,
-            allow_guest=1,
-            rate_limit_count=5,
-            api_method="rate_limited_endpoint",
-            script="""frappe.flags = {"test": True}""",
-        )
+	def test_server_script_rate_limiting(self):
+		script1 = frappe.get_doc(
+			doctype="Server Script",
+			id="rate_limited_server_script",
+			script_type="API",
+			enable_rate_limit=1,
+			allow_guest=1,
+			rate_limit_count=5,
+			api_method="rate_limited_endpoint",
+			script="""frappe.flags = {"test": True}""",
+		)
 
         script1.insert()
 
@@ -357,7 +356,50 @@ frappe.qb.from_(todo).select(todo.id).where(todo.id == "{todo.id}").run()
         self.assertEqual(cron_job.next_execution.day, 1)
         self.assertEqual(cron_job.next_execution.month, 1)
 
-        cron_script.cron_format = "0 0 2 1 *"  # 2nd january
-        cron_script.save()
-        cron_job.reload()
-        self.assertEqual(cron_job.next_execution.day, 2)
+		cron_script.cron_format = "0 0 2 1 *"  # 2nd january
+		cron_script.save()
+
+		updated_cron_job_id = frappe.db.get_value("Scheduled Job Type", {"server_script": cron_script.id})
+		updated_cron_job = frappe.get_doc("Scheduled Job Type", updated_cron_job_id)
+		self.assertEqual(updated_cron_job.next_execution.day, 2)
+
+	def test_server_script_state_changes(self):
+		script: ServerScript = frappe.get_doc(
+			doctype="Server Script",
+			id="scheduled_script_state_change",
+			script_type="Scheduler Event",
+			script="""frappe.flags = {"test": True}""",
+			event_frequency="Hourly",
+		).insert()
+
+		job: ScheduledJobType = frappe.get_doc("Scheduled Job Type", {"server_script": script.id})
+
+		script.script_type = "API"
+		script.save()
+		self.assertTrue(job.reload().stopped)
+
+		script.script_type = "Scheduler Event"
+		script.save()
+		self.assertFalse(job.reload().stopped)
+
+		# Change to different frequency
+		script.event_frequency = "Monthly"
+		script.save()
+		self.assertEqual(job.reload().frequency, "Monthly")
+
+		# change cron expr
+		script.event_frequency = "Cron"
+		script.cron_format = "* * * * *"
+		script.save()
+		self.assertEqual(job.reload().frequency, "Cron")
+		self.assertEqual(job.reload().cron_format, script.cron_format)
+
+		# manually disable
+
+		script.disabled = 1
+		script.save()
+		self.assertTrue(job.reload().stopped)
+
+		script.disabled = 0
+		script.save()
+		self.assertFalse(job.reload().stopped)

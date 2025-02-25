@@ -106,7 +106,7 @@ class EmailGroup(Document):
 
     def on_trash(self):
         for d in frappe.get_all("Email Group Member", "id", {"email_group": self.id}):
-            frappe.delete_doc("Email Group Member", d.id)
+            frappe.delete_doc("Email Group Member", d.id, force=True)
 
 
 @frappe.whitelist()

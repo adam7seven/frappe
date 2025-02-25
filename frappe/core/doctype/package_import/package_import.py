@@ -22,15 +22,15 @@ class PackageImport(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        activate: DF.Check
-        attach_package: DF.Attach | None
-        force: DF.Check
-        log: DF.Code | None
+		activate: DF.Check
+		attach_package: DF.Attach | None
+		force: DF.Check
+		log: DF.Code | None
+	# end: auto-generated types
 
-    # end: auto-generated types
-    def validate(self):
-        if self.activate:
-            self.import_package()
+	def validate(self):
+		if self.activate:
+			self.import_package()
 
     def import_package(self):
         attachment = get_attachments(self.doctype, self.id)

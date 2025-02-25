@@ -60,19 +60,19 @@ def search_link(
 # this is called by the search box
 @frappe.whitelist()
 def search_widget(
-    doctype: str,
-    txt: str,
-    query: str | None = None,
-    searchfield: str | None = None,
-    start: int = 0,
-    page_length: int = 10,
-    filters: str | None | dict | list = None,
-    filter_fields=None,
-    as_dict: bool = False,
-    reference_doctype: str | None = None,
-    ignore_user_permissions: bool = False,
+	doctype: str,
+	txt: str,
+	query: str | None = None,
+	searchfield: str | None = None,
+	start: int = 0,
+	page_length: int = 10,
+	filters: str | None | dict | list = None,
+	filter_fields=None,
+	as_dict: bool = False,
+	reference_doctype: str | None = None,
+	ignore_user_permissions: bool = False,
 ):
-    start = cint(start)
+	start = cint(start)
 
     if isinstance(filters, str):
         filters = json.loads(filters)
@@ -116,15 +116,11 @@ def search_widget(
 
     meta = frappe.get_meta(doctype)
 
-    if isinstance(filters, dict):
-        filters_items = filters.items()
-        filters = []
-        for key, value in filters_items:
-            filters.append(make_filter_tuple(doctype, key, value))
-
-    if filters is None:
-        filters = []
-    or_filters = []
+	if isinstance(filters, dict):
+		filters = [make_filter_tuple(doctype, key, value) for key, value in filters.items()]
+	elif filters is None:
+		filters = []
+	or_filters = []
 
     # build from doctype
     if txt:
@@ -261,21 +257,27 @@ def build_for_autosuggest(res: list[tuple], doctype: str) -> list[LinkSearchResu
     def to_string(parts):
         return ", ".join(unique(_(cstr(part)) if meta.translated_doctype else cstr(part) for part in parts if part))
 
-    results = []
-    meta = frappe.get_meta(doctype)
-    if meta.show_title_field_in_link:
-        for item in res:
-            item = list(item)
-            if len(item) == 1:
-                item = [item[0], item[0]]
-            label = item[1]  # use title as label
-            item[1] = item[0]  # show id in description instead of title
-            if len(item) >= 3 and item[2] == label:
-                # remove redundant title ("label") value
-                del item[2]
-            results.append({"value": item[0], "label": label, "description": to_string(item[1:])})
-    else:
-        results.extend({"value": item[0], "description": to_string(item[1:])} for item in res)
+	results = []
+	meta = frappe.get_meta(doctype)
+	if meta.show_title_field_in_link:
+		for item in res:
+			item = list(item)
+			if len(item) == 1:
+				item = [item[0], item[0]]
+			label = item[1]  # use title as label
+			item[1] = item[0]  # show id in description instead of title
+
+			if len(item) >= 3 and item[2] == label:
+				# remove redundant title ("label") value
+				del item[2]
+
+			autosuggest_row = {"value": item[0], "description": to_string(item[1:])}
+			if label:
+				autosuggest_row["label"] = label
+
+			results.append(autosuggest_row)
+	else:
+		results.extend({"value": item[0], "description": to_string(item[1:])} for item in res)
 
     return results
 

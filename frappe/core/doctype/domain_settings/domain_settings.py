@@ -15,16 +15,16 @@ class DomainSettings(Document):
         from frappe.core.doctype.has_domain.has_domain import HasDomain
         from frappe.types import DF
 
-        active_domains: DF.Table[HasDomain]
+		active_domains: DF.Table[HasDomain]
+	# end: auto-generated types
 
-    # end: auto-generated types
-    def set_active_domains(self, domains):
-        active_domains = [d.domain for d in self.active_domains]
-        added = False
-        for d in domains:
-            if d not in active_domains:
-                self.append("active_domains", dict(domain=d))
-                added = True
+	def set_active_domains(self, domains):
+		active_domains = [d.domain for d in self.active_domains]
+		added = False
+		for d in domains:
+			if d not in active_domains:
+				self.append("active_domains", dict(domain=d))
+				added = True
 
         if added:
             self.save()
@@ -49,21 +49,19 @@ class DomainSettings(Document):
             frappe.db.delete("Has Role", {"role": role})
             frappe.set_value("Role", role, "disabled", 1)
 
-        for domain in all_domains:
-            data = frappe.get_domain_data(domain)
-            if not frappe.db.get_value("Domain", domain):
-                frappe.get_doc(dict(doctype="Domain", domain=domain)).insert()
-            if "modules" in data:
-                for module in data.get("modules"):
-                    frappe.db.set_value(
-                        "Module Def", module, "restrict_to_domain", domain
-                    )
+		for domain in all_domains:
+			data = frappe.get_domain_data(domain)
+			if not frappe.db.get_value("Domain", domain):
+				frappe.get_doc(doctype="Domain", domain=domain).insert()
+			if "modules" in data:
+				for module in data.get("modules"):
+					frappe.db.set_value("Module Def", module, "restrict_to_domain", domain)
 
-            if "restricted_roles" in data:
-                for role in data["restricted_roles"]:
-                    if not frappe.db.get_value("Role", role):
-                        frappe.get_doc(dict(doctype="Role", id=role)).insert()
-                    frappe.db.set_value("Role", role, "restrict_to_domain", domain)
+			if "restricted_roles" in data:
+				for role in data["restricted_roles"]:
+					if not frappe.db.get_value("Role", role):
+						frappe.get_doc(doctype="Role", id=role).insert()
+					frappe.db.set_value("Role", role, "restrict_to_domain", domain)
 
                     if domain not in active_domains:
                         remove_role(role)

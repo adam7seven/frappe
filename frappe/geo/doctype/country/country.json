@@ -1,77 +1,81 @@
 {
-    "actions": [],
-    "allow_import": 1,
-    "autoid": "Prompt",
-    "creation": "2013-01-19 10:23:30",
-    "doctype": "DocType",
-    "document_type": "Setup",
-    "engine": "InnoDB",
-    "field_order": [
-        "date_format",
-        "time_format",
-        "time_zones",
-        "code"
-    ],
-    "fields": [
-        {
-            "fieldname": "date_format",
-            "fieldtype": "Data",
-            "in_list_view": 1,
-            "label": "Date Format"
-        },
-        {
-            "default": "HH:mm:ss",
-            "fieldname": "time_format",
-            "fieldtype": "Data",
-            "in_list_view": 1,
-            "label": "Time format"
-        },
-        {
-            "fieldname": "time_zones",
-            "fieldtype": "Text",
-            "in_list_view": 1,
-            "label": "Time Zones"
-        },
-        {
-            "fieldname": "code",
-            "fieldtype": "Data",
-            "in_list_view": 1,
-            "label": "Code"
-        }
-    ],
-    "icon": "fa fa-globe",
-    "idx": 1,
-    "links": [],
-    "modified": "2024-11-27 16:56:04.850422",
-    "modified_by": "Administrator",
-    "module": "Geo",
-    "id": "Country",
-    "owner": "Administrator",
-    "permissions": [
-        {
-            "create": 1,
-            "email": 1,
-            "export": 1,
-            "import": 1,
-            "print": 1,
-            "read": 1,
-            "report": 1,
-            "role": "System Manager",
-            "share": 1,
-            "write": 1
-        },
-        {
-            "email": 1,
-            "print": 1,
-            "read": 1,
-            "report": 1,
-            "role": "All"
-        }
-    ],
-    "quick_entry": 1,
-    "sort_field": "id",
-    "sort_order": "ASC",
-    "states": [],
-    "track_changes": 1,
-    "translated_doctype": 1
+ "actions": [],
+ "allow_import": 1,
+ "autoid": "Prompt",
+ "creation": "2013-01-19 10:23:30",
+ "doctype": "DocType",
+ "document_type": "Setup",
+ "engine": "InnoDB",
+ "field_order": [
+  "code",
+  "date_format",
+  "time_format",
+  "time_zones"
+ ],
+ "fields": [
+  {
+   "fieldname": "date_format",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Date Format"
+  },
+  {
+   "default": "HH:mm:ss",
+   "fieldname": "time_format",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Time format"
+  },
+  {
+   "fieldname": "time_zones",
+   "fieldtype": "Text",
+   "in_list_view": 1,
+   "label": "Time Zones"
+  },
+  {
+   "description": "The country's ISO 3166 ALPHA-2 code.",
+   "fieldname": "code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Code",
+   "length": 2,
+   "reqd": 1
+  }
+ ],
+ "icon": "fa fa-globe",
+ "idx": 1,
+ "links": [],
+ "modified": "2025-01-03 13:01:46.030113",
+ "modified_by": "Administrator",
+ "module": "Geo",
+ "id": "Country",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All"
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "id",
+ "sort_order": "ASC",
+ "states": [],
+ "track_changes": 1,
+ "translated_doctype": 1
 }

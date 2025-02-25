@@ -140,8 +140,15 @@ frappe.ui.form.ScriptManager = class ScriptManager {
 		// run them serially
 		return frappe.run_serially(tasks);
 	}
-	has_handlers(event_id, doctype) {
-		let handlers = this.get_handlers(event_id, doctype);
+	has_handler(event_id) {
+		// return true if there exist an event handler (new style only)
+		return (
+			frappe.ui.form.handlers[this.frm.doctype] &&
+		  frappe.ui.form.handlers[this.frm.doctype][event_id]
+		);
+	}
+  has_handlers(event_id, doctype) {
+	let handlers = this.get_handlers(event_id, doctype);
 		return handlers && (handlers.old_style.length || handlers.new_style.length);
 	}
 	get_handlers(event_id, doctype) {
@@ -156,11 +163,11 @@ frappe.ui.form.ScriptManager = class ScriptManager {
 				handlers.new_style.push(fn);
 			});
 		}
-		if (this.frm.cscript[event_id]) {
-			handlers.old_style.push(event_id);
+	  if (this.frm.cscript && this.frm.cscript[event_id]) {
+		handlers.old_style.push(event_id);
 		}
-		if (this.frm.cscript["custom_" + event_id]) {
-			handlers.old_style.push("custom_" + event_id);
+	  if (this.frm.cscript && this.frm.cscript["custom_" + event_id]) {
+		handlers.old_style.push("custom_" + event_id);
 		}
 		return handlers;
 	}
@@ -239,6 +246,7 @@ frappe.ui.form.ScriptManager = class ScriptManager {
 
 		this.trigger("setup");
 	}
+
 	log_error(caller, e) {
 		frappe.show_alert({ message: __("Error in Client Script."), indicator: "error" });
 		console.group && console.group();

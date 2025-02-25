@@ -16,9 +16,15 @@ class WebsiteRouteMeta(Document):
             WebsiteMetaTag,
         )
 
-        meta_tags: DF.Table[WebsiteMetaTag]
+		meta_tags: DF.Table[WebsiteMetaTag]
+	# end: auto-generated types
 
-    # end: auto-generated types
-    def autoid(self):
-        if self.id and self.id.startswith("/"):
-            self.id = self.id[1:]
+	def autoid(self):
+		if self.id and self.id.startswith("/"):
+			self.id = self.id[1:]
+
+	def clear_cache(self):
+		from frappe.website.website_components.metatags import has_meta_tags
+
+		has_meta_tags.clear_cache()
+		return super().clear_cache()

@@ -75,12 +75,12 @@ def create_email_flag_queue(ids, action):
                 as_dict=True,
             )
 
-            for queue in email_flag_queue:
-                if queue.action != action:
-                    frappe.delete_doc("Email Flag Queue", queue.id, ignore_permissions=True)
-                elif queue.action == action:
-                    # Read or Unread request for email is already available
-                    create_new = False
+			for queue in email_flag_queue:
+				if queue.action != action:
+					frappe.delete_doc("Email Flag Queue", queue.id, ignore_permissions=True, force=True)
+				elif queue.action == action:
+					# Read or Unread request for email is already available
+					create_new = False
 
             if create_new:
                 flag_queue = frappe.get_doc(

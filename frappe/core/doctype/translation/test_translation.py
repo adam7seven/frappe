@@ -2,24 +2,33 @@
 # License: MIT. See LICENSE
 import frappe
 from frappe import _
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
-class TestTranslation(FrappeTestCase):
-    def setUp(self):
-        frappe.db.delete("Translation")
+class UnitTestTranslation(UnitTestCase):
+	"""
+	Unit tests for Translation.
+	Use this class for testing individual functions and methods.
+	"""
 
-    def tearDown(self):
-        frappe.local.lang = "en"
-        from frappe.translate import clear_cache
+	pass
 
-        clear_cache()
 
-    def test_doctype(self):
-        translation_data = get_translation_data()
-        for lang, (source_string, new_translation) in translation_data.items():
-            frappe.local.lang = lang
-            original_translation = _(source_string)
+class TestTranslation(IntegrationTestCase):
+	def setUp(self):
+		frappe.db.delete("Translation")
+
+	def tearDown(self):
+		frappe.local.lang = "en"
+		from frappe.translate import clear_cache
+
+		clear_cache()
+
+	def test_doctype(self):
+		translation_data = get_translation_data()
+		for lang, (source_string, new_translation) in translation_data.items():
+			frappe.local.lang = lang
+			original_translation = _(source_string)
 
             docid = create_translation(lang, source_string, new_translation)
             self.assertEqual(_(source_string), new_translation)
@@ -27,34 +36,34 @@ class TestTranslation(FrappeTestCase):
             frappe.delete_doc("Translation", docid)
             self.assertEqual(_(source_string), original_translation)
 
-    def test_parent_language(self):
-        data = {
-            "Test Data": {
-                "es": "datos de prueba",
-                "es-MX": "pruebas de datos",
-            },
-            "Test Spanish": {
-                "es": "prueba de español",
-            },
-        }
+	def test_parent_language(self):
+		data = {
+			"Test Data": {
+				"es": "datos de prueba",
+				"es-MX": "pruebas de datos",
+			},
+			"Test Spanish": {
+				"es": "prueba de español",
+			},
+		}
 
-        for source_string, translations in data.items():
-            for lang, translation in translations.items():
-                create_translation(lang, source_string, translation)
+		for source_string, translations in data.items():
+			for lang, translation in translations.items():
+				create_translation(lang, source_string, translation)
 
         frappe.local.lang = "es"
 
-        self.assertEqual(_("Test Data"), data["Test Data"]["es"])
+		self.assertEqual(_("Test Data"), data["Test Data"]["es"])
 
-        self.assertEqual(_("Test Spanish"), data["Test Spanish"]["es"])
+		self.assertEqual(_("Test Spanish"), data["Test Spanish"]["es"])
 
         frappe.local.lang = "es-MX"
 
-        # different translation for es-MX
-        self.assertEqual(_("Test Data"), data["Test Data"]["es-MX"])
+		# different translation for es-MX
+		self.assertEqual(_("Test Data"), data["Test Data"]["es-MX"])
 
-        # from spanish (general)
-        self.assertEqual(_("Test Spanish"), data["Test Spanish"]["es"])
+		# from spanish (general)
+		self.assertEqual(_("Test Spanish"), data["Test Spanish"]["es"])
 
     def test_multi_language_translations(self):
         source = "User"
@@ -78,7 +87,7 @@ class TestTranslation(FrappeTestCase):
 			los procesadores Intel Core i5 e i7 de quinta generación con Intel HD Graphics 6000 son capaces de hacerlo.
 		"""
 
-        create_translation("es", source, target)
+		create_translation("es", source, target)
 
         source = """
 			<span style="font-family: &quot;Amazon Ember&quot;, Arial, sans-serif; font-size:
@@ -109,10 +118,10 @@ def get_translation_data():
 
 
 def create_translation(lang, source_string, new_translation) -> str:
-    doc = frappe.new_doc("Translation")
-    doc.language = lang
-    doc.source_text = source_string
-    doc.translated_text = new_translation
-    doc.save()
+	doc = frappe.new_doc("Translation")
+	doc.language = lang
+	doc.source_text = source_string
+	doc.translated_text = new_translation
+	doc.save()
 
     return doc.id

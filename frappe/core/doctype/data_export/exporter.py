@@ -195,55 +195,58 @@ class DataExporter:
         else:
             self.writer.writerow([""])
 
-        self.writer.writerow([""])
-        self.writer.writerow([_("Notes:")])
-        self.writer.writerow([_("Please do not change the template headings.")])
-        self.writer.writerow([_("First data column must be blank.")])
-        self.writer.writerow([_('If you are uploading new records, leave the "id" (ID) column blank.')])
-        self.writer.writerow([_('If you are uploading new records, "Naming Series" becomes mandatory, if present.')])
-        self.writer.writerow(
-            [
-                _(
-                    "Only mandatory fields are necessary for new records. You can delete non-mandatory columns if you wish."
-                )
-            ]
-        )
-        self.writer.writerow([_("For updating, you can update only selective columns.")])
-        self.writer.writerow([_("You can only upload upto 5000 records in one go. (may be less in some cases)")])
-        if self.id_field == "parent":
-            self.writer.writerow([_('"Parent" signifies the parent table in which this row must be added')])
-            self.writer.writerow(
-                [_('If you are updating, please select "Overwrite" else existing rows will not be deleted.')]
-            )
+		self.writer.writerow([""])
+		self.writer.writerow([_("Notes:")])
+		self.writer.writerow([_("Please do not change the template headings.")])
+		self.writer.writerow([_("First data column must be blank.")])
+		self.writer.writerow([_('If you are uploading new records, leave the "id" (ID) column blank.')])
+		self.writer.writerow(
+			[_('If you are uploading new records, "Naming Series" becomes mandatory, if present.')]
+		)
+		self.writer.writerow(
+			[
+				_(
+					"Only mandatory fields are necessary for new records. You can delete non-mandatory columns if you wish."
+				)
+			]
+		)
+		self.writer.writerow([_("For updating, you can update only selective columns.")])
+		self.writer.writerow(
+			[_("You can only upload upto 5000 records in one go. (may be less in some cases)")]
+		)
+		if self.id_field == "parent":
+			self.writer.writerow([_('"Parent" signifies the parent table in which this row must be added')])
+			self.writer.writerow(
+				[_('If you are updating, please select "Overwrite" else existing rows will not be deleted.')]
+			)
 
     def build_field_columns(self, dt, parentfield=None):
         meta = frappe.get_meta(dt)
 
-        # build list of valid docfields
-        tablecolumns = []
-        table_name = "tab" + dt
+		# build list of valid docfields
+		tablecolumns = []
+		table_name = "tab" + dt
 
-        for f in frappe.db.get_table_columns_description(table_name):
-            field = meta.get_field(f.name)
-            if f.name in ["owner", "creation"]:
-                std_field = next(
-                    (x for x in frappe.model.std_fields if x["fieldname"] == f.name),
-                    None,
-                )
-                if std_field:
-                    field = frappe._dict(
-                        {
-                            "fieldname": std_field.get("fieldname"),
-                            "label": std_field.get("label"),
-                            "fieldtype": std_field.get("fieldtype"),
-                            "options": std_field.get("options"),
-                            "idx": 0,
-                            "parent": dt,
-                        }
-                    )
+		for f in frappe.db.get_table_columns_description(table_name):
+			field = meta.get_field(f.name)
+			if f.name in ["owner", "creation"]:
+				std_field = next((x for x in frappe.model.std_fields if x["fieldname"] == f.name), None)
+				if std_field:
+					field = frappe._dict(
+						{
+							"fieldname": std_field.get("fieldname"),
+							"label": std_field.get("label"),
+							"fieldtype": std_field.get("fieldtype"),
+							"options": std_field.get("options"),
+							"idx": 0,
+							"parent": dt,
+						}
+					)
 
-            if field and ((self.select_columns and f.name in self.select_columns[dt]) or not self.select_columns):
-                tablecolumns.append(field)
+			if field and (
+				(self.select_columns and f.name in self.select_columns[dt]) or not self.select_columns
+			):
+				tablecolumns.append(field)
 
         tablecolumns.sort(key=lambda a: int(a.idx))
 
@@ -315,13 +318,13 @@ class DataExporter:
         ):
             return
 
-        self.tablerow.append("")
-        self.fieldrow.append(docfield.fieldname)
-        self.labelrow.append(_(docfield.label, context=docfield.parent))
-        self.mandatoryrow.append(docfield.reqd and "Yes" or "No")
-        self.typerow.append(docfield.fieldtype)
-        self.inforow.append(self.getinforow(docfield))
-        self.columns.append(docfield.fieldname)
+		self.tablerow.append("")
+		self.fieldrow.append(docfield.fieldname)
+		self.labelrow.append(_(docfield.label, context=docfield.parent))
+		self.mandatoryrow.append((docfield.reqd and "Yes") or "No")
+		self.typerow.append(docfield.fieldtype)
+		self.inforow.append(self.getinforow(docfield))
+		self.columns.append(docfield.fieldname)
 
     def append_empty_field_column(self):
         self.tablerow.append("~")
@@ -332,27 +335,26 @@ class DataExporter:
         self.inforow.append("")
         self.columns.append("")
 
-    @staticmethod
-    def getinforow(docfield):
-        """make info comment for options, links etc."""
-        if docfield.fieldtype == "Select":
-            if not docfield.options:
-                return ""
-            else:
-                options = get_select_options(docfield.options, docfield.options_has_label)
-                return _("One of") + ": %s" % ", ".join(filter(None, options))
-        elif docfield.fieldtype == "Link":
-            return "Valid %s" % docfield.options
-        elif docfield.fieldtype == "Int":
-            return "Integer"
-        elif docfield.fieldtype == "Check":
-            return "0 or 1"
-        elif docfield.fieldtype in ["Date", "Datetime"]:
-            return cstr(frappe.defaults.get_defaults().date_format)
-        elif hasattr(docfield, "info"):
-            return docfield.info
-        else:
-            return ""
+	@staticmethod
+	def getinforow(docfield):
+		"""make info comment for options, links etc."""
+		if docfield.fieldtype == "Select":
+			if not docfield.options:
+				return ""
+			else:
+				return _("One of") + ": {}".format(", ".join(filter(None, docfield.options.split("\n"))))
+		elif docfield.fieldtype == "Link":
+			return "Valid {}".format(docfield.options)
+		elif docfield.fieldtype == "Int":
+			return "Integer"
+		elif docfield.fieldtype == "Check":
+			return "0 or 1"
+		elif docfield.fieldtype in ["Date", "Datetime"]:
+			return cstr(frappe.defaults.get_defaults().date_format)
+		elif hasattr(docfield, "info"):
+			return docfield.info
+		else:
+			return ""
 
     def add_field_headings(self):
         if not self.export_without_column_meta:

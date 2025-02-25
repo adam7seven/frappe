@@ -22,19 +22,19 @@ class RQWorker(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        birth_date: DF.Datetime | None
-        current_job_id: DF.Link | None
-        failed_job_count: DF.Int
-        last_heartbeat: DF.Datetime | None
-        pid: DF.Data | None
-        queue: DF.Data | None
-        queue_type: DF.Literal["default", "long", "short"]
-        status: DF.Data | None
-        successful_job_count: DF.Int
-        total_working_time: DF.Duration | None
-        utilization_percent: DF.Percent
-        worker_name: DF.Data | None
-    # end: auto-generated types
+		birth_date: DF.Datetime | None
+		current_job_id: DF.Link | None
+		failed_job_count: DF.Int
+		last_heartbeat: DF.Datetime | None
+		pid: DF.Data | None
+		queue: DF.Data | None
+		queue_type: DF.Literal["default", "long", "short"]
+		status: DF.Data | None
+		successful_job_count: DF.Int
+		total_working_time: DF.Duration | None
+		utilization_percent: DF.Percent
+		worker_name: DF.Data | None
+	# end: auto-generated types
 
     def load_from_db(self):
         all_workers = get_workers()
@@ -45,24 +45,21 @@ class RQWorker(Document):
 
         super(Document, self).__init__(d)
 
-    @staticmethod
-    def get_list(args):
-        start = cint(args.get("start")) or 0
-        page_length = cint(args.get("page_length")) or 20
-
-        workers = get_workers()
+	@staticmethod
+	def get_list(start=0, page_length=20):
+		workers = get_workers()
 
         valid_workers = [w for w in workers if w.pid][start : start + page_length]
         return [serialize_worker(worker) for worker in valid_workers]
 
-    @staticmethod
-    def get_count(args) -> int:
-        return len(get_workers())
+	@staticmethod
+	def get_count() -> int:
+		return len(get_workers())
 
-    # None of these methods apply to virtual workers, overriden for sanity.
-    @staticmethod
-    def get_stats(args):
-        return {}
+	# None of these methods apply to virtual workers, overriden for sanity.
+	@staticmethod
+	def get_stats():
+		return {}
 
     def db_insert(self, *args, **kwargs):
         pass
@@ -105,8 +102,9 @@ def serialize_worker(worker: Worker) -> frappe._dict:
 
 
 def compute_utilization(worker: Worker) -> float:
-    with suppress(Exception):
-        total_time = (
-            datetime.datetime.now(pytz.UTC) - worker.birth_date.replace(tzinfo=pytz.UTC)
-        ).total_seconds()
-        return worker.total_working_time / total_time * 100
+	with suppress(Exception):
+		total_time = (
+			datetime.datetime.now(datetime.timezone.utc)
+			- worker.birth_date.replace(tzinfo=datetime.timezone.utc)
+		).total_seconds()
+		return worker.total_working_time / total_time * 100

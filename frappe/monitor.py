@@ -47,16 +47,16 @@ def log_file():
 class Monitor:
     __slots__ = ("data",)
 
-    def __init__(self, transaction_type, method, kwargs):
-        try:
-            self.data = frappe._dict(
-                {
-                    "site": frappe.local.site,
-                    "timestamp": datetime.datetime.now(pytz.UTC),
-                    "transaction_type": transaction_type,
-                    "uuid": str(uuid.uuid4()),
-                }
-            )
+	def __init__(self, transaction_type, method, kwargs):
+		try:
+			self.data = frappe._dict(
+				{
+					"site": frappe.local.site,
+					"timestamp": datetime.datetime.now(datetime.timezone.utc),
+					"transaction_type": transaction_type,
+					"uuid": str(uuid.uuid4()),
+				}
+			)
 
             if transaction_type == "request":
                 self.collect_request_meta()
@@ -83,20 +83,20 @@ class Monitor:
             self.data.job.method = kwargs["job_type"]
             self.data.job.scheduled = True
 
-        if job := rq.get_current_job():
-            self.data.uuid = job.id
-            waitdiff = self.data.timestamp - job.enqueued_at.replace(tzinfo=pytz.UTC)
-            self.data.job.wait = int(waitdiff.total_seconds() * 1000000)
+		if job := rq.get_current_job():
+			self.data.job_id = job.id
+			waitdiff = self.data.timestamp - job.enqueued_at.replace(tzinfo=datetime.timezone.utc)
+			self.data.job.wait = int(waitdiff.total_seconds() * 1000000)
 
     def add_custom_data(self, **kwargs):
         if self.data:
             self.data.update(kwargs)
 
-    def dump(self, response=None):
-        try:
-            timediff = datetime.datetime.now(pytz.UTC) - self.data.timestamp
-            # Obtain duration in microseconds
-            self.data.duration = int(timediff.total_seconds() * 1000000)
+	def dump(self, response=None):
+		try:
+			timediff = datetime.datetime.now(datetime.timezone.utc) - self.data.timestamp
+			# Obtain duration in microseconds
+			self.data.duration = int(timediff.total_seconds() * 1000000)
 
             if self.data.transaction_type == "request":
                 if response:
@@ -115,23 +115,23 @@ class Monitor:
         except Exception:
             traceback.print_exc()
 
-    def store(self):
-        serialized = json.dumps(self.data, sort_keys=True, default=str, separators=(",", ":"))
-        length = frappe.cache.rpush(MONITOR_REDIS_KEY, serialized)
-        if cint(length) > MONITOR_MAX_ENTRIES:
-            frappe.cache.ltrim(MONITOR_REDIS_KEY, 1, -1)
+	def store(self):
+		serialized = json.dumps(self.data, sort_keys=True, default=str, separators=(",", ":"))
+		length = frappe.cache.rpush(MONITOR_REDIS_KEY, serialized)
+		if cint(length) > MONITOR_MAX_ENTRIES:
+			frappe.cache.ltrim(MONITOR_REDIS_KEY, 1, -1)
 
 
 def flush():
-    try:
-        # Fetch all the logs without removing from cache
-        logs = frappe.cache.lrange(MONITOR_REDIS_KEY, 0, -1)
-        if logs:
-            logs = list(map(frappe.safe_decode, logs))
-            with open(log_file(), "a") as f:
-                f.write("\n".join(logs))
-                f.write("\n")
-            # Remove fetched entries from cache
-            frappe.cache.ltrim(MONITOR_REDIS_KEY, len(logs) - 1, -1)
-    except Exception:
-        traceback.print_exc()
+	try:
+		# Fetch all the logs without removing from cache
+		logs = frappe.cache.lrange(MONITOR_REDIS_KEY, 0, -1)
+		if logs:
+			logs = list(map(frappe.safe_decode, logs))
+			with open(log_file(), "a") as f:
+				f.write("\n".join(logs))
+				f.write("\n")
+			# Remove fetched entries from cache
+			frappe.cache.ltrim(MONITOR_REDIS_KEY, len(logs) - 1, -1)
+	except Exception:
+		traceback.print_exc()

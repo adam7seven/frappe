@@ -7,19 +7,24 @@ import json
 import frappe
 import frappe.defaults
 from frappe.desk.doctype.event.event import get_events
-from frappe.test_runner import make_test_objects
-from frappe.tests.utils import FrappeTestCase
-
-test_records = frappe.get_test_records("Event")
+from frappe.tests import IntegrationTestCase, UnitTestCase
+from frappe.tests.utils import make_test_objects
 
 
-class TestEvent(FrappeTestCase):
-    def setUp(self):
-        frappe.db.delete("Event")
-        make_test_objects("Event", reset=True)
+class UnitTestEvent(UnitTestCase):
+	"""
+	Unit tests for Event.
+	Use this class for testing individual functions and methods.
+	"""
 
-        self.test_records = frappe.get_test_records("Event")
-        self.test_user = "test1@example.com"
+	pass
+
+
+class TestEvent(IntegrationTestCase):
+	def setUp(self):
+		frappe.db.delete("Event")
+		make_test_objects("Event", reset=True)
+		self.test_user = "test1@example.com"
 
     def tearDown(self):
         frappe.set_user("Administrator")
@@ -60,14 +65,14 @@ class TestEvent(FrappeTestCase):
         self.assertFalse("_Test Event 3" in subjects)
         self.assertFalse("_Test Event 2" in subjects)
 
-    def test_revert_logic(self):
-        ev = frappe.get_doc(self.test_records[0]).insert()
-        id = ev.id
+	def test_revert_logic(self):
+		ev = frappe.get_doc(self.globalTestRecords["Event"][0]).insert()
+		id = ev.id
 
         frappe.delete_doc("Event", ev.id)
 
-        # insert again
-        ev = frappe.get_doc(self.test_records[0]).insert()
+		# insert again
+		ev = frappe.get_doc(self.globalTestRecords["Event"][0]).insert()
 
         # the id should be same!
         self.assertEqual(ev.id, id)
@@ -75,7 +80,7 @@ class TestEvent(FrappeTestCase):
     def test_assign(self):
         from frappe.desk.form.assign_to import add
 
-        ev = frappe.get_doc(self.test_records[0]).insert()
+		ev = frappe.get_doc(self.globalTestRecords["Event"][0]).insert()
 
         add(
             {
@@ -152,7 +157,79 @@ class TestEvent(FrappeTestCase):
         )
         self.assertFalse(bool(list(filter(lambda e: e.id == ev.id, ev_list2))))
 
-        ev_list3 = get_events(
-            "2015-02-01", "2015-02-01", "Administrator", for_reminder=True
-        )
-        self.assertTrue(bool(list(filter(lambda e: e.id == ev.id, ev_list3))))
+		ev_list3 = get_events("2015-02-01", "2015-02-01", "Administrator", for_reminder=True)
+		self.assertTrue(bool(list(filter(lambda e: e.id == ev.id, ev_list3))))
+
+	def test_quaterly_repeat(self):
+		ev = frappe.get_doc(
+			{
+				"doctype": "Event",
+				"subject": "_Test Event",
+				"starts_on": "2023-02-17",
+				"repeat_till": "2024-02-17",
+				"event_type": "Public",
+				"repeat_this_event": 1,
+				"repeat_on": "Quarterly",
+			}
+		)
+		ev.insert()
+		# Test Quaterly months
+		ev_list = get_events("2023-02-17", "2023-02-17", "Administrator", for_reminder=True)
+		self.assertTrue(bool(list(filter(lambda e: e.id == ev.id, ev_list))))
+
+		ev_list1 = get_events("2023-05-17", "2023-05-17", "Administrator", for_reminder=True)
+		self.assertTrue(bool(list(filter(lambda e: e.id == ev.id, ev_list1))))
+
+		ev_list2 = get_events("2023-08-17", "2023-08-17", "Administrator", for_reminder=True)
+		self.assertTrue(bool(list(filter(lambda e: e.id == ev.id, ev_list2))))
+
+		ev_list3 = get_events("2023-11-17", "2023-11-17", "Administrator", for_reminder=True)
+		self.assertTrue(bool(list(filter(lambda e: e.id == ev.id, ev_list3))))
+
+		# Test before event start date and after event end date
+		ev_list4 = get_events("2022-11-17", "2022-11-17", "Administrator", for_reminder=True)
+		self.assertFalse(bool(list(filter(lambda e: e.id == ev.id, ev_list4))))
+
+		ev_list4 = get_events("2024-02-17", "2024-02-17", "Administrator", for_reminder=True)
+		self.assertFalse(bool(list(filter(lambda e: e.id == ev.id, ev_list4))))
+
+		# Test months that aren't part of the quarterly cycle
+		ev_list4 = get_events("2023-12-17", "2023-12-17", "Administrator", for_reminder=True)
+		self.assertFalse(bool(list(filter(lambda e: e.id == ev.id, ev_list4))))
+
+		ev_list4 = get_events("2023-03-17", "2023-03-17", "Administrator", for_reminder=True)
+		self.assertFalse(bool(list(filter(lambda e: e.id == ev.id, ev_list4))))
+
+	def test_half_yearly_repeat(self):
+		ev = frappe.get_doc(
+			{
+				"doctype": "Event",
+				"subject": "_Test Event",
+				"starts_on": "2023-02-17",
+				"repeat_till": "2024-02-17",
+				"event_type": "Public",
+				"repeat_this_event": 1,
+				"repeat_on": "Half Yearly",
+			}
+		)
+		ev.insert()
+		# Test Half Yearly months
+		ev_list = get_events("2023-02-17", "2023-02-17", "Administrator", for_reminder=True)
+		self.assertTrue(bool(list(filter(lambda e: e.id == ev.id, ev_list))))
+
+		ev_list1 = get_events("2023-08-17", "2023-08-17", "Administrator", for_reminder=True)
+		self.assertTrue(bool(list(filter(lambda e: e.id == ev.id, ev_list1))))
+
+		# Test before event start date and after event end date
+		ev_list4 = get_events("2022-08-17", "2022-08-17", "Administrator", for_reminder=True)
+		self.assertFalse(bool(list(filter(lambda e: e.id == ev.id, ev_list4))))
+
+		ev_list4 = get_events("2024-02-17", "2024-02-17", "Administrator", for_reminder=True)
+		self.assertFalse(bool(list(filter(lambda e: e.id == ev.id, ev_list4))))
+
+		# Test months that aren't part of the half yearly cycle
+		ev_list4 = get_events("2023-12-17", "2023-12-17", "Administrator", for_reminder=True)
+		self.assertFalse(bool(list(filter(lambda e: e.id == ev.id, ev_list4))))
+
+		ev_list4 = get_events("2023-05-17", "2023-05-17", "Administrator", for_reminder=True)
+		self.assertFalse(bool(list(filter(lambda e: e.id == ev.id, ev_list4))))

@@ -24,11 +24,13 @@ from frappe import _
 from frappe.core.utils import html2text
 from frappe.frappeclient import FrappeClient
 from frappe.handler import execute_cmd
+from frappe.locale import get_date_format, get_number_format, get_time_format
 from frappe.model.delete_doc import delete_doc
 from frappe.model.mapper import get_mapped_doc
 from frappe.model.reid_doc import reid_doc
 from frappe.modules import scrub
 from frappe.utils.background_jobs import enqueue, get_jobs
+from frappe.utils.number_format import NumberFormat
 from frappe.website.utils import get_next_link, get_toc
 from frappe.www.printview import get_visible_columns
 
@@ -66,35 +68,33 @@ class FrappeTransformer(RestrictingNodeTransformer):
 
 
 class FrappePrintCollector(PrintCollector):
-    """Collect written text, and return it when called."""
+	"""Collect written text, and return it when called."""
 
-    def _call_print(self, *objects, **kwargs):
-        output = io.StringIO()
-        print(*objects, file=output, **kwargs)
-        frappe.log(output.getvalue().strip())
-        output.close()
+	def _call_print(self, *objects, **kwargs):
+		output = io.StringIO()
+		print(*objects, file=output, **kwargs)
+		frappe.log(output.getvalue().strip())
+		output.close()
 
 
 def is_safe_exec_enabled() -> bool:
-    # server scripts can only be enabled via common_site_config.json
-    return bool(frappe.get_common_site_config().get(SAFE_EXEC_CONFIG_KEY))
+	# server scripts can only be enabled via common_site_config.json
+	return bool(frappe.get_common_site_config(cached=bool(frappe.request)).get(SAFE_EXEC_CONFIG_KEY))
 
 
 def safe_exec(
-    script: str,
-    _globals: dict | None = None,
-    _locals: dict | None = None,
-    *,
-    restrict_commit_rollback: bool = False,
-    script_filename: str | None = None,
+	script: str,
+	_globals: dict | None = None,
+	_locals: dict | None = None,
+	*,
+	restrict_commit_rollback: bool = False,
+	script_filename: str | None = None,
 ):
-    if not is_safe_exec_enabled():
-        msg = _(
-            "Server Scripts are disabled. Please enable server scripts from bench configuration."
-        )
-        docs_cta = _("Read the documentation to know more")
-        msg += f"<br><a href='https://frappeframework.com/docs/user/en/desk/scripting/server-script'>{docs_cta}</a>"
-        frappe.throw(msg, ServerScriptNotEnabled, title="Server Scripts Disabled")
+	if not is_safe_exec_enabled():
+		msg = _("Server Scripts are disabled. Please enable server scripts from bench configuration.")
+		docs_cta = _("Read the documentation to know more")
+		msg += f"<br><a href='https://frappeframework.com/docs/user/en/desk/scripting/server-script'>{docs_cta}</a>"
+		frappe.throw(msg, ServerScriptNotEnabled, title="Server Scripts Disabled")
 
     # build globals
     exec_globals = get_safe_globals()
@@ -107,17 +107,17 @@ def safe_exec(
         exec_globals.frappe.db.pop("rollback", None)
         exec_globals.frappe.db.pop("add_index", None)
 
-    filename = SERVER_SCRIPT_FILE_PREFIX
-    if script_filename:
-        filename += f": {frappe.scrub(script_filename)}"
+	filename = SERVER_SCRIPT_FILE_PREFIX
+	if script_filename:
+		filename += f": {frappe.scrub(script_filename)}"
 
-    with safe_exec_flags(), patched_qb():
-        # execute script compiled by RestrictedPython
-        exec(
-            compile_restricted(script, filename=filename, policy=FrappeTransformer),
-            exec_globals,
-            _locals,
-        )
+	with safe_exec_flags(), patched_qb():
+		# execute script compiled by RestrictedPython
+		exec(
+			compile_restricted(script, filename=filename, policy=FrappeTransformer),
+			exec_globals,
+			_locals,
+		)
 
     return exec_globals, _locals
 
@@ -157,27 +157,29 @@ def _validate_safe_eval_syntax(code):
 
 @contextmanager
 def safe_exec_flags():
-    if not frappe.flags.in_safe_exec:
-        frappe.flags.in_safe_exec = 0
+	if frappe.flags.in_safe_exec is None:
+		frappe.flags.in_safe_exec = 0
 
-    frappe.flags.in_safe_exec += 1
+	frappe.flags.in_safe_exec += 1
 
-    try:
-        yield
-    finally:
-        # Always ensure that the flag is decremented
-        frappe.flags.in_safe_exec -= 1
+	try:
+		yield
+	finally:
+		# Always ensure that the flag is decremented
+		frappe.flags.in_safe_exec -= 1
 
 
 def get_safe_globals():
     datautils = frappe._dict()
 
-    if frappe.db:
-        date_format = frappe.db.get_default("date_format") or "yyyy-mm-dd"
-        time_format = frappe.db.get_default("time_format") or "HH:mm:ss"
-    else:
-        date_format = "yyyy-mm-dd"
-        time_format = "HH:mm:ss"
+	if frappe.db:
+		date_format = get_date_format()
+		time_format = get_time_format()
+		number_format = get_number_format()
+	else:
+		date_format = "yyyy-mm-dd"
+		time_format = "HH:mm:ss"
+		number_format = NumberFormat.from_string("#,###.##")
 
     add_data_utils(datautils)
 
@@ -186,112 +188,114 @@ def get_safe_globals():
     if "_" in form_dict:
         del frappe.local.form_dict["_"]
 
-    user = (
-        getattr(frappe.local, "session", None) and frappe.local.session.user or "Guest"
-    )
+	user = (getattr(frappe.local, "session", None) and frappe.local.session.user) or "Guest"
 
-    out = NamespaceDict(
-        # make available limited methods of frappe
-        json=NamespaceDict(loads=json.loads, dumps=json.dumps),
-        as_json=frappe.as_json,
-        dict=dict,
-        log=frappe.log,
-        _dict=frappe._dict,
-        args=form_dict,
-        frappe=NamespaceDict(
-            call=call_whitelisted_function,
-            flags=frappe._dict(),
-            format=frappe.format_value,
-            format_value=frappe.format_value,
-            date_format=date_format,
-            time_format=time_format,
-            format_date=frappe.utils.data.global_date_format,
-            form_dict=form_dict,
-            bold=frappe.bold,
-            copy_doc=frappe.copy_doc,
-            errprint=frappe.errprint,
-            qb=frappe.qb,
-            get_meta=frappe.get_meta,
-            new_doc=frappe.new_doc,
-            get_doc=frappe.get_doc,
-            get_mapped_doc=get_mapped_doc,
-            get_last_doc=frappe.get_last_doc,
-            get_cached_doc=frappe.get_cached_doc,
-            get_list=frappe.get_list,
-            get_all=frappe.get_all,
-            get_system_settings=frappe.get_system_settings,
-            reid_doc=reid_doc,
-            delete_doc=delete_doc,
-            utils=datautils,
-            get_url=frappe.utils.get_url,
-            render_template=frappe.render_template,
-            msgprint=frappe.msgprint,
-            throw=frappe.throw,
-            sendmail=frappe.sendmail,
-            get_print=frappe.get_print,
-            attach_print=frappe.attach_print,
-            user=user,
-            get_fullname=frappe.utils.get_fullname,
-            get_gravatar=frappe.utils.get_gravatar_url,
-            full_name=(
-                frappe.local.session.data.full_name
-                if getattr(frappe.local, "session", None)
-                else "Guest"
-            ),
-            request=getattr(frappe.local, "request", {}),
-            session=frappe._dict(
-                user=user,
-                csrf_token=(
-                    frappe.local.session.data.csrf_token
-                    if getattr(frappe.local, "session", None)
-                    else ""
-                ),
-            ),
-            make_get_request=frappe.integrations.utils.make_get_request,
-            make_post_request=frappe.integrations.utils.make_post_request,
-            make_put_request=frappe.integrations.utils.make_put_request,
-            make_patch_request=frappe.integrations.utils.make_patch_request,
-            make_delete_request=frappe.integrations.utils.make_delete_request,
-            socketio_port=frappe.conf.socketio_port,
-            get_hooks=get_hooks,
-            enqueue=safe_enqueue,
-            sanitize_html=frappe.utils.sanitize_html,
-            log_error=frappe.log_error,
-            log=frappe.log,
-            db=NamespaceDict(
-                get_list=frappe.get_list,
-                get_all=frappe.get_all,
-                get_value=frappe.db.get_value,
-                set_value=frappe.db.set_value,
-                get_single_value=frappe.db.get_single_value,
-                get_default=frappe.db.get_default,
-                exists=frappe.db.exists,
-                count=frappe.db.count,
-                escape=frappe.db.escape,
-                sql=read_sql,
-                commit=frappe.db.commit,
-                rollback=frappe.db.rollback,
-                after_commit=frappe.db.after_commit,
-                before_commit=frappe.db.before_commit,
-                after_rollback=frappe.db.after_rollback,
-                before_rollback=frappe.db.before_rollback,
-                add_index=frappe.db.add_index,
-            ),
-            lang=getattr(frappe.local, "lang", "en"),
-        ),
-        FrappeClient=FrappeClient,
-        style=frappe._dict(border_color="#d1d8dd"),
-        get_toc=get_toc,
-        get_next_link=get_next_link,
-        _=frappe._,
-        scrub=scrub,
-        guess_mimetype=mimetypes.guess_type,
-        html2text=html2text,
-        dev_server=frappe.local.dev_server,
-        run_script=run_script,
-        is_job_queued=is_job_queued,
-        get_visible_columns=get_visible_columns,
-    )
+	out = NamespaceDict(
+		# make available limited methods of frappe
+		json=NamespaceDict(loads=json.loads, dumps=json.dumps),
+		as_json=frappe.as_json,
+		dict=dict,
+		log=frappe.log,
+		_dict=frappe._dict,
+		args=form_dict,
+		frappe=NamespaceDict(
+			call=call_whitelisted_function,
+			flags=frappe._dict(),
+			format=frappe.format_value,
+			format_value=frappe.format_value,
+			date_format=date_format,
+			time_format=time_format,
+			number_format=number_format,
+			format_date=frappe.utils.data.global_date_format,
+			form_dict=form_dict,
+			bold=frappe.bold,
+			copy_doc=frappe.copy_doc,
+			errprint=frappe.errprint,
+			qb=frappe.qb,
+			get_meta=frappe.get_meta,
+			new_doc=frappe.new_doc,
+			get_doc=frappe.get_doc,
+			get_mapped_doc=get_mapped_doc,
+			get_last_doc=frappe.get_last_doc,
+			get_cached_doc=frappe.get_cached_doc,
+			get_list=frappe.get_list,
+			get_all=frappe.get_all,
+			get_system_settings=frappe.get_system_settings,
+			reid_doc=reid_doc,
+			delete_doc=delete_doc,
+			utils=datautils,
+			get_url=frappe.utils.get_url,
+			render_template=frappe.render_template,
+			msgprint=frappe.msgprint,
+			throw=frappe.throw,
+			sendmail=frappe.sendmail,
+			get_print=frappe.get_print,
+			attach_print=frappe.attach_print,
+			user=user,
+			get_fullname=frappe.utils.get_fullname,
+			get_gravatar=frappe.utils.get_gravatar_url,
+			full_name=frappe.local.session.data.full_name
+			if getattr(frappe.local, "session", None)
+			else "Guest",
+			request=getattr(frappe.local, "request", {}),
+			session=frappe._dict(
+				user=user,
+				csrf_token=frappe.local.session.data.csrf_token
+				if getattr(frappe.local, "session", None)
+				else "",
+			),
+			make_get_request=frappe.integrations.utils.make_get_request,
+			make_post_request=frappe.integrations.utils.make_post_request,
+			make_put_request=frappe.integrations.utils.make_put_request,
+			make_patch_request=frappe.integrations.utils.make_patch_request,
+			make_delete_request=frappe.integrations.utils.make_delete_request,
+			socketio_port=frappe.conf.socketio_port,
+			get_hooks=get_hooks,
+			enqueue=safe_enqueue,
+			sanitize_html=frappe.utils.sanitize_html,
+			log_error=frappe.log_error,
+			log=frappe.log,
+			db=NamespaceDict(
+				get_list=frappe.get_list,
+				get_all=frappe.get_all,
+				get_value=frappe.db.get_value,
+				set_value=frappe.db.set_value,
+				get_single_value=frappe.db.get_single_value,
+				get_default=frappe.db.get_default,
+				exists=frappe.db.exists,
+				count=frappe.db.count,
+				escape=frappe.db.escape,
+				sql=read_sql,
+				commit=frappe.db.commit,
+				rollback=frappe.db.rollback,
+				after_commit=frappe.db.after_commit,
+				before_commit=frappe.db.before_commit,
+				after_rollback=frappe.db.after_rollback,
+				before_rollback=frappe.db.before_rollback,
+				add_index=frappe.db.add_index,
+			),
+			website=NamespaceDict(
+				abs_url=frappe.website.utils.abs_url,
+				extract_title=frappe.website.utils.extract_title,
+				get_boot_data=frappe.website.utils.get_boot_data,
+				get_home_page=frappe.website.utils.get_home_page,
+				get_html_content_based_on_type=frappe.website.utils.get_html_content_based_on_type,
+			),
+			lang=getattr(frappe.local, "lang", "en"),
+		),
+		FrappeClient=FrappeClient,
+		style=frappe._dict(border_color="#d1d8dd"),
+		get_toc=get_toc,
+		get_next_link=get_next_link,
+		_=frappe._,
+		scrub=scrub,
+		guess_mimetype=mimetypes.guess_type,
+		html2text=html2text,
+		dev_server=frappe.local.dev_server,
+		run_script=run_script,
+		is_job_queued=is_job_queued,
+		get_visible_columns=get_visible_columns,
+	)
 
     add_module_properties(
         frappe.exceptions,
@@ -309,12 +313,12 @@ def get_safe_globals():
     out._getitem_ = _getitem
     out._getattr_ = _getattr_for_safe_exec
 
-    # Allow using `print()` calls with `safe_exec()`
-    out._print_ = FrappePrintCollector
+	# Allow using `print()` calls with `safe_exec()`
+	out._print_ = FrappePrintCollector
 
-    # allow iterators and list comprehension
-    out._getiter_ = iter
-    out._iter_unpack_sequence_ = RestrictedPython.Guards.guarded_iter_unpack_sequence
+	# allow iterators and list comprehension
+	out._getiter_ = iter
+	out._iter_unpack_sequence_ = RestrictedPython.Guards.guarded_iter_unpack_sequence
 
     # add common python builtins
     out.update(get_python_builtins())
@@ -323,56 +327,56 @@ def get_safe_globals():
 
 
 def get_keys_for_autocomplete(
-    key: str,
-    value: Any,
-    prefix: str = "",
-    offset: int = 0,
-    meta: str = "ctx",
-    depth: int = 0,
-    max_depth: int | None = None,
+	key: str,
+	value: Any,
+	prefix: str = "",
+	offset: int = 0,
+	meta: str = "ctx",
+	depth: int = 0,
+	max_depth: int | None = None,
 ):
-    if max_depth and depth > max_depth:
-        return
-    full_key = f"{prefix}.{key}" if prefix else key
-    if key.startswith("_"):
-        return
-    if isinstance(value, NamespaceDict | dict) and value:
-        if key == "form_dict":
-            yield {"value": full_key, "score": offset + 7, "meta": meta}
-        else:
-            yield from chain.from_iterable(
-                get_keys_for_autocomplete(
-                    key,
-                    value,
-                    full_key,
-                    offset,
-                    meta,
-                    depth + 1,
-                    max_depth=max_depth,
-                )
-                for key, value in value.items()
-            )
-    else:
-        if isinstance(value, type) and issubclass(value, Exception):
-            score = offset + 0
-        elif isinstance(value, ModuleType):
-            score = offset + 10
-        elif isinstance(value, FunctionType | MethodType):
-            score = offset + 9
-        elif isinstance(value, type):
-            score = offset + 8
-        elif isinstance(value, dict):
-            score = offset + 7
-        else:
-            score = offset + 6
-        yield {"value": full_key, "score": score, "meta": meta}
+	if max_depth and depth > max_depth:
+		return
+	full_key = f"{prefix}.{key}" if prefix else key
+	if key.startswith("_"):
+		return
+	if isinstance(value, NamespaceDict | dict) and value:
+		if key == "form_dict":
+			yield {"value": full_key, "score": offset + 7, "meta": meta}
+		else:
+			yield from chain.from_iterable(
+				get_keys_for_autocomplete(
+					key,
+					value,
+					full_key,
+					offset,
+					meta,
+					depth + 1,
+					max_depth=max_depth,
+				)
+				for key, value in value.items()
+			)
+	else:
+		if isinstance(value, type) and issubclass(value, Exception):
+			score = offset + 0
+		elif isinstance(value, ModuleType):
+			score = offset + 10
+		elif isinstance(value, FunctionType | MethodType):
+			score = offset + 9
+		elif isinstance(value, type):
+			score = offset + 8
+		elif isinstance(value, dict):
+			score = offset + 7
+		else:
+			score = offset + 6
+		yield {"value": full_key, "score": score, "meta": meta}
 
 
 def is_job_queued(job_id, queue="default"):
-    """
-    :param job_id: used to identify a queued job, usually dotted path to function
-    :param queue: should be either long, default or short
-    """
+	"""
+	:param job_id: used to identify a queued job, usually dotted path to function
+	:param queue: should be either long, default or short
+	"""
 
     site = frappe.local.site
     queued_jobs = get_jobs(site=site, queue=queue, key="job_id").get(site)
@@ -402,9 +406,7 @@ def call_whitelisted_function(function, **kwargs):
 def run_script(script, **kwargs):
     """run another server script"""
 
-    return call_with_form_dict(
-        lambda: frappe.get_doc("Server Script", script).execute_method(), kwargs
-    )
+	return call_with_form_dict(lambda: frappe.get_doc("Server Script", script).execute_method(), kwargs)
 
 
 def call_with_form_dict(function, kwargs):
@@ -462,9 +464,15 @@ def get_python_builtins():
     }
 
 
-def get_hooks(hook=None, default=None, app_name=None):
-    hooks = frappe.get_hooks(hook=hook, default=default, app_name=app_name)
-    return copy.deepcopy(hooks)
+def get_hooks(hook: str | None = None, default=None, app_name: str | None = None) -> frappe._dict:
+	"""Get hooks via `app/hooks.py`
+
+	:param hook: Name of the hook. Will gather all hooks for this name and return as a list.
+	:param default: Default if no hook found.
+	:param app_name: Filter by app."""
+
+	hooks = frappe.get_hooks(hook=hook, default=default, app_name=app_name)
+	return copy.deepcopy(hooks)
 
 
 def read_sql(query, *args, **kwargs):
@@ -563,11 +571,8 @@ def _validate_attribute_read(object, name):
     if isinstance(name, str) and (name in UNSAFE_ATTRIBUTES):
         raise SyntaxError(f"{name} is an unsafe attribute")
 
-    if isinstance(
-        object,
-        types.ModuleType | types.CodeType | types.TracebackType | types.FrameType,
-    ):
-        raise SyntaxError(f"Reading {object} attributes is not allowed")
+	if isinstance(object, types.ModuleType | types.CodeType | types.TracebackType | types.FrameType):
+		raise SyntaxError(f"Reading {object} attributes is not allowed")
 
     if name.startswith("_"):
         raise AttributeError(
@@ -576,20 +581,20 @@ def _validate_attribute_read(object, name):
 
 
 def _write(obj):
-    # guard function for RestrictedPython
-    if isinstance(
-        obj,
-        types.ModuleType
-        | types.CodeType
-        | types.TracebackType
-        | types.FrameType
-        | type
-        | types.FunctionType
-        | types.MethodType
-        | types.BuiltinFunctionType,
-    ):
-        raise SyntaxError(f"Not allowed to write to object {obj} of type {type(obj)}")
-    return obj
+	# guard function for RestrictedPython
+	if isinstance(
+		obj,
+		types.ModuleType
+		| types.CodeType
+		| types.TracebackType
+		| types.FrameType
+		| type
+		| types.FunctionType
+		| types.MethodType
+		| types.BuiltinFunctionType,
+	):
+		raise SyntaxError(f"Not allowed to write to object {obj} of type {type(obj)}")
+	return obj
 
 
 def add_data_utils(data):
@@ -610,115 +615,119 @@ def add_module_properties(module, data, filter_method):
 
 
 VALID_UTILS = (
-    "DATE_FORMAT",
-    "TIME_FORMAT",
-    "DATETIME_FORMAT",
-    "is_invalid_date_string",
-    "getdate",
-    "get_datetime",
-    "to_timedelta",
-    "get_timedelta",
-    "add_to_date",
-    "add_days",
-    "add_months",
-    "add_years",
-    "date_diff",
-    "month_diff",
-    "time_diff",
-    "time_diff_in_seconds",
-    "time_diff_in_hours",
-    "now_datetime",
-    "get_timestamp",
-    "get_eta",
-    "get_system_timezone",
-    "convert_utc_to_system_timezone",
-    "now",
-    "nowdate",
-    "today",
-    "nowtime",
-    "get_first_day",
-    "get_quarter_start",
-    "get_quarter_ending",
-    "get_first_day_of_week",
-    "get_year_start",
-    "get_last_day_of_week",
-    "get_last_day",
-    "get_time",
-    "get_datetime_in_timezone",
-    "get_datetime_str",
-    "get_date_str",
-    "get_time_str",
-    "get_user_date_format",
-    "get_user_time_format",
-    "format_date",
-    "format_time",
-    "format_datetime",
-    "format_duration",
-    "get_weekdays",
-    "get_weekday",
-    "get_timespan_date_range",
-    "global_date_format",
-    "has_common",
-    "flt",
-    "cint",
-    "floor",
-    "ceil",
-    "cstr",
-    "rounded",
-    "remainder",
-    "safe_div",
-    "round_based_on_smallest_currency_fraction",
-    "encode",
-    "parse_val",
-    "fmt_money",
-    "get_number_format_info",
-    "money_in_words",
-    "in_words",
-    "is_html",
-    "is_image",
-    "get_thumbnail_base64_for_image",
-    "image_to_base64",
-    "pdf_to_base64",
-    "strip_html",
-    "escape_html",
-    "pretty_date",
-    "comma_or",
-    "comma_and",
-    "comma_sep",
-    "new_line_sep",
-    "filter_strip_join",
-    "get_url",
-    "get_host_name_from_request",
-    "url_contains_port",
-    "get_host_name",
-    "get_link_to_form",
-    "get_link_to_report",
-    "get_absolute_url",
-    "get_url_to_form",
-    "get_url_to_list",
-    "get_url_to_report",
-    "get_url_to_report_with_filters",
-    "evaluate_filters",
-    "compare",
-    "get_filter",
-    "make_filter_tuple",
-    "make_filter_dict",
-    "sanitize_column",
-    "scrub_urls",
-    "expand_relative_urls",
-    "quoted",
-    "quote_urls",
-    "unique",
-    "strip",
-    "to_markdown",
-    "md_to_html",
-    "markdown",
-    "is_subset",
-    "generate_hash",
-    "formatdate",
-    "get_user_info_for_avatar",
-    "get_abbr",
-    "get_month",
+	"DATE_FORMAT",
+	"TIME_FORMAT",
+	"DATETIME_FORMAT",
+	"is_invalid_date_string",
+	"getdate",
+	"get_datetime",
+	"to_timedelta",
+	"get_timedelta",
+	"add_to_date",
+	"add_days",
+	"add_months",
+	"add_years",
+	"date_diff",
+	"month_diff",
+	"time_diff",
+	"time_diff_in_seconds",
+	"time_diff_in_hours",
+	"now_datetime",
+	"get_timestamp",
+	"get_eta",
+	"get_system_timezone",
+	"convert_utc_to_system_timezone",
+	"now",
+	"nowdate",
+	"today",
+	"nowtime",
+	"get_first_day",
+	"get_quarter_start",
+	"get_quarter_ending",
+	"get_first_day_of_week",
+	"get_year_start",
+	"get_year_ending",
+	"get_last_day_of_week",
+	"get_last_day",
+	"get_time",
+	"get_datetime_in_timezone",
+	"get_datetime_str",
+	"get_date_str",
+	"get_time_str",
+	"get_user_date_format",
+	"get_user_time_format",
+	"format_date",
+	"format_time",
+	"format_datetime",
+	"format_duration",
+	"get_weekdays",
+	"get_weekday",
+	"get_timespan_date_range",
+	"global_date_format",
+	"has_common",
+	"flt",
+	"cint",
+	"floor",
+	"ceil",
+	"cstr",
+	"rounded",
+	"remainder",
+	"safe_div",
+	"round_based_on_smallest_currency_fraction",
+	"encode",
+	"parse_val",
+	"fmt_money",
+	"get_number_format_info",
+	"money_in_words",
+	"in_words",
+	"is_html",
+	"is_image",
+	"get_thumbnail_base64_for_image",
+	"image_to_base64",
+	"pdf_to_base64",
+	"strip_html",
+	"escape_html",
+	"pretty_date",
+	"comma_or",
+	"comma_and",
+	"comma_sep",
+	"new_line_sep",
+	"filter_strip_join",
+	"add_trackers_to_url",
+	"parse_and_map_trackers_from_url",
+	"map_trackers",
+	"get_url",
+	"get_host_name_from_request",
+	"url_contains_port",
+	"get_host_name",
+	"get_link_to_form",
+	"get_link_to_report",
+	"get_absolute_url",
+	"get_url_to_form",
+	"get_url_to_list",
+	"get_url_to_report",
+	"get_url_to_report_with_filters",
+	"evaluate_filters",
+	"compare",
+	"get_filter",
+	"make_filter_tuple",
+	"make_filter_dict",
+	"sanitize_column",
+	"scrub_urls",
+	"expand_relative_urls",
+	"quoted",
+	"quote_urls",
+	"unique",
+	"strip",
+	"to_markdown",
+	"md_to_html",
+	"markdown",
+	"is_subset",
+	"generate_hash",
+	"formatdate",
+	"get_user_info_for_avatar",
+	"get_abbr",
+	"get_month",
 )
 
 

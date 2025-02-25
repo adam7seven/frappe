@@ -6,6 +6,6 @@ def execute():
     for id, email in frappe.get_all(
         "Email Group Member", fields=["id", "email"], as_list=True
     ):
-        if not validate_email_address(email, throw=False):
+		if not validate_email_address(email, throw=False):
             frappe.db.set_value("Email Group Member", id, "unsubscribed", 1)
-            frappe.db.commit()
+			frappe.db.commit()

@@ -72,28 +72,22 @@ class SocialLoginKey(Document):
     def autoid(self):
         self.id = frappe.scrub(self.provider_name)
 
-    def validate(self):
-        self.set_icon()
-        if self.custom_base_url and not self.base_url:
-            frappe.throw(_("Please enter Base URL"), exc=BaseUrlNotSetError)
-        if not self.authorize_url:
-            frappe.throw(_("Please enter Authorize URL"), exc=AuthorizeUrlNotSetError)
-        if not self.access_token_url:
-            frappe.throw(
-                _("Please enter Access Token URL"), exc=AccessTokenUrlNotSetError
-            )
-        if not self.redirect_url:
-            frappe.throw(_("Please enter Redirect URL"), exc=RedirectUrlNotSetError)
-        if self.enable_social_login and not self.client_id:
-            frappe.throw(
-                _("Please enter Client ID before social login is enabled"),
-                exc=ClientIDNotSetError,
-            )
-        if self.enable_social_login and not self.client_secret:
-            frappe.throw(
-                _("Please enter Client Secret before social login is enabled"),
-                exc=ClientSecretNotSetError,
-            )
+	def validate(self):
+		self.set_icon()
+		if self.custom_base_url and not self.base_url:
+			frappe.throw(_("Please enter Base URL"), exc=BaseUrlNotSetError)
+		if not self.authorize_url:
+			frappe.throw(_("Please enter Authorize URL"), exc=AuthorizeUrlNotSetError)
+		if not self.access_token_url:
+			frappe.throw(_("Please enter Access Token URL"), exc=AccessTokenUrlNotSetError)
+		if not self.redirect_url:
+			frappe.throw(_("Please enter Redirect URL"), exc=RedirectUrlNotSetError)
+		if self.enable_social_login and not self.client_id:
+			frappe.throw(_("Please enter Client ID before social login is enabled"), exc=ClientIDNotSetError)
+		if self.enable_social_login and not self.client_secret:
+			frappe.throw(
+				_("Please enter Client Secret before social login is enabled"), exc=ClientSecretNotSetError
+			)
 
     def set_icon(self):
         icon_map = {
@@ -226,25 +220,25 @@ class SocialLoginKey(Document):
             "auth_url_data": json.dumps({"response_type": "code", "scope": "openid"}),
         }
 
-        providers["Keycloak"] = {
-            "provider_name": "Keycloak",
-            "enable_social_login": 1,
-            "custom_base_url": 1,
-            "redirect_url": "/api/method/frappe.integrations.oauth2_logins.login_via_keycloak/keycloak",
-            "api_endpoint": "/protocol/openid-connect/userinfo",
-            "api_endpoint_args": None,
-            "authorize_url": "/protocol/openid-connect/auth",
-            "access_token_url": "/protocol/openid-connect/token",
-            "user_id_property": "preferred_username",
-            "auth_url_data": json.dumps({"response_type": "code", "scope": "openid"}),
-        }
+		providers["Keycloak"] = {
+			"provider_name": "Keycloak",
+			"enable_social_login": 1,
+			"custom_base_url": 1,
+			"redirect_url": "/api/method/frappe.integrations.oauth2_logins.login_via_keycloak/keycloak",
+			"api_endpoint": "/protocol/openid-connect/userinfo",
+			"api_endpoint_args": None,
+			"authorize_url": "/protocol/openid-connect/auth",
+			"access_token_url": "/protocol/openid-connect/token",
+			"user_id_property": "preferred_username",
+			"auth_url_data": json.dumps({"response_type": "code", "scope": "openid"}),
+		}
 
-        # Initialize the doc and return, used in patch
-        # Or can be used for creating key from controller
-        if initialize and provider:
-            for k, v in providers[provider].items():
-                setattr(self, k, v)
-            return
+		# Initialize the doc and return, used in patch
+		# Or can be used for creating key from controller
+		if initialize and provider:
+			for k, v in providers[provider].items():
+				setattr(self, k, v)
+			return
 
         return providers.get(provider) if provider else providers
 
@@ -254,6 +248,6 @@ def provider_allows_signup(provider: str) -> bool:
 
     sign_up_config = frappe.db.get_value("Social Login Key", provider, "sign_ups")
 
-    if not sign_up_config:  # fallback to global settings
-        return not is_signup_disabled()
-    return sign_up_config == "Allow"
+	if not sign_up_config:  # fallback to global settings
+		return not is_signup_disabled()
+	return sign_up_config == "Allow"

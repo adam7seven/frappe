@@ -67,22 +67,24 @@ class EmailDomain(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        append_emails_to_sent_folder: DF.Check
-        attachment_limit: DF.Int
-        email_server: DF.Data
-        incoming_port: DF.Data | None
-        sent_folder_name: DF.Data | None
-        smtp_port: DF.Data | None
-        smtp_server: DF.Data
-        use_imap: DF.Check
-        use_ssl: DF.Check
-        use_ssl_for_outgoing: DF.Check
-        use_starttls: DF.Check
-        use_tls: DF.Check
+		append_emails_to_sent_folder: DF.Check
+		attachment_limit: DF.Int
+		email_server: DF.Data
+		incoming_port: DF.Data | None
+		sent_folder_name: DF.Data | None
+		smtp_port: DF.Data | None
+		smtp_server: DF.Data
+		use_imap: DF.Check
+		use_ssl: DF.Check
+		use_ssl_for_outgoing: DF.Check
+		use_starttls: DF.Check
+		use_tls: DF.Check
+		validate_ssl_certificate: DF.Check
+		validate_ssl_certificate_for_outgoing: DF.Check
+	# end: auto-generated types
 
-    # end: auto-generated types
-    def validate(self):
-        """Validate POP3/IMAP and SMTP connections."""
+	def validate(self):
+		"""Validate POP3/IMAP and SMTP connections."""
 
         if (
             frappe.local.flags.in_patch
@@ -120,13 +122,9 @@ class EmailDomain(Document):
         else:
             conn_method = poplib.POP3_SSL if self.use_ssl else poplib.POP3
 
-        self.use_starttls = cint(
-            self.use_imap and self.use_starttls and not self.use_ssl
-        )
-        incoming_conn = conn_method(
-            self.email_server, port=self.incoming_port, timeout=30
-        )
-        incoming_conn.logout() if self.use_imap else incoming_conn.quit()
+		self.use_starttls = cint(self.use_imap and self.use_starttls and not self.use_ssl)
+		incoming_conn = conn_method(self.email_server, port=self.incoming_port, timeout=30)
+		incoming_conn.logout() if self.use_imap else incoming_conn.quit()
 
     @handle_error("outgoing")
     def validate_outgoing_server_conn(self):
@@ -138,4 +136,4 @@ class EmailDomain(Document):
         elif self.use_tls:
             self.smtp_port = self.smtp_port or 587
 
-        conn_method((self.smtp_server or ""), cint(self.smtp_port), timeout=30).quit()
+		conn_method((self.smtp_server or ""), cint(self.smtp_port), timeout=30).quit()

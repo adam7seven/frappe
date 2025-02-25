@@ -32,10 +32,8 @@ class WebsiteGenerator(Document):
         if not self.id and self.meta.autoid != "hash":
             self.id = self.scrubbed_title()
 
-    def onload(self):
-        self.get("__onload").update(
-            {"is_website_generator": True, "published": self.is_website_published()}
-        )
+	def onload(self):
+		self.get("__onload").update({"is_website_generator": True, "published": self.is_website_published()})
 
     def validate(self):
         self.set_route()
@@ -47,14 +45,13 @@ class WebsiteGenerator(Document):
         if self.route:
             self.route = self.route.strip("/.")[:139]
 
-    def make_route(self):
-        """Returns the default route. If `route` is specified in DocType it will be
-        route/title"""
-        from_title = self.scrubbed_title()
-        if self.meta.route:
-            return self.meta.route + "/" + from_title
-        else:
-            return from_title
+	def make_route(self):
+		"""Return the default route. If `route` is specified in DocType it will be route/title."""
+		from_title = self.scrubbed_title()
+		if self.meta.route:
+			return self.meta.route + "/" + from_title
+		else:
+			return from_title
 
     def scrubbed_title(self):
         return self.scrub(self.get(self.get_title_field()))
@@ -76,8 +73,11 @@ class WebsiteGenerator(Document):
         super().clear_cache()
         clear_cache(self.route)
 
-    def scrub(self, text):
-        return cleanup_page_id(text).replace("_", "-")
+		frappe.db.after_commit.add(lambda: clear_cache(self.route))
+		frappe.db.after_rollback.add(lambda: clear_cache(self.route))
+
+	def scrub(self, text):
+		return cleanup_page_name(text).replace("_", "-")
 
     def get_parents(self, context):
         """Return breadcrumbs"""
@@ -92,21 +92,19 @@ class WebsiteGenerator(Document):
         # On change is triggered last in the event lifecycle
         self.update_website_search_index()
 
-    def on_trash(self):
-        self.clear_cache()
-        self.send_indexing_request("URL_DELETED")
-        # On deleting the doc, remove the page from the web_routes index
-        if self.allow_website_search_indexing():
-            frappe.enqueue(
-                remove_document_from_index, path=self.route, enqueue_after_commit=True
-            )
+	def on_trash(self):
+		self.clear_cache()
+		self.send_indexing_request("URL_DELETED")
+		# On deleting the doc, remove the page from the web_routes index
+		if self.allow_website_search_indexing():
+			frappe.enqueue(remove_document_from_index, path=self.route, enqueue_after_commit=True)
 
-    def is_website_published(self):
-        """Return true if published in website"""
-        if self.get_condition_field():
-            return self.get(self.get_condition_field()) and True or False
-        else:
-            return True
+	def is_website_published(self):
+		"""Return true if published in website"""
+		if condition_field := self.get_condition_field():
+			return self.get(condition_field) or False
+		else:
+			return True
 
     def get_condition_field(self):
         condition_field = self.get_website_properties("condition_field")
@@ -141,17 +139,17 @@ class WebsiteGenerator(Document):
     def send_indexing_request(self, operation_type="URL_UPDATED"):
         """Send indexing request on update/trash operation."""
 
-        if (
-            frappe.db.get_single_value("Website Settings", "enable_google_indexing")
-            and self.is_website_published()
-            and self.meta.allow_guest_to_view
-        ):
-            url = frappe.utils.get_url(self.route)
-            frappe.enqueue(
-                "frappe.website.doctype.website_settings.google_indexing.publish_site",
-                url=url,
-                operation_type=operation_type,
-            )
+		if (
+			frappe.db.get_single_value("Website Settings", "enable_google_indexing")
+			and self.is_website_published()
+			and self.meta.allow_guest_to_view
+		):
+			url = frappe.utils.get_url(self.route)
+			frappe.enqueue(
+				"frappe.website.doctype.website_settings.google_indexing.publish_site",
+				url=url,
+				operation_type=operation_type,
+			)
 
     # Change the field value in doctype
     # Override this method to disable indexing

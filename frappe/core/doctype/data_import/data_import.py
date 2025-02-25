@@ -27,37 +27,45 @@ class DataImport(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        google_sheets_url: DF.Data | None
-        import_file: DF.Attach | None
-        import_type: DF.Literal["", "Insert New Records", "Update Existing Records"]
-        mute_emails: DF.Check
-        payload_count: DF.Int
-        reference_doctype: DF.Link
-        show_failed_logs: DF.Check
-        status: DF.Literal["Pending", "Success", "Partial Success", "Error", "Timed Out"]
-        submit_after_import: DF.Check
-        template_options: DF.Code | None
-        template_warnings: DF.Code | None
-    # end: auto-generated types
+		custom_delimiters: DF.Check
+		delimiter_options: DF.Data | None
+		google_sheets_url: DF.Data | None
+		import_file: DF.Attach | None
+		import_type: DF.Literal["", "Insert New Records", "Update Existing Records"]
+		mute_emails: DF.Check
+		payload_count: DF.Int
+		reference_doctype: DF.Link
+		show_failed_logs: DF.Check
+		status: DF.Literal["Pending", "Success", "Partial Success", "Error", "Timed Out"]
+		submit_after_import: DF.Check
+		template_options: DF.Code | None
+		template_warnings: DF.Code | None
+		use_csv_sniffer: DF.Check
+	# end: auto-generated types
 
-    def validate(self):
-        doc_before_save = self.get_doc_before_save()
-        if (
-            not (self.import_file or self.google_sheets_url)
-            or (doc_before_save and doc_before_save.import_file != self.import_file)
-            or (doc_before_save and doc_before_save.google_sheets_url != self.google_sheets_url)
-        ):
-            self.template_options = ""
-            self.template_warnings = ""
+	def validate(self):
+		doc_before_save = self.get_doc_before_save()
+		if (
+			not (self.import_file or self.google_sheets_url)
+			or (doc_before_save and doc_before_save.import_file != self.import_file)
+			or (doc_before_save and doc_before_save.google_sheets_url != self.google_sheets_url)
+		):
+			self.template_options = ""
+			self.template_warnings = ""
 
-        self.validate_doctype()
-        self.validate_import_file()
-        self.validate_google_sheets_url()
-        self.set_payload_count()
+		self.set_delimiters_flag()
+		self.validate_doctype()
+		self.validate_import_file()
+		self.validate_google_sheets_url()
+		self.set_payload_count()
 
-    def validate_doctype(self):
-        if self.reference_doctype in BLOCKED_DOCTYPES:
-            frappe.throw(_("Importing {0} is not allowed.").format(self.reference_doctype))
+	def set_delimiters_flag(self):
+		if self.import_file:
+			frappe.flags.delimiter_options = self.delimiter_options or ","
+
+	def validate_doctype(self):
+		if self.reference_doctype in BLOCKED_DOCTYPES:
+			frappe.throw(_("Importing {0} is not allowed.").format(self.reference_doctype))
 
     def validate_import_file(self):
         if self.import_file:
@@ -75,10 +83,11 @@ class DataImport(Document):
             payloads = i.import_file.get_payloads_for_import()
             self.payload_count = len(payloads)
 
-    @frappe.whitelist()
-    def get_preview_from_template(self, import_file=None, google_sheets_url=None):
-        if import_file:
-            self.import_file = import_file
+	@frappe.whitelist()
+	def get_preview_from_template(self, import_file=None, google_sheets_url=None):
+		if import_file:
+			self.import_file = import_file
+			self.set_delimiters_flag()
 
         if google_sheets_url:
             self.google_sheets_url = google_sheets_url
@@ -92,26 +101,23 @@ class DataImport(Document):
     def start_import(self):
         from frappe.utils.scheduler import is_scheduler_inactive
 
-        run_now = frappe.flags.in_test or frappe.conf.developer_mode
-        if is_scheduler_inactive() and not run_now:
-            frappe.throw(
-                _("Scheduler is inactive. Cannot import data."),
-                title=_("Scheduler Inactive"),
-            )
+		run_now = frappe.flags.in_test or frappe.conf.developer_mode
+		if is_scheduler_inactive() and not run_now:
+			frappe.throw(_("Scheduler is inactive. Cannot import data."), title=_("Scheduler Inactive"))
 
-        job_id = f"data_import::{self.id}"
+		job_id = f"data_import||{self.id}"
 
-        if not is_job_enqueued(job_id):
-            enqueue(
-                start_import,
-                queue="default",
-                timeout=10000,
-                event="data_import",
-                job_id=job_id,
-                data_import=self.id,
-                now=run_now,
-            )
-            return True
+		if not is_job_enqueued(job_id):
+			enqueue(
+				start_import,
+				queue="default",
+				timeout=10000,
+				event="data_import",
+				job_id=job_id,
+				data_import=self.id,
+				now=run_now,
+			)
+			return True
 
         return False
 
@@ -121,11 +127,11 @@ class DataImport(Document):
     def download_import_log(self):
         return self.get_importer().export_import_log()
 
-    def get_importer(self):
-        return Importer(self.reference_doctype, data_import=self)
+	def get_importer(self):
+		return Importer(self.reference_doctype, data_import=self, use_sniffer=self.use_csv_sniffer)
 
-    def on_trash(self):
-        frappe.db.delete("Data Import Log", {"data_import": self.name})
+	def on_trash(self):
+		frappe.db.delete("Data Import Log", {"data_import": self.id})
 
 
 @frappe.whitelist()
@@ -135,44 +141,38 @@ def get_preview_from_template(data_import, import_file=None, google_sheets_url=N
 
 @frappe.whitelist()
 def form_start_import(data_import: str):
-    return frappe.get_doc("Data Import", data_import).start_import()
+	return frappe.get_doc("Data Import", data_import).start_import()
 
 
 def start_import(data_import):
-    """This method runs in background job"""
-    data_import = frappe.get_doc("Data Import", data_import)
-    try:
-        i = Importer(data_import.reference_doctype, data_import=data_import)
-        i.import_data()
-    except JobTimeoutException:
-        frappe.db.rollback()
-        data_import.db_set("status", "Timed Out")
-    except Exception:
-        frappe.db.rollback()
-        data_import.db_set("status", "Error")
-        data_import.log_error("Data import failed")
-    finally:
-        frappe.flags.in_import = False
+	"""This method runs in background job"""
+	data_import = frappe.get_doc("Data Import", data_import)
+	try:
+		i = Importer(data_import.reference_doctype, data_import=data_import)
+		i.import_data()
+	except JobTimeoutException:
+		frappe.db.rollback()
+		data_import.db_set("status", "Timed Out")
+	except Exception:
+		frappe.db.rollback()
+		data_import.db_set("status", "Error")
+		data_import.log_error("Data import failed")
+	finally:
+		frappe.flags.in_import = False
 
     frappe.publish_realtime("data_import_refresh", {"data_import": data_import.id})
 
 
 @frappe.whitelist()
-def download_template(
-    doctype,
-    export_fields=None,
-    export_records=None,
-    export_filters=None,
-    file_type="CSV",
-):
-    """
-    Download template from Exporter
-            :param doctype: Document Type
-            :param export_fields=None: Fields to export as dict {'Sales Invoice': ['id', 'customer'], 'Sales Invoice Item': ['item_code']}
-            :param export_records=None: One of 'all', 'by_filter', 'blank_template'
-            :param export_filters: Filter dict
-            :param file_type: File type to export into
-    """
+def download_template(doctype, export_fields=None, export_records=None, export_filters=None, file_type="CSV"):
+	"""
+	Download template from Exporter
+	        :param doctype: Document Type
+	        :param export_fields=None: Fields to export as dict {'Sales Invoice': ['id', 'customer'], 'Sales Invoice Item': ['item_code']}
+	        :param export_records=None: One of 'all', 'by_filter', 'blank_template'
+	        :param export_filters: Filter dict
+	        :param file_type: File type to export into
+	"""
 
     export_fields = frappe.parse_json(export_fields)
     export_filters = frappe.parse_json(export_filters)
@@ -261,11 +261,13 @@ def import_file(doctype, file_path, import_type, submit_after_import=False, cons
     i.import_data()
 
 
-def import_doc(path, pre_process=None):
-    if os.path.isdir(path):
-        files = [os.path.join(path, f) for f in os.listdir(path)]
-    else:
-        files = [path]
+def import_doc(path, pre_process=None, sort=False):
+	if os.path.isdir(path):
+		files = [os.path.join(path, f) for f in os.listdir(path)]
+		if sort:
+			files.sort()
+	else:
+		files = [path]
 
     for f in files:
         if f.endswith(".json"):
@@ -284,29 +286,32 @@ def import_doc(path, pre_process=None):
 
 
 def export_json(doctype, path, filters=None, or_filters=None, id=None, order_by="creation asc"):
-    def post_process(out):
-        # Note on Tree DocTypes:
-        # The tree structure is maintained in the database via the fields "lft"
-        # and "rgt". They are automatically set and kept up-to-date. Importing
-        # them would destroy any existing tree structure. For this reason they
-        # are not exported as well.
-        del_keys = ("modified_by", "creation", "owner", "idx", "lft", "rgt")
-        for doc in out:
-            for key in del_keys:
-                if key in doc:
-                    del doc[key]
-            for v in doc.values():
-                if isinstance(v, list):
-                    for child in v:
-                        for key in (
-                            *del_keys,
-                            "docstatus",
-                            "doctype",
-                            "modified",
-                            "id",
-                        ):
-                            if key in child:
-                                del child[key]
+	def post_process(out):
+		# Note on Tree DocTypes:
+		# The tree structure is maintained in the database via the fields "lft"
+		# and "rgt". They are automatically set and kept up-to-date. Importing
+		# them would destroy any existing tree structure. For this reason they
+		# are not exported as well.
+		del_keys = ("modified_by", "creation", "owner", "idx", "lft", "rgt")
+		for doc in out:
+			for key in del_keys:
+				if key in doc:
+					del doc[key]
+			for v in doc.values():
+				if isinstance(v, list):
+					for child in v:
+						for key in (
+							*del_keys,
+							"docstatus",
+							"doctype",
+							"modified",
+							"id",
+							"parent",
+							"parentfield",
+							"parenttype",
+						):
+							if key in child:
+								del child[key]
 
     out = []
     if id:

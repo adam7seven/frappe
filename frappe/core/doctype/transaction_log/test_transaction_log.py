@@ -3,21 +3,28 @@
 import hashlib
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
-
-test_records = []
+from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
-class TestTransactionLog(FrappeTestCase):
-    def test_validate_chaining(self):
-        frappe.get_doc(
-            {
-                "doctype": "Transaction Log",
-                "reference_doctype": "Test Doctype",
-                "document_name": "Test Document 1",
-                "data": "first_data",
-            }
-        ).insert(ignore_permissions=True)
+class UnitTestTransactionLog(UnitTestCase):
+	"""
+	Unit tests for TransactionLog.
+	Use this class for testing individual functions and methods.
+	"""
+
+	pass
+
+
+class TestTransactionLog(IntegrationTestCase):
+	def test_validate_chaining(self):
+		frappe.get_doc(
+			{
+				"doctype": "Transaction Log",
+				"reference_doctype": "Test Doctype",
+				"document_name": "Test Document 1",
+				"data": "first_data",
+			}
+		).insert(ignore_permissions=True)
 
         second_log = frappe.get_doc(
             {

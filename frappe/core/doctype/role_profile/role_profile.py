@@ -25,33 +25,21 @@ class RoleProfile(Document):
         """set id as Role Profile id"""
         self.id = self.role_profile
 
-    def on_update(self):
-        self.queue_action(
-            "update_all_users",
-            now=frappe.flags.in_test or frappe.flags.in_install,
-            enqueue_after_commit=True,
-        )
+	def on_update(self):
+		self.clear_cache()
+		self.queue_action(
+			"update_all_users",
+			now=frappe.flags.in_test or frappe.flags.in_install,
+			enqueue_after_commit=True,
+			queue="long",
+		)
 
-    def update_all_users(self):
-        """Changes in role_profile reflected across all its user"""
-        has_role = frappe.qb.DocType("Has Role")
-        user = frappe.qb.DocType("User")
+	def update_all_users(self):
+		"""Changes in role_profile reflected across all its user"""
+		users = frappe.get_all("User Role Profile", filters={"role_profile": self.id}, pluck="parent")
+		for user in users:
+			user = frappe.get_doc("User", user)
+			user.save()  # resaving syncs roles
 
-        all_current_roles = (
-            frappe.qb.from_(user)
-            .join(has_role)
-            .on(user.id == has_role.parent)
-            .where(user.role_profile_id == self.id)
-            .select(user.id, has_role.role)
-        ).run()
-
-        user_roles = defaultdict(set)
-        for user, role in all_current_roles:
-            user_roles[user].add(role)
-
-        role_profile_roles = {role.role for role in self.roles}
-        for user, roles in user_roles.items():
-            if roles != role_profile_roles:
-                user = frappe.get_doc("User", user)
-                user.roles = []
-                user.add_roles(*role_profile_roles)
+	def get_permission_log_options(self, event=None):
+		return {"fields": ["roles"]}

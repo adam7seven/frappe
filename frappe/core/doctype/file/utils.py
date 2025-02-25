@@ -13,7 +13,6 @@ import frappe
 from frappe import _, safe_decode
 from frappe.utils import cint, cstr, encode, get_files_path, random_string, strip
 from frappe.utils.file_manager import safe_b64decode
-from frappe.utils.image import optimize_image
 
 if TYPE_CHECKING:
     from PIL.ImageFile import ImageFile
@@ -41,9 +40,9 @@ def make_home_folder() -> None:
 
 
 def setup_folder_path(filename: str, new_parent: str) -> None:
-    file: "File" = frappe.get_doc("File", filename)
-    file.folder = new_parent
-    file.save()
+	file: File = frappe.get_doc("File", filename)
+	file.folder = new_parent
+	file.save()
 
     if file.is_folder:
         from frappe.model.reid_doc import reid_doc
@@ -89,12 +88,12 @@ def get_extension(
 
 
 def get_local_image(file_url: str) -> tuple["ImageFile", str, str]:
-    from PIL import Image
+	from PIL import Image
 
-    if file_url.startswith("/private"):
-        file_url_path = (file_url.lstrip("/"),)
-    else:
-        file_url_path = ("public", file_url.lstrip("/"))
+	if file_url.startswith("/private"):
+		file_url_path = (file_url.lstrip("/"),)
+	else:
+		file_url_path = ("public", file_url.lstrip("/"))
 
     file_path = frappe.get_site_path(*file_url_path)
 
@@ -121,20 +120,20 @@ def get_local_image(file_url: str) -> tuple["ImageFile", str, str]:
 
 
 def get_web_image(file_url: str) -> tuple["ImageFile", str, str]:
-    import requests
-    import requests.exceptions
-    from PIL import Image
+	import requests
+	import requests.exceptions
+	from PIL import Image
 
-    file_url = frappe.utils.get_url(file_url)
-    r = requests.get(file_url, stream=True)
-    try:
-        r.raise_for_status()
-    except requests.exceptions.HTTPError as e:
-        if "404" in e.args[0]:
-            frappe.msgprint(_("File '{0}' not found").format(file_url))
-        else:
-            frappe.msgprint(_("Unable to read file format for {0}").format(file_url))
-        raise
+	file_url = frappe.utils.get_url(file_url)
+	r = requests.get(file_url, stream=True)
+	try:
+		r.raise_for_status()
+	except requests.exceptions.HTTPError as e:
+		if "404" in e.args[0]:
+			frappe.msgprint(_("File '{0}' not found").format(file_url))
+		else:
+			frappe.msgprint(_("Unable to read file format for {0}").format(file_url))
+		raise
 
     try:
         image = Image.open(BytesIO(r.content))
@@ -179,20 +178,13 @@ def delete_file(path: str) -> None:
             os.remove(path)
 
 
-def remove_file_by_url(
-    file_url: str, doctype: str | None = None, id: str | None = None
-) -> "Document":
-    if doctype and id:
-        fid = frappe.db.get_value(
-            "File",
-            {
-                "file_url": file_url,
-                "attached_to_doctype": doctype,
-                "attached_to_id": id,
-            },
-        )
-    else:
-        fid = frappe.db.get_value("File", {"file_url": file_url})
+def remove_file_by_url(file_url: str, doctype: str | None = None, id: str | None = None) -> "Document":
+	if doctype and id:
+		fid = frappe.db.get_value(
+			"File", {"file_url": file_url, "attached_to_doctype": doctype, "attached_to_id": id}
+		)
+	else:
+		fid = frappe.db.get_value("File", {"file_url": file_url})
 
     if fid:
         from frappe.utils.file_manager import remove_file
@@ -201,9 +193,9 @@ def remove_file_by_url(
 
 
 def get_content_hash(content: bytes | str) -> str:
-    if isinstance(content, str):
-        content = content.encode()
-    return hashlib.md5(content, usedforsecurity=False).hexdigest()  # nosec
+	if isinstance(content, str):
+		content = content.encode()
+	return hashlib.md5(content, usedforsecurity=False).hexdigest()  # nosec
 
 
 def generate_file_name(
@@ -235,13 +227,13 @@ def get_file_name(fname: str, optional_suffix: str | None = None) -> str:
     return f"{partial}{suffix}{extn}"
 
 
-def extract_images_from_doc(doc: "Document", fieldname: str):
-    content = doc.get(fieldname)
-    content = extract_images_from_html(
-        doc, content, is_private=(not doc.meta.make_attachments_public)
-    )
-    if frappe.flags.has_dataurl:
-        doc.set(fieldname, content)
+def extract_images_from_doc(doc: "Document", fieldname: str, is_private=True):
+	content = doc.get(fieldname)
+	if doc.meta.make_attachments_public:
+		is_private = False
+	content = extract_images_from_html(doc, content, is_private=is_private)
+	if frappe.flags.has_dataurl:
+		doc.set(fieldname, content)
 
 
 def extract_images_from_html(doc: "Document", content: str, is_private: bool = False):
@@ -252,26 +244,24 @@ def extract_images_from_html(doc: "Document", content: str, is_private: bool = F
         headers, content = data.split(",")
         mtype = headers.split(";", 1)[0]
 
-        if isinstance(content, str):
-            content = content.encode("utf-8")
-        if b"," in content:
-            content = content.split(b",")[1]
+		if isinstance(content, str):
+			content = content.encode("utf-8")
+		if b"," in content:
+			content = content.split(b",")[1]
 
-        if not content:
-            # if there is no content, return the original tag
-            return match.group(0)
+		if not content:
+			# if there is no content, return the original tag
+			return match.group(0)
 
-        try:
-            content = safe_b64decode(content)
-        except BinasciiError:
-            frappe.flags.has_dataurl = True
-            return f'<img src="#broken-image" alt="{get_corrupted_image_msg()}"'
+		try:
+			content = safe_b64decode(content)
+		except BinasciiError:
+			frappe.flags.has_dataurl = True
+			return f'<img src="#broken-image" alt="{get_corrupted_image_msg()}"'
 
-        content = optimize_image(content, mtype)
-
-        if "filename=" in headers:
-            filename = headers.split("filename=")[-1]
-            filename = safe_decode(filename).split(";", 1)[0]
+		if "filename=" in headers:
+			filename = headers.split("filename=")[-1]
+			filename = safe_decode(filename).split(";", 1)[0]
 
         else:
             filename = get_random_filename(content_type=mtype)
@@ -309,13 +299,13 @@ def extract_images_from_html(doc: "Document", content: str, is_private: bool = F
 
 
 def get_corrupted_image_msg():
-    return _("Image: Corrupted Data Stream")
+	return _("Image: Corrupted Data Stream")
 
 
 def get_random_filename(content_type: str | None = None) -> str:
-    extn = None
-    if content_type:
-        extn = mimetypes.guess_extension(content_type)
+	extn = None
+	if content_type:
+		extn = mimetypes.guess_extension(content_type)
 
     return random_string(7) + (extn or "")
 
@@ -384,18 +374,18 @@ def attach_files_to_document(doc: "Document", event) -> None:
             )
             continue
 
-        file: "File" = frappe.get_doc(
-            doctype="File",
-            file_url=value,
-            attached_to_id=doc.id,
-            attached_to_doctype=doc.doctype,
-            attached_to_field=df.fieldname,
-            folder="Home/Attachments",
-        )
-        try:
-            file.insert(ignore_permissions=True)
-        except Exception:
-            doc.log_error("Error Attaching File")
+		file: File = frappe.get_doc(
+			doctype="File",
+			file_url=value,
+			attached_to_id=doc.id,
+			attached_to_doctype=doc.doctype,
+			attached_to_field=df.fieldname,
+			folder="Home/Attachments",
+		)
+		try:
+			file.insert(ignore_permissions=True)
+		except Exception:
+			doc.log_error("Error Attaching File")
 
 
 def relink_files(doc, fieldname, temp_doc_id):
@@ -464,6 +454,6 @@ def find_file_by_url(path: str, id: str | None = None) -> Optional["File"]:
     # if the file is accessible from any one of those documents
     # then it should be downloadable
     for file_data in files:
-        file: "File" = frappe.get_doc(doctype="File", **file_data)
+        file: File = frappe.get_doc(doctype="File", **file_data)
         if file.is_downloadable():
             return file

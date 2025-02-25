@@ -19,8 +19,8 @@ def get_coords(doctype, filters, type):
 
 
 def convert_to_geojson(type, coords):
-    """Converts GPS coordinates to geoJSON string."""
-    geojson = {"type": "FeatureCollection", "features": None}
+	"""Convert GPS coordinates to geoJSON string."""
+	geojson = {"type": "FeatureCollection", "features": None}
 
     if type == "location_field":
         geojson["features"] = merge_location_features_in_one(coords)
@@ -102,8 +102,8 @@ def return_coordinates(doctype, filters_sql):
 
 
 def get_coords_conditions(doctype, filters=None):
-    """Returns SQL conditions with user permissions and filters for event queries."""
-    from frappe.desk.reportview import get_filters_cond
+	"""Return SQL conditions with user permissions and filters for event queries."""
+	from frappe.desk.reportview import get_filters_cond
 
     if not frappe.has_permission(doctype):
         frappe.throw(frappe._("Not Permitted"), frappe.PermissionError)

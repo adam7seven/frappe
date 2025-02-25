@@ -9,18 +9,16 @@ def sendmail_to_system_managers(subject, content):
 
 
 @frappe.whitelist()
-def get_contact_list(
-    txt, page_length=20, extra_filters: str | None = None
-) -> list[dict]:
-    """Return email ids for a multiselect field."""
-    if extra_filters:
-        extra_filters = frappe.parse_json(extra_filters)
+def get_contact_list(txt, page_length=20, extra_filters: str | None = None) -> list[dict]:
+	"""Return email ids for a multiselect field."""
+	if extra_filters:
+		extra_filters = frappe.parse_json(extra_filters)
 
-    filters = [
-        ["Contact Email", "email_id", "is", "set"],
-    ]
-    if extra_filters:
-        filters.extend(extra_filters)
+	filters = [
+		["Contact Email", "email_id", "is", "set"],
+	]
+	if extra_filters:
+		filters.extend(extra_filters)
 
     fields = ["first_name", "middle_name", "last_name", "company_id"]
     contacts = frappe.get_list(

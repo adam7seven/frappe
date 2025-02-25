@@ -36,21 +36,21 @@ frappe.get_indicator = function (doc, doctype, show_workflow_state) {
 
     var settings = frappe.listview_settings[doctype] || {};
 
-    var is_submittable = frappe.model.is_submittable(doctype);
-    let workflow_fieldname = frappe.workflow.get_state_fieldname(doctype);
+	var is_submittable = frappe.model.is_submittable(doctype);
+	let workflow_fieldname = frappe.workflow.get_state_fieldname(doctype);
 
-    let avoid_status_override = (frappe.workflow.avoid_status_override[doctype] || []).includes(
-        doc[workflow_fieldname]
-    );
-    // workflow
-    if (
-        workflow_fieldname &&
-        (!without_workflow || show_workflow_state) &&
-        !avoid_status_override
-    ) {
-        var value = doc[workflow_fieldname];
-        if (value) {
-            let colour = "";
+	let avoid_status_override = (frappe.workflow.avoid_status_override[doctype] || []).includes(
+		doc[workflow_fieldname]
+	);
+	// workflow
+	if (
+		workflow_fieldname &&
+		(!without_workflow || show_workflow_state) &&
+		!avoid_status_override
+	) {
+		var value = doc[workflow_fieldname];
+		if (value) {
+			let colour = "";
 
             if (locals["Workflow State"][value] && locals["Workflow State"][value].style) {
                 colour = {
@@ -120,10 +120,10 @@ frappe.get_indicator = function (doc, doctype, show_workflow_state) {
         return [__("Submitted"), "blue", "docstatus,=,1"];
     }
 
-    // based on status
-    if (doc.status) {
-        return [__(doc.status), frappe.utils.guess_colour(doc.status), "status,=," + doc.status];
-    }
+	// based on status
+	if (doc.status) {
+		return [__(doc.status), frappe.utils.guess_colour(doc.status), "status,=," + doc.status];
+	}
 
     // based on enabled
     if (frappe.meta.has_field(doctype, "enabled")) {

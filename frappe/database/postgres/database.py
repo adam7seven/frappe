@@ -2,6 +2,7 @@ import re
 
 import psycopg2
 import psycopg2.extensions
+from psycopg2 import sql
 from psycopg2.errorcodes import (
     CLASS_INTEGRITY_CONSTRAINT_VIOLATION,
     DEADLOCK_DETECTED,
@@ -13,11 +14,11 @@ from psycopg2.errorcodes import (
     UNIQUE_VIOLATION,
 )
 from psycopg2.errors import (
-    InterfaceError,
-    LockNotAvailable,
-    ReadOnlySqlTransaction,
-    SequenceGeneratorLimitExceeded,
-    SyntaxError,
+	InterfaceError,
+	LockNotAvailable,
+	ReadOnlySqlTransaction,
+	SequenceGeneratorLimitExceeded,
+	SyntaxError,
 )
 from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 
@@ -56,10 +57,10 @@ class PostgresExceptionUtil:
     def is_deadlocked(e):
         return getattr(e, "pgcode", None) == DEADLOCK_DETECTED
 
-    @staticmethod
-    def is_timedout(e):
-        # http://initd.org/psycopg/docs/extensions.html?highlight=datatype#psycopg2.extensions.QueryCanceledError
-        return isinstance(e, (psycopg2.extensions.QueryCanceledError | LockNotAvailable))
+	@staticmethod
+	def is_timedout(e):
+		# http://initd.org/psycopg/docs/extensions.html?highlight=datatype#psycopg2.extensions.QueryCanceledError
+		return isinstance(e, (psycopg2.extensions.QueryCanceledError | LockNotAvailable))
 
     @staticmethod
     def is_read_only_mode_error(e) -> bool:
@@ -117,72 +118,81 @@ class PostgresExceptionUtil:
     def is_db_table_size_limit(e) -> bool:
         return False
 
-    @staticmethod
-    def is_interface_error(e):
-        return isinstance(e, InterfaceError)
+	@staticmethod
+	def is_interface_error(e):
+		return isinstance(e, InterfaceError)
 
 
 class PostgresDatabase(PostgresExceptionUtil, Database):
     REGEX_CHARACTER = "~"
     default_port = "5432"
 
-    def setup_type_map(self):
-        self.db_type = "postgres"
-        self.type_map = {
-            "Currency": ("decimal", "21,9"),
-            "Int": ("bigint", None),
-            "Long Int": ("bigint", None),
-            "Float": ("decimal", "21,9"),
-            "Percent": ("decimal", "21,9"),
-            "Check": ("smallint", None),
-            "Small Text": ("text", ""),
-            "Long Text": ("text", ""),
-            "Code": ("text", ""),
-            "Text Editor": ("text", ""),
-            "Markdown Editor": ("text", ""),
-            "HTML Editor": ("text", ""),
-            "Date": ("date", ""),
-            "Datetime": ("timestamp", None),
-            "Time": ("time", "6"),
-            "Text": ("text", ""),
-            "Data": ("varchar", self.VARCHAR_LEN),
-            "Link": ("varchar", self.VARCHAR_LEN),
-            "Dynamic Link": ("varchar", self.VARCHAR_LEN),
-            "Password": ("text", ""),
-            "Select": ("varchar", self.VARCHAR_LEN),
-            "Rating": ("decimal", "3,2"),
-            "Read Only": ("varchar", self.VARCHAR_LEN),
-            "Attach": ("text", ""),
-            "Attach Image": ("text", ""),
-            "Signature": ("text", ""),
-            "Color": ("varchar", self.VARCHAR_LEN),
-            "Barcode": ("text", ""),
-            "Geolocation": ("text", ""),
-            "Duration": ("decimal", "21,9"),
-            "Icon": ("varchar", self.VARCHAR_LEN),
-            "Phone": ("varchar", self.VARCHAR_LEN),
-            "Autocomplete": ("varchar", self.VARCHAR_LEN),
-            "JSON": ("json", ""),
-        }
+	def setup_type_map(self):
+		self.db_type = "postgres"
+		self.type_map = {
+			"Currency": ("decimal", "21,9"),
+			"Int": ("int", None),
+			"Long Int": ("bigint", None),
+			"Float": ("decimal", "21,9"),
+			"Percent": ("decimal", "21,9"),
+			"Check": ("smallint", None),
+			"Small Text": ("text", ""),
+			"Long Text": ("text", ""),
+			"Code": ("text", ""),
+			"Text Editor": ("text", ""),
+			"Markdown Editor": ("text", ""),
+			"HTML Editor": ("text", ""),
+			"Date": ("date", ""),
+			"Datetime": ("timestamp", None),
+			"Time": ("time", "6"),
+			"Text": ("text", ""),
+			"Data": ("varchar", self.VARCHAR_LEN),
+			"Link": ("varchar", self.VARCHAR_LEN),
+			"Dynamic Link": ("varchar", self.VARCHAR_LEN),
+			"Password": ("text", ""),
+			"Select": ("varchar", self.VARCHAR_LEN),
+			"Rating": ("decimal", "3,2"),
+			"Read Only": ("varchar", self.VARCHAR_LEN),
+			"Attach": ("text", ""),
+			"Attach Image": ("text", ""),
+			"Signature": ("text", ""),
+			"Color": ("varchar", self.VARCHAR_LEN),
+			"Barcode": ("text", ""),
+			"Geolocation": ("text", ""),
+			"Duration": ("decimal", "21,9"),
+			"Icon": ("varchar", self.VARCHAR_LEN),
+			"Phone": ("varchar", self.VARCHAR_LEN),
+			"Autocomplete": ("varchar", self.VARCHAR_LEN),
+			"JSON": ("json", ""),
+		}
 
     @property
     def last_query(self):
         return LazyDecode(self._cursor.query)
 
-    def get_connection(self):
-        conn_settings = {
-            "user": self.user,
-            "dbname": self.cur_db_name,
-            # libpg defaults to default socket if not specified
-            "host": self.host or self.socket,
-        }
-        if self.password:
-            conn_settings["password"] = self.password
-        if not self.socket and self.port:
-            conn_settings["port"] = self.port
+	@property
+	def db_schema(self):
+		return frappe.conf.get("db_schema", "public").replace("'", "").replace('"', "")
 
-        conn = psycopg2.connect(**conn_settings)
-        conn.set_isolation_level(ISOLATION_LEVEL_REPEATABLE_READ)
+	def connect(self):
+		super().connect()
+
+		self._cursor.execute("SET search_path TO %s", (self.db_schema,))
+
+	def get_connection(self):
+		conn_settings = {
+			"dbname": self.cur_db_name,
+			"user": self.user,
+			# libpg defaults to default socket if not specified
+			"host": self.host or self.socket,
+		}
+		if self.password:
+			conn_settings["password"] = self.password
+		if not self.socket and self.port:
+			conn_settings["port"] = self.port
+
+		conn = psycopg2.connect(**conn_settings)
+		conn.set_isolation_level(ISOLATION_LEVEL_REPEATABLE_READ)
 
         return conn
 
@@ -208,41 +218,61 @@ class PostgresDatabase(PostgresExceptionUtil, Database):
 
         return str(psycopg2.extensions.QuotedString(s))
 
-    def get_database_size(self):
-        """'Returns database size in MB"""
-        db_size = self.sql(
-            "SELECT (pg_database_size(%s) / 1024 / 1024) as database_size",
-            self.cur_db_name,
-            as_dict=True,
-        )
-        return db_size[0].get("database_size")
+	def get_database_size(self):
+		"""Return database size in MB"""
+		db_size = self.sql(
+			"SELECT (pg_database_size(%s) / 1024 / 1024) as database_size", self.cur_db_name, as_dict=True
+		)
+		return db_size[0].get("database_size")
 
-    # pylint: disable=W0221
-    def sql(self, query, values=EmptyQueryValues, *args, **kwargs):
-        # from icecream import ic
-        # ic(query)
-        return super().sql(modify_query(query), modify_values(values), *args, **kwargs)
+	def _transform_result(self, result: list[tuple] | tuple[tuple]) -> tuple[tuple]:
+		return tuple(result) if isinstance(result, list) else result
+
+	# pylint: disable=W0221
+	def sql(self, query, values=EmptyQueryValues, *args, **kwargs):
+		return super().sql(modify_query(query), modify_values(values), *args, **kwargs)
 
     def lazy_mogrify(self, *args, **kwargs) -> str:
         return self.last_query
 
-    def get_tables(self, cached=True):
-        return [
-            d[0]
-            for d in self.sql(
-                """select table_name
-            from information_schema.tables
-            where table_catalog='{}'
-                and table_type = 'BASE TABLE'
-                and table_schema='{}'""".format(
-                    self.cur_db_name, frappe.conf.get("db_schema", "public")
-                )
-            )
-        ]
+	def get_tables(self, cached=True):
+		return [
+			d[0]
+			for d in self.sql(
+				"""select table_name
+			from information_schema.tables
+			where table_catalog=%s
+				and table_type = 'BASE TABLE'
+				and table_schema=%s""",
+				(self.cur_db_name, self.db_schema),
+			)
+		]
 
-    def format_date(self, date):
-        if not date:
-            return "0001-01-01"
+	def get_db_table_columns(self, table) -> list[str]:
+		"""Returns list of column names from given table."""
+		key = f"table_columns::{table}"
+		if (columns := frappe.client_cache.get_value(key)) is not None:
+			return columns
+
+		information_schema = frappe.qb.Schema("information_schema")
+
+		columns = (
+			frappe.qb.from_(information_schema.columns)
+			.select(information_schema.columns.column_name)
+			.where(
+				(information_schema.columns.table_name == table)
+				& (information_schema.columns.table_schema == self.db_schema)
+			)
+			.run(pluck=True)
+		)
+
+		frappe.client_cache.set_value(key, columns)
+
+		return columns
+
+	def format_date(self, date):
+		if not date:
+			return "0001-01-01"
 
         if not isinstance(date, str):
             date = date.strftime("%Y-%m-%d")
@@ -263,9 +293,11 @@ class PostgresDatabase(PostgresExceptionUtil, Database):
         new_name = get_table_name(new_name)
         return self.sql(f"ALTER TABLE `{old_name}` RENAME TO `{new_name}`")
 
-    def describe(self, doctype: str) -> list | tuple:
-        table_name = get_table_name(doctype)
-        return self.sql(f"SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME = '{table_name}'")
+	def describe(self, doctype: str) -> list | tuple:
+		table_name = get_table_name(doctype)
+		return self.sql(
+			f"SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME = '{table_name}' and table_schema='{frappe.conf.get('db_schema', 'public')}'"
+		)
 
     def change_column_type(
         self,
@@ -304,18 +336,18 @@ class PostgresDatabase(PostgresExceptionUtil, Database):
             )"""
         )
 
-    def create_global_search_table(self):
-        if "__global_search" not in self.get_tables():
-            self.sql(
-                f"""create table "__global_search"(
-                doctype varchar(100),
-                id varchar({self.VARCHAR_LEN}),
-                title varchar({self.VARCHAR_LEN}),
-                content text,
-                route varchar({self.VARCHAR_LEN}),
-                published int not null default 0,
-                unique (doctype, id))"""
-            )
+	def create_global_search_table(self):
+		if "__global_search" not in self.get_tables():
+			self.sql(
+				f"""create table "__global_search"(
+				doctype varchar(100),
+				id varchar({self.VARCHAR_LEN}),
+				title varchar({self.VARCHAR_LEN}),
+				content text,
+				route varchar({self.VARCHAR_LEN}),
+				published int not null default 0,
+				unique (doctype, id))"""
+			)
 
     def create_user_settings_table(self):
         self.sql_ddl(
@@ -342,8 +374,8 @@ class PostgresDatabase(PostgresExceptionUtil, Database):
             db_table = PostgresTable(doctype, meta)
             db_table.validate()
 
-            db_table.sync()
-            self.begin()
+			db_table.sync()
+			self.commit()
 
     @staticmethod
     def get_on_duplicate_update(key="id"):
@@ -354,20 +386,24 @@ class PostgresDatabase(PostgresExceptionUtil, Database):
     def check_implicit_commit(self, query):
         pass  # postgres can run DDL in transactions without implicit commits
 
-    def has_index(self, table_name, index_name):
-        return self.sql(
-            f"""SELECT 1 FROM pg_indexes WHERE tablename='{table_name}'
-            and indexname='{index_name}' limit 1"""
-        )
+	def has_index(self, table_name, index_name):
+		return self.sql(
+			"""SELECT 1 FROM pg_indexes WHERE tablename=%s
+			and schemaname = %s
+			and indexname=%s limit 1""",
+			(table_name, self.db_schema, index_name),
+		)
 
-    def add_index(self, doctype: str, fields: list, index_name: str | None = None):
-        """Creates an index with given fields if not already created.
-        Index name will be `fieldname1_fieldname2_index`"""
-        table_name = get_table_name(doctype)
-        index_name = index_name or self.get_index_name(fields)
-        fields_str = '", "'.join(re.sub(r"\(.*\)", "", field) for field in fields)
+	def add_index(self, doctype: str, fields: list, index_name: str | None = None):
+		"""Creates an index with given fields if not already created.
+		Index name will be `fieldname1_fieldname2_index`"""
+		table_name = get_table_name(doctype)
+		index_name = index_name or self.get_index_name(fields)
+		fields_str = '", "'.join(re.sub(r"\(.*\)", "", field) for field in fields)
 
-        self.sql_ddl(f'CREATE INDEX IF NOT EXISTS "{index_name}" ON `{table_name}` ("{fields_str}")')
+		self.sql_ddl(
+			f'CREATE INDEX IF NOT EXISTS "{index_name}" ON "{self.db_schema}"."{table_name}" ("{fields_str}")'
+		)
 
     def add_unique(self, doctype, fields, constraint_name=None):
         if isinstance(fields, str):
@@ -375,75 +411,88 @@ class PostgresDatabase(PostgresExceptionUtil, Database):
         if not constraint_name:
             constraint_name = "unique_" + "_".join(fields)
 
-        if not self.sql(
-            """
-            SELECT CONSTRAINT_NAME
-            FROM information_schema.TABLE_CONSTRAINTS
-            WHERE table_name=%s
-            AND constraint_type='UNIQUE'
-            AND CONSTRAINT_NAME=%s""",
-            ("tab" + doctype, constraint_name),
-        ):
-            self.commit()
-            self.sql(
-                """ALTER TABLE `tab{}`
-                    ADD CONSTRAINT {} UNIQUE ({})""".format(
-                    doctype, constraint_name, ", ".join(fields)
-                )
-            )
+		if not self.sql(
+			"""
+			SELECT CONSTRAINT_NAME
+			FROM information_schema.TABLE_CONSTRAINTS
+			WHERE table_name=%s
+			AND constraint_type='UNIQUE'
+			AND constraint_schema=%s
+			AND CONSTRAINT_NAME=%s""",
+			("tab" + doctype, self.db_schema, constraint_name),
+		):
+			self.commit()
 
-    def get_table_columns_description(self, table_name):
-        """Returns list of column and its description"""
-        # pylint: disable=W1401
-        return self.sql(
-            f"""
-            SELECT a.column_name AS name,
-            CASE LOWER(a.data_type)
-                WHEN 'character varying' THEN CONCAT('varchar(', a.character_maximum_length ,')')
-                WHEN 'timestamp without time zone' THEN 'timestamp'
-                ELSE a.data_type
-            END AS type,
-            BOOL_OR(b.index) AS index,
-            SPLIT_PART(COALESCE(a.column_default, NULL), '::', 1) AS default,
-            BOOL_OR(b.unique) AS unique
-            FROM information_schema.columns a
-            LEFT JOIN
-                (SELECT indexdef, tablename,
-                    indexdef LIKE '%UNIQUE INDEX%' AS unique,
-                    indexdef NOT LIKE '%UNIQUE INDEX%' AS index
-                    FROM pg_indexes
-                    WHERE tablename='{table_name}') b
-                ON SUBSTRING(b.indexdef, '(.*)') LIKE CONCAT('%', a.column_name, '%')
-            WHERE a.table_name = '{table_name}'
-            GROUP BY a.column_name, a.data_type, a.column_default, a.character_maximum_length;
-        """,
-            as_dict=1,
-        )
+			self.sql(
+				sql.SQL(
+					"""ALTER TABLE {schema}.{table}
+					ADD CONSTRAINT {constraint} UNIQUE ({fields})"""
+				)
+				.format(
+					schema=sql.Identifier(self.db_schema),
+					table=sql.Identifier("tab" + doctype),
+					constraint=sql.Identifier(constraint_name),
+					fields=sql.SQL(", ").join(sql.Identifier(field) for field in fields),
+				)
+				.as_string(self._conn)
+			)
 
-    def get_column_type(self, doctype, column):
-        """Returns column type from database."""
-        information_schema = frappe.qb.Schema("information_schema")
-        table = get_table_name(doctype)
+	def get_table_columns_description(self, table_name):
+		"""Return list of columns with description."""
+		# pylint: disable=W1401
+		return self.sql(
+			f"""
+			SELECT a.column_name AS name,
+			CASE LOWER(a.data_type)
+				WHEN 'character varying' THEN CONCAT('varchar(', a.character_maximum_length ,')')
+				WHEN 'timestamp without time zone' THEN 'timestamp'
+				ELSE a.data_type
+			END AS type,
+			BOOL_OR(b.index) AS index,
+			SPLIT_PART(COALESCE(a.column_default, NULL), '::', 1) AS default,
+			BOOL_OR(b.unique) AS unique,
+			COALESCE(a.is_nullable = 'NO', false) AS not_nullable
+			FROM information_schema.columns a
+			LEFT JOIN
+				(SELECT indexdef, tablename,
+					indexdef LIKE '%UNIQUE INDEX%' AS unique,
+					indexdef NOT LIKE '%UNIQUE INDEX%' AS index
+					FROM pg_indexes
+					WHERE tablename='{table_name}' AND schemaname='{self.db_schema}') b
+				ON SUBSTRING(b.indexdef, '(.*)') LIKE CONCAT('%', a.column_name, '%')
+			WHERE a.table_name = '{table_name}'
+				AND a.table_schema = '{self.db_schema}'
+			GROUP BY a.column_name, a.data_type, a.column_default, a.character_maximum_length, a.is_nullable;
+		""",
+			as_dict=1,
+		)
 
-        return (
-            frappe.qb.from_(information_schema.columns)
-            .select(information_schema.columns.data_type)
-            .where(
-                (information_schema.columns.table_name == table) & (information_schema.columns.column_name == column)
-            )
-            .run(pluck=True)[0]
-        )
+	def get_column_type(self, doctype, column):
+		"""Return column type from database."""
+		information_schema = frappe.qb.Schema("information_schema")
+		table = get_table_name(doctype)
+
+		return (
+			frappe.qb.from_(information_schema.columns)
+			.select(information_schema.columns.data_type)
+			.where(
+				(information_schema.columns.table_name == table)
+				& (information_schema.columns.column_name == column)
+				& (information_schema.columns.table_schema == self.db_schema)
+			)
+			.run(pluck=True)[0]
+		)
 
     def get_database_list(self):
         return self.sql("SELECT datname FROM pg_database", pluck=True)
 
-    def estimate_count(self, doctype: str):
-        """Get estimated count of total rows in a table."""
-        from frappe.utils.data import cint
+	def estimate_count(self, doctype: str):
+		"""Get estimated count of total rows in a table."""
+		from frappe.utils.data import cint
 
-        table = get_table_name(doctype)
-        count = self.sql("select reltuples from pg_class where relname = %s", table)
-        return cint(count[0][0]) if count else 0
+		table = get_table_name(doctype)
+		count = self.sql("select reltuples from pg_class where relname = %s", table)
+		return cint(count[0][0]) if count else 0
 
 
 def modify_query(query):
@@ -465,9 +514,9 @@ def modify_query(query):
 
 
 def modify_values(values):
-    def modify_value(value):
-        if isinstance(value, list | tuple):
-            value = tuple(modify_values(value))
+	def modify_value(value):
+		if isinstance(value, list | tuple):
+			value = tuple(modify_values(value))
 
         elif isinstance(value, int):
             value = str(value)
@@ -477,13 +526,13 @@ def modify_values(values):
     if not values or values == EmptyQueryValues:
         return values
 
-    if isinstance(values, dict):
-        for k, v in values.items():
-            values[k] = modify_value(v)
-    elif isinstance(values, tuple | list):
-        new_values = []
-        for val in values:
-            new_values.append(modify_value(val))
+	if isinstance(values, dict):
+		for k, v in values.items():
+			values[k] = modify_value(v)
+	elif isinstance(values, tuple | list):
+		new_values = []
+		for val in values:
+			new_values.append(modify_value(val))
 
         values = new_values
     else:

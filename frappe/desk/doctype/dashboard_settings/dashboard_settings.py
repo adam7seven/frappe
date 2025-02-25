@@ -18,10 +18,11 @@ class DashboardSettings(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        chart_config: DF.Code | None
-        user: DF.Link | None
-    # end: auto-generated types
-    pass
+		chart_config: DF.Code | None
+		user: DF.Link | None
+	# end: auto-generated types
+
+	pass
 
 
 @frappe.whitelist()

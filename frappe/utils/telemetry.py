@@ -1,4 +1,4 @@
-""" Basic telemetry for improving apps.
+"""Basic telemetry for improving apps.
 
 WARNING: Everything in this file should be treated "internal" and is subjected to change or get
 removed without any warning.
@@ -55,12 +55,10 @@ def init_telemetry():
 
 
 def capture(event, app, **kwargs):
-    init_telemetry()
-    ph: Posthog = getattr(frappe.local, "posthog", None)
-    with suppress(Exception):
-        ph and ph.capture(
-            distinct_id=frappe.local.site, event=f"{app}_{event}", **kwargs
-        )
+	init_telemetry()
+	ph: Posthog = getattr(frappe.local, "posthog", None)
+	with suppress(Exception):
+		ph and ph.capture(distinct_id=frappe.local.site, event=f"{app}_{event}", **kwargs)
 
 
 def capture_doc(doc, action):

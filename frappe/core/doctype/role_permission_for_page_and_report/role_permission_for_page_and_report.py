@@ -5,7 +5,6 @@ import frappe
 from frappe.core.doctype.report.report import is_prepared_report_enabled
 from frappe.model.document import Document
 from frappe.permissions import ALL_USER_ROLE
-from frappe.utils import cint
 
 
 class RolePermissionforPageandReport(Document):
@@ -18,17 +17,17 @@ class RolePermissionforPageandReport(Document):
         from frappe.core.doctype.has_role.has_role import HasRole
         from frappe.types import DF
 
-        enable_prepared_report: DF.Check
-        page: DF.Link | None
-        report: DF.Link | None
-        roles: DF.Table[HasRole]
-        set_role_for: DF.Literal["", "Page", "Report"]
+		enable_prepared_report: DF.Check
+		page: DF.Link | None
+		report: DF.Link | None
+		roles: DF.Table[HasRole]
+		set_role_for: DF.Literal["", "Page", "Report"]
+	# end: auto-generated types
 
-    # end: auto-generated types
-    @frappe.whitelist()
-    def set_report_page_data(self):
-        self.set_custom_roles()
-        self.check_prepared_report_disabled()
+	@frappe.whitelist()
+	def set_report_page_data(self):
+		self.set_custom_roles()
+		self.check_prepared_report_disabled()
 
     def set_custom_roles(self):
         args = self.get_args()
@@ -69,7 +68,7 @@ class RolePermissionforPageandReport(Document):
         args = self.get_args()
         id = frappe.db.get_value("Custom Role", args, "id")
 
-        args.update({"doctype": "Custom Role", "roles": self.get_roles()})
+		args.update({"doctype": "Custom Role", "roles": roles})
 
         if self.report:
             args.update(
@@ -80,12 +79,12 @@ class RolePermissionforPageandReport(Document):
                 }
             )
 
-        if id:
-            custom_role = frappe.get_doc("Custom Role", id)
-            custom_role.set("roles", self.get_roles())
-            custom_role.save()
-        else:
-            frappe.get_doc(args).insert()
+		if id:
+			custom_role = frappe.get_doc("Custom Role", id)
+			custom_role.set("roles", roles)
+			custom_role.save()
+		else:
+			frappe.get_doc(args).insert()
 
     def update_disable_prepared_report(self):
         if self.report:

@@ -11,10 +11,10 @@ from frappe.utils import get_url_to_form
 
 @frappe.whitelist()
 def update_follow(doctype: str, doc_id: str, following: bool):
-    if following:
-        return follow_document(doctype, doc_id, frappe.session.user)
-    else:
-        return unfollow_document(doctype, doc_id, frappe.session.user)
+	if following:
+		return (follow_document(doctype, doc_id, frappe.session.user) and True) or False
+	else:
+		return unfollow_document(doctype, doc_id, frappe.session.user)
 
 
 @frappe.whitelist()
@@ -25,52 +25,60 @@ def follow_document(doctype, doc_id, user):
     doc id
     user email
 
-    condition:
-    avoided for some doctype
-    follow only if track changes are set to 1
-    """
-    if (
-        doctype
-        in (
-            "Communication",
-            "ToDo",
-            "Email Unsubscribe",
-            "File",
-            "Comment",
-            "Email Account",
-            "Email Domain",
-        )
-        or doctype in log_types
-    ):
-        return
+	condition:
+	avoided for some doctype
+	follow only if track changes are set to 1
+	"""
+	if (
+		doctype
+		in (
+			"Communication",
+			"ToDo",
+			"Email Unsubscribe",
+			"File",
+			"Comment",
+			"Email Account",
+			"Email Domain",
+		)
+		or doctype in log_types
+	):
+		return False
 
-    if (not frappe.get_meta(doctype).track_changes) or user == "Administrator":
-        return
+	if not frappe.get_meta(doctype).track_changes:
+		frappe.toast(_("Can't follow since changes are not tracked."))
+		return False
 
-    if not frappe.db.get_value(
-        "User", user, "document_follow_notify", ignore=True, cache=True
-    ):
-        return
+	if user == "Administrator":
+		frappe.toast(_("Administrator can't follow"))
+		return False
 
-    if not is_document_followed(doctype, doc_id, user):
-        doc = frappe.new_doc("Document Follow")
-        doc.update({"ref_doctype": doctype, "ref_docid": doc_id, "user": user})
-        doc.save()
-        return doc
+	if not frappe.db.get_value("User", user, "document_follow_notify", ignore=True, cache=True):
+		frappe.toast(_("Document follow is not enabled for this user."))
+		return False
+
+	if not is_document_followed(doctype, doc_id, user):
+		doc = frappe.new_doc("Document Follow")
+		doc.update({"ref_doctype": doctype, "ref_docid": doc_id, "user": user})
+		doc.save()
+		frappe.toast(_("Following document {0}").format(doc_id))
+		return doc
+
+	return False
 
 
 @frappe.whitelist()
 def unfollow_document(doctype, doc_id, user):
-    doc = frappe.get_all(
-        "Document Follow",
-        filters={"ref_doctype": doctype, "ref_docid": doc_id, "user": user},
-        fields=["id"],
-        limit=1,
-    )
-    if doc:
-        frappe.delete_doc("Document Follow", doc[0].id)
-        return 1
-    return 0
+	doc = frappe.get_all(
+		"Document Follow",
+		filters={"ref_doctype": doctype, "ref_docid": doc_id, "user": user},
+		fields=["id"],
+		limit=1,
+	)
+	if doc:
+		frappe.delete_doc("Document Follow", doc[0].id, force=True)
+		frappe.toast(_("Un-following document {0}").format(doc_id))
+		return False
+	return False
 
 
 def get_message(doc_id, doctype, frequency, user):
@@ -135,34 +143,32 @@ def get_message_for_user(frequency, user):
     latest_document_follows = get_document_followed_by_user(user)
     valid_document_follows = []
 
-    for document_follow in latest_document_follows:
-        content = get_message(
-            document_follow.ref_docid, document_follow.ref_doctype, frequency, user
-        )
-        if content:
-            message = message + content
-            valid_document_follows.append(
-                {
-                    "reference_docid": document_follow.ref_docid,
-                    "reference_doctype": document_follow.ref_doctype,
-                    "reference_url": get_url_to_form(
-                        document_follow.ref_doctype, document_follow.ref_docid
-                    ),
-                }
-            )
-    return message, valid_document_follows
+	for document_follow in latest_document_follows:
+		content = get_message(document_follow.ref_docid, document_follow.ref_doctype, frequency, user)
+		if content:
+			message = message + content
+			valid_document_follows.append(
+				{
+					"reference_docid": document_follow.ref_docid,
+					"reference_doctype": document_follow.ref_doctype,
+					"reference_url": get_url_to_form(
+						document_follow.ref_doctype, document_follow.ref_docid
+					),
+				}
+			)
+	return message, valid_document_follows
 
 
 def get_document_followed_by_user(user):
-    DocumentFollow = DocType("Document Follow")
-    # at max 20 documents are sent for each user
-    return (
-        frappe.qb.from_(DocumentFollow)
-        .where(DocumentFollow.user == user)
-        .select(DocumentFollow.ref_doctype, DocumentFollow.ref_docid)
-        .orderby(DocumentFollow.modified)
-        .limit(20)
-    ).run(as_dict=True)
+	DocumentFollow = DocType("Document Follow")
+	# at max 20 documents are sent for each user
+	return (
+		frappe.qb.from_(DocumentFollow)
+		.where(DocumentFollow.user == user)
+		.select(DocumentFollow.ref_doctype, DocumentFollow.ref_docid)
+		.orderby(DocumentFollow.creation)
+		.limit(20)
+	).run(as_dict=True)
 
 
 def get_version(doctype, doc_id, frequency, user):

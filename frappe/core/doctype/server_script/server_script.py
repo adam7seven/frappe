@@ -3,18 +3,22 @@
 
 from functools import partial
 from itertools import chain
+from typing import TYPE_CHECKING
 
 import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.rate_limiter import rate_limit
 from frappe.utils.safe_exec import (
-    FrappeTransformer,
-    get_keys_for_autocomplete,
-    get_safe_globals,
-    is_safe_exec_enabled,
-    safe_exec,
+	FrappeTransformer,
+	get_keys_for_autocomplete,
+	get_safe_globals,
+	is_safe_exec_enabled,
+	safe_exec,
 )
+
+if TYPE_CHECKING:
+	from frappe.core.doctype.scheduled_job_type.scheduled_job_type import ScheduledJobType
 
 
 class ServerScript(Document):
@@ -26,71 +30,77 @@ class ServerScript(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        allow_guest: DF.Check
-        api_method: DF.Data | None
-        cron_format: DF.Data | None
-        disabled: DF.Check
-        doctype_event: DF.Literal[
-            "Before Insert",
-            "Before Validate",
-            "Before Save",
-            "After Insert",
-            "After Save",
-            "Before Reid",
-            "After Reid",
-            "Before Submit",
-            "After Submit",
-            "Before Cancel",
-            "After Cancel",
-            "Before Delete",
-            "After Delete",
-            "Before Save (Submitted Document)",
-            "After Save (Submitted Document)",
-            "Before Print",
-            "On Payment Authorization",
-        ]
-        enable_rate_limit: DF.Check
-        event_frequency: DF.Literal[
-            "All",
-            "Hourly",
-            "Daily",
-            "Weekly",
-            "Monthly",
-            "Yearly",
-            "Hourly Long",
-            "Daily Long",
-            "Weekly Long",
-            "Monthly Long",
-            "Cron",
-        ]
-        module: DF.Link | None
-        rate_limit_count: DF.Int
-        rate_limit_seconds: DF.Int
-        reference_doctype: DF.Link | None
-        script: DF.Code
-        script_type: DF.Literal[
-            "DocType Event", "Scheduler Event", "Permission Query", "API"
-        ]
+		allow_guest: DF.Check
+		api_method: DF.Data | None
+		cron_format: DF.Data | None
+		disabled: DF.Check
+		doctype_event: DF.Literal[
+			"Before Insert",
+			"Before Validate",
+			"Before Save",
+			"After Insert",
+			"After Save",
+			"Before Reid",
+			"After Reid",
+			"Before Submit",
+			"After Submit",
+			"Before Cancel",
+			"After Cancel",
+			"Before Discard",
+			"After Discard",
+			"Before Delete",
+			"After Delete",
+			"Before Save (Submitted Document)",
+			"After Save (Submitted Document)",
+			"Before Print",
+			"On Payment Authorization",
+			"On Payment Paid",
+			"On Payment Failed",
+			"On Payment Charge Processed",
+			"On Payment Mandate Charge Processed",
+			"On Payment Mandate Acquisition Processed",
+		]
+		enable_rate_limit: DF.Check
+		event_frequency: DF.Literal[
+			"All",
+			"Hourly",
+			"Daily",
+			"Weekly",
+			"Monthly",
+			"Yearly",
+			"Hourly Long",
+			"Daily Long",
+			"Weekly Long",
+			"Monthly Long",
+			"Cron",
+		]
+		module: DF.Link | None
+		rate_limit_count: DF.Int
+		rate_limit_seconds: DF.Int
+		reference_doctype: DF.Link | None
+		script: DF.Code
+		script_type: DF.Literal["DocType Event", "Scheduler Event", "Permission Query", "API"]
+	# end: auto-generated types
 
-    # end: auto-generated types
-    def validate(self):
-        frappe.only_for("Script Manager", True)
-        self.sync_scheduled_jobs()
-        self.clear_scheduled_events()
-        self.check_if_compilable_in_restricted_context()
+	def validate(self):
+		frappe.only_for("Script Manager", True)
+		self.check_if_compilable_in_restricted_context()
 
-    def on_update(self):
-        self.sync_scheduler_events()
+	def on_update(self):
+		self.sync_scheduled_job_type()
 
-    def clear_cache(self):
-        frappe.cache.delete_value("server_script_map")
-        return super().clear_cache()
+	def clear_cache(self):
+		frappe.client_cache.delete_value("server_script_map")
+		return super().clear_cache()
 
-    def on_trash(self):
-        frappe.cache.delete_value("server_script_map")
-        if self.script_type == "Scheduler Event":
-            for job in self.scheduled_jobs:
-                frappe.delete_doc("Scheduled Job Type", job.id)
+	def on_trash(self):
+		frappe.client_cache.delete_value("server_script_map")
+		if self.script_type == "Scheduler Event":
+			for job in self.scheduled_jobs:
+				scheduled_job_type: ScheduledJobType = frappe.get_doc("Scheduled Job Type", job.id)
+				scheduled_job_type.stopped = True
+				scheduled_job_type.server_script = None
+				scheduled_job_type.save()
 
     def get_code_fields(self):
         return {"script": "py"}
@@ -103,69 +113,58 @@ class ServerScript(Document):
             fields=["id", "stopped"],
         )
 
-    def sync_scheduled_jobs(self):
-        """Sync Scheduled Job Type statuses if Server Script's disabled status is changed"""
-        if self.script_type != "Scheduler Event" or not self.has_value_changed(
-            "disabled"
-        ):
-            return
+	def sync_scheduled_job_type(self):
+		"""Create or update Scheduled Job Type documents for Scheduler Event Server Scripts"""
 
-        for scheduled_job in self.scheduled_jobs:
-            if bool(scheduled_job.stopped) != bool(self.disabled):
-                job = frappe.get_doc("Scheduled Job Type", scheduled_job.id)
-                job.stopped = self.disabled
-                job.save()
+		def get_scheduled_job() -> "ScheduledJobType":
+			if scheduled_script := frappe.db.get_value("Scheduled Job Type", {"server_script": self.id}):
+				return frappe.get_doc("Scheduled Job Type", scheduled_script)
+			else:
+				return frappe.get_doc({"doctype": "Scheduled Job Type", "server_script": self.id})
 
-    def sync_scheduler_events(self):
-        """Create or update Scheduled Job Type documents for Scheduler Event Server Scripts"""
-        if (
-            not self.disabled
-            and self.event_frequency
-            and self.script_type == "Scheduler Event"
-        ):
-            cron_format = self.cron_format if self.event_frequency == "Cron" else None
-            setup_scheduler_events(
-                script_id=self.id,
-                frequency=self.event_frequency,
-                cron_format=cron_format,
-            )
+		previous_script_type = self.get_value_before_save("script_type")
+		if previous_script_type != self.script_type and previous_script_type == "Scheduler Event":
+			get_scheduled_job().update({"stopped": 1}).save()
+			return
 
-    def clear_scheduled_events(self):
-        """Deletes existing scheduled jobs by Server Script if self.event_frequency or self.cron_format has changed"""
-        if (
-            self.script_type == "Scheduler Event"
-            and (
-                self.has_value_changed("event_frequency")
-                or self.has_value_changed("cron_format")
-            )
-        ) or (
-            self.has_value_changed("script_type")
-            and self.script_type != "Scheduler Event"
-        ):
-            for scheduled_job in self.scheduled_jobs:
-                frappe.delete_doc(
-                    "Scheduled Job Type", scheduled_job.id, delete_permanently=1
-                )
+		if self.script_type != "Scheduler Event" or not (
+			self.has_value_changed("event_frequency")
+			or self.has_value_changed("cron_format")
+			or self.has_value_changed("disabled")
+			or self.has_value_changed("script_type")
+		):
+			return
 
-    def check_if_compilable_in_restricted_context(self):
-        """Check compilation errors and send them back as warnings."""
-        from RestrictedPython import compile_restricted
+		get_scheduled_job().update(
+			{
+				"method": frappe.scrub(f"{self.id}-{self.event_frequency}"),
+				"frequency": self.event_frequency,
+				"cron_format": self.cron_format if self.event_frequency == "Cron" else "",
+				"stopped": self.disabled,
+			}
+		).save()
 
-        try:
-            compile_restricted(self.script, policy=FrappeTransformer)
-        except Exception as e:
-            frappe.msgprint(str(e), title=_("Compilation warning"))
+		frappe.msgprint(_("Scheduled execution for script {0} has updated").format(self.id), alert=True)
 
-    def execute_method(self) -> dict:
-        """Specific to API endpoint Server Scripts
+	def check_if_compilable_in_restricted_context(self):
+		"""Check compilation errors and send them back as warnings."""
+		from RestrictedPython import compile_restricted
 
-        Raises:
-                frappe.DoesNotExistError: If self.script_type is not API
-                frappe.PermissionError: If self.allow_guest is unset for API accessed by Guest user
+		try:
+			compile_restricted(self.script, policy=FrappeTransformer)
+		except Exception as e:
+			frappe.msgprint(str(e), title=_("Compilation warning"))
 
-        Returns:
-                dict: Evaluates self.script with frappe.utils.safe_exec.safe_exec and returns the flags set in it's safe globals
-        """
+	def execute_method(self) -> dict:
+		"""Specific to API endpoint Server Scripts.
+
+		Raise:
+		        frappe.DoesNotExistError: If self.script_type is not API.
+		        frappe.PermissionError: If self.allow_guest is unset for API accessed by Guest user.
+
+		Return:
+		        dict: Evaluate self.script with frappe.utils.safe_exec.safe_exec and return the flags set in its safe globals.
+		"""
 
         if self.enable_rate_limit:
             # Wrap in rate limiter, required for specifying custom limits for each script
@@ -181,15 +180,15 @@ class ServerScript(Document):
     def execute_doc(self, doc: Document):
         """Specific to Document Event triggered Server Scripts
 
-        Args:
-                doc (Document): Executes script with for a certain document's events
-        """
-        safe_exec(
-            self.script,
-            _locals={"doc": doc},
-            restrict_commit_rollback=True,
-            script_filename=self.id,
-        )
+		Args:
+		        doc (Document): Executes script with for a certain document's events
+		"""
+		safe_exec(
+			self.script,
+			_locals={"doc": doc},
+			restrict_commit_rollback=True,
+			script_filename=self.id,
+		)
 
     def execute_scheduled_method(self):
         """Specific to Scheduled Jobs via Server Scripts
@@ -202,87 +201,44 @@ class ServerScript(Document):
 
         safe_exec(self.script, script_filename=self.id)
 
-    def get_permission_query_conditions(self, user: str) -> list[str]:
-        """Specific to Permission Query Server Scripts
+	def get_permission_query_conditions(self, user: str) -> list[str]:
+		"""Specific to Permission Query Server Scripts.
 
-        Args:
-                user (str): Takes user email to execute script and return list of conditions
+		Args:
+		        user (str): Take user email to execute script and return list of conditions.
 
-        Returns:
-                list: Returns list of conditions defined by rules in self.script
-        """
-        locals = {"user": user, "conditions": ""}
-        safe_exec(self.script, None, locals, script_filename=self.id)
-        if locals["conditions"]:
-            return locals["conditions"]
-
-    @frappe.whitelist()
-    def get_autocompletion_items(self):
-        """Generates a list of a autocompletion strings from the context dict
-        that is used while executing a Server Script.
-
-        Returns:
-                list: Returns list of autocompletion items.
-                For e.g., ["frappe.utils.cint", "frappe.get_all", ...]
-        """
-
-        return frappe.cache.get_value(
-            "server_script_autocompletion_items",
-            generator=lambda: list(
-                chain.from_iterable(
-                    get_keys_for_autocomplete(key, value, meta="utils")
-                    for key, value in get_safe_globals().items()
-                ),
-            ),
-        )
+		Return:
+		        list: Return list of conditions defined by rules in self.script.
+		"""
+		locals = {"user": user, "conditions": ""}
+		safe_exec(self.script, None, locals, script_filename=self.id)
+		if locals["conditions"]:
+			return locals["conditions"]
 
 
-def setup_scheduler_events(
-    script_id: str, frequency: str, cron_format: str | None = None
-):
-    """Creates or Updates Scheduled Job Type documents based on the specified script id and frequency
+@frappe.whitelist()
+def get_autocompletion_items():
+	"""Generate a list of autocompletion strings from the context dict
+	that is used while executing a Server Script.
 
-    Args:
-            script_id (str): Name of the Server Script document
-            frequency (str): Event label compatible with the Frappe scheduler
-    """
-    method = frappe.scrub(f"{script_id}-{frequency}")
-    scheduled_script = frappe.db.get_value("Scheduled Job Type", {"method": method})
+	e.g., ["frappe.utils.cint", "frappe.get_all", ...]
+	"""
 
-    if not scheduled_script:
-        frappe.get_doc(
-            {
-                "doctype": "Scheduled Job Type",
-                "method": method,
-                "frequency": frequency,
-                "server_script": script_id,
-                "cron_format": cron_format,
-            }
-        ).insert()
-
-        frappe.msgprint(
-            _("Enabled scheduled execution for script {0}").format(script_id)
-        )
-
-    else:
-        doc = frappe.get_doc("Scheduled Job Type", scheduled_script)
-
-        if doc.frequency == frequency:
-            return
-
-        doc.frequency = frequency
-        doc.cron_format = cron_format
-        doc.save()
-
-        frappe.msgprint(
-            _("Scheduled execution for script {0} has updated").format(script_id)
-        )
+	return frappe.cache.get_value(
+		"server_script_autocompletion_items",
+		generator=lambda: list(
+			chain.from_iterable(
+				get_keys_for_autocomplete(key, value, meta="utils")
+				for key, value in get_safe_globals().items()
+			),
+		),
+	)
 
 
-def execute_api_server_script(script=None, *args, **kwargs):
-    # These are only added for compatibility with rate limiter.
-    del args
-    del kwargs
+def execute_api_server_script(script: ServerScript, *args, **kwargs):
+	# These are only added for compatibility with rate limiter.
+	del args
+	del kwargs
 
     if script.script_type != "API":
         raise frappe.DoesNotExistError
@@ -291,8 +247,8 @@ def execute_api_server_script(script=None, *args, **kwargs):
     if frappe.session.user == "Guest" and not script.allow_guest:
         raise frappe.PermissionError
 
-    # output can be stored in flags
-    _globals, _locals = safe_exec(script.script, script_filename=script.id)
+	# output can be stored in flags
+	_globals, _locals = safe_exec(script.script, script_filename=script.id)
 
     return _globals.frappe.flags
 

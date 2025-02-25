@@ -22,7 +22,7 @@ def cache_source(function):
             return function(chart=chart, no_cache=no_cache)
         chart_id = frappe.parse_json(chart).id
         cache_key = f"chart-data:{chart_id}"
-        if int(kwargs.get("refresh") or 0):
+        if cint(kwargs.get("refresh")):
             results = generate_and_cache_results(kwargs, function, cache_key, chart)
         else:
             cached_results = frappe.cache.get_value(cache_key)
@@ -113,9 +113,9 @@ def make_records_in_module(app, module):
 
 
 def make_records(path, filters=None):
-    if os.path.isdir(path):
-        for fname in os.listdir(path):
-            if os.path.isdir(join(path, fname)):
-                if fname == "__pycache__":
-                    continue
-                import_file_by_path(f"{path}/{fname}/{fname}.json")
+	if os.path.isdir(path):
+		for fname in os.listdir(path):
+			if os.path.isdir(join(path, fname)):
+				if fname == "__pycache__":
+					continue
+				import_file_by_path(f"{path}/{fname}/{fname}.json")
