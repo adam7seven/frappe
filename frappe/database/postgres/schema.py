@@ -8,7 +8,7 @@ from frappe.utils.defaults import get_not_null_defaults
 class PostgresTable(DBTable):
     def create(self):
         varchar_len = frappe.db.VARCHAR_LEN
-        name_column = f"name varchar({varchar_len}) primary key"
+        id_column = f"id varchar({varchar_len}) primary key"
 
         additional_definitions = ""
         # columns
@@ -32,16 +32,16 @@ class PostgresTable(DBTable):
         # creating sequence(s)
         if not self.meta.issingle and self.meta.autoid == "autoincrement":
             frappe.db.create_sequence(self.doctype, check_not_exists=True)
-            name_column = "name bigint primary key"
+            id_column = "id bigint primary key"
 
         elif not self.meta.issingle and self.meta.autoid == "UUID":
-            name_column = "name uuid primary key"
+            id_column = "id uuid primary key"
 
         # TODO: set docstatus length
         # create table
         frappe.db.sql(
             f"""create table `{self.table_name}` (
-			{name_column},
+			{id_column},
 			creation timestamp(6),
 			modified timestamp(6),
 			modified_by varchar({varchar_len}),
@@ -98,7 +98,7 @@ class PostgresTable(DBTable):
             query.append(alter_pk)
 
         for col in self.set_default:
-            if col.fieldname == "name":
+            if col.fieldname == "id":
                 continue
 
             if col.fieldtype in ("Check", "Int"):
@@ -133,13 +133,13 @@ class PostgresTable(DBTable):
         drop_contraint_query = ""
         for col in self.drop_index:
             # primary key
-            if col.fieldname != "name":
+            if col.fieldname != "id":
                 # if index key exists
                 drop_contraint_query += f'DROP INDEX IF EXISTS "{col.fieldname}" ;'
 
         for col in self.drop_unique:
             # primary key
-            if col.fieldname != "name":
+            if col.fieldname != "id":
                 # if index key exists
                 drop_contraint_query += f'DROP INDEX IF EXISTS "unique_{col.fieldname}" ;'
 
@@ -193,9 +193,9 @@ class PostgresTable(DBTable):
     def alter_primary_key(self) -> str | None:
         # If there are no values in table allow migrating to UUID from varchar
         autoid = self.meta.autoid
-        if autoid == "UUID" and frappe.db.get_column_type(self.doctype, "name") != "uuid":
+        if autoid == "UUID" and frappe.db.get_column_type(self.doctype, "id") != "uuid":
             if not frappe.db.get_value(self.doctype, {}, order_by=None):
-                return "alter column `name` TYPE uuid USING name::uuid"
+                return "alter column `id` TYPE uuid USING id::uuid"
             else:
                 frappe.throw(
                     _("Primary key of doctype {0} can not be changed as there are existing values.").format(
@@ -204,5 +204,5 @@ class PostgresTable(DBTable):
                 )
 
         # Reverting from UUID to VARCHAR
-        if autoid != "UUID" and frappe.db.get_column_type(self.doctype, "name") == "uuid":
-            return f"alter column `name` TYPE varchar({frappe.db.VARCHAR_LEN})"
+        if autoid != "UUID" and frappe.db.get_column_type(self.doctype, "id") == "uuid":
+            return f"alter column `id` TYPE varchar({frappe.db.VARCHAR_LEN})"

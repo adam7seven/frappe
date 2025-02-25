@@ -8,7 +8,7 @@
 
 DROP TABLE IF EXISTS "tabDocField";
 CREATE TABLE "tabDocField" (
-  "name" varchar(255) NOT NULL,
+  "id" varchar(255) NOT NULL,
   "creation" timestamp(6) DEFAULT NULL,
   "modified" timestamp(6) DEFAULT NULL,
   "modified_by" varchar(255) DEFAULT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE "tabDocField" (
   "hide_border" smallint NOT NULL DEFAULT 0,
   "hide_days" smallint NOT NULL DEFAULT 0,
   "hide_seconds" smallint NOT NULL DEFAULT 0,
-  PRIMARY KEY ("name")
+  PRIMARY KEY ("id")
 ) ;
 
 create index on "tabDocField" ("parent");
@@ -82,7 +82,7 @@ create index on "tabDocField" ("fieldname");
 
 DROP TABLE IF EXISTS "tabDocPerm";
 CREATE TABLE "tabDocPerm" (
-  "name" varchar(255) NOT NULL,
+  "id" varchar(255) NOT NULL,
   "creation" timestamp(6) DEFAULT NULL,
   "modified" timestamp(6) DEFAULT NULL,
   "modified_by" varchar(255) DEFAULT NULL,
@@ -108,7 +108,7 @@ CREATE TABLE "tabDocPerm" (
   "share" smallint NOT NULL DEFAULT 1,
   "print" smallint NOT NULL DEFAULT 1,
   "email" smallint NOT NULL DEFAULT 1,
-  PRIMARY KEY ("name")
+  PRIMARY KEY ("id")
 ) ;
 
 create index on "tabDocPerm" ("parent");
@@ -119,7 +119,7 @@ create index on "tabDocPerm" ("parent");
 
 DROP TABLE IF EXISTS "tabDocType Action";
 CREATE TABLE "tabDocType Action" (
-  "name" varchar(255) NOT NULL,
+  "id" varchar(255) NOT NULL,
   "creation" timestamp(6) DEFAULT NULL,
   "modified" timestamp(6) DEFAULT NULL,
   "modified_by" varchar(255) DEFAULT NULL,
@@ -133,7 +133,7 @@ CREATE TABLE "tabDocType Action" (
   "group" text DEFAULT NULL,
   "action_type" varchar(140) NOT NULL,
   "action" varchar(140) NOT NULL,
-  PRIMARY KEY ("name")
+  PRIMARY KEY ("id")
 ) ;
 
 create index on "tabDocType Action" ("parent");
@@ -144,7 +144,7 @@ create index on "tabDocType Action" ("parent");
 
 DROP TABLE IF EXISTS "tabDocType Link";
 CREATE TABLE "tabDocType Link" (
-  "name" varchar(255) NOT NULL,
+  "id" varchar(255) NOT NULL,
   "creation" timestamp(6) DEFAULT NULL,
   "modified" timestamp(6) DEFAULT NULL,
   "modified_by" varchar(255) DEFAULT NULL,
@@ -158,7 +158,7 @@ CREATE TABLE "tabDocType Link" (
   "group" varchar(140) DEFAULT NULL,
   "link_doctype" varchar(140) NOT NULL,
   "link_fieldname" varchar(140) NOT NULL,
-  PRIMARY KEY ("name")
+  PRIMARY KEY ("id")
 ) ;
 
 create index on "tabDocType Link" ("parent");
@@ -170,7 +170,7 @@ create index on "tabDocType Link" ("parent");
 
 DROP TABLE IF EXISTS "tabDocType";
 CREATE TABLE "tabDocType" (
-  "name" varchar(255) NOT NULL,
+  "id" varchar(255) NOT NULL,
   "creation" timestamp(6) DEFAULT NULL,
   "modified" timestamp(6) DEFAULT NULL,
   "modified_by" varchar(255) DEFAULT NULL,
@@ -217,7 +217,7 @@ CREATE TABLE "tabDocType" (
   "engine" varchar(20) DEFAULT 'InnoDB',
   "default_print_format" varchar(255) DEFAULT NULL,
   "is_submittable" smallint NOT NULL DEFAULT 0,
-  "show_name_in_global_search" smallint NOT NULL DEFAULT 0,
+  "show_id_in_global_search" smallint NOT NULL DEFAULT 0,
   "_user_tags" varchar(255) DEFAULT NULL,
   "custom" smallint NOT NULL DEFAULT 0,
   "beta" smallint NOT NULL DEFAULT 0,
@@ -232,7 +232,7 @@ CREATE TABLE "tabDocType" (
   "show_title_field_in_link" smallint NOT NULL DEFAULT 0,
   "migration_hash" varchar(255) DEFAULT NULL,
   "translated_doctype" smallint NOT NULL DEFAULT 0,
-  PRIMARY KEY ("name")
+  PRIMARY KEY ("id")
 ) ;
 
 --
@@ -241,9 +241,9 @@ CREATE TABLE "tabDocType" (
 
 DROP TABLE IF EXISTS "tabSeries";
 CREATE TABLE "tabSeries" (
-  "name" varchar(100),
+  "id" varchar(100),
   "current" bigint NOT NULL DEFAULT 0,
-  PRIMARY KEY ("name")
+  PRIMARY KEY ("id")
 ) ;
 
 --
@@ -282,14 +282,14 @@ create index on "tabSingles" ("doctype", "field");
 DROP TABLE IF EXISTS "__Auth";
 CREATE TABLE "__Auth" (
 	"doctype" VARCHAR(140) NOT NULL,
-	"name" VARCHAR(255) NOT NULL,
+	"id" VARCHAR(255) NOT NULL,
 	"fieldname" VARCHAR(140) NOT NULL,
 	"password" TEXT NOT NULL,
 	"encrypted" int NOT NULL DEFAULT 0,
-	PRIMARY KEY ("doctype", "name", "fieldname")
+	PRIMARY KEY ("doctype", "id", "fieldname")
 );
 
-create index on "__Auth" ("doctype", "name", "fieldname");
+create index on "__Auth" ("doctype", "id", "fieldname");
 
 --
 -- Table structure for table "tabFile"
@@ -297,7 +297,7 @@ create index on "__Auth" ("doctype", "name", "fieldname");
 
 DROP TABLE IF EXISTS "tabFile";
 CREATE TABLE "tabFile" (
-  "name" varchar(255) NOT NULL,
+  "id" varchar(255) NOT NULL,
   "creation" timestamp(6) DEFAULT NULL,
   "modified" timestamp(6) DEFAULT NULL,
   "modified_by" varchar(255) DEFAULT NULL,
@@ -310,14 +310,14 @@ CREATE TABLE "tabFile" (
   "file_name" varchar(255) DEFAULT NULL,
   "file_url" varchar(255) DEFAULT NULL,
   "module" varchar(255) DEFAULT NULL,
-  "attached_to_name" varchar(255) DEFAULT NULL,
+  "attached_to_id" varchar(255) DEFAULT NULL,
   "file_size" bigint NOT NULL DEFAULT 0,
   "attached_to_doctype" varchar(255) DEFAULT NULL,
-  PRIMARY KEY ("name")
+  PRIMARY KEY ("id")
 );
 
 create index on "tabFile" ("parent");
-create index on "tabFile" ("attached_to_name");
+create index on "tabFile" ("attached_to_id");
 create index on "tabFile" ("attached_to_doctype");
 
 --
@@ -326,7 +326,7 @@ create index on "tabFile" ("attached_to_doctype");
 
 DROP TABLE IF EXISTS "tabDefaultValue";
 CREATE TABLE "tabDefaultValue" (
-  "name" varchar(255) NOT NULL,
+  "id" varchar(255) NOT NULL,
   "creation" timestamp(6) DEFAULT NULL,
   "modified" timestamp(6) DEFAULT NULL,
   "modified_by" varchar(255) DEFAULT NULL,
@@ -338,7 +338,7 @@ CREATE TABLE "tabDefaultValue" (
   "idx" bigint NOT NULL DEFAULT 0,
   "defvalue" text,
   "defkey" varchar(255) DEFAULT NULL,
-  PRIMARY KEY ("name")
+  PRIMARY KEY ("id")
 );
 
 create index on "tabDefaultValue" ("parent");

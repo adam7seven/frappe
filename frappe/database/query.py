@@ -11,7 +11,7 @@ import frappe
 from frappe import _
 from frappe.database.operator_map import OPERATOR_MAP
 from frappe.database.schema import SPECIAL_CHAR_PATTERN
-from frappe.database.utils import DefaultOrderBy, FilterValue, convert_to_value, get_doctype_name
+from frappe.database.utils import DefaultOrderBy, FilterValue, convert_to_value, get_doctype_id
 from frappe.query_builder import Criterion, Field, Order, functions
 from frappe.query_builder.functions import Function, SqlFunctions
 from frappe.query_builder.utils import PseudoColumnMapper
@@ -57,7 +57,7 @@ class Engine:
 
         if isinstance(table, Table):
             self.table = table
-            self.doctype = get_doctype_name(table.get_sql())
+            self.doctype = get_doctype_id(table.get_sql())
         else:
             self.doctype = table
             self.validate_doctype()
@@ -101,7 +101,7 @@ class Engine:
         # add fields
         self.fields = self.parse_fields(fields)
         if not self.fields:
-            self.fields = [self.table.name]
+            self.fields = [self.table.id]
 
         self.query._child_queries = []
         for field in self.fields:
@@ -120,7 +120,7 @@ class Engine:
             return
 
         if isinstance(filters, FilterValue):
-            filters = {"name": convert_to_value(filters)}
+            filters = {"id": convert_to_value(filters)}
 
         if isinstance(filters, Criterion):
             self.query = self.query.where(filters)
@@ -130,7 +130,7 @@ class Engine:
 
         elif isinstance(filters, list | tuple):
             if all(isinstance(d, FilterValue) for d in filters) and len(filters) > 0:
-                self.apply_dict_filters({"name": ("in", tuple(convert_to_value(f) for f in filters))})
+                self.apply_dict_filters({"id": ("in", tuple(convert_to_value(f) for f in filters))})
             else:
                 for filter in filters:
                     if isinstance(filter, FilterValue | Criterion | dict):
@@ -187,7 +187,7 @@ class Engine:
             table = frappe.qb.DocType(doctype)
             if meta.istable and not self.query.is_joined(table):
                 self.query = self.query.left_join(table).on(
-                    (table.parent == self.table.name) & (table.parenttype == self.doctype)
+                    (table.parent == self.table.id) & (table.parenttype == self.doctype)
                 )
 
         _value = convert_to_value(_value)
@@ -222,7 +222,7 @@ class Engine:
             self.query = self.query.where(operator_fn(_field, _value))
 
     def get_function_object(self, field: str) -> "Function":
-        """Return PyPika Function object. Expect field to look like 'SUM(*)' or 'name' or something similar."""
+        """Return PyPika Function object. Expect field to look like 'SUM(*)' or 'id' or something similar."""
         func = field.split("(", maxsplit=1)[0].capitalize()
         args_start, args_end = len(func) + 1, field.index(")")
         args = field[args_start:args_end].split(",")
@@ -441,7 +441,7 @@ class ChildTableField(DynamicTableField):
         main_table = frappe.qb.DocType(self.parent_doctype)
         if not query.is_joined(table):
             query = query.left_join(table).on(
-                (table.parent == main_table.name) & (table.parenttype == self.parent_doctype)
+                (table.parent == main_table.id) & (table.parenttype == self.parent_doctype)
             )
         return query
 
@@ -469,7 +469,7 @@ class LinkTableField(DynamicTableField):
         table = frappe.qb.DocType(self.doctype)
         main_table = frappe.qb.DocType(self.parent_doctype)
         if not query.is_joined(table):
-            query = query.left_join(table).on(table.name == getattr(main_table, self.link_fieldname))
+            query = query.left_join(table).on(table.id == getattr(main_table, self.link_fieldname))
         return query
 
 
@@ -488,11 +488,11 @@ class ChildQuery:
         self.parent_doctype = parent_doctype
         self.doctype = field.options
 
-    def get_query(self, parent_names=None) -> QueryBuilder:
+    def get_query(self, parent_ids=None) -> QueryBuilder:
         filters = {
             "parenttype": self.parent_doctype,
             "parentfield": self.fieldname,
-            "parent": ["in", parent_names],
+            "parent": ["in", parent_ids],
         }
         return frappe.qb.get_query(
             self.doctype,
@@ -516,30 +516,30 @@ def has_function(field):
             return True
 
 
-def get_nested_set_hierarchy_result(doctype: str, name: str, hierarchy: str) -> list[str]:
+def get_nested_set_hierarchy_result(doctype: str, id: str, hierarchy: str) -> list[str]:
     """Get matching nodes based on operator."""
     table = frappe.qb.DocType(doctype)
     try:
-        lft, rgt = frappe.qb.from_(table).select("lft", "rgt").where(table.name == name).run()[0]
+        lft, rgt = frappe.qb.from_(table).select("lft", "rgt").where(table.id == id).run()[0]
     except IndexError:
         lft, rgt = None, None
 
     if hierarchy in ("descendants of", "not descendants of", "descendants of (inclusive)"):
         result = (
             frappe.qb.from_(table)
-            .select(table.name)
+            .select(table.id)
             .where(table.lft > lft)
             .where(table.rgt < rgt)
             .orderby(table.lft, order=Order.asc)
             .run(pluck=True)
         )
         if hierarchy == "descendants of (inclusive)":
-            result += [name]
+            result += [id]
     else:
         # Get ancestor elements of a DocType with a tree structure
         result = (
             frappe.qb.from_(table)
-            .select(table.name)
+            .select(table.id)
             .where(table.lft < lft)
             .where(table.rgt > rgt)
             .orderby(table.lft, order=Order.desc)

@@ -11,7 +11,7 @@ class MariaDBTable(DBTable):
         additional_definitions = []
         engine = self.meta.get("engine") or "InnoDB"
         varchar_len = frappe.db.VARCHAR_LEN
-        name_column = f"name varchar({varchar_len}) primary key"
+        id_column = f"id varchar({varchar_len}) primary key"
 
         # columns
         column_defs = self.get_column_definitions()
@@ -45,16 +45,16 @@ class MariaDBTable(DBTable):
             # NOTE: not used nextval func as default as the ability to restore
             # database with sequences has bugs in mariadb and gives a scary error.
             # issue link: https://jira.mariadb.org/browse/MDEV-20070
-            name_column = "name bigint primary key"
+            id_column = "id bigint primary key"
 
         elif not self.meta.issingle and self.meta.autoid == "UUID":
-            name_column = "name uuid primary key"
+            id_column = "id uuid primary key"
 
         additional_definitions = ",\n".join(additional_definitions)
 
         # create table
         query = f"""create table `{self.table_name}` (
-			{name_column},
+			{id_column},
 			creation datetime(6),
 			modified datetime(6),
 			modified_by varchar({varchar_len}),
@@ -98,7 +98,7 @@ class MariaDBTable(DBTable):
         drop_index_query = []
 
         for col in {*self.drop_index, *self.drop_unique}:
-            if col.fieldname == "name":
+            if col.fieldname == "id":
                 continue
 
             current_column = self.current_columns.get(col.fieldname.lower())
@@ -147,9 +147,9 @@ class MariaDBTable(DBTable):
     def alter_primary_key(self) -> str | None:
         # If there are no values in table allow migrating to UUID from varchar
         autoid = self.meta.autoid
-        if autoid == "UUID" and frappe.db.get_column_type(self.doctype, "name") != "uuid":
+        if autoid == "UUID" and frappe.db.get_column_type(self.doctype, "id") != "uuid":
             if not frappe.db.get_value(self.doctype, {}, order_by=None):
-                return "modify name uuid"
+                return "modify id uuid"
             else:
                 frappe.throw(
                     _("Primary key of doctype {0} can not be changed as there are existing values.").format(
@@ -158,5 +158,5 @@ class MariaDBTable(DBTable):
                 )
 
         # Reverting from UUID to VARCHAR
-        if autoid != "UUID" and frappe.db.get_column_type(self.doctype, "name") == "uuid":
-            return f"modify name varchar({frappe.db.VARCHAR_LEN})"
+        if autoid != "UUID" and frappe.db.get_column_type(self.doctype, "id") == "uuid":
+            return f"modify id varchar({frappe.db.VARCHAR_LEN})"

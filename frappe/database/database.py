@@ -67,8 +67,8 @@ class Database:
 
     OPTIONAL_COLUMNS = ("_user_tags", "_comments", "_assign", "_liked_by")
     DEFAULT_SHORTCUTS = ("_Login", "__user", "_Full Name", "Today", "__today", "now", "Now")
-    STANDARD_VARCHAR_COLUMNS = ("name", "owner", "modified_by")
-    DEFAULT_COLUMNS = ("name", "creation", "modified", "modified_by", "owner", "docstatus", "idx")
+    STANDARD_VARCHAR_COLUMNS = ("id", "owner", "modified_by")
+    DEFAULT_COLUMNS = ("id", "creation", "modified", "modified_by", "owner", "docstatus", "idx")
     CHILD_TABLE_COLUMNS = ("parent", "parenttype", "parentfield")
     MAX_WRITES_PER_TRANSACTION = 200_000
 
@@ -186,15 +186,15 @@ class Database:
                 buffer the results internally. See `Database.unbuffered_cursor`.
         Examples:
 
-                # return customer names as dicts
-                frappe.db.sql("select name from tabCustomer", as_dict=True)
+                # return customer ids as dicts
+                frappe.db.sql("select id from tabCustomer", as_dict=True)
 
-                # return names beginning with a
-                frappe.db.sql("select name from tabCustomer where name like %s", "a%")
+                # return ids beginning with a
+                frappe.db.sql("select id from tabCustomer where id like %s", "a%")
 
                 # values as dict
-                frappe.db.sql("select name from tabCustomer where name like %(name)s and owner=%(owner)s",
-                        {"name": "a%", "owner":"test@example.com"})
+                frappe.db.sql("select id from tabCustomer where id like %(id)s and owner=%(owner)s",
+                        {"id": "a%", "owner":"test@example.com"})
 
         """
         if isinstance(query, MySQLQueryBuilder | PostgreSQLQueryBuilder):
@@ -403,7 +403,7 @@ class Database:
         Example:
 
                 # doctypes = ["DocType", "DocField", "User", ...]
-                doctypes = frappe.db.sql_list("select name from DocType")
+                doctypes = frappe.db.sql_list("select id from DocType")
         """
         return self.sql(query, values, **kwargs, debug=debug, pluck=True)
 
@@ -472,7 +472,7 @@ class Database:
         self,
         doctype: str,
         filters: FilterValue | dict | list | None = None,
-        fieldname: str | list[str] = "name",
+        fieldname: str | list[str] = "id",
         ignore: bool = False,
         as_dict: bool = False,
         debug: bool = False,
@@ -488,8 +488,8 @@ class Database:
     ):
         """Return a document property or list of properties.
 
-        :param doctype: DocType name.
-        :param filters: Filters like `{"x":"y"}` or name of the document. `None` if Single DocType.
+        :param doctype: DocType id.
+        :param filters: Filters like `{"x":"y"}` or id of the document. `None` if Single DocType.
         :param fieldname: Column name.
         :param ignore: Don't raise exception if table, column is missing.
         :param as_dict: Return values as dict.
@@ -504,7 +504,7 @@ class Database:
         Example:
 
                 # return first customer starting with a
-                frappe.db.get_value("Customer", {"name": ("like a%")})
+                frappe.db.get_value("Customer", {"id": ("like a%")})
 
                 # return last login of **User** `test@example.com`
                 frappe.db.get_value("User", "test@example.com", "last_login")
@@ -551,7 +551,7 @@ class Database:
         self,
         doctype: str,
         filters: FilterValue | dict | list | None = None,
-        fieldname: str | list[str] = "name",
+        fieldname: str | list[str] = "id",
         ignore: bool = False,
         as_dict: bool = False,
         debug: bool = False,
@@ -569,8 +569,8 @@ class Database:
     ):
         """Return multiple document properties.
 
-        :param doctype: DocType name.
-        :param filters: Filters like `{"x":"y"}` or name of the document.
+        :param doctype: DocType id.
+        :param filters: Filters like `{"x":"y"}` or id of the document.
         :param fieldname: Column name.
         :param ignore: Don't raise exception if table, column is missing.
         :param as_dict: Return values as dict.
@@ -581,7 +581,7 @@ class Database:
         Example:
 
                 # return first customer starting with a
-                customers = frappe.db.get_values("Customer", {"name": ("like a%")})
+                customers = frappe.db.get_values("Customer", {"id": ("like a%")})
 
                 # return last login of **User** `test@example.com`
                 user = frappe.db.get_values("User", "test@example.com", "*")[0]
@@ -693,7 +693,7 @@ class Database:
 
         :param fields: List of fields,
         :param filters: Filters (dict).
-        :param doctype: DocType name.
+        :param doctype: DocType id.
         """
         if fields == "*" or isinstance(filters, dict):
             # check if single doc matches with filters
@@ -889,8 +889,8 @@ class Database:
 
         **Warning:** this function will not call Document events and should be avoided in normal cases.
 
-        :param dt: DocType name.
-        :param dn: Document name for updating single record or filters for updating many records.
+        :param dt: DocType id.
+        :param dn: Document id for updating single record or filters for updating many records.
         :param field: Property / field name or dictionary of values to be updated
         :param value: Value to be updated.
         :param modified: Use this as the `modified` timestamp.
@@ -1035,20 +1035,20 @@ class Database:
         ```sql
         UPDATE `tabItem`
         SET `status` = CASE
-            WHEN `name` = 'Item-1' THEN 'Close'
-            WHEN `name` = 'Item-2' THEN 'Open'
-            WHEN `name` = 'Item-3' THEN 'Close'
-            WHEN `name` = 'Item-4' THEN 'Cancelled'
+            WHEN `id` = 'Item-1' THEN 'Close'
+            WHEN `id` = 'Item-2' THEN 'Open'
+            WHEN `id` = 'Item-3' THEN 'Close'
+            WHEN `id` = 'Item-4' THEN 'Cancelled'
             ELSE `status`
         end,
         `description` = CASE
-            WHEN `name` = 'Item-1' THEN 'This is the first task'
-            WHEN `name` = 'Item-2' THEN 'This is the second task'
-            WHEN `name` = 'Item-3' THEN 'This is the third task'
-            WHEN `name` = 'Item-4' THEN 'This is the fourth task'
+            WHEN `id` = 'Item-1' THEN 'This is the first task'
+            WHEN `id` = 'Item-2' THEN 'This is the second task'
+            WHEN `id` = 'Item-3' THEN 'This is the third task'
+            WHEN `id` = 'Item-4' THEN 'This is the fourth task'
             ELSE `description`
         end
-        WHERE  `name` IN ( 'Item-1', 'Item-2', 'Item-3', 'Item-4' )
+        WHERE  `id` IN ( 'Item-1', 'Item-2', 'Item-3', 'Item-4' )
         ```
         """
         if not doc_updates:
@@ -1067,7 +1067,7 @@ class Database:
                     conditions[field] = Case()
 
                 # WHEN
-                conditions[field].when(dt.name == docid, value)
+                conditions[field].when(dt.id == docid, value)
 
         for field in conditions:
             # ELSE
@@ -1077,7 +1077,7 @@ class Database:
             for column, value in modified_dict.items():
                 update_query = update_query.set(dt[column], value)
 
-        update_query.where(dt.name.isin(docids)).run(debug=debug)
+        update_query.where(dt.id.isin(docids)).run(debug=debug)
 
     def set_global(self, key, val, user="__global"):
         """Save a global key value. Global values will be automatically set if they match fieldname."""
@@ -1184,7 +1184,7 @@ class Database:
         return frappe.get_all(doctype, limit=1, order_by=None, as_list=True)
 
     def exists(self, dt, dn=None, cache=False, *, debug=False):
-        """Return the document name of a matching document, or None.
+        """Return the document id of a matching document, or None.
 
         Note: `cache` only works if `dt` and `dn` are of type `str`.
 
@@ -1260,7 +1260,7 @@ class Database:
 
         return (
             frappe.qb.from_(Table)
-            .select(Count(Table.name))
+            .select(Count(Table.id))
             .where(Table.creation >= now_datetime() - relativedelta(minutes=minutes))
             .run()[0][0]
         )
@@ -1330,12 +1330,12 @@ class Database:
 
     is_column_missing = staticmethod(_is_column_missing)
 
-    def get_descendants(self, doctype, name):
+    def get_descendants(self, doctype, id):
         """Return descendants of the group node in tree"""
         from frappe.utils.nestedset import get_descendants_of
 
         try:
-            return get_descendants_of(doctype, name, ignore_permissions=True)
+            return get_descendants_of(doctype, id, ignore_permissions=True)
         except Exception:
             # Can only happen if document doesn't exists - kept for backward compatibility
             return []
@@ -1352,7 +1352,7 @@ class Database:
         """Delete rows from a table in site which match the passed filters. This
         does not trigger DocType hooks. Simply runs a DELETE query in the database.
 
-        Doctype name can be passed directly, it will be pre-pended with `tab`.
+        Doctype id can be passed directly, it will be pre-pended with `tab`.
         """
         filters = filters or kwargs.get("conditions")
         query = frappe.qb.get_query(
@@ -1369,7 +1369,7 @@ class Database:
         """Truncate a table in the database. This runs a DDL command `TRUNCATE TABLE`.
         This cannot be rolled back.
 
-        Doctype name can be passed directly, it will be pre-pended with `tab`.
+        Doctype id can be passed directly, it will be pre-pended with `tab`.
         """
         return self.sql_ddl(f"truncate `{get_table_name(doctype)}`")
 
@@ -1416,7 +1416,7 @@ class Database:
         """
         Insert multiple records at a time
 
-        :param doctype: Doctype name
+        :param doctype: Doctype id
         :param fields: list of fields
         :params values: iterable of values
         """
