@@ -173,13 +173,13 @@ async function check_if_private_workspace(name) {
 }
 
 async function get_first_document(doctype) {
-	let docname;
+	let docid;
 
 	await frappe.db.get_list(doctype, { order_by: "creation" }).then((res) => {
-		if (Array.isArray(res) && res.length) docname = res[0].name;
+		if (Array.isArray(res) && res.length) docid = res[0].name;
 	});
 
-	return docname || "new";
+	return docid || "new";
 }
 
 async function get_path(frm) {

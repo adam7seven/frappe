@@ -226,7 +226,7 @@ class DocumentNamingSettings(Document):
     def create_version_log_for_change(self, series, old, new):
         version = frappe.new_doc("Version")
         version.ref_doctype = "Series"
-        version.docname = series or ".#"
+        version.docid = series or ".#"
         version.data = frappe.as_json({"changed": [["current", old, new]]})
         version.flags.ignore_links = True  # series is not a "real" doctype
         version.flags.ignore_permissions = True

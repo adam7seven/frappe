@@ -432,7 +432,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 		// in case of result like this
 		// [{value: 'Manufacturer 1', 'description': 'mobile part 1'},
 		// 	{value: 'Manufacturer 1', 'description': 'mobile part 2'}]
-		// suggestion list has two items with same value (docname) & description
+		// suggestion list has two items with same value (docid) & description
 		return results.reduce((newArr, currElem) => {
 			if (newArr.length === 0) return [currElem];
 			let element_with_same_value = newArr.find((e) => e.value === currElem.value);
@@ -568,7 +568,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 				var q = get_query(
 					(this.frm && this.frm.doc) || this.doc,
 					this.doctype,
-					this.docname
+					this.docid
 				);
 
 				if (typeof q === "string") {
@@ -663,7 +663,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 				} else if (this.frm) {
 					frappe.model.set_value(
 						this.df.parent,
-						this.docname,
+						this.docid,
 						target_field,
 						field_value,
 						this.df.fieldtype
@@ -679,14 +679,14 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 					"frappe.client.validate_link",
 					{
 						doctype: options,
-						docname: value,
+						docid: value,
 						fields: columns_to_fetch,
 					},
 					"GET",
 					{ cache: !columns_to_fetch.length }
 				)
 				.then((response) => {
-					if (!this.docname || !columns_to_fetch.length) {
+					if (!this.docid || !columns_to_fetch.length) {
 						return response.name;
 					}
 					update_dependant_fields(response);

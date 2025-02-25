@@ -482,7 +482,7 @@ frappe.ui.form.Layout = class Layout {
 			if (me.doc) {
 				fieldobj.doc = me.doc;
 				fieldobj.doctype = me.doc.doctype;
-				fieldobj.docname = me.doc.name;
+				fieldobj.docid = me.doc.name;
 				fieldobj.df =
 					frappe.meta.get_docfield(me.doc.doctype, fieldobj.df.fieldname, me.doc.name) ||
 					fieldobj.df;
@@ -795,11 +795,7 @@ frappe.ui.form.Layout = class Layout {
 				frappe.throw(__('Invalid "depends_on" expression'));
 			}
 		} else if (expression.substr(0, 3) == "fn:" && this.frm) {
-			out = this.frm.script_manager.trigger(
-				expression.substr(3),
-				this.doctype,
-				this.docname
-			);
+			out = this.frm.script_manager.trigger(expression.substr(3), this.doctype, this.docid);
 		} else {
 			var value = doc[expression];
 			if ($.isArray(value)) {

@@ -8,11 +8,11 @@ frappe.pages["print"].on_page_load = function (wrapper) {
 	$(wrapper).bind("show", () => {
 		const route = frappe.get_route();
 		const doctype = route[1];
-		const docname = route.slice(2).join("/");
+		const docid = route.slice(2).join("/");
 		if (!frappe.route_options || !frappe.route_options.frm) {
-			frappe.model.with_doc(doctype, docname, () => {
-				let frm = { doctype: doctype, docname: docname };
-				frm.doc = frappe.get_doc(doctype, docname);
+			frappe.model.with_doc(doctype, docid, () => {
+				let frm = { doctype: doctype, docid: docid };
+				frm.doc = frappe.get_doc(doctype, docid);
 				frappe.model.with_doctype(doctype, () => {
 					frm.meta = frappe.get_meta(route[1]);
 					print_view.show(frm);
@@ -58,7 +58,7 @@ frappe.ui.form.PrintView = class {
 	}
 
 	set_title() {
-		this.page.set_title(__(this.frm.docname));
+		this.page.set_title(__(this.frm.docid));
 	}
 
 	setup_toolbar() {
@@ -219,7 +219,7 @@ frappe.ui.form.PrintView = class {
 		frappe
 			.xcall("frappe.printing.page.print.print.get_print_settings_to_show", {
 				doctype: this.frm.doc.doctype,
-				docname: this.frm.doc.name,
+				docid: this.frm.doc.name,
 			})
 			.then((settings) => this.add_settings_to_sidebar(settings));
 	}
@@ -484,7 +484,7 @@ frappe.ui.form.PrintView = class {
 		frappe.route_options = {
 			frm: this,
 		};
-		frappe.set_route("Form", this.frm.doctype, this.frm.docname);
+		frappe.set_route("Form", this.frm.doctype, this.frm.docid);
 	}
 
 	show_footer() {

@@ -11,7 +11,7 @@
     "remind_at",
     "description",
     "reminder_doctype",
-    "reminder_docname",
+    "reminder_docid",
     "notified"
   ],
   "fields": [
@@ -34,7 +34,7 @@
       "read_only": 1
     },
     {
-      "fieldname": "reminder_docname",
+      "fieldname": "reminder_docid",
       "fieldtype": "Dynamic Link",
       "in_list_view": 1,
       "label": "Document Name",

@@ -81,7 +81,7 @@ frappe.ui.form.ControlMarkdownEditor = class ControlMarkdownEditor extends (
 			new frappe.ui.FileUploader({
 				dialog_title: __("Insert Image in Markdown"),
 				doctype: this.doctype,
-				docname: this.docname,
+				docid: this.docid,
 				frm: this.frm,
 				files,
 				folder: "Home/Attachments",

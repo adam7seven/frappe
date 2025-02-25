@@ -236,12 +236,12 @@ frappe.views.GalleryView = class GalleryView {
 			resolve();
 		});
 	}
-	show(docname) {
-		this.prepare_pswp_items().then(() => this._show(docname));
+	show(docid) {
+		this.prepare_pswp_items().then(() => this._show(docid));
 	}
-	_show(docname) {
+	_show(docid) {
 		const items = this.pswp_items;
-		const item_index = items.findIndex((item) => item.name === docname);
+		const item_index = items.findIndex((item) => item.name === docid);
 
 		var options = {
 			index: item_index,

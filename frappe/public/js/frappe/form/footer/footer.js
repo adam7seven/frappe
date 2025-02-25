@@ -35,7 +35,7 @@ frappe.ui.form.Footer = class FormFooter {
 					frappe
 						.xcall("frappe.desk.form.utils.add_comment", {
 							reference_doctype: this.frm.doctype,
-							reference_name: this.frm.docname,
+							reference_name: this.frm.docid,
 							content: comment,
 							comment_email: frappe.session.user,
 							comment_by: frappe.session.user_fullname,

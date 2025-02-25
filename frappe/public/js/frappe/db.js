@@ -65,12 +65,12 @@ frappe.db = {
 				.then((r) => resolve(r ? r.message : null));
 		});
 	},
-	set_value: function (doctype, docname, fieldname, value, callback) {
+	set_value: function (doctype, docid, fieldname, value, callback) {
 		return frappe.call({
 			method: "frappe.client.set_value",
 			args: {
 				doctype: doctype,
-				name: docname,
+				name: docid,
 				fieldname: fieldname,
 				value: value,
 			},

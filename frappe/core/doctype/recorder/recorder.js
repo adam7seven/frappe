@@ -94,7 +94,7 @@ frappe.ui.form.on("Recorder Query", "form_render", function (frm, cdt, cdn) {
 		}
 
 		let field_wrapper =
-			frm.fields_dict[row.parentfield].grid.grid_rows_by_docname[cdn].grid_form.fields_dict[
+			frm.fields_dict[row.parentfield].grid.grid_rows_by_docid[cdn].grid_form.fields_dict[
 				fieldname
 			].wrapper;
 		$(html).appendTo(field_wrapper);

@@ -432,7 +432,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 			method: method,
 			args: {
 				doctype: this.frm.doctype,
-				name: this.frm.docname,
+				name: this.frm.docid,
 				items: items,
 			},
 			callback: function (r) {
@@ -579,7 +579,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 		let method = this.data.graph_method;
 		let args = {
 			doctype: this.frm.doctype,
-			docname: this.frm.doc.name,
+			docid: this.frm.doc.name,
 		};
 		$.extend(args, this.data.graph_method_args);
 

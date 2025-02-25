@@ -299,8 +299,8 @@ def check_if_doc_is_linked(doc, method="Delete"):
                 # linked to same item or doc having same name as the item
                 continue
             else:
-                reference_docname = item_parent or item.name
-                raise_link_exists_exception(doc, linked_parent_doctype, reference_docname)
+                reference_docid = item_parent or item.name
+                raise_link_exists_exception(doc, linked_parent_doctype, reference_docid)
 
 
 def check_if_doc_is_dynamically_linked(doc, method="Delete"):
@@ -346,7 +346,7 @@ def check_if_doc_is_dynamically_linked(doc, method="Delete"):
                     method == "Cancel" and DocStatus(refdoc.docstatus).is_submitted()
                 ):
                     reference_doctype = refdoc.parenttype if meta.istable else df.parent
-                    reference_docname = refdoc.parent if meta.istable else refdoc.name
+                    reference_docid = refdoc.parent if meta.istable else refdoc.name
 
                     if reference_doctype in frappe.get_hooks("ignore_links_on_delete") or (
                         reference_doctype in ignore_linked_doctypes and method == "Cancel"
@@ -356,15 +356,15 @@ def check_if_doc_is_dynamically_linked(doc, method="Delete"):
 
                     at_position = f"at Row: {refdoc.idx}" if meta.istable else ""
 
-                    raise_link_exists_exception(doc, reference_doctype, reference_docname, at_position)
+                    raise_link_exists_exception(doc, reference_doctype, reference_docid, at_position)
 
 
-def raise_link_exists_exception(doc, reference_doctype, reference_docname, row=""):
+def raise_link_exists_exception(doc, reference_doctype, reference_docid, row=""):
     doc_link = f'<a href="/app/Form/{doc.doctype}/{doc.name}">{doc.name}</a>'
-    reference_link = f'<a href="/app/Form/{reference_doctype}/{reference_docname}">{reference_docname}</a>'
+    reference_link = f'<a href="/app/Form/{reference_doctype}/{reference_docid}">{reference_docid}</a>'
 
     # hack to display Single doctype only once in message
-    if reference_doctype == reference_docname:
+    if reference_doctype == reference_docid:
         reference_doctype = ""
 
     frappe.throw(
@@ -379,10 +379,10 @@ def delete_dynamic_links(doctype, name):
     delete_references("ToDo", doctype, name, "reference_type")
     delete_references("Email Unsubscribe", doctype, name)
     delete_references("DocShare", doctype, name, "share_doctype", "share_name")
-    delete_references("Version", doctype, name, "ref_doctype", "docname")
+    delete_references("Version", doctype, name, "ref_doctype", "docid")
     delete_references("Comment", doctype, name)
     delete_references("View Log", doctype, name)
-    delete_references("Document Follow", doctype, name, "ref_doctype", "ref_docname")
+    delete_references("Document Follow", doctype, name, "ref_doctype", "ref_docid")
     delete_references("Notification Log", doctype, name, "document_type", "document_name")
 
     # unlink communications

@@ -166,7 +166,7 @@ class Importer:
 							{
 								"current": current_index,
 								"total": total_payload_count,
-								"docname": doc.name,
+								"docid": doc.name,
 								"data_import": self.data_import.name,
 								"success": True,
 								"row_indexes": row_indexes,
@@ -178,7 +178,7 @@ class Importer:
 					create_import_log(
 						self.data_import.name,
 						log_index,
-						{"success": True, "docname": doc.name, "row_indexes": row_indexes},
+						{"success": True, "docid": doc.name, "row_indexes": row_indexes},
 					)
 
 					log_index += 1
@@ -267,7 +267,7 @@ class Importer:
 
 		new_doc.flags.updater_reference = {
 			"doctype": self.data_import.doctype,
-			"docname": self.data_import.name,
+			"docid": self.data_import.name,
 			"label": _("via Data Import"),
 		}
 
@@ -288,7 +288,7 @@ class Importer:
 			# update doc if there are changes
 			updated_doc.flags.updater_reference = {
 				"doctype": self.data_import.doctype,
-				"docname": self.data_import.name,
+				"docid": self.data_import.name,
 				"label": _("via Data Import"),
 			}
 			updated_doc.save()
@@ -344,7 +344,7 @@ class Importer:
 
 		import_log = frappe.get_all(
 			"Data Import Log",
-			fields=["row_indexes", "success", "messages", "exception", "docname"],
+			fields=["row_indexes", "success", "messages", "exception", "docid"],
 			filters={"data_import": self.data_import.name},
 			order_by="log_index",
 		)
@@ -357,7 +357,7 @@ class Importer:
 			row_number = json.loads(log.get("row_indexes"))[0]
 			status = "Success" if log.get("success") else "Failure"
 			message = (
-				"Successfully Imported {}".format(log.get("docname"))
+				"Successfully Imported {}".format(log.get("docid"))
 				if log.get("success")
 				else log.get("messages")
 			)
@@ -1281,7 +1281,7 @@ def create_import_log(data_import, log_index, log_details):
 			"success": log_details.get("success"),
 			"data_import": data_import,
 			"row_indexes": json.dumps(log_details.get("row_indexes")),
-			"docname": log_details.get("docname"),
+			"docid": log_details.get("docid"),
 			"messages": json.dumps(log_details.get("messages", "[]")),
 			"exception": log_details.get("exception"),
 		}

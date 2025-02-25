@@ -244,7 +244,7 @@ const props = defineProps({
 	doctype: {
 		default: null,
 	},
-	docname: {
+	docid: {
 		default: null,
 	},
 	fieldname: {
@@ -655,8 +655,8 @@ function upload_file(file, i) {
 			form_data.append("doctype", props.doctype);
 		}
 
-		if (props.docname) {
-			form_data.append("docname", props.docname);
+		if (props.docid) {
+			form_data.append("docid", props.docid);
 		}
 
 		if (props.fieldname) {

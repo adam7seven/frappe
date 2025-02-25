@@ -39,15 +39,15 @@ $.extend(frappe.meta, {
 		frappe.meta.docfield_list[df.parent].push(df);
 	},
 
-	make_docfield_copy_for: function (doctype, docname, docfield_list = null) {
+	make_docfield_copy_for: function (doctype, docid, docfield_list = null) {
 		var c = frappe.meta.docfield_copy;
 		if (!c[doctype]) c[doctype] = {};
-		if (!c[doctype][docname]) c[doctype][docname] = {};
+		if (!c[doctype][docid]) c[doctype][docid] = {};
 
 		docfield_list = docfield_list || frappe.meta.docfield_list[doctype] || [];
 		for (var i = 0, j = docfield_list.length; i < j; i++) {
 			var df = docfield_list[i];
-			c[doctype][docname][df.fieldname || df.label] = copy_dict(df);
+			c[doctype][docid][df.fieldname || df.label] = copy_dict(df);
 		}
 	},
 
@@ -292,20 +292,20 @@ $.extend(frappe.meta, {
 			if (df.options.indexOf(":") != -1) {
 				var options = df.options.split(":");
 				if (options.length == 3) {
-					let docname = null;
+					let docid = null;
 					if (doc) {
 						// get reference record e.g. Company
-						docname = doc[options[1]];
-						if (!docname && cur_frm) {
-							docname = cur_frm.doc[options[1]];
+						docid = doc[options[1]];
+						if (!docid && cur_frm) {
+							docid = cur_frm.doc[options[1]];
 						}
 					} else {
 						// Try to get default value, useful for cases like Company overridden in session defaults
-						docname = frappe.defaults.get_user_default(options[1]);
+						docid = frappe.defaults.get_user_default(options[1]);
 					}
 					currency =
-						frappe.model.get_value(options[0], docname, options[2]) ||
-						frappe.model.get_value(":" + options[0], docname, options[2]) ||
+						frappe.model.get_value(options[0], docid, options[2]) ||
+						frappe.model.get_value(":" + options[0], docid, options[2]) ||
 						currency;
 				}
 			} else if (doc && doc[df.options]) {

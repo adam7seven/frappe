@@ -138,8 +138,8 @@ frappe.ui.form.on("DocType", {
 });
 
 frappe.ui.form.on("DocField", {
-	form_render(frm, doctype, docname) {
-		frm.trigger("setup_fetch_from_fields", doctype, docname);
+	form_render(frm, doctype, docid) {
+		frm.trigger("setup_fetch_from_fields", doctype, docid);
 	},
 
 	fieldtype: function (frm) {

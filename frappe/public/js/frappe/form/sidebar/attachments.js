@@ -20,7 +20,7 @@ frappe.ui.form.Attachments = class Attachments {
 			frappe.open_in_new_tab = true;
 			frappe.set_route("List", "File", {
 				attached_to_doctype: this.frm.doctype,
-				attached_to_name: this.frm.docname,
+				attached_to_name: this.frm.docid,
 			});
 		});
 
@@ -194,7 +194,7 @@ frappe.ui.form.Attachments = class Attachments {
 			args: {
 				fid: fileid,
 				dt: me.frm.doctype,
-				dn: me.frm.docname,
+				dn: me.frm.docid,
 			},
 			callback: function (r, rt) {
 				if (r.exc) {
@@ -221,7 +221,7 @@ frappe.ui.form.Attachments = class Attachments {
 
 		new frappe.ui.FileUploader({
 			doctype: this.frm.doctype,
-			docname: this.frm.docname,
+			docid: this.frm.docid,
 			frm: this.frm,
 			folder: "Home/Attachments",
 			on_success: (file_doc) => {
@@ -235,7 +235,7 @@ frappe.ui.form.Attachments = class Attachments {
 		return {
 			from_form: 1,
 			doctype: this.frm.doctype,
-			docname: this.frm.docname,
+			docid: this.frm.docid,
 		};
 	}
 	attachment_uploaded(attachment) {

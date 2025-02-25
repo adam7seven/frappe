@@ -16,7 +16,7 @@
     "translated_text",
     "section_break_6",
     "contribution_status",
-    "contribution_docname"
+    "contribution_docid"
   ],
   "fields": [
     {
@@ -61,7 +61,7 @@
       "read_only": 1
     },
     {
-      "fieldname": "contribution_docname",
+      "fieldname": "contribution_docid",
       "fieldtype": "Data",
       "hidden": 1,
       "label": "Contribution Document Name",

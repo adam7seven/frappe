@@ -46,7 +46,7 @@ let { print_format, store } = useStore();
 
 // variables
 let type = ref("PDF");
-let docname = ref(null);
+let docid = ref(null);
 let preview_loaded = ref(false);
 let iframe = ref(null);
 let doc_select_ref = ref(null);
@@ -58,7 +58,7 @@ let preview_type = ref(null);
 function refresh() {
 	iframe.value?.contentWindow.location.reload();
 }
-function get_default_docname() {
+function get_default_docid() {
 	return frappe.db.get_list(doctype.value, { limit: 1 }).then((doc) => {
 		return doc.length > 0 ? doc[0].name : null;
 	});
@@ -68,10 +68,10 @@ let doctype = computed(() => {
 	return print_format.value.doc_type;
 });
 let url = computed(() => {
-	if (!docname.value) return null;
+	if (!docid.value) return null;
 	let params = new URLSearchParams();
 	params.append("doctype", doctype.value);
-	params.append("name", docname.value);
+	params.append("name", docid.value);
 	params.append("print_format", print_format.value.name);
 
 	if (store.value.letterhead) {
@@ -88,11 +88,11 @@ onMounted(() => {
 		parent: doc_select_ref.value,
 		df: {
 			label: __("Select {0}", [__(doctype.value)]),
-			fieldname: "docname",
+			fieldname: "docid",
 			fieldtype: "Link",
 			options: doctype.value,
 			change: () => {
-				docname.value = doc_select.value.get_value();
+				docid.value = doc_select.value.get_value();
 			},
 		},
 		render_input: true,
@@ -101,7 +101,7 @@ onMounted(() => {
 		parent: preview_type_ref.value,
 		df: {
 			label: __("Preview type"),
-			fieldname: "docname",
+			fieldname: "docid",
 			fieldtype: "Select",
 			options: ["PDF", "HTML"],
 			change: () => {
@@ -111,7 +111,7 @@ onMounted(() => {
 		render_input: true,
 	});
 	preview_type.value.set_value(type.value);
-	get_default_docname().then((doc_name) => {
+	get_default_docid().then((doc_name) => {
 		doc_name && doc_select.value.set_value(doc_name);
 	});
 });

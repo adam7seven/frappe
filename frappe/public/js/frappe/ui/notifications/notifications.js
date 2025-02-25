@@ -225,10 +225,10 @@ class NotificationsView extends BaseNotificationsView {
 		}
 	}
 
-	mark_as_read(docname, $el) {
+	mark_as_read(docid, $el) {
 		frappe
 			.call("frappe.desk.doctype.notification_log.notification_log.mark_as_read", {
-				docname: docname,
+				docid: docid,
 			})
 			.then(() => {
 				$el.removeClass("unread");
@@ -340,10 +340,10 @@ class NotificationsView extends BaseNotificationsView {
 		const link_doctype = notification_doc.document_type
 			? notification_doc.document_type
 			: "Notification Log";
-		const link_docname = notification_doc.document_name
+		const link_docid = notification_doc.document_name
 			? notification_doc.document_name
 			: notification_doc.name;
-		return frappe.utils.get_form_link(link_doctype, link_docname);
+		return frappe.utils.get_form_link(link_doctype, link_docid);
 	}
 
 	toggle_notification_icon(seen) {

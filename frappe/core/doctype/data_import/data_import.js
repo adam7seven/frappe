@@ -423,7 +423,7 @@ frappe.ui.form.on("Data Import", {
 								html = __("Successfully imported {0}", [
 									`<span class="underline">${frappe.utils.get_form_link(
 										frm.doc.reference_doctype,
-										log.docname,
+										log.docid,
 										true
 									)}<span>`,
 								]);
@@ -431,7 +431,7 @@ frappe.ui.form.on("Data Import", {
 								html = __("Successfully updated {0}", [
 									`<span class="underline">${frappe.utils.get_form_link(
 										frm.doc.reference_doctype,
-										log.docname,
+										log.docid,
 										true
 									)}<span>`,
 								]);

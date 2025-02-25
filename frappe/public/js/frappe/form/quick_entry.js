@@ -330,7 +330,7 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm extends frappe.ui.Dialog {
 		// set defaults
 		$.each(this.fields_dict, function (fieldname, field) {
 			field.doctype = me.doc.doctype;
-			field.docname = me.doc.name;
+			field.docid = me.doc.name;
 
 			if (!is_null(me.doc[fieldname])) {
 				field.set_input(me.doc[fieldname]);

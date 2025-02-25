@@ -136,7 +136,7 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
 		}
 	}
 
-	setup_fetch_from_fields(doc, doctype, docname) {
+	setup_fetch_from_fields(doc, doctype, docid) {
 		let frm = this.frm;
 		// Render two select fields for Fetch From instead of Small Text for better UX
 		let field = frm.cur_grid.grid_form.fields_dict.fetch_from;
@@ -150,7 +150,7 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
 		$doctype_select.wrap('<div class="col"></div>');
 		$field_select.wrap('<div class="col"></div>');
 
-		let row = frappe.get_doc(doctype, docname);
+		let row = frappe.get_doc(doctype, docid);
 		let curr_value = { doctype: null, fieldname: null };
 		if (row.fetch_from) {
 			let [doctype, fieldname] = row.fetch_from.split(".");

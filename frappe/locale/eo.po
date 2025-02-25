@@ -5483,7 +5483,7 @@ msgstr "crwdns92720:0crwdne92720:0"
 msgid "Contributed"
 msgstr "crwdns128750:0crwdne128750:0"
 
-#. Label of the contribution_docname (Data) field in DocType 'Translation'
+#. Label of the contribution_docid (Data) field in DocType 'Translation'
 #: frappe/core/doctype/translation/translation.json
 msgid "Contribution Document Name"
 msgstr "crwdns128752:0crwdne128752:0"
@@ -7582,7 +7582,7 @@ msgstr "crwdns93668:0crwdne93668:0"
 #. Label of the reference_name (Data) field in DocType 'Milestone'
 #. Label of the document (Dynamic Link) field in DocType 'Audit Trail'
 #. Option for the 'Show in Module Section' (Select) field in DocType 'DocType'
-#. Label of the docname (Dynamic Link) field in DocType 'Permission Inspector'
+#. Label of the docid (Dynamic Link) field in DocType 'Permission Inspector'
 #. Label of the document (Link) field in DocType 'Notification Subscribed
 #. Document'
 #: frappe/automation/doctype/milestone/milestone.json
@@ -7649,12 +7649,12 @@ msgstr "crwdns93700:0#{0}crwdne93700:0"
 msgid "Document Links Row #{0}: Table Fieldname is mandatory for internal links"
 msgstr "crwdns93702:0#{0}crwdne93702:0"
 
-#. Label of the reminder_docname (Dynamic Link) field in DocType 'Reminder'
+#. Label of the reminder_docid (Dynamic Link) field in DocType 'Reminder'
 #. Label of the share_name (Dynamic Link) field in DocType 'DocShare'
 #. Label of the document_name (Data) field in DocType 'Transaction Log'
-#. Label of the docname (Data) field in DocType 'Version'
+#. Label of the docid (Data) field in DocType 'Version'
 #. Label of the document_name (Dynamic Link) field in DocType 'Tag Link'
-#. Label of the ref_docname (Dynamic Link) field in DocType 'Document Follow'
+#. Label of the ref_docid (Dynamic Link) field in DocType 'Document Follow'
 #: frappe/automation/doctype/reminder/reminder.json
 #: frappe/core/doctype/docshare/docshare.json
 #: frappe/core/doctype/transaction_log/transaction_log.json
@@ -20699,8 +20699,8 @@ msgstr "crwdns130780:0crwdne130780:0"
 msgid "Reference DocType and Reference Name are required"
 msgstr "crwdns99416:0crwdne99416:0"
 
-#. Label of the ref_docname (Dynamic Link) field in DocType 'Submission Queue'
-#. Label of the reference_docname (Dynamic Link) field in DocType 'Discussion
+#. Label of the ref_docid (Dynamic Link) field in DocType 'Submission Queue'
+#. Label of the reference_docid (Dynamic Link) field in DocType 'Discussion
 #. Topic'
 #: frappe/core/doctype/submission_queue/submission_queue.json
 #: frappe/website/doctype/discussion_topic/discussion_topic.json
@@ -20733,9 +20733,9 @@ msgstr "crwdns99422:0crwdne99422:0"
 msgid "Reference Document"
 msgstr "crwdns111158:0crwdne111158:0"
 
-#. Label of the reference_docname (Dynamic Link) field in DocType 'Document
+#. Label of the reference_docid (Dynamic Link) field in DocType 'Document
 #. Share Key'
-#. Label of the reference_docname (Dynamic Link) field in DocType 'Integration
+#. Label of the reference_docid (Dynamic Link) field in DocType 'Integration
 #. Request'
 #: frappe/core/doctype/document_share_key/document_share_key.json
 #: frappe/integrations/doctype/integration_request/integration_request.json
@@ -20792,9 +20792,9 @@ msgstr "crwdns130786:0crwdne130786:0"
 #. Label of the reference_name (Dynamic Link) field in DocType 'Activity Log'
 #. Label of the reference_name (Dynamic Link) field in DocType 'Comment'
 #. Label of the reference_name (Dynamic Link) field in DocType 'Communication'
-#. Label of the docname (Data) field in DocType 'Data Import Log'
+#. Label of the docid (Data) field in DocType 'Data Import Log'
 #. Label of the reference_name (Data) field in DocType 'Error Log'
-#. Label of the reference_docname (Dynamic Link) field in DocType 'Event
+#. Label of the reference_docid (Dynamic Link) field in DocType 'Event
 #. Participants'
 #. Label of the reference_name (Dynamic Link) field in DocType 'ToDo'
 #. Label of the reference_name (Dynamic Link) field in DocType 'Email

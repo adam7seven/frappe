@@ -577,11 +577,11 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 			setValue: (value) => {
 				const cell = this.datatable.getCell(colIndex, rowIndex);
 				let fieldname = this.datatable.getColumn(colIndex).docfield.fieldname;
-				let docname = cell.name;
+				let docid = cell.name;
 				let doctype = cell.doctype;
 
 				control.set_value(value);
-				return this.set_control_value(doctype, docname, fieldname, value)
+				return this.set_control_value(doctype, docid, fieldname, value)
 					.then((updated_doc) => {
 						const _data = this.data
 							.filter((b) => b.name === updated_doc.name)
@@ -589,7 +589,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 								(a) =>
 									// child table cell
 									(doctype != updated_doc.doctype &&
-										a[doctype + ":name"] == docname) ||
+										a[doctype + ":name"] == docid) ||
 									doctype == updated_doc.doctype
 							);
 
@@ -622,11 +622,11 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 		};
 	}
 
-	set_control_value(doctype, docname, fieldname, value) {
-		this.last_updated_doc = docname;
+	set_control_value(doctype, docid, fieldname, value) {
+		this.last_updated_doc = docid;
 		return new Promise((resolve, reject) => {
 			frappe.db
-				.set_value(doctype, docname, { [fieldname]: value })
+				.set_value(doctype, docid, { [fieldname]: value })
 				.then((r) => {
 					if (r.message) {
 						resolve(r.message);
@@ -685,11 +685,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 				frappe.throw(__('Invalid "depends_on" expression'));
 			}
 		} else if (expression.substr(0, 3) == "fn:" && this.frm) {
-			out = this.frm.script_manager.trigger(
-				expression.substr(3),
-				this.doctype,
-				this.docname
-			);
+			out = this.frm.script_manager.trigger(expression.substr(3), this.doctype, this.docid);
 		} else {
 			var value = data[expression];
 			if ($.isArray(value)) {
@@ -1274,11 +1270,11 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 		});
 	}
 
-	get_checked_items(only_docnames) {
+	get_checked_items(only_docids) {
 		const indexes = this.datatable.rowmanager.getCheckedRows();
 		const items = indexes.map((i) => this.data[i]).filter((i) => i != undefined);
 
-		if (only_docnames) {
+		if (only_docids) {
 			return items.map((d) => d.name);
 		}
 

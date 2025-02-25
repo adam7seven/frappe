@@ -89,7 +89,7 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
 	}
 	get_file_attachment_list() {
 		if (!this.frm) return;
-		var fl = frappe.model.docinfo[this.frm.doctype][this.frm.docname];
+		var fl = frappe.model.docinfo[this.frm.doctype][this.frm.docid];
 		if (fl && fl.attachments) {
 			this.set_description("");
 			var options = [""];

@@ -88,8 +88,8 @@ class TestRenameDoc(IntegrationTestCase):
         frappe.db.sql_ddl("drop table if exists `tabRenamed Doc`")
 
         # delete the documents created
-        for docname in self.available_documents:
-            frappe.delete_doc(self.test_doctype, docname)
+        for docid in self.available_documents:
+            frappe.delete_doc(self.test_doctype, docid)
 
         for dt in self.doctype.values():
             if frappe.db.exists("DocType", dt):
@@ -212,10 +212,10 @@ class TestRenameDoc(IntegrationTestCase):
 
         # pass invalid types to API
         with self.assertRaises(TypeError):
-            update_document_title(doctype=dt, docname=dn, title={}, name={"hack": "this"})
+            update_document_title(doctype=dt, docid=dn, title={}, name={"hack": "this"})
 
         doc_before = frappe.get_doc(test_doctype, dn)
-        return_value = update_document_title(doctype=dt, docname=dn, new_name=new_name)
+        return_value = update_document_title(doctype=dt, docid=dn, new_name=new_name)
         doc_after = frappe.get_doc(test_doctype, return_value)
 
         doc_before_dict = doc_before.as_dict(no_nulls=True, no_default_fields=True)

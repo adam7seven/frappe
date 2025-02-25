@@ -254,7 +254,7 @@ def create_web_page(title, route, single_thread):
                 {
                     "title": "Discussions",
                     "cta_title": "New Discussion",
-                    "docname": web_page.name,
+                    "docid": web_page.name,
                     "single_thread": single_thread,
                 }
             ),
@@ -266,14 +266,14 @@ def create_web_page(title, route, single_thread):
 
 
 def create_topic_and_reply(web_page):
-    topic = frappe.db.exists("Discussion Topic", {"reference_doctype": "Web Page", "reference_docname": web_page})
+    topic = frappe.db.exists("Discussion Topic", {"reference_doctype": "Web Page", "reference_docid": web_page})
 
     if not topic:
         topic = frappe.get_doc(
             {
                 "doctype": "Discussion Topic",
                 "reference_doctype": "Web Page",
-                "reference_docname": web_page,
+                "reference_docid": web_page,
                 "title": "Test Topic",
             }
         )
@@ -633,7 +633,7 @@ def publish_realtime(
     room=None,
     user=None,
     doctype=None,
-    docname=None,
+    docid=None,
     task_id=None,
 ):
     frappe.publish_realtime(
@@ -642,22 +642,22 @@ def publish_realtime(
         room=room,
         user=user,
         doctype=doctype,
-        docname=docname,
+        docid=docid,
         task_id=task_id,
     )
 
 
 @whitelist_for_tests
-def publish_progress(duration=3, title=None, doctype=None, docname=None):
+def publish_progress(duration=3, title=None, doctype=None, docid=None):
     # This should consider session user and only show it to current user.
-    frappe.enqueue(slow_task, duration=duration, title=title, doctype=doctype, docname=docname)
+    frappe.enqueue(slow_task, duration=duration, title=title, doctype=doctype, docid=docid)
 
 
-def slow_task(duration, title, doctype, docname):
+def slow_task(duration, title, doctype, docid):
     import time
 
     steps = 10
 
     for i in range(steps + 1):
-        frappe.publish_progress(i * 10, title=title, doctype=doctype, docname=docname)
+        frappe.publish_progress(i * 10, title=title, doctype=doctype, docid=docid)
         time.sleep(int(duration) / steps)

@@ -9,9 +9,9 @@ frappe.ui.form.on("Permission Inspector", {
 	refresh(frm) {
 		frm.disable_save();
 	},
-	docname: call_debug,
+	docid: call_debug,
 	ref_doctype(frm) {
-		frm.doc.docname = ""; // Usually doctype change invalidates docname
+		frm.doc.docid = ""; // Usually doctype change invalidates docid
 		call_debug(frm);
 	},
 	user: call_debug,

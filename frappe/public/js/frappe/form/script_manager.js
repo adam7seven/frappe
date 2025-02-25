@@ -91,7 +91,7 @@ frappe.ui.form.ScriptManager = class ScriptManager {
 		// are bound to this event_name
 		let me = this;
 		doctype = doctype || this.frm.doctype;
-		name = name || this.frm.docname;
+		name = name || this.frm.docid;
 
 		let tasks = [];
 		let handlers = this.get_handlers(event_name, doctype);
@@ -233,7 +233,7 @@ frappe.ui.form.ScriptManager = class ScriptManager {
 			setup_add_fetch(field.df);
 			if (frappe.model.table_fields.includes(field.df.fieldtype)) {
 				$.each(
-					frappe.meta.get_docfields(field.df.options, me.frm.docname),
+					frappe.meta.get_docfields(field.df.options, me.frm.docid),
 					function (i, df) {
 						setup_add_fetch(df);
 					}

@@ -22,7 +22,7 @@ class IntegrationRequest(Document):
         integration_request_service: DF.Data | None
         is_remote_request: DF.Check
         output: DF.Code | None
-        reference_docname: DF.DynamicLink | None
+        reference_docid: DF.DynamicLink | None
         reference_doctype: DF.Link | None
         request_description: DF.Data | None
         request_headers: DF.Code | None

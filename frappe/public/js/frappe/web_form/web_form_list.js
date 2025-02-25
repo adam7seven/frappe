@@ -343,7 +343,7 @@ export default class WebFormList {
 				method: "frappe.website.doctype.web_form.web_form.delete_multiple",
 				args: {
 					web_form_name: this.web_form_name,
-					docnames: this.get_selected().map((row) => row.doc.name),
+					docids: this.get_selected().map((row) => row.doc.name),
 				},
 			})
 			.then(() => {

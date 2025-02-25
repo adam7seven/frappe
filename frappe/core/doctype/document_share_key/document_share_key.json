@@ -6,12 +6,7 @@
   "doctype": "DocType",
   "editable_grid": 1,
   "engine": "InnoDB",
-  "field_order": [
-    "reference_doctype",
-    "reference_docname",
-    "key",
-    "expires_on"
-  ],
+  "field_order": ["reference_doctype", "reference_docid", "key", "expires_on"],
   "fields": [
     {
       "fieldname": "reference_doctype",
@@ -22,7 +17,7 @@
       "search_index": 1
     },
     {
-      "fieldname": "reference_docname",
+      "fieldname": "reference_docid",
       "fieldtype": "Dynamic Link",
       "label": "Reference Document Name",
       "options": "reference_doctype",

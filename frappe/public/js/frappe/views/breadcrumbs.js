@@ -200,8 +200,8 @@ frappe.breadcrumbs = {
 
 	set_form_breadcrumb(breadcrumbs, view) {
 		const doctype = breadcrumbs.doctype;
-		let docname = frappe.get_route().slice(2).join("/");
-		let doc = frappe.get_doc(doctype, docname);
+		let docid = frappe.get_route().slice(2).join("/");
+		let doc = frappe.get_doc(doctype, docid);
 
 		if (doc.__islocal) return; // new doc, no breadcrumb required
 
@@ -209,7 +209,7 @@ frappe.breadcrumbs = {
 
 		if (title == doc.name) return; // title and name are same, don't add breadcrumb
 
-		let form_route = `/app/${frappe.router.slug(doctype)}/${encodeURIComponent(docname)}`;
+		let form_route = `/app/${frappe.router.slug(doctype)}/${encodeURIComponent(docid)}`;
 		this.append_breadcrumb_element(form_route, doc.name);
 
 		if (view === "form") {
@@ -225,9 +225,9 @@ frappe.breadcrumbs = {
 
 	set_dashboard_breadcrumb(breadcrumbs) {
 		const doctype = breadcrumbs.doctype;
-		const docname = frappe.get_route()[1];
-		let dashboard_route = `/app/${frappe.router.slug(doctype)}/${docname}`;
-		$(`<li><a href="${dashboard_route}">${__(docname)}</a></li>`).appendTo(this.$breadcrumbs);
+		const docid = frappe.get_route()[1];
+		let dashboard_route = `/app/${frappe.router.slug(doctype)}/${docid}`;
+		$(`<li><a href="${dashboard_route}">${__(docid)}</a></li>`).appendTo(this.$breadcrumbs);
 	},
 
 	setup_modules() {

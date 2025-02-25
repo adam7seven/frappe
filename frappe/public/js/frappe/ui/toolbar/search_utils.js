@@ -65,9 +65,9 @@ frappe.search.utils = {
 			if (route[0] === "Form") {
 				const doctype = route[1];
 				if (route.length > 2 && doctype !== route[2]) {
-					const docname = route[2];
-					out.label = __(doctype) + " " + docname.bold();
-					out.value = __(doctype) + " " + docname;
+					const docid = route[2];
+					out.label = __(doctype) + " " + docid.bold();
+					out.value = __(doctype) + " " + docid;
 				} else {
 					out.label = __(doctype).bold();
 					out.value = __(doctype);

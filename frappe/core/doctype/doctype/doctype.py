@@ -1239,22 +1239,22 @@ def validate_fields(meta: Meta):
     def check_illegal_characters(fieldname):
         validate_column_name(fieldname)
 
-    def check_invalid_fieldnames(docname, fieldname):
+    def check_invalid_fieldnames(docid, fieldname):
         if fieldname in Document._reserved_keywords:
             frappe.throw(
                 _("{0}: fieldname cannot be set to reserved keyword {1}").format(
-                    frappe.bold(docname),
+                    frappe.bold(docid),
                     frappe.bold(fieldname),
                 ),
                 title=_("Invalid Fieldname"),
             )
 
-    def check_unique_fieldname(docname, fieldname):
+    def check_unique_fieldname(docid, fieldname):
         duplicates = list(filter(None, map(lambda df: (df.fieldname == fieldname and str(df.idx)) or None, fields)))
         if len(duplicates) > 1:
             frappe.throw(
                 _("{0}: Fieldname {1} appears multiple times in rows {2}").format(
-                    docname, fieldname, ", ".join(duplicates)
+                    docid, fieldname, ", ".join(duplicates)
                 ),
                 UniqueFieldnameError,
             )
@@ -1262,14 +1262,14 @@ def validate_fields(meta: Meta):
     def check_fieldname_length(fieldname):
         validate_column_length(fieldname)
 
-    def check_illegal_mandatory(docname, d):
+    def check_illegal_mandatory(docid, d):
         if (d.fieldtype in no_value_fields) and d.fieldtype not in table_fields and d.reqd:
             frappe.throw(
-                _("{0}: Field {1} of type {2} cannot be mandatory").format(docname, d.label, d.fieldtype),
+                _("{0}: Field {1} of type {2} cannot be mandatory").format(docid, d.label, d.fieldtype),
                 IllegalMandatoryError,
             )
 
-    def check_link_table_options(docname, d):
+    def check_link_table_options(docid, d):
         if frappe.flags.in_patch or frappe.flags.in_fixtures:
             return
 
@@ -1277,7 +1277,7 @@ def validate_fields(meta: Meta):
             if not d.options:
                 frappe.throw(
                     _("{0}: Options required for Link or Table type field {1} in row {2}").format(
-                        docname, d.label, d.idx
+                        docid, d.label, d.idx
                     ),
                     DoctypeLinkError,
                 )
@@ -1288,14 +1288,14 @@ def validate_fields(meta: Meta):
                 if not options:
                     frappe.throw(
                         _("{0}: Options must be a valid DocType for field {1} in row {2}").format(
-                            docname, d.label, d.idx
+                            docid, d.label, d.idx
                         ),
                         WrongOptionsDoctypeLinkError,
                     )
                 elif options != d.options:
                     frappe.throw(
                         _("{0}: Options {1} must be the same as doctype name {2} for the field {3}").format(
-                            docname, d.options, options, d.label
+                            docid, d.options, options, d.label
                         ),
                         DoctypeLinkError,
                     )
@@ -1303,11 +1303,11 @@ def validate_fields(meta: Meta):
                     # fix case
                     d.options = options
 
-    def check_hidden_and_mandatory(docname, d):
+    def check_hidden_and_mandatory(docid, d):
         if d.hidden and d.reqd and not d.default and not frappe.flags.in_migrate:
             frappe.throw(
                 _("{0}: Field {1} in row {2} cannot be hidden and mandatory without default").format(
-                    docname, d.label, d.idx
+                    docid, d.label, d.idx
                 ),
                 HiddenAndMandatoryWithoutDefaultError,
             )
@@ -1362,7 +1362,7 @@ def validate_fields(meta: Meta):
         ):
             frappe.throw(_("Precision should be between 1 and 6"))
 
-    def check_unique_and_text(docname, d):
+    def check_unique_and_text(docid, d):
         if meta.is_virtual:
             return
 
@@ -1373,7 +1373,7 @@ def validate_fields(meta: Meta):
         if getattr(d, "unique", False):
             if d.fieldtype not in ("Data", "Link", "Read Only", "Int"):
                 frappe.throw(
-                    _("{0}: Fieldtype {1} for {2} cannot be unique").format(docname, d.fieldtype, d.label),
+                    _("{0}: Fieldtype {1} for {2} cannot be unique").format(docid, d.fieldtype, d.label),
                     NonUniqueError,
                 )
 
@@ -1387,14 +1387,14 @@ def validate_fields(meta: Meta):
                 if has_non_unique_values and has_non_unique_values[0][0]:
                     frappe.throw(
                         _("{0}: Field '{1}' cannot be set as Unique as it has non-unique values").format(
-                            docname, d.label
+                            docid, d.label
                         ),
                         NonUniqueError,
                     )
 
         if d.search_index and d.fieldtype in ("Text", "Long Text", "Small Text", "Code", "Text Editor"):
             frappe.throw(
-                _("{0}:Fieldtype {1} for {2} cannot be indexed").format(docname, d.fieldtype, d.label),
+                _("{0}:Fieldtype {1} for {2} cannot be indexed").format(docid, d.fieldtype, d.label),
                 CannotIndexedError,
             )
 

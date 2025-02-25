@@ -109,9 +109,9 @@ const insert_message = (data) => {
 	const topic = data.topic_info;
 	const first_topic = !$(".reply-card").length;
 	const doctype = decodeURIComponent($(".discussions-parent").attr("data-doctype"));
-	const docname = decodeURIComponent($(".discussions-parent").attr("data-docname"));
+	const docid = decodeURIComponent($(".discussions-parent").attr("data-docid"));
 	const document_match_found =
-		doctype == topic.reference_doctype && docname == topic.reference_docname;
+		doctype == topic.reference_doctype && docid == topic.reference_docid;
 
 	if ($(`.discussion-on-page[data-topic=${topic.name}]`).length) {
 		$(data.template).insertBefore(
@@ -222,14 +222,14 @@ const submit_discussion = (e) => {
 		let doctype = target.closest(".discussions-parent").attr("data-doctype");
 		doctype = doctype ? decodeURIComponent(doctype) : doctype;
 
-		let docname = target.closest(".discussions-parent").attr("data-docname");
-		docname = docname ? decodeURIComponent(docname) : docname;
+		let docid = target.closest(".discussions-parent").attr("data-docid");
+		docid = docid ? decodeURIComponent(docid) : docid;
 
 		frappe.call({
 			method: "frappe.website.doctype.discussion_topic.discussion_topic.submit_discussion",
 			args: {
 				doctype: doctype ? doctype : "",
-				docname: docname ? docname : "",
+				docid: docid ? docid : "",
 				reply: reply,
 				title: title,
 				topic_name: target.closest(".discussion-on-page").attr("data-topic"),

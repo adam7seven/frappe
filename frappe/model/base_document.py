@@ -788,20 +788,20 @@ class BaseDocument:
     def get_invalid_links(self, is_submittable=False):
         """Return list of invalid links and also update fetch values if not set."""
 
-        def get_msg(df, docname):
+        def get_msg(df, docid):
             # check if parentfield exists (only applicable for child table doctype)
             if self.get("parentfield"):
-                return "{} #{}: {}: {}".format(_("Row"), self.idx, _(df.label, context=df.parent), docname)
+                return "{} #{}: {}: {}".format(_("Row"), self.idx, _(df.label, context=df.parent), docid)
 
-            return f"{_(df.label, context=df.parent)}: {docname}"
+            return f"{_(df.label, context=df.parent)}: {docid}"
 
         invalid_links = []
         cancelled_links = []
 
         for df in self.meta.get_link_fields() + self.meta.get("fields", {"fieldtype": ("=", "Dynamic Link")}):
-            docname = self.get(df.fieldname)
+            docid = self.get(df.fieldname)
 
-            if docname:
+            if docid:
                 if df.fieldtype == "Link":
                     doctype = df.options
                     if not doctype:
@@ -812,7 +812,7 @@ class BaseDocument:
                         frappe.throw(_("{0} must be set first").format(self.meta.get_label(df.options)))
                     invalidate_distinct_link_doctypes(df.parent, df.options, doctype)
 
-                # MySQL is case insensitive. Preserve case of the original docname in the Link Field.
+                # MySQL is case insensitive. Preserve case of the original docid in the Link Field.
 
                 # get a map of values ot fetch along with this link query
                 # that are mapped as link_fieldname.source_fieldname in Options of
@@ -827,7 +827,7 @@ class BaseDocument:
                 if not meta.get("is_virtual"):
                     if not fields_to_fetch:
                         # cache a single value type
-                        values = _dict(name=frappe.db.get_value(doctype, docname, "name", cache=True))
+                        values = _dict(name=frappe.db.get_value(doctype, docid, "name", cache=True))
                     else:
                         values_to_fetch = ["name"] + [_df.fetch_from.split(".")[-1] for _df in fields_to_fetch]
 
@@ -835,13 +835,13 @@ class BaseDocument:
                         # (for compatibility, `values` must have same data type)
                         empty_values = _dict({value: None for value in values_to_fetch})
                         # don't cache if fetching other values too
-                        values = frappe.db.get_value(doctype, docname, values_to_fetch, as_dict=True) or empty_values
+                        values = frappe.db.get_value(doctype, docid, values_to_fetch, as_dict=True) or empty_values
 
                 if getattr(meta, "issingle", 0):
                     values.name = doctype
 
                 if meta.get("is_virtual"):
-                    values = frappe.get_doc(doctype, docname).as_dict()
+                    values = frappe.get_doc(doctype, docid).as_dict()
 
                 if values:
                     if not df.get("is_virtual"):
@@ -852,18 +852,18 @@ class BaseDocument:
                             self.set_fetch_from_value(doctype, _df, values)
 
                     if not meta.istable:
-                        notify_link_count(doctype, docname)
+                        notify_link_count(doctype, docid)
 
                     if not values.name:
-                        invalid_links.append((df.fieldname, docname, get_msg(df, docname)))
+                        invalid_links.append((df.fieldname, docid, get_msg(df, docid)))
 
                     elif (
                         df.fieldname != "amended_from"
                         and (is_submittable or self.meta.is_submittable)
                         and frappe.get_meta(doctype).is_submittable
-                        and cint(frappe.db.get_value(doctype, docname, "docstatus")) == DocStatus.cancelled()
+                        and cint(frappe.db.get_value(doctype, docid, "docstatus")) == DocStatus.cancelled()
                     ):
-                        cancelled_links.append((df.fieldname, docname, get_msg(df, docname)))
+                        cancelled_links.append((df.fieldname, docid, get_msg(df, docid)))
 
         return invalid_links, cancelled_links
 

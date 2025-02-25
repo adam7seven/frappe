@@ -256,14 +256,14 @@ frappe.dashboard_utils = {
 		return field;
 	},
 
-	get_add_to_dashboard_dialog(docname, doctype, method) {
+	get_add_to_dashboard_dialog(docid, doctype, method) {
 		const field = this.get_dashboard_link_field();
 
 		const dialog = new frappe.ui.Dialog({
 			title: __("Add to Dashboard"),
 			fields: [field],
 			primary_action: (values) => {
-				values.name = docname;
+				values.name = docid;
 				values.set_standard = frappe.boot.developer_mode;
 				frappe.xcall(method, { args: values }).then(() => {
 					let dashboard_route_html = `<a href = "/app/dashboard/${values.dashboard}">${values.dashboard}</a>`;

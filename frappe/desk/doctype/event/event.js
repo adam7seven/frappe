@@ -23,9 +23,9 @@ frappe.ui.form.on("Event", {
 		if (frm.doc.event_participants) {
 			frm.doc.event_participants.forEach((value) => {
 				frm.add_custom_button(
-					__(value.reference_docname),
+					__(value.reference_docid),
 					function () {
-						frappe.set_route("Form", value.reference_doctype, value.reference_docname);
+						frappe.set_route("Form", value.reference_doctype, value.reference_docid);
 					},
 					__("Participants")
 				);
@@ -78,7 +78,7 @@ frappe.ui.form.on("Event Participants", {
 				args: {
 					event: frm.doc,
 					reference_doctype: cdt,
-					reference_docname: cdn,
+					reference_docid: cdn,
 				},
 				freeze: true,
 				callback: function (r) {
@@ -109,7 +109,7 @@ frappe.desk.eventParticipants = class eventParticipants {
 			doctype: me.doctype,
 			dynamic_link_field: "reference_doctype",
 			dynamic_link_reference: me.doctype,
-			fieldname: "reference_docname",
+			fieldname: "reference_docid",
 			target: table,
 			txt: "",
 		});

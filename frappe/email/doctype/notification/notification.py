@@ -352,7 +352,7 @@ def get_context(context):
                     doc.set(fieldname, value)
                     doc.flags.updater_reference = {
                         "doctype": self.doctype,
-                        "docname": self.name,
+                        "docid": self.name,
                         "label": _("via Notification"),
                     }
                     doc.flags.in_notification_update = True

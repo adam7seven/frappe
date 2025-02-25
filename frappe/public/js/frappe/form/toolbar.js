@@ -37,30 +37,30 @@ frappe.ui.form.Toolbar = class Toolbar {
 			title = __("New {0}", [__(this.frm.meta.name)]);
 		} else if (this.frm.meta.title_field) {
 			let title_field = (this.frm.doc[this.frm.meta.title_field] || "").toString().trim();
-			title = strip_html(title_field || this.frm.docname);
+			title = strip_html(title_field || this.frm.docid);
 			if (
 				this.frm.doc.__islocal ||
-				title === this.frm.docname ||
+				title === this.frm.docid ||
 				this.frm.meta.autoid === "hash"
 			) {
 				this.page.set_title_sub("");
 			} else {
-				this.page.set_title_sub(this.frm.docname);
+				this.page.set_title_sub(this.frm.docid);
 				this.page.$sub_title_area.css("cursor", "copy");
 				this.page.$sub_title_area.on("click", (event) => {
 					event.stopImmediatePropagation();
-					frappe.utils.copy_to_clipboard(this.frm.docname);
+					frappe.utils.copy_to_clipboard(this.frm.docid);
 				});
 			}
 		} else {
-			title = this.frm.docname;
+			title = this.frm.docid;
 		}
 
 		var me = this;
 		title = __(title);
 		this.page.set_title(title);
 		if (this.frm.meta.title_field) {
-			frappe.utils.set_title(title + " - " + this.frm.docname);
+			frappe.utils.set_title(title + " - " + this.frm.docid);
 		}
 		this.page.$title_area.toggleClass(
 			"editable-title",
@@ -97,7 +97,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 	}
 	rename_document_title(input_name, input_title, merge = false) {
 		let confirm_message = null;
-		const docname = this.frm.doc.name;
+		const docid = this.frm.doc.name;
 		const title_field = this.frm.meta.title_field || "";
 		const doctype = this.frm.doctype;
 		let queue;
@@ -108,18 +108,18 @@ frappe.ui.form.Toolbar = class Toolbar {
 		if (input_name) {
 			const warning = __("This cannot be undone");
 			const message = __("Are you sure you want to merge {0} with {1}?", [
-				docname.bold(),
+				docid.bold(),
 				input_name.bold(),
 			]);
 			confirm_message = `${message}<br><b>${warning}<b>`;
 		}
 
 		let rename_document = () => {
-			if (input_name != docname) frappe.realtime.doctype_subscribe(doctype, input_name);
+			if (input_name != docid) frappe.realtime.doctype_subscribe(doctype, input_name);
 			return frappe
 				.xcall("frappe.model.rename_doc.update_document_title", {
 					doctype,
-					docname,
+					docid,
 					name: input_name,
 					title: input_title,
 					enqueue: true,
@@ -128,22 +128,22 @@ frappe.ui.form.Toolbar = class Toolbar {
 					freeze_message: __("Updating related fields..."),
 					queue,
 				})
-				.then((new_docname) => {
+				.then((new_docid) => {
 					const reload_form = (input_name) => {
-						$(document).trigger("rename", [doctype, docname, input_name]);
-						if (locals[doctype] && locals[doctype][docname])
-							delete locals[doctype][docname];
+						$(document).trigger("rename", [doctype, docid, input_name]);
+						if (locals[doctype] && locals[doctype][docid])
+							delete locals[doctype][docid];
 						this.frm.reload_doc();
 					};
 
 					// handle document renaming queued action
-					if (input_name != docname) {
+					if (input_name != docid) {
 						frappe.realtime.on("list_update", (data) => {
 							if (data.doctype == doctype && data.name == input_name) {
 								reload_form(input_name);
 								frappe.show_alert({
 									message: __("Document renamed from {0} to {1}", [
-										docname.bold(),
+										docid.bold(),
 										input_name.bold(),
 									]),
 									indicator: "success",
@@ -152,21 +152,21 @@ frappe.ui.form.Toolbar = class Toolbar {
 						});
 						frappe.show_alert(
 							__("Document renaming from {0} to {1} has been queued", [
-								docname.bold(),
+								docid.bold(),
 								input_name.bold(),
 							])
 						);
 					}
 
 					// handle document sync rename action
-					if (input_name && (new_docname || input_name) != docname) {
-						reload_form(new_docname || input_name);
+					if (input_name && (new_docid || input_name) != docid) {
+						reload_form(new_docid || input_name);
 					}
 				});
 		};
 
 		return new Promise((resolve, reject) => {
-			if (input_title === this.frm.doc[title_field] && input_name === docname) {
+			if (input_title === this.frm.doc[title_field] && input_name === docid) {
 				this.show_unchanged_document_alert();
 				resolve();
 			} else if (merge) {
@@ -187,7 +187,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 
 		this.page.$title_area.find(".title-text").on("click", () => {
 			let fields = [];
-			let docname = me.frm.doc.name;
+			let docid = me.frm.doc.name;
 			let title_field = me.frm.meta.title_field || "";
 
 			// check if title is updatable
@@ -203,7 +203,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 				});
 			}
 
-			// check if docname is updatable
+			// check if docid is updatable
 			if (me.can_rename()) {
 				let label = __("New Name");
 				if (me.frm.meta.autoid && me.frm.meta.autoid.startsWith("field:")) {
@@ -218,7 +218,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 							fieldname: "name",
 							fieldtype: "Data",
 							reqd: 1,
-							default: docname,
+							default: docid,
 						},
 						{
 							label: __("Merge with existing"),
@@ -566,7 +566,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 			frappe.model.can_create("Custom Field") &&
 			frappe.model.can_create("Property Setter")
 		) {
-			let doctype = is_doctype_form ? this.frm.docname : this.frm.doctype;
+			let doctype = is_doctype_form ? this.frm.docid : this.frm.doctype;
 			let is_doctype_custom = is_doctype_form ? this.frm.doc.custom : false;
 
 			if (doctype != "DocType" && !is_doctype_custom && this.frm.meta.issingle === 0) {
@@ -664,7 +664,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 						"frappe.client.is_document_amended",
 						{
 							doctype: doc.doctype,
-							docname: doc.name,
+							docid: doc.name,
 						},
 						"GET",
 						{ cache: true }

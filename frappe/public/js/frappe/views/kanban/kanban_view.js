@@ -82,7 +82,7 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
 			method: "frappe.client.get_doc_permissions",
 			args: {
 				doctype: "Kanban Board",
-				docname: this.board_name,
+				docid: this.board_name,
 			},
 			callback: (result) => {
 				this.board_perms = result.message.permissions || {};

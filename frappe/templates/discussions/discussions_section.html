@@ -1,9 +1,9 @@
 {% set topics = frappe.get_all("Discussion Topic",
-{"reference_doctype": doctype, "reference_docname": docname}, ["name", "title", "owner", "creation"]) %}
+{"reference_doctype": doctype, "reference_docid": docid}, ["name", "title", "owner", "creation"]) %}
 
 
 <div class="discussions-parent {% if single_thread %} is-single-thread {% endif %}"
-	data-doctype="{{ doctype | urlencode }}" data-docname="{{ docname | urlencode }}">
+	data-doctype="{{ doctype | urlencode }}" data-docid="{{ docid | urlencode }}">
 
 	{% if not single_thread %}
 	{% include "frappe/templates/discussions/topic_modal.html" %}

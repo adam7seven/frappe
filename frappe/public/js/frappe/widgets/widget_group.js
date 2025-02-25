@@ -178,7 +178,7 @@ export default class WidgetGroup {
 
 		this.widgets_list.forEach((wid) => {
 			let config = wid.get_config();
-			let name = config.docname ? config.docname : config.name;
+			let name = config.docid ? config.docid : config.name;
 			prepared_dict[name] = config;
 		});
 

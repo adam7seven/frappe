@@ -8,7 +8,7 @@ frappe.ui.form.on("Address", {
 			if (
 				frappe.dynamic_link &&
 				frappe.dynamic_link.doc &&
-				frappe.dynamic_link.doc.name == last_doc.docname
+				frappe.dynamic_link.doc.name == last_doc.docid
 			) {
 				frm.set_value("links", "");
 				frm.add_child("links", {
@@ -57,15 +57,15 @@ frappe.ui.form.on("Address", {
 				if (
 					frappe.dynamic_link &&
 					frappe.dynamic_link.doc &&
-					frappe.dynamic_link.doc.name == last_doc.docname
+					frappe.dynamic_link.doc.name == last_doc.docid
 				) {
 					for (let i in frm.doc.links) {
 						let link = frm.doc.links[i];
 						if (
 							last_doc.doctype == link.link_doctype &&
-							last_doc.docname == link.link_name
+							last_doc.docid == link.link_name
 						) {
-							frappe.set_route("Form", last_doc.doctype, last_doc.docname);
+							frappe.set_route("Form", last_doc.doctype, last_doc.docid);
 						}
 					}
 				}

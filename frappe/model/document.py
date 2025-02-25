@@ -1316,7 +1316,7 @@ class Document(BaseDocument, DocRef):
             "doc_update",
             {"modified": self.modified, "doctype": self.doctype, "name": self.name},
             doctype=self.doctype,
-            docname=self.name,
+            docid=self.name,
             after_commit=True,
         )
 
@@ -1622,7 +1622,7 @@ class Document(BaseDocument, DocRef):
             "Document Share Key",
             {
                 "reference_doctype": self.doctype,
-                "reference_docname": self.name,
+                "reference_docid": self.name,
                 "expires_on": expires_on,
             },
         )
@@ -1631,7 +1631,7 @@ class Document(BaseDocument, DocRef):
         else:
             doc = frappe.new_doc("Document Share Key")
             doc.reference_doctype = self.doctype
-            doc.reference_docname = self.name
+            doc.reference_docid = self.name
             doc.expires_on = expires_on
             doc.flags.no_expiry = no_expiry
             doc.insert(ignore_permissions=True)

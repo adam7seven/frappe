@@ -168,14 +168,14 @@ frappe.provide("frappe.views");
 					method_name = "add_card";
 					args = {
 						board_name: context.state.board.name,
-						docname: card.name,
+						docid: card.name,
 						colname: card.colname,
 					};
 				} else {
 					method_name = "update_order_for_single_card";
 					args = {
 						board_name: context.state.board.name,
-						docname: card.name,
+						docid: card.name,
 						from_colname: card.from_colname,
 						to_colname: card.to_colname,
 						old_index: card.old_index,
@@ -812,7 +812,7 @@ frappe.provide("frappe.views");
 				obj: self,
 				method: "frappe.desk.form.assign_to.add",
 				doctype: card.doctype,
-				docname: card.name,
+				docid: card.name,
 				callback: function () {
 					const users = self.assign_to_dialog.get_values().assign_to;
 					card.assigned_list = [...new Set(card.assigned_list.concat(users))];

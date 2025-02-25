@@ -29,13 +29,13 @@ $.extend(frappe.contacts, {
 			return route[0] === "Form" && route[1] !== frm.doctype;
 		});
 		let doctype = last_route && last_route[1];
-		let docname = last_route && last_route[2];
+		let docid = last_route && last_route[2];
 
-		if (last_route && last_route.length > 3) docname = last_route.slice(2).join("/");
+		if (last_route && last_route.length > 3) docid = last_route.slice(2).join("/");
 
 		return {
 			doctype,
-			docname,
+			docid,
 		};
 	},
 	get_address_display: function (frm, address_field, display_field) {

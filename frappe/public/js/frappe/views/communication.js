@@ -444,7 +444,7 @@ frappe.views.CommunicationComposer = class {
 	setup_last_edited_communication() {
 		if (this.frm) {
 			this.doctype = this.frm.doctype;
-			this.key = this.frm.docname;
+			this.key = this.frm.docid;
 		} else {
 			this.doctype = this.key = "Inbox";
 		}
@@ -583,7 +583,7 @@ frappe.views.CommunicationComposer = class {
 		if (this.frm) {
 			args = {
 				doctype: this.frm.doctype,
-				docname: this.frm.docname,
+				docid: this.frm.docid,
 				folder: "Home/Attachments",
 				on_success: (attachment) => {
 					this.frm.attachments.attachment_uploaded(attachment);
@@ -732,7 +732,7 @@ frappe.views.CommunicationComposer = class {
 		if (this.dialog && this.frm) {
 			let message = this.dialog.get_value("content");
 			message = message.split(separator_element)[0];
-			localforage.setItem(this.frm.doctype + this.frm.docname, message).catch((e) => {
+			localforage.setItem(this.frm.doctype + this.frm.docid, message).catch((e) => {
 				if (e) {
 					// silently fail
 					console.log(e);
@@ -751,7 +751,7 @@ frappe.views.CommunicationComposer = class {
 
 	delete_saved_draft() {
 		if (this.dialog && this.frm) {
-			localforage.removeItem(this.frm.doctype + this.frm.docname).catch((e) => {
+			localforage.removeItem(this.frm.doctype + this.frm.docid).catch((e) => {
 				if (e) {
 					// silently fail
 					console.log(e);
@@ -867,8 +867,8 @@ frappe.views.CommunicationComposer = class {
 
 		let message = this.message || "";
 		if (!message && this.frm) {
-			const { doctype, docname } = this.frm;
-			message = (await localforage.getItem(doctype + docname)) || "";
+			const { doctype, docid } = this.frm;
+			message = (await localforage.getItem(doctype + docid)) || "";
 		}
 
 		if (message) {

@@ -15,9 +15,9 @@ function get_version_timeline_content(version_doc, frm) {
 	let updater_reference = data.updater_reference;
 	if (!$.isEmptyObject(updater_reference)) {
 		let label = updater_reference.label || __("via {0}", [updater_reference.doctype]);
-		let { doctype, docname } = updater_reference;
-		if (doctype && docname) {
-			updater_reference_link = frappe.utils.get_form_link(doctype, docname, true, label);
+		let { doctype, docid } = updater_reference;
+		if (doctype && docid) {
+			updater_reference_link = frappe.utils.get_form_link(doctype, docid, true, label);
 		} else {
 			updater_reference_link = label;
 		}
@@ -82,7 +82,7 @@ function get_version_timeline_content(version_doc, frm) {
 					out.push(get_version_comment(version_doc, message));
 				}
 			} else {
-				const df = frappe.meta.get_docfield(frm.doctype, p[0], frm.docname);
+				const df = frappe.meta.get_docfield(frm.doctype, p[0], frm.docid);
 				if (df && (!df.hidden || df.show_on_timeline)) {
 					const field_display_status = frappe.perm.get_field_display_status(
 						df,
@@ -143,7 +143,7 @@ function get_version_timeline_content(version_doc, frm) {
 					frappe.meta.get_docfield(
 						frm.fields_dict[row[0]].grid.doctype,
 						p[0],
-						frm.docname
+						frm.docid
 					);
 
 				if (df && (!df.hidden || df.show_on_timeline)) {
@@ -204,7 +204,7 @@ function get_version_timeline_content(version_doc, frm) {
 	["added", "removed"].forEach(function (key) {
 		if (data[key] && data[key].length) {
 			let parts = (data[key] || []).map(function (p) {
-				var df = frappe.meta.get_docfield(frm.doctype, p[0], frm.docname);
+				var df = frappe.meta.get_docfield(frm.doctype, p[0], frm.docid);
 
 				if (df && (!df.hidden || df.show_on_timeline)) {
 					var field_display_status = frappe.perm.get_field_display_status(

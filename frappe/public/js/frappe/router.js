@@ -203,11 +203,11 @@ frappe.router = {
 						: null
 				);
 			} else if (route[1] && route[1] !== "view") {
-				let docname = route[1];
+				let docid = route[1];
 				if (route.length > 2) {
-					docname = route.slice(1).join("/");
+					docid = route.slice(1).join("/");
 				}
-				route = ["Form", doctype_route.doctype, docname];
+				route = ["Form", doctype_route.doctype, docid];
 			} else if (frappe.model.is_single(doctype_route.doctype)) {
 				route = ["Form", doctype_route.doctype, doctype_route.doctype];
 			} else if (meta.default_view) {

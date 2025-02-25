@@ -288,15 +288,11 @@ Object.assign(frappe.utils, {
 		if (!txt) return txt;
 
 		var content = $("<div></div>").html(txt);
-		content
-			.find("blockquote")
-			.parent("blockquote")
-			.addClass("hidden")
-			.before(
-				'<p><a class="text-muted btn btn-default toggle-blockquote" style="padding: 2px 7px 0px; line-height: 1;"> \
+		content.find("blockquote").parent("blockquote").addClass("hidden").before(
+			'<p><a class="text-muted btn btn-default toggle-blockquote" style="padding: 2px 7px 0px; line-height: 1;"> \
 					• • • \
 				</a></p>'
-			);
+		);
 		return content.html();
 	},
 	scroll_page_to_top() {
@@ -1409,13 +1405,13 @@ Object.assign(frappe.utils, {
 		</div>`);
 	},
 
-	print(doctype, docname, print_format, letterhead, lang_code) {
+	print(doctype, docid, print_format, letterhead, lang_code) {
 		let w = window.open(
 			frappe.urllib.get_full_url(
 				"/printview?doctype=" +
 					encodeURIComponent(doctype) +
 					"&name=" +
-					encodeURIComponent(docname) +
+					encodeURIComponent(docid) +
 					"&trigger_print=1" +
 					"&format=" +
 					encodeURIComponent(print_format) +
@@ -1567,7 +1563,7 @@ Object.assign(frappe.utils, {
 			return frappe
 				.xcall("frappe.desk.search.get_link_title", {
 					doctype: doctype,
-					docname: name,
+					docid: name,
 				})
 				.then((title) => {
 					frappe.utils.add_link_title(doctype, name, title);

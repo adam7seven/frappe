@@ -815,11 +815,7 @@ export default class GridRow {
 				frappe.throw(__('Invalid "depends_on" expression'));
 			}
 		} else if (expression.substr(0, 3) == "fn:" && this.frm) {
-			out = this.frm.script_manager.trigger(
-				expression.substr(3),
-				this.doctype,
-				this.docname
-			);
+			out = this.frm.script_manager.trigger(expression.substr(3), this.doctype, this.docid);
 		} else {
 			var value = doc[expression];
 			if ($.isArray(value)) {
@@ -1135,7 +1131,7 @@ export default class GridRow {
 			with_link_btn: true,
 			doc: this.doc,
 			doctype: this.doc.doctype,
-			docname: this.doc.name,
+			docid: this.doc.name,
 			frm: this.grid.frm,
 			grid: this.grid,
 			grid_row: this,
@@ -1469,7 +1465,7 @@ export default class GridRow {
 		if (field) {
 			// the below if statement is added to factor in the exception when this.doc is undefined -
 			// - after row removals via customize_form.js on links, actions and states child-tables
-			if (this.doc) field.docname = this.doc.name;
+			if (this.doc) field.docid = this.doc.name;
 			field.refresh();
 		}
 

@@ -532,24 +532,17 @@ $.extend(frappe.model, {
 		}
 	},
 
-	set_value: function (
-		doctype,
-		docname,
-		fieldname,
-		value,
-		fieldtype,
-		skip_dirty_trigger = false
-	) {
+	set_value: function (doctype, docid, fieldname, value, fieldtype, skip_dirty_trigger = false) {
 		/* help: Set a value locally (if changed) and execute triggers */
 
 		var doc;
 		if ($.isPlainObject(doctype)) {
 			// first parameter is the doc, shift parameters to the left
 			doc = doctype;
-			fieldname = docname;
+			fieldname = docid;
 			value = fieldname;
 		} else {
-			doc = locals[doctype] && locals[doctype][docname];
+			doc = locals[doctype] && locals[doctype][docid];
 		}
 
 		let to_update = fieldname;
@@ -721,13 +714,13 @@ $.extend(frappe.model, {
 		return no_copy_list;
 	},
 
-	delete_doc: function (doctype, docname, callback) {
-		let title = docname;
+	delete_doc: function (doctype, docid, callback) {
+		let title = docid;
 		const title_field = frappe.get_meta(doctype).title_field;
 		if (frappe.get_meta(doctype).autoid == "hash" && title_field) {
-			const value = frappe.model.get_value(doctype, docname, title_field);
+			const value = frappe.model.get_value(doctype, docid, title_field);
 			if (value) {
-				title = `${value} (${docname})`;
+				title = `${value} (${docid})`;
 			}
 		}
 		frappe.confirm(__("Permanently delete {0}?", [title.bold()]), function () {
@@ -735,14 +728,14 @@ $.extend(frappe.model, {
 				method: "frappe.client.delete",
 				args: {
 					doctype: doctype,
-					name: docname,
+					name: docid,
 				},
 				freeze: true,
 				freeze_message: __("Deleting {0}...", [title]),
 				callback: function (r, rt) {
 					if (!r.exc) {
 						frappe.utils.play_sound("delete");
-						frappe.model.clear_doc(doctype, docname);
+						frappe.model.clear_doc(doctype, docid);
 						if (callback) callback(r, rt);
 					}
 				},
@@ -750,20 +743,20 @@ $.extend(frappe.model, {
 		});
 	},
 
-	rename_doc: function (doctype, docname, callback) {
+	rename_doc: function (doctype, docid, callback) {
 		let message = __("Merge with existing");
 		let warning = __("This cannot be undone");
 		let merge_label = message + " <b>(" + warning + ")</b>";
 
 		var d = new frappe.ui.Dialog({
-			title: __("Rename {0}", [__(docname)]),
+			title: __("Rename {0}", [__(docid)]),
 			fields: [
 				{
 					label: __("New Name"),
 					fieldname: "new_name",
 					fieldtype: "Data",
 					reqd: 1,
-					default: docname,
+					default: docid,
 				},
 				{ label: merge_label, fieldtype: "Check", fieldname: "merge" },
 			],
@@ -779,7 +772,7 @@ $.extend(frappe.model, {
 				freeze_message: "Updating related fields...",
 				args: {
 					doctype: doctype,
-					old: docname,
+					old: docid,
 					new: args.new_name,
 					merge: args.merge,
 				},
@@ -788,11 +781,11 @@ $.extend(frappe.model, {
 					if (!r.exc) {
 						$(document).trigger("rename", [
 							doctype,
-							docname,
+							docid,
 							r.message || args.new_name,
 						]);
-						if (locals[doctype] && locals[doctype][docname])
-							delete locals[doctype][docname];
+						if (locals[doctype] && locals[doctype][docid])
+							delete locals[doctype][docid];
 						d.hide();
 						if (callback) callback(r.message);
 					}

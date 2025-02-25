@@ -732,7 +732,7 @@ class FormTimeline extends BaseTimeline {
 
 	copy_link(ev) {
 		let doc_link = frappe.urllib.get_full_url(
-			frappe.utils.get_form_link(this.frm.doctype, this.frm.docname)
+			frappe.utils.get_form_link(this.frm.doctype, this.frm.docid)
 		);
 		let element_id = $(ev.currentTarget).closest(".timeline-content").attr("id");
 		frappe.utils.copy_to_clipboard(`${doc_link}#${element_id}`);

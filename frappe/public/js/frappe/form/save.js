@@ -236,7 +236,7 @@ frappe.ui.form.remove_old_form_route = () => {
 
 frappe.ui.form.update_calling_link = (newdoc) => {
 	if (!frappe._from_link) return;
-	var doc = frappe.get_doc(frappe._from_link.doctype, frappe._from_link.docname);
+	var doc = frappe.get_doc(frappe._from_link.doctype, frappe._from_link.docid);
 
 	let is_valid_doctype = () => {
 		if (frappe._from_link.df.fieldtype === "Link") {
@@ -256,7 +256,7 @@ frappe.ui.form.update_calling_link = (newdoc) => {
 				$.each(
 					frappe._from_link.frm.fields_dict[doc.parentfield].grid.grid_rows,
 					function (index, field) {
-						if (field.doc && field.doc.name === frappe._from_link.docname) {
+						if (field.doc && field.doc.name === frappe._from_link.docid) {
 							if (meta.title_field && meta.show_title_field_in_link) {
 								frappe.utils.add_link_title(
 									newdoc.doctype,
@@ -285,11 +285,7 @@ frappe.ui.form.update_calling_link = (newdoc) => {
 			// if from form, switch
 			if (frappe._from_link.frm) {
 				frappe
-					.set_route(
-						"Form",
-						frappe._from_link.frm.doctype,
-						frappe._from_link.frm.docname
-					)
+					.set_route("Form", frappe._from_link.frm.doctype, frappe._from_link.frm.docid)
 					.then(() => {
 						frappe.utils.scroll_to(frappe._from_link_scrollY);
 					});

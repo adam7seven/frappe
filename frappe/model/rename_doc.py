@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 def update_document_title(
     *,
     doctype: str,
-    docname: str,
+    docid: str,
     title: str | None = None,
     name: str | None = None,
     merge: bool = False,
@@ -31,10 +31,10 @@ def update_document_title(
     **kwargs,
 ) -> str:
     """
-    Update the name or title of a document. Return `name` if document was renamed, `docname` if renaming operation was queued.
+    Update the name or title of a document. Return `name` if document was renamed, `docid` if renaming operation was queued.
 
     :param doctype: DocType of the document
-    :param docname: Name of the document
+    :param docid: Name of the document
     :param title: New Title of the document
     :param name: New Name of the document
     :param merge: Merge the current Document with the existing one if exists
@@ -46,7 +46,7 @@ def update_document_title(
     updated_name = kwargs.get("new_name") or name
 
     # TODO: omit this after runtime type checking (ref: https://github.com/frappe/frappe/pull/14927)
-    for obj in [docname, updated_title, updated_name]:
+    for obj in [docid, updated_title, updated_name]:
         if not isinstance(obj, str | NoneType):
             frappe.throw(f"{obj=} must be of type str or None")
 
@@ -55,7 +55,7 @@ def update_document_title(
     enqueue = sbool(enqueue)
     action_enqueued = enqueue and not is_scheduler_inactive()
 
-    doc = frappe.get_doc(doctype, docname)
+    doc = frappe.get_doc(doctype, docid)
     doc.check_permission(permtype="write")
 
     title_field = doc.meta.get_title_field()
@@ -107,7 +107,7 @@ def update_document_title(
             except Exception as e:
                 if frappe.db.is_duplicate_entry(e):
                     frappe.throw(
-                        _("{0} {1} already exists").format(doctype, frappe.bold(docname)),
+                        _("{0} {1} already exists").format(doctype, frappe.bold(docid)),
                         title=_("Duplicate Name"),
                         exc=frappe.DuplicateEntryError,
                     )
@@ -236,7 +236,7 @@ def rename_doc(
         event="doc_rename",
         message={"doctype": doctype, "old": old, "new": new},
         doctype=doctype,
-        docname=old,
+        docid=old,
         after_commit=True,
     )
 
@@ -322,8 +322,8 @@ def update_attachments(doctype: str, old: str, new: str) -> None:
 def rename_versions(doctype: str, old: str, new: str) -> None:
     Version = frappe.qb.DocType("Version")
 
-    frappe.qb.update(Version).set(Version.docname, new).where(
-        (Version.docname == old) & (Version.ref_doctype == doctype)
+    frappe.qb.update(Version).set(Version.docid, new).where(
+        (Version.docid == old) & (Version.ref_doctype == doctype)
     ).run()
 
 
@@ -343,7 +343,7 @@ def rename_parent_and_child(doctype: str, old: str, new: str, meta: "Meta") -> N
 
 
 def update_autoid_field(doctype: str, new: str, meta: "Meta") -> None:
-    # update the value of the autoid field on rename of the docname
+    # update the value of the autoid field on rename of the docid
     if meta.get("autoid"):
         field = meta.get("autoid").split(":")
         if field and field[0] == "field":

@@ -2097,14 +2097,14 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		this.$summary.toggle(flag);
 	}
 
-	get_checked_items(only_docnames) {
+	get_checked_items(only_docids) {
 		const indexes = this.datatable.rowmanager.getCheckedRows();
 
 		return indexes.reduce((items, i) => {
 			if (i === undefined) return items;
 
 			const item = this.data[i];
-			items.push(only_docnames ? item.name : item);
+			items.push(only_docids ? item.name : item);
 			return items;
 		}, []);
 	}

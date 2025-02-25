@@ -330,8 +330,8 @@ frappe.ui.form.on("Customize Form Field", {
 		frm.trigger("setup_default_views");
 	},
 
-	form_render(frm, doctype, docname) {
-		frm.trigger("setup_fetch_from_fields", doctype, docname);
+	form_render(frm, doctype, docid) {
+		frm.trigger("setup_fetch_from_fields", doctype, docid);
 	},
 });
 

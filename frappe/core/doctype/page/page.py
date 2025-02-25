@@ -195,7 +195,7 @@ class Page(Document):
                 self.script += "\n\n" + js
 
 
-def delete_custom_role(field, docname):
-    name = frappe.db.get_value("Custom Role", {field: docname}, "name")
+def delete_custom_role(field, docid):
+    name = frappe.db.get_value("Custom Role", {field: docid}, "name")
     if name:
         frappe.delete_doc("Custom Role", name)

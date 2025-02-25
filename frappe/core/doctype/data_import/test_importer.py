@@ -97,7 +97,7 @@ class TestImporter(IntegrationTestCase):
 
         import_log = frappe.get_all(
             "Data Import Log",
-            fields=["row_indexes", "success", "messages", "exception", "docname"],
+            fields=["row_indexes", "success", "messages", "exception", "docid"],
             filters={"data_import": data_import.name},
             order_by="log_index",
         )

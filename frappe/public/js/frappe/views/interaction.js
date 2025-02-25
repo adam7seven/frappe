@@ -141,7 +141,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 		if (this.frm) {
 			args = {
 				doctype: this.frm.doctype,
-				docname: this.frm.docname,
+				docid: this.frm.docid,
 				folder: "Home/Attachments",
 				on_success: (attachment) => {
 					this.frm.attachments.attachment_uploaded(attachment);
@@ -241,7 +241,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 			interaction_values["event_participants"] = [
 				{
 					reference_doctype: form_values.reference_doctype,
-					reference_docname: form_values.reference_document,
+					reference_docid: form_values.reference_document,
 				},
 			];
 		}

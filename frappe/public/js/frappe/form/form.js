@@ -23,7 +23,7 @@ frappe.ui.form.Controller = class FormController {
 
 frappe.ui.form.Form = class FrappeForm {
 	constructor(doctype, parent, in_form, doctype_layout_name) {
-		this.docname = "";
+		this.docid = "";
 		this.doctype = doctype;
 		this.doctype_layout_name = doctype_layout_name;
 		this.in_form = in_form ? true : false;
@@ -284,7 +284,7 @@ frappe.ui.form.Form = class FrappeForm {
 			"*",
 			function (fieldname, value, doc, skip_dirty_trigger = false) {
 				// set input
-				if (doc.name == me.docname) {
+				if (doc.name == me.docid) {
 					if (!skip_dirty_trigger) {
 						me.dirty();
 					}
@@ -316,7 +316,7 @@ frappe.ui.form.Form = class FrappeForm {
 				df.options,
 				"*",
 				function (fieldname, value, doc, skip_dirty_trigger = false) {
-					if (doc.parent == me.docname && doc.parentfield === df.fieldname) {
+					if (doc.parent == me.docid && doc.parentfield === df.fieldname) {
 						if (!skip_dirty_trigger) {
 							me.dirty();
 						}
@@ -336,7 +336,7 @@ frappe.ui.form.Form = class FrappeForm {
 
 		frappe.realtime.on("doc_rename", (data) => {
 			// the current form has been renamed by some backend process
-			if (data.doctype == this.doctype && data.old == this.docname) {
+			if (data.doctype == this.doctype && data.old == this.docid) {
 				// the current form does not exist anymore, route to the new one
 				frappe.set_route("Form", this.doctype, data.new);
 			}
@@ -361,7 +361,7 @@ frappe.ui.form.Form = class FrappeForm {
 
 			new frappe.ui.FileUploader({
 				doctype: me.doctype,
-				docname: me.docname,
+				docid: me.docid,
 				frm: me,
 				files: dataTransfer.files,
 				folder: "Home/Attachments",
@@ -393,29 +393,29 @@ frappe.ui.form.Form = class FrappeForm {
 
 	// REFRESH
 
-	refresh(docname) {
-		var switched = docname ? true : false;
+	refresh(docid) {
+		var switched = docid ? true : false;
 
 		removeEventListener("beforeunload", this.beforeUnloadListener, { capture: true });
 
-		if (docname) {
-			this.switch_doc(docname);
+		if (docid) {
+			this.switch_doc(docid);
 		}
 
 		cur_frm = this;
 
 		this.undo_manager.erase_history();
 
-		if (this.docname) {
+		if (this.docid) {
 			// document to show
 			this.save_disabled = false;
 			// set the doc
-			this.doc = frappe.get_doc(this.doctype, this.docname);
+			this.doc = frappe.get_doc(this.doctype, this.docid);
 
 			// check permissions
 			this.fetch_permissions();
 			if (!this.has_read_permission()) {
-				frappe.show_not_permitted(__(this.doctype) + " " + __(cstr(this.docname)));
+				frappe.show_not_permitted(__(this.doctype) + " " + __(cstr(this.docid)));
 				return;
 			}
 
@@ -425,15 +425,15 @@ frappe.ui.form.Form = class FrappeForm {
 			});
 
 			// read only (workflow)
-			this.read_only = frappe.workflow.is_read_only(this.doctype, this.docname);
+			this.read_only = frappe.workflow.is_read_only(this.doctype, this.docid);
 			if (this.read_only) {
 				this.set_read_only();
 				frappe.show_alert(__("This form is not editable due to a Workflow."));
 			}
 
 			// check if doctype is already open
-			if (!this.opendocs[this.docname]) {
-				this.check_doctype_conflict(this.docname);
+			if (!this.opendocs[this.docid]) {
+				this.check_doctype_conflict(this.docid);
 			} else {
 				if (this.check_reload()) {
 					return;
@@ -533,7 +533,7 @@ frappe.ui.form.Form = class FrappeForm {
 		}
 	}
 
-	switch_doc(docname) {
+	switch_doc(docid) {
 		// reset visible columns, since column headings can change in different docs
 		this.grids.forEach((grid_obj) => {
 			grid_obj.grid.visible_columns = null;
@@ -542,7 +542,7 @@ frappe.ui.form.Form = class FrappeForm {
 		});
 		frappe.ui.form.close_grid_form();
 		this.viewers && this.viewers.parent.empty();
-		this.docname = docname;
+		this.docid = docid;
 		this.setup_docinfo_change_listener();
 	}
 
@@ -559,7 +559,7 @@ frappe.ui.form.Form = class FrappeForm {
 	}
 
 	trigger_onload(switched) {
-		if (!this.opendocs[this.docname]) {
+		if (!this.opendocs[this.docid]) {
 			var me = this;
 			this.cscript.is_onload = true;
 			this.initialize_new_doc();
@@ -581,9 +581,9 @@ frappe.ui.form.Form = class FrappeForm {
 		var me = this;
 
 		// hide any open grid
-		this.script_manager.trigger("before_load", this.doctype, this.docname).then(() => {
+		this.script_manager.trigger("before_load", this.doctype, this.docid).then(() => {
 			me.script_manager.trigger("onload");
-			me.opendocs[me.docname] = true;
+			me.opendocs[me.docid] = true;
 			me.render_form();
 
 			frappe.after_ajax(function () {
@@ -595,7 +595,7 @@ frappe.ui.form.Form = class FrappeForm {
 
 		// update seen
 		if (this.meta.track_seen) {
-			$('.list-id[data-name="' + me.docname + '"]').addClass("seen");
+			$('.list-id[data-name="' + me.docid + '"]').addClass("seen");
 		}
 	}
 
@@ -727,7 +727,7 @@ frappe.ui.form.Form = class FrappeForm {
 		// set title
 		// main title
 		if (!this.meta.in_dialog || this.in_form) {
-			frappe.utils.set_title(this.meta.issingle ? this.doctype : this.docname);
+			frappe.utils.set_title(this.meta.issingle ? this.doctype : this.docid);
 		}
 
 		// show / hide buttons
@@ -846,7 +846,7 @@ frappe.ui.form.Form = class FrappeForm {
 	discard(btn, callback, on_error) {
 		const me = this;
 		return new Promise((resolve) => {
-			frappe.confirm(__("Discard {0}", [this.docname]), function () {
+			frappe.confirm(__("Discard {0}", [this.docid]), function () {
 				me.script_manager.trigger("before_discard").then(function () {
 					return me._discard(btn, callback, on_error, false); // ?
 				});
@@ -859,7 +859,7 @@ frappe.ui.form.Form = class FrappeForm {
 		return new Promise((resolve) => {
 			this.validate_form_action("Submit");
 			frappe.confirm(
-				__("Permanently Submit {0}?", [this.docname]),
+				__("Permanently Submit {0}?", [this.docid]),
 				function () {
 					frappe.validated = true;
 					me.script_manager.trigger("before_submit").then(function () {
@@ -939,11 +939,11 @@ frappe.ui.form.Form = class FrappeForm {
 
 		for (let doctype of doctypes) {
 			if (!me.ignore_doctypes_on_cancel_all.includes(doctype)) {
-				let docnames = links
+				let docids = links
 					.filter((link) => link.doctype == doctype)
 					.map((link) => frappe.utils.get_form_link(link.doctype, link.name, true))
 					.join(", ");
-				links_text += `<li><strong>${__(doctype)}</strong>: ${docnames}</li>`;
+				links_text += `<li><strong>${__(doctype)}</strong>: ${docids}</li>`;
 			}
 		}
 		links_text = `<ul>${links_text}</ul>`;
@@ -1026,7 +1026,7 @@ frappe.ui.form.Form = class FrappeForm {
 			cancel_doc();
 		} else {
 			frappe.confirm(
-				__("Permanently Cancel {0}?", [this.docname]),
+				__("Permanently Cancel {0}?", [this.docid]),
 				cancel_doc,
 				me.handle_save_fail(btn, on_error)
 			);
@@ -1072,7 +1072,7 @@ frappe.ui.form.Form = class FrappeForm {
 			discard_doc();
 		} else {
 			frappe.confirm(
-				__("Permanently Discard {0}?", [this.docname]),
+				__("Permanently Discard {0}?", [this.docid]),
 				discard_doc,
 				me.handle_save_fail(btn, on_error)
 			);
@@ -1081,7 +1081,7 @@ frappe.ui.form.Form = class FrappeForm {
 
 	savetrash() {
 		this.validate_form_action("Delete");
-		frappe.model.delete_doc(this.doctype, this.docname, function () {
+		frappe.model.delete_doc(this.doctype, this.docid, function () {
 			window.history.back();
 		});
 	}
@@ -1095,7 +1095,7 @@ frappe.ui.form.Form = class FrappeForm {
 		frappe
 			.xcall("frappe.client.is_document_amended", {
 				doctype: this.doc.doctype,
-				docname: this.doc.name,
+				docid: this.doc.name,
 			})
 			.then((is_amended) => {
 				if (is_amended) {
@@ -1106,7 +1106,7 @@ frappe.ui.form.Form = class FrappeForm {
 				this.validate_form_action("Amend");
 				var me = this;
 				var fn = function (newdoc) {
-					newdoc.amended_from = me.docname;
+					newdoc.amended_from = me.docid;
 					if (me.fields_dict && me.fields_dict["amendment_date"])
 						newdoc.amendment_date = frappe.datetime.obj_to_str(new Date());
 				};
@@ -1124,9 +1124,9 @@ frappe.ui.form.Form = class FrappeForm {
 		// workflows if the user already have those permissions. This is to allow for users to
 		// continue through the workflow states and to allow execution of functions like Duplicate.
 		if (
-			(frappe.workflow.is_read_only(this.doctype, this.docname) &&
+			(frappe.workflow.is_read_only(this.doctype, this.docid) &&
 				(perms["write"] || perms["create"] || perms["submit"] || perms["cancel"])) ||
-			!frappe.workflow.is_read_only(this.doctype, this.docname)
+			!frappe.workflow.is_read_only(this.doctype, this.docid)
 		) {
 			allowed_for_workflow = true;
 		}
@@ -1252,11 +1252,11 @@ frappe.ui.form.Form = class FrappeForm {
 		return 1;
 	}
 
-	check_doctype_conflict(docname) {
-		if (this.doctype == "DocType" && docname == "DocType") {
+	check_doctype_conflict(docid) {
+		if (this.doctype == "DocType" && docid == "DocType") {
 			frappe.msgprint(__("Allowing DocType, DocType. Be careful!"));
 		} else if (this.doctype == "DocType") {
-			if (frappe.views.formview[docname] || frappe.pages["List/" + docname]) {
+			if (frappe.views.formview[docid] || frappe.pages["List/" + docid]) {
 				window.location.reload();
 				//	frappe.msgprint(__("Cannot open {0} when its instance is open", ['DocType']))
 				// throw 'doctype open conflict'
@@ -1279,7 +1279,7 @@ frappe.ui.form.Form = class FrappeForm {
 		// from form
 		if (this.meta.istable) return;
 
-		if (this.docname == old) this.docname = name;
+		if (this.docid == old) this.docid = name;
 		else return;
 
 		// cleanup
@@ -1338,7 +1338,7 @@ frappe.ui.form.Form = class FrappeForm {
 
 		let args = {
 			doctype: this.doctype,
-			value: this.docname,
+			value: this.docid,
 			filters,
 			sort_order,
 			sort_field,
@@ -1354,7 +1354,7 @@ frappe.ui.form.Form = class FrappeForm {
 	}
 
 	rename_doc() {
-		frappe.model.rename_doc(this.doctype, this.docname, () => this.refresh_header());
+		frappe.model.rename_doc(this.doctype, this.docid, () => this.refresh_header());
 	}
 
 	share_doc() {
@@ -1365,7 +1365,7 @@ frappe.ui.form.Form = class FrappeForm {
 		new frappe.views.CommunicationComposer({
 			doc: this.doc,
 			frm: this,
-			subject: __(this.meta.name) + ": " + this.docname,
+			subject: __(this.meta.name) + ": " + this.docid,
 			recipients: this.doc.email || this.doc.email_id || this.doc.contact_email,
 			attach_document_print: true,
 			message: message,
@@ -1385,11 +1385,11 @@ frappe.ui.form.Form = class FrappeForm {
 	}
 
 	reload_doc() {
-		this.check_doctype_conflict(this.docname);
+		this.check_doctype_conflict(this.docid);
 
 		if (!this.doc.__islocal) {
-			frappe.model.remove_from_locals(this.doctype, this.docname);
-			return frappe.model.with_doc(this.doctype, this.docname, () => {
+			frappe.model.remove_from_locals(this.doctype, this.docid);
+			return frappe.model.with_doc(this.doctype, this.docid, () => {
 				this.refresh();
 			});
 		}
@@ -1436,7 +1436,7 @@ frappe.ui.form.Form = class FrappeForm {
 	}
 
 	get_docinfo() {
-		return frappe.model.docinfo[this.doctype][this.docname];
+		return frappe.model.docinfo[this.doctype][this.docid];
 	}
 
 	is_dirty() {
@@ -1544,7 +1544,7 @@ frappe.ui.form.Form = class FrappeForm {
 	}
 
 	get_doc() {
-		return locals[this.doctype][this.docname];
+		return locals[this.doctype][this.docid];
 	}
 
 	set_currency_labels(fields_list, currency, parentfield) {
@@ -1592,7 +1592,7 @@ frappe.ui.form.Form = class FrappeForm {
 		}
 		for (var i = 0, l = fnames.length; i < l; i++) {
 			var fieldname = fnames[i];
-			var field = frappe.meta.get_docfield(this.doctype, fieldname, this.docname);
+			var field = frappe.meta.get_docfield(this.doctype, fieldname, this.docid);
 			if (field) {
 				fn(field);
 				this.refresh_field(fieldname);
@@ -1604,17 +1604,17 @@ frappe.ui.form.Form = class FrappeForm {
 		if (fieldname2) {
 			// for child
 			var doctype = this.get_docfield(fieldname1).options;
-			return frappe.meta.get_docfield(doctype, fieldname2, this.docname);
+			return frappe.meta.get_docfield(doctype, fieldname2, this.docid);
 		} else {
 			// for parent
-			return frappe.meta.get_docfield(this.doctype, fieldname1, this.docname);
+			return frappe.meta.get_docfield(this.doctype, fieldname1, this.docid);
 		}
 	}
 
-	set_df_property(fieldname, property, value, docname, table_field, table_row_name = null) {
+	set_df_property(fieldname, property, value, docid, table_field, table_row_name = null) {
 		let df;
 
-		if (!docname || !table_field) {
+		if (!docid || !table_field) {
 			df = this.get_docfield(fieldname);
 		} else {
 			const grid = this.fields_dict[fieldname].grid;
@@ -1634,8 +1634,8 @@ frappe.ui.form.Form = class FrappeForm {
 			df[property] = value;
 
 			if (table_field && table_row_name) {
-				if (this.fields_dict[fieldname].grid.grid_rows_by_docname[table_row_name]) {
-					this.fields_dict[fieldname].grid.grid_rows_by_docname[
+				if (this.fields_dict[fieldname].grid.grid_rows_by_docid[table_row_name]) {
+					this.fields_dict[fieldname].grid.grid_rows_by_docid[
 						table_row_name
 					].refresh_field(table_field);
 				}
@@ -1844,14 +1844,14 @@ frappe.ui.form.Form = class FrappeForm {
 		this.refresh_fields();
 	}
 
-	trigger(event, doctype, docname) {
-		return this.script_manager.trigger(event, doctype, docname);
+	trigger(event, doctype, docid) {
+		return this.script_manager.trigger(event, doctype, docid);
 	}
 
 	get_formatted(fieldname) {
 		return frappe.format(
 			this.doc[fieldname],
-			frappe.meta.get_docfield(this.doctype, fieldname, this.docname),
+			frappe.meta.get_docfield(this.doctype, fieldname, this.docid),
 			{ no_icon: true },
 			this.doc
 		);
@@ -2053,10 +2053,10 @@ frappe.ui.form.Form = class FrappeForm {
 
 	setup_docinfo_change_listener() {
 		let doctype = this.doctype;
-		let docname = this.docname;
+		let docid = this.docid;
 
 		if (this.doc && !this.is_new()) {
-			frappe.realtime.doc_subscribe(doctype, docname);
+			frappe.realtime.doc_subscribe(doctype, docid);
 		}
 		frappe.realtime.off("docinfo_update");
 		frappe.realtime.on("docinfo_update", ({ doc, key, action = "update" }) => {
@@ -2064,24 +2064,24 @@ frappe.ui.form.Form = class FrappeForm {
 				!doc.reference_doctype ||
 				!doc.reference_name ||
 				doc.reference_doctype !== doctype ||
-				doc.reference_name !== docname
+				doc.reference_name !== docid
 			) {
 				return;
 			}
-			let doc_list = frappe.model.docinfo[doctype][docname][key] || [];
+			let doc_list = frappe.model.docinfo[doctype][docid][key] || [];
 			let docindex = doc_list.findIndex((old_doc) => {
 				return old_doc.name === doc.name;
 			});
 
 			if (action === "add") {
-				frappe.model.docinfo[doctype][docname][key].push(doc);
+				frappe.model.docinfo[doctype][docid][key].push(doc);
 			}
 			if (docindex > -1) {
 				if (action === "update") {
-					frappe.model.docinfo[doctype][docname][key].splice(docindex, 1, doc);
+					frappe.model.docinfo[doctype][docid][key].splice(docindex, 1, doc);
 				}
 				if (action === "delete") {
-					frappe.model.docinfo[doctype][docname][key].splice(docindex, 1);
+					frappe.model.docinfo[doctype][docid][key].splice(docindex, 1);
 				}
 			}
 			// no need to update timeline of owner of comment
@@ -2129,7 +2129,7 @@ frappe.ui.form.Form = class FrappeForm {
 	}
 
 	set_active_tab(tab) {
-		const previous_tab_name = this.active_tab_map?.[this.docname]?.df?.fieldname || "";
+		const previous_tab_name = this.active_tab_map?.[this.docid]?.df?.fieldname || "";
 		const next_tab_name = tab?.df?.fieldname || "";
 		const has_changed = previous_tab_name !== next_tab_name;
 
@@ -2141,7 +2141,7 @@ frappe.ui.form.Form = class FrappeForm {
 		}
 
 		this.active_tab_map ??= {};
-		this.active_tab_map[this.docname] = tab;
+		this.active_tab_map[this.docid] = tab;
 
 		// Update URL hash to reflect the active tab
 		const new_hash = next_tab_name.replace("__details", "");
@@ -2167,7 +2167,7 @@ frappe.ui.form.Form = class FrappeForm {
 	}
 
 	get_active_tab() {
-		return this.active_tab_map && this.active_tab_map[this.docname];
+		return this.active_tab_map && this.active_tab_map[this.docid];
 	}
 
 	get_involved_users() {
@@ -2216,7 +2216,7 @@ frappe.ui.form.Form = class FrappeForm {
 		frappe
 			.call({
 				method: "frappe.core.doctype.submission_queue.submission_queue.get_latest_submissions",
-				args: { doctype: this.doctype, docname: this.docname },
+				args: { doctype: this.doctype, docid: this.docid },
 			})
 			.then((r) => {
 				if (r.message?.latest_submission) {
@@ -2234,7 +2234,7 @@ frappe.ui.form.Form = class FrappeForm {
 						<div class="col-md-6">
 							<a href='/app/submission-queue?ref_doctype=${encodeURIComponent(
 								this.doctype
-							)}&ref_docname=${encodeURIComponent(this.docname)}'>${__(
+							)}&ref_docid=${encodeURIComponent(this.docid)}'>${__(
 							"All Submissions"
 						)}</a>
 						`;

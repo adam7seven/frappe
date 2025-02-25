@@ -1464,8 +1464,8 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 					[min_index, max_index] = [max_index, min_index];
 				}
 
-				let docnames = this.data.slice(min_index + 1, max_index).map((d) => d.name);
-				const selector = docnames
+				let docids = this.data.slice(min_index + 1, max_index).map((d) => d.name);
+				const selector = docids
 					.map((name) => `.list-row-checkbox[data-name="${encodeURIComponent(name)}"]`)
 					.join(",");
 				this.$result.find(selector).prop("checked", true);
@@ -1658,8 +1658,8 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		}
 
 		$.each(this.$checks, (i, el) => {
-			let docname = $(el).attr("data-name");
-			this.$result.find(`.list-row-checkbox[data-name='${docname}']`).prop("checked", true);
+			let docid = $(el).attr("data-name");
+			this.$result.find(`.list-row-checkbox[data-name='${docid}']`).prop("checked", true);
 		});
 		this.on_row_checked();
 	}
@@ -1694,14 +1694,14 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		this.list_sidebar.parent.find(".list-tag-preview").text(preview_label);
 	}
 
-	get_checked_items(only_docnames) {
-		const docnames = Array.from(this.$checks || []).map((check) =>
+	get_checked_items(only_docids) {
+		const docids = Array.from(this.$checks || []).map((check) =>
 			cstr(unescape($(check).data().name))
 		);
 
-		if (only_docnames) return docnames;
+		if (only_docids) return docids;
 
-		return this.data.filter((d) => docnames.includes(d.name));
+		return this.data.filter((d) => docids.includes(d.name));
 	}
 
 	clear_checked_items() {
@@ -1863,7 +1863,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 						me.disable_list_update = true;
 						frappe
 							.xcall("frappe.model.workflow.bulk_workflow_approval", {
-								docnames: this.get_checked_items(true),
+								docids: this.get_checked_items(true),
 								doctype: this.doctype,
 								action: action,
 							})
@@ -2015,24 +2015,22 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			return {
 				label: __("Delete", null, "Button in list view actions menu"),
 				action: () => {
-					const docnames = this.get_checked_items(true).map((docname) =>
-						docname.toString()
-					);
+					const docids = this.get_checked_items(true).map((docid) => docid.toString());
 					let message = __(
 						"Delete {0} item permanently?",
-						[docnames.length],
+						[docids.length],
 						"Title of confirmation dialog"
 					);
-					if (docnames.length > 1) {
+					if (docids.length > 1) {
 						message = __(
 							"Delete {0} items permanently?",
-							[docnames.length],
+							[docids.length],
 							"Title of confirmation dialog"
 						);
 					}
 					frappe.confirm(message, () => {
 						this.disable_list_update = true;
-						bulk_operations.delete(docnames, () => {
+						bulk_operations.delete(docids, () => {
 							this.disable_list_update = false;
 							this.clear_checked_items();
 							this.refresh();
@@ -2047,17 +2045,17 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			return {
 				label: __("Cancel", null, "Button in list view actions menu"),
 				action: () => {
-					const docnames = this.get_checked_items(true);
-					if (docnames.length > 0) {
+					const docids = this.get_checked_items(true);
+					if (docids.length > 0) {
 						frappe.confirm(
 							__(
 								"Cancel {0} documents?",
-								[docnames.length],
+								[docids.length],
 								"Title of confirmation dialog"
 							),
 							() => {
 								this.disable_list_update = true;
-								bulk_operations.submit_or_cancel(docnames, "cancel", () => {
+								bulk_operations.submit_or_cancel(docids, "cancel", () => {
 									this.disable_list_update = false;
 									this.clear_checked_items();
 									this.refresh();
@@ -2074,17 +2072,17 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			return {
 				label: __("Submit", null, "Button in list view actions menu"),
 				action: () => {
-					const docnames = this.get_checked_items(true);
-					if (docnames.length > 0) {
+					const docids = this.get_checked_items(true);
+					if (docids.length > 0) {
 						frappe.confirm(
 							__(
 								"Submit {0} documents?",
-								[docnames.length],
+								[docids.length],
 								"Title of confirmation dialog"
 							),
 							() => {
 								this.disable_list_update = true;
-								bulk_operations.submit_or_cancel(docnames, "submit", () => {
+								bulk_operations.submit_or_cancel(docids, "submit", () => {
 									this.disable_list_update = false;
 									this.clear_checked_items();
 									this.refresh();
@@ -2123,9 +2121,9 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			return {
 				label: __("Export", null, "Button in list view actions menu"),
 				action: () => {
-					const docnames = this.get_checked_items(true);
+					const docids = this.get_checked_items(true);
 
-					bulk_operations.export(doctype, docnames);
+					bulk_operations.export(doctype, docids);
 				},
 				standard: true,
 			};

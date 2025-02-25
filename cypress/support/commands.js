@@ -364,7 +364,7 @@ Cypress.Commands.add("insert_doc", (doctype, args, ignore_duplicate) => {
 		});
 });
 
-Cypress.Commands.add("update_doc", (doctype, docname, args) => {
+Cypress.Commands.add("update_doc", (doctype, docid, args) => {
 	return cy
 		.window()
 		.its("frappe.csrf_token")
@@ -372,7 +372,7 @@ Cypress.Commands.add("update_doc", (doctype, docname, args) => {
 			return cy
 				.request({
 					method: "PUT",
-					url: `/api/resource/${doctype}/${docname}`,
+					url: `/api/resource/${doctype}/${docid}`,
 					body: args,
 					headers: {
 						Accept: "application/json",

@@ -3,7 +3,7 @@ frappe.ui.form.ControlDynamicLink = class ControlDynamicLink extends frappe.ui.f
 		let options = "";
 		if (this.df.get_options) {
 			options = this.df.get_options(this);
-		} else if (this.docname == null && cur_dialog) {
+		} else if (this.docid == null && cur_dialog) {
 			//for dialog box
 			options = cur_dialog.get_value(this.df.options);
 		} else if (!cur_frm) {
@@ -20,7 +20,7 @@ frappe.ui.form.ControlDynamicLink = class ControlDynamicLink extends frappe.ui.f
 				options = input.val();
 			}
 		} else {
-			options = frappe.model.get_value(this.df.parent, this.docname, this.df.options);
+			options = frappe.model.get_value(this.df.parent, this.docid, this.df.options);
 		}
 
 		if (frappe.model.is_single(options)) {

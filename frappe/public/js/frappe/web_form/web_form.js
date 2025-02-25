@@ -396,7 +396,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 					this.handle_success(response.message);
 					frappe.web_form.events.trigger("after_save");
 					this.after_save && this.after_save();
-					// args doctype and docname added to link doctype in file manager
+					// args doctype and docid added to link doctype in file manager
 					if (is_new && (response.message.attachment || response.message.file)) {
 						frappe.call({
 							type: "POST",
@@ -404,7 +404,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 							args: {
 								file_url: response.message.attachment || response.message.file,
 								doctype: response.message.doctype,
-								docname: response.message.name,
+								docid: response.message.name,
 							},
 						});
 					}

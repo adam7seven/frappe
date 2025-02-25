@@ -426,25 +426,25 @@ def get_contact_name(email_id: str) -> str | None:
             return contact_id
 
 
-def get_contacts_linking_to(doctype, docname, fields=None):
+def get_contacts_linking_to(doctype, docid, fields=None):
     """Return a list of contacts containing a link to the given document."""
     return frappe.get_list(
         "Contact",
         fields=fields,
         filters=[
             ["Dynamic Link", "link_doctype", "=", doctype],
-            ["Dynamic Link", "link_name", "=", docname],
+            ["Dynamic Link", "link_name", "=", docid],
         ],
     )
 
 
-def get_contacts_linked_from(doctype, docname, fields=None):
+def get_contacts_linked_from(doctype, docid, fields=None):
     """Return a list of contacts that are contained in (linked from) the given document."""
     link_fields = frappe.get_meta(doctype).get("fields", {"fieldtype": "Link", "options": "Contact"})
     if not link_fields:
         return []
 
-    contact_names = frappe.get_value(doctype, docname, fieldname=[f.fieldname for f in link_fields])
+    contact_names = frappe.get_value(doctype, docid, fieldname=[f.fieldname for f in link_fields])
     if not contact_names:
         return []
 

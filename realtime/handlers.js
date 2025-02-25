@@ -55,48 +55,48 @@ function frappe_handlers(socket) {
 		socket.join(room);
 	});
 
-	socket.on("doc_subscribe", function (doctype, docname) {
-		socket.has_permission(doctype, docname).then(() => {
-			socket.join(doc_room(doctype, docname));
+	socket.on("doc_subscribe", function (doctype, docid) {
+		socket.has_permission(doctype, docid).then(() => {
+			socket.join(doc_room(doctype, docid));
 		});
 	});
 
-	socket.on("doc_unsubscribe", function (doctype, docname) {
-		let room = doc_room(doctype, docname);
+	socket.on("doc_unsubscribe", function (doctype, docid) {
+		let room = doc_room(doctype, docid);
 		socket.leave(room);
 	});
 
-	socket.on("doc_open", function (doctype, docname) {
-		socket.has_permission(doctype, docname).then(() => {
-			let room = open_doc_room(doctype, docname);
+	socket.on("doc_open", function (doctype, docid) {
+		socket.has_permission(doctype, docid).then(() => {
+			let room = open_doc_room(doctype, docid);
 			socket.join(room);
 			if (!socket.subscribed_documents) socket.subscribed_documents = [];
-			socket.subscribed_documents.push([doctype, docname]);
+			socket.subscribed_documents.push([doctype, docid]);
 
 			// show who is currently viewing the form
 			notify_subscribed_doc_users({
 				socket: socket,
 				doctype: doctype,
-				docname: docname,
+				docid: docid,
 			});
 		});
 	});
 
-	socket.on("doc_close", function (doctype, docname) {
+	socket.on("doc_close", function (doctype, docid) {
 		// remove this user from the list of 'who is currently viewing the form'
-		let room = open_doc_room(doctype, docname);
+		let room = open_doc_room(doctype, docid);
 		socket.leave(room);
 
 		if (socket.subscribed_documents) {
 			socket.subscribed_documents = socket.subscribed_documents.filter(([dt, dn]) => {
-				!(dt == doctype && dn == docname);
+				!(dt == doctype && dn == docid);
 			});
 		}
 
 		notify_subscribed_doc_users({
 			socket: socket,
 			doctype: doctype,
-			docname: docname,
+			docid: docid,
 		});
 	});
 
@@ -107,18 +107,18 @@ function frappe_handlers(socket) {
 
 function notify_disconnected_documents(socket) {
 	if (socket.subscribed_documents) {
-		socket.subscribed_documents.forEach(([doctype, docname]) => {
-			notify_subscribed_doc_users({ socket, doctype, docname });
+		socket.subscribed_documents.forEach(([doctype, docid]) => {
+			notify_subscribed_doc_users({ socket, doctype, docid });
 		});
 	}
 }
 
 function notify_subscribed_doc_users(args) {
-	if (!(args && args.doctype && args.docname)) {
+	if (!(args && args.doctype && args.docid)) {
 		return;
 	}
 	const socket = args.socket;
-	const room = open_doc_room(args.doctype, args.docname);
+	const room = open_doc_room(args.doctype, args.docid);
 
 	const clients = Array.from(socket.nsp.adapter.rooms.get(room) || []);
 
@@ -136,13 +136,13 @@ function notify_subscribed_doc_users(args) {
 	// notify
 	socket.nsp.to(room).emit("doc_viewers", {
 		doctype: args.doctype,
-		docname: args.docname,
+		docid: args.docid,
 		users: Array.from(new Set(users)),
 	});
 }
 
-const doc_room = (doctype, docname) => "doc:" + doctype + "/" + docname;
-const open_doc_room = (doctype, docname) => "open_doc:" + doctype + "/" + docname;
+const doc_room = (doctype, docid) => "doc:" + doctype + "/" + docid;
+const open_doc_room = (doctype, docid) => "open_doc:" + doctype + "/" + docid;
 const user_room = (user) => "user:" + user;
 const doctype_room = (doctype) => "doctype:" + doctype;
 const task_room = (task_id) => "task_progress:" + task_id;
