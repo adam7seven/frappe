@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestWebsiteSidebar(UnitTestCase):
-	"""
-	Unit tests for WebsiteSidebar.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for WebsiteSidebar.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestWebsiteSidebar(IntegrationTestCase):
-	pass
+    pass

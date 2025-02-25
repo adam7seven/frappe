@@ -13,20 +13,20 @@ if TYPE_CHECKING:
 
 
 class UnitTestPrintFormat(UnitTestCase):
-	"""
-	Unit tests for PrintFormat.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for PrintFormat.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestPrintFormat(IntegrationTestCase):
-	def test_print_user(self, style=None):
-		print_html = frappe.get_print("User", "Administrator", style=style)
-		self.assertTrue("<label>First Name: </label>" in print_html)
-		self.assertTrue(re.findall(r'<div class="col-xs-[^"]*">[\s]*administrator[\s]*</div>', print_html))
-		return print_html
+    def test_print_user(self, style=None):
+        print_html = frappe.get_print("User", "Administrator", style=style)
+        self.assertTrue("<label>First Name: </label>" in print_html)
+        self.assertTrue(re.findall(r'<div class="col-xs-[^"]*">[\s]*administrator[\s]*</div>', print_html))
+        return print_html
 
     def test_print_user_standard(self):
         print_html = self.test_print_user("Standard")
@@ -44,11 +44,11 @@ class TestPrintFormat(IntegrationTestCase):
         print_html = self.test_print_user("Classic")
         self.assertTrue("/* classic format: for-test */" in print_html)
 
-	@unittest.skipUnless(
-		os.access(frappe.get_app_path("frappe"), os.W_OK), "Only run if frappe app paths is writable"
-	)
-	def test_export_doc(self):
-		doc: PrintFormat = frappe.get_doc("Print Format", self.globalTestRecords["Print Format"][0]["id"])
+    @unittest.skipUnless(
+        os.access(frappe.get_app_path("frappe"), os.W_OK), "Only run if frappe app paths is writable"
+    )
+    def test_export_doc(self):
+        doc: PrintFormat = frappe.get_doc("Print Format", self.globalTestRecords["Print Format"][0]["id"])
 
         # this is only to make export_doc happy
         doc.standard = "Yes"

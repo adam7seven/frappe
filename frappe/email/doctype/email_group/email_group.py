@@ -84,7 +84,7 @@ class EmailGroup(Document):
     def get_total_subscribers(self):
         return frappe.db.sql(
             """select count(*) from `tabEmail Group Member`
-			where email_group=%s""",
+            where email_group=%s""",
             self.id,
         )[0][0]
 

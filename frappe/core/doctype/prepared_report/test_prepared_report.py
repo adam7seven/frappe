@@ -12,12 +12,12 @@ from frappe.tests.test_query_builder import run_only_if
 
 
 class UnitTestPreparedReport(UnitTestCase):
-	"""
-	Unit tests for PreparedReport.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for PreparedReport.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestPreparedReport(IntegrationTestCase):

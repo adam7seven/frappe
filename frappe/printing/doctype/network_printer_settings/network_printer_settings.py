@@ -15,21 +15,21 @@ class NetworkPrinterSettings(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-		port: DF.Int
-		printer_name: DF.Literal[None]
-		server_ip: DF.Data
-	# end: auto-generated types
+        port: DF.Int
+        printer_name: DF.Literal[None]
+        server_ip: DF.Data
+    # end: auto-generated types
 
-	@frappe.whitelist()
-	def get_printers_list(self, ip="127.0.0.1", port=631):
-		printer_list = []
-		try:
-			import cups
-		except ImportError:
-			frappe.throw(
-				_(
-					"""This feature can not be used as dependencies are missing.
-				Please contact your system manager to enable this by installing pycups!"""
+    @frappe.whitelist()
+    def get_printers_list(self, ip="127.0.0.1", port=631):
+        printer_list = []
+        try:
+            import cups
+        except ImportError:
+            frappe.throw(
+                _(
+                    """This feature can not be used as dependencies are missing.
+                Please contact your system manager to enable this by installing pycups!"""
                 )
             )
             return

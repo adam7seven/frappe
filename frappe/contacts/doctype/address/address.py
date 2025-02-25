@@ -218,13 +218,13 @@ def get_list_context(context=None):
 def get_address_list(doctype, txt, filters, limit_start, limit_page_length=20, order_by=None):
     from frappe.www.list import get_list
 
-	user = frappe.session.user
+    user = frappe.session.user
 
     if not filters:
         filters = []
     filters.append(("Address", "owner", "=", user))
 
-	return get_list(doctype, txt, filters, limit_start, limit_page_length)
+    return get_list(doctype, txt, filters, limit_start, limit_page_length)
 
 
 def has_website_permission(doc, ptype, user, verbose=False):
@@ -267,35 +267,35 @@ def get_company_address(company):
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def address_query(doctype, txt, searchfield, start, page_len, filters):
-	from frappe.desk.search import search_widget
+    from frappe.desk.search import search_widget
 
-	_filters = []
-	if link_doctype := filters.pop("link_doctype", None):
-		_filters.append(["Dynamic Link", "link_doctype", "=", link_doctype])
+    _filters = []
+    if link_doctype := filters.pop("link_doctype", None):
+        _filters.append(["Dynamic Link", "link_doctype", "=", link_doctype])
 
-	if link_id := filters.pop("link_id", None):
-		_filters.append(["Dynamic Link", "link_id", "=", link_id])
+    if link_id := filters.pop("link_id", None):
+        _filters.append(["Dynamic Link", "link_id", "=", link_id])
 
-	_filters.extend([key, "=", value] for key, value in filters.items())
+    _filters.extend([key, "=", value] for key, value in filters.items())
 
-	return search_widget(
-		"Address", txt, filters=_filters, searchfield=searchfield, start=start, page_length=page_len
-	)
+    return search_widget(
+        "Address", txt, filters=_filters, searchfield=searchfield, start=start, page_length=page_len
+    )
 
 
 def get_condensed_address(doc, no_title=False):
-	fields = [
-		"address_title",
-		"address_line1",
-		"address_line2",
-		"city",
-		"county",
-		"state",
-		"country",
-	]
-	if no_title:
-		fields.remove("address_title")
-	return ", ".join(doc.get(d) for d in fields if doc.get(d))
+    fields = [
+        "address_title",
+        "address_line1",
+        "address_line2",
+        "city",
+        "county",
+        "state",
+        "country",
+    ]
+    if no_title:
+        fields.remove("address_title")
+    return ", ".join(doc.get(d) for d in fields if doc.get(d))
 
 
 def update_preferred_address(address, field):

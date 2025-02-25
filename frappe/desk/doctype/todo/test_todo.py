@@ -10,17 +10,17 @@ EXTRA_TEST_RECORD_DEPENDENCIES = ["User"]
 
 
 class UnitTestTodo(UnitTestCase):
-	"""
-	Unit tests for Todo.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for Todo.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestToDo(IntegrationTestCase):
-	def test_delete(self):
-		todo = frappe.get_doc(doctype="ToDo", description="test todo", assigned_by="Administrator").insert()
+    def test_delete(self):
+        todo = frappe.get_doc(doctype="ToDo", description="test todo", assigned_by="Administrator").insert()
 
         frappe.db.delete("Deleted Document")
         todo.delete()
@@ -30,32 +30,32 @@ class TestToDo(IntegrationTestCase):
         )
         self.assertEqual(todo.as_json(), deleted.data)
 
-	def test_fetch(self):
-		todo = frappe.get_doc(doctype="ToDo", description="test todo", assigned_by="Administrator").insert()
-		self.assertEqual(
-			todo.assigned_by_full_name, frappe.db.get_value("User", todo.assigned_by, "full_name")
-		)
+    def test_fetch(self):
+        todo = frappe.get_doc(doctype="ToDo", description="test todo", assigned_by="Administrator").insert()
+        self.assertEqual(
+            todo.assigned_by_full_name, frappe.db.get_value("User", todo.assigned_by, "full_name")
+        )
 
     def test_fetch_setup(self):
         frappe.db.delete("ToDo")
 
-		todo_meta = frappe.get_meta("ToDo")
-		todo_meta.get("fields", dict(fieldname="assigned_by_full_name"))[0].fetch_from = ""
-		todo_meta.save()
+        todo_meta = frappe.get_meta("ToDo")
+        todo_meta.get("fields", dict(fieldname="assigned_by_full_name"))[0].fetch_from = ""
+        todo_meta.save()
 
         frappe.clear_cache(doctype="ToDo")
 
-		todo = frappe.get_doc(doctype="ToDo", description="test todo", assigned_by="Administrator").insert()
-		self.assertFalse(todo.assigned_by_full_name)
+        todo = frappe.get_doc(doctype="ToDo", description="test todo", assigned_by="Administrator").insert()
+        self.assertFalse(todo.assigned_by_full_name)
 
-		todo_meta = frappe.get_meta("ToDo")
-		todo_meta.get("fields", dict(fieldname="assigned_by_full_name"))[
-			0
-		].fetch_from = "assigned_by.full_name"
-		todo_meta.save()
+        todo_meta = frappe.get_meta("ToDo")
+        todo_meta.get("fields", dict(fieldname="assigned_by_full_name"))[
+            0
+        ].fetch_from = "assigned_by.full_name"
+        todo_meta.save()
 
-		todo.reload()
-		todo.save()
+        todo.reload()
+        todo.save()
 
         self.assertEqual(
             todo.assigned_by_full_name,
@@ -121,21 +121,21 @@ class TestToDo(IntegrationTestCase):
     def test_fetch_if_empty(self):
         frappe.db.delete("ToDo")
 
-		# Allow user changes
-		todo_meta = frappe.get_meta("ToDo")
-		field = todo_meta.get("fields", dict(fieldname="assigned_by_full_name"))[0]
-		field.fetch_from = "assigned_by.full_name"
-		field.fetch_if_empty = 1
-		todo_meta.save()
+        # Allow user changes
+        todo_meta = frappe.get_meta("ToDo")
+        field = todo_meta.get("fields", dict(fieldname="assigned_by_full_name"))[0]
+        field.fetch_from = "assigned_by.full_name"
+        field.fetch_if_empty = 1
+        todo_meta.save()
 
         frappe.clear_cache(doctype="ToDo")
 
-		todo = frappe.get_doc(
-			doctype="ToDo",
-			description="test todo",
-			assigned_by="Administrator",
-			assigned_by_full_name="Admin",
-		).insert()
+        todo = frappe.get_doc(
+            doctype="ToDo",
+            description="test todo",
+            assigned_by="Administrator",
+            assigned_by_full_name="Admin",
+        ).insert()
 
         self.assertEqual(todo.assigned_by_full_name, "Admin")
 

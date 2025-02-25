@@ -19,34 +19,34 @@ class AuditTrail(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-		doctype_id: DF.Link
-		document: DF.DynamicLink
-		end_date: DF.Date | None
-		start_date: DF.Date | None
-	# end: auto-generated types
+        doctype_id: DF.Link
+        document: DF.DynamicLink
+        end_date: DF.Date | None
+        start_date: DF.Date | None
+    # end: auto-generated types
 
-	pass
+    pass
 
-	def validate(self):
-		self.validate_fields()
-		self.validate_document()
+    def validate(self):
+        self.validate_fields()
+        self.validate_document()
 
-	def validate_fields(self):
-		fields_dict = {
-			"DocType": self.doctype_id,
-			"Document": self.document,
-		}
-		for field in fields_dict:
-			if not fields_dict[field]:
-				frappe.throw(_("{} field cannot be empty.").format(frappe.bold(field)))
+    def validate_fields(self):
+        fields_dict = {
+            "DocType": self.doctype_id,
+            "Document": self.document,
+        }
+        for field in fields_dict:
+            if not fields_dict[field]:
+                frappe.throw(_("{} field cannot be empty.").format(frappe.bold(field)))
 
-	def validate_document(self):
-		if not frappe.db.exists(self.doctype_id, self.document):
-			frappe.throw(
-				_("The selected document {0} is not a {1}.").format(
-					frappe.bold(self.document), frappe.bold(self.doctype_id)
-				)
-			)
+    def validate_document(self):
+        if not frappe.db.exists(self.doctype_id, self.document):
+            frappe.throw(
+                _("The selected document {0} is not a {1}.").format(
+                    frappe.bold(self.document), frappe.bold(self.doctype_id)
+                )
+            )
 
     @frappe.whitelist()
     def compare_document(self):
@@ -74,20 +74,20 @@ class AuditTrail(Document):
             "removed": self.removed,
         }
 
-	def get_amended_documents(self):
-		start_date = self.get("start_date")
-		amended_document_ids = []
-		curr_doc = self.document
-		creation = frappe.db.get_value(self.doctype_id, self.document, "creation")
-		while (
-			curr_doc
-			and len(amended_document_ids) < 5
-			and (start_date is None or compare(creation, ">=", start_date, "Date"))
-		):
-			amended_document_ids.append(curr_doc)
-			curr_doc = frappe.db.get_value(self.doctype_id, curr_doc, "amended_from")
-			creation = frappe.db.get_value(self.doctype_id, curr_doc, "creation")
-		amended_document_ids = amended_document_ids[::-1]
+    def get_amended_documents(self):
+        start_date = self.get("start_date")
+        amended_document_ids = []
+        curr_doc = self.document
+        creation = frappe.db.get_value(self.doctype_id, self.document, "creation")
+        while (
+            curr_doc
+            and len(amended_document_ids) < 5
+            and (start_date is None or compare(creation, ">=", start_date, "Date"))
+        ):
+            amended_document_ids.append(curr_doc)
+            curr_doc = frappe.db.get_value(self.doctype_id, curr_doc, "amended_from")
+            creation = frappe.db.get_value(self.doctype_id, curr_doc, "creation")
+        amended_document_ids = amended_document_ids[::-1]
 
         return amended_document_ids
 

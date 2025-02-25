@@ -9,19 +9,19 @@ EXTRA_TEST_RECORD_DEPENDENCIES = ["Blog Post"]
 
 
 class UnitTestWebsiteRouteMeta(UnitTestCase):
-	"""
-	Unit tests for WebsiteRouteMeta.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for WebsiteRouteMeta.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestWebsiteRouteMeta(IntegrationTestCase):
-	def test_meta_tag_generation(self):
-		blogs = frappe.get_all(
-			"Blog Post", fields=["id", "route"], filters={"published": 1, "route": ("!=", "")}, limit=1
-		)
+    def test_meta_tag_generation(self):
+        blogs = frappe.get_all(
+            "Blog Post", fields=["id", "route"], filters={"published": 1, "route": ("!=", "")}, limit=1
+        )
 
         blog = blogs[0]
 

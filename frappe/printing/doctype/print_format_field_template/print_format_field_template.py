@@ -15,17 +15,17 @@ class PrintFormatFieldTemplate(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-		document_type: DF.Link
-		field: DF.Data | None
-		module: DF.Link | None
-		standard: DF.Check
-		template: DF.Code | None
-		template_file: DF.Data | None
-	# end: auto-generated types
+        document_type: DF.Link
+        field: DF.Data | None
+        module: DF.Link | None
+        standard: DF.Check
+        template: DF.Code | None
+        template_file: DF.Data | None
+    # end: auto-generated types
 
-	def validate(self):
-		if self.standard and not frappe.conf.developer_mode and not frappe.flags.in_patch:
-			frappe.throw(_("Enable developer mode to create a standard Print Template"))
+    def validate(self):
+        if self.standard and not frappe.conf.developer_mode and not frappe.flags.in_patch:
+            frappe.throw(_("Enable developer mode to create a standard Print Template"))
 
     def before_insert(self):
         self.validate_duplicate()

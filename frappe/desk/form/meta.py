@@ -12,24 +12,24 @@ from frappe.utils import get_bench_path, get_html_format
 from frappe.utils.data import get_link_to_form
 
 ASSET_KEYS = (
-	"__js",
-	"__css",
-	"__list_js",
-	"__calendar_js",
-	"__map_js",
-	"__linked_with",
-	"__messages",
-	"__print_formats",
-	"__workflow_docs",
-	"__form_grid_templates",
-	"__listview_template",
-	"__tree_js",
-	"__dashboard",
-	"__kanban_column_fields",
-	"__templates",
-	"__custom_js",
-	"__custom_list_js",
-	"__workspaces",
+    "__js",
+    "__css",
+    "__list_js",
+    "__calendar_js",
+    "__map_js",
+    "__linked_with",
+    "__messages",
+    "__print_formats",
+    "__workflow_docs",
+    "__form_grid_templates",
+    "__listview_template",
+    "__tree_js",
+    "__dashboard",
+    "__kanban_column_fields",
+    "__templates",
+    "__custom_js",
+    "__custom_list_js",
+    "__workspaces",
 )
 
 
@@ -45,7 +45,7 @@ def get_meta(doctype, cached=True) -> "FormMeta":
     else:
         meta = FormMeta(doctype)
 
-	return meta
+    return meta
 
 
 class FormMeta(Meta):
@@ -60,15 +60,15 @@ class FormMeta(Meta):
         self.add_search_fields()
         self.add_linked_document_type()
 
-		if not self.istable:
-			self.add_code()
-			self.add_custom_script()
-			self.load_print_formats()
-			self.load_workflows()
-			self.load_templates()
-			self.load_dashboard()
-			self.load_kanban_meta()
-			self.load_workspaces()
+        if not self.istable:
+            self.add_code()
+            self.add_custom_script()
+            self.load_print_formats()
+            self.load_workflows()
+            self.load_templates()
+            self.load_dashboard()
+            self.load_kanban_meta()
+            self.load_workspaces()
 
         self.set("__assets_loaded", True)
 
@@ -226,7 +226,7 @@ class FormMeta(Meta):
     def load_print_formats(self):
         print_formats = frappe.db.sql(
             """select * FROM `tabPrint Format`
-			WHERE doc_type=%s AND docstatus<2 and disabled=0""",
+            WHERE doc_type=%s AND docstatus<2 and disabled=0""",
             (self.id,),
             as_dict=1,
             update={"doctype": "Print Format"},
@@ -257,39 +257,39 @@ class FormMeta(Meta):
 
                 self.set("__form_grid_templates", templates)
 
-	def load_dashboard(self):
-		self.set("__dashboard", self.get_dashboard_data())
+    def load_dashboard(self):
+        self.set("__dashboard", self.get_dashboard_data())
 
-	def load_workspaces(self):
-		Shortcut = frappe.qb.DocType("Workspace Shortcut")
-		Workspace = frappe.qb.DocType("Workspace")
-		shortcut = (
-			frappe.qb.from_(Shortcut)
-			.select(Shortcut.parent)
-			.inner_join(Workspace)
-			.on(Workspace.id == Shortcut.parent)
-			.where(Shortcut.link_to == self.id)
-			.where(Shortcut.type == "DocType")
-			.where(Workspace.public == 1)
-			.run()
-		)
-		if shortcut:
-			self.set("__workspaces", [shortcut[0][0]])
-		else:
-			Link = frappe.qb.DocType("Workspace Link")
-			link = (
-				frappe.qb.from_(Link)
-				.select(Link.parent)
-				.inner_join(Workspace)
-				.on(Workspace.id == Link.parent)
-				.where(Link.link_type == "DocType")
-				.where(Link.link_to == self.id)
-				.where(Workspace.public == 1)
-				.run()
-			)
+    def load_workspaces(self):
+        Shortcut = frappe.qb.DocType("Workspace Shortcut")
+        Workspace = frappe.qb.DocType("Workspace")
+        shortcut = (
+            frappe.qb.from_(Shortcut)
+            .select(Shortcut.parent)
+            .inner_join(Workspace)
+            .on(Workspace.id == Shortcut.parent)
+            .where(Shortcut.link_to == self.id)
+            .where(Shortcut.type == "DocType")
+            .where(Workspace.public == 1)
+            .run()
+        )
+        if shortcut:
+            self.set("__workspaces", [shortcut[0][0]])
+        else:
+            Link = frappe.qb.DocType("Workspace Link")
+            link = (
+                frappe.qb.from_(Link)
+                .select(Link.parent)
+                .inner_join(Workspace)
+                .on(Workspace.id == Link.parent)
+                .where(Link.link_type == "DocType")
+                .where(Link.link_to == self.id)
+                .where(Workspace.public == 1)
+                .run()
+            )
 
-			if link:
-				self.set("__workspaces", [link[0][0]])
+            if link:
+                self.set("__workspaces", [link[0][0]])
 
     def load_kanban_meta(self):
         self.load_kanban_column_fields()

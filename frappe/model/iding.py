@@ -412,8 +412,8 @@ def getseries(key, digits):
 def revert_series_if_last(key, id, doc=None):
     """
     Reverts the series for particular naming series:
-    * key is naming series		- SINV-.YYYY-.####
-    * id is actual id		- SINV-2021-0001
+    * key is naming series        - SINV-.YYYY-.####
+    * id is actual id        - SINV-2021-0001
 
     1. This function split the key into two parts prefix (SINV-YYYY) & hashes (####).
     2. Use prefix to get the current index of that naming series from Series table
@@ -530,9 +530,9 @@ def append_number_if_id_exists(
     if exists:
         last = frappe.db.sql(
             f"""SELECT `{fieldname}` FROM `tab{doctype}`
-			WHERE `{fieldname}` {frappe.db.REGEX_CHARACTER} %s
-			ORDER BY length({fieldname}) DESC,
-			`{fieldname}` DESC LIMIT 1""",
+            WHERE `{fieldname}` {frappe.db.REGEX_CHARACTER} %s
+            ORDER BY length({fieldname}) DESC,
+            `{fieldname}` DESC LIMIT 1""",
             regex,
         )
 

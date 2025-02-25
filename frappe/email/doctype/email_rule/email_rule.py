@@ -5,16 +5,16 @@ from frappe.model.document import Document
 
 
 class EmailRule(Document):
-	# begin: auto-generated types
-	# This code is auto-generated. Do not modify anything in this block.
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
 
-	from typing import TYPE_CHECKING
+    from typing import TYPE_CHECKING
 
-	if TYPE_CHECKING:
-		from frappe.types import DF
+    if TYPE_CHECKING:
+        from frappe.types import DF
 
-		email_id: DF.Data | None
-		is_spam: DF.Check
-	# end: auto-generated types
+        email_id: DF.Data | None
+        is_spam: DF.Check
+    # end: auto-generated types
 
-	pass
+    pass

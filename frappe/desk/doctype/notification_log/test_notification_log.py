@@ -7,18 +7,18 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestNotificationLog(UnitTestCase):
-	"""
-	Unit tests for NotificationLog.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for NotificationLog.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestNotificationLog(IntegrationTestCase):
-	def test_assignment(self):
-		todo = get_todo()
-		user = get_user()
+    def test_assignment(self):
+        todo = get_todo()
+        user = get_user()
 
         assign_task(
             {
@@ -47,9 +47,9 @@ class TestNotificationLog(IntegrationTestCase):
         )
         self.assertEqual(log_type, "Share")
 
-		email = get_last_email_queue()
-		content = f"Subject: {frappe.utils.get_fullname(frappe.session.user)} shared a document ToDo"
-		self.assertTrue(content in email.message)
+        email = get_last_email_queue()
+        content = f"Subject: {frappe.utils.get_fullname(frappe.session.user)} shared a document ToDo"
+        self.assertTrue(content in email.message)
 
 
 def get_last_email_queue():

@@ -20,26 +20,26 @@ class PackageRelease(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-		major: DF.Int
-		minor: DF.Int
-		package: DF.Link
-		patch: DF.Int
-		path: DF.SmallText | None
-		publish: DF.Check
-		release_notes: DF.MarkdownEditor | None
-	# end: auto-generated types
+        major: DF.Int
+        minor: DF.Int
+        package: DF.Link
+        patch: DF.Int
+        path: DF.SmallText | None
+        publish: DF.Check
+        release_notes: DF.MarkdownEditor | None
+    # end: auto-generated types
 
-	def set_version(self):
-		# set the next patch release by default
-		doctype = frappe.qb.DocType("Package Release")
-		if not self.major:
-			self.major = (
-				frappe.qb.from_(doctype)
-				.where(doctype.package == self.package)
-				.select(Max(doctype.minor))
-				.run()[0][0]
-				or 0
-			)
+    def set_version(self):
+        # set the next patch release by default
+        doctype = frappe.qb.DocType("Package Release")
+        if not self.major:
+            self.major = (
+                frappe.qb.from_(doctype)
+                .where(doctype.package == self.package)
+                .select(Max(doctype.minor))
+                .run()[0][0]
+                or 0
+            )
 
         if not self.minor:
             self.minor = (
@@ -60,17 +60,17 @@ class PackageRelease(Document):
             self.patch,
         )
 
-	def validate(self):
-		package = frappe.get_doc("Package", self.package)
-		package_path = Path(frappe.get_site_path("packages", package.package_name))
-		if not package_path.resolve().is_relative_to(Path(frappe.get_site_path()).resolve()):
-			frappe.throw("Invalid package path: " + package_path.as_posix())
+    def validate(self):
+        package = frappe.get_doc("Package", self.package)
+        package_path = Path(frappe.get_site_path("packages", package.package_name))
+        if not package_path.resolve().is_relative_to(Path(frappe.get_site_path()).resolve()):
+            frappe.throw("Invalid package path: " + package_path.as_posix())
 
-		if self.publish:
-			self.export_files(package)
+        if self.publish:
+            self.export_files(package)
 
-	def export_files(self, package):
-		"""Export all the documents in this package to site/packages folder"""
+    def export_files(self, package):
+        """Export all the documents in this package to site/packages folder"""
 
         self.export_modules()
         self.export_package_files(package)
@@ -123,16 +123,16 @@ class PackageRelease(Document):
             ]
         )
 
-		# make attachment
-		file = frappe.get_doc(
-			doctype="File",
-			file_url="/" + os.path.join("files", filename),
-			attached_to_doctype=self.doctype,
-			attached_to_id=self.id,
-		)
+        # make attachment
+        file = frappe.get_doc(
+            doctype="File",
+            file_url="/" + os.path.join("files", filename),
+            attached_to_doctype=self.doctype,
+            attached_to_id=self.id,
+        )
 
-		# Set path to tarball
-		self.path = file.file_url
+        # Set path to tarball
+        self.path = file.file_url
 
-		file.flags.ignore_duplicate_entry_error = True
-		file.insert()
+        file.flags.ignore_duplicate_entry_error = True
+        file.insert()

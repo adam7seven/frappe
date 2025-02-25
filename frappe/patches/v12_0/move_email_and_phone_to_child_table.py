@@ -8,13 +8,13 @@ def execute():
 
     contact_details = frappe.db.sql(
         """
-		SELECT
-			`id`, `email_id`, `phone`, `mobile_no`, `modified_by`, `creation`, `modified`
-		FROM `tabContact`
-		where not exists (select * from `tabContact Email`
-			where `tabContact Email`.parent=`tabContact`.id
-			and `tabContact Email`.email_id=`tabContact`.email_id)
-	""",
+        SELECT
+            `id`, `email_id`, `phone`, `mobile_no`, `modified_by`, `creation`, `modified`
+        FROM `tabContact`
+        where not exists (select * from `tabContact Email`
+            where `tabContact Email`.parent=`tabContact`.id
+            and `tabContact Email`.email_id=`tabContact`.email_id)
+    """,
         as_dict=True,
     )
 
@@ -78,11 +78,11 @@ def execute():
         if email_values and (count % 10000 == 0 or count == len(contact_details) - 1):
             frappe.db.sql(
                 """
-				INSERT INTO `tabContact Email`
-					(`idx`, `id`, `email_id`, `parentfield`, `parenttype`, `parent`, `is_primary`, `creation`,
-					`modified`, `modified_by`)
-				VALUES {}
-			""".format(
+                INSERT INTO `tabContact Email`
+                    (`idx`, `id`, `email_id`, `parentfield`, `parenttype`, `parent`, `is_primary`, `creation`,
+                    `modified`, `modified_by`)
+                VALUES {}
+            """.format(
                     ", ".join(["%s"] * len(email_values))
                 ),
                 tuple(email_values),
@@ -93,11 +93,11 @@ def execute():
         if phone_values and (count % 10000 == 0 or count == len(contact_details) - 1):
             frappe.db.sql(
                 """
-				INSERT INTO `tabContact Phone`
-					(`idx`, `id`, `phone`, `parentfield`, `parenttype`, `parent`, `is_primary_phone`, `is_primary_mobile_no`, `creation`,
-					`modified`, `modified_by`)
-				VALUES {}
-			""".format(
+                INSERT INTO `tabContact Phone`
+                    (`idx`, `id`, `phone`, `parentfield`, `parenttype`, `parent`, `is_primary_phone`, `is_primary_mobile_no`, `creation`,
+                    `modified`, `modified_by`)
+                VALUES {}
+            """.format(
                     ", ".join(["%s"] * len(phone_values))
                 ),
                 tuple(phone_values),

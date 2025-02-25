@@ -38,7 +38,7 @@ def set_timeline_doc(doc):
 
 
 def find(list_of_dict, match_function):
-	"""Return a dict in a list of dicts on matching the conditions provided in match function.
+    """Return a dict in a list of dicts on matching the conditions provided in match function.
 
     Usage:
             list_of_dict = [{'id': 'Suraj'}, {'id': 'Aditya'}]
@@ -53,7 +53,7 @@ def find(list_of_dict, match_function):
 
 
 def find_all(list_of_dict, match_function):
-	"""Return all matching dicts in a list of dicts. Uses matching function to filter out the dicts.
+    """Return all matching dicts in a list of dicts. Uses matching function to filter out the dicts.
 
     Usage:
             colored_shapes = [
@@ -85,6 +85,6 @@ def ljust_list(_list, length, fill_word=None):
 
 
 def html2text(html: str, strip_links=False, wrap=True) -> str:
-	"""Return the given `html` as markdown text."""
-	strip = ["a"] if strip_links else None
-	return md(html, heading_style="ATX", strip=strip, wrap=wrap)
+    """Return the given `html` as markdown text."""
+    strip = ["a"] if strip_links else None
+    return md(html, heading_style="ATX", strip=strip, wrap=wrap)

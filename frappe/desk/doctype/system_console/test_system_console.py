@@ -5,19 +5,19 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestSystemConsole(UnitTestCase):
-	"""
-	Unit tests for SystemConsole.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for SystemConsole.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestSystemConsole(IntegrationTestCase):
-	@classmethod
-	def setUpClass(cls) -> None:
-		cls.enterClassContext(cls.enable_safe_exec())
-		return super().setUpClass()
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.enterClassContext(cls.enable_safe_exec())
+        return super().setUpClass()
 
     def test_system_console(self):
         system_console = frappe.get_doc("System Console")

@@ -5,18 +5,18 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestTag(UnitTestCase):
-	"""
-	Unit tests for Tag.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for Tag.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestTag(IntegrationTestCase):
-	def setUp(self) -> None:
-		frappe.db.delete("Tag")
-		frappe.db.sql("UPDATE `tabDocType` set _user_tags=''")
+    def setUp(self) -> None:
+        frappe.db.delete("Tag")
+        frappe.db.sql("UPDATE `tabDocType` set _user_tags=''")
 
     def test_tag_count_query(self):
         self.assertDictEqual(

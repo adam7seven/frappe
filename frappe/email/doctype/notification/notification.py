@@ -33,150 +33,150 @@ class Notification(Document):
 
     from typing import TYPE_CHECKING
 
-	if TYPE_CHECKING:
-		from frappe.email.doctype.notification_recipient.notification_recipient import NotificationRecipient
-		from frappe.types import DF
+    if TYPE_CHECKING:
+        from frappe.email.doctype.notification_recipient.notification_recipient import NotificationRecipient
+        from frappe.types import DF
 
-		attach_print: DF.Check
-		channel: DF.Literal["Email", "Slack", "System Notification", "SMS"]
-		condition: DF.Code | None
-		date_changed: DF.Literal[None]
-		datetime_changed: DF.Literal[None]
-		datetime_last_run: DF.Datetime | None
-		days_in_advance: DF.Int
-		document_type: DF.Link
-		enabled: DF.Check
-		event: DF.Literal[
-			"",
-			"New",
-			"Save",
-			"Submit",
-			"Cancel",
-			"Days After",
-			"Days Before",
-			"Minutes After",
-			"Minutes Before",
-			"Value Change",
-			"Method",
-			"Custom",
-		]
-		is_standard: DF.Check
-		message: DF.Code | None
-		message_type: DF.Literal["Markdown", "HTML", "Plain Text"]
-		method: DF.Data | None
-		minutes_offset: DF.Int
-		module: DF.Link | None
-		print_format: DF.Link | None
-		property_value: DF.Data | None
-		recipients: DF.Table[NotificationRecipient]
-		send_system_notification: DF.Check
-		send_to_all_assignees: DF.Check
-		sender: DF.Link | None
-		sender_email: DF.Data | None
-		set_property_after_alert: DF.Literal[None]
-		slack_webhook_url: DF.Link | None
-		subject: DF.Data | None
-		value_changed: DF.Literal[None]
-	# end: auto-generated types
+        attach_print: DF.Check
+        channel: DF.Literal["Email", "Slack", "System Notification", "SMS"]
+        condition: DF.Code | None
+        date_changed: DF.Literal[None]
+        datetime_changed: DF.Literal[None]
+        datetime_last_run: DF.Datetime | None
+        days_in_advance: DF.Int
+        document_type: DF.Link
+        enabled: DF.Check
+        event: DF.Literal[
+            "",
+            "New",
+            "Save",
+            "Submit",
+            "Cancel",
+            "Days After",
+            "Days Before",
+            "Minutes After",
+            "Minutes Before",
+            "Value Change",
+            "Method",
+            "Custom",
+        ]
+        is_standard: DF.Check
+        message: DF.Code | None
+        message_type: DF.Literal["Markdown", "HTML", "Plain Text"]
+        method: DF.Data | None
+        minutes_offset: DF.Int
+        module: DF.Link | None
+        print_format: DF.Link | None
+        property_value: DF.Data | None
+        recipients: DF.Table[NotificationRecipient]
+        send_system_notification: DF.Check
+        send_to_all_assignees: DF.Check
+        sender: DF.Link | None
+        sender_email: DF.Data | None
+        set_property_after_alert: DF.Literal[None]
+        slack_webhook_url: DF.Link | None
+        subject: DF.Data | None
+        value_changed: DF.Literal[None]
+    # end: auto-generated types
 
-	def onload(self):
-		"""load message"""
-		if self.is_standard:
-			self.message = self.get_template()
+    def onload(self):
+        """load message"""
+        if self.is_standard:
+            self.message = self.get_template()
 
     def autoid(self):
         if not self.id:
             self.id = self.subject
 
-	# START: PreviewRenderer API
+    # START: PreviewRenderer API
 
-	@frappe.whitelist()
-	def preview_meets_condition(self, preview_document):
-		if not self.condition:
-			return _("Yes")
-		try:
-			doc = frappe.get_cached_doc(self.document_type, preview_document)
-			context = get_context(doc)
-			return _("Yes") if frappe.safe_eval(self.condition, eval_locals=context) else _("No")
-		except Exception as e:
-			frappe.local.message_log = []
-			return _("Failed to evaluate conditions: {}").format(e)
+    @frappe.whitelist()
+    def preview_meets_condition(self, preview_document):
+        if not self.condition:
+            return _("Yes")
+        try:
+            doc = frappe.get_cached_doc(self.document_type, preview_document)
+            context = get_context(doc)
+            return _("Yes") if frappe.safe_eval(self.condition, eval_locals=context) else _("No")
+        except Exception as e:
+            frappe.local.message_log = []
+            return _("Failed to evaluate conditions: {}").format(e)
 
-	@frappe.whitelist()
-	def preview_message(self, preview_document):
-		try:
-			doc = frappe.get_cached_doc(self.document_type, preview_document)
-			context = get_context(doc)
-			context.update({"alert": self, "comments": None})
-			if doc.get("_comments"):
-				context["comments"] = json.loads(doc.get("_comments"))
-			if self.is_standard:
-				self.load_standard_properties(context)
-			msg = frappe.render_template(self.message, context)
-			if self.channel == "SMS":
-				return frappe.utils.strip_html_tags(msg)
-			return msg
-		except Exception as e:
-			return _("Failed to render message: {}").format(e)
+    @frappe.whitelist()
+    def preview_message(self, preview_document):
+        try:
+            doc = frappe.get_cached_doc(self.document_type, preview_document)
+            context = get_context(doc)
+            context.update({"alert": self, "comments": None})
+            if doc.get("_comments"):
+                context["comments"] = json.loads(doc.get("_comments"))
+            if self.is_standard:
+                self.load_standard_properties(context)
+            msg = frappe.render_template(self.message, context)
+            if self.channel == "SMS":
+                return frappe.utils.strip_html_tags(msg)
+            return msg
+        except Exception as e:
+            return _("Failed to render message: {}").format(e)
 
-	@frappe.whitelist()
-	def preview_subject(self, preview_document):
-		try:
-			doc = frappe.get_cached_doc(self.document_type, preview_document)
-			context = get_context(doc)
-			context.update({"alert": self, "comments": None})
-			if doc.get("_comments"):
-				context["comments"] = json.loads(doc.get("_comments"))
-			if self.is_standard:
-				self.load_standard_properties(context)
-			if not self.subject:
-				return _("No subject")
-			if "{" in self.subject:
-				return frappe.render_template(self.subject, context)
-			return self.subject
-		except Exception as e:
-			return _("Failed to render subject: {}").format(e)
+    @frappe.whitelist()
+    def preview_subject(self, preview_document):
+        try:
+            doc = frappe.get_cached_doc(self.document_type, preview_document)
+            context = get_context(doc)
+            context.update({"alert": self, "comments": None})
+            if doc.get("_comments"):
+                context["comments"] = json.loads(doc.get("_comments"))
+            if self.is_standard:
+                self.load_standard_properties(context)
+            if not self.subject:
+                return _("No subject")
+            if "{" in self.subject:
+                return frappe.render_template(self.subject, context)
+            return self.subject
+        except Exception as e:
+            return _("Failed to render subject: {}").format(e)
 
-	# END: PreviewRenderer API
+    # END: PreviewRenderer API
 
-	def validate(self):
-		if self.channel in ("Email", "Slack", "System Notification"):
-			validate_template(self.subject)
+    def validate(self):
+        if self.channel in ("Email", "Slack", "System Notification"):
+            validate_template(self.subject)
 
         validate_template(self.message)
 
         if self.event in ("Days Before", "Days After") and not self.date_changed:
             frappe.throw(_("Please specify which date field must be checked"))
 
-		if self.event in ("Minutes Before", "Minutes After"):
-			if not self.datetime_changed:
-				frappe.throw(_("Please specify which datetime field must be checked"))
-			if not self.minutes_offset:
-				frappe.throw(_("Please specify the minutes offset"))
-			if self.minutes_offset < 10:
-				frappe.throw(
-					_("Please specify at least 10 minutes due to the trigger cadence of the scheduler")
-				)
+        if self.event in ("Minutes Before", "Minutes After"):
+            if not self.datetime_changed:
+                frappe.throw(_("Please specify which datetime field must be checked"))
+            if not self.minutes_offset:
+                frappe.throw(_("Please specify the minutes offset"))
+            if self.minutes_offset < 10:
+                frappe.throw(
+                    _("Please specify at least 10 minutes due to the trigger cadence of the scheduler")
+                )
 
-		if self.event == "Value Change" and not self.value_changed:
-			frappe.throw(_("Please specify which value field must be checked"))
+        if self.event == "Value Change" and not self.value_changed:
+            frappe.throw(_("Please specify which value field must be checked"))
 
-		self.validate_forbidden_document_types()
-		self.validate_condition()
-		self.validate_standard()
-		clear_notification_cache()
+        self.validate_forbidden_document_types()
+        self.validate_condition()
+        self.validate_standard()
+        clear_notification_cache()
 
-	def clear_cache(self):
-		super().clear_cache()
-		clear_notification_cache()
+    def clear_cache(self):
+        super().clear_cache()
+        clear_notification_cache()
 
-	def on_update(self):
-		path = export_module_json(self, self.is_standard, self.module)
-		if path and self.message:
-			extension = FORMATS.get(self.message_type, ".md")
-			file_path = path + extension
-			with open(file_path, "w") as f:
-				f.write(self.message)
+    def on_update(self):
+        path = export_module_json(self, self.is_standard, self.module)
+        if path and self.message:
+            extension = FORMATS.get(self.message_type, ".md")
+            file_path = path + extension
+            with open(file_path, "w") as f:
+                f.write(self.message)
 
             # py
             if not os.path.exists(path + ".py"):
@@ -185,8 +185,8 @@ class Notification(Document):
                         """import frappe
 
 def get_context(context):
-	# do your magic here
-	pass
+    # do your magic here
+    pass
 """
                     )
 
@@ -206,20 +206,20 @@ def get_context(context):
             except Exception:
                 frappe.throw(_("The Condition '{0}' is invalid").format(self.condition))
 
-	def validate_forbidden_document_types(self):
-		if self.document_type in FORBIDDEN_DOCUMENT_TYPES or (
-			frappe.get_meta(self.document_type).istable and self.event not in DATE_BASED_EVENTS
-		):
-			# only date based events are allowed for child tables
-			frappe.throw(
-				_("Cannot set Notification with event {0} on Document Type {1}").format(
-					_(self.event), _(self.document_type)
-				)
-			)
+    def validate_forbidden_document_types(self):
+        if self.document_type in FORBIDDEN_DOCUMENT_TYPES or (
+            frappe.get_meta(self.document_type).istable and self.event not in DATE_BASED_EVENTS
+        ):
+            # only date based events are allowed for child tables
+            frappe.throw(
+                _("Cannot set Notification with event {0} on Document Type {1}").format(
+                    _(self.event), _(self.document_type)
+                )
+            )
 
-	def get_documents_for_today(self):
-		"""get list of documents that will be triggered today"""
-		docs = []
+    def get_documents_for_today(self):
+        """get list of documents that will be triggered today"""
+        docs = []
 
         diff_days = self.days_in_advance
         if self.event == "Days After":
@@ -250,102 +250,102 @@ def get_context(context):
 
         return docs
 
-	def get_documents_for_this_moment(self) -> list[Document]:
-		"""
-		Get list of documents that will be triggered at this moment.
+    def get_documents_for_this_moment(self) -> list[Document]:
+        """
+        Get list of documents that will be triggered at this moment.
 
-		This method retrieves documents based on the specified datetime field and minutes offset.
-		It considers documents that fall within the time range from the last run time plus the offset
-		up to the current time plus the offset.
+        This method retrieves documents based on the specified datetime field and minutes offset.
+        It considers documents that fall within the time range from the last run time plus the offset
+        up to the current time plus the offset.
 
-		Returns:
-		        list: A list of document objects that meet the criteria for notification.
-		"""
-		docs = []
+        Returns:
+                list: A list of document objects that meet the criteria for notification.
+        """
+        docs = []
 
-		offset_in_minutes = self.minutes_offset
+        offset_in_minutes = self.minutes_offset
 
-		now = now_datetime()  # reference now
-		last = (
-			# one ficticious scheduler tick earlier if frist run
-			add_to_date(now, minutes=-5) if not self.datetime_last_run else self.datetime_last_run
-		)
+        now = now_datetime()  # reference now
+        last = (
+            # one ficticious scheduler tick earlier if frist run
+            add_to_date(now, minutes=-5) if not self.datetime_last_run else self.datetime_last_run
+        )
 
-		if self.event == "Minutes After":
-			offset = partial(add_to_date, minutes=-offset_in_minutes)
-		else:
-			offset = partial(add_to_date, minutes=offset_in_minutes)
+        if self.event == "Minutes After":
+            offset = partial(add_to_date, minutes=-offset_in_minutes)
+        else:
+            offset = partial(add_to_date, minutes=offset_in_minutes)
 
-		(lower, upper) = map(offset, [last, now])  # nosemgrep
+        (lower, upper) = map(offset, [last, now])  # nosemgrep
 
-		doc_list = frappe.get_all(
-			self.document_type,
-			fields="id",
-			filters=[
-				{self.datetime_changed: (">", lower)},
-				{self.datetime_changed: ("<=", upper)},
-			],
-		)
+        doc_list = frappe.get_all(
+            self.document_type,
+            fields="id",
+            filters=[
+                {self.datetime_changed: (">", lower)},
+                {self.datetime_changed: ("<=", upper)},
+            ],
+        )
 
-		self.db_set("datetime_last_run", now)  # set reference now for next run
+        self.db_set("datetime_last_run", now)  # set reference now for next run
 
-		for d in doc_list:
-			doc = frappe.get_doc(self.document_type, d.id)
+        for d in doc_list:
+            doc = frappe.get_doc(self.document_type, d.id)
 
-			if self.condition and not frappe.safe_eval(self.condition, None, get_context(doc)):
-				continue
+            if self.condition and not frappe.safe_eval(self.condition, None, get_context(doc)):
+                continue
 
-			docs.append(doc)
+            docs.append(doc)
 
-		return docs
+        return docs
 
-	def queue_send(self, doc, enqueue_after_commit=True):
-		"""
-		Enqueue the process to build recipients and send notifications.
+    def queue_send(self, doc, enqueue_after_commit=True):
+        """
+        Enqueue the process to build recipients and send notifications.
 
-		This method is particularly useful for sending notifications, especially 'Custom'-type,
-		without the additional overhead associated with `Document.queue_action`.
+        This method is particularly useful for sending notifications, especially 'Custom'-type,
+        without the additional overhead associated with `Document.queue_action`.
 
-		Args:
-		              doc (Document): The document object for which the notification is being sent.
-		              enqueue_after_commit (bool, optional): If True, the task will be enqueued after
-		                the current transaction is committed. Defaults to True.
+        Args:
+                      doc (Document): The document object for which the notification is being sent.
+                      enqueue_after_commit (bool, optional): If True, the task will be enqueued after
+                        the current transaction is committed. Defaults to True.
 
-		Note:
-		              This method is the recommended way to send 'Custom'-type notifications.
+        Note:
+                      This method is the recommended way to send 'Custom'-type notifications.
 
-		Example:
-		              To queue a notification from a server script:
+        Example:
+                      To queue a notification from a server script:
 
-		              ```python
-		              notification = frappe.get_doc("Notification", "My Notification", ignore_permissions=True)
-		              notification.queue_send(customer)
-		              ```
+                      ```python
+                      notification = frappe.get_doc("Notification", "My Notification", ignore_permissions=True)
+                      notification.queue_send(customer)
+                      ```
 
-		              This example queues the "My Notification" to be sent for the specified customer document.
-		"""
-		from frappe.utils.background_jobs import enqueue
+                      This example queues the "My Notification" to be sent for the specified customer document.
+        """
+        from frappe.utils.background_jobs import enqueue
 
-		return enqueue(
-			"frappe.email.doctype.notification.notification.evaluate_alert",
-			doc=doc,
-			alert=self,
-			now=frappe.flags.in_test,
-			enqueue_after_commit=enqueue_after_commit,
-		)
+        return enqueue(
+            "frappe.email.doctype.notification.notification.evaluate_alert",
+            doc=doc,
+            alert=self,
+            now=frappe.flags.in_test,
+            enqueue_after_commit=enqueue_after_commit,
+        )
 
-	def send(self, doc):
-		"""Build recipients and send Notification"""
+    def send(self, doc):
+        """Build recipients and send Notification"""
 
-		context = get_context(doc)
-		context.update({"alert": self, "comments": None})
-		if doc.get("_comments"):
-			context["comments"] = json.loads(doc.get("_comments"))
+        context = get_context(doc)
+        context.update({"alert": self, "comments": None})
+        if doc.get("_comments"):
+            context["comments"] = json.loads(doc.get("_comments"))
 
-		if self.is_standard:
-			self.load_standard_properties(context)
+        if self.is_standard:
+            self.load_standard_properties(context)
 
-		self.send_notification_by_channel(doc, context)
+        self.send_notification_by_channel(doc, context)
 
         if self.set_property_after_alert:
             allow_update = True
@@ -379,24 +379,24 @@ def get_context(context):
             except Exception:
                 self.log_error("Document update failed")
 
-	def send_notification_by_channel(self, doc, context):
-		"""Send notification based on the specified channel."""
-		try:
-			if self.channel == "Email":
-				self.send_an_email(doc, context)
-			elif self.channel == "Slack":
-				self.send_a_slack_msg(doc, context)
-			elif self.channel == "SMS":
-				self.send_sms(doc, context)
-			elif self.channel == "System Notification" or self.send_system_notification:
-				self.create_system_notification(doc, context)
-		except Exception:
-			self.log_error("Failed to send Notification")
+    def send_notification_by_channel(self, doc, context):
+        """Send notification based on the specified channel."""
+        try:
+            if self.channel == "Email":
+                self.send_an_email(doc, context)
+            elif self.channel == "Slack":
+                self.send_a_slack_msg(doc, context)
+            elif self.channel == "SMS":
+                self.send_sms(doc, context)
+            elif self.channel == "System Notification" or self.send_system_notification:
+                self.create_system_notification(doc, context)
+        except Exception:
+            self.log_error("Failed to send Notification")
 
-	def create_system_notification(self, doc, context):
-		subject = self.subject
-		if "{" in subject:
-			subject = frappe.render_template(self.subject, context)
+    def create_system_notification(self, doc, context):
+        subject = self.subject
+        if "{" in subject:
+            subject = frappe.render_template(self.subject, context)
 
         attachments = self.get_attachment(doc)
 
@@ -455,9 +455,9 @@ def get_context(context):
                 bcc=bcc,
                 communication_type="Automated Message",
             ).get("id")
-			# set the outgoing email account because we did in fact send it via sendmail above
-			comm = frappe.get_doc("Communication", communication)
-			comm.get_outgoing_email_account()
+            # set the outgoing email account because we did in fact send it via sendmail above
+            comm = frappe.get_doc("Communication", communication)
+            comm.get_outgoing_email_account()
 
         frappe.sendmail(
             recipients=recipients,
@@ -484,66 +484,66 @@ def get_context(context):
             reference_id=get_reference_id(doc),
         )
 
-	def send_sms(self, doc, context):
-		send_sms(
-			receiver_list=self.get_receiver_list(doc, context, "mobile_no", self.get_mobile_no),
-			msg=frappe.utils.strip_html_tags(frappe.render_template(self.message, context)),
-		)
+    def send_sms(self, doc, context):
+        send_sms(
+            receiver_list=self.get_receiver_list(doc, context, "mobile_no", self.get_mobile_no),
+            msg=frappe.utils.strip_html_tags(frappe.render_template(self.message, context)),
+        )
 
-	@staticmethod
-	def get_mobile_no(doc, field):
-		option = doc.meta.get_field(field).options.strip()
-		# users may sometimes register mobile numbers under Phone type fields
-		if option == "Phone" or option == "Mobile":
-			mobile_no = doc.get(field)
-			if not mobile_no:
-				doc.log_error(
-					_("Notification: document {0} has no {1} number set (field: {2})").format(
-						field, doc.id, option, field
-					)
-				)
-		# but on user & customer it's expected to be set on the proper field
-		elif option == "User":
-			user = doc.get(field)
-			mobile_no = frappe.get_value("User", user, "mobile_no")
-			if not mobile_no:
-				doc.log_error(_("Notification: user {0} has no Mobile number set").format(user))
-		elif option == "Customer":
-			customer = doc.get(field)
-			mobile_no = frappe.get_value("Customer", customer, "mobile_no")
-			if not mobile_no:
-				doc.log_error(_("Notification: customer {0} has no Mobile number set").format(customer))
-		else:
-			frappe.throw(
-				_(
-					"Field {0} on document {1} is neither a Mobile number field nor a Customer or User link"
-				).format(field, doc.id)
-			)
-		return mobile_no
+    @staticmethod
+    def get_mobile_no(doc, field):
+        option = doc.meta.get_field(field).options.strip()
+        # users may sometimes register mobile numbers under Phone type fields
+        if option == "Phone" or option == "Mobile":
+            mobile_no = doc.get(field)
+            if not mobile_no:
+                doc.log_error(
+                    _("Notification: document {0} has no {1} number set (field: {2})").format(
+                        field, doc.id, option, field
+                    )
+                )
+        # but on user & customer it's expected to be set on the proper field
+        elif option == "User":
+            user = doc.get(field)
+            mobile_no = frappe.get_value("User", user, "mobile_no")
+            if not mobile_no:
+                doc.log_error(_("Notification: user {0} has no Mobile number set").format(user))
+        elif option == "Customer":
+            customer = doc.get(field)
+            mobile_no = frappe.get_value("Customer", customer, "mobile_no")
+            if not mobile_no:
+                doc.log_error(_("Notification: customer {0} has no Mobile number set").format(customer))
+        else:
+            frappe.throw(
+                _(
+                    "Field {0} on document {1} is neither a Mobile number field nor a Customer or User link"
+                ).format(field, doc.id)
+            )
+        return mobile_no
 
-	def get_list_of_recipients(self, doc, context):
-		recipients = []
-		cc = []
-		bcc = []
-		for recipient in self.recipients:
-			if recipient.condition:
-				if not frappe.safe_eval(recipient.condition, None, context):
-					continue
-			if recipient.receiver_by_document_field:
-				data_field, child_field = _parse_receiver_by_document_field(
-					recipient.receiver_by_document_field
-				)
-				if child_field:
-					for d in doc.get(child_field):
-						email_id = d.get(data_field)
-						if validate_email_address(email_id):
-							recipients.append(email_id)
-				# field from current doc
-				else:
-					email_ids_value = doc.get(data_field)
-					if validate_email_address(email_ids_value):
-						email_ids = email_ids_value.replace(",", "\n")
-						recipients = recipients + email_ids.split("\n")
+    def get_list_of_recipients(self, doc, context):
+        recipients = []
+        cc = []
+        bcc = []
+        for recipient in self.recipients:
+            if recipient.condition:
+                if not frappe.safe_eval(recipient.condition, None, context):
+                    continue
+            if recipient.receiver_by_document_field:
+                data_field, child_field = _parse_receiver_by_document_field(
+                    recipient.receiver_by_document_field
+                )
+                if child_field:
+                    for d in doc.get(child_field):
+                        email_id = d.get(data_field)
+                        if validate_email_address(email_id):
+                            recipients.append(email_id)
+                # field from current doc
+                else:
+                    email_ids_value = doc.get(data_field)
+                    if validate_email_address(email_ids_value):
+                        email_ids = email_ids_value.replace(",", "\n")
+                        recipients = recipients + email_ids.split("\n")
 
             cc.extend(get_emails_from_template(recipient.cc, context))
             bcc.extend(get_emails_from_template(recipient.bcc, context))
@@ -562,40 +562,40 @@ def get_context(context):
 
         return list(set(recipients)), list(set(cc)), list(set(bcc))
 
-	def get_receiver_list(self, doc, context, field_on_user="mobile_no", recipient_extractor_func=None):
-		"""return receiver list based on the doc field and role specified"""
-		if not recipient_extractor_func:
-			recipient_extractor_func = self.get_mobile_no
-		receiver_list = []
-		for recipient in self.recipients:
-			if recipient.condition:
-				if not frappe.safe_eval(recipient.condition, None, context):
-					continue
+    def get_receiver_list(self, doc, context, field_on_user="mobile_no", recipient_extractor_func=None):
+        """return receiver list based on the doc field and role specified"""
+        if not recipient_extractor_func:
+            recipient_extractor_func = self.get_mobile_no
+        receiver_list = []
+        for recipient in self.recipients:
+            if recipient.condition:
+                if not frappe.safe_eval(recipient.condition, None, context):
+                    continue
 
-			# For sending messages to the owner's mobile phone number
-			if recipient.receiver_by_document_field == "owner":
-				receiver_list += get_user_info([dict(user_name=doc.get("owner"))], field_on_user)
-			# For sending messages to the number specified in the receiver field
-			elif recipient.receiver_by_document_field:
-				data_field, child_field = _parse_receiver_by_document_field(
-					recipient.receiver_by_document_field
-				)
-				if child_field:
-					for d in doc.get(child_field):
-						if recv := recipient_extractor_func(d, data_field):
-							receiver_list.append(recv)
-				# field from current doc
-				else:
-					if recv := recipient_extractor_func(doc, data_field):
-						receiver_list.append(recv)
+            # For sending messages to the owner's mobile phone number
+            if recipient.receiver_by_document_field == "owner":
+                receiver_list += get_user_info([dict(user_name=doc.get("owner"))], field_on_user)
+            # For sending messages to the number specified in the receiver field
+            elif recipient.receiver_by_document_field:
+                data_field, child_field = _parse_receiver_by_document_field(
+                    recipient.receiver_by_document_field
+                )
+                if child_field:
+                    for d in doc.get(child_field):
+                        if recv := recipient_extractor_func(d, data_field):
+                            receiver_list.append(recv)
+                # field from current doc
+                else:
+                    if recv := recipient_extractor_func(doc, data_field):
+                        receiver_list.append(recv)
 
-			# For sending messages to specified role
-			if recipient.receiver_by_role:
-				receiver_list += get_info_based_on_role(
-					recipient.receiver_by_role, field_on_user, ignore_permissions=True
-				)
+            # For sending messages to specified role
+            if recipient.receiver_by_role:
+                receiver_list += get_info_based_on_role(
+                    recipient.receiver_by_role, field_on_user, ignore_permissions=True
+                )
 
-		return list(set(receiver_list))
+        return list(set(receiver_list))
 
     def get_attachment(self, doc):
         """check print settings are attach the pdf"""
@@ -668,7 +668,7 @@ def get_context(context):
         frappe.cache.hdel("notifications", self.document_type)
 
 def clear_notification_cache():
-	frappe.client_cache.delete_keys("notifications::")
+    frappe.client_cache.delete_keys("notifications::")
 
 
 @frappe.whitelist()
@@ -679,7 +679,7 @@ def get_documents_for_today(notification):
 
 
 def trigger_offset_alerts():
-	trigger_notifications(None, "offset")
+    trigger_notifications(None, "offset")
 
 
 def trigger_daily_alerts():
@@ -699,26 +699,26 @@ def trigger_notifications(doc, method=None):
         for d in doc_list:
             alert = frappe.get_doc("Notification", d.id)
 
-			for doc in alert.get_documents_for_today():
-				evaluate_alert(doc, alert, alert.event)
-				#  this is the end of the transaction in the alert trigger stack
-				frappe.db.commit()  # nosemgrep
+            for doc in alert.get_documents_for_today():
+                evaluate_alert(doc, alert, alert.event)
+                #  this is the end of the transaction in the alert trigger stack
+                frappe.db.commit()  # nosemgrep
 
-	elif method == "offset":
-		doc_list = frappe.get_all(
-			"Notification", filters={"event": ("in", ("Minutes Before", "Minutes After")), "enabled": 1}
-		)
-		for d in doc_list:
-			alert = frappe.get_doc("Notification", d.id)
+    elif method == "offset":
+        doc_list = frappe.get_all(
+            "Notification", filters={"event": ("in", ("Minutes Before", "Minutes After")), "enabled": 1}
+        )
+        for d in doc_list:
+            alert = frappe.get_doc("Notification", d.id)
 
-			for doc in alert.get_documents_for_this_moment():
-				evaluate_alert(doc, alert, alert.event)
-				#  this is the end of the transaction in the alert trigger stack
-				frappe.db.commit()  # nosemgrep
+            for doc in alert.get_documents_for_this_moment():
+                evaluate_alert(doc, alert, alert.event)
+                #  this is the end of the transaction in the alert trigger stack
+                frappe.db.commit()  # nosemgrep
 
 
 def evaluate_alert(doc: Document, alert, event=None):
-	from jinja2 import TemplateError
+    from jinja2 import TemplateError
 
     try:
         if isinstance(alert, str):
@@ -769,13 +769,13 @@ def evaluate_alert(doc: Document, alert, event=None):
 
 
 def get_context(doc):
-	Frappe = namedtuple("Frappe", ["frappe"])
-	frappe = Frappe(frappe=get_safe_globals().get("frappe"))
-	return {
-		"doc": doc,
-		"nowdate": nowdate,
-		"frappe": frappe.frappe,
-	}
+    Frappe = namedtuple("Frappe", ["frappe"])
+    frappe = Frappe(frappe=get_safe_globals().get("frappe"))
+    return {
+        "doc": doc,
+        "nowdate": nowdate,
+        "frappe": frappe.frappe,
+    }
 
 
 def get_assignees(doc):
@@ -797,23 +797,23 @@ def get_emails_from_template(template, context):
     if not template:
         return ()
 
-	emails = frappe.render_template(template, context) if "{" in template else template
-	return filter(None, emails.replace(",", "\n").split("\n"))
+    emails = frappe.render_template(template, context) if "{" in template else template
+    return filter(None, emails.replace(",", "\n").split("\n"))
 
 
 def get_reference_doctype(doc):
-	return doc.parenttype if doc.meta.istable else doc.doctype
+    return doc.parenttype if doc.meta.istable else doc.doctype
 
 
 def get_reference_id(doc):
-	return doc.parent if doc.meta.istable else doc.id
+    return doc.parent if doc.meta.istable else doc.id
 
 
 def _parse_receiver_by_document_field(s):
-	fragments = s.split(",")
-	# fields from child table or linked doctype
-	if len(fragments) > 1:
-		data_field, child_field = fragments
-	else:
-		data_field, child_field = fragments[0], None
-	return data_field, child_field
+    fragments = s.split(",")
+    # fields from child table or linked doctype
+    if len(fragments) > 1:
+        data_field, child_field = fragments
+    else:
+        data_field, child_field = fragments[0], None
+    return data_field, child_field

@@ -158,8 +158,8 @@ def get_users(doctype: str, id: str) -> list:
 def _get_users(doc: "Document") -> list:
     from frappe.permissions import has_permission
 
-	if not has_permission(doc.doctype, "read", doc, print_logs=False):
-		return []
+    if not has_permission(doc.doctype, "read", doc, print_logs=False):
+        return []
 
     return frappe.get_all(
         "DocShare",

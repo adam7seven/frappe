@@ -34,14 +34,14 @@ class GoogleAuthenticationError(Exception):
 class GoogleOAuth:
     OAUTH_URL = "https://oauth2.googleapis.com/token"
 
-	def __init__(self, domain: str, validate: bool = True):
-		self.google_settings = frappe.get_single("Google Settings")
-		self.domain = domain.lower()
-		self.scopes = (
-			" ".join(_SCOPES[self.domain])
-			if isinstance(_SCOPES[self.domain], list | tuple)
-			else _SCOPES[self.domain]
-		)
+    def __init__(self, domain: str, validate: bool = True):
+        self.google_settings = frappe.get_single("Google Settings")
+        self.domain = domain.lower()
+        self.scopes = (
+            " ".join(_SCOPES[self.domain])
+            if isinstance(_SCOPES[self.domain], list | tuple)
+            else _SCOPES[self.domain]
+        )
 
         if validate:
             self.validate_google_settings()
@@ -59,8 +59,8 @@ class GoogleOAuth:
                 frappe._("Please update {} before continuing.").format(google_settings)
             )
 
-	def authorize(self, oauth_code: str) -> dict[str, str | int]:
-		"""Return a dict with access and refresh token.
+    def authorize(self, oauth_code: str) -> dict[str, str | int]:
+        """Return a dict with access and refresh token.
 
         :param oauth_code: code got back from google upon successful auhtorization
         """
@@ -102,8 +102,8 @@ class GoogleOAuth:
             raise_err=True,
         )
 
-	def get_authentication_url(self, state: dict[str, str]) -> dict[str, str]:
-		"""Return Google authentication url.
+    def get_authentication_url(self, state: dict[str, str]) -> dict[str, str]:
+        """Return Google authentication url.
 
         :param state: dict of values which you need on callback (for calling methods, redirection back to the form, doc id, etc)
         """
@@ -120,8 +120,8 @@ class GoogleOAuth:
             )
         }
 
-	def get_google_service_object(self, access_token: str, refresh_token: str):
-		"""Return Google service object."""
+    def get_google_service_object(self, access_token: str, refresh_token: str):
+        """Return Google service object."""
 
         credentials_dict = {
             "token": access_token,
@@ -148,8 +148,8 @@ def handle_response(
     error_message: str,
     raise_err: bool = False,
 ):
-	if "error" in response:
-		frappe.log_error(frappe._(error_title), frappe._(response.get("error_description", error_message)))
+    if "error" in response:
+        frappe.log_error(frappe._(error_title), frappe._(response.get("error_description", error_message)))
 
         if raise_err:
             frappe.throw(
@@ -164,7 +164,7 @@ def handle_response(
 
 
 def is_valid_access_token(access_token: str) -> bool:
-	response = get("https://oauth2.googleapis.com/tokeninfo", params={"access_token": access_token}).json()
+    response = get("https://oauth2.googleapis.com/tokeninfo", params={"access_token": access_token}).json()
 
     if "error" in response:
         return False
@@ -174,9 +174,9 @@ def is_valid_access_token(access_token: str) -> bool:
 
 @frappe.whitelist(methods=["GET"])
 def callback(state: str, code: str | None = None, error: str | None = None) -> None:
-	"""Common callback for google integrations.
-	Invokes functions using `frappe.get_attr` and also adds required (keyworded) arguments
-	along with committing and redirecting us back to frappe site."""
+    """Common callback for google integrations.
+    Invokes functions using `frappe.get_attr` and also adds required (keyworded) arguments
+    along with committing and redirecting us back to frappe site."""
 
     state = json.loads(state)
     redirect = state.pop("redirect", "/app")
@@ -199,5 +199,5 @@ def callback(state: str, code: str | None = None, error: str | None = None) -> N
                 width=640,
             )
 
-	frappe.local.response["type"] = "redirect"
-	frappe.local.response["location"] = f"{redirect}?{failure_query_param if error else success_query_param}"
+    frappe.local.response["type"] = "redirect"
+    frappe.local.response["location"] = f"{redirect}?{failure_query_param if error else success_query_param}"

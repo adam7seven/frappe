@@ -13,31 +13,31 @@ EXTRA_TEST_RECORD_DEPENDENCIES = ["Custom Field", "Property Setter"]
 
 
 class UnitTestCustomizeForm(UnitTestCase):
-	"""
-	Unit tests for CustomizeForm.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for CustomizeForm.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestCustomizeForm(IntegrationTestCase):
-	def insert_custom_field(self):
-		frappe.delete_doc_if_exists("Custom Field", "Event-custom_test_field")
-		self.field = frappe.get_doc(
-			{
-				"doctype": "Custom Field",
-				"fieldname": "custom_test_field",
-				"dt": "Event",
-				"label": "Test Custom Field",
-				"description": "A Custom Field for Testing",
-				"fieldtype": "Select",
-				"in_list_view": 1,
-				"options": "\nCustom 1\nCustom 2\nCustom 3",
-				"default": "Custom 3",
-				"insert_after": frappe.get_meta("Event").fields[-1].fieldname,
-			}
-		).insert()
+    def insert_custom_field(self):
+        frappe.delete_doc_if_exists("Custom Field", "Event-custom_test_field")
+        self.field = frappe.get_doc(
+            {
+                "doctype": "Custom Field",
+                "fieldname": "custom_test_field",
+                "dt": "Event",
+                "label": "Test Custom Field",
+                "description": "A Custom Field for Testing",
+                "fieldtype": "Select",
+                "in_list_view": 1,
+                "options": "\nCustom 1\nCustom 2\nCustom 3",
+                "default": "Custom 3",
+                "insert_after": frappe.get_meta("Event").fields[-1].fieldname,
+            }
+        ).insert()
 
     def setUp(self):
         self.insert_custom_field()
@@ -79,26 +79,26 @@ class TestCustomizeForm(IntegrationTestCase):
 
         return d
 
-	def test_save_customization_property(self):
-		d = self.get_customize_form("Event")
-		self.assertEqual(
-			frappe.db.get_value("Property Setter", {"doc_type": "Event", "property": "allow_copy"}, "value"),
-			None,
-		)
+    def test_save_customization_property(self):
+        d = self.get_customize_form("Event")
+        self.assertEqual(
+            frappe.db.get_value("Property Setter", {"doc_type": "Event", "property": "allow_copy"}, "value"),
+            None,
+        )
 
-		d.allow_copy = 1
-		d.run_method("save_customization")
-		self.assertEqual(
-			frappe.db.get_value("Property Setter", {"doc_type": "Event", "property": "allow_copy"}, "value"),
-			"1",
-		)
+        d.allow_copy = 1
+        d.run_method("save_customization")
+        self.assertEqual(
+            frappe.db.get_value("Property Setter", {"doc_type": "Event", "property": "allow_copy"}, "value"),
+            "1",
+        )
 
-		d.allow_copy = 0
-		d.run_method("save_customization")
-		self.assertEqual(
-			frappe.db.get_value("Property Setter", {"doc_type": "Event", "property": "allow_copy"}, "value"),
-			None,
-		)
+        d.allow_copy = 0
+        d.run_method("save_customization")
+        self.assertEqual(
+            frappe.db.get_value("Property Setter", {"doc_type": "Event", "property": "allow_copy"}, "value"),
+            None,
+        )
 
     def test_save_customization_field_property(self):
         d = self.get_customize_form("Event")
@@ -204,7 +204,7 @@ class TestCustomizeForm(IntegrationTestCase):
 
         self.assertEqual(frappe.db.get_value("Custom Field", custom_field.id), None)
 
-		make_test_records_for_doctype("Custom Field")
+        make_test_records_for_doctype("Custom Field")
 
     def test_reset_to_defaults(self):
         d = frappe.get_doc("Customize Form")
@@ -215,7 +215,7 @@ class TestCustomizeForm(IntegrationTestCase):
             d.get("fields", {"fieldname": "repeat_this_event"})[0].in_list_view, 0
         )
 
-		make_test_records_for_doctype("Property Setter")
+        make_test_records_for_doctype("Property Setter")
 
     def test_set_allow_on_submit(self):
         d = self.get_customize_form("Event")
@@ -287,9 +287,9 @@ class TestCustomizeForm(IntegrationTestCase):
 
         length = frappe.db.sql(
             """SELECT character_maximum_length
-			FROM information_schema.columns
-			WHERE table_name = 'tabNotification Log'
-			AND column_name = 'document_id'"""
+            FROM information_schema.columns
+            WHERE table_name = 'tabNotification Log'
+            AND column_name = 'document_id'"""
         )[0][0]
 
         self.assertEqual(length, new_document_length)

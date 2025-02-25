@@ -59,10 +59,10 @@ class Comment(Document):
         notify_mentions(self.reference_doctype, self.reference_id, self.content)
         self.notify_change("add")
 
-	def validate(self):
-		if not self.comment_email:
-			self.comment_email = frappe.session.user
-		self.content = frappe.utils.sanitize_html(self.content, always_sanitize=True)
+    def validate(self):
+        if not self.comment_email:
+            self.comment_email = frappe.session.user
+        self.content = frappe.utils.sanitize_html(self.content, always_sanitize=True)
 
     def on_update(self):
         update_comment_in_doc(self)

@@ -4,13 +4,13 @@ import frappe
 def execute():
     communications = frappe.db.sql(
         """
-		SELECT
-			`tabCommunication`.id, `tabCommunication`.creation, `tabCommunication`.modified,
-			`tabCommunication`.modified_by,`tabCommunication`.timeline_doctype, `tabCommunication`.timeline_id,
-			`tabCommunication`.link_doctype, `tabCommunication`.link_id
-		FROM `tabCommunication`
-		WHERE `tabCommunication`.communication_medium='Email'
-	""",
+        SELECT
+            `tabCommunication`.id, `tabCommunication`.creation, `tabCommunication`.modified,
+            `tabCommunication`.modified_by,`tabCommunication`.timeline_doctype, `tabCommunication`.timeline_id,
+            `tabCommunication`.link_doctype, `tabCommunication`.link_id
+        FROM `tabCommunication`
+        WHERE `tabCommunication`.communication_medium='Email'
+    """,
         as_dict=True,
     )
 
@@ -52,11 +52,11 @@ def execute():
         if values and (count % 10000 == 0 or count == len(communications) - 1):
             frappe.db.sql(
                 """
-				INSERT INTO `tabCommunication Link`
-					(`idx`, `id`, `parentfield`, `parenttype`, `parent`, `link_doctype`, `link_id`, `creation`,
-					`modified`, `modified_by`)
-				VALUES {}
-			""".format(
+                INSERT INTO `tabCommunication Link`
+                    (`idx`, `id`, `parentfield`, `parenttype`, `parent`, `link_doctype`, `link_id`, `creation`,
+                    `modified`, `modified_by`)
+                VALUES {}
+            """.format(
                     ", ".join([d for d in values])
                 )
             )

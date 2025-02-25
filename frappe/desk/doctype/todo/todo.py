@@ -145,11 +145,11 @@ class ToDo(Document):
             else:
                 raise
 
-	@classmethod
-	def get_owners(cls, filters=None):
-		"""Return list of owners after applying filters on ToDos."""
-		rows = frappe.get_all(cls.DocType, filters=filters or {}, fields=["allocated_to"])
-		return [parse_addr(row.allocated_to)[1] for row in rows if row.allocated_to]
+    @classmethod
+    def get_owners(cls, filters=None):
+        """Return list of owners after applying filters on ToDos."""
+        rows = frappe.get_all(cls.DocType, filters=filters or {}, fields=["allocated_to"])
+        return [parse_addr(row.allocated_to)[1] for row in rows if row.allocated_to]
 
 
 # NOTE: todo is viewable if a user is an owner, or set as assigned_to value, or has any role that is allowed to access ToDo doctype.

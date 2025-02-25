@@ -4,13 +4,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestDeletedDocument(UnitTestCase):
-	"""
-	Unit tests for DeletedDocument.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for DeletedDocument.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestDeletedDocument(IntegrationTestCase):
-	pass
+    pass

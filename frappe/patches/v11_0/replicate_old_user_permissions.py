@@ -28,10 +28,10 @@ def execute():
             doctype_to_skip = "\n".join(doctype_to_skip)
             frappe.db.sql(
                 """
-				update `tabUser Permission`
-				set skip_for_doctype = %s
-				where user=%s and allow=%s
-			""",
+                update `tabUser Permission`
+                set skip_for_doctype = %s
+                where user=%s and allow=%s
+            """,
                 (doctype_to_skip, key[1], key[0]),
             )
 

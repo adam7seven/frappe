@@ -5,23 +5,23 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestModuleProfile(UnitTestCase):
-	"""
-	Unit tests for ModuleProfile.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for ModuleProfile.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestModuleProfile(IntegrationTestCase):
-	def test_make_new_module_profile(self):
-		if not frappe.db.get_value("Module Profile", "_Test Module Profile"):
-			frappe.get_doc(
-				{
-					"doctype": "Module Profile",
-					"block_modules": [{"module": "Accounts"}],
-				}
-			).insert()
+    def test_make_new_module_profile(self):
+        if not frappe.db.get_value("Module Profile", "_Test Module Profile"):
+            frappe.get_doc(
+                {
+                    "doctype": "Module Profile",
+                    "block_modules": [{"module": "Accounts"}],
+                }
+            ).insert()
 
         # add to user and check
         if not frappe.db.get_value("User", "test-for-module_profile@example.com"):

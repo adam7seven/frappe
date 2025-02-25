@@ -6,13 +6,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestPermissionLog(UnitTestCase):
-	"""
-	Unit tests for PermissionLog.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for PermissionLog.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestPermissionLog(IntegrationTestCase):
-	pass
+    pass

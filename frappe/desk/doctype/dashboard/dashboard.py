@@ -80,19 +80,19 @@ def get_permission_query_conditions(user):
     if not user:
         user = frappe.session.user
 
-	if user == "Administrator" or "System Manager" in frappe.get_roles(user):
-		return
+    if user == "Administrator" or "System Manager" in frappe.get_roles(user):
+        return
 
-	module_not_set = " ifnull(`tabDashboard`.`module`, '') = '' "
-	allowed_modules = [
-		frappe.db.escape(module.get("id")) for module in get_modules_from_all_apps_for_user()
-	]
-	if not allowed_modules:
-		return module_not_set
+    module_not_set = " ifnull(`tabDashboard`.`module`, '') = '' "
+    allowed_modules = [
+        frappe.db.escape(module.get("id")) for module in get_modules_from_all_apps_for_user()
+    ]
+    if not allowed_modules:
+        return module_not_set
 
-	return f" `tabDashboard`.`module` in ({','.join(allowed_modules)}) or {module_not_set} "
-		allowed_modules=",".join(allowed_modules)
-	)
+    return f" `tabDashboard`.`module` in ({','.join(allowed_modules)}) or {module_not_set} "
+        allowed_modules=",".join(allowed_modules)
+    )
 
     return f" `tabDashboard`.`module` in ({','.join(allowed_modules)}) or {module_not_set} "
 
@@ -130,8 +130,8 @@ def get_permitted_cards(dashboard_id):
         for chart_link in dashboard.charts
         if chart_link.chart in non_standard_charts
     ]
-		chart_link.chart for chart_link in dashboard.charts if chart_link.chart in non_standard_charts
-	]
+        chart_link.chart for chart_link in dashboard.charts if chart_link.chart in non_standard_charts
+    ]
 
 
 def get_non_standard_cards_in_dashboard(dashboard):
@@ -154,8 +154,8 @@ def get_non_standard_warning_message(non_standard_docs_map):
             html += f'<div><a href="/app/Form/{doctype}/{doc}">{doc}</a></div>'
         html += "<br>"
         return html
-		html += "<br>"
-		return html
+        html += "<br>"
+        return html
 
     html = message + "<br>"
 

@@ -186,29 +186,29 @@ def delete_fields(args_dict, delete=0):
         if not delete:
             continue
 
-		if frappe.db.get_value("DocType", dt, "issingle"):
-			frappe.db.delete(
-				"Singles",
-				{
-					"doctype": dt,
-					"field": ("in", fields),
-				},
-			)
-		else:
-			existing_fields = frappe.db.describe(dt)
-			existing_fields = (existing_fields and [e[0] for e in existing_fields]) or []
-			fields_need_to_delete = set(fields) & set(existing_fields)
-			if not fields_need_to_delete:
-				continue
+        if frappe.db.get_value("DocType", dt, "issingle"):
+            frappe.db.delete(
+                "Singles",
+                {
+                    "doctype": dt,
+                    "field": ("in", fields),
+                },
+            )
+        else:
+            existing_fields = frappe.db.describe(dt)
+            existing_fields = (existing_fields and [e[0] for e in existing_fields]) or []
+            fields_need_to_delete = set(fields) & set(existing_fields)
+            if not fields_need_to_delete:
+                continue
 
             if frappe.db.db_type == "mariadb":
                 # mariadb implicitly commits before DDL, make it explicit
                 frappe.db.commit()
 
-			query = "ALTER TABLE `tab{}` ".format(dt) + ", ".join(
-				"DROP COLUMN `{}`".format(f) for f in fields_need_to_delete
-			)
-			frappe.db.sql(query)
+            query = "ALTER TABLE `tab{}` ".format(dt) + ", ".join(
+                "DROP COLUMN `{}`".format(f) for f in fields_need_to_delete
+            )
+            frappe.db.sql(query)
 
         if frappe.db.db_type == "postgres":
             # commit the results to db
@@ -216,12 +216,12 @@ def delete_fields(args_dict, delete=0):
 
 
 def get_permitted_fields(
-	doctype: str,
-	parenttype: str | None = None,
-	user: str | None = None,
-	permission_type: str | None = None,
-	*,
-	ignore_virtual=False,
+    doctype: str,
+    parenttype: str | None = None,
+    user: str | None = None,
+    permission_type: str | None = None,
+    *,
+    ignore_virtual=False,
 ) -> list[str]:
     meta = frappe.get_meta(doctype)
     valid_columns = meta.get_valid_columns()
@@ -241,24 +241,24 @@ def get_permitted_fields(
     meta_fields = meta.default_fields.copy()
     optional_meta_fields = [x for x in optional_fields if x in valid_columns]
 
-	meta_fields = meta.default_fields.copy()
-	optional_meta_fields = [x for x in optional_fields if x in valid_columns]
+    meta_fields = meta.default_fields.copy()
+    optional_meta_fields = [x for x in optional_fields if x in valid_columns]
 
-	if permitted_fields := meta.get_permitted_fieldnames(
-		parenttype=parenttype,
-		user=user,
-		permission_type=permission_type,
-		with_virtual_fields=not ignore_virtual,
-	):
-		if permission_type == "select":
-			return permitted_fields
+    if permitted_fields := meta.get_permitted_fieldnames(
+        parenttype=parenttype,
+        user=user,
+        permission_type=permission_type,
+        with_virtual_fields=not ignore_virtual,
+    ):
+        if permission_type == "select":
+            return permitted_fields
 
-		if meta.istable:
-			meta_fields.extend(child_table_fields)
+        if meta.istable:
+            meta_fields.extend(child_table_fields)
 
         return meta_fields + permitted_fields + optional_meta_fields
 
-	return meta_fields + optional_meta_fields
+    return meta_fields + optional_meta_fields
 
 
 def is_default_field(fieldname: str) -> bool:

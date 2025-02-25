@@ -113,9 +113,9 @@ def make_records_in_module(app, module):
 
 
 def make_records(path, filters=None):
-	if os.path.isdir(path):
-		for fname in os.listdir(path):
-			if os.path.isdir(join(path, fname)):
-				if fname == "__pycache__":
-					continue
-				import_file_by_path(f"{path}/{fname}/{fname}.json")
+    if os.path.isdir(path):
+        for fname in os.listdir(path):
+            if os.path.isdir(join(path, fname)):
+                if fname == "__pycache__":
+                    continue
+                import_file_by_path(f"{path}/{fname}/{fname}.json")

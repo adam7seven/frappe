@@ -18,12 +18,12 @@ from frappe.utils.background_jobs import (
 
 
 class TestBackgroundJobs(IntegrationTestCase):
-	def test_remove_failed_jobs(self):
-		frappe.enqueue(method="frappe.tests.test_background_jobs.fail_function", queue="short")
-		# wait for enqueued job to execute
-		time.sleep(2)
-		conn = get_redis_conn()
-		queues = Queue.all(conn)
+    def test_remove_failed_jobs(self):
+        frappe.enqueue(method="frappe.tests.test_background_jobs.fail_function", queue="short")
+        # wait for enqueued job to execute
+        time.sleep(2)
+        conn = get_redis_conn()
+        queues = Queue.all(conn)
 
         for queue in queues:
             if queue.name == generate_qname("short"):

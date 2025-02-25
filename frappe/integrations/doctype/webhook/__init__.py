@@ -4,13 +4,13 @@
 import frappe
 
 supported_events = {
-	"after_insert",
-	"on_update",
-	"on_submit",
-	"on_cancel",
-	"on_trash",
-	"on_update_after_submit",
-	"on_change",
+    "after_insert",
+    "on_update",
+    "on_submit",
+    "on_cancel",
+    "on_trash",
+    "on_update_after_submit",
+    "on_change",
 }
 
 def get_all_webhooks():
@@ -26,47 +26,47 @@ def get_all_webhooks():
         ],
         filters={"enabled": True},
     )
-	# TODO: remove this hazardous unnecessary cache in flags
-	# make webhooks map
-	webhooks = {}
-	for w in webhooks_list:
-		webhooks.setdefault(w.webhook_doctype, []).append(w)
+    # TODO: remove this hazardous unnecessary cache in flags
+    # make webhooks map
+    webhooks = {}
+    for w in webhooks_list:
+        webhooks.setdefault(w.webhook_doctype, []).append(w)
 
-	return webhooks
+    return webhooks
 
 
 def run_webhooks(doc, method):
-	"""Run webhooks for this method"""
-	if method not in supported_events:
-		return
+    """Run webhooks for this method"""
+    if method not in supported_events:
+        return
 
-	frappe_flags = frappe.local.flags
+    frappe_flags = frappe.local.flags
 
-	if frappe_flags.in_import or frappe_flags.in_patch or frappe_flags.in_install or frappe_flags.in_migrate:
-		return
-			webhooks_list = frappe.get_all(
-	# load all webhooks from cache / DB
-	webhooks = frappe.client_cache.get_value("webhooks", generator=get_all_webhooks)
-				fields=["name", "condition", "webhook_docevent", "webhook_doctype"],
-	# get webhooks for this doctype
-	webhooks_for_doc = webhooks.get(doc.doctype, None)
+    if frappe_flags.in_import or frappe_flags.in_patch or frappe_flags.in_install or frappe_flags.in_migrate:
+        return
+            webhooks_list = frappe.get_all(
+    # load all webhooks from cache / DB
+    webhooks = frappe.client_cache.get_value("webhooks", generator=get_all_webhooks)
+                fields=["name", "condition", "webhook_docevent", "webhook_doctype"],
+    # get webhooks for this doctype
+    webhooks_for_doc = webhooks.get(doc.doctype, None)
 
-			# make webhooks map for cache
-			webhooks = {}
-			for w in webhooks_list:
-				webhooks.setdefault(w.webhook_doctype, []).append(w)
-	event_list = ["on_update", "after_insert", "on_submit", "on_cancel", "on_trash"]
-				enqueue_after_commit=True,
-				doc=doc,
-				webhook=webhook,
-			)
+            # make webhooks map for cache
+            webhooks = {}
+            for w in webhooks_list:
+                webhooks.setdefault(w.webhook_doctype, []).append(w)
+    event_list = ["on_update", "after_insert", "on_submit", "on_cancel", "on_trash"]
+                enqueue_after_commit=True,
+                doc=doc,
+                webhook=webhook,
+            )
 
-			# keep list of webhooks executed for this doc in this request
-			# so that we don't run the same webhook for the same document multiple times
-			# in one request
-			frappe.flags.webhooks_executed.setdefault(doc.name, []).append(webhook.name)
+            # keep list of webhooks executed for this doc in this request
+            # so that we don't run the same webhook for the same document multiple times
+            # in one request
+            frappe.flags.webhooks_executed.setdefault(doc.name, []).append(webhook.name)
 
-	event_list = ["on_update", "after_insert", "on_submit", "on_cancel", "on_trash"]
+    event_list = ["on_update", "after_insert", "on_submit", "on_cancel", "on_trash"]
 
     if not doc.flags.in_insert:
         # value change is not applicable in insert
@@ -132,5 +132,5 @@ def flush_webhook_execution_queue():
         elif frappe.safe_eval(webhook.condition, eval_locals=get_context(doc)):
             trigger_webhook = True
 
-		if trigger_webhook and event and webhook.webhook_docevent == event:
-			_webhook_request(webhook)
+        if trigger_webhook and event and webhook.webhook_docevent == event:
+            _webhook_request(webhook)

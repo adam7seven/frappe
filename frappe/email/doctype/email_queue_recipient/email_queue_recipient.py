@@ -14,15 +14,15 @@ class EmailQueueRecipient(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-		error: DF.Code | None
-		parent: DF.Data
-		parentfield: DF.Data
-		parenttype: DF.Data
-		recipient: DF.Data | None
-		status: DF.Literal["", "Not Sent", "Sent"]
-	# end: auto-generated types
+        error: DF.Code | None
+        parent: DF.Data
+        parentfield: DF.Data
+        parenttype: DF.Data
+        recipient: DF.Data | None
+        status: DF.Literal["", "Not Sent", "Sent"]
+    # end: auto-generated types
 
-	DOCTYPE = "Email Queue Recipient"
+    DOCTYPE = "Email Queue Recipient"
 
     def is_mail_to_be_sent(self):
         return self.status == "Not Sent"

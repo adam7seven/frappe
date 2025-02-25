@@ -12,17 +12,17 @@ from frappe.website.doctype.personal_data_download_request.personal_data_downloa
 
 
 class UnitTestPersonalDataDownloadRequest(UnitTestCase):
-	"""
-	Unit tests for PersonalDataDownloadRequest.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for PersonalDataDownloadRequest.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestRequestPersonalData(IntegrationTestCase):
-	def setUp(self):
-		create_user_if_not_exists(email="test_privacy@example.com")
+    def setUp(self):
+        create_user_if_not_exists(email="test_privacy@example.com")
 
     def tearDown(self):
         frappe.db.delete("Personal Data Download Request")
@@ -58,8 +58,8 @@ class TestRequestPersonalData(IntegrationTestCase):
 
         self.assertEqual(file_count, 1)
 
-		email_queue = frappe.get_all("Email Queue", fields=["message"], order_by="creation DESC", limit=1)
-		self.assertIn(frappe._("Download Your Data"), email_queue[0].message)
+        email_queue = frappe.get_all("Email Queue", fields=["message"], order_by="creation DESC", limit=1)
+        self.assertIn(frappe._("Download Your Data"), email_queue[0].message)
 
         frappe.db.delete("Email Queue")
 

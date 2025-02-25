@@ -4,13 +4,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestEmailFlagQueue(UnitTestCase):
-	"""
-	Unit tests for EmailFlagQueue.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for EmailFlagQueue.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestEmailFlagQueue(IntegrationTestCase):
-	pass
+    pass

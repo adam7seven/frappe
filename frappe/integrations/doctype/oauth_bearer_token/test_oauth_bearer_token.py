@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestOauthBearerToken(UnitTestCase):
-	"""
-	Unit tests for OauthBearerToken.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for OauthBearerToken.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestOAuthBearerToken(IntegrationTestCase):
-	pass
+    pass

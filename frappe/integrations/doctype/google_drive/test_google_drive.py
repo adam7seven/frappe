@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestGoogleDrive(UnitTestCase):
-	"""
-	Unit tests for GoogleDrive.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for GoogleDrive.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestGoogleDrive(IntegrationTestCase):
-	pass
+    pass

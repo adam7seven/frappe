@@ -24,10 +24,10 @@ class Newsletter(WebsiteGenerator):
 
     from typing import TYPE_CHECKING
 
-	if TYPE_CHECKING:
-		from frappe.email.doctype.newsletter_attachment.newsletter_attachment import NewsletterAttachment
-		from frappe.email.doctype.newsletter_email_group.newsletter_email_group import NewsletterEmailGroup
-		from frappe.types import DF
+    if TYPE_CHECKING:
+        from frappe.email.doctype.newsletter_attachment.newsletter_attachment import NewsletterAttachment
+        from frappe.email.doctype.newsletter_email_group.newsletter_email_group import NewsletterEmailGroup
+        from frappe.types import DF
 
         attachments: DF.Table[NewsletterAttachment]
         campaign: DF.Link | None
@@ -366,9 +366,9 @@ def subscribe(email, email_group=None):
             _("Click here to verify"),
         )
         content = """
-			<p>{}. {}.</p>
-			<p><a href="{}">{}</a></p>
-		""".format(
+            <p>{}. {}.</p>
+            <p><a href="{}">{}</a></p>
+        """.format(
             *translatable_content
         )
 
@@ -381,38 +381,38 @@ def subscribe(email, email_group=None):
 
 @frappe.whitelist(allow_guest=True)
 def confirm_subscription(email, email_group=None):
-	"""API endpoint to confirm email subscription.
-	This endpoint is called when user clicks on the link sent to their mail.
-	"""
-	if not verify_request():
-		return
+    """API endpoint to confirm email subscription.
+    This endpoint is called when user clicks on the link sent to their mail.
+    """
+    if not verify_request():
+        return
 
-	if email_group is None:
-		email_group = get_default_email_group()
+    if email_group is None:
+        email_group = get_default_email_group()
 
-	try:
-		group = frappe.get_doc("Email Group", email_group)
-	except frappe.DoesNotExistError:
-		group = frappe.get_doc({"doctype": "Email Group", "title": email_group}).insert(
-			ignore_permissions=True
-		)
+    try:
+        group = frappe.get_doc("Email Group", email_group)
+    except frappe.DoesNotExistError:
+        group = frappe.get_doc({"doctype": "Email Group", "title": email_group}).insert(
+            ignore_permissions=True
+        )
 
     frappe.flags.ignore_permissions = True
 
     add_subscribers(email_group, email)
     frappe.db.commit()
 
-	welcome_url = group.get_welcome_url(email)
+    welcome_url = group.get_welcome_url(email)
 
-	if welcome_url:
-		frappe.local.response["type"] = "redirect"
-		frappe.local.response["location"] = welcome_url
-	else:
-		frappe.respond_as_web_page(
-			_("Confirmed"),
-			_("{0} has been successfully added to the Email Group.").format(email),
-			indicator_color="green",
-		)
+    if welcome_url:
+        frappe.local.response["type"] = "redirect"
+        frappe.local.response["location"] = welcome_url
+    else:
+        frappe.respond_as_web_page(
+            _("Confirmed"),
+            _("{0} has been successfully added to the Email Group.").format(email),
+            indicator_color="green",
+        )
 
 
 def get_list_context(context=None):

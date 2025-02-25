@@ -32,37 +32,37 @@ class BlogPost(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-		blog_category: DF.Link
-		blog_intro: DF.SmallText | None
-		blogger: DF.Link
-		content: DF.TextEditor | None
-		content_html: DF.HTMLEditor | None
-		content_md: DF.MarkdownEditor | None
-		content_type: DF.Literal["Markdown", "Rich Text", "HTML"]
-		disable_comments: DF.Check
-		disable_likes: DF.Check
-		email_sent: DF.Check
-		enable_email_notification: DF.Check
-		featured: DF.Check
-		hide_cta: DF.Check
-		meta_description: DF.SmallText | None
-		meta_image: DF.AttachImage | None
-		meta_title: DF.Data | None
-		published: DF.Check
-		published_on: DF.Date | None
-		read_time: DF.Int
-		route: DF.Data | None
-		title: DF.Data
-	# end: auto-generated types
+        blog_category: DF.Link
+        blog_intro: DF.SmallText | None
+        blogger: DF.Link
+        content: DF.TextEditor | None
+        content_html: DF.HTMLEditor | None
+        content_md: DF.MarkdownEditor | None
+        content_type: DF.Literal["Markdown", "Rich Text", "HTML"]
+        disable_comments: DF.Check
+        disable_likes: DF.Check
+        email_sent: DF.Check
+        enable_email_notification: DF.Check
+        featured: DF.Check
+        hide_cta: DF.Check
+        meta_description: DF.SmallText | None
+        meta_image: DF.AttachImage | None
+        meta_title: DF.Data | None
+        published: DF.Check
+        published_on: DF.Date | None
+        read_time: DF.Int
+        route: DF.Data | None
+        title: DF.Data
+    # end: auto-generated types
 
-	@frappe.whitelist()
-	def make_route(self):
-		if not self.route:
-			return (
-				frappe.db.get_value("Blog Category", self.blog_category, "route")
-				+ "/"
-				+ self.scrub(self.title)
-			)
+    @frappe.whitelist()
+    def make_route(self):
+        if not self.route:
+            return (
+                frappe.db.get_value("Blog Category", self.blog_category, "route")
+                + "/"
+                + self.scrub(self.title)
+            )
 
     def validate(self):
         super().validate()
@@ -95,17 +95,17 @@ class BlogPost(WebsiteGenerator):
 
         self.set_read_time()
 
-		if self.is_website_published():
-			from frappe.core.doctype.file.utils import extract_images_from_doc
+        if self.is_website_published():
+            from frappe.core.doctype.file.utils import extract_images_from_doc
 
-			# Extract images first before the standard image extraction to ensure they are public.
-			extract_images_from_doc(self, "content", is_private=False)
-			extract_images_from_doc(self, "content_md", is_private=False)
+            # Extract images first before the standard image extraction to ensure they are public.
+            extract_images_from_doc(self, "content", is_private=False)
+            extract_images_from_doc(self, "content_md", is_private=False)
 
-	def reset_featured_for_other_blogs(self):
-		all_posts = frappe.get_all("Blog Post", {"featured": 1})
-		for post in all_posts:
-			frappe.db.set_value("Blog Post", post.id, "featured", 0)
+    def reset_featured_for_other_blogs(self):
+        all_posts = frappe.get_all("Blog Post", {"featured": 1})
+        for post in all_posts:
+            frappe.db.set_value("Blog Post", post.id, "featured", 0)
 
     def on_update(self):
         super().on_update()
@@ -230,14 +230,14 @@ class BlogPost(WebsiteGenerator):
             "reference_id": self.id,
         }
 
-		context.like_count = frappe.db.count("Comment", filters)
+        context.like_count = frappe.db.count("Comment", filters)
 
         filters["comment_email"] = user
 
         if user == "Guest":
             filters["ip_address"] = frappe.local.request_ip
 
-		context.like = frappe.db.count("Comment", filters)
+        context.like = frappe.db.count("Comment", filters)
 
     def set_read_time(self):
         content = self.content or self.content_html or ""
@@ -326,59 +326,59 @@ def get_blog_categories():
 
 
 def clear_blog_cache():
-	for blog in frappe.db.get_list("Blog Post", fields=["route"], pluck="route", filters={"published": True}):
-		clear_cache(blog)
+    for blog in frappe.db.get_list("Blog Post", fields=["route"], pluck="route", filters={"published": True}):
+        clear_cache(blog)
 
     clear_cache("writers")
 
 
 def get_blog_list(doctype, txt=None, filters=None, limit_start=0, limit_page_length=20, order_by=None):
-	conditions = []
-	if filters and filters.get("blog_category"):
-		category = filters.get("blog_category")
-	else:
-		category = frappe.utils.escape_html(
-			frappe.local.form_dict.blog_category or frappe.local.form_dict.category
-		)
+    conditions = []
+    if filters and filters.get("blog_category"):
+        category = filters.get("blog_category")
+    else:
+        category = frappe.utils.escape_html(
+            frappe.local.form_dict.blog_category or frappe.local.form_dict.category
+        )
 
-	if filters and filters.get("blogger"):
-		conditions.append("t1.blogger={}".format(frappe.db.escape(filters.get("blogger"))))
+    if filters and filters.get("blogger"):
+        conditions.append("t1.blogger={}".format(frappe.db.escape(filters.get("blogger"))))
 
-	if category:
-		conditions.append("t1.blog_category={}".format(frappe.db.escape(category)))
+    if category:
+        conditions.append("t1.blog_category={}".format(frappe.db.escape(category)))
 
-	if txt:
-		conditions.append(
-			"(t1.content like {0} or t1.title like {0})".format(frappe.db.escape("%" + txt + "%"))
-		)
+    if txt:
+        conditions.append(
+            "(t1.content like {0} or t1.title like {0})".format(frappe.db.escape("%" + txt + "%"))
+        )
 
     if conditions:
         frappe.local.no_cache = 1
 
     query = """\
-		select
-			t1.title, t1.id, t1.blog_category, t1.route, t1.published_on, t1.read_time,
-				t1.published_on as creation,
-				t1.read_time as read_time,
-				t1.featured as featured,
-				t1.meta_image as cover_image,
-				t1.content as content,
-				t1.content_type as content_type,
-				t1.content_html as content_html,
-				t1.content_md as content_md,
-				ifnull(t1.blog_intro, t1.content) as intro,
-				t2.full_name, t2.avatar, t1.blogger,
-				(select count(id) from `tabComment`
-					where
-						comment_type='Comment'
-						and reference_doctype='Blog Post'
-						and reference_id=t1.id) as comments
-		from `tabBlog Post` t1, `tabBlogger` t2
-		where t1.published = 1
-		and t1.blogger = t2.id
-		{condition}
-		order by featured desc, published_on desc, id asc
-		limit {page_len} OFFSET {start}""".format(
+        select
+            t1.title, t1.id, t1.blog_category, t1.route, t1.published_on, t1.read_time,
+                t1.published_on as creation,
+                t1.read_time as read_time,
+                t1.featured as featured,
+                t1.meta_image as cover_image,
+                t1.content as content,
+                t1.content_type as content_type,
+                t1.content_html as content_html,
+                t1.content_md as content_md,
+                ifnull(t1.blog_intro, t1.content) as intro,
+                t2.full_name, t2.avatar, t1.blogger,
+                (select count(id) from `tabComment`
+                    where
+                        comment_type='Comment'
+                        and reference_doctype='Blog Post'
+                        and reference_id=t1.id) as comments
+        from `tabBlog Post` t1, `tabBlogger` t2
+        where t1.published = 1
+        and t1.blogger = t2.id
+        {condition}
+        order by featured desc, published_on desc, id asc
+        limit {page_len} OFFSET {start}""".format(
         start=limit_start,
         page_len=limit_page_length,
         condition=(" and " + " and ".join(conditions)) if conditions else "",
@@ -407,11 +407,11 @@ def get_blog_list(doctype, txt=None, filters=None, limit_start=0, limit_page_len
             "Blog Category", post.blog_category, ["id", "route", "title"], as_dict=True
         )
 
-		if (
-			post.avatar
-			and ("http:" not in post.avatar and "https:" not in post.avatar)
-			and not post.avatar.startswith("/")
-		):
-			post.avatar = "/" + post.avatar
+        if (
+            post.avatar
+            and ("http:" not in post.avatar and "https:" not in post.avatar)
+            and not post.avatar.startswith("/")
+        ):
+            post.avatar = "/" + post.avatar
 
     return posts

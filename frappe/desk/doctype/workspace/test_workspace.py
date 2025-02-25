@@ -5,17 +5,17 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestWorkspace(UnitTestCase):
-	"""
-	Unit tests for Workspace.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for Workspace.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestWorkspace(IntegrationTestCase):
-	def setUp(self):
-		create_module("Test Module")
+    def setUp(self):
+        create_module("Test Module")
 
     def tearDown(self):
         frappe.db.delete("Workspace", {"module": "Test Module"})
@@ -24,18 +24,18 @@ class TestWorkspace(IntegrationTestCase):
 
     # TODO: FIX ME - flaky test!!!
     # def test_workspace_with_cards_specific_to_a_country(self):
-    # 	workspace = create_workspace()
-    # 	insert_card(workspace, "Card Label 1", "DocType 1", "DocType 2", "France")
-    # 	insert_card(workspace, "Card Label 2", "DocType A", "DocType B")
+    #     workspace = create_workspace()
+    #     insert_card(workspace, "Card Label 1", "DocType 1", "DocType 2", "France")
+    #     insert_card(workspace, "Card Label 2", "DocType A", "DocType B")
 
-    # 	workspace.insert(ignore_if_duplicate = True)
+    #     workspace.insert(ignore_if_duplicate = True)
 
-    # 	cards = workspace.get_link_groups()
+    #     cards = workspace.get_link_groups()
 
-    # 	if frappe.get_system_settings('country') == "France":
-    # 		self.assertEqual(len(cards), 2)
-    # 	else:
-    # 		self.assertEqual(len(cards), 1)
+    #     if frappe.get_system_settings('country') == "France":
+    #         self.assertEqual(len(cards), 2)
+    #     else:
+    #         self.assertEqual(len(cards), 1)
 
 
 def create_module(id):

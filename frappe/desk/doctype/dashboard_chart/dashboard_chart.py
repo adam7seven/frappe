@@ -61,19 +61,19 @@ def get_permission_query_conditions(user):
         )
     if allowed_modules:
         module_condition = """`tabDashboard Chart`.`module` in ({allowed_modules})
-			or `tabDashboard Chart`.`module` is NULL""".format(
+            or `tabDashboard Chart`.`module` is NULL""".format(
             allowed_modules=",".join(allowed_modules)
         )
 
     return f"""
-		((`tabDashboard Chart`.`chart_type` in ('Count', 'Sum', 'Average')
-		and {doctype_condition})
-		or
-		(`tabDashboard Chart`.`chart_type` = 'Report'
-		and {report_condition}))
-		and
-		({module_condition})
-	"""
+        ((`tabDashboard Chart`.`chart_type` in ('Count', 'Sum', 'Average')
+        and {doctype_condition})
+        or
+        (`tabDashboard Chart`.`chart_type` = 'Report'
+        and {report_condition}))
+        and
+        ({module_condition})
+    """
 
 
 def has_permission(doc, ptype, user):
@@ -134,8 +134,8 @@ def get(
     if not filters:
         filters = []
 
-	# don't include cancelled documents
-	filters.append([chart.document_type, "docstatus", "<", 2])
+    # don't include cancelled documents
+    filters.append([chart.document_type, "docstatus", "<", 2])
 
     if chart.chart_type == "Group By":
         chart_config = get_group_by_chart_config(chart, filters)
@@ -208,18 +208,18 @@ def get_chart_config(chart, filters, timespan, timegrain, from_date, to_date):
     from_date = from_date.strftime("%Y-%m-%d")
     to_date = to_date
 
-	filters.append([doctype, datefield, ">=", from_date])
-	filters.append([doctype, datefield, "<=", to_date])
+    filters.append([doctype, datefield, ">=", from_date])
+    filters.append([doctype, datefield, "<=", to_date])
 
-	data = frappe.get_list(
-		doctype,
-		fields=[datefield, f"SUM({value_field})", "COUNT(*)"],
-		filters=filters,
-		group_by=datefield,
-		order_by=datefield,
-		as_list=True,
-		parent_doctype=chart.parent_document_type,
-	)
+    data = frappe.get_list(
+        doctype,
+        fields=[datefield, f"SUM({value_field})", "COUNT(*)"],
+        filters=filters,
+        group_by=datefield,
+        order_by=datefield,
+        as_list=True,
+        parent_doctype=chart.parent_document_type,
+    )
 
     result = get_result(data, timegrain, from_date, to_date, chart.chart_type)
 
@@ -245,28 +245,28 @@ def get_heatmap_chart_config(chart, filters, heatmap_year):
     year_start_date = datetime.date(year, 1, 1).strftime("%Y-%m-%d")
     next_year_start_date = datetime.date(year + 1, 1, 1).strftime("%Y-%m-%d")
 
-	filters.append([doctype, datefield, ">", f"{year_start_date}"])
-	filters.append([doctype, datefield, "<", f"{next_year_start_date}"])
+    filters.append([doctype, datefield, ">", f"{year_start_date}"])
+    filters.append([doctype, datefield, "<", f"{next_year_start_date}"])
 
     if frappe.db.db_type == "mariadb":
         timestamp_field = f"unix_timestamp({datefield})"
     else:
         timestamp_field = f"extract(epoch from timestamp {datefield})"
 
-	data = dict(
-		frappe.get_all(
-			doctype,
-			fields=[
-				timestamp_field,
-				f"{aggregate_function}({value_field})",
-			],
-			filters=filters,
-			group_by=f"date({datefield})",
-			as_list=1,
-			order_by=f"{datefield} asc",
-			ignore_ifnull=True,
-		)
-	)
+    data = dict(
+        frappe.get_all(
+            doctype,
+            fields=[
+                timestamp_field,
+                f"{aggregate_function}({value_field})",
+            ],
+            filters=filters,
+            group_by=f"date({datefield})",
+            as_list=1,
+            order_by=f"{datefield} asc",
+            ignore_ifnull=True,
+        )
+    )
 
     return {
         "labels": [],
@@ -275,10 +275,10 @@ def get_heatmap_chart_config(chart, filters, heatmap_year):
 
 
 def get_group_by_chart_config(chart, filters) -> dict | None:
-	aggregate_function = get_aggregate_function(chart.group_by_type)
-	value_field = chart.aggregate_function_based_on or "1"
-	group_by_field = chart.group_by_based_on
-	doctype = chart.document_type
+    aggregate_function = get_aggregate_function(chart.group_by_type)
+    value_field = chart.aggregate_function_based_on or "1"
+    group_by_field = chart.group_by_based_on
+    doctype = chart.document_type
 
     data = frappe.get_list(
         doctype,
@@ -293,22 +293,22 @@ def get_group_by_chart_config(chart, filters) -> dict | None:
         ignore_ifnull=True,
     )
 
-	group_by_field_field = frappe.get_meta(doctype).get_field(
-		group_by_field
-	)  # get info about @group_by_field
+    group_by_field_field = frappe.get_meta(doctype).get_field(
+        group_by_field
+    )  # get info about @group_by_field
 
-	if data and group_by_field_field.fieldtype == "Link":  # if @group_by_field is link
-		title_field = frappe.get_meta(group_by_field_field.options)  # get title field
-		if title_field.title_field:  # if has title_field
-			for item in data:  # replace chart labels from id to title value
-				item.id = frappe.get_value(group_by_field_field.options, item.id, title_field.title_field)
+    if data and group_by_field_field.fieldtype == "Link":  # if @group_by_field is link
+        title_field = frappe.get_meta(group_by_field_field.options)  # get title field
+        if title_field.title_field:  # if has title_field
+            for item in data:  # replace chart labels from id to title value
+                item.id = frappe.get_value(group_by_field_field.options, item.id, title_field.title_field)
 
-	if data:
-		return {
-			"labels": [item.get("id", "Not Specified") for item in data],
-			"datasets": [{"id": chart.id, "values": [item["count"] for item in data]}],
-		}
-	return None
+    if data:
+        return {
+            "labels": [item.get("id", "Not Specified") for item in data],
+            "datasets": [{"id": chart.id, "values": [item["count"] for item in data]}],
+        }
+    return None
 
 
 def get_aggregate_function(chart_type):
@@ -320,20 +320,20 @@ def get_aggregate_function(chart_type):
 
 
 def get_result(data, timegrain, from_date, to_date, chart_type):
-	dates = get_dates_from_timegrain(from_date, to_date, timegrain)
-	result = [[date, 0] for date in dates]
-	data_index = 0
-	if data:
-		for d in result:
-			count = 0
-			while data_index < len(data) and getdate(data[data_index][0]) <= d[0]:
-				d[1] += cint(data[data_index][1])
-				count += cint(data[data_index][2])
-				data_index += 1
-			if chart_type == "Average" and count != 0:
-				d[1] = d[1] / count
-			if chart_type == "Count":
-				d[1] = count
+    dates = get_dates_from_timegrain(from_date, to_date, timegrain)
+    result = [[date, 0] for date in dates]
+    data_index = 0
+    if data:
+        for d in result:
+            count = 0
+            while data_index < len(data) and getdate(data[data_index][0]) <= d[0]:
+                d[1] += cint(data[data_index][1])
+                count += cint(data[data_index][2])
+                data_index += 1
+            if chart_type == "Average" and count != 0:
+                d[1] = d[1] / count
+            if chart_type == "Count":
+                d[1] = count
 
     return result
 
@@ -371,7 +371,7 @@ class DashboardChart(Document):
             "Count", "Sum", "Average", "Group By", "Custom", "Report"
         ]
         color: DF.Color | None
-		currency: DF.Link | None
+        currency: DF.Link | None
         custom_options: DF.Code | None
         document_type: DF.Link | None
         dynamic_filters_json: DF.Code | None

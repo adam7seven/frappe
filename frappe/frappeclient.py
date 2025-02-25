@@ -61,14 +61,14 @@ class FrappeClient:
     def __exit__(self, *args, **kwargs):
         self.logout()
 
-	def _login(self, username, password):
-		"""Login/start a session. Called internally on init"""
-		r = self.session.post(
-			self.url,
-			params={"cmd": "login", "usr": username, "pwd": password},
-			verify=self.verify,
-			headers=self.headers,
-		)
+    def _login(self, username, password):
+        """Login/start a session. Called internally on init"""
+        r = self.session.post(
+            self.url,
+            params={"cmd": "login", "usr": username, "pwd": password},
+            verify=self.verify,
+            headers=self.headers,
+        )
 
         if r.status_code == 200 and r.json().get("message") in ("Logged In", "No App"):
             return r.json()
@@ -111,22 +111,22 @@ class FrappeClient:
             headers=self.headers,
         )
 
-	def get_list(self, doctype, fields='["id"]', filters=None, limit_start=0, limit_page_length=None):
-		"""Return list of records of a particular type."""
-		if not isinstance(fields, str):
-			fields = json.dumps(fields)
-		params = {
-			"fields": fields,
-		}
-		if filters:
-			params["filters"] = json.dumps(filters)
-		if limit_page_length is not None:
-			params["limit_start"] = limit_start
-			params["limit_page_length"] = limit_page_length
-		res = self.session.get(
-			self.url + "/api/resource/" + doctype, params=params, verify=self.verify, headers=self.headers
-		)
-		return self.post_process(res)
+    def get_list(self, doctype, fields='["id"]', filters=None, limit_start=0, limit_page_length=None):
+        """Return list of records of a particular type."""
+        if not isinstance(fields, str):
+            fields = json.dumps(fields)
+        params = {
+            "fields": fields,
+        }
+        if filters:
+            params["filters"] = json.dumps(filters)
+        if limit_page_length is not None:
+            params["limit_start"] = limit_start
+            params["limit_page_length"] = limit_page_length
+        res = self.session.get(
+            self.url + "/api/resource/" + doctype, params=params, verify=self.verify, headers=self.headers
+        )
+        return self.post_process(res)
 
     def insert(self, doc):
         """Insert a document to the remote server
@@ -190,8 +190,8 @@ class FrappeClient:
             {"cmd": "frappe.client.submit", "doc": frappe.as_json(doc)}
         )
 
-	def get_value(self, doctype, fieldname=None, filters=None):
-		"""Return a value from a document.
+    def get_value(self, doctype, fieldname=None, filters=None):
+        """Return a value from a document.
 
         :param doctype: DocType to be queried
         :param fieldname: Field to be returned (default `id`)
@@ -231,8 +231,8 @@ class FrappeClient:
             {"cmd": "frappe.client.cancel", "doctype": doctype, "id": id}
         )
 
-	def get_doc(self, doctype, id="", filters=None, fields=None):
-		"""Return a single remote document.
+    def get_doc(self, doctype, id="", filters=None, fields=None):
+        """Return a single remote document.
 
         :param doctype: DocType of the document to be returned
         :param id: (optional) `id` of the document to be returned
@@ -268,14 +268,14 @@ class FrappeClient:
         }
         return self.post_request(params)
 
-	def migrate_doctype(self, doctype, filters=None, update=None, verbose=1, exclude=None, preprocess=None):
-		"""Migrate records from another doctype"""
-		meta = frappe.get_meta(doctype)
-		tables = {}
-		for df in meta.get_table_fields():
-			if verbose:
-				print("getting " + df.options)
-			tables[df.fieldname] = self.get_list(df.options, limit_page_length=999999)
+    def migrate_doctype(self, doctype, filters=None, update=None, verbose=1, exclude=None, preprocess=None):
+        """Migrate records from another doctype"""
+        meta = frappe.get_meta(doctype)
+        tables = {}
+        for df in meta.get_table_fields():
+            if verbose:
+                print("getting " + df.options)
+            tables[df.fieldname] = self.get_list(df.options, limit_page_length=999999)
 
         # get links
         if verbose:
@@ -388,11 +388,11 @@ class FrappeClient:
         res = self.post_process(res)
         return res
 
-	def preprocess(self, params):
-		"""convert dicts, lists to json"""
-		for key, value in params.items():
-			if isinstance(value, dict | list):
-				params[key] = json.dumps(value)
+    def preprocess(self, params):
+        """convert dicts, lists to json"""
+        for key, value in params.items():
+            if isinstance(value, dict | list):
+                params[key] = json.dumps(value)
 
         return params
 

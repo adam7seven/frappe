@@ -161,17 +161,17 @@ def get_doc_files(files, start_path):
 
     files = files or []
 
-	for _module, doctype in IMPORTABLE_DOCTYPES + [
-		(None, frappe.scrub(dt)) for dt in frappe.get_hooks("importable_doctypes")
-	]:
-		doctype_path = os.path.join(start_path, doctype)
-		if os.path.exists(doctype_path):
-			for docid in os.listdir(doctype_path):
-				if os.path.isdir(os.path.join(doctype_path, docid)):
-					doc_path = os.path.join(doctype_path, docid, docid) + ".json"
-					if os.path.exists(doc_path):
-						if doc_path not in files:
-							files.append(doc_path)
+    for _module, doctype in IMPORTABLE_DOCTYPES + [
+        (None, frappe.scrub(dt)) for dt in frappe.get_hooks("importable_doctypes")
+    ]:
+        doctype_path = os.path.join(start_path, doctype)
+        if os.path.exists(doctype_path):
+            for docid in os.listdir(doctype_path):
+                if os.path.isdir(os.path.join(doctype_path, docid)):
+                    doc_path = os.path.join(doctype_path, docid, docid) + ".json"
+                    if os.path.exists(doc_path):
+                        if doc_path not in files:
+                            files.append(doc_path)
 
     return files
 
@@ -189,8 +189,8 @@ def remove_orphan_doctypes():
     doctype_ids = frappe.get_all("DocType", {"custom": 0}, pluck="id")
     orphan_doctypes = []
 
-	clear_controller_cache()
-	class_overrides = frappe.get_hooks("override_doctype_class", {})
+    clear_controller_cache()
+    class_overrides = frappe.get_hooks("override_doctype_class", {})
 
     for doctype in doctype_ids:
         if doctype in class_overrides:

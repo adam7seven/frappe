@@ -10,11 +10,11 @@ def execute():
 def fix_communications():
     for communication in frappe.db.sql(
         """select id, recipients, cc, bcc from tabCommunication
-		where creation > '2020-06-01'
-			and communication_medium='Email'
-			and communication_type='Communication'
-			and (cc like  '%&lt;%' or bcc like '%&lt;%' or recipients like '%&lt;%')
-		""",
+        where creation > '2020-06-01'
+            and communication_medium='Email'
+            and communication_type='Communication'
+            and (cc like  '%&lt;%' or bcc like '%&lt;%' or recipients like '%&lt;%')
+        """,
         as_dict=1,
     ):
         communication["recipients"] = format_email_id(communication.recipients)
@@ -23,7 +23,7 @@ def fix_communications():
 
         frappe.db.sql(
             """update `tabCommunication` set recipients=%s,cc=%s,bcc=%s
-			where id =%s """,
+            where id =%s """,
             (
                 communication["recipients"],
                 communication["cc"],
@@ -54,8 +54,8 @@ def fix_show_as_cc_email_queue():
 def fix_email_queue_recipients():
     for recipient in frappe.db.sql(
         """select recipient, id from
-		`tabEmail Queue Recipient` where recipient like '%&lt;%'
-			and status='Not Sent' and creation > '2020-06-01' """,
+        `tabEmail Queue Recipient` where recipient like '%&lt;%'
+            and status='Not Sent' and creation > '2020-06-01' """,
         as_dict=1,
     ):
         frappe.db.set_value(

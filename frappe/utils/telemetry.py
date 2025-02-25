@@ -55,10 +55,10 @@ def init_telemetry():
 
 
 def capture(event, app, **kwargs):
-	init_telemetry()
-	ph: Posthog = getattr(frappe.local, "posthog", None)
-	with suppress(Exception):
-		ph and ph.capture(distinct_id=frappe.local.site, event=f"{app}_{event}", **kwargs)
+    init_telemetry()
+    ph: Posthog = getattr(frappe.local, "posthog", None)
+    with suppress(Exception):
+        ph and ph.capture(distinct_id=frappe.local.site, event=f"{app}_{event}", **kwargs)
 
 
 def capture_doc(doc, action):

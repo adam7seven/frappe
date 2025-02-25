@@ -7,10 +7,10 @@ from frappe.tests import IntegrationTestCase
 
 
 class TestGeoUtils(IntegrationTestCase):
-	def setUp(self):
-		self.todo = frappe.get_doc(
-			doctype="ToDo", description="Test description", assigned_by="Administrator"
-		).insert()
+    def setUp(self):
+        self.todo = frappe.get_doc(
+            doctype="ToDo", description="Test description", assigned_by="Administrator"
+        ).insert()
 
         self.test_location_dict = {
             "type": "FeatureCollection",
@@ -47,11 +47,11 @@ class TestGeoUtils(IntegrationTestCase):
         coords = get_coords("Location", self.test_filter_not_exists, "location_field")
         self.assertEqual(coords, {"type": "FeatureCollection", "features": []})
 
-	def test_get_coords_from_not_existable_location(self):
-		self.assertRaises(frappe.ValidationError, get_coords, "ToDo", self.test_filter_todo, "location_field")
+    def test_get_coords_from_not_existable_location(self):
+        self.assertRaises(frappe.ValidationError, get_coords, "ToDo", self.test_filter_todo, "location_field")
 
-	def test_get_coords_from_not_existable_coords(self):
-		self.assertRaises(frappe.ValidationError, get_coords, "ToDo", self.test_filter_todo, "coordinates")
+    def test_get_coords_from_not_existable_coords(self):
+        self.assertRaises(frappe.ValidationError, get_coords, "ToDo", self.test_filter_todo, "coordinates")
 
     def tearDown(self):
         self.todo.delete()

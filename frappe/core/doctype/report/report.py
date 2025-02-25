@@ -54,13 +54,13 @@ class Report(Document):
         if not self.module:
             self.module = frappe.db.get_value("DocType", self.ref_doctype, "module")
 
-		if not self.is_standard:
-			self.is_standard = "No"
-			if (
-				frappe.session.user == "Administrator"
-				and getattr(frappe.local.conf, "developer_mode", 0) == 1
-			):
-				self.is_standard = "Yes"
+        if not self.is_standard:
+            self.is_standard = "No"
+            if (
+                frappe.session.user == "Administrator"
+                and getattr(frappe.local.conf, "developer_mode", 0) == 1
+            ):
+                self.is_standard = "Yes"
 
         if self.is_standard == "No":
             # allow only script manager to edit scripts
@@ -86,21 +86,21 @@ class Report(Document):
         doc.letterhead = None
         doc.prepared_report = 0
 
-	def on_trash(self):
-		if (
-			self.is_standard == "Yes"
-			and not cint(getattr(frappe.local.conf, "developer_mode", 0))
-			and not frappe.flags.in_migrate
-			and not frappe.flags.in_patch
-		):
-			frappe.throw(_("You are not allowed to delete Standard Report"))
-		delete_custom_role("report", self.id)
+    def on_trash(self):
+        if (
+            self.is_standard == "Yes"
+            and not cint(getattr(frappe.local.conf, "developer_mode", 0))
+            and not frappe.flags.in_migrate
+            and not frappe.flags.in_patch
+        ):
+            frappe.throw(_("You are not allowed to delete Standard Report"))
+        delete_custom_role("report", self.id)
 
-	def get_permission_log_options(self, event=None):
-		return {"fields": ["roles"]}
+    def get_permission_log_options(self, event=None):
+        return {"fields": ["roles"]}
 
-	def get_columns(self):
-		return [d.as_dict(no_default_fields=True, no_child_table_fields=True) for d in self.columns]
+    def get_columns(self):
+        return [d.as_dict(no_default_fields=True, no_child_table_fields=True) for d in self.columns]
 
     @frappe.whitelist()
     def set_doctype_roles(self):
@@ -110,9 +110,9 @@ class Report(Document):
                 roles = [{"role": d.role} for d in meta.permissions if d.permlevel == 0]
                 self.set("roles", roles)
 
-	def is_permitted(self):
-		"""Return True if `Has Role` is not set or the user is allowed."""
-		from frappe.utils import has_common
+    def is_permitted(self):
+        """Return True if `Has Role` is not set or the user is allowed."""
+        from frappe.utils import has_common
 
         allowed = [d.role for d in frappe.get_all("Has Role", fields=["role"], filters={"parent": self.id})]
 
@@ -135,8 +135,8 @@ class Report(Document):
         if frappe.flags.in_import:
             return
 
-		if self.is_standard == "Yes" and frappe.conf.developer_mode:
-			export_to_files(record_list=[["Report", self.id]], record_module=self.module, create_init=True)
+        if self.is_standard == "Yes" and frappe.conf.developer_mode:
+            export_to_files(record_list=[["Report", self.id]], record_module=self.module, create_init=True)
 
             self.create_report_py()
 
@@ -156,19 +156,19 @@ class Report(Document):
 
         return [columns, result]
 
-	def execute_script_report(self, filters):
-		# save the timestamp to automatically set to prepared
-		threshold = 15
+    def execute_script_report(self, filters):
+        # save the timestamp to automatically set to prepared
+        threshold = 15
 
-		start_time = datetime.datetime.now()
-		prepared_report_watcher = None
-		if not self.prepared_report:
-			prepared_report_watcher = threading.Timer(
-				interval=threshold,
-				function=enable_prepared_report,
-				kwargs={"report": self.id, "site": frappe.local.site},
-			)
-			prepared_report_watcher.start()
+        start_time = datetime.datetime.now()
+        prepared_report_watcher = None
+        if not self.prepared_report:
+            prepared_report_watcher = threading.Timer(
+                interval=threshold,
+                function=enable_prepared_report,
+                kwargs={"report": self.id, "site": frappe.local.site},
+            )
+            prepared_report_watcher.start()
 
         # The JOB
         if self.is_standard == "Yes":
@@ -176,8 +176,8 @@ class Report(Document):
         else:
             res = self.execute_script(filters)
 
-		prepared_report_watcher and prepared_report_watcher.cancel()
-		execution_time = (datetime.datetime.now() - start_time).total_seconds()
+        prepared_report_watcher and prepared_report_watcher.cancel()
+        execution_time = (datetime.datetime.now() - start_time).total_seconds()
 
         frappe.cache.hset("report_execution_time", self.id, execution_time)
 
@@ -316,12 +316,12 @@ class Report(Document):
     def get_standard_report_filters(self, params, filters):
         _filters = params.get("filters") or []
 
-		if filters:
-			for key, value in filters.items():
-				condition, _value = "=", value
-				if isinstance(value, list | tuple):
-					condition, _value = value
-				_filters.append([key, condition, _value])
+        if filters:
+            for key, value in filters.items():
+                condition, _value = "=", value
+                if isinstance(value, list | tuple):
+                    condition, _value = value
+                _filters.append([key, condition, _value])
 
         return _filters
 
@@ -330,10 +330,10 @@ class Report(Document):
         if params.get("sort_by"):
             order_by = Report._format(params.get("sort_by").split(".")) + " " + params.get("sort_order")
 
-		elif params.get("order_by"):
-			order_by = params.get("order_by")
-		else:
-			order_by = Report._format([self.ref_doctype, "creation"]) + " desc"
+        elif params.get("order_by"):
+            order_by = params.get("order_by")
+        else:
+            order_by = Report._format([self.ref_doctype, "creation"]) + " desc"
 
         if params.get("sort_by_next"):
             order_by += (
@@ -351,8 +351,8 @@ class Report(Document):
     def build_standard_report_columns(self, columns, group_by_args):
         _columns = []
 
-		for fieldname, doctype in columns:
-			meta = frappe.get_meta(doctype)
+        for fieldname, doctype in columns:
+            meta = frappe.get_meta(doctype)
 
             if meta.get_field(fieldname):
                 field = meta.get_field(fieldname)
@@ -372,17 +372,17 @@ class Report(Document):
             _columns.append(field)
         return _columns
 
-	def build_data_dict(self, result, columns):
-		data = []
-		for row in result:
-			if isinstance(row, list | tuple):
-				_row = frappe._dict()
-				for i, val in enumerate(row):
-					_row[columns[i].get("fieldname")] = val
-			elif isinstance(row, dict):
-				# no need to convert from dict to dict
-				_row = frappe._dict(row)
-			data.append(_row)
+    def build_data_dict(self, result, columns):
+        data = []
+        for row in result:
+            if isinstance(row, list | tuple):
+                _row = frappe._dict()
+                for i, val in enumerate(row):
+                    _row[columns[i].get("fieldname")] = val
+            elif isinstance(row, dict):
+                # no need to convert from dict to dict
+                _row = frappe._dict(row)
+            data.append(_row)
 
         return data
 
@@ -395,7 +395,7 @@ class Report(Document):
 
 
 def is_prepared_report_enabled(report):
-	return cint(frappe.db.get_value("Report", report, "prepared_report"))
+    return cint(frappe.db.get_value("Report", report, "prepared_report"))
 
 
 def get_report_module_dotted_path(module, report_id):
@@ -430,8 +430,8 @@ def get_group_by_column_label(args, meta):
 
 
 def enable_prepared_report(report: str, site: str):
-	frappe.init(site)
-	frappe.connect()
-	frappe.db.set_value("Report", report, "prepared_report", 1)
-	frappe.db.commit()
-	frappe.destroy()
+    frappe.init(site)
+    frappe.connect()
+    frappe.db.set_value("Report", report, "prepared_report", 1)
+    frappe.db.commit()
+    frappe.destroy()

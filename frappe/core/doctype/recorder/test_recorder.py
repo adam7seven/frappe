@@ -14,17 +14,17 @@ from frappe.utils import set_request
 
 
 class UnitTestRecorder(UnitTestCase):
-	"""
-	Unit tests for Recorder.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for Recorder.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestRecorder(IntegrationTestCase):
-	def setUp(self):
-		self.start_recoder()
+    def setUp(self):
+        self.start_recoder()
 
     def tearDown(self) -> None:
         frappe.recorder.stop()
@@ -83,26 +83,26 @@ class TestRecorder(IntegrationTestCase):
         requests = frappe.get_list("Recorder", order_by="path desc")
         self.assertEqual(requests[0].path, "/api/method/ping")
 
-	def test_recorder_serialization(self):
-		frappe.get_all("User")  # trigger one query
-		self.stop_recorder()
-		requests = frappe.get_all("Recorder")
-		request_doc = get_recorder_data(requests[0].id)
-		self.assertIsInstance(serialize_request(request_doc), dict)
+    def test_recorder_serialization(self):
+        frappe.get_all("User")  # trigger one query
+        self.stop_recorder()
+        requests = frappe.get_all("Recorder")
+        request_doc = get_recorder_data(requests[0].id)
+        self.assertIsInstance(serialize_request(request_doc), dict)
 
 
 class TestQueryOptimization(IntegrationTestCase):
-	@run_only_if(db_type_is.MARIADB)
-	def test_query_optimizer(self):
-		suggested_index = _optimize_query(
-			"""select id from
-			`tabUser` u
-			join `tabHas Role` r
-			on r.parent = u.id
-			where email='xyz'
-			and creation > '2023'
-			and bio like '%xyz%'
-			"""
-		)
-		self.assertEqual(suggested_index.table, "tabUser")
-		self.assertEqual(suggested_index.column, "email")
+    @run_only_if(db_type_is.MARIADB)
+    def test_query_optimizer(self):
+        suggested_index = _optimize_query(
+            """select id from
+            `tabUser` u
+            join `tabHas Role` r
+            on r.parent = u.id
+            where email='xyz'
+            and creation > '2023'
+            and bio like '%xyz%'
+            """
+        )
+        self.assertEqual(suggested_index.table, "tabUser")
+        self.assertEqual(suggested_index.column, "email")

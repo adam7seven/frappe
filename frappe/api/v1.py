@@ -71,10 +71,10 @@ def read_doc(doctype: str, id: str):
     if "run_method" in frappe.form_dict:
         return execute_doc_method(doctype, id)
 
-	doc = frappe.get_doc(doctype, id)
-	doc.check_permission("read")
-	doc.apply_fieldlevel_read_permissions()
-	return doc
+    doc = frappe.get_doc(doctype, id)
+    doc.check_permission("read")
+    doc.apply_fieldlevel_read_permissions()
+    return doc
 
 
 def execute_doc_method(doctype: str, id: str, method: str | None = None):
@@ -82,13 +82,13 @@ def execute_doc_method(doctype: str, id: str, method: str | None = None):
     doc = frappe.get_doc(doctype, id)
     doc.is_whitelisted(method)
 
-	if frappe.request.method == "GET":
-		doc.check_permission("read")
-		return doc.run_method(method, **frappe.form_dict)
+    if frappe.request.method == "GET":
+        doc.check_permission("read")
+        return doc.run_method(method, **frappe.form_dict)
 
-	elif frappe.request.method == "POST":
-		doc.check_permission("write")
-		return doc.run_method(method, **frappe.form_dict)
+    elif frappe.request.method == "POST":
+        doc.check_permission("write")
+        return doc.run_method(method, **frappe.form_dict)
 
 
 def get_request_form_data():

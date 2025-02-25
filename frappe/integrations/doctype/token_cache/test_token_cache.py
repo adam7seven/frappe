@@ -7,19 +7,19 @@ EXTRA_TEST_RECORD_DEPENDENCIES = ["User", "Connected App", "Token Cache"]
 
 
 class UnitTestTokenCache(UnitTestCase):
-	"""
-	Unit tests for TokenCache.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for TokenCache.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestTokenCache(IntegrationTestCase):
-	def setUp(self):
-		self.token_cache = frappe.get_last_doc("Token Cache")
-		self.token_cache.update({"connected_app": frappe.get_last_doc("Connected App").id})
-		self.token_cache.save(ignore_permissions=True)
+    def setUp(self):
+        self.token_cache = frappe.get_last_doc("Token Cache")
+        self.token_cache.update({"connected_app": frappe.get_last_doc("Connected App").id})
+        self.token_cache.save(ignore_permissions=True)
 
     def test_get_auth_header(self):
         self.token_cache.get_auth_header()

@@ -17,23 +17,23 @@ def execute(filters=None):
     data = frappe.db.multisql(
         {
             "mariadb": """
-				SELECT table_name AS `table`,
-						round(((data_length + index_length) / 1024 / 1024), 2) `size`,
-						round((data_length / 1024 / 1024), 2) as data_size,
-						round((index_length / 1024 / 1024), 2) as index_size
-				FROM information_schema.TABLES
-				ORDER BY (data_length + index_length) DESC;
-			""",
+                SELECT table_name AS `table`,
+                        round(((data_length + index_length) / 1024 / 1024), 2) `size`,
+                        round((data_length / 1024 / 1024), 2) as data_size,
+                        round((index_length / 1024 / 1024), 2) as index_size
+                FROM information_schema.TABLES
+                ORDER BY (data_length + index_length) DESC;
+            """,
             "postgres": """
-				SELECT
-				  table_name as "table",
-				  round(pg_total_relation_size(quote_ident(table_name)) / 1024 / 1024, 2) as "size",
-				  round(pg_relation_size(quote_ident(table_name)) / 1024 / 1024, 2) as "data_size",
-				  round(pg_indexes_size(quote_ident(table_name)) / 1024 / 1024, 2) as "index_size"
-				FROM information_schema.tables
-				WHERE table_schema = 'public'
-				ORDER BY 2 DESC;
-			""",
+                SELECT
+                  table_name as "table",
+                  round(pg_total_relation_size(quote_ident(table_name)) / 1024 / 1024, 2) as "size",
+                  round(pg_relation_size(quote_ident(table_name)) / 1024 / 1024, 2) as "data_size",
+                  round(pg_indexes_size(quote_ident(table_name)) / 1024 / 1024, 2) as "index_size"
+                FROM information_schema.tables
+                WHERE table_schema = 'public'
+                ORDER BY 2 DESC;
+            """,
         },
         as_dict=1,
     )

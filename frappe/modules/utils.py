@@ -23,14 +23,14 @@ doctype_python_modules = {}
 
 
 def export_module_json(doc: "Document", is_standard: bool, module: str) -> str | None:
-	"""Make a folder for the given doc and add its json file (make it a standard object that will be synced).
+    """Make a folder for the given doc and add its json file (make it a standard object that will be synced).
 
-	Return the absolute file_path without the extension.
-	Eg: For exporting a Print Format "_Test Print Format 1", the return value will be
-	`/home/gavin/frappe-bench/apps/frappe/frappe/core/print_format/_test_print_format_1/_test_print_format_1`
-	"""
-	if not frappe.flags.in_import and is_standard and frappe.conf.developer_mode:
-		from frappe.modules.export_file import export_to_files
+    Return the absolute file_path without the extension.
+    Eg: For exporting a Print Format "_Test Print Format 1", the return value will be
+    `/home/gavin/frappe-bench/apps/frappe/frappe/core/print_format/_test_print_format_1/_test_print_format_1`
+    """
+    if not frappe.flags.in_import and is_standard and frappe.conf.developer_mode:
+        from frappe.modules.export_file import export_to_files
 
         # json
         export_to_files(
@@ -153,34 +153,34 @@ def sync_customizations_for_doctype(data: dict, folder: str, filename: str = "")
                     doc = frappe.get_doc(data)
                     doc.db_insert()
 
-			match custom_doctype:
-				case "Custom Field":
-					for d in data[key]:
-						field = frappe.db.get_value(
-							"Custom Field", {"dt": doc_type, "fieldname": d["fieldname"]}
-						)
-						if not field:
-							d["owner"] = "Administrator"
-							_insert(d)
-						else:
-							custom_field = frappe.get_doc("Custom Field", field)
-							custom_field.flags.ignore_validate = True
-							custom_field.update(d)
-							custom_field.db_update()
-				case "Property Setter":
-					# Property setter implement their own deduplication, we can just sync them as is
-					for d in data[key]:
-						if d.get("doc_type") == doc_type:
-							d["doctype"] = "Property Setter"
-							doc = frappe.get_doc(d)
-							doc.flags.validate_fields_for_doctype = False
-							doc.insert()
-				case "Custom DocPerm":
-					# TODO/XXX: Docperm have no "sync" as of now. They get OVERRIDDEN on sync.
-					frappe.db.delete("Custom DocPerm", {"parent": doc_type})
+            match custom_doctype:
+                case "Custom Field":
+                    for d in data[key]:
+                        field = frappe.db.get_value(
+                            "Custom Field", {"dt": doc_type, "fieldname": d["fieldname"]}
+                        )
+                        if not field:
+                            d["owner"] = "Administrator"
+                            _insert(d)
+                        else:
+                            custom_field = frappe.get_doc("Custom Field", field)
+                            custom_field.flags.ignore_validate = True
+                            custom_field.update(d)
+                            custom_field.db_update()
+                case "Property Setter":
+                    # Property setter implement their own deduplication, we can just sync them as is
+                    for d in data[key]:
+                        if d.get("doc_type") == doc_type:
+                            d["doctype"] = "Property Setter"
+                            doc = frappe.get_doc(d)
+                            doc.flags.validate_fields_for_doctype = False
+                            doc.insert()
+                case "Custom DocPerm":
+                    # TODO/XXX: Docperm have no "sync" as of now. They get OVERRIDDEN on sync.
+                    frappe.db.delete("Custom DocPerm", {"parent": doc_type})
 
-					for d in data[key]:
-						_insert(d)
+                    for d in data[key]:
+                        _insert(d)
 
                     for d in data[key]:
                         _insert(d)
@@ -351,30 +351,30 @@ def make_boilerplate(
         controller_body = indent(
             dedent(
                 """
-			def db_insert(self, *args, **kwargs):
-				raise NotImplementedError
+            def db_insert(self, *args, **kwargs):
+                raise NotImplementedError
 
-			def load_from_db(self):
-				raise NotImplementedError
+            def load_from_db(self):
+                raise NotImplementedError
 
-			def db_update(self):
-				raise NotImplementedError
+            def db_update(self):
+                raise NotImplementedError
 
-			def delete(self):
-				raise NotImplementedError
+            def delete(self):
+                raise NotImplementedError
 
-			@staticmethod
-			def get_list(filters=None, page_length=20, **kwargs):
-				pass
+            @staticmethod
+            def get_list(filters=None, page_length=20, **kwargs):
+                pass
 
-			@staticmethod
-			def get_count(filters=None, **kwargs):
-				pass
+            @staticmethod
+            def get_count(filters=None, **kwargs):
+                pass
 
-			@staticmethod
-			def get_stats(**kwargs):
-				pass
-			"""
+            @staticmethod
+            def get_stats(**kwargs):
+                pass
+            """
             ),
             "\t",
         )

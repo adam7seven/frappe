@@ -21,19 +21,19 @@ def get_table_snapshot(doctype):
 
 
 class UnitTestCountry(UnitTestCase):
-	"""
-	Unit tests for Country.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for Country.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestCountry(IntegrationTestCase):
-	def test_bulk_insert_correctness(self):
-		def clear_tables():
-			frappe.db.delete("Currency")
-			frappe.db.delete("Country")
+    def test_bulk_insert_correctness(self):
+        def clear_tables():
+            frappe.db.delete("Currency")
+            frappe.db.delete("Country")
 
         # Clear data
         clear_tables()

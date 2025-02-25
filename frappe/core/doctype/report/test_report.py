@@ -17,19 +17,19 @@ EXTRA_TEST_RECORD_DEPENDENCIES = ["User"]
 
 
 class UnitTestReport(UnitTestCase):
-	"""
-	Unit tests for Report.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for Report.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestReport(IntegrationTestCase):
-	@classmethod
-	def setUpClass(cls) -> None:
-		cls.enterClassContext(cls.enable_safe_exec())
-		return super().setUpClass()
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.enterClassContext(cls.enable_safe_exec())
+        return super().setUpClass()
 
     def test_report_builder(self):
         if frappe.db.exists("Report", "User Activity Report"):
@@ -251,12 +251,12 @@ class TestReport(IntegrationTestCase):
         self.assertNotEqual(report.is_permitted(), True)
         frappe.set_user("Administrator")
 
-	# test for the `_format` method if report data doesn't have sort_by parameter
-	def test_format_method(self):
-		if frappe.db.exists("Report", "User Activity Report Without Sort"):
-			frappe.delete_doc("Report", "User Activity Report Without Sort")
-		with open(os.path.join(os.path.dirname(__file__), "user_activity_report_without_sort.json")) as f:
-			frappe.get_doc(json.loads(f.read())).insert()
+    # test for the `_format` method if report data doesn't have sort_by parameter
+    def test_format_method(self):
+        if frappe.db.exists("Report", "User Activity Report Without Sort"):
+            frappe.delete_doc("Report", "User Activity Report Without Sort")
+        with open(os.path.join(os.path.dirname(__file__), "user_activity_report_without_sort.json")) as f:
+            frappe.get_doc(json.loads(f.read())).insert()
 
         report = frappe.get_doc("Report", "User Activity Report Without Sort")
         columns, data = report.get_data()

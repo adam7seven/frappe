@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestNavbarSettings(UnitTestCase):
-	"""
-	Unit tests for NavbarSettings.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for NavbarSettings.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestNavbarSettings(IntegrationTestCase):
-	pass
+    pass

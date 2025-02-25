@@ -22,31 +22,31 @@ class NumberCard(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-		aggregate_function_based_on: DF.Literal[None]
-		color: DF.Color | None
-		currency: DF.Link | None
-		document_type: DF.Link | None
-		dynamic_filters_json: DF.Code | None
-		filters_config: DF.Code | None
-		filters_json: DF.Code | None
-		function: DF.Literal["Count", "Sum", "Average", "Minimum", "Maximum"]
-		is_public: DF.Check
-		is_standard: DF.Check
-		label: DF.Data
-		method: DF.Data | None
-		module: DF.Link | None
-		parent_document_type: DF.Link | None
-		report_field: DF.Literal[None]
-		report_function: DF.Literal["Sum", "Average", "Minimum", "Maximum"]
-		report_id: DF.Link | None
-		show_percentage_stats: DF.Check
-		stats_time_interval: DF.Literal["Daily", "Weekly", "Monthly", "Yearly"]
-		type: DF.Literal["Document Type", "Report", "Custom"]
-	# end: auto-generated types
+        aggregate_function_based_on: DF.Literal[None]
+        color: DF.Color | None
+        currency: DF.Link | None
+        document_type: DF.Link | None
+        dynamic_filters_json: DF.Code | None
+        filters_config: DF.Code | None
+        filters_json: DF.Code | None
+        function: DF.Literal["Count", "Sum", "Average", "Minimum", "Maximum"]
+        is_public: DF.Check
+        is_standard: DF.Check
+        label: DF.Data
+        method: DF.Data | None
+        module: DF.Link | None
+        parent_document_type: DF.Link | None
+        report_field: DF.Literal[None]
+        report_function: DF.Literal["Sum", "Average", "Minimum", "Maximum"]
+        report_id: DF.Link | None
+        show_percentage_stats: DF.Check
+        stats_time_interval: DF.Literal["Daily", "Weekly", "Monthly", "Yearly"]
+        type: DF.Literal["Document Type", "Report", "Custom"]
+    # end: auto-generated types
 
-	def autoname(self):
-		if not self.id:
-			self.id = self.label
+    def autoname(self):
+        if not self.id:
+            self.id = self.label
 
         if frappe.db.exists("Number Card", self.id):
             self.id = append_number_if_id_exists("Number Card", self.id)
@@ -119,15 +119,15 @@ def get_permission_query_conditions(user=None):
         )
     if allowed_modules:
         module_condition = """`tabNumber Card`.`module` in ({allowed_modules})
-			or `tabNumber Card`.`module` is NULL""".format(
+            or `tabNumber Card`.`module` is NULL""".format(
             allowed_modules=",".join(allowed_modules)
         )
 
     return f"""
-		{doctype_condition}
-		and
-		{module_condition}
-	"""
+        {doctype_condition}
+        and
+        {module_condition}
+    """
 
 
 def has_permission(doc, ptype, user):

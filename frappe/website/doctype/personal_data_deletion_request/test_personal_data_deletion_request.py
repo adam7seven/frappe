@@ -14,21 +14,21 @@ from frappe.website.doctype.personal_data_download_request.test_personal_data_do
 
 
 class UnitTestPersonalDataDeletionRequest(UnitTestCase):
-	"""
-	Unit tests for PersonalDataDeletionRequest.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for PersonalDataDeletionRequest.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestPersonalDataDeletionRequest(IntegrationTestCase):
-	def setUp(self):
-		create_user_if_not_exists(email="test_delete@example.com")
-		self.delete_request = frappe.get_doc(
-			{"doctype": "Personal Data Deletion Request", "email": "test_delete@example.com"}
-		)
-		self.delete_request.save(ignore_permissions=True)
+    def setUp(self):
+        create_user_if_not_exists(email="test_delete@example.com")
+        self.delete_request = frappe.get_doc(
+            {"doctype": "Personal Data Deletion Request", "email": "test_delete@example.com"}
+        )
+        self.delete_request.save(ignore_permissions=True)
 
     def test_delete_request(self):
         email_queue = frappe.get_all(
@@ -69,25 +69,25 @@ class TestPersonalDataDeletionRequest(IntegrationTestCase):
         )
         self.assertEqual(self.delete_request.status, "Deleted")
 
-	def test_unverified_record_removal(self):
-		date_time_obj = datetime.strptime(self.delete_request.creation, "%Y-%m-%d %H:%M:%S.%f") + timedelta(
-			days=-7
-		)
-		self.delete_request.db_set("creation", date_time_obj)
-		self.delete_request.db_set("status", "Pending Verification")
+    def test_unverified_record_removal(self):
+        date_time_obj = datetime.strptime(self.delete_request.creation, "%Y-%m-%d %H:%M:%S.%f") + timedelta(
+            days=-7
+        )
+        self.delete_request.db_set("creation", date_time_obj)
+        self.delete_request.db_set("status", "Pending Verification")
 
         remove_unverified_record()
         self.assertFalse(
             frappe.db.exists("Personal Data Deletion Request", self.delete_request.id)
         )
 
-	def test_process_auto_request(self):
-		frappe.db.set_single_value("Website Settings", "auto_account_deletion", "1")
-		date_time_obj = datetime.strptime(self.delete_request.creation, "%Y-%m-%d %H:%M:%S.%f") + timedelta(
-			hours=-2
-		)
-		self.delete_request.db_set("creation", date_time_obj)
-		self.delete_request.db_set("status", "Pending Approval")
+    def test_process_auto_request(self):
+        frappe.db.set_single_value("Website Settings", "auto_account_deletion", "1")
+        date_time_obj = datetime.strptime(self.delete_request.creation, "%Y-%m-%d %H:%M:%S.%f") + timedelta(
+            hours=-2
+        )
+        self.delete_request.db_set("creation", date_time_obj)
+        self.delete_request.db_set("status", "Pending Approval")
 
         process_data_deletion_request()
         self.delete_request.reload()

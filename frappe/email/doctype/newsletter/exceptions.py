@@ -5,12 +5,12 @@ from frappe.exceptions import ValidationError
 
 
 class NewsletterAlreadySentError(ValidationError):
-	pass
+    pass
 
 
 class NoRecipientFoundError(ValidationError):
-	pass
+    pass
 
 
 class NewsletterNotSavedError(ValidationError):
-	pass
+    pass

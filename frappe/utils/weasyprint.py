@@ -92,9 +92,9 @@ class PrintFormatGenerator:
         self.context.footer = footer_html
         return self.get_main_html()
 
-	def get_main_html(self):
-		self.context.css = frappe.render_template("templates/print_format/print_format.css", self.context)
-		return frappe.render_template("templates/print_format/print_format.html", self.context)
+    def get_main_html(self):
+        self.context.css = frappe.render_template("templates/print_format/print_format.css", self.context)
+        return frappe.render_template("templates/print_format/print_format.html", self.context)
 
     def get_header_footer_html(self):
         header_html = footer_html = None
@@ -108,9 +108,9 @@ class PrintFormatGenerator:
             )
         return header_html, footer_html
 
-	def render_pdf(self):
-		"""Return a bytes sequence of the rendered PDF."""
-		HTML, CSS = import_weasyprint()
+    def render_pdf(self):
+        """Return a bytes sequence of the rendered PDF."""
+        HTML, CSS = import_weasyprint()
 
         self._make_header_footer()
 

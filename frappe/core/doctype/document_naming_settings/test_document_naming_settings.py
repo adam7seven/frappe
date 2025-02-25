@@ -12,34 +12,34 @@ from frappe.utils import cint
 
 
 class UnitTestDocumentNamingSettings(UnitTestCase):
-	"""
-	Unit tests for DocumentNamingSettings.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for DocumentNamingSettings.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestNamingSeries(IntegrationTestCase):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
-		cls.ns_doctype = (
-			new_doctype(
-				fields=[
-					{
-						"label": "Series",
-						"fieldname": "naming_series",
-						"fieldtype": "Select",
-						"options": f"\n{frappe.generate_hash()}-.###",
-					}
-				],
-				autoid="naming_series:",
-				is_submittable=1,
-			)
-			.insert()
-			.id
-		)
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.ns_doctype = (
+            new_doctype(
+                fields=[
+                    {
+                        "label": "Series",
+                        "fieldname": "naming_series",
+                        "fieldtype": "Select",
+                        "options": f"\n{frappe.generate_hash()}-.###",
+                    }
+                ],
+                autoid="naming_series:",
+                is_submittable=1,
+            )
+            .insert()
+            .id
+        )
 
     def setUp(self):
         self.dns: DocumentNamingSettings = frappe.get_doc("Document Naming Settings")
@@ -47,10 +47,10 @@ class TestNamingSeries(IntegrationTestCase):
     def tearDown(self):
         frappe.db.rollback()
 
-	def get_valid_serieses(self):
-		VALID_SERIES = ["SINV-", "SI-.{field}.", "SI-#.###", ""]
-		existing_series = self.dns.get_transactions_and_prefixes()["prefixes"]
-		return VALID_SERIES + existing_series
+    def get_valid_serieses(self):
+        VALID_SERIES = ["SINV-", "SI-.{field}.", "SI-#.###", ""]
+        existing_series = self.dns.get_transactions_and_prefixes()["prefixes"]
+        return VALID_SERIES + existing_series
 
     def test_naming_preview(self):
         self.dns.transaction_type = self.ns_doctype
@@ -62,9 +62,9 @@ class TestNamingSeries(IntegrationTestCase):
         self.dns.try_naming_series = "AXBZ-.{currency}.-"
         serieses = self.dns.preview_series().split("\n")
 
-	def test_get_transactions(self):
-		naming_info = self.dns.get_transactions_and_prefixes()
-		self.assertIn(self.ns_doctype, naming_info["transactions"])
+    def test_get_transactions(self):
+        naming_info = self.dns.get_transactions_and_prefixes()
+        self.assertIn(self.ns_doctype, naming_info["transactions"])
 
         existing_naming_series = (
             frappe.get_meta(self.ns_doctype).get_field("naming_series").options
@@ -103,14 +103,14 @@ class TestNamingSeries(IntegrationTestCase):
         self.dns.default_amend_naming = "Amend Counter"
         self.dns.update_amendment_rule()
 
-		submittable_doc = frappe.get_doc(
-			doctype=self.ns_doctype, some_fieldname="test doc with submit"
-		).submit()
-		submittable_doc.cancel()
+        submittable_doc = frappe.get_doc(
+            doctype=self.ns_doctype, some_fieldname="test doc with submit"
+        ).submit()
+        submittable_doc.cancel()
 
-		amended_doc = frappe.get_doc(
-			doctype=self.ns_doctype, some_fieldname="test doc with submit", amended_from=submittable_doc.id
-		).insert()
+        amended_doc = frappe.get_doc(
+            doctype=self.ns_doctype, some_fieldname="test doc with submit", amended_from=submittable_doc.id
+        ).insert()
 
         self.assertIn(submittable_doc.id, amended_doc.id)
         amended_doc.delete()
@@ -118,7 +118,7 @@ class TestNamingSeries(IntegrationTestCase):
         self.dns.default_amend_naming = "Default Naming"
         self.dns.update_amendment_rule()
 
-		new_amended_doc = frappe.get_doc(
-			doctype=self.ns_doctype, some_fieldname="test doc with submit", amended_from=submittable_doc.id
-		).insert()
-		self.assertNotIn(submittable_doc.id, new_amended_doc.id)
+        new_amended_doc = frappe.get_doc(
+            doctype=self.ns_doctype, some_fieldname="test doc with submit", amended_from=submittable_doc.id
+        ).insert()
+        self.assertNotIn(submittable_doc.id, new_amended_doc.id)

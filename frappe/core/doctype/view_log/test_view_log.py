@@ -5,17 +5,17 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestViewLog(UnitTestCase):
-	"""
-	Unit tests for ViewLog.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for ViewLog.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestViewLog(IntegrationTestCase):
-	def tearDown(self):
-		frappe.set_user("Administrator")
+    def tearDown(self):
+        frappe.set_user("Administrator")
 
     def test_if_user_is_added(self):
         ev = frappe.get_doc(

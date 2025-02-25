@@ -42,20 +42,20 @@ def toggle_two_factor_auth(state, roles=None):
 
 
 def two_factor_is_enabled(user=None):
-	"""Return True if 2FA is enabled."""
-	enabled = cint(frappe.get_system_settings("enable_two_factor_auth"))
-	if enabled:
-		bypass_two_factor_auth = cint(frappe.get_system_settings("bypass_2fa_for_retricted_ip_users"))
-		if bypass_two_factor_auth and user:
-			user_doc = frappe.get_doc("User", user)
-			restrict_ip_list = (
-				user_doc.get_restricted_ip_list()
-			)  # can be None or one or more than one ip address
-			if restrict_ip_list and frappe.local.request_ip:
-				for ip in restrict_ip_list:
-					if frappe.local.request_ip.startswith(ip):
-						enabled = False
-						break
+    """Return True if 2FA is enabled."""
+    enabled = cint(frappe.get_system_settings("enable_two_factor_auth"))
+    if enabled:
+        bypass_two_factor_auth = cint(frappe.get_system_settings("bypass_2fa_for_retricted_ip_users"))
+        if bypass_two_factor_auth and user:
+            user_doc = frappe.get_doc("User", user)
+            restrict_ip_list = (
+                user_doc.get_restricted_ip_list()
+            )  # can be None or one or more than one ip address
+            if restrict_ip_list and frappe.local.request_ip:
+                for ip in restrict_ip_list:
+                    if frappe.local.request_ip.startswith(ip):
+                        enabled = False
+                        break
 
     if not user or not enabled:
         return enabled
@@ -96,17 +96,17 @@ def cache_2fa_data(user, token, otp_secret, tmp_id):
     pwd = frappe.form_dict.get("pwd")
     verification_method = get_verification_method()
 
-	pipeline = frappe.cache.pipeline()
+    pipeline = frappe.cache.pipeline()
 
-	# set increased expiry time for SMS and Email
-	if verification_method in ["SMS", "Email"]:
-		expiry_time = frappe.flags.token_expiry or 300
-		pipeline.set(tmp_id + "_token", token, expiry_time)
-	else:
-		expiry_time = frappe.flags.otp_expiry or 180
-	for k, v in {"_usr": user, "_pwd": pwd, "_otp_secret": otp_secret}.items():
-		pipeline.set(f"{tmp_id}{k}", v, expiry_time)
-	pipeline.execute()
+    # set increased expiry time for SMS and Email
+    if verification_method in ["SMS", "Email"]:
+        expiry_time = frappe.flags.token_expiry or 300
+        pipeline.set(tmp_id + "_token", token, expiry_time)
+    else:
+        expiry_time = frappe.flags.otp_expiry or 180
+    for k, v in {"_usr": user, "_pwd": pwd, "_otp_secret": otp_secret}.items():
+        pipeline.set(f"{tmp_id}{k}", v, expiry_time)
+    pipeline.execute()
 
 
 def two_factor_is_enabled_for_(user):
@@ -131,9 +131,9 @@ def two_factor_is_enabled_for_(user):
 
 
 def get_otpsecret_for_(user):
-	"""Set OTP Secret for user even if not set."""
-	if otp_secret := get_default(user + "_otpsecret"):
-		return decrypt(otp_secret, key=f"{user}.otpsecret")
+    """Set OTP Secret for user even if not set."""
+    if otp_secret := get_default(user + "_otpsecret"):
+        return decrypt(otp_secret, key=f"{user}.otpsecret")
 
     otp_secret = b32encode(os.urandom(10)).decode("utf-8")
     set_default(user + "_otpsecret", encrypt(otp_secret))
@@ -143,7 +143,7 @@ def get_otpsecret_for_(user):
 
 
 def get_verification_method():
-	return frappe.get_system_settings("two_factor_method")
+    return frappe.get_system_settings("two_factor_method")
 
 
 def confirm_otp_token(login_manager, otp=None, tmp_id=None):
@@ -189,96 +189,96 @@ def confirm_otp_token(login_manager, otp=None, tmp_id=None):
 
 
 def get_verification_obj(user, token, otp_secret):
-	otp_issuer = frappe.get_system_settings("otp_issuer_name")
-	verification_method = get_verification_method()
-	verification_obj = None
-	if verification_method == "SMS":
-		verification_obj = process_2fa_for_sms(user, token, otp_secret)
-	elif verification_method == "OTP App":
-		# check if this if the first time that the user is trying to login. If so, send an email
-		if not get_default(user + "_otplogin"):
-			verification_obj = process_2fa_for_email(user, token, otp_secret, otp_issuer, method="OTP App")
-		else:
-			verification_obj = process_2fa_for_otp_app(user, otp_secret, otp_issuer)
-	elif verification_method == "Email":
-		verification_obj = process_2fa_for_email(user, token, otp_secret, otp_issuer)
-	return verification_obj
+    otp_issuer = frappe.get_system_settings("otp_issuer_name")
+    verification_method = get_verification_method()
+    verification_obj = None
+    if verification_method == "SMS":
+        verification_obj = process_2fa_for_sms(user, token, otp_secret)
+    elif verification_method == "OTP App":
+        # check if this if the first time that the user is trying to login. If so, send an email
+        if not get_default(user + "_otplogin"):
+            verification_obj = process_2fa_for_email(user, token, otp_secret, otp_issuer, method="OTP App")
+        else:
+            verification_obj = process_2fa_for_otp_app(user, otp_secret, otp_issuer)
+    elif verification_method == "Email":
+        verification_obj = process_2fa_for_email(user, token, otp_secret, otp_issuer)
+    return verification_obj
 
 
 def process_2fa_for_sms(user, token, otp_secret):
-	"""Process sms method for 2fa."""
-	phone = frappe.db.get_value("User", user, ["phone", "mobile_no"], as_dict=1)
-	phone = phone.mobile_no or phone.phone
-	status = send_token_via_sms(otp_secret, token=token, phone_no=phone)
-	return {
-		"token_delivery": status,
-		"prompt": status and "Enter verification code sent to {}".format(phone[:4] + "******" + phone[-3:]),
-		"method": "SMS",
-		"setup": status,
-	}
+    """Process sms method for 2fa."""
+    phone = frappe.db.get_value("User", user, ["phone", "mobile_no"], as_dict=1)
+    phone = phone.mobile_no or phone.phone
+    status = send_token_via_sms(otp_secret, token=token, phone_no=phone)
+    return {
+        "token_delivery": status,
+        "prompt": status and "Enter verification code sent to {}".format(phone[:4] + "******" + phone[-3:]),
+        "method": "SMS",
+        "setup": status,
+    }
 
 
 def process_2fa_for_otp_app(user, otp_secret, otp_issuer):
-	"""Process OTP App method for 2fa."""
-	if get_default(user + "_otplogin"):
-		otp_setup_completed = True
-	else:
-		otp_setup_completed = False
+    """Process OTP App method for 2fa."""
+    if get_default(user + "_otplogin"):
+        otp_setup_completed = True
+    else:
+        otp_setup_completed = False
 
     return {"method": "OTP App", "setup": otp_setup_completed}
 
 
 def process_2fa_for_email(user, token, otp_secret, otp_issuer, method="Email"):
-	"""Process Email method for 2fa."""
-	subject = None
-	message = None
-	status = True
-	prompt = ""
-	if method == "OTP App" and not get_default(user + "_otplogin"):
-		"""Sending one-time email for OTP App"""
-		totp_uri = pyotp.TOTP(otp_secret).provisioning_uri(user, issuer_name=otp_issuer)
-		qrcode_link = get_link_for_qrcode(user, totp_uri)
-		message = get_email_body_for_qr_code({"qrcode_link": qrcode_link})
-		subject = get_email_subject_for_qr_code({"qrcode_link": qrcode_link})
-		prompt = _(
-			"Please check your registered email address for instructions on how to proceed. Do not close this window as you will have to return to it."
-		)
-	else:
-		"""Sending email verification"""
-		prompt = _("Verification code has been sent to your registered email address.")
-	status = send_token_via_email(user, token, otp_secret, otp_issuer, subject=subject, message=message)
-	return {
-		"token_delivery": status,
-		"prompt": status and prompt,
-		"method": "Email",
-		"setup": status,
-	}
+    """Process Email method for 2fa."""
+    subject = None
+    message = None
+    status = True
+    prompt = ""
+    if method == "OTP App" and not get_default(user + "_otplogin"):
+        """Sending one-time email for OTP App"""
+        totp_uri = pyotp.TOTP(otp_secret).provisioning_uri(user, issuer_name=otp_issuer)
+        qrcode_link = get_link_for_qrcode(user, totp_uri)
+        message = get_email_body_for_qr_code({"qrcode_link": qrcode_link})
+        subject = get_email_subject_for_qr_code({"qrcode_link": qrcode_link})
+        prompt = _(
+            "Please check your registered email address for instructions on how to proceed. Do not close this window as you will have to return to it."
+        )
+    else:
+        """Sending email verification"""
+        prompt = _("Verification code has been sent to your registered email address.")
+    status = send_token_via_email(user, token, otp_secret, otp_issuer, subject=subject, message=message)
+    return {
+        "token_delivery": status,
+        "prompt": status and prompt,
+        "method": "Email",
+        "setup": status,
+    }
 
 
 def get_email_subject_for_2fa(kwargs_dict):
-	"""Get email subject for 2fa."""
-	subject_template = _("Login Verification Code from {}").format(
-		frappe.get_system_settings("otp_issuer_name")
-	)
-	return frappe.render_template(subject_template, kwargs_dict)
+    """Get email subject for 2fa."""
+    subject_template = _("Login Verification Code from {}").format(
+        frappe.get_system_settings("otp_issuer_name")
+    )
+    return frappe.render_template(subject_template, kwargs_dict)
 
 
 def get_email_body_for_2fa(kwargs_dict):
     """Get email body for 2fa."""
     body_template = """
-		Enter this code to complete your login:
-		<br><br>
-		<b style="font-size: 18px;">{{ otp }}</b>
-	"""
+        Enter this code to complete your login:
+        <br><br>
+        <b style="font-size: 18px;">{{ otp }}</b>
+    """
     return frappe.render_template(body_template, kwargs_dict)
 
 
 def get_email_subject_for_qr_code(kwargs_dict):
-	"""Get QRCode email subject."""
-	subject_template = _("One Time Password (OTP) Registration Code from {}").format(
-		frappe.get_system_settings("otp_issuer_name")
-	)
-	return frappe.render_template(subject_template, kwargs_dict)
+    """Get QRCode email subject."""
+    subject_template = _("One Time Password (OTP) Registration Code from {}").format(
+        frappe.get_system_settings("otp_issuer_name")
+    )
+    return frappe.render_template(subject_template, kwargs_dict)
 
 
 def get_email_body_for_qr_code(kwargs_dict):
@@ -290,14 +290,14 @@ def get_email_body_for_qr_code(kwargs_dict):
 
 
 def get_link_for_qrcode(user, totp_uri):
-	"""Get link to temporary page showing QRCode."""
-	key = frappe.generate_hash(length=20)
-	key_user = f"{key}_user"
-	key_uri = f"{key}_uri"
-	lifespan = int(frappe.get_system_settings("lifespan_qrcode_image")) or 240
-	frappe.cache.set_value(key_uri, totp_uri, expires_in_sec=lifespan)
-	frappe.cache.set_value(key_user, user, expires_in_sec=lifespan)
-	return get_url(f"/qrcode?k={key}")
+    """Get link to temporary page showing QRCode."""
+    key = frappe.generate_hash(length=20)
+    key_user = f"{key}_user"
+    key_uri = f"{key}_uri"
+    lifespan = int(frappe.get_system_settings("lifespan_qrcode_image")) or 240
+    frappe.cache.set_value(key_uri, totp_uri, expires_in_sec=lifespan)
+    frappe.cache.set_value(key_user, user, expires_in_sec=lifespan)
+    return get_url(f"/qrcode?k={key}")
 
 
 def send_token_via_sms(otpsecret, token=None, phone_no=None):
@@ -341,23 +341,23 @@ def send_token_via_sms(otpsecret, token=None, phone_no=None):
 
 
 def send_token_via_email(user, token, otp_secret, otp_issuer, subject=None, message=None):
-	"""Send token to user as email."""
-	user_email = frappe.db.get_value("User", user, "email")
-	if not user_email:
-		return False
-	hotp = pyotp.HOTP(otp_secret)
-	otp = hotp.at(int(token))
-	template_args = {"otp": otp, "otp_issuer": otp_issuer}
+    """Send token to user as email."""
+    user_email = frappe.db.get_value("User", user, "email")
+    if not user_email:
+        return False
+    hotp = pyotp.HOTP(otp_secret)
+    otp = hotp.at(int(token))
+    template_args = {"otp": otp, "otp_issuer": otp_issuer}
 
-	frappe.sendmail(
-		recipients=user_email,
-		subject=subject or get_email_subject_for_2fa(template_args),
-		message=message or get_email_body_for_2fa(template_args),
-		header=[_("Verification Code"), "blue"],
-		delayed=False,
-		retry=3,
-	)
-	return True
+    frappe.sendmail(
+        recipients=user_email,
+        subject=subject or get_email_subject_for_2fa(template_args),
+        message=message or get_email_body_for_2fa(template_args),
+        header=[_("Verification Code"), "blue"],
+        delayed=False,
+        retry=3,
+    )
+    return True
 
 
 def get_qr_svg_code(totp_uri):
@@ -377,14 +377,14 @@ def get_qr_svg_code(totp_uri):
 
 
 def create_barcode_folder():
-	"""Get Barcodes folder."""
-	folder_name = "Barcodes"
-	folder = frappe.db.exists("File", {"file_name": folder_name})
-	if folder:
-		return folder
-	folder = frappe.get_doc({"doctype": "File", "file_name": folder_name, "is_folder": 1, "folder": "Home"})
-	folder.insert(ignore_permissions=True)
-	return folder.id
+    """Get Barcodes folder."""
+    folder_name = "Barcodes"
+    folder = frappe.db.exists("File", {"file_name": folder_name})
+    if folder:
+        return folder
+    folder = frappe.get_doc({"doctype": "File", "file_name": folder_name, "is_folder": 1, "folder": "Home"})
+    folder.insert(ignore_permissions=True)
+    return folder.id
 
 
 def delete_qrimage(user, check_expiry=False):
@@ -416,13 +416,13 @@ def delete_all_barcodes_for_users():
 
 
 def should_remove_barcode_image(barcode):
-	"""Check if it's time to delete barcode image from server."""
-	if isinstance(barcode, str):
-		barcode = frappe.get_doc("File", barcode)
-	lifespan = frappe.get_system_settings("lifespan_qrcode_image") or 240
-	if time_diff_in_seconds(get_datetime(), barcode.creation) > int(lifespan):
-		return True
-	return False
+    """Check if it's time to delete barcode image from server."""
+    if isinstance(barcode, str):
+        barcode = frappe.get_doc("File", barcode)
+    lifespan = frappe.get_system_settings("lifespan_qrcode_image") or 240
+    if time_diff_in_seconds(get_datetime(), barcode.creation) > int(lifespan):
+        return True
+    return False
 
 
 def disable():

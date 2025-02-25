@@ -12,17 +12,17 @@ EXTRA_TEST_RECORD_DEPENDENCIES = ["Web Form"]
 
 
 class UnitTestWebForm(UnitTestCase):
-	"""
-	Unit tests for WebForm.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for WebForm.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestWebForm(IntegrationTestCase):
-	def setUp(self):
-		frappe.conf.disable_website_cache = True
+    def setUp(self):
+        frappe.conf.disable_website_cache = True
 
     def tearDown(self):
         frappe.conf.disable_website_cache = False
@@ -79,15 +79,15 @@ class TestWebForm(IntegrationTestCase):
         set_request(method="GET", path="manage-events/new")
         content = self.normalize_html(get_response_content("manage-events/new"))
 
-		self.assertIn(self.normalize_html('<meta name="title" content="Test Meta Form Title">'), content)
-		self.assertIn(
-			self.normalize_html('<meta property="og:title" content="Test Meta Form Title">'), content
-		)
-		self.assertIn(
-			self.normalize_html('<meta property="og:description" content="Test Meta Form Description">'),
-			content,
-		)
-		self.assertIn(
-			self.normalize_html('<meta property="og:image" content="https://frappe.io/files/frappe.png">'),
-			content,
-		)
+        self.assertIn(self.normalize_html('<meta name="title" content="Test Meta Form Title">'), content)
+        self.assertIn(
+            self.normalize_html('<meta property="og:title" content="Test Meta Form Title">'), content
+        )
+        self.assertIn(
+            self.normalize_html('<meta property="og:description" content="Test Meta Form Description">'),
+            content,
+        )
+        self.assertIn(
+            self.normalize_html('<meta property="og:image" content="https://frappe.io/files/frappe.png">'),
+            content,
+        )

@@ -272,20 +272,20 @@ def get_user_energy_and_review_points(user=None, from_date=None, as_dict=True):
 
     points_list = frappe.db.sql(
         f"""
-		SELECT
-			SUM(CASE WHEN `type` != 'Review' THEN `points` ELSE 0 END) AS energy_points,
-			SUM(CASE WHEN `type` = 'Review' THEN `points` ELSE 0 END) AS review_points,
-			SUM(CASE
-				WHEN `type`='Review' AND `points` < 0 {given_points_condition}
-				THEN ABS(`points`)
-				ELSE 0
-			END) as given_points,
-			`user`
-		FROM `tabEnergy Point Log`
-		{conditions}
-		GROUP BY `user`
-		ORDER BY `energy_points` DESC
-	""",
+        SELECT
+            SUM(CASE WHEN `type` != 'Review' THEN `points` ELSE 0 END) AS energy_points,
+            SUM(CASE WHEN `type` = 'Review' THEN `points` ELSE 0 END) AS review_points,
+            SUM(CASE
+                WHEN `type`='Review' AND `points` < 0 {given_points_condition}
+                THEN ABS(`points`)
+                ELSE 0
+            END) as given_points,
+            `user`
+        FROM `tabEnergy Point Log`
+        {conditions}
+        GROUP BY `user`
+        ORDER BY `energy_points` DESC
+    """,
         values=values,
         as_dict=1,
     )

@@ -14,24 +14,24 @@ if TYPE_CHECKING:
 
 
 class UnitTestCommunication(UnitTestCase):
-	"""
-	Unit tests for Communication.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for Communication.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestCommunication(IntegrationTestCase):
-	def test_email(self):
-		valid_email_list = [
-			"Full Name <full@example.com>",
-			'"Full Name with quotes and <weird@chars.com>" <weird@example.com>',
-			"Surname, Name <name.surname@domain.com>",
-			"Purchase@ABC <purchase@abc.com>",
-			"xyz@abc2.com <xyz@abc.com>",
-			"Name [something else] <name@domain.com>",
-		]
+    def test_email(self):
+        valid_email_list = [
+            "Full Name <full@example.com>",
+            '"Full Name with quotes and <weird@chars.com>" <weird@example.com>',
+            "Surname, Name <name.surname@domain.com>",
+            "Purchase@ABC <purchase@abc.com>",
+            "xyz@abc2.com <xyz@abc.com>",
+            "Name [something else] <name@domain.com>",
+        ]
 
         invalid_email_list = [
             "[invalid!email]",
@@ -142,33 +142,33 @@ class TestCommunication(IntegrationTestCase):
 
         self.assertNotEqual(2, len(comm.timeline_links))
 
-	def test_contacts_attached(self):
-		contact_sender: Contact = frappe.get_doc(
-			{
-				"doctype": "Contact",
-				"first_name": "contact_sender",
-			}
-		)
-		contact_sender.add_email("comm_sender@example.com")
-		contact_sender.insert(ignore_permissions=True)
+    def test_contacts_attached(self):
+        contact_sender: Contact = frappe.get_doc(
+            {
+                "doctype": "Contact",
+                "first_name": "contact_sender",
+            }
+        )
+        contact_sender.add_email("comm_sender@example.com")
+        contact_sender.insert(ignore_permissions=True)
 
-		contact_recipient: Contact = frappe.get_doc(
-			{
-				"doctype": "Contact",
-				"first_name": "contact_recipient",
-			}
-		)
-		contact_recipient.add_email("comm_recipient@example.com")
-		contact_recipient.insert(ignore_permissions=True)
+        contact_recipient: Contact = frappe.get_doc(
+            {
+                "doctype": "Contact",
+                "first_name": "contact_recipient",
+            }
+        )
+        contact_recipient.add_email("comm_recipient@example.com")
+        contact_recipient.insert(ignore_permissions=True)
 
-		contact_cc: Contact = frappe.get_doc(
-			{
-				"doctype": "Contact",
-				"first_name": "contact_cc",
-			}
-		)
-		contact_cc.add_email("comm_cc@example.com")
-		contact_cc.insert(ignore_permissions=True)
+        contact_cc: Contact = frappe.get_doc(
+            {
+                "doctype": "Contact",
+                "first_name": "contact_cc",
+            }
+        )
+        contact_cc.add_email("comm_cc@example.com")
+        contact_cc.insert(ignore_permissions=True)
 
         comm: Communication = frappe.get_doc(
             {
@@ -229,41 +229,41 @@ class TestCommunication(IntegrationTestCase):
         self.assertIn(comm_note_1.id, data)
         self.assertIn(comm_note_2.id, data)
 
-	def test_parse_email(self):
-		to = "Jon Doe <jon.doe@example.org>"
-		cc = """=?UTF-8?Q?Max_Mu=C3=9F?= <max.muss@examle.org>,
-	erp+Customer=Plus%2BCompany@example.org,
-	erp+Customer+Space%20Company@example.org,
-	erp+Customer+Space+Company+Plus+Encoded@example.org"""
-		bcc = ""
+    def test_parse_email(self):
+        to = "Jon Doe <jon.doe@example.org>"
+        cc = """=?UTF-8?Q?Max_Mu=C3=9F?= <max.muss@examle.org>,
+    erp+Customer=Plus%2BCompany@example.org,
+    erp+Customer+Space%20Company@example.org,
+    erp+Customer+Space+Company+Plus+Encoded@example.org"""
+        bcc = ""
 
-		results = list(parse_email([to, cc, bcc]))
-		self.assertEqual(
-			[
-				("Customer", "Plus+Company"),
-				("Customer", "Space Company"),
-				("Customer", "Space Company Plus Encoded"),
-			],
-			results,
-		)
+        results = list(parse_email([to, cc, bcc]))
+        self.assertEqual(
+            [
+                ("Customer", "Plus+Company"),
+                ("Customer", "Space Company"),
+                ("Customer", "Space Company Plus Encoded"),
+            ],
+            results,
+        )
 
-		results = list(parse_email([to, bcc]))
-		self.assertEqual(results, [])
+        results = list(parse_email([to, bcc]))
+        self.assertEqual(results, [])
 
-		to = "jane.doe+A+Test@example.org"
-		cc = ""
-		bcc = "=?UTF-8?Q?Max_Mu=C3=9F?= <max.muss+Note=Very%20important@examle.org>"
-		results = list(parse_email([to, cc, bcc]))
-		self.assertEqual([("A", "Test"), ("Note", "Very important")], results)
+        to = "jane.doe+A+Test@example.org"
+        cc = ""
+        bcc = "=?UTF-8?Q?Max_Mu=C3=9F?= <max.muss+Note=Very%20important@examle.org>"
+        results = list(parse_email([to, cc, bcc]))
+        self.assertEqual([("A", "Test"), ("Note", "Very important")], results)
 
-	def test_get_emails(self):
-		emails = get_emails(
-			[
-				"comm_recipient+DocType+DocName@example.com",
-				'"First, LastName" <first.lastname@email.com>',
-				"test@user.com",
-			]
-		)
+    def test_get_emails(self):
+        emails = get_emails(
+            [
+                "comm_recipient+DocType+DocName@example.com",
+                '"First, LastName" <first.lastname@email.com>',
+                "test@user.com",
+            ]
+        )
 
         self.assertEqual(emails[0], "comm_recipient+DocType+DocName@example.com")
         self.assertEqual(emails[1], "first.lastname@email.com")
@@ -282,18 +282,18 @@ class TestCommunication(IntegrationTestCase):
             base_communication
             | {
                 "content": f"""<div class="ql-editor read-mode">
-				Hi,
-				How are you?
-				</div><p></p><br><p class="signature">{signature}</p>""",
+                Hi,
+                How are you?
+                </div><p></p><br><p class="signature">{signature}</p>""",
             }
         ).insert(ignore_permissions=True)
         comm_without_signature = frappe.get_doc(
             base_communication
             | {
                 "content": """<div class="ql-editor read-mode">
-				Hi,
-				How are you?
-				</div>"""
+                Hi,
+                How are you?
+                </div>"""
             }
         ).insert(ignore_permissions=True)
 
@@ -301,46 +301,46 @@ class TestCommunication(IntegrationTestCase):
         self.assertEqual(comm_with_signature.content.count(signature), 1)
         self.assertEqual(comm_without_signature.content.count(signature), 1)
 
-	def test_mark_as_spam(self):
-		frappe.get_doc(
-			{
-				"doctype": "Email Rule",
-				"email_id": "spammer@example.com",
-				"is_spam": 1,
-			}
-		).insert(ignore_permissions=True)
+    def test_mark_as_spam(self):
+        frappe.get_doc(
+            {
+                "doctype": "Email Rule",
+                "email_id": "spammer@example.com",
+                "is_spam": 1,
+            }
+        ).insert(ignore_permissions=True)
 
-		spam_comm: Communication = frappe.get_doc(
-			{
-				"doctype": "Communication",
-				"communication_medium": "Email",
-				"subject": "This is spam",
-				"sender": "spammer@example.com",
-				"recipients": "comm_recipient@example.com",
-				"sent_or_received": "Received",
-			}
-		).insert(ignore_permissions=True)
+        spam_comm: Communication = frappe.get_doc(
+            {
+                "doctype": "Communication",
+                "communication_medium": "Email",
+                "subject": "This is spam",
+                "sender": "spammer@example.com",
+                "recipients": "comm_recipient@example.com",
+                "sent_or_received": "Received",
+            }
+        ).insert(ignore_permissions=True)
 
-		self.assertEqual(spam_comm.email_status, "Spam")
+        self.assertEqual(spam_comm.email_status, "Spam")
 
-		normal_comm: Communication = frappe.get_doc(
-			{
-				"doctype": "Communication",
-				"communication_medium": "Email",
-				"subject": "This is spam",
-				"sender": "friendlyhuman@example.com",
-				"recipients": "comm_recipient@example.com",
-				"sent_or_received": "Received",
-			}
-		).insert(ignore_permissions=True)
-		self.assertNotEqual(normal_comm.email_status, "Spam")
+        normal_comm: Communication = frappe.get_doc(
+            {
+                "doctype": "Communication",
+                "communication_medium": "Email",
+                "subject": "This is spam",
+                "sender": "friendlyhuman@example.com",
+                "recipients": "comm_recipient@example.com",
+                "sent_or_received": "Received",
+            }
+        ).insert(ignore_permissions=True)
+        self.assertNotEqual(normal_comm.email_status, "Spam")
 
 
 class TestCommunicationEmailMixin(IntegrationTestCase):
-	def new_communication(self, recipients=None, cc=None, bcc=None) -> Communication:
-		recipients = ", ".join(recipients or [])
-		cc = ", ".join(cc or [])
-		bcc = ", ".join(bcc or [])
+    def new_communication(self, recipients=None, cc=None, bcc=None) -> Communication:
+        recipients = ", ".join(recipients or [])
+        cc = ", ".join(cc or [])
+        bcc = ", ".join(bcc or [])
 
         return frappe.get_doc(
             {
@@ -406,18 +406,18 @@ class TestCommunicationEmailMixin(IntegrationTestCase):
             set_user_as="cc+1@test.com",
         )
 
-	def test_bcc(self):
-		bcc_list = [
-			"bcc+1@test.com",
-			"cc <bcc+2@test.com>",
-		]
-		user = self.new_user(email="bcc+2@test.com", enabled=0)
-		comm = self.new_communication(bcc=bcc_list)
-		res = comm.get_mail_bcc_with_displayname()
-		# Disabled users have thread_notify disabled, so they'll be removed from the list
-		self.assertCountEqual(res, bcc_list[:1])
-		user.delete()
-		comm.delete()
+    def test_bcc(self):
+        bcc_list = [
+            "bcc+1@test.com",
+            "cc <bcc+2@test.com>",
+        ]
+        user = self.new_user(email="bcc+2@test.com", enabled=0)
+        comm = self.new_communication(bcc=bcc_list)
+        res = comm.get_mail_bcc_with_displayname()
+        # Disabled users have thread_notify disabled, so they'll be removed from the list
+        self.assertCountEqual(res, bcc_list[:1])
+        user.delete()
+        comm.delete()
 
     def test_sendmail(self):
         to_list = ["to <to@test.com>"]

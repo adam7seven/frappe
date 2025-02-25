@@ -6,13 +6,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestGoogleContacts(UnitTestCase):
-	"""
-	Unit tests for GoogleContacts.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for GoogleContacts.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestGoogleContacts(IntegrationTestCase):
-	pass
+    pass

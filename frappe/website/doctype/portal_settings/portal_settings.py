@@ -18,24 +18,24 @@ class PortalSettings(Document):
             PortalMenuItem,
         )
 
-		custom_menu: DF.Table[PortalMenuItem]
-		default_portal_home: DF.Data | None
-		default_role: DF.Link | None
-		hide_standard_menu: DF.Check
-		menu: DF.Table[PortalMenuItem]
-	# end: auto-generated types
+        custom_menu: DF.Table[PortalMenuItem]
+        default_portal_home: DF.Data | None
+        default_role: DF.Link | None
+        hide_standard_menu: DF.Check
+        menu: DF.Table[PortalMenuItem]
+    # end: auto-generated types
 
-	def add_item(self, item):
-		"""insert new portal menu item if route is not set, or role is different"""
-		exists = [d for d in self.get("menu", []) if d.get("route") == item.get("route")]
-		if exists and item.get("role"):
-			if exists[0].role != item.get("role"):
-				exists[0].role = item.get("role")
-				return True
-		elif not exists:
-			item["enabled"] = 1
-			self.append("menu", item)
-			return True
+    def add_item(self, item):
+        """insert new portal menu item if route is not set, or role is different"""
+        exists = [d for d in self.get("menu", []) if d.get("route") == item.get("route")]
+        if exists and item.get("role"):
+            if exists[0].role != item.get("role"):
+                exists[0].role = item.get("role")
+                return True
+        elif not exists:
+            item["enabled"] = 1
+            self.append("menu", item)
+            return True
 
     @frappe.whitelist()
     def reset(self):
@@ -54,9 +54,9 @@ class PortalSettings(Document):
             if self.add_item(item):
                 dirty = True
 
-		self.remove_deleted_doctype_items()
-		if dirty:
-			self.save()
+        self.remove_deleted_doctype_items()
+        if dirty:
+            self.save()
 
     def on_update(self):
         self.clear_cache()

@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestDataImport(UnitTestCase):
-	"""
-	Unit tests for DataImport.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for DataImport.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestDataImport(IntegrationTestCase):
-	pass
+    pass

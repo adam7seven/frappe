@@ -47,13 +47,13 @@ class DocumentPage(BaseTemplatePage):
 
         return self.build_response(html)
 
-	@cache_html
-	def get_html(self):
-		self.doc = frappe.get_cached_doc(self.doctype, self.docid)
-		self.init_context()
-		self.update_context()
-		self.post_process_context()
-		return frappe.get_template(self.template_path).render(self.context)
+    @cache_html
+    def get_html(self):
+        self.doc = frappe.get_cached_doc(self.doctype, self.docid)
+        self.init_context()
+        self.update_context()
+        self.post_process_context()
+        return frappe.get_template(self.template_path).render(self.context)
 
     def update_context(self):
         self.context.doc = self.doc

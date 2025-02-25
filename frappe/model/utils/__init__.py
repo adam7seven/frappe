@@ -31,7 +31,7 @@ def set_default(doc, key):
 
     frappe.db.sql(
         """update `tab{}` set `is_default`=0
-		where `{}`={} and id!={}""".format(
+        where `{}`={} and id!={}""".format(
             doc.doctype, key, "%s", "%s"
         ),
         (doc.get(key), doc.id),
@@ -62,12 +62,12 @@ def render_include(content):
 
     content = cstr(content)
 
-	# try 5 levels of includes
-	for _ in range(5):
-		if "{% include" in content:
-			paths = INCLUDE_DIRECTIVE_PATTERN.findall(content)
-			if not paths:
-				raise InvalidIncludePath
+    # try 5 levels of includes
+    for _ in range(5):
+        if "{% include" in content:
+            paths = INCLUDE_DIRECTIVE_PATTERN.findall(content)
+            if not paths:
+                raise InvalidIncludePath
 
             for path in paths:
                 app, app_path = path.split("/", 1)
@@ -76,9 +76,9 @@ def render_include(content):
                     if path.endswith(".html"):
                         include = html_to_js_template(path, include)
 
-					content = re.sub(
-						rf"""{{% include\s['"]{path}['"]\s%}}""", include.replace("\\", "\\\\"), content
-					)
+                    content = re.sub(
+                        rf"""{{% include\s['"]{path}['"]\s%}}""", include.replace("\\", "\\\\"), content
+                    )
 
         else:
             break
@@ -87,7 +87,7 @@ def render_include(content):
 
 
 def get_fetch_values(doctype, fieldname, value):
-	"""Return fetch value dict for the given object.
+    """Return fetch value dict for the given object.
 
     :param doctype: Target doctype
     :param fieldname: Link fieldname selected
@@ -134,11 +134,11 @@ def get_fetch_values(doctype, fieldname, value):
 
 @site_cache()
 def is_virtual_doctype(doctype: str):
-	if frappe.flags.in_install or frappe.flags.in_migrate:
-		if frappe.db.has_column("DocType", "is_virtual"):
-			return frappe.db.get_value("DocType", doctype, "is_virtual")
-	else:
-		return getattr(frappe.get_meta(doctype), "is_virtual", False)
+    if frappe.flags.in_install or frappe.flags.in_migrate:
+        if frappe.db.has_column("DocType", "is_virtual"):
+            return frappe.db.get_value("DocType", doctype, "is_virtual")
+    else:
+        return getattr(frappe.get_meta(doctype), "is_virtual", False)
 
 
 @site_cache()
@@ -148,74 +148,74 @@ def is_single_doctype(doctype: str) -> bool:
     if doctype in DOCTYPES_FOR_DOCTYPE:
         return False
 
-	if frappe.flags.in_install or frappe.flags.in_migrate:
-		return frappe.db.get_value("DocType", doctype, "issingle")
-	else:
-		return getattr(frappe.get_meta(doctype), "issingle", False)
+    if frappe.flags.in_install or frappe.flags.in_migrate:
+        return frappe.db.get_value("DocType", doctype, "issingle")
+    else:
+        return getattr(frappe.get_meta(doctype), "issingle", False)
 
 
 def simple_singledispatch(func):
-	"""
-	A decorator that implements a simplified version of single dispatch.
+    """
+    A decorator that implements a simplified version of single dispatch.
 
-	This decorator allows you to define a generic function that can have
-	different behaviors based on the type of its first argument. It's similar
-	to Python's functools.singledispatch, but with a simpler implementation.
+    This decorator allows you to define a generic function that can have
+    different behaviors based on the type of its first argument. It's similar
+    to Python's functools.singledispatch, but with a simpler implementation.
 
-	Args:
-	    func (callable): The base function to be decorated.
+    Args:
+        func (callable): The base function to be decorated.
 
-	Returns:
-	    callable: A wrapper function that implements the single dispatch logic.
+    Returns:
+        callable: A wrapper function that implements the single dispatch logic.
 
-	The returned wrapper function has a 'register' method that can be used
-	to register type-specific implementations:
+    The returned wrapper function has a 'register' method that can be used
+    to register type-specific implementations:
 
-	@wrapper.register(specific_type)
-	def type_specific_func(arg, ...):
-	    # Implementation for specific_type
+    @wrapper.register(specific_type)
+    def type_specific_func(arg, ...):
+        # Implementation for specific_type
 
-	When the wrapped function is called, it dispatches to the most specific
-	implementation based on the type of the first argument. If no matching
-	implementation is found, it falls back to the base function.
+    When the wrapped function is called, it dispatches to the most specific
+    implementation based on the type of the first argument. If no matching
+    implementation is found, it falls back to the base function.
 
-	Example:
-	    @simple_singledispatch
-	    def func(arg):
-	        print(f"Base implementation for {type(arg)}")
+    Example:
+        @simple_singledispatch
+        def func(arg):
+            print(f"Base implementation for {type(arg)}")
 
-	    @func.register(int)
-	    def _(arg):
-	        print(f"Implementation for int: {arg}")
+        @func.register(int)
+        def _(arg):
+            print(f"Implementation for int: {arg}")
 
-	    @func.register(str)
-	    def _(arg):
-	        print(f"Implementation for str: {arg}")
+        @func.register(str)
+        def _(arg):
+            print(f"Implementation for str: {arg}")
 
-	    func(10)  # Outputs: Implementation for int: 10
-	    func("hello")  # Outputs: Implementation for str: hello
-	    func([1, 2, 3])  # Outputs: Base implementation for <class 'list'>
-	"""
-	registry = {}
+        func(10)  # Outputs: Implementation for int: 10
+        func("hello")  # Outputs: Implementation for str: hello
+        func([1, 2, 3])  # Outputs: Base implementation for <class 'list'>
+    """
+    registry = {}
 
-	def dispatch(arg):
-		for cls in arg.__class__.__mro__:
-			if cls in registry:
-				return registry[cls]
-		return func
+    def dispatch(arg):
+        for cls in arg.__class__.__mro__:
+            if cls in registry:
+                return registry[cls]
+        return func
 
-	def register(type_):
-		def decorator(f):
-			registry[type_] = f
-			return f
+    def register(type_):
+        def decorator(f):
+            registry[type_] = f
+            return f
 
-		return decorator
+        return decorator
 
-	@wraps(func)
-	def wrapper(*args, **kw):
-		if not args:
-			return func(*args, **kw)
-		return dispatch(args[0])(*args, **kw)
+    @wraps(func)
+    def wrapper(*args, **kw):
+        if not args:
+            return func(*args, **kw)
+        return dispatch(args[0])(*args, **kw)
 
-	wrapper.register = register
-	return wrapper
+    wrapper.register = register
+    return wrapper

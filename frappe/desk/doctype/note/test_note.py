@@ -6,21 +6,21 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestNote(UnitTestCase):
-	"""
-	Unit tests for Note.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for Note.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestNote(IntegrationTestCase):
-	def insert_note(self):
-		frappe.db.delete("Version")
-		frappe.db.delete("Note")
-		frappe.db.delete("Note Seen By")
+    def insert_note(self):
+        frappe.db.delete("Version")
+        frappe.db.delete("Note")
+        frappe.db.delete("Note Seen By")
 
-		return frappe.get_doc(doctype="Note", title="test note", content="test note content").insert()
+        return frappe.get_doc(doctype="Note", title="test note", content="test note content").insert()
 
     def test_version(self):
         note = self.insert_note()

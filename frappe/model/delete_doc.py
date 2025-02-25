@@ -52,12 +52,12 @@ def delete_doc(
             frappe.get_doc(doctype, id).delete()
             continue
 
-		# already deleted..?
-		if not frappe.db.exists(doctype, id):
-			if not ignore_missing:
-				raise frappe.DoesNotExistError(doctype=doctype)
-			else:
-				return False
+        # already deleted..?
+        if not frappe.db.exists(doctype, id):
+            if not ignore_missing:
+                raise frappe.DoesNotExistError(doctype=doctype)
+            else:
+                return False
 
         # delete passwords
         delete_all_passwords_for(doctype, id)
@@ -192,15 +192,15 @@ def delete_doc(
 
 
 def add_to_deleted_document(doc):
-	"""Add this document to Deleted Document table. Called after delete"""
-	if doc.doctype != "Deleted Document" and frappe.flags.in_install != "frappe":
-		frappe.get_doc(
-			doctype="Deleted Document",
-			deleted_doctype=doc.doctype,
-			deleted_id=doc.id,
-			data=doc.as_json(),
-			owner=frappe.session.user,
-		).db_insert()
+    """Add this document to Deleted Document table. Called after delete"""
+    if doc.doctype != "Deleted Document" and frappe.flags.in_install != "frappe":
+        frappe.get_doc(
+            doctype="Deleted Document",
+            deleted_doctype=doc.doctype,
+            deleted_id=doc.id,
+            data=doc.as_json(),
+            owner=frappe.session.user,
+        ).db_insert()
 
 
 def update_naming_series(doc):
@@ -255,24 +255,24 @@ def update_flags(doc, flags=None, ignore_permissions=False):
 
 
 def check_permission_and_not_submitted(doc):
-	# permission
-	if not doc.flags.ignore_permissions and frappe.session.user != "Administrator":
-		if doc.doctype == "DocType" and not doc.custom:
-			frappe.throw(_("Only the Administrator can delete a standard DocType."))
-		else:
-			doc.check_permission("delete")
+    # permission
+    if not doc.flags.ignore_permissions and frappe.session.user != "Administrator":
+        if doc.doctype == "DocType" and not doc.custom:
+            frappe.throw(_("Only the Administrator can delete a standard DocType."))
+        else:
+            doc.check_permission("delete")
 
-	# check if submitted
-	if doc.meta.is_submittable and doc.docstatus.is_submitted():
-		frappe.msgprint(
-			_("{0} {1}: Submitted Record cannot be deleted. You must {2} Cancel {3} it first.").format(
-				_(doc.doctype),
-				doc.id,
-				"<a href='https://docs.erpnext.com//docs/user/manual/en/setting-up/articles/delete-submitted-document' target='_blank'>",
-				"</a>",
-			),
-			raise_exception=True,
-		)
+    # check if submitted
+    if doc.meta.is_submittable and doc.docstatus.is_submitted():
+        frappe.msgprint(
+            _("{0} {1}: Submitted Record cannot be deleted. You must {2} Cancel {3} it first.").format(
+                _(doc.doctype),
+                doc.id,
+                "<a href='https://docs.erpnext.com//docs/user/manual/en/setting-up/articles/delete-submitted-document' target='_blank'>",
+                "</a>",
+            ),
+            raise_exception=True,
+        )
 
 
 def check_if_doc_is_linked(doc, method="Delete"):
@@ -281,36 +281,36 @@ def check_if_doc_is_linked(doc, method="Delete"):
     """
     from frappe.model.reid_doc import get_link_fields
 
-	link_fields = get_link_fields(doc.doctype)
-	ignored_doctypes = set()
+    link_fields = get_link_fields(doc.doctype)
+    ignored_doctypes = set()
 
-	if method == "Cancel" and (doc_ignore_flags := doc.get("ignore_linked_doctypes")):
-		ignored_doctypes.update(doc_ignore_flags)
-	if method == "Delete":
-		ignored_doctypes.update(frappe.get_hooks("ignore_links_on_delete"))
+    if method == "Cancel" and (doc_ignore_flags := doc.get("ignore_linked_doctypes")):
+        ignored_doctypes.update(doc_ignore_flags)
+    if method == "Delete":
+        ignored_doctypes.update(frappe.get_hooks("ignore_links_on_delete"))
 
-	for lf in link_fields:
-		link_dt, link_field, issingle = lf["parent"], lf["fieldname"], lf["issingle"]
-		if link_dt in ignored_doctypes or (link_field == "amended_from" and method == "Cancel"):
-			continue
+    for lf in link_fields:
+        link_dt, link_field, issingle = lf["parent"], lf["fieldname"], lf["issingle"]
+        if link_dt in ignored_doctypes or (link_field == "amended_from" and method == "Cancel"):
+            continue
 
-		try:
-			meta = frappe.get_meta(link_dt)
-		except frappe.DoesNotExistError:
-			frappe.clear_last_message()
-			# This mostly happens when app do not remove their customizations, we shouldn't
-			# prevent link checks from failing in those cases
-			continue
+        try:
+            meta = frappe.get_meta(link_dt)
+        except frappe.DoesNotExistError:
+            frappe.clear_last_message()
+            # This mostly happens when app do not remove their customizations, we shouldn't
+            # prevent link checks from failing in those cases
+            continue
 
-		if issingle:
-			if frappe.db.get_single_value(link_dt, link_field) == doc.id:
-				raise_link_exists_exception(doc, link_dt, link_dt)
-			continue
+        if issingle:
+            if frappe.db.get_single_value(link_dt, link_field) == doc.id:
+                raise_link_exists_exception(doc, link_dt, link_dt)
+            continue
 
-		fields = ["id", "docstatus"]
+        fields = ["id", "docstatus"]
 
-		if meta.istable:
-			fields.extend(["parent", "parenttype"])
+        if meta.istable:
+            fields.extend(["parent", "parenttype"])
 
         for item in frappe.db.get_values(
             link_dt, {link_field: doc.id}, fields, as_dict=True
@@ -319,8 +319,8 @@ def check_if_doc_is_linked(doc, method="Delete"):
             item_parent = getattr(item, "parent", None)
             linked_parent_doctype = item.parenttype if item_parent else link_dt
 
-			if linked_parent_doctype in ignored_doctypes:
-				continue
+            if linked_parent_doctype in ignored_doctypes:
+                continue
 
             if method != "Delete" and (
                 method != "Cancel" or not DocStatus(item.docstatus).is_submitted()
@@ -374,7 +374,7 @@ def check_if_doc_is_dynamically_linked(doc, method="Delete"):
             df["table"] = ", `parent`, `parenttype`, `idx`" if meta.istable else ""
             for refdoc in frappe.db.sql(
                 """select `id`, `docstatus` {table} from `tab{parent}` where
-				`{options}`=%s and `{fieldname}`=%s""".format(
+                `{options}`=%s and `{fieldname}`=%s""".format(
                     **df
                 ),
                 (doc.doctype, doc.id),
@@ -466,11 +466,11 @@ def clear_references(
 ):
     frappe.db.sql(
         f"""update
-			`tab{doctype}`
-		set
-			{reference_doctype_field}=NULL, {reference_id_field}=NULL
-		where
-			{reference_doctype_field}=%s and {reference_id_field}=%s""",  # nosec
+            `tab{doctype}`
+        set
+            {reference_doctype_field}=NULL, {reference_id_field}=NULL
+        where
+            {reference_doctype_field}=%s and {reference_id_field}=%s""",  # nosec
         (reference_doctype, reference_id),
     )
 

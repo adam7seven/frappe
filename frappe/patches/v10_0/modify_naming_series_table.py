@@ -8,4 +8,4 @@ import frappe
 
 
 def execute():
-	frappe.db.sql(""" ALTER TABLE `tabSeries` MODIFY current BIGINT """)
+    frappe.db.sql(""" ALTER TABLE `tabSeries` MODIFY current BIGINT """)

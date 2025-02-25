@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestLogSettingUser(UnitTestCase):
-	"""
-	Unit tests for LogSettingUser.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for LogSettingUser.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestLogSettingUser(IntegrationTestCase):
-	pass
+    pass

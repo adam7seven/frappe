@@ -1,10 +1,10 @@
 """Creates/Updates types in python controller when schema is updated.
 
 Design goal:
-	- Developer should be able to see schema in same file.
-	- Type checkers should assist with field names and basic validation in same file.
-	- `get_doc` outside of same file without explicit annotation is out of scope.
-	- Customizations like change of fieldtype and addition of fields are out of scope.
+    - Developer should be able to see schema in same file.
+    - Type checkers should assist with field names and basic validation in same file.
+    - `get_doc` outside of same file without explicit annotation is out of scope.
+    - Customizations like change of fieldtype and addition of fields are out of scope.
 """
 
 import ast
@@ -59,14 +59,14 @@ class TypeExporter:
         self.doctype = doc.id
         self.field_types = {}
 
-		self.imports = {"from frappe.types import DF"}
-		self.indent = "\t"
-		self.controller_path = (
-			Path(frappe.get_module_path(doc.module))
-			/ "doctype"
-			/ scrub(self.doctype)
-			/ f"{scrub(self.doctype)}.py"
-		)
+        self.imports = {"from frappe.types import DF"}
+        self.indent = "\t"
+        self.controller_path = (
+            Path(frappe.get_module_path(doc.module))
+            / "doctype"
+            / scrub(self.doctype)
+            / f"{scrub(self.doctype)}.py"
+        )
 
     def export_types(self):
         self._guess_indentation()
@@ -84,14 +84,14 @@ class TypeExporter:
             existing_block_start = code.find(first_line)
             existing_block_end = code.find(last_line) + len(last_line)
 
-			code = code[:existing_block_start] + new_code + "\n\n" + code[existing_block_end:].lstrip("\n")
-		elif class_definition in code:  # Add just after class definition
-			# Regex by default will only match till line ends, span end is when we need to stop
-			if class_def := re.search(rf"class {despaced_id}\(.*", code):  # )
-				class_definition_end = class_def.span()[1] + 1
-				code = (
-					code[:class_definition_end] + new_code + "\n\n" + code[class_definition_end:].lstrip("\n")
-				)
+            code = code[:existing_block_start] + new_code + "\n\n" + code[existing_block_end:].lstrip("\n")
+        elif class_definition in code:  # Add just after class definition
+            # Regex by default will only match till line ends, span end is when we need to stop
+            if class_def := re.search(rf"class {despaced_id}\(.*", code):  # )
+                class_definition_end = class_def.span()[1] + 1
+                code = (
+                    code[:class_definition_end] + new_code + "\n\n" + code[class_definition_end:].lstrip("\n")
+                )
 
         if self._validate_code(code):
             self.controller_path.write_text(code)
@@ -166,10 +166,10 @@ class TypeExporter:
         if field.fieldtype in non_nullable_types:
             return False
 
-		if field.not_nullable:
-			return False
+        if field.not_nullable:
+            return False
 
-		return not bool(field.reqd)
+        return not bool(field.reqd)
 
     def _generic_parameters(self, field) -> str | None:
         """If field is container type then return element type."""
@@ -182,12 +182,12 @@ class TypeExporter:
             self.imports.add(import_statment)
             return f"[{cls_name}]"
 
-		elif field.fieldtype == "Select":
-			if not field.options:
-				# Could be dynamic
-				return "[None]"
-			options = [o.strip() for o in field.options.split("\n")]
-			return json.dumps(options)
+        elif field.fieldtype == "Select":
+            if not field.options:
+                # Could be dynamic
+                return "[None]"
+            options = [o.strip() for o in field.options.split("\n")]
+            return json.dumps(options)
 
     @staticmethod
     def _validate_code(code) -> bool:

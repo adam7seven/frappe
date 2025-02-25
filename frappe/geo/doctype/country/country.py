@@ -17,23 +17,23 @@ class Country(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-		code: DF.Data
-		date_format: DF.Data | None
-		time_format: DF.Data | None
-		time_zones: DF.Text | None
-	# end: auto-generated types
+        code: DF.Data
+        date_format: DF.Data | None
+        time_format: DF.Data | None
+        time_zones: DF.Text | None
+    # end: auto-generated types
 
-	# NOTE: During installation country docs are bulk inserted.
+    # NOTE: During installation country docs are bulk inserted.
 
-	def validate(self):
-		error_msg = _("{0} is not a valid ISO 3166 ALPHA-2 code.").format(self.code)
-		try:
-			country = pycountry.countries.lookup(self.code)
-		except LookupError:
-			frappe.throw(error_msg)
+    def validate(self):
+        error_msg = _("{0} is not a valid ISO 3166 ALPHA-2 code.").format(self.code)
+        try:
+            country = pycountry.countries.lookup(self.code)
+        except LookupError:
+            frappe.throw(error_msg)
 
-		if country.alpha_2 != self.code.upper():
-			frappe.throw(error_msg)
+        if country.alpha_2 != self.code.upper():
+            frappe.throw(error_msg)
 
 
 def import_country_and_currency():

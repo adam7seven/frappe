@@ -26,9 +26,9 @@ def get(id):
 
 @frappe.whitelist(allow_guest=True)
 def getpage(id: str):
-	"""
-	Load the page from `frappe.form` and send it via `frappe.response`
-	"""
+    """
+    Load the page from `frappe.form` and send it via `frappe.response`
+    """
 
-	doc = get(id)
-	frappe.response.docs.append(doc)
+    doc = get(id)
+    frappe.response.docs.append(doc)

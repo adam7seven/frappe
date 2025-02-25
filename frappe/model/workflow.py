@@ -288,7 +288,7 @@ def _bulk_workflow_action(docids, doctype, action):
             frappe.db.commit()
         except Exception as e:
             if not frappe.message_log:
-                # Exception is	raised manually and not from msgprint or throw
+                # Exception is    raised manually and not from msgprint or throw
                 message = f"{e.__class__.__name__}"
                 if e.args:
                     message += f" : {e.args[0]}"

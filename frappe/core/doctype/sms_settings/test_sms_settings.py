@@ -4,13 +4,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestSmsSettings(UnitTestCase):
-	"""
-	Unit tests for SmsSettings.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for SmsSettings.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestSMSSettings(IntegrationTestCase):
-	pass
+    pass

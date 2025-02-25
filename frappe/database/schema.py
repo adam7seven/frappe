@@ -23,43 +23,43 @@ class DBTable:
         self.columns: dict[str, DbColumn] = {}
         self.current_columns = {}
 
-		# lists for change
-		self.add_column: list[DbColumn] = []
-		self.change_type: list[DbColumn] = []
-		self.change_name: list[DbColumn] = []
-		self.change_nullability: list[DbColumn] = []
-		self.add_unique: list[DbColumn] = []
-		self.add_index: list[DbColumn] = []
-		self.drop_unique: list[DbColumn] = []
-		self.drop_index: list[DbColumn] = []
-		self.set_default: list[DbColumn] = []
+        # lists for change
+        self.add_column: list[DbColumn] = []
+        self.change_type: list[DbColumn] = []
+        self.change_name: list[DbColumn] = []
+        self.change_nullability: list[DbColumn] = []
+        self.add_unique: list[DbColumn] = []
+        self.add_index: list[DbColumn] = []
+        self.drop_unique: list[DbColumn] = []
+        self.drop_index: list[DbColumn] = []
+        self.set_default: list[DbColumn] = []
 
         # load
         self.get_columns_from_docfields()
 
-	def sync(self):
-		if self.meta.get("is_virtual"):
-			# no schema to sync for virtual doctypes
-			return
-		if self.is_new():
-			self.create()
-		else:
-			frappe.client_cache.delete_value(f"table_columns::{self.table_name}")
-			self.alter()
+    def sync(self):
+        if self.meta.get("is_virtual"):
+            # no schema to sync for virtual doctypes
+            return
+        if self.is_new():
+            self.create()
+        else:
+            frappe.client_cache.delete_value(f"table_columns::{self.table_name}")
+            self.alter()
 
     def create(self):
         pass
 
-	def get_column_definitions(self):
-		column_list = [*frappe.db.DEFAULT_COLUMNS]
-		ret = []
-		for k in list(self.columns):
-			if k not in column_list:
-				d = self.columns[k].get_definition()
-				if d:
-					ret.append("`" + k + "` " + d)
-					column_list.append(k)
-		return ret
+    def get_column_definitions(self):
+        column_list = [*frappe.db.DEFAULT_COLUMNS]
+        ret = []
+        for k in list(self.columns):
+            if k not in column_list:
+                d = self.columns[k].get_definition()
+                if d:
+                    ret.append("`" + k + "` " + d)
+                    column_list.append(k)
+        return ret
 
     def get_index_definitions(self):
         return [
@@ -92,18 +92,18 @@ class DBTable:
             if field.get("is_virtual"):
                 continue
 
-			self.columns[field.get("fieldname")] = DbColumn(
-				table=self,
-				fieldname=field.get("fieldname"),
-				fieldtype=field.get("fieldtype"),
-				length=field.get("length"),
-				default=field.get("default"),
-				set_index=field.get("search_index"),
-				options=field.get("options"),
-				unique=field.get("unique"),
-				precision=field.get("precision"),
-				not_nullable=field.get("not_nullable"),
-			)
+            self.columns[field.get("fieldname")] = DbColumn(
+                table=self,
+                fieldname=field.get("fieldname"),
+                fieldtype=field.get("fieldtype"),
+                length=field.get("length"),
+                default=field.get("default"),
+                set_index=field.get("search_index"),
+                options=field.get("options"),
+                unique=field.get("unique"),
+                precision=field.get("precision"),
+                not_nullable=field.get("not_nullable"),
+            )
 
     def validate(self):
         """Check if change in varchar length isn't truncating the columns"""
@@ -131,27 +131,27 @@ class DBTable:
                     )
                 )
 
-			if "varchar" in frappe.db.type_map.get(col.fieldtype, ()):
-				# validate length range
-				new_length = cint(col.length) or cint(frappe.db.VARCHAR_LEN)
-				if not (1 <= new_length <= 1000):
-					frappe.throw(_("Length of {0} should be between 1 and 1000").format(col.fieldname))
+            if "varchar" in frappe.db.type_map.get(col.fieldtype, ()):
+                # validate length range
+                new_length = cint(col.length) or cint(frappe.db.VARCHAR_LEN)
+                if not (1 <= new_length <= 1000):
+                    frappe.throw(_("Length of {0} should be between 1 and 1000").format(col.fieldname))
 
-				current_col = self.current_columns.get(col.fieldname, {})
-				if not current_col:
-					continue
-				current_type = self.current_columns[col.fieldname]["type"]
-				current_length = VARCHAR_CAST_PATTERN.findall(current_type)
-				if not current_length:
-					# case when the field is no longer a varchar
-					continue
-				current_length = current_length[0]
-				if cint(current_length) != cint(new_length):
-					try:
-						# check for truncation
-						max_length = frappe.db.sql(
-							f"""SELECT MAX(CHAR_LENGTH(`{col.fieldname}`)) FROM `tab{self.doctype}`"""
-						)
+                current_col = self.current_columns.get(col.fieldname, {})
+                if not current_col:
+                    continue
+                current_type = self.current_columns[col.fieldname]["type"]
+                current_length = VARCHAR_CAST_PATTERN.findall(current_type)
+                if not current_length:
+                    # case when the field is no longer a varchar
+                    continue
+                current_length = current_length[0]
+                if cint(current_length) != cint(new_length):
+                    try:
+                        # check for truncation
+                        max_length = frappe.db.sql(
+                            f"""SELECT MAX(CHAR_LENGTH(`{col.fieldname}`)) FROM `tab{self.doctype}`"""
+                        )
 
                     except frappe.db.InternalError as e:
                         if frappe.db.is_missing_column(e):
@@ -186,80 +186,80 @@ class DBTable:
 
 
 class DbColumn:
-	def __init__(
-		self,
-		*,
-		table,
-		fieldname,
-		fieldtype,
-		length,
-		default,
-		set_index,
-		options,
-		unique,
-		precision,
-		not_nullable,
-	):
-		self.table = table
-		self.fieldname = fieldname
-		self.fieldtype = fieldtype
-		self.length = length
-		self.set_index = set_index
-		self.default = default
-		self.options = options
-		self.unique = unique
-		self.precision = precision
-		self.not_nullable = not_nullable
+    def __init__(
+        self,
+        *,
+        table,
+        fieldname,
+        fieldtype,
+        length,
+        default,
+        set_index,
+        options,
+        unique,
+        precision,
+        not_nullable,
+    ):
+        self.table = table
+        self.fieldname = fieldname
+        self.fieldtype = fieldtype
+        self.length = length
+        self.set_index = set_index
+        self.default = default
+        self.options = options
+        self.unique = unique
+        self.precision = precision
+        self.not_nullable = not_nullable
 
-	def get_definition(self, for_modification=False):
-		column_def = get_definition(
-			self.fieldtype,
-			precision=self.precision,
-			length=self.length,
-			options=self.options,
-		)
+    def get_definition(self, for_modification=False):
+        column_def = get_definition(
+            self.fieldtype,
+            precision=self.precision,
+            length=self.length,
+            options=self.options,
+        )
 
         if not column_def:
             return column_def
 
-		null = True
-		default = None
-		unique = False
+        null = True
+        default = None
+        unique = False
 
-		if self.fieldtype in ("Check", "Int"):
-			default = cint(self.default)
-			null = False
+        if self.fieldtype in ("Check", "Int"):
+            default = cint(self.default)
+            null = False
 
-		elif self.fieldtype in ("Currency", "Float", "Percent"):
-			default = flt(self.default)
-			null = False
+        elif self.fieldtype in ("Currency", "Float", "Percent"):
+            default = flt(self.default)
+            null = False
 
-		elif (
-			self.default
-			and (self.default not in frappe.db.DEFAULT_SHORTCUTS)
-			and not cstr(self.default).startswith(":")
-		):
-			default = frappe.db.escape(self.default)
+        elif (
+            self.default
+            and (self.default not in frappe.db.DEFAULT_SHORTCUTS)
+            and not cstr(self.default).startswith(":")
+        ):
+            default = frappe.db.escape(self.default)
 
-		if self.not_nullable and null:
-			if default is None:
-				default = get_not_null_defaults(self.fieldtype)
-				if isinstance(default, str):
-					default = frappe.db.escape(default)
-			null = False
+        if self.not_nullable and null:
+            if default is None:
+                default = get_not_null_defaults(self.fieldtype)
+                if isinstance(default, str):
+                    default = frappe.db.escape(default)
+            null = False
 
-		if self.unique and not for_modification and (column_def not in ("text", "longtext")):
-			unique = True
+        if self.unique and not for_modification and (column_def not in ("text", "longtext")):
+            unique = True
 
-		if not null:
-			column_def += " NOT NULL"
+        if not null:
+            column_def += " NOT NULL"
 
-		if default is not None:
-			column_def += f" DEFAULT {default}"
+        if default is not None:
+            column_def += f" DEFAULT {default}"
 
-		if unique:
-			column_def += " UNIQUE"
-		return column_def
+        if unique:
+            column_def += " UNIQUE"
+        return column_def
 
     def build_for_alter_table(self, current_def):
         column_type = get_definition(self.fieldtype, self.precision, self.length)
@@ -304,16 +304,16 @@ class DbColumn:
         ):
             self.table.set_default.append(self)
 
-		# nullability
-		if self.not_nullable is not None and (self.not_nullable != current_def["not_nullable"]):
-			self.table.change_nullability.append(self)
+        # nullability
+        if self.not_nullable is not None and (self.not_nullable != current_def["not_nullable"]):
+            self.table.change_nullability.append(self)
 
-		# index should be applied or dropped irrespective of type change
-		if (current_def["index"] and not self.set_index) and column_type not in ("text", "longtext"):
-			self.table.drop_index.append(self)
+        # index should be applied or dropped irrespective of type change
+        if (current_def["index"] and not self.set_index) and column_type not in ("text", "longtext"):
+            self.table.drop_index.append(self)
 
-		elif (not current_def["index"] and self.set_index) and column_type not in ("text", "longtext"):
-			self.table.add_index.append(self)
+        elif (not current_def["index"] and self.set_index) and column_type not in ("text", "longtext"):
+            self.table.add_index.append(self)
 
     def default_changed(self, current_def):
         if "decimal" in current_def["type"]:
@@ -380,21 +380,21 @@ def validate_column_length(fieldname):
 
 
 def get_definition(fieldtype, precision=None, length=None, *, options=None):
-	d = frappe.db.type_map.get(fieldtype)
+    d = frappe.db.type_map.get(fieldtype)
 
-	if (
-		fieldtype == "Link"
-		and options
-		# XXX: This might not trigger if referred doctype is not yet created
-		# This is largely limitation of how migration happens though.
-		# Maybe we can sort by creation and then modified?
-		and frappe.db.exists("DocType", options)
-		and frappe.get_meta(options).autoid == "UUID"
-	):
-		d = ("uuid", None)
+    if (
+        fieldtype == "Link"
+        and options
+        # XXX: This might not trigger if referred doctype is not yet created
+        # This is largely limitation of how migration happens though.
+        # Maybe we can sort by creation and then modified?
+        and frappe.db.exists("DocType", options)
+        and frappe.get_meta(options).autoid == "UUID"
+    ):
+        d = ("uuid", None)
 
-	if not d:
-		return
+    if not d:
+        return
 
     if fieldtype == "Int" and length and length > 11:
         # convert int to long int if the length of the int is greater than 11
@@ -425,12 +425,12 @@ def get_definition(fieldtype, precision=None, length=None, *, options=None):
 
 
 def add_column(doctype, column_name, fieldtype, precision=None, length=None, default=None, not_null=False):
-	frappe.db.commit()
-	query = "alter table `tab{}` add column if not exists {} {}".format(
-		doctype,
-		column_name,
-		get_definition(fieldtype, precision, length),
-	)
+    frappe.db.commit()
+    query = "alter table `tab{}` add column if not exists {} {}".format(
+        doctype,
+        column_name,
+        get_definition(fieldtype, precision, length),
+    )
 
     if not_null:
         query += " not null"

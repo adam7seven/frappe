@@ -43,18 +43,18 @@ class HelpArticle(WebsiteGenerator):
                 ]
             )
 
-	def on_update(self):
-		self.update_category()
+    def on_update(self):
+        self.update_category()
 
-	def clear_cache(self):
-		clear_knowledge_base_cache()
-		return super().clear_cache()
+    def clear_cache(self):
+        clear_knowledge_base_cache()
+        return super().clear_cache()
 
-	def update_category(self):
-		cnt = frappe.db.count("Help Article", filters={"category": self.category, "published": 1})
-		cat = frappe.get_doc("Help Category", self.category)
-		cat.help_articles = cnt
-		cat.save()
+    def update_category(self):
+        cnt = frappe.db.count("Help Article", filters={"category": self.category, "published": 1})
+        cat = frappe.get_doc("Help Category", self.category)
+        cat.help_articles = cnt
+        cat.save()
 
     def get_context(self, context):
         if is_markdown(context.content):
@@ -109,14 +109,14 @@ def get_sidebar_items():
     def _get():
         return frappe.db.sql(
             """select
-				concat(category_id, " (", help_articles, ")") as title,
-				concat('/', route) as route
-			from
-				`tabHelp Category`
-			where
-				published = 1 and help_articles > 0
-			order by
-				help_articles desc""",
+                concat(category_id, " (", help_articles, ")") as title,
+                concat('/', route) as route
+            from
+                `tabHelp Category`
+            where
+                published = 1 and help_articles > 0
+            order by
+                help_articles desc""",
             as_dict=True,
         )
 
@@ -124,8 +124,8 @@ def get_sidebar_items():
 
 
 def clear_knowledge_base_cache():
-	frappe.cache.delete_value("knowledge_base:category_sidebar")
-	frappe.cache.delete_value("knowledge_base:faq")
+    frappe.cache.delete_value("knowledge_base:category_sidebar")
+    frappe.cache.delete_value("knowledge_base:faq")
 
 
 @frappe.whitelist(allow_guest=True)

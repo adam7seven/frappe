@@ -87,7 +87,7 @@ def remove_like(doctype, id):
             )
         ],
         ignore_permissions=True,
-		force=True,
+        force=True,
     )
 
 

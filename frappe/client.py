@@ -26,19 +26,19 @@ Requests via FrappeClient are also handled here.
 
 @frappe.whitelist()
 def get_list(
-	doctype,
-	fields=None,
-	filters=None,
-	group_by=None,
-	order_by=None,
-	limit_start=None,
-	limit_page_length=20,
-	parent=None,
-	debug: bool = False,
-	as_dict: bool = True,
-	or_filters=None,
+    doctype,
+    fields=None,
+    filters=None,
+    group_by=None,
+    order_by=None,
+    limit_start=None,
+    limit_page_length=20,
+    parent=None,
+    debug: bool = False,
+    as_dict: bool = True,
+    or_filters=None,
 ):
-	"""Return a list of records by filters, fields, ordering and limit.
+    """Return a list of records by filters, fields, ordering and limit.
 
     :param doctype: DocType of the data to be queried
     :param fields: fields to be returned. Default is `id`
@@ -49,19 +49,19 @@ def get_list(
     if frappe.is_table(doctype):
         check_parent_permission(parent, doctype)
 
-	args = frappe._dict(
-		doctype=doctype,
-		parent_doctype=parent,
-		fields=fields,
-		filters=filters,
-		or_filters=or_filters,
-		group_by=group_by,
-		order_by=order_by,
-		limit_start=limit_start,
-		limit_page_length=limit_page_length,
-		debug=debug,
-		as_list=not as_dict,
-	)
+    args = frappe._dict(
+        doctype=doctype,
+        parent_doctype=parent,
+        fields=fields,
+        filters=filters,
+        or_filters=or_filters,
+        group_by=group_by,
+        order_by=order_by,
+        limit_start=limit_start,
+        limit_page_length=limit_page_length,
+        debug=debug,
+        as_list=not as_dict,
+    )
 
     validate_args(args)
     return frappe.get_list(**args)
@@ -74,7 +74,7 @@ def get_count(doctype, filters=None, debug=False, cache=False):
 
 @frappe.whitelist()
 def get(doctype, id=None, filters=None, parent=None):
-	"""Return a document by id or filters.
+    """Return a document by id or filters.
 
     :param doctype: DocType of the document to be returned
     :param id: return document of this `id`
@@ -98,7 +98,7 @@ def get(doctype, id=None, filters=None, parent=None):
 
 @frappe.whitelist()
 def get_value(doctype, fieldname, filters=None, as_dict=True, debug=False, parent=None):
-	"""Return a value from a document.
+    """Return a value from a document.
 
     :param doctype: DocType to be queried
     :param fieldname: Field to be returned (default `id`)
@@ -344,8 +344,8 @@ get_js = frappe.whitelist()(_get_js)
 
 @frappe.whitelist(allow_guest=True)
 def get_time_zone():
-	"""Return the default time zone."""
-	return {"time_zone": frappe.defaults.get_defaults().get("time_zone")}
+    """Return the default time zone."""
+    return {"time_zone": frappe.defaults.get_defaults().get("time_zone")}
 
 
 @frappe.whitelist(methods=["POST", "PUT"])
@@ -397,11 +397,11 @@ def attach_file(
 @frappe.whitelist()
 @http_cache(max_age=10 * 60)
 def is_document_amended(doctype, docid):
-	if frappe.permissions.has_permission(doctype):
-		try:
-			return frappe.db.exists(doctype, {"amended_from": docid})
-		except frappe.db.InternalError:
-			pass
+    if frappe.permissions.has_permission(doctype):
+        try:
+            return frappe.db.exists(doctype, {"amended_from": docid})
+        except frappe.db.InternalError:
+            pass
 
     return False
 
@@ -414,18 +414,18 @@ def validate_link(doctype: str, docid: str, fields=None):
     if not isinstance(docid, str):
         frappe.throw(_("Document ID must be a string"))
 
-	if doctype != "DocType":
-		parent_doctype = None
-		if frappe.get_meta(doctype).istable:  # needed for links to child rows
-			parent_doctype = frappe.db.get_value(doctype, docid, "parenttype")
-		if not (
-			frappe.has_permission(doctype, "select", parent_doctype=parent_doctype)
-			or frappe.has_permission(doctype, "read", parent_doctype=parent_doctype)
-		):
-			frappe.throw(
-				_("You do not have Read or Select Permissions for {}").format(frappe.bold(doctype)),
-				frappe.PermissionError,
-			)
+    if doctype != "DocType":
+        parent_doctype = None
+        if frappe.get_meta(doctype).istable:  # needed for links to child rows
+            parent_doctype = frappe.db.get_value(doctype, docid, "parenttype")
+        if not (
+            frappe.has_permission(doctype, "select", parent_doctype=parent_doctype)
+            or frappe.has_permission(doctype, "read", parent_doctype=parent_doctype)
+        ):
+            frappe.throw(
+                _("You do not have Read or Select Permissions for {}").format(frappe.bold(doctype)),
+                frappe.PermissionError,
+            )
 
     values = frappe._dict()
 
@@ -444,13 +444,13 @@ def validate_link(doctype: str, docid: str, fields=None):
 
     values.id = frappe.db.get_value(doctype, docid, cache=True)
 
-	fields = frappe.parse_json(fields)
-	if not values.id:
-		return values
+    fields = frappe.parse_json(fields)
+    if not values.id:
+        return values
 
-	if not fields:
-		frappe.local.response_headers.set("Cache-Control", "private,max-age=1800,stale-while-revalidate=7200")
-		return values
+    if not fields:
+        frappe.local.response_headers.set("Cache-Control", "private,max-age=1800,stale-while-revalidate=7200")
+        return values
 
     try:
         values.update(get_value(doctype, fields, docid))
@@ -468,7 +468,7 @@ def validate_link(doctype: str, docid: str, fields=None):
 
 
 def insert_doc(doc) -> "Document":
-	"""Insert document and return parent document object with appended child document if `doc` is child document else return the inserted document object.
+    """Insert document and return parent document object with appended child document if `doc` is child document else return the inserted document object.
 
     :param doc: doc to insert (dict)"""
 
@@ -496,20 +496,20 @@ def delete_doc(doctype, id):
     so that the parent doc's `on_update` is called
     """
 
-	if frappe.is_table(doctype):
-		values = frappe.db.get_value(doctype, id, ["parenttype", "parent", "parentfield"])
-		if not values:
-			raise frappe.DoesNotExistError(doctype=doctype)
+    if frappe.is_table(doctype):
+        values = frappe.db.get_value(doctype, id, ["parenttype", "parent", "parentfield"])
+        if not values:
+            raise frappe.DoesNotExistError(doctype=doctype)
 
-		parenttype, parent, parentfield = values
-		parent = frappe.get_doc(parenttype, parent)
-		if not parent.has_permission("write"):
-			raise frappe.DoesNotExistError(doctype=doctype)
+        parenttype, parent, parentfield = values
+        parent = frappe.get_doc(parenttype, parent)
+        if not parent.has_permission("write"):
+            raise frappe.DoesNotExistError(doctype=doctype)
 
-		for row in parent.get(parentfield):
-			if row.id == id:
-				parent.remove(row)
-				parent.save(ignore_permissions=True)
-				break
-	else:
-		frappe.delete_doc(doctype, id, ignore_missing=False)
+        for row in parent.get(parentfield):
+            if row.id == id:
+                parent.remove(row)
+                parent.save(ignore_permissions=True)
+                break
+    else:
+        frappe.delete_doc(doctype, id, ignore_missing=False)

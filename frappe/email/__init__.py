@@ -10,15 +10,15 @@ def sendmail_to_system_managers(subject, content):
 
 @frappe.whitelist()
 def get_contact_list(txt, page_length=20, extra_filters: str | None = None) -> list[dict]:
-	"""Return email ids for a multiselect field."""
-	if extra_filters:
-		extra_filters = frappe.parse_json(extra_filters)
+    """Return email ids for a multiselect field."""
+    if extra_filters:
+        extra_filters = frappe.parse_json(extra_filters)
 
-	filters = [
-		["Contact Email", "email_id", "is", "set"],
-	]
-	if extra_filters:
-		filters.extend(extra_filters)
+    filters = [
+        ["Contact Email", "email_id", "is", "set"],
+    ]
+    if extra_filters:
+        filters.extend(extra_filters)
 
     fields = ["first_name", "middle_name", "last_name", "company_id"]
     contacts = frappe.get_list(
@@ -46,9 +46,9 @@ def get_contact_list(txt, page_length=20, extra_filters: str | None = None) -> l
 def get_system_managers():
     return frappe.db.sql_list(
         """select parent FROM `tabHas Role`
-		WHERE role='System Manager'
-		AND parent!='Administrator'
-		AND parent IN (SELECT email FROM tabUser WHERE enabled=1)"""
+        WHERE role='System Manager'
+        AND parent!='Administrator'
+        AND parent IN (SELECT email FROM tabUser WHERE enabled=1)"""
     )
 
 
@@ -56,14 +56,14 @@ def get_system_managers():
 def relink(id, reference_doctype=None, reference_id=None):
     frappe.db.sql(
         """update
-			`tabCommunication`
-		set
-			reference_doctype = %s,
-			reference_id = %s,
-			status = "Linked"
-		where
-			communication_type = "Communication" and
-			id = %s""",
+            `tabCommunication`
+        set
+            reference_doctype = %s,
+            reference_id = %s,
+            status = "Linked"
+        where
+            communication_type = "Communication" and
+            id = %s""",
         (reference_doctype, reference_id, id),
     )
 

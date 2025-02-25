@@ -41,13 +41,13 @@ class Note(Document):
         self.print_heading = self.id
         self.sub_heading = ""
 
-	def clear_cache(self):
-		frappe.cache.delete_keys(UNSEEN_NOTES_KEY)
-		return super().clear_cache()
+    def clear_cache(self):
+        frappe.cache.delete_keys(UNSEEN_NOTES_KEY)
+        return super().clear_cache()
 
-	def mark_seen_by(self, user: str) -> None:
-		if user in [d.user for d in self.seen_by]:
-			return
+    def mark_seen_by(self, user: str) -> None:
+        if user in [d.user for d in self.seen_by]:
+            return
 
         self.append("seen_by", {"user": user})
 
@@ -67,34 +67,34 @@ def get_permission_query_conditions(user):
 
 
 def has_permission(doc, user):
-	return bool(doc.public or doc.owner == user)
+    return bool(doc.public or doc.owner == user)
 
 
 def get_unseen_notes():
-	from frappe.query_builder.terms import ParameterizedValueWrapper, SubQuery
+    from frappe.query_builder.terms import ParameterizedValueWrapper, SubQuery
 
-	def _get_unseen_notes():
-		note = frappe.qb.DocType("Note")
-		nsb = frappe.qb.DocType("Note Seen By").as_("nsb")
+    def _get_unseen_notes():
+        note = frappe.qb.DocType("Note")
+        nsb = frappe.qb.DocType("Note Seen By").as_("nsb")
 
-		return (
-			frappe.qb.from_(note)
-			.select(note.id, note.title, note.content, note.notify_on_every_login)
-			.where(
-				(note.notify_on_login == 1)
-				& (note.expire_notification_on > frappe.utils.now())
-				& (
-					ParameterizedValueWrapper(frappe.session.user).notin(
-						SubQuery(frappe.qb.from_(nsb).select(nsb.user).where(nsb.parent == note.id))
-					)
-				)
-			)
-		).run(as_dict=1)
+        return (
+            frappe.qb.from_(note)
+            .select(note.id, note.title, note.content, note.notify_on_every_login)
+            .where(
+                (note.notify_on_login == 1)
+                & (note.expire_notification_on > frappe.utils.now())
+                & (
+                    ParameterizedValueWrapper(frappe.session.user).notin(
+                        SubQuery(frappe.qb.from_(nsb).select(nsb.user).where(nsb.parent == note.id))
+                    )
+                )
+            )
+        ).run(as_dict=1)
 
-	return (
-		frappe.cache.get_value(
-			f"{UNSEEN_NOTES_KEY}{frappe.session.user}",
-			generator=_get_unseen_notes,
-		)
-		or []
-	)
+    return (
+        frappe.cache.get_value(
+            f"{UNSEEN_NOTES_KEY}{frappe.session.user}",
+            generator=_get_unseen_notes,
+        )
+        or []
+    )

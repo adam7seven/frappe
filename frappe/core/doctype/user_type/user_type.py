@@ -26,19 +26,19 @@ class UserType(Document):
         from frappe.core.doctype.user_type_module.user_type_module import UserTypeModule
         from frappe.types import DF
 
-		apply_user_permission_on: DF.Link | None
-		custom_select_doctypes: DF.Table[UserSelectDocumentType]
-		is_standard: DF.Check
-		role: DF.Link | None
-		select_doctypes: DF.Table[UserSelectDocumentType]
-		user_doctypes: DF.Table[UserDocumentType]
-		user_id_field: DF.Literal[None]
-		user_type_modules: DF.Table[UserTypeModule]
-	# end: auto-generated types
+        apply_user_permission_on: DF.Link | None
+        custom_select_doctypes: DF.Table[UserSelectDocumentType]
+        is_standard: DF.Check
+        role: DF.Link | None
+        select_doctypes: DF.Table[UserSelectDocumentType]
+        user_doctypes: DF.Table[UserDocumentType]
+        user_id_field: DF.Literal[None]
+        user_type_modules: DF.Table[UserTypeModule]
+    # end: auto-generated types
 
-	def validate(self):
-		self.set_modules()
-		self.add_select_perm_doctypes()
+    def validate(self):
+        self.set_modules()
+        self.add_select_perm_doctypes()
 
     def clear_cache(self):
         super().clear_cache()
@@ -151,17 +151,17 @@ class UserType(Document):
         if block_modules:
             user.set("block_modules", block_modules)
 
-	def add_role_permissions_for_user_doctypes(self):
-		perms = ["read", "write", "create", "submit", "cancel", "amend", "delete", "print", "email", "share"]
-		for row in self.user_doctypes:
-			docperm = add_role_permissions(row.document_type, self.role)
-			values = {perm: row.get(perm, default=0) for perm in perms}
+    def add_role_permissions_for_user_doctypes(self):
+        perms = ["read", "write", "create", "submit", "cancel", "amend", "delete", "print", "email", "share"]
+        for row in self.user_doctypes:
+            docperm = add_role_permissions(row.document_type, self.role)
+            values = {perm: row.get(perm, default=0) for perm in perms}
 
-			update_custom_docperm(docperm, values)
+            update_custom_docperm(docperm, values)
 
-	def add_select_perm_doctypes(self):
-		if frappe.flags.ignore_select_perm:
-			return
+    def add_select_perm_doctypes(self):
+        if frappe.flags.ignore_select_perm:
+            return
 
         self.select_doctypes = []
 
@@ -189,15 +189,15 @@ class UserType(Document):
             if field.options not in user_doctypes:
                 select_doctypes.append(field.options)
 
-	def add_role_permissions_for_select_doctypes(self):
-		for doctype in ["select_doctypes", "custom_select_doctypes"]:
-			for row in self.get(doctype):
-				docperm = add_role_permissions(row.document_type, self.role)
-				update_custom_docperm(docperm, {"select": 1, "read": 0, "create": 0, "write": 0})
+    def add_role_permissions_for_select_doctypes(self):
+        for doctype in ["select_doctypes", "custom_select_doctypes"]:
+            for row in self.get(doctype):
+                docperm = add_role_permissions(row.document_type, self.role)
+                update_custom_docperm(docperm, {"select": 1, "read": 0, "create": 0, "write": 0})
 
-	def add_role_permissions_for_file(self):
-		docperm = add_role_permissions("File", self.role)
-		update_custom_docperm(docperm, {"read": 1, "create": 1, "write": 1})
+    def add_role_permissions_for_file(self):
+        docperm = add_role_permissions("File", self.role)
+        update_custom_docperm(docperm, {"read": 1, "create": 1, "write": 1})
 
     def remove_permission_for_deleted_doctypes(self):
         doctypes = [d.document_type for d in self.user_doctypes]
@@ -366,12 +366,12 @@ def apply_permissions_for_non_standard_user_type(doc, method=None):
                 ["id", "user"],
             )
 
-			if not perm_data:
-				user_doc = frappe.get_cached_doc("User", doc.get(data[1]))
-				user_doc.set_roles_and_modules_based_on_user_type()
-				user_doc.update_children()
-				add_user_permission(doc.doctype, doc.id, doc.get(data[1]))
-			else:
-				user_perm = frappe.get_doc("User Permission", perm_data[0])
-				user_perm.user = doc.get(data[1])
-				user_perm.save(ignore_permissions=True)
+            if not perm_data:
+                user_doc = frappe.get_cached_doc("User", doc.get(data[1]))
+                user_doc.set_roles_and_modules_based_on_user_type()
+                user_doc.update_children()
+                add_user_permission(doc.doctype, doc.id, doc.get(data[1]))
+            else:
+                user_perm = frappe.get_doc("User Permission", perm_data[0])
+                user_perm.user = doc.get(data[1])
+                user_perm.save(ignore_permissions=True)

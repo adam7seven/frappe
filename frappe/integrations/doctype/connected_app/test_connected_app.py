@@ -52,17 +52,17 @@ def get_oauth_client():
 
 
 class UnitTestConnectedApp(UnitTestCase):
-	"""
-	Unit tests for ConnectedApp.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for ConnectedApp.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestConnectedApp(IntegrationTestCase):
-	def setUp(self):
-		"""Set up a Connected App that connects to our own oAuth provider.
+    def setUp(self):
+        """Set up a Connected App that connects to our own oAuth provider.
 
         Frappe comes with it's own oAuth2 provider that we can test against. The
         client credentials can be obtained from an "OAuth Client". All depends

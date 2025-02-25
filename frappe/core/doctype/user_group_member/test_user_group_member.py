@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestUserGroupMember(UnitTestCase):
-	"""
-	Unit tests for UserGroupMember.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for UserGroupMember.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestUserGroupMember(IntegrationTestCase):
-	pass
+    pass

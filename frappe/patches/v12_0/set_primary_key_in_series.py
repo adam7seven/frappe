@@ -7,13 +7,13 @@ def execute():
 
     duplicate_keys = frappe.db.sql(
         """
-		SELECT id, max(current) as current
-		from
-			`tabSeries`
-		group by
-			id
-		having count(id) > 1
-	""",
+        SELECT id, max(current) as current
+        from
+            `tabSeries`
+        group by
+            id
+        having count(id) > 1
+    """,
         as_dict=True,
     )
 

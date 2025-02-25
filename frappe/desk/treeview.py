@@ -15,7 +15,7 @@ def get_all_nodes(doctype, label, parent, tree_method, **filters):
 
     tree_method = frappe.get_attr(tree_method)
 
-	frappe.is_whitelisted(tree_method)
+    frappe.is_whitelisted(tree_method)
 
     data = tree_method(doctype, parent, **filters)
     out = [dict(parent=label, data=data)]
@@ -37,16 +37,16 @@ def get_all_nodes(doctype, label, parent, tree_method, **filters):
 
 @frappe.whitelist()
 def get_children(doctype, parent="", include_disabled=False, **filters):
-	if isinstance(include_disabled, str):
-		include_disabled = frappe.sbool(include_disabled)
-	return _get_children(doctype, parent, include_disabled=include_disabled)
+    if isinstance(include_disabled, str):
+        include_disabled = frappe.sbool(include_disabled)
+    return _get_children(doctype, parent, include_disabled=include_disabled)
 
 
 def _get_children(doctype, parent="", ignore_permissions=False, include_disabled=False):
-	parent_field = "parent_" + frappe.scrub(doctype)
-	filters = [[f"ifnull(`{parent_field}`,'')", "=", parent], ["docstatus", "<", 2]]
-	if frappe.db.has_column(doctype, "disabled") and not include_disabled:
-		filters.append(["disabled", "=", False])
+    parent_field = "parent_" + frappe.scrub(doctype)
+    filters = [[f"ifnull(`{parent_field}`,'')", "=", parent], ["docstatus", "<", 2]]
+    if frappe.db.has_column(doctype, "disabled") and not include_disabled:
+        filters.append(["disabled", "=", False])
 
     meta = frappe.get_meta(doctype)
 
@@ -74,16 +74,16 @@ def add_node():
 def make_tree_args(**kwarg):
     kwarg.pop("cmd", None)
 
-	doctype = kwarg["doctype"]
-	parent_field = "parent_" + frappe.scrub(doctype)
+    doctype = kwarg["doctype"]
+    parent_field = "parent_" + frappe.scrub(doctype)
 
     if kwarg["is_root"] == "false":
         kwarg["is_root"] = False
     if kwarg["is_root"] == "true":
         kwarg["is_root"] = True
 
-	parent = kwarg.get("parent") or kwarg.get(parent_field)
-	if doctype != parent:
-		kwarg.update({parent_field: parent})
+    parent = kwarg.get("parent") or kwarg.get(parent_field)
+    if doctype != parent:
+        kwarg.update({parent_field: parent})
 
     return frappe._dict(kwarg)

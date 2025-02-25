@@ -42,9 +42,9 @@ class Package(Document):
         if not all(c in allowed_characters for c in self.package_name):
             frappe.throw("Package name can only contain letters, digits and hyphens")
 
-		allowed_characters = ascii_letters + digits + "-"
-		if not all(c in allowed_characters for c in self.package_name):
-			frappe.throw("Package name can only contain letters, digits and hyphens")
+        allowed_characters = ascii_letters + digits + "-"
+        if not all(c in allowed_characters for c in self.package_name):
+            frappe.throw("Package name can only contain letters, digits and hyphens")
 
 
 @frappe.whitelist()

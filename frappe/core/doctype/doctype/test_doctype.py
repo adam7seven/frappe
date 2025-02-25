@@ -9,15 +9,15 @@ from unittest.mock import patch
 import frappe
 from frappe.cache_manager import clear_doctype_cache
 from frappe.core.doctype.doctype.doctype import (
-	CannotIndexedError,
-	DocType,
-	DoctypeLinkError,
-	HiddenAndMandatoryWithoutDefaultError,
-	IllegalMandatoryError,
-	InvalidFieldNameError,
-	UniqueFieldnameError,
-	WrongOptionsDoctypeLinkError,
-	validate_links_table_fieldnames,
+    CannotIndexedError,
+    DocType,
+    DoctypeLinkError,
+    HiddenAndMandatoryWithoutDefaultError,
+    IllegalMandatoryError,
+    InvalidFieldNameError,
+    UniqueFieldnameError,
+    WrongOptionsDoctypeLinkError,
+    validate_links_table_fieldnames,
 )
 from frappe.core.doctype.rq_job.test_rq_job import wait_for_completion
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
@@ -29,17 +29,17 @@ from frappe.utils import get_table_name
 
 
 class UnitTestDoctype(UnitTestCase):
-	"""
-	Unit tests for Doctype.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for Doctype.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestDocType(IntegrationTestCase):
-	def tearDown(self):
-		frappe.db.rollback()
+    def tearDown(self):
+        frappe.db.rollback()
 
     def test_validate_id(self):
         self.assertRaises(frappe.NameError, new_doctype("_Some DocType").insert)
@@ -69,7 +69,7 @@ class TestDocType(IntegrationTestCase):
         self.assertEqual(
             frappe.db.sql(
                 f"""select data_type FROM information_schema.columns
-				where column_name = 'id' and table_name = 'tab{self._testMethodName}'"""
+                where column_name = 'id' and table_name = 'tab{self._testMethodName}'"""
             )[0][0],
             "bigint",
         )
@@ -85,7 +85,7 @@ class TestDocType(IntegrationTestCase):
         self.assertTrue(
             frappe.db.sql(
                 f"""select * from {table_name}
-				where {conditions}"""
+                where {conditions}"""
             )
         )
 
@@ -97,7 +97,7 @@ class TestDocType(IntegrationTestCase):
         self.assertEqual(
             frappe.db.sql(
                 f"""select data_type FROM information_schema.columns
-				where column_name = 'id' and table_name = 'tab{self._testMethodName}'"""
+                where column_name = 'id' and table_name = 'tab{self._testMethodName}'"""
             )[0][0],
             "varchar" if frappe.db.db_type == "mariadb" else "character varying",
         )
@@ -225,15 +225,15 @@ class TestDocType(IntegrationTestCase):
             frappe.flags.allow_doctype_export = 1
             test_doctype.save()
 
-			# assert that field_order list is being created with the default order
-			test_doctype_json = frappe.get_file_json(path)
-			self.assertTrue(test_doctype_json.get("field_order"))
-			self.assertEqual(len(test_doctype_json["fields"]), len(test_doctype_json["field_order"]))
-			self.assertListEqual(
-				[f["fieldname"] for f in test_doctype_json["fields"]], test_doctype_json["field_order"]
-			)
-			self.assertListEqual([f["fieldname"] for f in test_doctype_json["fields"]], initial_fields_order)
-			self.assertListEqual(test_doctype_json["field_order"], initial_fields_order)
+            # assert that field_order list is being created with the default order
+            test_doctype_json = frappe.get_file_json(path)
+            self.assertTrue(test_doctype_json.get("field_order"))
+            self.assertEqual(len(test_doctype_json["fields"]), len(test_doctype_json["field_order"]))
+            self.assertListEqual(
+                [f["fieldname"] for f in test_doctype_json["fields"]], test_doctype_json["field_order"]
+            )
+            self.assertListEqual([f["fieldname"] for f in test_doctype_json["fields"]], initial_fields_order)
+            self.assertListEqual(test_doctype_json["field_order"], initial_fields_order)
 
             # remove field_order to test reload_doc/sync/migrate is backwards compatible without field_order
             del test_doctype_json["field_order"]
@@ -248,16 +248,16 @@ class TestDocType(IntegrationTestCase):
             frappe.reload_doctype(test_doctype.id, force=True)
             test_doctype.reload()
 
-			# assert that field_order list is being created with the default order again
-			test_doctype.save()
-			test_doctype_json = frappe.get_file_json(path)
-			self.assertTrue(test_doctype_json.get("field_order"))
-			self.assertEqual(len(test_doctype_json["fields"]), len(test_doctype_json["field_order"]))
-			self.assertListEqual(
-				[f["fieldname"] for f in test_doctype_json["fields"]], test_doctype_json["field_order"]
-			)
-			self.assertListEqual([f["fieldname"] for f in test_doctype_json["fields"]], initial_fields_order)
-			self.assertListEqual(test_doctype_json["field_order"], initial_fields_order)
+            # assert that field_order list is being created with the default order again
+            test_doctype.save()
+            test_doctype_json = frappe.get_file_json(path)
+            self.assertTrue(test_doctype_json.get("field_order"))
+            self.assertEqual(len(test_doctype_json["fields"]), len(test_doctype_json["field_order"]))
+            self.assertListEqual(
+                [f["fieldname"] for f in test_doctype_json["fields"]], test_doctype_json["field_order"]
+            )
+            self.assertListEqual([f["fieldname"] for f in test_doctype_json["fields"]], initial_fields_order)
+            self.assertListEqual(test_doctype_json["field_order"], initial_fields_order)
 
             # reorder fields: swap row 1 and 3
             test_doctype.fields[0], test_doctype.fields[2] = (
@@ -267,13 +267,13 @@ class TestDocType(IntegrationTestCase):
             for i, f in enumerate(test_doctype.fields):
                 f.idx = i + 1
 
-			# assert that reordering fields only affects `field_order` rather than `fields` attr
-			test_doctype.save()
-			test_doctype_json = frappe.get_file_json(path)
-			self.assertListEqual([f["fieldname"] for f in test_doctype_json["fields"]], initial_fields_order)
-			self.assertListEqual(
-				test_doctype_json["field_order"], ["field_3", "field_2", "field_1", "field_4"]
-			)
+            # assert that reordering fields only affects `field_order` rather than `fields` attr
+            test_doctype.save()
+            test_doctype_json = frappe.get_file_json(path)
+            self.assertListEqual([f["fieldname"] for f in test_doctype_json["fields"]], initial_fields_order)
+            self.assertListEqual(
+                test_doctype_json["field_order"], ["field_3", "field_2", "field_1", "field_4"]
+            )
 
             # reorder `field_order` in the json file: swap row 2 and 4
             test_doctype_json["field_order"][1], test_doctype_json["field_order"][3] = (
@@ -639,7 +639,7 @@ class TestDocType(IntegrationTestCase):
         else:
             self.fail(
                 """Shouldn't be possible to transition to/from autoincremented doctype
-				when data is present in doctype"""
+                when data is present in doctype"""
             )
         finally:
             # cleanup
@@ -839,52 +839,52 @@ class TestDocType(IntegrationTestCase):
         )
         self.assertRaises(frappe.ValidationError, recursive_dt.insert)
 
-	def test_no_recursive_fetch(self):
-		recursive_dt = new_doctype(
-			fields=[
-				{
-					"label": "User",
-					"fieldname": "user",
-					"fieldtype": "Link",
-					"fetch_from": "user.email",
-				}
-			],
-		)
-		self.assertRaises(frappe.ValidationError, recursive_dt.insert)
+    def test_no_recursive_fetch(self):
+        recursive_dt = new_doctype(
+            fields=[
+                {
+                    "label": "User",
+                    "fieldname": "user",
+                    "fieldtype": "Link",
+                    "fetch_from": "user.email",
+                }
+            ],
+        )
+        self.assertRaises(frappe.ValidationError, recursive_dt.insert)
 
-	def test_meta_serialization(self):
-		doctype = new_doctype(
-			fields=[{"fieldname": "some_fieldname", "fieldtype": "Data", "set_only_once": 1}],
-			is_submittable=1,
-		).insert()
-		doc = frappe.new_doc(doctype.name, some_fieldname="something").insert()
-		doc.save()
-		doc.submit()
-		frappe.get_meta(doctype.name).as_dict()
+    def test_meta_serialization(self):
+        doctype = new_doctype(
+            fields=[{"fieldname": "some_fieldname", "fieldtype": "Data", "set_only_once": 1}],
+            is_submittable=1,
+        ).insert()
+        doc = frappe.new_doc(doctype.name, some_fieldname="something").insert()
+        doc.save()
+        doc.submit()
+        frappe.get_meta(doctype.name).as_dict()
 
-	def test_row_compression(self):
-		if frappe.db.db_type != "mariadb":
-			return
+    def test_row_compression(self):
+        if frappe.db.db_type != "mariadb":
+            return
 
-		compressed_dt = new_doctype(row_format="Compressed").insert().name
-		dynamic_dt = new_doctype().insert().name
+        compressed_dt = new_doctype(row_format="Compressed").insert().name
+        dynamic_dt = new_doctype().insert().name
 
-		information_schema = frappe.qb.Schema("information_schema")
+        information_schema = frappe.qb.Schema("information_schema")
 
-		def get_format(dt):
-			return (
-				frappe.qb.from_(information_schema.tables)
-				.select("row_format")
-				.where(
-					(information_schema.tables.table_schema == frappe.conf.db_name)
-					& (information_schema.tables.table_name == get_table_name(dt))
-				)
-				.run()[0][0]
-				.upper()
-			)
+        def get_format(dt):
+            return (
+                frappe.qb.from_(information_schema.tables)
+                .select("row_format")
+                .where(
+                    (information_schema.tables.table_schema == frappe.conf.db_name)
+                    & (information_schema.tables.table_name == get_table_name(dt))
+                )
+                .run()[0][0]
+                .upper()
+            )
 
-		self.assertEqual(get_format(compressed_dt), "COMPRESSED")
-		self.assertEqual(get_format(dynamic_dt), "DYNAMIC")
+        self.assertEqual(get_format(compressed_dt), "COMPRESSED")
+        self.assertEqual(get_format(dynamic_dt), "DYNAMIC")
 
 
 def new_doctype(

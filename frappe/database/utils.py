@@ -25,15 +25,15 @@ NestedSetHierarchy = (
 
 
 def convert_to_value(o: FilterValue):
-	if hasattr(o, "__value__"):
-		return o.__value__()
-	if isinstance(o, bool):
-		return int(o)
-	return o
+    if hasattr(o, "__value__"):
+        return o.__value__()
+    if isinstance(o, bool):
+        return int(o)
+    return o
 
 
 def is_query_type(query: str, query_type: str | tuple[str, ...]) -> bool:
-	return query.lstrip().split(maxsplit=1)[0].lower().startswith(query_type)
+    return query.lstrip().split(maxsplit=1)[0].lower().startswith(query_type)
 
 
 def is_pypika_function_object(field: str) -> bool:
@@ -50,8 +50,8 @@ def get_doctype_id(table_name: str) -> str:
 
 
 class LazyString:
-	def _setup(self) -> str:
-		raise NotImplementedError
+    def _setup(self) -> str:
+        raise NotImplementedError
 
     @cached_property
     def value(self) -> str:
@@ -70,8 +70,8 @@ class LazyDecode(LazyString):
     def __init__(self, value: str) -> None:
         self._value = value
 
-	def _setup(self) -> str:
-		return self._value.decode()
+    def _setup(self) -> str:
+        return self._value.decode()
 
 
 class LazyMogrify(LazyString):
@@ -81,28 +81,28 @@ class LazyMogrify(LazyString):
         self.query = query
         self.values = values
 
-	def _setup(self) -> str:
-		return frappe.db.mogrify(self.query, self.values)
+    def _setup(self) -> str:
+        return frappe.db.mogrify(self.query, self.values)
 
 
 def dangerously_reconnect_on_connection_abort(func):
-	"""Reconnect on connection failure.
+    """Reconnect on connection failure.
 
-	As the name suggest, it's dangerous to use this function as it will NOT restore DB transaction
-	so make sure you're using it right.
+    As the name suggest, it's dangerous to use this function as it will NOT restore DB transaction
+    so make sure you're using it right.
 
-	Ideal use case: Some kinda logging or final steps in a background jobs. Anything more than that
-	will risk bugs from DB transactions.
-	"""
+    Ideal use case: Some kinda logging or final steps in a background jobs. Anything more than that
+    will risk bugs from DB transactions.
+    """
 
-	@wraps(func)
-	def wrapper(*args, **kwargs):
-		try:
-			return func(*args, **kwargs)
-		except Exception as e:
-			if frappe.db.is_interface_error(e) or isinstance(e, frappe.db.OperationalError):
-				frappe.db.connect()
-				return func(*args, **kwargs)
-			raise
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            if frappe.db.is_interface_error(e) or isinstance(e, frappe.db.OperationalError):
+                frappe.db.connect()
+                return func(*args, **kwargs)
+            raise
 
-	return wrapper
+    return wrapper

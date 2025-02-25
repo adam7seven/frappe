@@ -127,7 +127,7 @@ def add(parent, role, permlevel):
 
 @frappe.whitelist()
 def update(doctype: str, role: str, permlevel: int, ptype: str, value=None, if_owner=0) -> str | None:
-	"""Update role permission params.
+    """Update role permission params.
 
     Args:
             doctype (str): ID of the DocType to update params for
@@ -136,24 +136,24 @@ def update(doctype: str, role: str, permlevel: int, ptype: str, value=None, if_o
             ptype (str): permission type, example "read", "delete", etc.
             value (None, optional): value for ptype, None indicates False
 
-	Return:
-	        str: Refresh flag if permission is updated successfully
-	"""
+    Return:
+            str: Refresh flag if permission is updated successfully
+    """
 
     def clear_cache():
         frappe.clear_cache(doctype=doctype)
 
-	frappe.only_for("System Manager")
+    frappe.only_for("System Manager")
 
-	if ptype == "report" and value == "1" and if_owner == "1":
-		frappe.throw(_("Cannot set 'Report' permission if 'Only If Creator' permission is set"))
+    if ptype == "report" and value == "1" and if_owner == "1":
+        frappe.throw(_("Cannot set 'Report' permission if 'Only If Creator' permission is set"))
 
-	out = update_permission_property(doctype, role, permlevel, ptype, value, if_owner=if_owner)
+    out = update_permission_property(doctype, role, permlevel, ptype, value, if_owner=if_owner)
 
-	if ptype == "if_owner" and value == "1":
-		update_permission_property(doctype, role, permlevel, "report", "0", if_owner=value)
+    if ptype == "if_owner" and value == "1":
+        update_permission_property(doctype, role, permlevel, "report", "0", if_owner=value)
 
-	frappe.db.after_commit.add(clear_cache)
+    frappe.db.after_commit.add(clear_cache)
 
     return "refresh" if out else None
 
@@ -163,11 +163,11 @@ def remove(doctype, role, permlevel, if_owner=0):
     frappe.only_for("System Manager")
     setup_custom_perms(doctype)
 
-	custom_docperms = frappe.db.get_values(
-		"Custom DocPerm", {"parent": doctype, "role": role, "permlevel": permlevel, "if_owner": if_owner}
-	)
-	for id in custom_docperms:
-		frappe.delete_doc("Custom DocPerm", id, ignore_permissions=True, force=True)
+    custom_docperms = frappe.db.get_values(
+        "Custom DocPerm", {"parent": doctype, "role": role, "permlevel": permlevel, "if_owner": if_owner}
+    )
+    for id in custom_docperms:
+        frappe.delete_doc("Custom DocPerm", id, ignore_permissions=True, force=True)
 
     if not frappe.get_all("Custom DocPerm", {"parent": doctype}):
         frappe.throw(

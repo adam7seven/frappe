@@ -10,19 +10,19 @@ from frappe.website.doctype.blog_post.test_blog_post import make_test_blog
 
 
 class UnitTestComment(UnitTestCase):
-	"""
-	Unit tests for Comment.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for Comment.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestComment(IntegrationTestCase):
-	def test_comment_creation(self):
-		test_doc = frappe.get_doc(doctype="ToDo", description="test")
-		test_doc.insert()
-		comment = test_doc.add_comment("Comment", "test comment")
+    def test_comment_creation(self):
+        test_doc = frappe.get_doc(doctype="ToDo", description="test")
+        test_doc.insert()
+        comment = test_doc.add_comment("Comment", "test comment")
 
         test_doc.reload()
 
@@ -68,8 +68,8 @@ class TestComment(IntegrationTestCase):
 
         frappe.db.delete("Comment", {"reference_doctype": "Blog Post"})
 
-		add_comment_args.update(comment="pleez vizits my site http://mysite.com", comment_by="bad commentor")
-		add_comment(**add_comment_args)
+        add_comment_args.update(comment="pleez vizits my site http://mysite.com", comment_by="bad commentor")
+        add_comment(**add_comment_args)
 
         self.assertEqual(
             len(
@@ -104,21 +104,21 @@ class TestComment(IntegrationTestCase):
 
         test_blog.delete()
 
-	@IntegrationTestCase.change_settings("Blog Settings", {"allow_guest_to_comment": 0})
-	def test_guest_cannot_comment(self):
-		test_blog = make_test_blog()
-		with set_user("Guest"):
-			self.assertEqual(
-				add_comment(
-					comment="Good comment with 10 chars",
-					comment_email="mail@example.org",
-					comment_by="Good Tester",
-					reference_doctype="Blog Post",
-					reference_id=test_blog.id,
-					route=test_blog.route,
-				),
-				None,
-			)
+    @IntegrationTestCase.change_settings("Blog Settings", {"allow_guest_to_comment": 0})
+    def test_guest_cannot_comment(self):
+        test_blog = make_test_blog()
+        with set_user("Guest"):
+            self.assertEqual(
+                add_comment(
+                    comment="Good comment with 10 chars",
+                    comment_email="mail@example.org",
+                    comment_by="Good Tester",
+                    reference_doctype="Blog Post",
+                    reference_id=test_blog.id,
+                    route=test_blog.route,
+                ),
+                None,
+            )
 
     def test_user_not_logged_in(self):
         some_system_user = frappe.db.get_value(

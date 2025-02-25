@@ -78,8 +78,8 @@ def make(
             category=DeprecationWarning,
         )
 
-	if doctype and id:
-		frappe.has_permission(doctype, doc=id, ptype="email", throw=True)
+    if doctype and id:
+        frappe.has_permission(doctype, doc=id, ptype="email", throw=True)
 
     return _make(
         doctype=doctype,
@@ -142,30 +142,30 @@ def _make(
     cc = list_to_str(cc) if isinstance(cc, list) else cc
     bcc = list_to_str(bcc) if isinstance(bcc, list) else bcc
 
-	comm: Communication = frappe.get_doc(
-		{
-			"doctype": "Communication",
-			"subject": subject,
-			"content": content,
-			"sender": sender,
-			"sender_full_name": sender_full_name,
-			"recipients": recipients,
-			"cc": cc or None,
-			"bcc": bcc or None,
-			"communication_medium": communication_medium,
-			"sent_or_received": sent_or_received,
-			"reference_doctype": doctype,
-			"reference_id": id,
-			"email_template": email_template,
-			"message_id": get_string_between("<", get_message_id(), ">"),
-			"read_receipt": read_receipt,
-			"has_attachment": 1 if attachments else 0,
-			"communication_type": communication_type,
-			"send_after": send_after,
-		}
-	)
-	comm.flags.skip_add_signature = not add_signature
-	comm.insert(ignore_permissions=True)
+    comm: Communication = frappe.get_doc(
+        {
+            "doctype": "Communication",
+            "subject": subject,
+            "content": content,
+            "sender": sender,
+            "sender_full_name": sender_full_name,
+            "recipients": recipients,
+            "cc": cc or None,
+            "bcc": bcc or None,
+            "communication_medium": communication_medium,
+            "sent_or_received": sent_or_received,
+            "reference_doctype": doctype,
+            "reference_id": id,
+            "email_template": email_template,
+            "message_id": get_string_between("<", get_message_id(), ">"),
+            "read_receipt": read_receipt,
+            "has_attachment": 1 if attachments else 0,
+            "communication_type": communication_type,
+            "send_after": send_after,
+        }
+    )
+    comm.flags.skip_add_signature = not add_signature
+    comm.insert(ignore_permissions=True)
 
     # if not committed, delayed task doesn't find the communication
     if attachments:
@@ -182,14 +182,14 @@ def _make(
                 exc=frappe.OutgoingEmailError,
             )
 
-		comm.send_email(
-			print_html=print_html,
-			print_format=print_format,
-			send_me_a_copy=send_me_a_copy,
-			print_letterhead=print_letterhead,
-			print_language=print_language,
-			now=now,
-		)
+        comm.send_email(
+            print_html=print_html,
+            print_format=print_format,
+            send_me_a_copy=send_me_a_copy,
+            print_letterhead=print_letterhead,
+            print_language=print_language,
+            now=now,
+        )
 
     emails_not_sent_to = comm.exclude_emails_list(include_sender=send_me_a_copy)
 
@@ -197,13 +197,13 @@ def _make(
 
 
 def validate_email(doc: "Communication") -> None:
-	"""Validate Email Addresses of Recipients and CC"""
-	if (
-		doc.communication_type != "Communication"
-		or doc.communication_medium != "Email"
-		or doc.flags.in_receive
-	):
-		return
+    """Validate Email Addresses of Recipients and CC"""
+    if (
+        doc.communication_type != "Communication"
+        or doc.communication_medium != "Email"
+        or doc.flags.in_receive
+    ):
+        return
 
     # validate recipients
     for email in split_emails(doc.recipients):

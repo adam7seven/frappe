@@ -17,7 +17,7 @@ def execute():
     )
 
     message = "Email Accounts with auth method as OAuth have been disabled.\
-	Please re-setup your OAuth based email accounts with the connected app mechanism to re-enable them."
+    Please re-setup your OAuth based email accounts with the connected app mechanism to re-enable them."
 
     if sysmanagers := get_system_managers():
         make_notification_logs(

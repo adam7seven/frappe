@@ -12,21 +12,21 @@ from frappe.desk.query_report import build_xlsx_data
 from frappe.model.document import Document
 from frappe.model.iding import append_number_if_id_exists
 from frappe.utils import (
-	add_to_date,
-	cint,
-	format_time,
-	get_first_day,
-	get_first_day_of_week,
-	get_link_to_form,
-	get_quarter_start,
-	get_url_to_report,
-	get_year_start,
-	getdate,
-	global_date_format,
-	now,
-	now_datetime,
-	today,
-	validate_email_address,
+    add_to_date,
+    cint,
+    format_time,
+    get_first_day,
+    get_first_day_of_week,
+    get_link_to_form,
+    get_quarter_start,
+    get_url_to_report,
+    get_year_start,
+    getdate,
+    global_date_format,
+    now,
+    now_datetime,
+    today,
+    validate_email_address,
 )
 from frappe.utils.csvutils import to_csv
 from frappe.utils.xlsxutils import make_xlsx
@@ -98,11 +98,11 @@ class AutoEmailReport(Document):
     def validate_report_count(self):
         count = frappe.db.count("Auto Email Report", {"user": self.user, "enabled": 1})
 
-		max_reports_per_user = (
-			cint(frappe.local.conf.max_reports_per_user)  # kept for backward compatibilty
-			or cint(frappe.get_system_settings("max_auto_email_report_per_user"))
-			or 20
-		)
+        max_reports_per_user = (
+            cint(frappe.local.conf.max_reports_per_user)  # kept for backward compatibilty
+            or cint(frappe.get_system_settings("max_auto_email_report_per_user"))
+            or 20
+        )
 
         if count > max_reports_per_user + (-1 if self.flags.in_insert else 0):
             msg = _("Only {0} emailed reports are allowed per user.").format(
@@ -142,9 +142,9 @@ class AutoEmailReport(Document):
                 + "</ul>",
             )
 
-	def get_report_content(self):
-		"""Return file for the report in given format."""
-		report = frappe.get_doc("Report", self.report)
+    def get_report_content(self):
+        """Return file for the report in given format."""
+        report = frappe.get_doc("Report", self.report)
 
         self.filters = frappe.parse_json(self.filters) if self.filters else {}
 
@@ -205,9 +205,9 @@ class AutoEmailReport(Document):
         else:
             frappe.throw(_("Invalid Output Format"))
 
-	def get_html_table(self, columns=None, data=None):
-		date_time = global_date_format(now()) + " " + format_time(now())
-		report_doctype = frappe.db.get_value("Report", self.report, "ref_doctype")
+    def get_html_table(self, columns=None, data=None):
+        date_time = global_date_format(now()) + " " + format_time(now())
+        report_doctype = frappe.db.get_value("Report", self.report, "ref_doctype")
 
         return frappe.render_template(
             "frappe/templates/emails/auto_email_report.html",
@@ -233,40 +233,40 @@ class AutoEmailReport(Document):
     def prepare_dynamic_filters(self):
         self.filters = frappe.parse_json(self.filters)
 
-		to_date = today()
+        to_date = today()
 
-		if self.use_first_day_of_period:
-			from_date = to_date
-			if self.dynamic_date_period == "Daily":
-				from_date = add_to_date(to_date, days=-1)
-			elif self.dynamic_date_period == "Weekly":
-				from_date = get_first_day_of_week(from_date)
-			elif self.dynamic_date_period == "Monthly":
-				from_date = get_first_day(from_date)
-			elif self.dynamic_date_period == "Quarterly":
-				from_date = get_quarter_start(from_date)
-			elif self.dynamic_date_period == "Half Yearly":
-				from_date = get_half_year_start(from_date)
-			elif self.dynamic_date_period == "Yearly":
-				from_date = get_year_start(from_date)
+        if self.use_first_day_of_period:
+            from_date = to_date
+            if self.dynamic_date_period == "Daily":
+                from_date = add_to_date(to_date, days=-1)
+            elif self.dynamic_date_period == "Weekly":
+                from_date = get_first_day_of_week(from_date)
+            elif self.dynamic_date_period == "Monthly":
+                from_date = get_first_day(from_date)
+            elif self.dynamic_date_period == "Quarterly":
+                from_date = get_quarter_start(from_date)
+            elif self.dynamic_date_period == "Half Yearly":
+                from_date = get_half_year_start(from_date)
+            elif self.dynamic_date_period == "Yearly":
+                from_date = get_year_start(from_date)
 
-			self.set_date_filters(from_date, to_date)
-		else:
-			from_date_value = {
-				"Daily": ("days", -1),
-				"Weekly": ("weeks", -1),
-				"Monthly": ("months", -1),
-				"Quarterly": ("months", -3),
-				"Half Yearly": ("months", -6),
-				"Yearly": ("years", -1),
-			}[self.dynamic_date_period]
+            self.set_date_filters(from_date, to_date)
+        else:
+            from_date_value = {
+                "Daily": ("days", -1),
+                "Weekly": ("weeks", -1),
+                "Monthly": ("months", -1),
+                "Quarterly": ("months", -3),
+                "Half Yearly": ("months", -6),
+                "Yearly": ("years", -1),
+            }[self.dynamic_date_period]
 
-			from_date = add_to_date(to_date, **{from_date_value[0]: from_date_value[1]})
-			self.set_date_filters(from_date, to_date)
+            from_date = add_to_date(to_date, **{from_date_value[0]: from_date_value[1]})
+            self.set_date_filters(from_date, to_date)
 
-	def set_date_filters(self, from_date, to_date):
-		self.filters[self.from_date_field] = from_date
-		self.filters[self.to_date_field] = to_date
+    def set_date_filters(self, from_date, to_date):
+        self.filters[self.from_date_field] = from_date
+        self.filters[self.to_date_field] = to_date
 
     def send(self):
         if self.filter_meta and not self.filters:
@@ -282,8 +282,8 @@ class AutoEmailReport(Document):
         else:
             message = self.get_html_table()
 
-		if self.format != "HTML":
-			attachments = [{"fname": self.get_file_name(), "fcontent": data}]
+        if self.format != "HTML":
+            attachments = [{"fname": self.get_file_name(), "fcontent": data}]
 
         frappe.sendmail(
             recipients=self.email_to.split(),

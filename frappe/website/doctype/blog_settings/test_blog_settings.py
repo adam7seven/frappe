@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestBlogSettings(UnitTestCase):
-	"""
-	Unit tests for BlogSettings.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for BlogSettings.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestBlogSettings(IntegrationTestCase):
-	pass
+    pass

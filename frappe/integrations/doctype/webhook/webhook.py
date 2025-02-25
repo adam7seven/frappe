@@ -33,42 +33,42 @@ class Webhook(Document):
         )
         from frappe.types import DF
 
-		background_jobs_queue: DF.Autocomplete | None
-		condition: DF.SmallText | None
-		enable_security: DF.Check
-		enabled: DF.Check
-		is_dynamic_url: DF.Check
-		request_method: DF.Literal["POST", "PUT", "DELETE"]
-		request_structure: DF.Literal["", "Form URL-Encoded", "JSON"]
-		request_url: DF.SmallText
-		timeout: DF.Int
-		webhook_data: DF.Table[WebhookData]
-		webhook_docevent: DF.Literal[
-			"after_insert",
-			"on_update",
-			"on_submit",
-			"on_cancel",
-			"on_trash",
-			"on_update_after_submit",
-			"on_change",
-		]
-		webhook_doctype: DF.Link
-		webhook_headers: DF.Table[WebhookHeader]
-		webhook_json: DF.Code | None
-		webhook_secret: DF.Password | None
-	# end: auto-generated types
+        background_jobs_queue: DF.Autocomplete | None
+        condition: DF.SmallText | None
+        enable_security: DF.Check
+        enabled: DF.Check
+        is_dynamic_url: DF.Check
+        request_method: DF.Literal["POST", "PUT", "DELETE"]
+        request_structure: DF.Literal["", "Form URL-Encoded", "JSON"]
+        request_url: DF.SmallText
+        timeout: DF.Int
+        webhook_data: DF.Table[WebhookData]
+        webhook_docevent: DF.Literal[
+            "after_insert",
+            "on_update",
+            "on_submit",
+            "on_cancel",
+            "on_trash",
+            "on_update_after_submit",
+            "on_change",
+        ]
+        webhook_doctype: DF.Link
+        webhook_headers: DF.Table[WebhookHeader]
+        webhook_json: DF.Code | None
+        webhook_secret: DF.Password | None
+    # end: auto-generated types
 
-	def validate(self):
-		self.validate_docevent()
-		self.validate_condition()
-		self.validate_request_url()
-		self.validate_request_body()
-		self.validate_repeating_fields()
-		self.validate_secret()
-		self.preview_document = None
+    def validate(self):
+        self.validate_docevent()
+        self.validate_condition()
+        self.validate_request_url()
+        self.validate_request_body()
+        self.validate_repeating_fields()
+        self.validate_secret()
+        self.preview_document = None
 
-	def on_update(self):
-		frappe.client_cache.delete_value("webhooks")
+    def on_update(self):
+        frappe.client_cache.delete_value("webhooks")
 
     def validate_docevent(self):
         if self.webhook_doctype:
@@ -121,26 +121,26 @@ class Webhook(Document):
             except Exception:
                 frappe.throw(_("Invalid Webhook Secret"))
 
-	@frappe.whitelist()
-	def preview_meets_condition(self, preview_document):
-		if not self.condition:
-			return _("Yes")
-		try:
-			doc = frappe.get_cached_doc(self.webhook_doctype, preview_document)
-			met_condition = frappe.safe_eval(self.condition, eval_locals=get_context(doc))
-		except Exception as e:
-			frappe.local.message_log = []
-			return _("Failed to evaluate conditions: {}").format(e)
-		return _("Yes") if met_condition else _("No")
+    @frappe.whitelist()
+    def preview_meets_condition(self, preview_document):
+        if not self.condition:
+            return _("Yes")
+        try:
+            doc = frappe.get_cached_doc(self.webhook_doctype, preview_document)
+            met_condition = frappe.safe_eval(self.condition, eval_locals=get_context(doc))
+        except Exception as e:
+            frappe.local.message_log = []
+            return _("Failed to evaluate conditions: {}").format(e)
+        return _("Yes") if met_condition else _("No")
 
-	@frappe.whitelist()
-	def preview_request_body(self, preview_document):
-		try:
-			doc = frappe.get_cached_doc(self.webhook_doctype, preview_document)
-			return frappe.as_json(get_webhook_data(doc, self))
-		except Exception as e:
-			frappe.local.message_log = []
-			return _("Failed to compute request body: {}").format(e)
+    @frappe.whitelist()
+    def preview_request_body(self, preview_document):
+        try:
+            doc = frappe.get_cached_doc(self.webhook_doctype, preview_document)
+            return frappe.as_json(get_webhook_data(doc, self))
+        except Exception as e:
+            frappe.local.message_log = []
+            return _("Failed to compute request body: {}").format(e)
 
 
 def get_context(doc):
@@ -157,10 +157,10 @@ def enqueue_webhook(doc, webhook) -> None:
         headers = get_webhook_headers(doc, webhook)
         data = get_webhook_data(doc, webhook)
 
-	except Exception as e:
-		frappe.logger().debug({"enqueue_webhook_error": e})
-		log_request(webhook.id, doc.doctype, doc.id, request_url, headers, data)
-		return
+    except Exception as e:
+        frappe.logger().debug({"enqueue_webhook_error": e})
+        log_request(webhook.id, doc.doctype, doc.id, request_url, headers, data)
+        return
 
     for i in range(3):
         try:
@@ -189,28 +189,28 @@ def enqueue_webhook(doc, webhook) -> None:
 
 
 def log_request(
-	webhook: str,
-	doctype: str,
-	docid: str,
-	url: str,
-	headers: dict,
-	data: dict,
-	res: requests.Response | None = None,
+    webhook: str,
+    doctype: str,
+    docid: str,
+    url: str,
+    headers: dict,
+    data: dict,
+    res: requests.Response | None = None,
 ):
-	request_log = frappe.get_doc(
-		{
-			"doctype": "Webhook Request Log",
-			"webhook": webhook,
-			"reference_doctype": doctype,
-			"reference_document": docid,
-			"user": frappe.session.user if frappe.session.user else None,
-			"url": url,
-			"headers": frappe.as_json(headers) if headers else None,
-			"data": frappe.as_json(data) if data else None,
-			"response": res.text if res is not None else None,
-			"error": frappe.get_traceback(),
-		}
-	)
+    request_log = frappe.get_doc(
+        {
+            "doctype": "Webhook Request Log",
+            "webhook": webhook,
+            "reference_doctype": doctype,
+            "reference_document": docid,
+            "user": frappe.session.user if frappe.session.user else None,
+            "url": url,
+            "headers": frappe.as_json(headers) if headers else None,
+            "data": frappe.as_json(data) if data else None,
+            "response": res.text if res is not None else None,
+            "error": frappe.get_traceback(),
+        }
+    )
 
     request_log.save(ignore_permissions=True)
 

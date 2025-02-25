@@ -9,24 +9,24 @@ from frappe.website.serve import get_response
 
 
 class UnitTestWebTemplate(UnitTestCase):
-	"""
-	Unit tests for WebTemplate.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for WebTemplate.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestWebTemplate(IntegrationTestCase):
-	def test_render_web_template_with_values(self):
-		doc = frappe.get_doc("Web Template", "Hero with Right Image")
-		values = {
-			"title": "Test Hero",
-			"subtitle": "Test subtitle content",
-			"primary_action": "/test",
-			"primary_action_label": "Test Button",
-		}
-		html = doc.render(values)
+    def test_render_web_template_with_values(self):
+        doc = frappe.get_doc("Web Template", "Hero with Right Image")
+        values = {
+            "title": "Test Hero",
+            "subtitle": "Test subtitle content",
+            "primary_action": "/test",
+            "primary_action_label": "Test Button",
+        }
+        html = doc.render(values)
 
         soup = BeautifulSoup(html, "html.parser")
         heading = soup.find("h1")

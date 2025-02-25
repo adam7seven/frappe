@@ -215,9 +215,9 @@ def sync(g_calendar=None):
 
 
 def get_google_calendar_object(g_calendar):
-	"""Return an object of Google Calendar along with Google Calendar doc."""
-	google_settings = frappe.get_doc("Google Settings")
-	account = frappe.get_doc("Google Calendar", g_calendar)
+    """Return an object of Google Calendar along with Google Calendar doc."""
+    google_settings = frappe.get_doc("Google Settings")
+    account = frappe.get_doc("Google Calendar", g_calendar)
 
     credentials_dict = {
         "token": account.get_access_token(),
@@ -247,41 +247,41 @@ def get_google_calendar_object(g_calendar):
 
 
 def check_google_calendar(account, google_calendar):
-	"""
-	Checks if Google Calendar is present with the specified id.
-	If not, creates one.
-	"""
-	account.load_from_db()
-	try:
-		if account.google_calendar_id:
-			google_calendar.calendars().get(calendarId=account.google_calendar_id).execute()
-		else:
-			# If no Calendar ID create a new Calendar
-			calendar = {
-				"summary": account.id,
-				"timeZone": frappe.get_system_settings("time_zone"),
-			}
-			created_calendar = google_calendar.calendars().insert(body=calendar).execute()
-			frappe.db.set_value(
-				"Google Calendar", account.id, "google_calendar_id", created_calendar.get("id")
-			)
-			frappe.db.commit()
-	except HttpError as err:
-		frappe.throw(
-			_("Google Calendar - Could not create Calendar for {0}, error code {1}.").format(
-				account.id, err.resp.status
-			)
-		)
+    """
+    Checks if Google Calendar is present with the specified id.
+    If not, creates one.
+    """
+    account.load_from_db()
+    try:
+        if account.google_calendar_id:
+            google_calendar.calendars().get(calendarId=account.google_calendar_id).execute()
+        else:
+            # If no Calendar ID create a new Calendar
+            calendar = {
+                "summary": account.id,
+                "timeZone": frappe.get_system_settings("time_zone"),
+            }
+            created_calendar = google_calendar.calendars().insert(body=calendar).execute()
+            frappe.db.set_value(
+                "Google Calendar", account.id, "google_calendar_id", created_calendar.get("id")
+            )
+            frappe.db.commit()
+    except HttpError as err:
+        frappe.throw(
+            _("Google Calendar - Could not create Calendar for {0}, error code {1}.").format(
+                account.id, err.resp.status
+            )
+        )
 
 
 def sync_events_from_google_calendar(g_calendar, method=None):
-	"""Sync Events from Google Calendar in Framework Calendar.
+    """Sync Events from Google Calendar in Framework Calendar.
 
-	Google Calendar returns nextSyncToken when all the events in Google Calendar are fetched.
-	nextSyncToken is returned at the very last page
-	https://developers.google.com/calendar/v3/sync
-	"""
-	google_calendar, account = get_google_calendar_object(g_calendar)
+    Google Calendar returns nextSyncToken when all the events in Google Calendar are fetched.
+    nextSyncToken is returned at the very last page
+    https://developers.google.com/calendar/v3/sync
+    """
+    google_calendar, account = get_google_calendar_object(g_calendar)
 
     if not account.pull_from_google_calendar:
         return
@@ -748,11 +748,11 @@ def format_date_according_to_google_calendar(all_day, starts_on, ends_on=None):
 
 
 def parse_google_calendar_recurrence_rule(repeat_day_week_number, repeat_day_name):
-	"""Return (repeat_on) exact date for combination eg 4TH viz. 4th thursday of a month."""
-	if repeat_day_week_number < 0:
-		# Consider a month with 5 weeks and event is to be repeated in last week of every month, google caledar considers
-		# a month has 4 weeks and hence it'll return -1 for a month with 5 weeks.
-		repeat_day_week_number = 4
+    """Return (repeat_on) exact date for combination eg 4TH viz. 4th thursday of a month."""
+    if repeat_day_week_number < 0:
+        # Consider a month with 5 weeks and event is to be repeated in last week of every month, google caledar considers
+        # a month has 4 weeks and hence it'll return -1 for a month with 5 weeks.
+        repeat_day_week_number = 4
 
     weekdays = get_weekdays()
     current_date = now_datetime()
@@ -783,9 +783,9 @@ def parse_google_calendar_recurrence_rule(repeat_day_week_number, repeat_day_nam
 
 
 def repeat_on_to_google_calendar_recurrence_rule(doc):
-	"""Return event (repeat_on) in Google Calendar format ie RRULE:FREQ=WEEKLY;BYDAY=MO,TU,TH."""
-	recurrence = framework_frequencies.get(doc.repeat_on)
-	weekdays = get_weekdays()
+    """Return event (repeat_on) in Google Calendar format ie RRULE:FREQ=WEEKLY;BYDAY=MO,TU,TH."""
+    recurrence = framework_frequencies.get(doc.repeat_on)
+    weekdays = get_weekdays()
 
     if doc.repeat_on == "Weekly":
         byday = [
@@ -801,11 +801,11 @@ def repeat_on_to_google_calendar_recurrence_rule(doc):
 
 
 def get_week_number(dt):
-	"""Return the week number of the month for the specified date.
+    """Return the week number of the month for the specified date.
 
-	https://stackoverflow.com/questions/3806473/python-week-number-of-the-month/16804556
-	"""
-	from math import ceil
+    https://stackoverflow.com/questions/3806473/python-week-number-of-the-month/16804556
+    """
+    from math import ceil
 
     first_day = dt.replace(day=1)
 
@@ -843,8 +843,8 @@ def get_conference_data(doc):
 
 
 def get_attendees(doc):
-	"""Return a list of dicts with attendee emails, if available in event_participants table."""
-	attendees, email_not_found = [], []
+    """Return a list of dicts with attendee emails, if available in event_participants table."""
+    attendees, email_not_found = [], []
 
     for participant in doc.event_participants:
         if participant.get("email"):
@@ -869,80 +869,80 @@ def get_attendees(doc):
 
 
 """API Response
-	{
-		'kind': 'calendar#events',
-		'etag': '"etag"',
-		'summary': 'Test Calendar',
-		'updated': '2019-07-25T06:09:34.681Z',
-		'timeZone': 'Asia/Kolkata',
-		'accessRole': 'owner',
-		'defaultReminders': [],
-		'nextSyncToken': 'token',
-		'items': [
-			{
-				'kind': 'calendar#event',
-				'etag': '"etag"',
-				'id': 'id',
-				'status': 'confirmed' or 'cancelled',
-				'htmlLink': 'link',
-				'created': '2019-07-25T06:08:21.000Z',
-				'updated': '2019-07-25T06:09:34.681Z',
-				'summary': 'asdf',
-				'creator': {
-					'email': 'email'
-				},
-				'organizer': {
-					'email': 'email',
-					'displayName': 'Test Calendar',
-					'self': True
-				},
-				'start': {
-					'dateTime': '2019-07-27T12:00:00+05:30', (if all day event the its 'date' instead of 'dateTime')
-					'timeZone': 'Asia/Kolkata'
-				},
-				'end': {
-					'dateTime': '2019-07-27T13:00:00+05:30', (if all day event the its 'date' instead of 'dateTime')
-					'timeZone': 'Asia/Kolkata'
-				},
-				'recurrence': *recurrence,
-				'iCalUID': 'uid',
-				'sequence': 1,
-				'hangoutLink': 'https://meet.google.com/mee-ting-uri',
-				'conferenceData': {
-					'createRequest': {
-						'requestId': 'EV00001',
-						'conferenceSolutionKey': {
-							'type': 'hangoutsMeet'
-						},
-						'status': {
-							'statusCode': 'success'
-						}
-					},
-					'entryPoints': [
-						{
-							'entryPointType': 'video',
-							'uri': 'https://meet.google.com/mee-ting-uri',
-							'label': 'meet.google.com/mee-ting-uri'
-						}
-					],
-					'conferenceSolution': {
-						'key': {
-							'type': 'hangoutsMeet'
-						},
-						'id': 'Google Meet',
-						'iconUri': 'https://fonts.gstatic.com/s/i/productlogos/meet_2020q4/v6/web-512dp/logo_meet_2020q4_color_2x_web_512dp.png'
-					},
-					'conferenceId': 'mee-ting-uri'
-				'reminders': {
-					'useDefault': True
-				}
-			}
-		]
-	}
-	*recurrence
-		- Daily Event: ['RRULE:FREQ=DAILY']
-		- Weekly Event: ['RRULE:FREQ=WEEKLY;BYDAY=MO,TU,TH']
-		- Monthly Event: ['RRULE:FREQ=MONTHLY;BYDAY=4TH']
-			- BYDAY: -2, -1, 1, 2, 3, 4 with weekdays (-2 edge case for April 2017 had 6 weeks in a month)
-		- Yearly Event: ['RRULE:FREQ=YEARLY;']
-		- Custom Event: ['RRULE:FREQ=WEEKLY;WKST=SU;UNTIL=20191028;BYDAY=MO,WE']"""
+    {
+        'kind': 'calendar#events',
+        'etag': '"etag"',
+        'summary': 'Test Calendar',
+        'updated': '2019-07-25T06:09:34.681Z',
+        'timeZone': 'Asia/Kolkata',
+        'accessRole': 'owner',
+        'defaultReminders': [],
+        'nextSyncToken': 'token',
+        'items': [
+            {
+                'kind': 'calendar#event',
+                'etag': '"etag"',
+                'id': 'id',
+                'status': 'confirmed' or 'cancelled',
+                'htmlLink': 'link',
+                'created': '2019-07-25T06:08:21.000Z',
+                'updated': '2019-07-25T06:09:34.681Z',
+                'summary': 'asdf',
+                'creator': {
+                    'email': 'email'
+                },
+                'organizer': {
+                    'email': 'email',
+                    'displayName': 'Test Calendar',
+                    'self': True
+                },
+                'start': {
+                    'dateTime': '2019-07-27T12:00:00+05:30', (if all day event the its 'date' instead of 'dateTime')
+                    'timeZone': 'Asia/Kolkata'
+                },
+                'end': {
+                    'dateTime': '2019-07-27T13:00:00+05:30', (if all day event the its 'date' instead of 'dateTime')
+                    'timeZone': 'Asia/Kolkata'
+                },
+                'recurrence': *recurrence,
+                'iCalUID': 'uid',
+                'sequence': 1,
+                'hangoutLink': 'https://meet.google.com/mee-ting-uri',
+                'conferenceData': {
+                    'createRequest': {
+                        'requestId': 'EV00001',
+                        'conferenceSolutionKey': {
+                            'type': 'hangoutsMeet'
+                        },
+                        'status': {
+                            'statusCode': 'success'
+                        }
+                    },
+                    'entryPoints': [
+                        {
+                            'entryPointType': 'video',
+                            'uri': 'https://meet.google.com/mee-ting-uri',
+                            'label': 'meet.google.com/mee-ting-uri'
+                        }
+                    ],
+                    'conferenceSolution': {
+                        'key': {
+                            'type': 'hangoutsMeet'
+                        },
+                        'id': 'Google Meet',
+                        'iconUri': 'https://fonts.gstatic.com/s/i/productlogos/meet_2020q4/v6/web-512dp/logo_meet_2020q4_color_2x_web_512dp.png'
+                    },
+                    'conferenceId': 'mee-ting-uri'
+                'reminders': {
+                    'useDefault': True
+                }
+            }
+        ]
+    }
+    *recurrence
+        - Daily Event: ['RRULE:FREQ=DAILY']
+        - Weekly Event: ['RRULE:FREQ=WEEKLY;BYDAY=MO,TU,TH']
+        - Monthly Event: ['RRULE:FREQ=MONTHLY;BYDAY=4TH']
+            - BYDAY: -2, -1, 1, 2, 3, 4 with weekdays (-2 edge case for April 2017 had 6 weeks in a month)
+        - Yearly Event: ['RRULE:FREQ=YEARLY;']
+        - Custom Event: ['RRULE:FREQ=WEEKLY;WKST=SU;UNTIL=20191028;BYDAY=MO,WE']"""

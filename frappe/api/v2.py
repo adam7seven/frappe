@@ -3,9 +3,9 @@
 This file defines routes and implementation for REST API.
 
 Note:
-	- All functions in this file should be treated as "whitelisted" as they are exposed via routes
-	- None of the functions present here should be called from python code, their location and
-	  internal implementation can change without treating it as "breaking change".
+    - All functions in this file should be treated as "whitelisted" as they are exposed via routes
+    - None of the functions present here should be called from python code, their location and
+      internal implementation can change without treating it as "breaking change".
 """
 
 import json
@@ -98,14 +98,14 @@ def create_doc(doctype: str):
 
 
 def copy_doc(doctype: str, id: str, ignore_no_copy: bool = True):
-	"""Return a clean copy of the given document that can be modified and posted as a new document."""
-	doc = frappe.get_doc(doctype, id)
-	doc.check_permission("read")
-	doc.apply_fieldlevel_read_permissions()
+    """Return a clean copy of the given document that can be modified and posted as a new document."""
+    doc = frappe.get_doc(doctype, id)
+    doc.check_permission("read")
+    doc.apply_fieldlevel_read_permissions()
 
-	copy = frappe.copy_doc(doc, ignore_no_copy=ignore_no_copy)
+    copy = frappe.copy_doc(doc, ignore_no_copy=ignore_no_copy)
 
-	return copy.as_dict(no_private_properties=True, no_nulls=True)
+    return copy.as_dict(no_private_properties=True, no_nulls=True)
 
 def update_doc(doctype: str, id: str):
     data = frappe.form_dict

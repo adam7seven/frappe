@@ -4,13 +4,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestPatchLog(UnitTestCase):
-	"""
-	Unit tests for PatchLog.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for PatchLog.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestPatchLog(IntegrationTestCase):
-	pass
+    pass

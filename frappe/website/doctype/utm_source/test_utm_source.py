@@ -6,13 +6,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestUtmSource(UnitTestCase):
-	"""
-	Unit tests for UtmSource.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for UtmSource.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestUTMSource(IntegrationTestCase):
-	pass
+    pass

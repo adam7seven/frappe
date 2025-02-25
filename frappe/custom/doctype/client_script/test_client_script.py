@@ -4,13 +4,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestClientScript(UnitTestCase):
-	"""
-	Unit tests for ClientScript.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for ClientScript.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestClientScript(IntegrationTestCase):
-	pass
+    pass

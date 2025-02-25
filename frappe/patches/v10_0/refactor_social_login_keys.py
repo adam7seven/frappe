@@ -27,16 +27,16 @@ def execute():
             facebook_login_key.enable_social_login = 0
         facebook_login_key.save()
 
-	if social_login_keys.get("frappe_server_url"):
-		frappe_login_key = frappe.new_doc("Social Login Key")
-		frappe_login_key.get_social_login_provider("Frappe", initialize=True)
-		frappe_login_key.social_login_provider = "Frappe"
-		frappe_login_key.base_url = social_login_keys.get("frappe_server_url")
-		frappe_login_key.client_id = social_login_keys.get("frappe_client_id")
-		frappe_login_key.client_secret = social_login_keys.get("frappe_client_secret")
-		if not (frappe_login_key.client_secret and frappe_login_key.client_id and frappe_login_key.base_url):
-			frappe_login_key.enable_social_login = 0
-		frappe_login_key.save()
+    if social_login_keys.get("frappe_server_url"):
+        frappe_login_key = frappe.new_doc("Social Login Key")
+        frappe_login_key.get_social_login_provider("Frappe", initialize=True)
+        frappe_login_key.social_login_provider = "Frappe"
+        frappe_login_key.base_url = social_login_keys.get("frappe_server_url")
+        frappe_login_key.client_id = social_login_keys.get("frappe_client_id")
+        frappe_login_key.client_secret = social_login_keys.get("frappe_client_secret")
+        if not (frappe_login_key.client_secret and frappe_login_key.client_id and frappe_login_key.base_url):
+            frappe_login_key.enable_social_login = 0
+        frappe_login_key.save()
 
     if social_login_keys.get("github_client_id") or social_login_keys.get(
         "github_client_secret"
@@ -138,8 +138,8 @@ def insert_user_social_login(
         values.append(username)
 
     query = """INSERT INTO `tabUser Social Login` (`{source_cols}`)
-		VALUES ({values})
-	""".format(
+        VALUES ({values})
+    """.format(
         source_cols="`, `".join(source_cols),
         values=", ".join([frappe.db.escape(d) for d in values]),
     )

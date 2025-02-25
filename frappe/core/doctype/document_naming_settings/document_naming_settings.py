@@ -26,26 +26,26 @@ class DocumentNamingSettings(Document):
         )
         from frappe.types import DF
 
-		amend_naming_override: DF.Table[AmendedDocumentNamingSettings]
-		current_value: DF.Int
-		default_amend_naming: DF.Literal["Amend Counter", "Default Naming"]
-		naming_series_options: DF.Text | None
-		prefix: DF.Autocomplete | None
-		series_preview: DF.Text | None
-		transaction_type: DF.Autocomplete | None
-		try_naming_series: DF.Data | None
-		user_must_always_select: DF.Check
-	# end: auto-generated types
+        amend_naming_override: DF.Table[AmendedDocumentNamingSettings]
+        current_value: DF.Int
+        default_amend_naming: DF.Literal["Amend Counter", "Default Naming"]
+        naming_series_options: DF.Text | None
+        prefix: DF.Autocomplete | None
+        series_preview: DF.Text | None
+        transaction_type: DF.Autocomplete | None
+        try_naming_series: DF.Data | None
+        user_must_always_select: DF.Check
+    # end: auto-generated types
 
-	@frappe.whitelist()
-	def get_transactions_and_prefixes(self):
-		transactions = self._get_transactions()
-		prefixes = self._get_prefixes(transactions)
+    @frappe.whitelist()
+    def get_transactions_and_prefixes(self):
+        transactions = self._get_transactions()
+        prefixes = self._get_prefixes(transactions)
 
         return {"transactions": transactions, "prefixes": prefixes}
 
-	def _get_transactions(self) -> list[str]:
-		readable_doctypes = set(get_doctypes_with_read())
+    def _get_transactions(self) -> list[str]:
+        readable_doctypes = set(get_doctypes_with_read())
 
         standard = frappe.get_all("DocField", {"fieldname": "naming_series"}, "parent", pluck="parent")
         custom = frappe.get_all("Custom Field", {"fieldname": "naming_series"}, "dt", pluck="dt")
@@ -128,8 +128,8 @@ class DocumentNamingSettings(Document):
         for series in options:
             self.validate_series_id(series)
 
-		if options and self.user_must_always_select:
-			options = ["", *options]
+        if options and self.user_must_always_select:
+            options = ["", *options]
 
         default = options[0] if options else ""
 
@@ -221,7 +221,7 @@ class DocumentNamingSettings(Document):
         previous_value = naming_series.get_current_value()
         naming_series.update_counter(self.current_value)
 
-		self.create_version_log_for_change(naming_series.get_prefix(), previous_value, self.current_value)
+        self.create_version_log_for_change(naming_series.get_prefix(), previous_value, self.current_value)
 
         frappe.msgprint(
             _("Series counter for {} updated to {} successfully").format(self.prefix, self.current_value),

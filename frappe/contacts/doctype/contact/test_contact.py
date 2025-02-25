@@ -9,38 +9,38 @@ EXTRA_TEST_RECORD_DEPENDENCIES = ["Contact", "Salutation"]
 
 
 class UnitTestContact(UnitTestCase):
-	"""
-	Unit tests for Contact.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for Contact.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestContact(IntegrationTestCase):
-	def test_check_default_email(self):
-		emails = [
-			{"email": "test1@example.com", "is_primary": 0},
-			{"email": "test2@example.com", "is_primary": 0},
-			{"email": "test3@example.com", "is_primary": 0},
-			{"email": "test4@example.com", "is_primary": 1},
-			{"email": "test5@example.com", "is_primary": 0},
-		]
-		contact = create_contact("Email", "Mr", emails=emails)
+    def test_check_default_email(self):
+        emails = [
+            {"email": "test1@example.com", "is_primary": 0},
+            {"email": "test2@example.com", "is_primary": 0},
+            {"email": "test3@example.com", "is_primary": 0},
+            {"email": "test4@example.com", "is_primary": 1},
+            {"email": "test5@example.com", "is_primary": 0},
+        ]
+        contact = create_contact("Email", "Mr", emails=emails)
 
         self.assertEqual(contact.email_id, "test4@example.com")
 
-	def test_check_default_phone_and_mobile(self):
-		phones = [
-			{"phone": "+91 0000000010", "is_primary_phone": 0, "is_primary_mobile_no": 0},
-			{"phone": "+91 0000000011", "is_primary_phone": 0, "is_primary_mobile_no": 0},
-			{"phone": "+91 0000000012", "is_primary_phone": 1, "is_primary_mobile_no": 0},
-			{"phone": "+91 0000000013", "is_primary_phone": 0, "is_primary_mobile_no": 1},
-		]
-		contact = create_contact("Phone", "Mr", phones=phones)
+    def test_check_default_phone_and_mobile(self):
+        phones = [
+            {"phone": "+91 0000000010", "is_primary_phone": 0, "is_primary_mobile_no": 0},
+            {"phone": "+91 0000000011", "is_primary_phone": 0, "is_primary_mobile_no": 0},
+            {"phone": "+91 0000000012", "is_primary_phone": 1, "is_primary_mobile_no": 0},
+            {"phone": "+91 0000000013", "is_primary_phone": 0, "is_primary_mobile_no": 1},
+        ]
+        contact = create_contact("Phone", "Mr", phones=phones)
 
-		self.assertEqual(contact.phone, "+91 0000000012")
-		self.assertEqual(contact.mobile_no, "+91 0000000013")
+        self.assertEqual(contact.phone, "+91 0000000012")
+        self.assertEqual(contact.mobile_no, "+91 0000000013")
 
     def test_get_full_name(self):
         self.assertEqual(get_full_name(first="John"), "John")

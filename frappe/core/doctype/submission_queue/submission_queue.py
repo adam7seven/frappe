@@ -54,8 +54,8 @@ class SubmissionQueue(Document):
         from frappe.query_builder import Interval
         from frappe.query_builder.functions import Now
 
-		table = frappe.qb.DocType("Submission Queue")
-		frappe.db.delete(table, filters=(table.creation < (Now() - Interval(days=days))))
+        table = frappe.qb.DocType("Submission Queue")
+        frappe.db.delete(table, filters=(table.creation < (Now() - Interval(days=days))))
 
     def insert(self, to_be_queued_doc: Document, action: str):
         self.status = "Queued"

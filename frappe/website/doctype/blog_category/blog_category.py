@@ -14,16 +14,16 @@ class BlogCategory(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-		description: DF.SmallText | None
-		preview_image: DF.AttachImage | None
-		published: DF.Check
-		route: DF.Data | None
-		title: DF.Data
-	# end: auto-generated types
+        description: DF.SmallText | None
+        preview_image: DF.AttachImage | None
+        published: DF.Check
+        route: DF.Data | None
+        title: DF.Data
+    # end: auto-generated types
 
-	def autoid(self):
-		# to override autoid of WebsiteGenerator
-		self.id = self.scrub(self.title)
+    def autoid(self):
+        # to override autoid of WebsiteGenerator
+        self.id = self.scrub(self.title)
 
     def on_update(self):
         clear_cache()

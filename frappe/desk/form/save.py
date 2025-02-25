@@ -14,17 +14,17 @@ from frappe.utils.telemetry import capture_doc
 
 @frappe.whitelist()
 def savedocs(doc, action):
-	"""save / submit / update doclist"""
-	doc = frappe.get_doc(json.loads(doc))
-	capture_doc(doc, action)
-	if doc.get("__islocal") and doc.id.startswith("new-" + doc.doctype.lower().replace(" ", "-")):
-		# required to relink missing attachments if they exist.
-		doc.__temporary_id = doc.id
+    """save / submit / update doclist"""
+    doc = frappe.get_doc(json.loads(doc))
+    capture_doc(doc, action)
+    if doc.get("__islocal") and doc.id.startswith("new-" + doc.doctype.lower().replace(" ", "-")):
+        # required to relink missing attachments if they exist.
+        doc.__temporary_id = doc.id
 
-	for child in doc.get_all_children():
-		child.__temporary_id = child.id
+    for child in doc.get_all_children():
+        child.__temporary_id = child.id
 
-	set_local_id(doc)
+    set_local_id(doc)
 
     # action
     doc.docstatus = {
@@ -69,13 +69,13 @@ def cancel(doctype=None, id=None, workflow_state_fieldname=None, workflow_state=
 
 @frappe.whitelist()
 def discard(doctype: str, name: str | int):
-	"""discard a draft document"""
-	doc = frappe.get_doc(doctype, name)
-	capture_doc(doc, "Discard")
+    """discard a draft document"""
+    doc = frappe.get_doc(doctype, name)
+    capture_doc(doc, "Discard")
 
-	doc.discard()
-	send_updated_docs(doc)
-	frappe.msgprint(frappe._("Discarded"), indicator="red", alert=True)
+    doc.discard()
+    send_updated_docs(doc)
+    frappe.msgprint(frappe._("Discarded"), indicator="red", alert=True)
 
 
 def send_updated_docs(doc):

@@ -23,15 +23,15 @@ class DocTypeLayout(Document):
         )
         from frappe.types import DF
 
-		client_script: DF.Code | None
-		document_type: DF.Link
-		fields: DF.Table[DocTypeLayoutField]
-		route: DF.Data
-	# end: auto-generated types
+        client_script: DF.Code | None
+        document_type: DF.Link
+        fields: DF.Table[DocTypeLayoutField]
+        route: DF.Data
+    # end: auto-generated types
 
-	def validate(self):
-		if not self.route:
-			self.route = slug(self.id)
+    def validate(self):
+        if not self.route:
+            self.route = slug(self.id)
 
     @frappe.whitelist()
     def sync_fields(self):

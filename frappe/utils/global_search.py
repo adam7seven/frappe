@@ -233,14 +233,14 @@ def insert_values_for_multiple_docs(all_contents):
         frappe.db.multisql(
             {
                 "mariadb": """INSERT IGNORE INTO `__global_search`
-				(doctype, id, content, published, title, route)
-				VALUES {} """.format(
+                (doctype, id, content, published, title, route)
+                VALUES {} """.format(
                     ", ".join(batch_values)
                 ),
                 "postgres": """INSERT INTO `__global_search`
-				(doctype, id, content, published, title, route)
-				VALUES {}
-				ON CONFLICT("id", "doctype") DO NOTHING""".format(
+                (doctype, id, content, published, title, route)
+                VALUES {}
+                ON CONFLICT("id", "doctype") DO NOTHING""".format(
                     ", ".join(batch_values)
                 ),
             }
@@ -456,23 +456,23 @@ def sync_value(value: dict):
     frappe.db.multisql(
         {
             "mariadb": """INSERT INTO `__global_search`
-			(`doctype`, `id`, `content`, `published`, `title`, `route`)
-			VALUES (%(doctype)s, %(id)s, %(content)s, %(published)s, %(title)s, %(route)s)
-			ON DUPLICATE key UPDATE
-				`content`=%(content)s,
-				`published`=%(published)s,
-				`title`=%(title)s,
-				`route`=%(route)s
-		""",
+            (`doctype`, `id`, `content`, `published`, `title`, `route`)
+            VALUES (%(doctype)s, %(id)s, %(content)s, %(published)s, %(title)s, %(route)s)
+            ON DUPLICATE key UPDATE
+                `content`=%(content)s,
+                `published`=%(published)s,
+                `title`=%(title)s,
+                `route`=%(route)s
+        """,
             "postgres": """INSERT INTO `__global_search`
-			(`doctype`, `id`, `content`, `published`, `title`, `route`)
-			VALUES (%(doctype)s, %(id)s, %(content)s, %(published)s, %(title)s, %(route)s)
-			ON CONFLICT("doctype", "id") DO UPDATE SET
-				`content`=%(content)s,
-				`published`=%(published)s,
-				`title`=%(title)s,
-				`route`=%(route)s
-		""",
+            (`doctype`, `id`, `content`, `published`, `title`, `route`)
+            VALUES (%(doctype)s, %(id)s, %(content)s, %(published)s, %(title)s, %(route)s)
+            ON CONFLICT("doctype", "id") DO UPDATE SET
+                `content`=%(content)s,
+                `published`=%(published)s,
+                `title`=%(title)s,
+                `route`=%(route)s
+        """,
         },
         value,
     )
@@ -538,18 +538,18 @@ def search(text, start=0, limit=20, doctype=""):
 
         results.extend(result)
 
-	# sort results based on allowed_doctype's priority
-	for doctype in allowed_doctypes:
-		for r in results:
-			if r.doctype == doctype and r.rank > 0.0:
-				try:
-					meta = frappe.get_meta(r.doctype)
-					if meta.image_field:
-						r.image = frappe.db.get_value(r.doctype, r.id, meta.image_field)
-					if meta.title_field:
-						r.title = frappe.db.get_value(r.doctype, r.id, meta.title_field)
-				except Exception:
-					frappe.clear_messages()
+    # sort results based on allowed_doctype's priority
+    for doctype in allowed_doctypes:
+        for r in results:
+            if r.doctype == doctype and r.rank > 0.0:
+                try:
+                    meta = frappe.get_meta(r.doctype)
+                    if meta.image_field:
+                        r.image = frappe.db.get_value(r.doctype, r.id, meta.image_field)
+                    if meta.title_field:
+                        r.title = frappe.db.get_value(r.doctype, r.id, meta.title_field)
+                except Exception:
+                    frappe.clear_messages()
 
                 sorted_results.extend([r])
 
@@ -571,9 +571,9 @@ def web_search(text: str, scope: str | None = None, start: int = 0, limit: int =
     texts = text.split("&")
     for text in texts:
         common_query = """ SELECT `doctype`, `id`, `content`, `title`, `route`
-			FROM `__global_search`
-			WHERE {conditions}
-			LIMIT %(limit)s OFFSET %(start)s"""
+            FROM `__global_search`
+            WHERE {conditions}
+            LIMIT %(limit)s OFFSET %(start)s"""
 
         scope_condition = "`route` like %(scope)s AND " if scope else ""
         published_condition = "`published` = 1 AND "
@@ -581,11 +581,11 @@ def web_search(text: str, scope: str | None = None, start: int = 0, limit: int =
             [published_condition, scope_condition]
         )
 
-		# https://mariadb.com/kb/en/library/full-text-index-overview/#in-boolean-mode
-		mariadb_conditions += "MATCH(`content`) AGAINST ({} IN BOOLEAN MODE)".format(
-			frappe.db.escape("+" + text + "*")
-		)
-		postgres_conditions += f'TO_TSVECTOR("content") @@ PLAINTO_TSQUERY({frappe.db.escape(text)})'
+        # https://mariadb.com/kb/en/library/full-text-index-overview/#in-boolean-mode
+        mariadb_conditions += "MATCH(`content`) AGAINST ({} IN BOOLEAN MODE)".format(
+            frappe.db.escape("+" + text + "*")
+        )
+        postgres_conditions += f'TO_TSVECTOR("content") @@ PLAINTO_TSQUERY({frappe.db.escape(text)})'
 
         values = {
             "scope": "".join([scope, "%"]) if scope else "",

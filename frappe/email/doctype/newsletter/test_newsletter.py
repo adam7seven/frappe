@@ -139,8 +139,8 @@ class TestNewsletterMixin:
 
 
 class TestNewsletter(TestNewsletterMixin, IntegrationTestCase):
-	def test_send(self):
-		self.send_newsletter()
+    def test_send(self):
+        self.send_newsletter()
 
         email_queue_list = [
             frappe.get_doc("Email Queue", e.id) for e in frappe.get_all("Email Queue")

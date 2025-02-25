@@ -218,8 +218,8 @@ class CustomField(Document):
                 ).format(frappe.bold(self.label))
             )
 
-		# delete property setter entries
-		delete_property_setter(self.dt, field_name=self.fieldname)
+        # delete property setter entries
+        delete_property_setter(self.dt, field_name=self.fieldname)
 
         # update doctype layouts
         doctype_layouts = frappe.get_all("DocType Layout", filters={"document_type": self.dt}, pluck="id")
@@ -246,20 +246,20 @@ class CustomField(Document):
         if self.fieldname == self.insert_after:
             frappe.throw(_("Insert After cannot be set as {0}").format(meta.get_label(self.insert_after)))
 
-	def get_permission_log_options(self, event=None):
-		if event != "after_delete" and self.fieldtype not in (
-			"Section Break",
-			"Column Break",
-			"Tab Break",
-			"Fold",
-		):
-			return {
-				"fields": ("ignore_user_permissions", "permlevel"),
-				"for_doctype": "DocType",
-				"for_document": self.dt,
-			}
+    def get_permission_log_options(self, event=None):
+        if event != "after_delete" and self.fieldtype not in (
+            "Section Break",
+            "Column Break",
+            "Tab Break",
+            "Fold",
+        ):
+            return {
+                "fields": ("ignore_user_permissions", "permlevel"),
+                "for_doctype": "DocType",
+                "for_document": self.dt,
+            }
 
-		self._no_perm_log = True
+        self._no_perm_log = True
 
 
 @frappe.whitelist()
@@ -272,10 +272,10 @@ def get_fields_label(doctype=None):
     if meta.custom:
         return frappe.msgprint(_("Custom Fields can only be added to a standard DocType."))
 
-	return [
-		{"value": df.fieldname or "", "label": _(df.label, context=df.parent) if df.label else ""}
-		for df in frappe.get_meta(doctype).get("fields")
-	]
+    return [
+        {"value": df.fieldname or "", "label": _(df.label, context=df.parent) if df.label else ""}
+        for df in frappe.get_meta(doctype).get("fields")
+    ]
 
 
 def create_custom_field_if_values_exist(doctype, df):
@@ -367,34 +367,34 @@ def rename_fieldname(custom_field: str, fieldname: str):
     field.set_fieldname()
     new_fieldname = field.fieldname
 
-	if field.is_system_generated:
-		frappe.throw(_("System Generated Fields can not be renamed"))
-	if frappe.db.has_column(parent_doctype, fieldname):
-		frappe.throw(_("Can not rename as column {0} is already present on DocType.").format(fieldname))
-	if old_fieldname == new_fieldname:
-		frappe.msgprint(_("Old and new fieldnames are same."), alert=True)
-		return
+    if field.is_system_generated:
+        frappe.throw(_("System Generated Fields can not be renamed"))
+    if frappe.db.has_column(parent_doctype, fieldname):
+        frappe.throw(_("Can not rename as column {0} is already present on DocType.").format(fieldname))
+    if old_fieldname == new_fieldname:
+        frappe.msgprint(_("Old and new fieldnames are same."), alert=True)
+        return
 
-	if frappe.db.has_column(field.dt, old_fieldname):
-		frappe.db.rename_column(parent_doctype, old_fieldname, new_fieldname)
+    if frappe.db.has_column(field.dt, old_fieldname):
+        frappe.db.rename_column(parent_doctype, old_fieldname, new_fieldname)
 
     # Update in DB after alter column is successful, alter column will implicitly commit, so it's
     # best to commit change on field too to avoid any possible mismatch between two.
     field.db_set("fieldname", field.fieldname, notify=True)
     _update_fieldname_references(field, old_fieldname, new_fieldname)
 
-	frappe.msgprint(_("Custom field renamed to {0} successfully.").format(fieldname), alert=True)
-	frappe.db.commit()
-	frappe.clear_cache()
+    frappe.msgprint(_("Custom field renamed to {0} successfully.").format(fieldname), alert=True)
+    frappe.db.commit()
+    frappe.clear_cache()
 
 
 def _update_fieldname_references(field: CustomField, old_fieldname: str, new_fieldname: str) -> None:
-	# Passwords are stored in auth table, so column name needs to be updated there.
-	if field.fieldtype == "Password":
-		Auth = frappe.qb.Table("__Auth")
-		frappe.qb.update(Auth).set(Auth.fieldname, new_fieldname).where(
-			(Auth.doctype == field.dt) & (Auth.fieldname == old_fieldname)
-		).run()
+    # Passwords are stored in auth table, so column name needs to be updated there.
+    if field.fieldtype == "Password":
+        Auth = frappe.qb.Table("__Auth")
+        frappe.qb.update(Auth).set(Auth.fieldname, new_fieldname).where(
+            (Auth.doctype == field.dt) & (Auth.fieldname == old_fieldname)
+        ).run()
 
     # Update ordering reference.
     frappe.db.set_value(

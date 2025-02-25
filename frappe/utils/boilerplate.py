@@ -39,37 +39,37 @@ def _get_user_inputs(app_name):
     hooks.app_name = app_name
     app_title = hooks.app_name.replace("_", " ").title()
 
-	new_app_config = {
-		"app_title": {
-			"prompt": "App Title",
-			"default": app_title,
-			"validator": is_valid_title,
-		},
-		"app_description": {"prompt": "App Description"},
-		"app_publisher": {"prompt": "App Publisher"},
-		"app_email": {"prompt": "App Email", "validator": is_valid_email},
-		"app_license": {
-			"prompt": "App License",
-			"default": "mit",
-			"type": click.Choice(get_license_options()),
-		},
-		"create_github_workflow": {
-			"prompt": "Create GitHub Workflow action for unittests",
-			"default": False,
-			"type": bool,
-		},
-		"branch_name": {"prompt": "Branch Name", "default": get_app_branch("frappe")},
-	}
+    new_app_config = {
+        "app_title": {
+            "prompt": "App Title",
+            "default": app_title,
+            "validator": is_valid_title,
+        },
+        "app_description": {"prompt": "App Description"},
+        "app_publisher": {"prompt": "App Publisher"},
+        "app_email": {"prompt": "App Email", "validator": is_valid_email},
+        "app_license": {
+            "prompt": "App License",
+            "default": "mit",
+            "type": click.Choice(get_license_options()),
+        },
+        "create_github_workflow": {
+            "prompt": "Create GitHub Workflow action for unittests",
+            "default": False,
+            "type": bool,
+        },
+        "branch_name": {"prompt": "Branch Name", "default": get_app_branch("frappe")},
+    }
 
     for property, config in new_app_config.items():
         value = None
         input_type = config.get("type", str)
 
-		while value is None:
-			if input_type is bool:
-				value = click.confirm(config["prompt"], default=config.get("default"))
-			else:
-				value = click.prompt(config["prompt"], default=config.get("default"), type=input_type)
+        while value is None:
+            if input_type is bool:
+                value = click.confirm(config["prompt"], default=config.get("default"))
+            else:
+                value = click.prompt(config["prompt"], default=config.get("default"), type=input_type)
 
             if validator_function := config.get("validator"):
                 if not validator_function(value):
@@ -100,53 +100,53 @@ def is_valid_title(title) -> bool:
 
 
 def get_license_options() -> list[str]:
-	url = "https://api.github.com/licenses"
-	try:
-		res = requests.get(url=url)
-	except requests.exceptions.RequestException:
-		return ["agpl-3.0", "gpl-3.0", "mit", "custom"]
+    url = "https://api.github.com/licenses"
+    try:
+        res = requests.get(url=url)
+    except requests.exceptions.RequestException:
+        return ["agpl-3.0", "gpl-3.0", "mit", "custom"]
 
-	if res.status_code == 200:
-		res = res.json()
-		ids = [r.get("spdx_id") for r in res]
-		return [licencse.lower() for licencse in ids]
+    if res.status_code == 200:
+        res = res.json()
+        ids = [r.get("spdx_id") for r in res]
+        return [licencse.lower() for licencse in ids]
 
     return ["agpl-3.0", "gpl-3.0", "mit", "custom"]
 
 
 def get_license_text(license_name: str) -> str:
-	url = f"https://api.github.com/licenses/{license_name.lower()}"
-	try:
-		res = requests.get(url=url)
-	except requests.exceptions.RequestException:
-		return "No license text found"
-	if res.status_code == 200:
-		res = res.json()
-		return res.get("body")
-	return license_name
+    url = f"https://api.github.com/licenses/{license_name.lower()}"
+    try:
+        res = requests.get(url=url)
+    except requests.exceptions.RequestException:
+        return "No license text found"
+    if res.status_code == 200:
+        res = res.json()
+        return res.get("body")
+    return license_name
 
 
 def copy_from_frappe(rel_path: str, new_app_path: str):
-	"""Copy files from frappe app to new app."""
-	src = Path(frappe.get_app_path("frappe", "..")) / rel_path
-	target = Path(new_app_path) / rel_path
-	Path(target).write_text(Path(src).read_text())
+    """Copy files from frappe app to new app."""
+    src = Path(frappe.get_app_path("frappe", "..")) / rel_path
+    target = Path(new_app_path) / rel_path
+    Path(target).write_text(Path(src).read_text())
 
 
 def _create_app_boilerplate(dest, hooks, no_git=False):
-	frappe.create_folder(
-		os.path.join(dest, hooks.app_name, hooks.app_name, frappe.scrub(hooks.app_title)),
-		with_init=True,
-	)
-	frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "templates"), with_init=True)
-	frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "www"))
-	frappe.create_folder(
-		os.path.join(dest, hooks.app_name, hooks.app_name, "templates", "pages"), with_init=True
-	)
-	frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "templates", "includes"))
-	frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "config"), with_init=True)
-	frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "public", "css"))
-	frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "public", "js"))
+    frappe.create_folder(
+        os.path.join(dest, hooks.app_name, hooks.app_name, frappe.scrub(hooks.app_title)),
+        with_init=True,
+    )
+    frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "templates"), with_init=True)
+    frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "www"))
+    frappe.create_folder(
+        os.path.join(dest, hooks.app_name, hooks.app_name, "templates", "pages"), with_init=True
+    )
+    frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "templates", "includes"))
+    frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "config"), with_init=True)
+    frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "public", "css"))
+    frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "public", "js"))
 
     # add .gitkeep file so that public folder is committed to git
     # this is needed because if public doesn't exist, bench build doesn't symlink the apps assets
@@ -163,26 +163,26 @@ def _create_app_boilerplate(dest, hooks, no_git=False):
     with open(os.path.join(dest, hooks.app_name, "pyproject.toml"), "w") as f:
         f.write(frappe.as_unicode(pyproject_template.format(**hooks)))
 
-	with open(os.path.join(dest, hooks.app_name, ".pre-commit-config.yaml"), "w") as f:
-		f.write(frappe.as_unicode(precommit_template.format(**hooks)))
+    with open(os.path.join(dest, hooks.app_name, ".pre-commit-config.yaml"), "w") as f:
+        f.write(frappe.as_unicode(precommit_template.format(**hooks)))
 
-	license_body = get_license_text(license_name=hooks.app_license)
-	with open(os.path.join(dest, hooks.app_name, "license.txt"), "w") as f:
-		f.write(frappe.as_unicode(license_body))
+    license_body = get_license_text(license_name=hooks.app_license)
+    with open(os.path.join(dest, hooks.app_name, "license.txt"), "w") as f:
+        f.write(frappe.as_unicode(license_body))
 
-	with open(
-		os.path.join(dest, hooks.app_name, hooks.app_name, frappe.scrub(hooks.app_title), ".frappe"), "w"
-	) as f:
-		f.write("")
+    with open(
+        os.path.join(dest, hooks.app_name, hooks.app_name, frappe.scrub(hooks.app_title), ".frappe"), "w"
+    ) as f:
+        f.write("")
 
-	from frappe.deprecation_dumpster import boilerplate_modules_txt
+    from frappe.deprecation_dumpster import boilerplate_modules_txt
 
-	boilerplate_modules_txt(dest, hooks.app_name, hooks.app_title)
+    boilerplate_modules_txt(dest, hooks.app_name, hooks.app_title)
 
-	# These values could contain quotes and can break string declarations
-	# So escaping them before setting variables in setup.py and hooks.py
-	for key in ("app_publisher", "app_description", "app_license"):
-		hooks[key] = hooks[key].replace("\\", "\\\\").replace("'", "\\'").replace('"', '\\"')
+    # These values could contain quotes and can break string declarations
+    # So escaping them before setting variables in setup.py and hooks.py
+    for key in ("app_publisher", "app_description", "app_license"):
+        hooks[key] = hooks[key].replace("\\", "\\\\").replace("'", "\\'").replace('"', '\\"')
 
     with open(os.path.join(dest, hooks.app_name, hooks.app_name, "hooks.py"), "w") as f:
         f.write(frappe.as_unicode(hooks_template.format(**hooks)))
@@ -194,26 +194,26 @@ def _create_app_boilerplate(dest, hooks, no_git=False):
 
     app_directory = os.path.join(dest, hooks.app_name)
 
-	copy_from_frappe(".editorconfig", app_directory)
-	copy_from_frappe(".eslintrc", app_directory)
+    copy_from_frappe(".editorconfig", app_directory)
+    copy_from_frappe(".eslintrc", app_directory)
 
-	if hooks.create_github_workflow:
-		_create_github_workflow_files(dest, hooks)
-		hooks.readme_ci_section = readme_ci_section
-	else:
-		hooks.readme_ci_section = ""
+    if hooks.create_github_workflow:
+        _create_github_workflow_files(dest, hooks)
+        hooks.readme_ci_section = readme_ci_section
+    else:
+        hooks.readme_ci_section = ""
 
-	with open(os.path.join(dest, hooks.app_name, "README.md"), "w") as f:
-		f.write(frappe.as_unicode(readme_template.format(**hooks)))
+    with open(os.path.join(dest, hooks.app_name, "README.md"), "w") as f:
+        f.write(frappe.as_unicode(readme_template.format(**hooks)))
 
-	if not no_git:
-		with open(os.path.join(dest, hooks.app_name, ".gitignore"), "w") as f:
-			f.write(frappe.as_unicode(gitignore_template.format(app_name=hooks.app_name)))
+    if not no_git:
+        with open(os.path.join(dest, hooks.app_name, ".gitignore"), "w") as f:
+            f.write(frappe.as_unicode(gitignore_template.format(app_name=hooks.app_name)))
 
-		# initialize git repository
-		app_repo = git.Repo.init(app_directory, initial_branch=hooks.branch_name)
-		app_repo.git.add(A=True)
-		app_repo.index.commit("feat: Initialize App")
+        # initialize git repository
+        app_repo = git.Repo.init(app_directory, initial_branch=hooks.branch_name)
+        app_repo.git.add(A=True)
+        app_repo.index.commit("feat: Initialize App")
 
     print(f"'{hooks.app_name}' created at {app_directory}")
 
@@ -226,20 +226,20 @@ def _create_github_workflow_files(dest, hooks):
     with open(ci_workflow, "w") as f:
         f.write(github_workflow_template.format(**hooks))
 
-	linter_workflow = workflows_path / "linter.yml"
-	with open(linter_workflow, "w") as f:
-		f.write(linter_workflow_template)
+    linter_workflow = workflows_path / "linter.yml"
+    with open(linter_workflow, "w") as f:
+        f.write(linter_workflow_template)
 
 
 PATCH_TEMPLATE = textwrap.dedent(
     '''
-	import frappe
+    import frappe
 
-	def execute():
-		"""{docstring}"""
+    def execute():
+        """{docstring}"""
 
-		# Write your patch here.
-		pass
+        # Write your patch here.
+        pass
 '''
 )
 
@@ -310,8 +310,8 @@ class PatchCreator:
         if self.patch_file.exists():
             raise Exception(f"Patch {self.patch_file} already exists")
 
-		*path, _filename = self.patch_file.relative_to(self.app_dir.parents[0]).parts
-		dotted_path = ".".join([*path, self.patch_file.stem])
+        *path, _filename = self.patch_file.relative_to(self.app_dir.parents[0]).parts
+        dotted_path = ".".join([*path, self.patch_file.stem])
 
         patches_txt = self.app_dir / "patches.txt"
         existing_patches = patches_txt.read_text()
@@ -414,13 +414,13 @@ app_license = "{app_license}"
 
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
-# 	{{
-# 		"name": "{app_name}",
-# 		"logo": "/assets/{app_name}/logo.png",
-# 		"title": "{app_title}",
-# 		"route": "/{app_name}",
-# 		"has_permission": "{app_name}.api.permission.has_app_permission"
-# 	}}
+#     {{
+#         "name": "{app_name}",
+#         "logo": "/assets/{app_name}/logo.png",
+#         "title": "{app_title}",
+#         "route": "/{app_name}",
+#         "has_permission": "{app_name}.api.permission.has_app_permission"
+#     }}
 # ]
 
 # Includes in <head>
@@ -463,7 +463,7 @@ app_license = "{app_license}"
 
 # website user home page (by Role)
 # role_home_page = {{
-# 	"Role": "home_page"
+#     "Role": "home_page"
 # }}
 
 # Generators
@@ -480,8 +480,8 @@ app_license = "{app_license}"
 
 # add methods and filters to jinja environment
 # jinja = {{
-# 	"methods": "{app_name}.utils.jinja_methods",
-# 	"filters": "{app_name}.utils.jinja_filters"
+#     "methods": "{app_name}.utils.jinja_methods",
+#     "filters": "{app_name}.utils.jinja_filters"
 # }}
 
 # Installation
@@ -523,11 +523,11 @@ app_license = "{app_license}"
 # Permissions evaluated in scripted ways
 
 # permission_query_conditions = {{
-# 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
+#     "Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
 # }}
 #
 # has_permission = {{
-# 	"Event": "frappe.desk.doctype.event.event.has_permission",
+#     "Event": "frappe.desk.doctype.event.event.has_permission",
 # }}
 
 # DocType Class
@@ -535,7 +535,7 @@ app_license = "{app_license}"
 # Override standard doctype classes
 
 # override_doctype_class = {{
-# 	"ToDo": "custom_app.overrides.CustomToDo"
+#     "ToDo": "custom_app.overrides.CustomToDo"
 # }}
 
 # Document Events
@@ -543,32 +543,32 @@ app_license = "{app_license}"
 # Hook on document methods and events
 
 # doc_events = {{
-# 	"*": {{
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}}
+#     "*": {{
+#         "on_update": "method",
+#         "on_cancel": "method",
+#         "on_trash": "method"
+#     }}
 # }}
 
 # Scheduled Tasks
 # ---------------
 
 # scheduler_events = {{
-# 	"all": [
-# 		"{app_name}.tasks.all"
-# 	],
-# 	"daily": [
-# 		"{app_name}.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"{app_name}.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"{app_name}.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"{app_name}.tasks.monthly"
-# 	],
+#     "all": [
+#         "{app_name}.tasks.all"
+#     ],
+#     "daily": [
+#         "{app_name}.tasks.daily"
+#     ],
+#     "hourly": [
+#         "{app_name}.tasks.hourly"
+#     ],
+#     "weekly": [
+#         "{app_name}.tasks.weekly"
+#     ],
+#     "monthly": [
+#         "{app_name}.tasks.monthly"
+#     ],
 # }}
 
 # Testing
@@ -580,14 +580,14 @@ app_license = "{app_license}"
 # ------------------------------
 #
 # override_whitelisted_methods = {{
-# 	"frappe.desk.doctype.event.event.get_events": "{app_name}.event.get_events"
+#     "frappe.desk.doctype.event.event.get_events": "{app_name}.event.get_events"
 # }}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
 # override_doctype_dashboards = {{
-# 	"Task": "{app_name}.task.get_dashboard_data"
+#     "Task": "{app_name}.task.get_dashboard_data"
 # }}
 
 # exempt linked doctypes from being automatically cancelled
@@ -613,38 +613,38 @@ app_license = "{app_license}"
 # --------------------
 
 # user_data_fields = [
-# 	{{
-# 		"doctype": "{{doctype_1}}",
-# 		"filter_by": "{{filter_by}}",
-# 		"redact_fields": ["{{field_1}}", "{{field_2}}"],
-# 		"partial": 1,
-# 	}},
-# 	{{
-# 		"doctype": "{{doctype_2}}",
-# 		"filter_by": "{{filter_by}}",
-# 		"partial": 1,
-# 	}},
-# 	{{
-# 		"doctype": "{{doctype_3}}",
-# 		"strict": False,
-# 	}},
-# 	{{
-# 		"doctype": "{{doctype_4}}"
-# 	}}
+#     {{
+#         "doctype": "{{doctype_1}}",
+#         "filter_by": "{{filter_by}}",
+#         "redact_fields": ["{{field_1}}", "{{field_2}}"],
+#         "partial": 1,
+#     }},
+#     {{
+#         "doctype": "{{doctype_2}}",
+#         "filter_by": "{{filter_by}}",
+#         "partial": 1,
+#     }},
+#     {{
+#         "doctype": "{{doctype_3}}",
+#         "strict": False,
+#     }},
+#     {{
+#         "doctype": "{{doctype_4}}"
+#     }}
 # ]
 
 # Authentication and authorization
 # --------------------------------
 
 # auth_hooks = [
-# 	"{app_name}.auth.validate"
+#     "{app_name}.auth.validate"
 # ]
 
 # Automatically update python controller files with type annotations for this app.
 # export_python_type_annotations = True
 
 # default_log_clearing_doctypes = {{
-# 	"Logging DocType Name": 30  # days to retain logs
+#     "Logging DocType Name": 30  # days to retain logs
 # }}
 
 """

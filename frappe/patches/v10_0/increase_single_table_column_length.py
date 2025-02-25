@@ -6,5 +6,5 @@ import frappe
 
 
 def execute():
-	for col in ("field", "doctype"):
-		frappe.db.sql_ddl(f"alter table `tabSingles` modify column `{col}` varchar(255)")
+    for col in ("field", "doctype"):
+        frappe.db.sql_ddl(f"alter table `tabSingles` modify column `{col}` varchar(255)")

@@ -83,8 +83,8 @@ def get_current_index():
 
         frappe.db.sql(
             """UPDATE `tabSeries`
-			SET `current` = `current` + 1
-			where `id` = 'TRANSACTLOG'"""
+            SET `current` = `current` + 1
+            where `id` = 'TRANSACTLOG'"""
         )
         current = cint(current) + 1
     else:

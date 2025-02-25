@@ -15,18 +15,18 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestDocumentFollow(UnitTestCase):
-	"""
-	Unit tests for DocumentFollow.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for DocumentFollow.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestDocumentFollow(IntegrationTestCase):
-	def test_document_follow_version(self):
-		user = get_user()
-		event_doc = get_event()
+    def test_document_follow_version(self):
+        user = get_user()
+        event_doc = get_event()
 
         event_doc.description = "This is a test description for sending mail"
         event_doc.save(ignore_version=False)

@@ -41,15 +41,15 @@ def get_emails_sent_today(email_account=None):
     if email_account=None, email account filter is not applied while counting
     """
     q = """
-		SELECT
-			COUNT(`id`)
-		FROM
-			`tabEmail Queue`
-		WHERE
-			`status` in ('Sent', 'Not Sent', 'Sending')
-			AND
-			`creation` > (NOW() - INTERVAL '24' HOUR)
-	"""
+        SELECT
+            COUNT(`id`)
+        FROM
+            `tabEmail Queue`
+        WHERE
+            `status` in ('Sent', 'Not Sent', 'Sending')
+            AND
+            `creation` > (NOW() - INTERVAL '24' HOUR)
+    """
 
     q_args = {}
     if email_account is not None:
@@ -63,15 +63,15 @@ def get_emails_sent_today(email_account=None):
 
 
 def get_unsubscribe_message(unsubscribe_message: str, expose_recipients: str) -> "frappe._dict[str, str]":
-	unsubscribe_message = unsubscribe_message or _("Unsubscribe")
-	unsubscribe_link = f'<a href="<!--unsubscribe_url-->" target="_blank">{unsubscribe_message}</a>'
-	unsubscribe_html = _("{0} to stop receiving emails of this type").format(unsubscribe_link)
-	html = f"""<div class="email-unsubscribe">
-			<!--cc_message-->
-			<div>
-				{unsubscribe_html}
-			</div>
-		</div>"""
+    unsubscribe_message = unsubscribe_message or _("Unsubscribe")
+    unsubscribe_link = f'<a href="<!--unsubscribe_url-->" target="_blank">{unsubscribe_message}</a>'
+    unsubscribe_html = _("{0} to stop receiving emails of this type").format(unsubscribe_link)
+    html = f"""<div class="email-unsubscribe">
+            <!--cc_message-->
+            <div>
+                {unsubscribe_html}
+            </div>
+        </div>"""
 
     text = f"\n\n{unsubscribe_message}: <!--unsubscribe_url-->\n"
     if expose_recipients == "footer":
@@ -128,15 +128,15 @@ def return_unsubscribed_page(email, doctype, id):
 
 
 def flush():
-	"""flush email queue, every time: called from scheduler.
+    """flush email queue, every time: called from scheduler.
 
-	This should not be called outside of background jobs.
-	"""
-	from frappe.email.doctype.email_queue.email_queue import EmailQueue
+    This should not be called outside of background jobs.
+    """
+    from frappe.email.doctype.email_queue.email_queue import EmailQueue
 
-	# To avoid running jobs inside unit tests
-	if frappe.are_emails_muted():
-		msgprint(_("Emails are muted"))
+    # To avoid running jobs inside unit tests
+    if frappe.are_emails_muted():
+        msgprint(_("Emails are muted"))
 
     if cint(frappe.db.get_default("suspend_email_queue")) == 1:
         return
@@ -169,15 +169,15 @@ def get_queue():
 
     return frappe.db.sql(
         f"""select
-			id, sender
-		from
-			`tabEmail Queue`
-		where
-			(status='Not Sent' or status='Partially Sent') and
-			(send_after is null or send_after < %(now)s)
-		order
-			by priority desc, retry asc, creation asc
-		limit {batch_size}""",
+            id, sender
+        from
+            `tabEmail Queue`
+        where
+            (status='Not Sent' or status='Partially Sent') and
+            (send_after is null or send_after < %(now)s)
+        order
+            by priority desc, retry asc, creation asc
+        limit {batch_size}""",
         {"now": now_datetime()},
         as_dict=True,
     )

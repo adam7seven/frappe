@@ -18,13 +18,13 @@ class PersonalDataDownloadRequest(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-		amended_from: DF.Link | None
-		user: DF.Link
-		user_name: DF.Data | None
-	# end: auto-generated types
+        amended_from: DF.Link | None
+        user: DF.Link
+        user_name: DF.Data | None
+    # end: auto-generated types
 
-	def after_insert(self):
-		personal_data = get_user_data(self.user)
+    def after_insert(self):
+        personal_data = get_user_data(self.user)
 
         frappe.enqueue_doc(
             self.doctype,
@@ -71,12 +71,12 @@ class PersonalDataDownloadRequest(Document):
 
 
 def get_user_data(user):
-	"""Return user data not linked to `User` doctype."""
-	hooks = frappe.get_hooks("user_data_fields")
-	data = {}
-	for hook in hooks:
-		d = data.get(hook.get("doctype"), [])
-		d += frappe.get_all(hook.get("doctype"), {hook.get("filter_by", "owner"): user}, ["*"])
-		if d:
-			data.update({hook.get("doctype"): d})
-	return json.dumps(data, indent=2, default=str)
+    """Return user data not linked to `User` doctype."""
+    hooks = frappe.get_hooks("user_data_fields")
+    data = {}
+    for hook in hooks:
+        d = data.get(hook.get("doctype"), [])
+        d += frappe.get_all(hook.get("doctype"), {hook.get("filter_by", "owner"): user}, ["*"])
+        if d:
+            data.update({hook.get("doctype"): d})
+    return json.dumps(data, indent=2, default=str)

@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestListViewSettings(UnitTestCase):
-	"""
-	Unit tests for ListViewSettings.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for ListViewSettings.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestListViewSettings(IntegrationTestCase):
-	pass
+    pass

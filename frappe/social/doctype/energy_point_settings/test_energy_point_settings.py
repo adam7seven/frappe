@@ -6,13 +6,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestEnergyPointSettings(UnitTestCase):
-	"""
-	Unit tests for EnergyPointSettings.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for EnergyPointSettings.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestEnergyPointSettings(IntegrationTestCase):
-	pass
+    pass

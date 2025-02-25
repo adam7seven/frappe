@@ -4,13 +4,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestCustomRole(UnitTestCase):
-	"""
-	Unit tests for CustomRole.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for CustomRole.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestCustomRole(IntegrationTestCase):
-	pass
+    pass

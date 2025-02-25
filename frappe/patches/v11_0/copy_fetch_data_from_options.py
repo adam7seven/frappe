@@ -9,30 +9,30 @@ def execute():
 
     frappe.db.sql(
         """
-		update `tabDocField`
-		set fetch_from = options, options=''
-		where options like '%.%' and (fetch_from is NULL OR fetch_from='')
- 		and fieldtype in ('Data', 'Read Only', 'Text', 'Small Text', 'Text Editor', 'Code', 'Link', 'Check')
- 		and fieldname!='naming_series'
-	"""
+        update `tabDocField`
+        set fetch_from = options, options=''
+        where options like '%.%' and (fetch_from is NULL OR fetch_from='')
+         and fieldtype in ('Data', 'Read Only', 'Text', 'Small Text', 'Text Editor', 'Code', 'Link', 'Check')
+         and fieldname!='naming_series'
+    """
     )
 
     frappe.db.sql(
         """
-		update `tabCustom Field`
-		set fetch_from = options, options=''
-		where options like '%.%' and (fetch_from is NULL OR fetch_from='')
- 		and fieldtype in ('Data', 'Read Only', 'Text', 'Small Text', 'Text Editor', 'Code', 'Link', 'Check')
- 		and fieldname!='naming_series'
-	"""
+        update `tabCustom Field`
+        set fetch_from = options, options=''
+        where options like '%.%' and (fetch_from is NULL OR fetch_from='')
+         and fieldtype in ('Data', 'Read Only', 'Text', 'Small Text', 'Text Editor', 'Code', 'Link', 'Check')
+         and fieldname!='naming_series'
+    """
     )
 
     frappe.db.sql(
         """
-		update `tabProperty Setter`
-		set property="fetch_from", id=concat(doc_type, '-', field_name, '-', property)
-		where property="options" and value like '%.%'
-		and property_type in ('Data', 'Read Only', 'Text', 'Small Text', 'Text Editor', 'Code', 'Link', 'Check')
-		and field_name!='naming_series'
-	"""
+        update `tabProperty Setter`
+        set property="fetch_from", id=concat(doc_type, '-', field_name, '-', property)
+        where property="options" and value like '%.%'
+        and property_type in ('Data', 'Read Only', 'Text', 'Small Text', 'Text Editor', 'Code', 'Link', 'Check')
+        and field_name!='naming_series'
+    """
     )

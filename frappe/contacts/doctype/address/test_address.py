@@ -8,18 +8,18 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestAddress(UnitTestCase):
-	"""
-	Unit tests for Address.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for Address.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestAddress(IntegrationTestCase):
-	def test_template_works(self):
-		if not frappe.db.exists("Address Template", "India"):
-			frappe.get_doc({"doctype": "Address Template", "country": "India", "is_default": 1}).insert()
+    def test_template_works(self):
+        if not frappe.db.exists("Address Template", "India"):
+            frappe.get_doc({"doctype": "Address Template", "country": "India", "is_default": 1}).insert()
 
         if not frappe.db.exists("Address", "_Test Address-Office"):
             frappe.get_doc(

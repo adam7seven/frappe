@@ -13,27 +13,27 @@ no_cache = 1
 
 
 def get_context(context, **dict_params):
-	"""Return context for a list standard list page.
+    """Return context for a list standard list page.
 
-	Also update `get_list_context` from the doctype module file."""
-	frappe.local.form_dict.update(dict_params)
-	doctype = frappe.local.form_dict.doctype
-	context.parents = [{"route": "me", "title": _("My Account")}]
-	context.meta = frappe.get_meta(doctype)
-	context.update(get_list_context(context, doctype) or {})
-	context.doctype = doctype
-	context.txt = frappe.local.form_dict.txt
-	context.update(get(**frappe.local.form_dict))
+    Also update `get_list_context` from the doctype module file."""
+    frappe.local.form_dict.update(dict_params)
+    doctype = frappe.local.form_dict.doctype
+    context.parents = [{"route": "me", "title": _("My Account")}]
+    context.meta = frappe.get_meta(doctype)
+    context.update(get_list_context(context, doctype) or {})
+    context.doctype = doctype
+    context.txt = frappe.local.form_dict.txt
+    context.update(get(**frappe.local.form_dict))
 
 
 @frappe.whitelist(allow_guest=True)
 def get(doctype, txt=None, limit_start=0, limit=20, pathname=None, **kwargs):
-	"""Return processed HTML page for a standard listing."""
-	limit_start = cint(limit_start)
-	raw_result = get_list_data(doctype, txt, limit_start, limit=limit + 1, **kwargs)
-	show_more = len(raw_result) > limit
-	if show_more:
-		raw_result = raw_result[:-1]
+    """Return processed HTML page for a standard listing."""
+    limit_start = cint(limit_start)
+    raw_result = get_list_data(doctype, txt, limit_start, limit=limit + 1, **kwargs)
+    show_more = len(raw_result) > limit
+    if show_more:
+        raw_result = raw_result[:-1]
 
     meta = frappe.get_meta(doctype)
     list_context = frappe.flags.list_context
@@ -89,8 +89,8 @@ def get_list_data(
     web_form_id=None,
     **kwargs,
 ):
-	"""Return processed HTML page for a standard listing."""
-	limit_start = cint(limit_start)
+    """Return processed HTML page for a standard listing."""
+    limit_start = cint(limit_start)
 
     if frappe.is_table(doctype):
         frappe.throw(_("Child DocTypes are not allowed"), title=_("Invalid DocType"))
@@ -113,14 +113,14 @@ def get_list_data(
 
     _get_list = list_context.get_list or get_list
 
-	kwargs = dict(
-		doctype=doctype,
-		txt=txt,
-		filters=filters,
-		limit_start=limit_start,
-		limit_page_length=limit,
-		order_by=list_context.order_by or "creation desc",
-	)
+    kwargs = dict(
+        doctype=doctype,
+        txt=txt,
+        filters=filters,
+        limit_start=limit_start,
+        limit_page_length=limit,
+        order_by=list_context.order_by or "creation desc",
+    )
 
     # allow guest if flag is set
     if not list_context.get_list and (
@@ -155,10 +155,10 @@ def prepare_filters(doctype, controller, kwargs):
     filters = frappe._dict(kwargs)
     meta = frappe.get_meta(doctype)
 
-	if hasattr(controller, "website") and controller.website.get("condition_field"):
-		filters[controller.website["condition_field"]] = 1
-	elif meta.is_published_field:
-		filters[meta.is_published_field] = 1
+    if hasattr(controller, "website") and controller.website.get("condition_field"):
+        filters[controller.website["condition_field"]] = 1
+    elif meta.is_published_field:
+        filters[meta.is_published_field] = 1
 
     if filters.pathname:
         # resolve additional filters from path
@@ -167,10 +167,10 @@ def prepare_filters(doctype, controller, kwargs):
             if key not in filters and key != "flags":
                 filters[key] = val
 
-	# filter the filters to include valid fields only
-	for fieldname in list(filters.keys()):
-		if not meta.has_field(fieldname):
-			del filters[fieldname]
+    # filter the filters to include valid fields only
+    for fieldname in list(filters.keys()):
+        if not meta.has_field(fieldname):
+            del filters[fieldname]
 
     return filters
 
@@ -228,15 +228,15 @@ def get_list_context(context, doctype, web_form_id=None):
 
 
 def get_list(
-	doctype,
-	txt,
-	filters,
-	limit_start,
-	limit_page_length=20,
-	ignore_permissions=False,
-	fields=None,
-	order_by=None,
-	or_filters=None,
+    doctype,
+    txt,
+    filters,
+    limit_start,
+    limit_page_length=20,
+    ignore_permissions=False,
+    fields=None,
+    order_by=None,
+    or_filters=None,
 ):
     meta = frappe.get_meta(doctype)
     if not filters:
@@ -245,8 +245,8 @@ def get_list(
     if not fields:
         fields = "distinct *"
 
-	if or_filters is None:
-		or_filters = []
+    if or_filters is None:
+        or_filters = []
 
     if txt:
         if meta.search_fields:

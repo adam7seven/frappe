@@ -129,17 +129,17 @@ def generate_report_result(
 
 
 def normalize_result(result, columns):
-	# Convert to list of dicts from list of lists/tuples
-	data = []
-	column_names = [column["fieldname"] for column in columns]
-	if result and isinstance(result[0], list | tuple):
-		for row in result:
-			row_obj = {}
-			for idx, column_name in enumerate(column_names):
-				row_obj[column_name] = row[idx]
-			data.append(row_obj)
-	else:
-		data = result
+    # Convert to list of dicts from list of lists/tuples
+    data = []
+    column_names = [column["fieldname"] for column in columns]
+    if result and isinstance(result[0], list | tuple):
+        for row in result:
+            row_obj = {}
+            for idx, column_name in enumerate(column_names):
+                row_obj[column_name] = row[idx]
+            data.append(row_obj)
+    else:
+        data = result
 
     return data
 
@@ -169,8 +169,8 @@ def get_script(report_id):
         script = report.javascript
         script += f"\n\n//# sourceURL={scrub(report.id)}__custom"
 
-	if not script:
-		script = "frappe.query_reports['{}']={{}}".format(report_id)
+    if not script:
+        script = "frappe.query_reports['{}']={{}}".format(report_id)
 
     return {
         "script": render_include(script),

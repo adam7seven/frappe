@@ -13,10 +13,10 @@ from frappe.tests import IntegrationTestCase
 
 
 class TestAssign(IntegrationTestCase):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
-		create_test_doctype(TEST_DOCTYPE)
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        create_test_doctype(TEST_DOCTYPE)
 
     def test_assign(self):
         todo = frappe.get_doc({"doctype": "ToDo", "description": "test"}).insert()

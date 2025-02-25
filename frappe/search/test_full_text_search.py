@@ -5,10 +5,10 @@ from frappe.tests import IntegrationTestCase
 
 
 class TestFullTextSearch(IntegrationTestCase):
-	def setUp(self):
-		index = get_index()
-		index.build()
-		self.index = index
+    def setUp(self):
+        index = get_index()
+        index.build()
+        self.index = index
 
     def test_search_term(self):
         # Search Wikipedia
@@ -90,8 +90,8 @@ def get_documents():
         {
             "id": "site/wikipedia",
             "content": """Wikipedia is a multilingual online encyclopedia created and maintained
-			as an open collaboration project by a community of volunteer editors using a wiki-based editing system.
-			It is the largest and most popular general reference work on the World Wide Web. CommonSearchTerm""",
+            as an open collaboration project by a community of volunteer editors using a wiki-based editing system.
+            It is the largest and most popular general reference work on the World Wide Web. CommonSearchTerm""",
         }
     )
 
@@ -99,8 +99,8 @@ def get_documents():
         {
             "id": "os/linux",
             "content": """Linux is a family of open source Unix-like operating systems based on the
-			Linux kernel, an operating system kernel first released on September 17, 1991, by Linus Torvalds.
-			Linux is typically packaged in a Linux distribution. CommonSearchTerm""",
+            Linux kernel, an operating system kernel first released on September 17, 1991, by Linus Torvalds.
+            Linux is typically packaged in a Linux distribution. CommonSearchTerm""",
         }
     )
 
@@ -108,9 +108,9 @@ def get_documents():
         {
             "id": "os/gnu",
             "content": """GNU is an operating system and an extensive collection of computer software.
-			GNU is composed wholly of free software, most of which is licensed under the GNU Project's own
-			General Public License. GNU is a recursive acronym for "GNU's Not Unix! ",
-			chosen because GNU's design is Unix-like, but differs from Unix by being free software and containing no Unix code. CommonSearchTerm""",
+            GNU is composed wholly of free software, most of which is licensed under the GNU Project's own
+            General Public License. GNU is a recursive acronym for "GNU's Not Unix! ",
+            chosen because GNU's design is Unix-like, but differs from Unix by being free software and containing no Unix code. CommonSearchTerm""",
         }
     )
 
@@ -118,8 +118,8 @@ def get_documents():
         {
             "id": "sw/erpnext",
             "content": """ERPNext is a free and open-source integrated Enterprise Resource Planning software developed by
-			Frappe Technologies Pvt. Ltd. and is built on MariaDB database system using a Python based server-side framework.
-			ERPNext is a generic ERP software used by manufacturers, distributors and services companies. CommonSearchTerm""",
+            Frappe Technologies Pvt. Ltd. and is built on MariaDB database system using a Python based server-side framework.
+            ERPNext is a generic ERP software used by manufacturers, distributors and services companies. CommonSearchTerm""",
         }
     )
 
@@ -127,7 +127,7 @@ def get_documents():
         {
             "id": "sw/frappe",
             "content": """Frappe Framework is a full-stack web framework, that includes everything you need to build and
-			deploy business applications with Rich Admin Interface. CommonSearchTerm""",
+            deploy business applications with Rich Admin Interface. CommonSearchTerm""",
         }
     )
 

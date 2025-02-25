@@ -5,38 +5,38 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestDocumentNamingRule(UnitTestCase):
-	"""
-	Unit tests for DocumentNamingRule.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for DocumentNamingRule.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestDocumentNamingRule(IntegrationTestCase):
-	def test_naming_rule_by_series(self):
-		naming_rule = frappe.get_doc(
-			doctype="Document Naming Rule", document_type="ToDo", prefix="test-todo-", prefix_digits=5
-		).insert()
+    def test_naming_rule_by_series(self):
+        naming_rule = frappe.get_doc(
+            doctype="Document Naming Rule", document_type="ToDo", prefix="test-todo-", prefix_digits=5
+        ).insert()
 
-		todo = frappe.get_doc(
-			doctype="ToDo", description="Is this my id " + frappe.generate_hash()
-		).insert()
+        todo = frappe.get_doc(
+            doctype="ToDo", description="Is this my id " + frappe.generate_hash()
+        ).insert()
 
         self.assertEqual(todo.id, "test-todo-00001")
 
         naming_rule.delete()
         todo.delete()
 
-	def test_naming_rule_by_condition(self):
-		naming_rule = frappe.get_doc(
-			doctype="Document Naming Rule",
-			document_type="ToDo",
-			prefix="test-high-",
-			prefix_digits=5,
-			priority=10,
-			conditions=[dict(field="priority", condition="=", value="High")],
-		).insert()
+    def test_naming_rule_by_condition(self):
+        naming_rule = frappe.get_doc(
+            doctype="Document Naming Rule",
+            document_type="ToDo",
+            prefix="test-high-",
+            prefix_digits=5,
+            priority=10,
+            conditions=[dict(field="priority", condition="=", value="High")],
+        ).insert()
 
         # another rule
         naming_rule_1 = frappe.copy_doc(naming_rule)
@@ -52,17 +52,17 @@ class TestDocumentNamingRule(IntegrationTestCase):
         naming_rule_2.conditions = []
         naming_rule_2.insert()
 
-		todo = frappe.get_doc(
-			doctype="ToDo", priority="High", description="Is this my id " + frappe.generate_hash()
-		).insert()
+        todo = frappe.get_doc(
+            doctype="ToDo", priority="High", description="Is this my id " + frappe.generate_hash()
+        ).insert()
 
-		todo_1 = frappe.get_doc(
-			doctype="ToDo", priority="Medium", description="Is this my id " + frappe.generate_hash()
-		).insert()
+        todo_1 = frappe.get_doc(
+            doctype="ToDo", priority="Medium", description="Is this my id " + frappe.generate_hash()
+        ).insert()
 
-		todo_2 = frappe.get_doc(
-			doctype="ToDo", priority="Low", description="Is this my id " + frappe.generate_hash()
-		).insert()
+        todo_2 = frappe.get_doc(
+            doctype="ToDo", priority="Low", description="Is this my id " + frappe.generate_hash()
+        ).insert()
 
         try:
             self.assertEqual(todo.id, "test-high-00001")

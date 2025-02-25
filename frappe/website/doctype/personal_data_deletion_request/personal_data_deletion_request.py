@@ -26,14 +26,14 @@ class PersonalDataDeletionRequest(Document):
             PersonalDataDeletionStep,
         )
 
-		anonymization_matrix: DF.Code | None
-		deletion_steps: DF.Table[PersonalDataDeletionStep]
-		email: DF.Data
-		status: DF.Literal["Pending Verification", "Pending Approval", "On Hold", "Deleted"]
-	# end: auto-generated types
+        anonymization_matrix: DF.Code | None
+        deletion_steps: DF.Table[PersonalDataDeletionStep]
+        email: DF.Data
+        status: DF.Literal["Pending Verification", "Pending Approval", "On Hold", "Deleted"]
+    # end: auto-generated types
 
-	def __init__(self, *args, **kwargs):
-		super().__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         self.user_data_fields = frappe.get_hooks("user_data_fields")
         self.full_match_privacy_docs = [
@@ -109,19 +109,19 @@ class PersonalDataDeletionRequest(Document):
             header=[_("Confirm Deletion of Account"), "green"],
         )
 
-	def notify_system_managers(self):
-		recipients = []
-		for manager in get_system_managers(only_id=True):
-			if is_email_notifications_enabled(manager):
-				recipients.append(manager)
+    def notify_system_managers(self):
+        recipients = []
+        for manager in get_system_managers(only_id=True):
+            if is_email_notifications_enabled(manager):
+                recipients.append(manager)
 
-		frappe.sendmail(
-			recipients=recipients,
-			subject=_("User {0} has requested for data deletion").format(self.email),
-			template="data_deletion_approval",
-			args={"user": self.email, "url": frappe.utils.get_url(self.get_url())},
-			header=[_("Approval Required"), "green"],
-		)
+        frappe.sendmail(
+            recipients=recipients,
+            subject=_("User {0} has requested for data deletion").format(self.email),
+            template="data_deletion_approval",
+            args={"user": self.email, "url": frappe.utils.get_url(self.get_url())},
+            header=[_("Approval Required"), "green"],
+        )
 
     def validate_data_anonymization(self):
         frappe.only_for("System Manager")
@@ -163,15 +163,15 @@ class PersonalDataDeletionRequest(Document):
         if self.deletion_steps:
             return
 
-		for step in self.full_match_privacy_docs + self.partial_privacy_docs:
-			row_data = {
-				"status": "Pending",
-				"document_type": step.get("doctype"),
-				"partial": step.get("partial", False),
-				"fields": json.dumps(step.get("redact_fields", [])),
-				"filtered_by": step.get("filtered_by") or "",
-			}
-			self.append("deletion_steps", row_data)
+        for step in self.full_match_privacy_docs + self.partial_privacy_docs:
+            row_data = {
+                "status": "Pending",
+                "document_type": step.get("doctype"),
+                "partial": step.get("partial", False),
+                "fields": json.dumps(step.get("redact_fields", [])),
+                "filtered_by": step.get("filtered_by") or "",
+            }
+            self.append("deletion_steps", row_data)
 
         self.anonymization_matrix = json.dumps(self.anonymization_value_map, indent=4)
         self.save()
@@ -252,11 +252,11 @@ class PersonalDataDeletionRequest(Document):
         meta = frappe.get_meta(ref["doctype"])
         filter_by_meta = meta.get_field(filter_by)
 
-		if filter_by_meta and filter_by_meta.fieldtype != "Link":
-			if self.email in doc[filter_by]:
-				value = re.sub(self.full_name_regex, self.anonymization_value_map["Data"], doc[filter_by])
-				value = re.sub(self.email_regex, self.anon, value)
-				self.anonymize_fields_dict[filter_by] = value
+        if filter_by_meta and filter_by_meta.fieldtype != "Link":
+            if self.email in doc[filter_by]:
+                value = re.sub(self.full_name_regex, self.anonymization_value_map["Data"], doc[filter_by])
+                value = re.sub(self.email_regex, self.anon, value)
+                self.anonymize_fields_dict[filter_by] = value
 
         frappe.db.set_value(
             ref["doctype"],
@@ -279,17 +279,17 @@ class PersonalDataDeletionRequest(Document):
 
         self.add_deletion_steps()
 
-		self.full_match_doctypes = (
-			doc
-			for doc in self.full_match_privacy_docs
-			if filter(lambda x: x.document_type == doc and x.status == "Pending", self.deletion_steps)
-		)
+        self.full_match_doctypes = (
+            doc
+            for doc in self.full_match_privacy_docs
+            if filter(lambda x: x.document_type == doc and x.status == "Pending", self.deletion_steps)
+        )
 
-		self.partial_match_doctypes = (
-			doc
-			for doc in self.partial_privacy_docs
-			if filter(lambda x: x.document_type == doc and x.status == "Pending", self.deletion_steps)
-		)
+        self.partial_match_doctypes = (
+            doc
+            for doc in self.partial_privacy_docs
+            if filter(lambda x: x.document_type == doc and x.status == "Pending", self.deletion_steps)
+        )
 
         for doctype in self.full_match_doctypes:
             self.redact_full_match_data(doctype, email)
@@ -397,9 +397,9 @@ def process_data_deletion_request():
 def remove_unverified_record():
     frappe.db.sql(
         """
-		DELETE FROM `tabPersonal Data Deletion Request`
-		WHERE `status` = 'Pending Verification'
-		AND `creation` < (NOW() - INTERVAL '7' DAY)"""
+        DELETE FROM `tabPersonal Data Deletion Request`
+        WHERE `status` = 'Pending Verification'
+        AND `creation` < (NOW() - INTERVAL '7' DAY)"""
     )
 
 

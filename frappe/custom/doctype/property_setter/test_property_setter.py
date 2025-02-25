@@ -4,13 +4,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestPropertySetter(UnitTestCase):
-	"""
-	Unit tests for PropertySetter.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for PropertySetter.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestPropertySetter(IntegrationTestCase):
-	pass
+    pass

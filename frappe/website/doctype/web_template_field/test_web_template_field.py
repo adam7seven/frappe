@@ -5,13 +5,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestWebTemplateField(UnitTestCase):
-	"""
-	Unit tests for WebTemplateField.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for WebTemplateField.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestWebTemplateField(IntegrationTestCase):
-	pass
+    pass

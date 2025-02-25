@@ -16,12 +16,12 @@ class Domain(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-		domain: DF.Data
-	# end: auto-generated types
+        domain: DF.Data
+    # end: auto-generated types
 
-	"""Domain documents are created automatically when DocTypes
-	with "Restricted" domains are imported during
-	installation or migration"""
+    """Domain documents are created automatically when DocTypes
+    with "Restricted" domains are imported during
+    installation or migration"""
 
     def setup_domain(self):
         """Setup domain icons, permissions, custom fields etc."""
@@ -30,10 +30,10 @@ class Domain(Document):
         self.setup_properties()
         self.set_values()
 
-		if not cint(frappe.defaults.get_defaults().setup_complete):
-			# if setup not complete, setup desktop etc.
-			self.setup_sidebar_items()
-			self.set_default_portal_role()
+        if not cint(frappe.defaults.get_defaults().setup_complete):
+            # if setup not complete, setup desktop etc.
+            self.setup_sidebar_items()
+            self.set_default_portal_role()
 
         if self.data.custom_fields:
             create_custom_fields(self.data.custom_fields)
@@ -75,15 +75,15 @@ class Domain(Document):
                     if custom_field_name:
                         frappe.delete_doc("Custom Field", custom_field_name)
 
-	def setup_roles(self):
-		"""Enable roles that are restricted to this domain"""
-		if self.data.restricted_roles:
-			user = frappe.get_doc("User", frappe.session.user)
-			for role_id in self.data.restricted_roles:
-				user.append("roles", {"role": role_id})
-				if not frappe.db.get_value("Role", role_id):
-					frappe.get_doc(doctype="Role", id=role_id).insert()
-					continue
+    def setup_roles(self):
+        """Enable roles that are restricted to this domain"""
+        if self.data.restricted_roles:
+            user = frappe.get_doc("User", frappe.session.user)
+            for role_id in self.data.restricted_roles:
+                user.append("roles", {"role": role_id})
+                if not frappe.db.get_value("Role", role_id):
+                    frappe.get_doc(doctype="Role", id=role_id).insert()
+                    continue
 
                 role = frappe.get_doc("Role", role_id)
                 role.disabled = 0
@@ -124,18 +124,18 @@ class Domain(Document):
             # disable all
             frappe.db.sql("update `tabPortal Menu Item` set enabled=0")
 
-			# enable
-			frappe.db.sql(
-				"""update `tabPortal Menu Item` set enabled=1
-				where route in ({})""".format(", ".join(f'"{d}"' for d in self.data.allow_sidebar_items))
-			)
+            # enable
+            frappe.db.sql(
+                """update `tabPortal Menu Item` set enabled=1
+                where route in ({})""".format(", ".join(f'"{d}"' for d in self.data.allow_sidebar_items))
+            )
 
         if self.data.remove_sidebar_items:
             # disable all
             frappe.db.sql("update `tabPortal Menu Item` set enabled=1")
 
-			# enable
-			frappe.db.sql(
-				"""update `tabPortal Menu Item` set enabled=0
-				where route in ({})""".format(", ".join(f'"{d}"' for d in self.data.remove_sidebar_items))
-			)
+            # enable
+            frappe.db.sql(
+                """update `tabPortal Menu Item` set enabled=0
+                where route in ({})""".format(", ".join(f'"{d}"' for d in self.data.remove_sidebar_items))
+            )

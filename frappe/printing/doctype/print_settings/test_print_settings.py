@@ -4,13 +4,13 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestPrintSettings(UnitTestCase):
-	"""
-	Unit tests for PrintSettings.
-	Use this class for testing individual functions and methods.
-	"""
+    """
+    Unit tests for PrintSettings.
+    Use this class for testing individual functions and methods.
+    """
 
-	pass
+    pass
 
 
 class TestPrintSettings(IntegrationTestCase):
-	pass
+    pass
