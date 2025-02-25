@@ -140,13 +140,13 @@
     },
     {
       "depends_on": "eval: doc.notify_by_email",
-      "description": "To add dynamic subject, use jinja tags like\n\n<div><pre><code>New {{ doc.doctype }} #{{ doc.name }}</code></pre></div>",
+      "description": "To add dynamic subject, use jinja tags like\n\n<div><pre><code>New {{ doc.doctype }} #{{ doc.id }}</code></pre></div>",
       "fieldname": "subject",
       "fieldtype": "Data",
       "label": "Subject"
     },
     {
-      "default": "Please find attached {{ doc.doctype }} #{{ doc.name }}",
+      "default": "Please find attached {{ doc.doctype }} #{{ doc.id }}",
       "depends_on": "eval: doc.notify_by_email",
       "fieldname": "message",
       "fieldtype": "Text",
@@ -204,7 +204,7 @@
   "modified": "2025-01-20 14:15:55.287788",
   "modified_by": "Administrator",
   "module": "Automation",
-  "name": "Auto Repeat",
+  "id": "Auto Repeat",
   "naming_rule": "Expression",
   "owner": "Administrator",
   "permissions": [

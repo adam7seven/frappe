@@ -49,7 +49,7 @@ class Reminder(Document):
             notification.for_user = self.user
             notification.set("type", "Alert")
             notification.document_type = self.reminder_doctype
-            notification.document_name = self.reminder_docid
+            notification.document_id = self.reminder_docid
             notification.subject = self.description
             notification.insert()
         except Exception:
@@ -86,7 +86,7 @@ def send_reminders():
             ("remind_at", ">=", lower_threshold),  # dont send too old reminders if failed to send
             ("notified", "=", 0),
         ],
-        pluck="name",
+        pluck="id",
         ignore_ifnull=True,
     )
 

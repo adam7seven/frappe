@@ -63,7 +63,7 @@ class AssignmentRule(Document):
             )
 
     def apply_unassign(self, doc, assignments):
-        if self.unassign_condition and self.name in [d.assignment_rule for d in assignments]:
+        if self.unassign_condition and self.id in [d.assignment_rule for d in assignments]:
             return self.clear_assignment(doc)
 
         return False
@@ -74,7 +74,7 @@ class AssignmentRule(Document):
 
     def do_assignment(self, doc):
         # clear existing assignment, to reassign
-        assign_to.clear(doc.get("doctype"), doc.get("name"), ignore_permissions=True)
+        assign_to.clear(doc.get("doctype"), doc.get("id"), ignore_permissions=True)
 
         user = self.get_user(doc)
 
@@ -83,9 +83,9 @@ class AssignmentRule(Document):
                 dict(
                     assign_to=[user],
                     doctype=doc.get("doctype"),
-                    name=doc.get("name"),
+                    id=doc.get("id"),
                     description=frappe.render_template(self.description, doc),
-                    assignment_rule=self.name,
+                    assignment_rule=self.id,
                     notify=True,
                     date=doc.get(self.due_date_based_on) if self.due_date_based_on else None,
                 ),
@@ -101,12 +101,12 @@ class AssignmentRule(Document):
     def clear_assignment(self, doc):
         """Clear assignments"""
         if self.safe_eval("unassign_condition", doc):
-            return assign_to.clear(doc.get("doctype"), doc.get("name"), ignore_permissions=True)
+            return assign_to.clear(doc.get("doctype"), doc.get("id"), ignore_permissions=True)
 
     def close_assignments(self, doc):
         """Close assignments"""
         if self.safe_eval("close_condition", doc):
-            return assign_to.close_all_assignments(doc.get("doctype"), doc.get("name"), ignore_permissions=True)
+            return assign_to.close_all_assignments(doc.get("doctype"), doc.get("id"), ignore_permissions=True)
 
     def get_user(self, doc):
         """
@@ -186,8 +186,8 @@ class AssignmentRule(Document):
 def get_assignments(doc) -> list[dict]:
     return frappe.get_all(
         "ToDo",
-        fields=["name", "assignment_rule"],
-        filters=dict(reference_type=doc.get("doctype"), reference_name=doc.get("name"), status=("!=", "Cancelled")),
+        fields=["id", "assignment_rule"],
+        filters=dict(reference_type=doc.get("doctype"), reference_id=doc.get("id"), status=("!=", "Cancelled")),
         limit=5,
     )
 
@@ -197,16 +197,16 @@ def bulk_apply(doctype, docids):
     docids = frappe.parse_json(docids)
     background = len(docids) > 5
 
-    for name in docids:
+    for id in docids:
         if background:
             frappe.enqueue(
                 "frappe.automation.doctype.assignment_rule.assignment_rule.apply",
                 doc=None,
                 doctype=doctype,
-                name=name,
+                id=id,
             )
         else:
-            apply(doctype=doctype, name=name)
+            apply(doctype=doctype, id=id)
 
 
 def reopen_closed_assignment(doc):
@@ -214,10 +214,10 @@ def reopen_closed_assignment(doc):
         "ToDo",
         filters={
             "reference_type": doc.doctype,
-            "reference_name": doc.name,
+            "reference_id": doc.id,
             "status": "Closed",
         },
-        pluck="name",
+        pluck="id",
     )
 
     for todo in todo_list:
@@ -228,7 +228,7 @@ def reopen_closed_assignment(doc):
     return bool(todo_list)
 
 
-def apply(doc=None, method=None, doctype=None, name=None):
+def apply(doc=None, method=None, doctype=None, id=None):
     doctype = doctype or doc.doctype
 
     skip_assignment_rules = (
@@ -238,8 +238,8 @@ def apply(doc=None, method=None, doctype=None, name=None):
     if skip_assignment_rules:
         return
 
-    if not doc and doctype and name:
-        doc = frappe.get_doc(doctype, name)
+    if not doc and doctype and id:
+        doc = frappe.get_doc(doctype, id)
 
     assignment_rules = get_doctype_map(
         "Assignment Rule",
@@ -250,7 +250,7 @@ def apply(doc=None, method=None, doctype=None, name=None):
 
     # multiple auto assigns
     assignment_rule_docs: list[AssignmentRule] = [
-        frappe.get_cached_doc("Assignment Rule", d.get("name")) for d in assignment_rules
+        frappe.get_cached_doc("Assignment Rule", d.get("id")) for d in assignment_rules
     ]
 
     if not assignment_rule_docs:
@@ -303,9 +303,9 @@ def apply(doc=None, method=None, doctype=None, name=None):
                         "ToDo",
                         filters={
                             "reference_type": doc.doctype,
-                            "reference_name": doc.name,
+                            "reference_id": doc.id,
                         },
-                        pluck="name",
+                        pluck="id",
                     )
 
                     for todo in todos_to_close:
@@ -337,7 +337,7 @@ def update_due_date(doc, state=None):
 
     assignment_rules = get_doctype_map(
         doctype="Assignment Rule",
-        name=f"due_date_rules_for_{doc.doctype}",
+        id=f"due_date_rules_for_{doc.doctype}",
         filters={
             "due_date_based_on": ["is", "set"],
             "document_type": doc.doctype,
@@ -346,22 +346,20 @@ def update_due_date(doc, state=None):
     )
 
     for rule in assignment_rules:
-        rule_doc = frappe.get_cached_doc("Assignment Rule", rule.get("name"))
+        rule_doc = frappe.get_cached_doc("Assignment Rule", rule.get("id"))
         due_date_field = rule_doc.due_date_based_on
-        field_updated = (
-            doc.meta.has_field(due_date_field) and doc.has_value_changed(due_date_field) and rule.get("name")
-        )
+        field_updated = doc.meta.has_field(due_date_field) and doc.has_value_changed(due_date_field) and rule.get("id")
 
         if field_updated:
             assignment_todos = frappe.get_all(
                 "ToDo",
                 filters={
-                    "assignment_rule": rule.get("name"),
+                    "assignment_rule": rule.get("id"),
                     "reference_type": doc.doctype,
-                    "reference_name": doc.name,
+                    "reference_id": doc.id,
                     "status": "Open",
                 },
-                pluck="name",
+                pluck="id",
             )
 
             for todo in assignment_todos:
@@ -369,7 +367,7 @@ def update_due_date(doc, state=None):
                 todo_doc.date = doc.get(due_date_field)
                 todo_doc.flags.updater_reference = {
                     "doctype": "Assignment Rule",
-                    "docid": rule.get("name"),
+                    "docid": rule.get("id"),
                     "label": _("via Assignment Rule"),
                 }
                 todo_doc.save(ignore_permissions=True)

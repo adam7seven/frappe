@@ -13,7 +13,7 @@ frappe.ui.form.on("Assignment Rule", {
 		frm.set_query("document_type", () => {
 			return {
 				filters: {
-					name: ["!=", "ToDo"],
+					id: ["!=", "ToDo"],
 				},
 			};
 		});

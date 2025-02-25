@@ -34,7 +34,7 @@
   "modified": "2024-03-23 16:03:29.801483",
   "modified_by": "Administrator",
   "module": "Automation",
-  "name": "Milestone Tracker",
+  "id": "Milestone Tracker",
   "owner": "Administrator",
   "permissions": [
     {

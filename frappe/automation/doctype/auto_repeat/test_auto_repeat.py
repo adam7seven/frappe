@@ -49,16 +49,16 @@ class TestAutoRepeat(IntegrationTestCase):
     def test_daily_auto_repeat(self):
         todo = frappe.get_doc(doctype="ToDo", description="test recurring todo", assigned_by="Administrator").insert()
 
-        doc = make_auto_repeat(reference_document=todo.name)
+        doc = make_auto_repeat(reference_document=todo.id)
         self.assertEqual(doc.next_schedule_date, today())
         data = get_auto_repeat_entries(getdate(today()))
         create_repeated_entries(data)
         frappe.db.commit()
 
         todo = frappe.get_doc(doc.reference_doctype, doc.reference_document)
-        self.assertEqual(todo.auto_repeat, doc.name)
+        self.assertEqual(todo.auto_repeat, doc.id)
 
-        new_todo = frappe.db.get_value("ToDo", {"auto_repeat": doc.name, "name": ("!=", todo.name)}, "name")
+        new_todo = frappe.db.get_value("ToDo", {"auto_repeat": doc.id, "id": ("!=", todo.id)}, "id")
 
         new_todo = frappe.get_doc("ToDo", new_todo)
 
@@ -70,7 +70,7 @@ class TestAutoRepeat(IntegrationTestCase):
         doc = make_auto_repeat(
             reference_doctype="ToDo",
             frequency="Weekly",
-            reference_document=todo.name,
+            reference_document=todo.id,
             start_date=add_days(today(), -7),
         )
 
@@ -80,9 +80,9 @@ class TestAutoRepeat(IntegrationTestCase):
         frappe.db.commit()
 
         todo = frappe.get_doc(doc.reference_doctype, doc.reference_document)
-        self.assertEqual(todo.auto_repeat, doc.name)
+        self.assertEqual(todo.auto_repeat, doc.id)
 
-        new_todo = frappe.db.get_value("ToDo", {"auto_repeat": doc.name, "name": ("!=", todo.name)}, "name")
+        new_todo = frappe.db.get_value("ToDo", {"auto_repeat": doc.id, "id": ("!=", todo.id)}, "id")
 
         new_todo = frappe.get_doc("ToDo", new_todo)
 
@@ -99,7 +99,7 @@ class TestAutoRepeat(IntegrationTestCase):
         doc = make_auto_repeat(
             reference_doctype="ToDo",
             frequency="Weekly",
-            reference_document=todo.name,
+            reference_document=todo.id,
             start_date=add_days(today(), -7),
             days=days,
         )
@@ -110,7 +110,7 @@ class TestAutoRepeat(IntegrationTestCase):
         frappe.db.commit()
 
         todo = frappe.get_doc(doc.reference_doctype, doc.reference_document)
-        self.assertEqual(todo.auto_repeat, doc.name)
+        self.assertEqual(todo.auto_repeat, doc.id)
 
         doc.reload()
         self.assertEqual(doc.next_schedule_date, add_days(getdate(), 2))
@@ -121,12 +121,12 @@ class TestAutoRepeat(IntegrationTestCase):
 
         todo = frappe.get_doc(doctype="ToDo", description="test recurring todo", assigned_by="Administrator").insert()
 
-        self.monthly_auto_repeat("ToDo", todo.name, start_date, end_date)
+        self.monthly_auto_repeat("ToDo", todo.id, start_date, end_date)
         # test without end_date
         todo = frappe.get_doc(
             doctype="ToDo", description="test recurring todo without end_date", assigned_by="Administrator"
         ).insert()
-        self.monthly_auto_repeat("ToDo", todo.name, start_date)
+        self.monthly_auto_repeat("ToDo", todo.id, start_date)
 
     def monthly_auto_repeat(self, doctype, docid, start_date, end_date=None):
         def get_months(start, end):
@@ -145,17 +145,17 @@ class TestAutoRepeat(IntegrationTestCase):
 
         data = get_auto_repeat_entries(getdate(today()))
         create_repeated_entries(data)
-        docids = frappe.get_all(doc.reference_doctype, {"auto_repeat": doc.name})
+        docids = frappe.get_all(doc.reference_doctype, {"auto_repeat": doc.id})
         self.assertEqual(len(docids), 1)
 
-        doc = frappe.get_doc("Auto Repeat", doc.name)
+        doc = frappe.get_doc("Auto Repeat", doc.id)
         doc.db_set("disabled", 0)
 
         months = get_months(getdate(start_date), getdate(today()))
         data = get_auto_repeat_entries(getdate(today()))
         create_repeated_entries(data)
 
-        docids = frappe.get_all(doc.reference_doctype, {"auto_repeat": doc.name})
+        docids = frappe.get_all(doc.reference_doctype, {"auto_repeat": doc.id})
         self.assertEqual(len(docids), months)
 
     def test_email_notification(self):
@@ -164,7 +164,7 @@ class TestAutoRepeat(IntegrationTestCase):
         ).insert()
 
         doc = make_auto_repeat(
-            reference_document=todo.name,
+            reference_document=todo.id,
             notify=1,
             recipients="test@domain.com",
             subject="New ToDo",
@@ -174,9 +174,9 @@ class TestAutoRepeat(IntegrationTestCase):
         create_repeated_entries(data)
         frappe.db.commit()
 
-        new_todo = frappe.db.get_value("ToDo", {"auto_repeat": doc.name, "name": ("!=", todo.name)}, "name")
+        new_todo = frappe.db.get_value("ToDo", {"auto_repeat": doc.id, "id": ("!=", todo.id)}, "id")
 
-        email_queue = frappe.db.exists("Email Queue", dict(reference_doctype="ToDo", reference_name=new_todo))
+        email_queue = frappe.db.exists("Email Queue", dict(reference_doctype="ToDo", reference_id=new_todo))
         self.assertTrue(email_queue)
 
     def test_next_schedule_date(self):
@@ -184,7 +184,7 @@ class TestAutoRepeat(IntegrationTestCase):
         todo = frappe.get_doc(
             doctype="ToDo", description="test next schedule date for monthly", assigned_by="Administrator"
         ).insert()
-        doc = make_auto_repeat(frequency="Monthly", reference_document=todo.name, start_date=add_months(today(), -2))
+        doc = make_auto_repeat(frequency="Monthly", reference_document=todo.id, start_date=add_months(today(), -2))
 
         # next_schedule_date is set as on or after current date
         # it should not be a previous month's date
@@ -193,7 +193,7 @@ class TestAutoRepeat(IntegrationTestCase):
         todo = frappe.get_doc(
             doctype="ToDo", description="test next schedule date for daily", assigned_by="Administrator"
         ).insert()
-        doc = make_auto_repeat(frequency="Daily", reference_document=todo.name, start_date=add_days(today(), -2))
+        doc = make_auto_repeat(frequency="Daily", reference_document=todo.id, start_date=add_days(today(), -2))
         self.assertEqual(getdate(doc.next_schedule_date), current_date)
 
     def test_submit_on_creation(self):
@@ -206,14 +206,14 @@ class TestAutoRepeat(IntegrationTestCase):
         doc = make_auto_repeat(
             frequency="Daily",
             reference_doctype=doctype,
-            reference_document=submittable_doc.name,
+            reference_document=submittable_doc.id,
             start_date=add_days(current_date, -1),
             submit_on_creation=1,
         )
 
         data = get_auto_repeat_entries(current_date)
         create_repeated_entries(data)
-        docids = frappe.get_all(doc.reference_doctype, filters={"auto_repeat": doc.name}, fields=["docstatus"], limit=1)
+        docids = frappe.get_all(doc.reference_doctype, filters={"auto_repeat": doc.id}, fields=["docstatus"], limit=1)
         self.assertEqual(docids[0].docstatus, 1)
 
 
@@ -223,7 +223,7 @@ def make_auto_repeat(**args):
         {
             "doctype": "Auto Repeat",
             "reference_doctype": args.reference_doctype or "ToDo",
-            "reference_document": args.reference_document or frappe.db.get_value("ToDo", "name"),
+            "reference_document": args.reference_document or frappe.db.get_value("ToDo", "id"),
             "submit_on_creation": args.submit_on_creation or 0,
             "frequency": args.frequency or "Daily",
             "start_date": args.start_date or add_days(today(), -1),
@@ -244,7 +244,7 @@ def create_submittable_doctype(doctype, submit_perms=1):
         doc = frappe.get_doc(
             {
                 "doctype": "DocType",
-                "__newname": doctype,
+                "__newid": doctype,
                 "module": "Custom",
                 "custom": 1,
                 "is_submittable": 1,
