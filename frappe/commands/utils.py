@@ -231,7 +231,7 @@ def reset_perms(context: CliCtxObj):
             frappe.init(site)
             frappe.connect()
             for d in frappe.db.sql_list(
-                """select name from `tabDocType`
+                """select id from `tabDocType`
 				where istable=0 and custom=0"""
             ):
                 frappe.clear_cache(doctype=d)
@@ -350,15 +350,15 @@ def export_doc(context: CliCtxObj, doctype, docid):
 @click.argument("path")
 @click.option("--name", help="Export only one document")
 @pass_context
-def export_json(context: CliCtxObj, doctype, path, name=None):
-    "Export doclist as json to the given path, use '-' as name for Singles."
+def export_json(context: CliCtxObj, doctype, path, id=None):
+    "Export doclist as json to the given path, use '-' as id for Singles."
     from frappe.core.doctype.data_import.data_import import export_json
 
     for site in context.sites:
         try:
             frappe.init(site)
             frappe.connect()
-            export_json(doctype, path, name=name)
+            export_json(doctype, path, id=id)
         finally:
             frappe.destroy()
     if not context.sites:
@@ -457,13 +457,13 @@ def data_import(context: CliCtxObj, file_path, doctype, import_type=None, submit
     frappe.destroy()
 
 
-@click.command("bulk-rename")
+@click.command("bulk-reid")
 @click.argument("doctype")
 @click.argument("path")
 @pass_context
-def bulk_rename(context: CliCtxObj, doctype, path):
-    "Rename multiple records via CSV file"
-    from frappe.model.rename_doc import bulk_rename
+def bulk_reid(context: CliCtxObj, doctype, path):
+    "Reid multiple records via CSV file"
+    from frappe.model.reid_doc import bulk_reid
     from frappe.utils.csvutils import read_csv_content
 
     site = get_site(context)
@@ -474,7 +474,7 @@ def bulk_rename(context: CliCtxObj, doctype, path):
     frappe.init(site)
     frappe.connect()
 
-    bulk_rename(doctype, rows, via_console=True)
+    bulk_reid(doctype, rows, via_console=True)
 
     frappe.destroy()
 
@@ -1026,7 +1026,7 @@ commands = [
     set_config,
     show_config,
     watch,
-    bulk_rename,
+    bulk_reid,
     add_to_email_queue,
     rebuild_global_search,
     list_sites,

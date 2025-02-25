@@ -1392,7 +1392,7 @@ def trim_database(context: CliCtxObj, dry_run, format, no_backup, yes=False):
             .where(information_schema.tables.table_type == "BASE TABLE")
             .run(pluck=True)
         )
-        doctype_tables = frappe.get_all("DocType", pluck="name")
+        doctype_tables = frappe.get_all("DocType", pluck="id")
 
         for table_name in database_tables:
             if not table_name.startswith("tab"):
@@ -1522,7 +1522,7 @@ def add_new_user(
     user = frappe.new_doc("User")
     user.update(
         {
-            "name": email,
+            "id": email,
             "email": email,
             "enabled": 1,
             "first_name": first_name or email,
@@ -1536,7 +1536,7 @@ def add_new_user(
     if password:
         from frappe.utils.password import update_password
 
-        update_password(user=user.name, pwd=password)
+        update_password(user=user.id, pwd=password)
 
 
 def ensure_app_not_frappe(app: str) -> None:
