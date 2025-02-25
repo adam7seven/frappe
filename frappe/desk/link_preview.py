@@ -26,9 +26,9 @@ def get_preview_data(doctype, docid):
 
     preview_fields.append(title_field)
     preview_fields.append(image_field)
-    preview_fields.append("name")
+    preview_fields.append("id")
 
-    preview_data = frappe.get_list(doctype, filters={"name": docid}, fields=preview_fields, limit=1)
+    preview_data = frappe.get_list(doctype, filters={"id": docid}, fields=preview_fields, limit=1)
 
     if not preview_data:
         return
@@ -38,11 +38,11 @@ def get_preview_data(doctype, docid):
     formatted_preview_data = {
         "preview_image": preview_data.get(image_field),
         "preview_title": preview_data.get(title_field),
-        "name": preview_data.get("name"),
+        "id": preview_data.get("id"),
     }
 
     for key, val in preview_data.items():
-        if val and meta.has_field(key) and key not in [image_field, title_field, "name"]:
+        if val and meta.has_field(key) and key not in [image_field, title_field, "id"]:
             formatted_preview_data[meta.get_field(key).label] = frappe.format(
                 val,
                 meta.get_field(key).fieldtype,

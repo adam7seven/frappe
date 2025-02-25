@@ -42,7 +42,7 @@
   "modified": "2024-04-08 18:36:42.203032",
   "modified_by": "Administrator",
   "module": "Desk",
-  "name": "Changelog Feed",
+  "id": "Changelog Feed",
   "owner": "Administrator",
   "permissions": [
     {

@@ -13,16 +13,16 @@ frappe.ui.form.on("Workspace Settings", {
 			column_added = false;
 		for (let page of frappe.boot.allowed_workspaces) {
 			if (page.public) {
-				frm.workspace_map[page.name] = page;
+				frm.workspace_map[page.id] = page;
 				cnt++;
 				frm.docfields.push({
 					fieldtype: "Check",
-					fieldname: page.name,
+					fieldname: page.id,
 					hidden: !frappe.boot.app_data_map[frappe.current_app].workspaces.includes(
 						page.title
 					),
 					label: page.title + (page.parent_page ? ` (${page.parent_page})` : ""),
-					initial_value: workspace_visibilty[page.name] !== 0, // not set is also visible
+					initial_value: workspace_visibilty[page.id] !== 0, // not set is also visible
 				});
 			}
 		}

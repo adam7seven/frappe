@@ -39,7 +39,7 @@ def get_report_doc(report_name):
 
     if not doc.is_permitted():
         frappe.throw(
-            _("You don't have access to Report: {0}").format(_(doc.name)),
+            _("You don't have access to Report: {0}").format(_(doc.id)),
             frappe.PermissionError,
         )
 
@@ -117,7 +117,7 @@ def generate_report_result(report, filters=None, user=None, custom_columns=None,
         "report_summary": report_summary,
         "skip_total_row": skip_total_row or 0,
         "status": None,
-        "execution_time": frappe.cache.hget("report_execution_time", report.name) or 0,
+        "execution_time": frappe.cache.hget("report_execution_time", report.id) or 0,
     }
 
 
@@ -146,21 +146,21 @@ def get_script(report_name):
 
     # custom modules are virtual modules those exists in DB but not in disk.
     module_path = "" if is_custom_module else get_module_path(module)
-    report_folder = module_path and os.path.join(module_path, "report", scrub(report.name))
-    script_path = report_folder and os.path.join(report_folder, scrub(report.name) + ".js")
-    print_path = report_folder and os.path.join(report_folder, scrub(report.name) + ".html")
+    report_folder = module_path and os.path.join(module_path, "report", scrub(report.id))
+    script_path = report_folder and os.path.join(report_folder, scrub(report.id) + ".js")
+    print_path = report_folder and os.path.join(report_folder, scrub(report.id) + ".html")
 
     script = None
     if os.path.exists(script_path):
         with open(script_path) as f:
             script = f.read()
-            script += f"\n\n//# sourceURL={scrub(report.name)}.js"
+            script += f"\n\n//# sourceURL={scrub(report.id)}.js"
 
     html_format = get_html_format(print_path)
 
     if not script and report.javascript:
         script = report.javascript
-        script += f"\n\n//# sourceURL={scrub(report.name)}__custom"
+        script += f"\n\n//# sourceURL={scrub(report.id)}__custom"
 
     if not script:
         script = "frappe.query_reports['{}']={{}}".format(report_name)
@@ -170,7 +170,7 @@ def get_script(report_name):
         "html_format": html_format,
         "execution_time": frappe.cache.hget("report_execution_time", report_name) or 0,
         "filters": report.filters,
-        "custom_report_name": report.name if report.get("is_custom_report") else None,
+        "custom_report_name": report.id if report.get("is_custom_report") else None,
     }
 
 
@@ -220,7 +220,7 @@ def run(
             result = get_prepared_report_result(report, filters, dn, user)
         else:
             result = generate_report_result(report, filters, user, custom_columns, is_tree, parent_field)
-            add_data_to_monitor(report=report.reference_report or report.name)
+            add_data_to_monitor(report=report.reference_report or report.id)
     except Exception:
         frappe.log_error("Report Error")
         raise
@@ -234,12 +234,12 @@ def run(
 
 
 def add_custom_column_data(custom_columns, result):
-    doctype_names_from_custom_field = []
+    doctype_ids_from_custom_field = []
     for column in custom_columns:
         if len(column["fieldname"].split("-")) > 1:
             # length greater than 1, means that the column is a custom field with confilicting fieldname
-            doctype_name = frappe.unscrub(column["fieldname"].split("-")[1])
-            doctype_names_from_custom_field.append(doctype_name)
+            doctype_id = frappe.unscrub(column["fieldname"].split("-")[1])
+            doctype_ids_from_custom_field.append(doctype_id)
         column["fieldname"] = column["fieldname"].split("-")[0]
 
     custom_column_data = get_data_for_custom_report(custom_columns, result)
@@ -253,13 +253,13 @@ def add_custom_column_data(custom_columns, result):
                 # backwards compatibile `link_field`
                 # old custom reports which use `str` should not break.
                 if isinstance(link_field, str):
-                    link_field = frappe._dict({"fieldname": link_field, "names": []})
+                    link_field = frappe._dict({"fieldname": link_field, "ids": []})
 
                 row_reference = row.get(link_field.get("fieldname"))
                 # possible if the row is empty
                 if not row_reference:
                     continue
-                if key[0] in doctype_names_from_custom_field:
+                if key[0] in doctype_ids_from_custom_field:
                     column["fieldname"] = column.get("id")
                 row[column.get("fieldname")] = custom_column_data.get(key).get(row_reference)
 
@@ -506,17 +506,17 @@ def add_total_row(result, columns, meta=None, is_tree=False, parent_field=None):
 
 
 @frappe.whitelist()
-def get_data_for_custom_field(doctype, field, names=None):
+def get_data_for_custom_field(doctype, field, ids=None):
     if not frappe.has_permission(doctype, "read"):
         frappe.throw(_("Not Permitted to read {0}").format(_(doctype)), frappe.PermissionError)
 
     filters = {}
-    if names:
-        if isinstance(names, str | bytearray):
-            names = frappe.json.loads(names)
-        filters.update({"name": ["in", names]})
+    if ids:
+        if isinstance(ids, str | bytearray):
+            ids = frappe.json.loads(ids)
+        filters.update({"id": ["in", ids]})
 
-    return frappe._dict(frappe.get_list(doctype, filters=filters, fields=["name", field], as_list=1))
+    return frappe._dict(frappe.get_list(doctype, filters=filters, fields=["id", field], as_list=1))
 
 
 def get_data_for_custom_report(columns, result):
@@ -527,19 +527,19 @@ def get_data_for_custom_report(columns, result):
             # backwards compatibile `link_field`
             # old custom reports which use `str` should not break
             if isinstance(link_field, str):
-                link_field = frappe._dict({"fieldname": link_field, "names": []})
+                link_field = frappe._dict({"fieldname": link_field, "ids": []})
 
             fieldname = column.get("fieldname")
             doctype = column.get("doctype")
 
             row_key = link_field.get("fieldname")
-            names = []
+            ids = []
             for row in result:
                 if row.get(row_key):
-                    names.append(row.get(row_key))
-            names = list(set(names))
+                    ids.append(row.get(row_key))
+            ids = list(set(ids))
 
-            doc_field_value_map[(doctype, fieldname)] = get_data_for_custom_field(doctype, fieldname, names)
+            doc_field_value_map[(doctype, fieldname)] = get_data_for_custom_field(doctype, fieldname, ids)
     return doc_field_value_map
 
 
@@ -578,8 +578,8 @@ def save_report(reference_report, report_name, columns, filters):
                 "reference_report": reference_report,
             }
         ).insert(ignore_permissions=True)
-        frappe.msgprint(_("{0} saved successfully").format(_(new_report.name)))
-        return new_report.name
+        frappe.msgprint(_("{0} saved successfully").format(_(new_report.id)))
+        return new_report.id
 
 
 def get_filtered_data(ref_doctype, columns, data, user):

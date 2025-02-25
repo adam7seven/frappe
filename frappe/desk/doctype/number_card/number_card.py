@@ -5,7 +5,7 @@ import frappe
 from frappe import _
 from frappe.boot import get_allowed_report_names
 from frappe.model.document import Document
-from frappe.model.naming import append_number_if_name_exists
+from frappe.model.naming import append_number_if_id_exists
 from frappe.modules.export_file import export_to_files
 from frappe.query_builder import Criterion
 from frappe.query_builder.utils import DocType
@@ -45,11 +45,11 @@ class NumberCard(Document):
     # end: auto-generated types
 
     def autoid(self):
-        if not self.name:
-            self.name = self.label
+        if not self.id:
+            self.id = self.label
 
-        if frappe.db.exists("Number Card", self.name):
-            self.name = append_number_if_name_exists("Number Card", self.name)
+        if frappe.db.exists("Number Card", self.id):
+            self.id = append_number_if_id_exists("Number Card", self.id)
 
     def validate(self):
         if self.type == "Document Type":
@@ -72,7 +72,7 @@ class NumberCard(Document):
 
     def on_update(self):
         if frappe.conf.developer_mode and self.is_standard:
-            export_to_files(record_list=[["Number Card", self.name]], record_module=self.module)
+            export_to_files(record_list=[["Number Card", self.id]], record_module=self.module)
 
 
 def get_permission_query_conditions(user=None):
@@ -163,7 +163,7 @@ def get_percentage_difference(doc, filters, result):
     doc = frappe.parse_json(doc)
     result = frappe.parse_json(result)
 
-    doc = frappe.get_doc("Number Card", doc.name)
+    doc = frappe.get_doc("Number Card", doc.id)
 
     if not doc.get("show_percentage_stats"):
         return
@@ -226,7 +226,7 @@ def get_cards_for_user(doctype, txt, searchfield, start, page_len, filters):
     )
 
     return (
-        condition_query.select(numberCard.name, numberCard.label, numberCard.document_type)
+        condition_query.select(numberCard.id, numberCard.label, numberCard.document_type)
         .where((numberCard.owner == frappe.session.user) | (numberCard.is_public == 1))
         .where(Criterion.any(search_conditions))
     ).run()
@@ -236,7 +236,7 @@ def get_cards_for_user(doctype, txt, searchfield, start, page_len, filters):
 def create_report_number_card(args):
     card = create_number_card(args)
     args = frappe.parse_json(args)
-    args.name = card.name
+    args.id = card.id
     if args.dashboard:
         add_card_to_dashboard(frappe.as_json(args))
 
@@ -247,7 +247,7 @@ def add_card_to_dashboard(args):
 
     dashboard = frappe.get_doc("Dashboard", args.dashboard)
     dashboard_link = frappe.new_doc("Number Card Link")
-    dashboard_link.card = args.name
+    dashboard_link.card = args.id
 
     if args.set_standard and dashboard.is_standard:
         card = frappe.get_doc("Number Card", dashboard_link.card)

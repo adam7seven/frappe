@@ -35,7 +35,7 @@
   "modified": "2024-09-03 21:29:54.127014",
   "modified_by": "Administrator",
   "module": "Desk",
-  "name": "Workspace Settings",
+  "id": "Workspace Settings",
   "owner": "Administrator",
   "permissions": [
     {

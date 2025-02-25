@@ -5,10 +5,10 @@
   "doctype": "DocType",
   "editable_grid": 1,
   "engine": "InnoDB",
-  "field_order": ["number_card_name", "label"],
+  "field_order": ["number_card_id", "label"],
   "fields": [
     {
-      "fieldname": "number_card_name",
+      "fieldname": "number_card_id",
       "fieldtype": "Link",
       "in_list_view": 1,
       "label": "Number Card Name",
@@ -28,7 +28,7 @@
   "modified": "2024-03-23 16:04:06.156245",
   "modified_by": "Administrator",
   "module": "Desk",
-  "name": "Workspace Number Card",
+  "id": "Workspace Number Card",
   "owner": "Administrator",
   "permissions": [],
   "sort_field": "creation",

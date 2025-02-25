@@ -106,23 +106,23 @@ class Event(Document):
         self.sync_communication()
 
     def on_trash(self):
-        communications = frappe.get_all("Communication", dict(reference_doctype=self.doctype, reference_name=self.name))
+        communications = frappe.get_all("Communication", dict(reference_doctype=self.doctype, reference_id=self.id))
         if communications:
             for communication in communications:
-                frappe.delete_doc_if_exists("Communication", communication.name, force=True)
+                frappe.delete_doc_if_exists("Communication", communication.id, force=True)
 
     def sync_communication(self):
         if self.event_participants:
             for participant in self.event_participants:
                 filters = [
                     ["Communication", "reference_doctype", "=", self.doctype],
-                    ["Communication", "reference_name", "=", self.name],
+                    ["Communication", "reference_id", "=", self.id],
                     ["Communication Link", "link_doctype", "=", participant.reference_doctype],
-                    ["Communication Link", "link_name", "=", participant.reference_docid],
+                    ["Communication Link", "link_id", "=", participant.reference_docid],
                 ]
-                if comms := frappe.get_all("Communication", filters=filters, fields=["name"], distinct=True):
+                if comms := frappe.get_all("Communication", filters=filters, fields=["id"], distinct=True):
                     for comm in comms:
-                        communication = frappe.get_doc("Communication", comm.name)
+                        communication = frappe.get_doc("Communication", comm.id)
                         self.update_communication(participant, communication)
                 else:
                     meta = frappe.get_meta(participant.reference_doctype)
@@ -132,7 +132,7 @@ class Event(Document):
     def create_communication(self, participant):
         communication = frappe.new_doc("Communication")
         self.update_communication(participant, communication)
-        self.communication = communication.name
+        self.communication = communication.id
 
     def update_communication(self, participant, communication):
         communication.communication_medium = "Event"
@@ -142,7 +142,7 @@ class Event(Document):
         communication.sender = self.owner
         communication.sender_full_name = frappe.utils.get_fullname(self.owner)
         communication.reference_doctype = self.doctype
-        communication.reference_name = self.name
+        communication.reference_id = self.id
         communication.communication_medium = (
             communication_mapping.get(self.event_category) if self.event_category else ""
         )
@@ -155,7 +155,7 @@ class Event(Document):
 
         Args:
                 doctype (string): Reference Doctype
-                docid (string): Reference Docname
+                docid (string): Reference Docid
         """
         self.append(
             "event_participants",
@@ -197,17 +197,17 @@ def delete_communication(event, reference_doctype, reference_docid):
 
     filters = [
         ["Communication", "reference_doctype", "=", event.get("doctype")],
-        ["Communication", "reference_name", "=", event.get("name")],
+        ["Communication", "reference_id", "=", event.get("id")],
         ["Communication Link", "link_doctype", "=", deleted_participant.reference_doctype],
-        ["Communication Link", "link_name", "=", deleted_participant.reference_docid],
+        ["Communication Link", "link_id", "=", deleted_participant.reference_docid],
     ]
 
-    comms = frappe.get_list("Communication", filters=filters, fields=["name"])
+    comms = frappe.get_list("Communication", filters=filters, fields=["id"])
 
     if comms:
         deletion = []
         for comm in comms:
-            delete = frappe.get_doc("Communication", comm.name).delete()
+            delete = frappe.get_doc("Communication", comm.id).delete()
             deletion.append(delete)
 
         return deletion
@@ -235,13 +235,13 @@ def send_event_digest():
     users = [
         user
         for user in get_enabled_system_users()
-        if is_email_notifications_enabled_for_type(user.name, "Event Reminders")
+        if is_email_notifications_enabled_for_type(user.id, "Event Reminders")
     ]
 
     for user in users:
-        events = get_events(today, today, user.name, for_reminder=True)
+        events = get_events(today, today, user.id, for_reminder=True)
         if events:
-            frappe.set_user_lang(user.name, user.language)
+            frappe.set_user_lang(user.id, user.language)
 
             for e in events:
                 e.starts_on = format_datetime(e.starts_on, "hh:mm a")
@@ -276,7 +276,7 @@ def get_events(start, end, user=None, for_reminder=False, filters=None) -> list[
 
     events = frappe.db.sql(
         """
-		SELECT `tabEvent`.name,
+		SELECT `tabEvent`.id,
 				`tabEvent`.subject,
 				`tabEvent`.description,
 				`tabEvent`.color,
@@ -317,10 +317,10 @@ def get_events(start, end, user=None, for_reminder=False, filters=None) -> list[
 				`tabEvent`.event_type='Public'
 				OR `tabEvent`.owner=%(user)s
 				OR EXISTS(
-					SELECT `tabDocShare`.name
+					SELECT `tabDocShare`.id
 					FROM `tabDocShare`
 					WHERE `tabDocShare`.share_doctype='Event'
-						AND `tabDocShare`.share_name=`tabEvent`.name
+						AND `tabDocShare`.share_id=`tabEvent`.id
 						AND `tabDocShare`.user=%(user)s
 				)
 			)
@@ -515,11 +515,11 @@ def get_events(start, end, user=None, for_reminder=False, filters=None) -> list[
     return events
 
 
-def delete_events(ref_type, ref_name, delete_event=False):
+def delete_events(ref_type, ref_id, delete_event=False):
     participations = frappe.get_all(
         "Event Participants",
-        filters={"reference_doctype": ref_type, "reference_docid": ref_name, "parenttype": "Event"},
-        fields=["parent", "name"],
+        filters={"reference_doctype": ref_type, "reference_docid": ref_id, "parenttype": "Event"},
+        fields=["parent", "id"],
     )
 
     if participations:
@@ -532,15 +532,15 @@ def delete_events(ref_type, ref_name, delete_event=False):
                 )
 
                 if len(total_participants) <= 1:
-                    frappe.db.delete("Event", {"name": participation.parent})
-                    frappe.db.delete("Event Participants", {"name": participation.name})
+                    frappe.db.delete("Event", {"id": participation.parent})
+                    frappe.db.delete("Event Participants", {"id": participation.id})
 
 
 # Close events if ends_on or repeat_till is less than now_datetime
 def set_status_of_events():
-    events = frappe.get_list("Event", filters={"status": "Open"}, fields=["name", "ends_on", "repeat_till"])
+    events = frappe.get_list("Event", filters={"status": "Open"}, fields=["id", "ends_on", "repeat_till"])
     for event in events:
         if (event.ends_on and getdate(event.ends_on) < getdate(nowdate())) or (
             event.repeat_till and getdate(event.repeat_till) < getdate(nowdate())
         ):
-            frappe.db.set_value("Event", event.name, "status", "Closed")
+            frappe.db.set_value("Event", event.id, "status", "Closed")

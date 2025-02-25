@@ -4,28 +4,28 @@
 import frappe
 
 
-def get(name):
-	"""
-	Return the :term:`doclist` of the `Page` specified by `name`
-	"""
-	page = frappe.get_doc("Page", name)
-	if page.is_permitted():
-		page.load_assets()
-		docs = frappe._dict(page.as_dict())
-		if getattr(page, "_dynamic_page", None):
-			docs["_dynamic_page"] = 1
+def get(id):
+    """
+    Return the :term:`doclist` of the `Page` specified by `id`
+    """
+    page = frappe.get_doc("Page", id)
+    if page.is_permitted():
+        page.load_assets()
+        docs = frappe._dict(page.as_dict())
+        if getattr(page, "_dynamic_page", None):
+            docs["_dynamic_page"] = 1
 
-		return docs
-	else:
-		frappe.response["403"] = 1
-		raise frappe.PermissionError("No read permission for Page %s" % (page.title or name))
+        return docs
+    else:
+        frappe.response["403"] = 1
+        raise frappe.PermissionError("No read permission for Page %s" % (page.title or id))
 
 
 @frappe.whitelist(allow_guest=True)
-def getpage(name: str):
-	"""
-	Load the page from `frappe.form` and send it via `frappe.response`
-	"""
+def getpage(id: str):
+    """
+    Load the page from `frappe.form` and send it via `frappe.response`
+    """
 
-	doc = get(name)
-	frappe.response.docs.append(doc)
+    doc = get(id)
+    frappe.response.docs.append(doc)

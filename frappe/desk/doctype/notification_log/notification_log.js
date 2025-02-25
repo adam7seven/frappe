@@ -16,7 +16,7 @@ frappe.ui.form.on("Notification Log", {
 			return;
 		}
 		const dt = frm.doc.document_type;
-		const dn = frm.doc.document_name;
+		const dn = frm.doc.document_id;
 		frappe.set_route("Form", dt, dn);
 	},
 
@@ -28,7 +28,7 @@ frappe.ui.form.on("Notification Log", {
 			<div class="attached-file text-medium">
 				<div class="ellipsis">
 					<i class="fa fa-paperclip"></i>
-					<a class="attached-file-link">${attachment.name}.pdf</a>
+					<a class="attached-file-link">${attachment.id}.pdf</a>
 				</div>
 			</div>
 		`);
@@ -37,7 +37,7 @@ frappe.ui.form.on("Notification Log", {
 			const w = window.open(
 				frappe.urllib.get_full_url(`/api/method/frappe.utils.print_format.download_pdf?
 					doctype=${encodeURIComponent(attachment.doctype)}
-					&name=${encodeURIComponent(attachment.name)}
+					&id=${encodeURIComponent(attachment.id)}
 					&format=${encodeURIComponent(attachment.print_format)}
 					&lang=${encodeURIComponent(attachment.lang)}`)
 			);

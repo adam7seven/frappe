@@ -27,7 +27,7 @@
   "modified": "2024-04-19 15:46:57.993123",
   "modified_by": "Administrator",
   "module": "Desk",
-  "name": "System Health Report Tables",
+  "id": "System Health Report Tables",
   "owner": "Administrator",
   "permissions": [],
   "sort_field": "creation",

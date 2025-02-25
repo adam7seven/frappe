@@ -122,7 +122,7 @@
   "modified": "2024-03-23 16:03:31.952985",
   "modified_by": "Administrator",
   "module": "Desk",
-  "name": "Notification Settings",
+  "id": "Notification Settings",
   "naming_rule": "Set by user",
   "owner": "Administrator",
   "permissions": [

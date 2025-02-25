@@ -89,7 +89,7 @@
   "modified": "2024-03-23 16:03:31.284619",
   "modified_by": "Administrator",
   "module": "Desk",
-  "name": "Note",
+  "id": "Note",
   "naming_rule": "Random",
   "owner": "Administrator",
   "permissions": [

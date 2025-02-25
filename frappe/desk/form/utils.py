@@ -24,10 +24,10 @@ def remove_attach():
 
 @frappe.whitelist(methods=["POST", "PUT"])
 def add_comment(
-    reference_doctype: str, reference_name: str, content: str, comment_email: str, comment_by: str
+    reference_doctype: str, reference_id: str, content: str, comment_email: str, comment_by: str
 ) -> "Comment":
     """Allow logged user with permission to read document to add a comment"""
-    reference_doc = frappe.get_doc(reference_doctype, reference_name)
+    reference_doc = frappe.get_doc(reference_doctype, reference_id)
     reference_doc.check_permission()
 
     comment = frappe.new_doc("Comment")
@@ -35,7 +35,7 @@ def add_comment(
         {
             "comment_type": "Comment",
             "reference_doctype": reference_doctype,
-            "reference_name": reference_name,
+            "reference_id": reference_id,
             "comment_email": comment_email,
             "comment_by": comment_by,
             "content": extract_images_from_html(reference_doc, content, is_private=True),
@@ -44,21 +44,21 @@ def add_comment(
     comment.insert(ignore_permissions=True)
 
     if frappe.get_cached_value("User", frappe.session.user, "follow_commented_documents"):
-        follow_document(comment.reference_doctype, comment.reference_name, frappe.session.user)
+        follow_document(comment.reference_doctype, comment.reference_id, frappe.session.user)
 
     return comment
 
 
 @frappe.whitelist()
-def update_comment(name, content):
+def update_comment(id, content):
     """allow only owner to update comment"""
-    doc = frappe.get_doc("Comment", name)
+    doc = frappe.get_doc("Comment", id)
 
     if frappe.session.user not in ["Administrator", doc.owner]:
         frappe.throw(_("Comment can only be edited by the owner"), frappe.PermissionError)
 
-    if doc.reference_doctype and doc.reference_name:
-        reference_doc = frappe.get_doc(doc.reference_doctype, doc.reference_name)
+    if doc.reference_doctype and doc.reference_id:
+        reference_doc = frappe.get_doc(doc.reference_doctype, doc.reference_id)
         reference_doc.check_permission()
 
         doc.content = extract_images_from_html(reference_doc, content, is_private=True)
@@ -89,7 +89,7 @@ def get_next(doctype, value, prev, filters=None, sort_order="desc", sort_field="
 
     res = frappe.get_list(
         doctype,
-        fields=["name"],
+        fields=["id"],
         filters=filters,
         order_by=f"`tab{doctype}`.{sort_field}" + " " + sort_order,
         limit_start=0,
@@ -105,4 +105,4 @@ def get_next(doctype, value, prev, filters=None, sort_order="desc", sort_field="
 
 
 def get_pdf_link(doctype, docid, print_format="Standard", no_letterhead=0):
-    return f"/api/method/frappe.utils.print_format.download_pdf?doctype={doctype}&name={docid}&format={print_format}&no_letterhead={no_letterhead}"
+    return f"/api/method/frappe.utils.print_format.download_pdf?doctype={doctype}&id={docid}&format={print_format}&no_letterhead={no_letterhead}"

@@ -19,8 +19,8 @@ frappe.setup = {
 		frappe.setup.slides.push(slide);
 	},
 
-	remove_slide: function (slide_name) {
-		frappe.setup.slides = frappe.setup.slides.filter((slide) => slide.name !== slide_name);
+	remove_slide: function (slide_id) {
+		frappe.setup.slides = frappe.setup.slides.filter((slide) => slide.id !== slide_id);
 	},
 
 	run_event: function (event) {
@@ -65,7 +65,7 @@ frappe.pages["setup-wizard"].on_page_show = function () {
 frappe.setup.on("before_load", function () {
 	// load slides
 	frappe.setup.slides_settings.forEach((s) => {
-		if (!(s.name === "user" && frappe.boot.developer_mode)) {
+		if (!(s.id === "user" && frappe.boot.developer_mode)) {
 			// if not user slide with developer mode
 			frappe.setup.add_slide(s);
 		}
@@ -368,7 +368,7 @@ frappe.setup.SetupWizardSlide = class SetupWizardSlide extends frappe.ui.Slide {
 frappe.setup.slides_settings = [
 	{
 		// Welcome (language) slide
-		name: "welcome",
+		id: "welcome",
 		title: __("Welcome"),
 
 		fields: [
@@ -447,7 +447,7 @@ frappe.setup.slides_settings = [
 	},
 	{
 		// Profile slide
-		name: "user",
+		id: "user",
 		title: __("Let's set up your account"),
 		icon: "fa fa-user",
 		fields: [

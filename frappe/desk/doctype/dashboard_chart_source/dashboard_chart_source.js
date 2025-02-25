@@ -9,8 +9,8 @@ frappe.ui.form.on("Dashboard Chart Source", {
 				function () {
 					let dashboard_chart = frappe.model.get_new_doc("Dashboard Chart");
 					dashboard_chart.chart_type = "Custom";
-					dashboard_chart.source = frm.doc.name;
-					frappe.set_route("Form", "Dashboard Chart", dashboard_chart.name);
+					dashboard_chart.source = frm.doc.id;
+					frappe.set_route("Form", "Dashboard Chart", dashboard_chart.id);
 				},
 				__("Create")
 			);

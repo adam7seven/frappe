@@ -70,7 +70,7 @@ def get_kanban_boards(doctype):
     """Get Kanban Boards for doctype to show in List View"""
     return frappe.get_list(
         "Kanban Board",
-        fields=["name", "filters", "reference_doctype", "private"],
+        fields=["id", "filters", "reference_doctype", "private"],
         filters={"reference_doctype": doctype},
     )
 
@@ -116,10 +116,10 @@ def update_order(board_name, order):
 
     for col_name, cards in order_dict.items():
         for card in cards:
-            column = frappe.get_value(doctype, {"name": card}, fieldname)
+            column = frappe.get_value(doctype, {"id": card}, fieldname)
             if column != col_name:
                 frappe.set_value(doctype, card, fieldname, col_name)
-                updated_cards.append(dict(name=card, column=col_name))
+                updated_cards.append(dict(id=card, column=col_name))
 
         for column in board.columns:
             if column.column_name == col_name:
@@ -224,7 +224,7 @@ def get_order_for_column(board, colname):
     if board.filters:
         filters.append(frappe.parse_json(board.filters)[0])
 
-    return frappe.as_json(frappe.get_list(board.reference_doctype, filters=filters, pluck="name"))
+    return frappe.as_json(frappe.get_list(board.reference_doctype, filters=filters, pluck="id"))
 
 
 @frappe.whitelist()

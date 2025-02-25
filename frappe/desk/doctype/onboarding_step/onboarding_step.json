@@ -220,7 +220,7 @@
   "modified": "2024-03-23 16:03:33.078443",
   "modified_by": "Administrator",
   "module": "Desk",
-  "name": "Onboarding Step",
+  "id": "Onboarding Step",
   "naming_rule": "Set by user",
   "owner": "Administrator",
   "permissions": [

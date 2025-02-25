@@ -37,7 +37,7 @@ class BulkUpdate(Document):
 
             condition = f" where {self.condition}"
 
-        docids = frappe.db.sql_list(f"""select name from `tab{self.document_type}`{condition} limit {limit} offset 0""")
+        docids = frappe.db.sql_list(f"""select id from `tab{self.document_type}`{condition} limit {limit} offset 0""")
         return submit_cancel_or_update_docs(self.document_type, docids, "update", {self.field: self.update_value})
 
 

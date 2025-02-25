@@ -34,7 +34,7 @@
   "modified": "2024-03-23 16:01:30.816591",
   "modified_by": "Administrator",
   "module": "Desk",
-  "name": "Console Log",
+  "id": "Console Log",
   "naming_rule": "Expression",
   "owner": "Administrator",
   "permissions": [

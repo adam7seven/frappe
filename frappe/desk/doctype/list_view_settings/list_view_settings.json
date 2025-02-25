@@ -70,7 +70,7 @@
   "modified": "2024-08-21 18:17:24.889783",
   "modified_by": "Administrator",
   "module": "Desk",
-  "name": "List View Settings",
+  "id": "List View Settings",
   "naming_rule": "Set by user",
   "owner": "Administrator",
   "permissions": [

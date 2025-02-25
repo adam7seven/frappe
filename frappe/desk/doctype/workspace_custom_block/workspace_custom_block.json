@@ -5,10 +5,10 @@
   "doctype": "DocType",
   "editable_grid": 1,
   "engine": "InnoDB",
-  "field_order": ["custom_block_name", "label"],
+  "field_order": ["custom_block_id", "label"],
   "fields": [
     {
-      "fieldname": "custom_block_name",
+      "fieldname": "custom_block_id",
       "fieldtype": "Link",
       "in_list_view": 1,
       "label": "Custom Block Name",
@@ -27,7 +27,7 @@
   "modified": "2024-03-23 16:04:05.916601",
   "modified_by": "Administrator",
   "module": "Desk",
-  "name": "Workspace Custom Block",
+  "id": "Workspace Custom Block",
   "owner": "Administrator",
   "permissions": [],
   "sort_field": "creation",

@@ -25,7 +25,7 @@ frappe.ui.form.on("System Health Report", {
 			frm.set_value("socketio_ping_check", "Pass");
 			frm.set_value(
 				"socketio_transport_mode",
-				frappe.realtime.socket.io?.engine?.transport?.name
+				frappe.realtime.socket.io?.engine?.transport?.id
 			);
 		});
 		frappe.realtime.emit("ping");
@@ -73,7 +73,7 @@ frappe.ui.form.on("System Health Report", {
 		document.head.appendChild(style);
 
 		const update_fields = () => {
-			if (!frappe.get_route().includes(frm.doc.name)) {
+			if (!frappe.get_route().includes(frm.doc.id)) {
 				clearInterval(interval);
 			}
 			Object.entries(conditions).forEach(([field, condition]) => {

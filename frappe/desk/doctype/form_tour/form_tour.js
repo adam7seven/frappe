@@ -75,7 +75,7 @@ frappe.ui.form.on("Form Tour", {
 			);
 		});
 		if (!frm.doc.ui_tour) {
-			// remove report name if reference doctype is changed and report name is not valid.
+			// remove report id if reference doctype is changed and report id is not valid.
 			frappe.db
 				.get_list(
 					"Report",
@@ -84,10 +84,10 @@ frappe.ui.form.on("Form Tour", {
 							ref_doctype: frm.doc.reference_doctype,
 						},
 					},
-					{ fields: ["name"] }
+					{ fields: ["id"] }
 				)
 				.then((reports) => {
-					if (reports.findIndex((r) => r.name == frm.doc.report_name) == -1) {
+					if (reports.findIndex((r) => r.id == frm.doc.report_name) == -1) {
 						frm.set_value("report_name", "");
 						frm.refresh_field("report_name");
 					}
@@ -105,10 +105,10 @@ let add_custom_button = (frm) => {
 					frappe.call({
 						method: "frappe.desk.doctype.form_tour.form_tour.reset_tour",
 						args: {
-							tour_name: frm.doc.name,
+							tour_id: frm.doc.id,
 						},
 					});
-					delete frappe.boot.user.onboarding_status[frm.doc.name];
+					delete frappe.boot.user.onboarding_status[frm.doc.id];
 				}
 			);
 		});
@@ -120,14 +120,14 @@ let add_custom_button = (frm) => {
 			if (issingle) {
 				route_changed = frappe.set_route("Form", frm.doc.reference_doctype);
 			} else if (frm.doc.first_document) {
-				const name = await get_first_document(frm.doc.reference_doctype);
-				route_changed = frappe.set_route("Form", frm.doc.reference_doctype, name);
+				const id = await get_first_document(frm.doc.reference_doctype);
+				route_changed = frappe.set_route("Form", frm.doc.reference_doctype, id);
 			} else {
 				route_changed = frappe.set_route("Form", frm.doc.reference_doctype, "new");
 			}
 			route_changed.then(() => {
-				const tour_name = frm.doc.name;
-				cur_frm.tour.init({ tour_name }).then(() => cur_frm.tour.start());
+				const tour_id = frm.doc.id;
+				cur_frm.tour.init({ tour_id }).then(() => cur_frm.tour.start());
 			});
 		});
 	}
@@ -167,8 +167,8 @@ async function check_if_single(doctype) {
 	const { message } = await frappe.db.get_value("DocType", doctype, "issingle");
 	return message.issingle || 0;
 }
-async function check_if_private_workspace(name) {
-	const { message } = await frappe.db.get_value("Workspace", name, "public");
+async function check_if_private_workspace(id) {
+	const { message } = await frappe.db.get_value("Workspace", id, "public");
 	return !message.public || 0;
 }
 
@@ -176,7 +176,7 @@ async function get_first_document(doctype) {
 	let docid;
 
 	await frappe.db.get_list(doctype, { order_by: "creation" }).then((res) => {
-		if (Array.isArray(res) && res.length) docid = res[0].name;
+		if (Array.isArray(res) && res.length) docid = res[0].id;
 	});
 
 	return docid || "new";

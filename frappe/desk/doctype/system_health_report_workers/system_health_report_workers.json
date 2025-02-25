@@ -38,7 +38,7 @@
   "modified": "2024-04-19 15:44:52.298443",
   "modified_by": "Administrator",
   "module": "Desk",
-  "name": "System Health Report Workers",
+  "id": "System Health Report Workers",
   "owner": "Administrator",
   "permissions": [],
   "sort_field": "creation",

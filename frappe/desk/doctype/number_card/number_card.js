@@ -35,12 +35,12 @@ frappe.ui.form.on("Number Card", {
 	create_add_to_dashboard_button: function (frm) {
 		frm.add_custom_button(__("Add Card to Dashboard"), () => {
 			const dialog = frappe.dashboard_utils.get_add_to_dashboard_dialog(
-				frm.doc.name,
+				frm.doc.id,
 				"Number Card",
 				"frappe.desk.doctype.number_card.number_card.add_card_to_dashboard"
 			);
 
-			if (!frm.doc.name) {
+			if (!frm.doc.id) {
 				frappe.msgprint(__("Please create Card first"));
 			} else {
 				dialog.show();
@@ -444,7 +444,7 @@ frappe.ui.form.on("Number Card", {
 			frm.set_query("parent_document_type", function () {
 				return {
 					filters: {
-						name: ["in", parents],
+						id: ["in", parents],
 					},
 				};
 			});

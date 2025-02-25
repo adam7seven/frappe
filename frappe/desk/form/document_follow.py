@@ -10,19 +10,19 @@ from frappe.utils import get_url_to_form
 
 
 @frappe.whitelist()
-def update_follow(doctype: str, doc_name: str, following: bool):
+def update_follow(doctype: str, doc_id: str, following: bool):
     if following:
-        return (follow_document(doctype, doc_name, frappe.session.user) and True) or False
+        return (follow_document(doctype, doc_id, frappe.session.user) and True) or False
     else:
-        return unfollow_document(doctype, doc_name, frappe.session.user)
+        return unfollow_document(doctype, doc_id, frappe.session.user)
 
 
 @frappe.whitelist()
-def follow_document(doctype, doc_name, user):
+def follow_document(doctype, doc_id, user):
     """
     param:
-    Doctype name
-    doc name
+    Doctype id
+    doc id
     user email
 
     condition:
@@ -56,33 +56,33 @@ def follow_document(doctype, doc_name, user):
         frappe.toast(_("Document follow is not enabled for this user."))
         return False
 
-    if not is_document_followed(doctype, doc_name, user):
+    if not is_document_followed(doctype, doc_id, user):
         doc = frappe.new_doc("Document Follow")
-        doc.update({"ref_doctype": doctype, "ref_docid": doc_name, "user": user})
+        doc.update({"ref_doctype": doctype, "ref_docid": doc_id, "user": user})
         doc.save()
-        frappe.toast(_("Following document {0}").format(doc_name))
+        frappe.toast(_("Following document {0}").format(doc_id))
         return doc
 
     return False
 
 
 @frappe.whitelist()
-def unfollow_document(doctype, doc_name, user):
+def unfollow_document(doctype, doc_id, user):
     doc = frappe.get_all(
         "Document Follow",
-        filters={"ref_doctype": doctype, "ref_docid": doc_name, "user": user},
-        fields=["name"],
+        filters={"ref_doctype": doctype, "ref_docid": doc_id, "user": user},
+        fields=["id"],
         limit=1,
     )
     if doc:
-        frappe.delete_doc("Document Follow", doc[0].name, force=True)
-        frappe.toast(_("Un-following document {0}").format(doc_name))
+        frappe.delete_doc("Document Follow", doc[0].id, force=True)
+        frappe.toast(_("Un-following document {0}").format(doc_id))
         return False
     return False
 
 
-def get_message(doc_name, doctype, frequency, user):
-    activity_list = get_version(doctype, doc_name, frequency, user) + get_comments(doctype, doc_name, frequency, user)
+def get_message(doc_id, doctype, frequency, user):
+    activity_list = get_version(doctype, doc_id, frequency, user) + get_comments(doctype, doc_id, frequency, user)
     return sorted(activity_list, key=lambda k: k["time"], reverse=True)
 
 
@@ -128,7 +128,7 @@ def get_user_list(frequency):
     return (
         frappe.qb.from_(DocumentFollow)
         .join(User)
-        .on(DocumentFollow.user == User.name)
+        .on(DocumentFollow.user == User.id)
         .where(User.document_follow_notify == 1)
         .where(User.document_follow_frequency == frequency)
         .select(DocumentFollow.user)
@@ -167,13 +167,13 @@ def get_document_followed_by_user(user):
     ).run(as_dict=True)
 
 
-def get_version(doctype, doc_name, frequency, user):
+def get_version(doctype, doc_id, frequency, user):
     timeline = []
     version = frappe.get_all(
         "Version",
         filters=[
             ["ref_doctype", "=", doctype],
-            ["docid", "=", doc_name],
+            ["docid", "=", doc_id],
             *_get_filters(frequency, user),
         ],
         fields=["data", "modified", "modified_by"],
@@ -184,18 +184,18 @@ def get_version(doctype, doc_name, frequency, user):
             time = frappe.utils.format_datetime(v.modified, "hh:mm a")
             timeline_items = []
             if change.changed:
-                timeline_items = get_field_changed(change.changed, time, doctype, doc_name, v)
+                timeline_items = get_field_changed(change.changed, time, doctype, doc_id, v)
             if change.row_changed:
-                timeline_items = get_row_changed(change.row_changed, time, doctype, doc_name, v)
+                timeline_items = get_row_changed(change.row_changed, time, doctype, doc_id, v)
             if change.added:
-                timeline_items = get_added_row(change.added, time, doctype, doc_name, v)
+                timeline_items = get_added_row(change.added, time, doctype, doc_id, v)
 
             timeline = timeline + timeline_items
 
     return timeline
 
 
-def get_comments(doctype, doc_name, frequency, user):
+def get_comments(doctype, doc_id, frequency, user):
     from frappe.core.utils import html2text
 
     timeline = []
@@ -203,7 +203,7 @@ def get_comments(doctype, doc_name, frequency, user):
         "Comment",
         filters=[
             ["reference_doctype", "=", doctype],
-            ["reference_name", "=", doc_name],
+            ["reference_id", "=", doc_id],
             *_get_filters(frequency, user),
         ],
         fields=["content", "modified", "modified_by", "comment_type"],
@@ -222,23 +222,23 @@ def get_comments(doctype, doc_name, frequency, user):
                 "time": comment.modified,
                 "data": {"time": time, "comment": html2text(str(comment.content)), "by": by},
                 "doctype": doctype,
-                "doc_name": doc_name,
+                "doc_id": doc_id,
                 "type": "comment",
             }
         )
     return timeline
 
 
-def is_document_followed(doctype, doc_name, user):
-    return frappe.db.exists("Document Follow", {"ref_doctype": doctype, "ref_docid": doc_name, "user": user})
+def is_document_followed(doctype, doc_id, user):
+    return frappe.db.exists("Document Follow", {"ref_doctype": doctype, "ref_docid": doc_id, "user": user})
 
 
 @frappe.whitelist()
-def get_follow_users(doctype, doc_name):
-    return frappe.get_all("Document Follow", filters={"ref_doctype": doctype, "ref_docid": doc_name}, fields=["user"])
+def get_follow_users(doctype, doc_id):
+    return frappe.get_all("Document Follow", filters={"ref_doctype": doctype, "ref_docid": doc_id}, fields=["user"])
 
 
-def get_row_changed(row_changed, time, doctype, doc_name, v):
+def get_row_changed(row_changed, time, doctype, doc_id, v):
     from frappe.core.utils import html2text
 
     items = []
@@ -258,7 +258,7 @@ def get_row_changed(row_changed, time, doctype, doc_name, v):
                     "to": html2text(str(d[3][0][2])),
                 },
                 "doctype": doctype,
-                "doc_name": doc_name,
+                "doc_id": doc_id,
                 "type": "row changed",
                 "by": v.modified_by,
             }
@@ -266,13 +266,13 @@ def get_row_changed(row_changed, time, doctype, doc_name, v):
     return items
 
 
-def get_added_row(added, time, doctype, doc_name, v):
+def get_added_row(added, time, doctype, doc_id, v):
     return [
         {
             "time": v.modified,
             "data": {"to": d[0], "time": time},
             "doctype": doctype,
-            "doc_name": doc_name,
+            "doc_id": doc_id,
             "type": "row added",
             "by": v.modified_by,
         }
@@ -280,7 +280,7 @@ def get_added_row(added, time, doctype, doc_name, v):
     ]
 
 
-def get_field_changed(changed, time, doctype, doc_name, v):
+def get_field_changed(changed, time, doctype, doc_id, v):
     from frappe.core.utils import html2text
 
     items = []
@@ -298,7 +298,7 @@ def get_field_changed(changed, time, doctype, doc_name, v):
                     "to": html2text(str(d[2])),
                 },
                 "doctype": doctype,
-                "doc_name": doc_name,
+                "doc_id": doc_id,
                 "type": "field changed",
                 "by": v.modified_by,
             }

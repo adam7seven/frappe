@@ -92,7 +92,7 @@
     {
       "default": "0",
       "depends_on": "eval:(!doc.ui_tour && !doc.first_document)",
-      "fieldname": "include_name_field",
+      "fieldname": "include_id_field",
       "fieldtype": "Check",
       "label": "Include Name Field"
     },
@@ -181,7 +181,7 @@
   "modified": "2024-11-17 13:06:48.120836",
   "modified_by": "Administrator",
   "module": "Desk",
-  "name": "Form Tour",
+  "id": "Form Tour",
   "naming_rule": "By fieldname",
   "owner": "Administrator",
   "permissions": [

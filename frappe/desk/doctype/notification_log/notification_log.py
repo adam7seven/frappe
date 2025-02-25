@@ -21,7 +21,7 @@ class NotificationLog(Document):
         from frappe.types import DF
 
         attached_file: DF.Code | None
-        document_name: DF.Data | None
+        document_id: DF.Data | None
         document_type: DF.Link | None
         email_content: DF.TextEditor | None
         for_user: DF.Link | None
@@ -63,7 +63,7 @@ def get_permission_query_conditions(for_user):
 def get_title(doctype, docid, title_field=None):
     if not title_field:
         title_field = frappe.get_meta(doctype).get_title_field()
-    return docid if title_field == "name" else frappe.db.get_value(doctype, docid, title_field)
+    return docid if title_field == "id" else frappe.db.get_value(doctype, docid, title_field)
 
 
 def get_title_html(title):
@@ -108,7 +108,7 @@ def make_notification_logs(doc, users):
 
 
 def _get_user_ids(user_emails):
-    user_names = frappe.db.get_values("User", {"enabled": 1, "email": ("in", user_emails)}, "name", pluck=True)
+    user_names = frappe.db.get_values("User", {"enabled": 1, "email": ("in", user_emails)}, "id", pluck=True)
     return [user for user in user_names if is_notifications_enabled(user)]
 
 
@@ -132,8 +132,8 @@ def send_notification_email(doc: NotificationLog):
         args["doc_link"] = doc.link
     else:
         args["document_type"] = doc.document_type
-        args["document_name"] = doc.document_name
-        args["doc_link"] = get_url_to_form(doc.document_type, doc.document_name)
+        args["document_id"] = doc.document_id
+        args["doc_link"] = get_url_to_form(doc.document_type, doc.document_id)
 
     frappe.sendmail(
         recipients=user.email,
@@ -146,7 +146,7 @@ def send_notification_email(doc: NotificationLog):
 
 
 def get_email_header(doc, language: str | None = None):
-    docid = doc.document_name
+    docid = doc.document_id
     header_map = {
         "Default": _("New Notification", lang=language),
         "Mention": _("New Mention on {0}", lang=language).format(docid),
@@ -176,9 +176,9 @@ def get_notification_logs(limit=20):
 @frappe.whitelist()
 def mark_all_as_read():
     unread_docs_list = frappe.get_all("Notification Log", filters={"read": 0, "for_user": frappe.session.user})
-    unread_docids = [doc.name for doc in unread_docs_list]
+    unread_docids = [doc.id for doc in unread_docs_list]
     if unread_docids:
-        filters = {"name": ["in", unread_docids]}
+        filters = {"id": ["in", unread_docids]}
         frappe.db.set_value("Notification Log", filters, "read", 1, update_modified=False)
 
 

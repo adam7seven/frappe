@@ -265,7 +265,7 @@
   "modified": "2024-09-26 15:47:24.710881",
   "modified_by": "Administrator",
   "module": "Desk",
-  "name": "Workspace",
+  "id": "Workspace",
   "naming_rule": "By fieldname",
   "owner": "Administrator",
   "permissions": [

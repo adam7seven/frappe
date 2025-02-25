@@ -261,7 +261,7 @@ class Leaderboard {
 				const custom_options = {
 					data: {
 						datasets: [{ values: graph_items.map((d) => d.value) }],
-						labels: graph_items.map((d) => d.name),
+						labels: graph_items.map((d) => d.id),
 					},
 					format_tooltip_x: (d) => d[this.options.selected_filter_item],
 					height: 140,
@@ -301,7 +301,7 @@ class Leaderboard {
 
 	render_list_header() {
 		const _selected_filter = this.options.selected_filter.map((i) => frappe.model.unscrub(i));
-		const fields = ["rank", "name", this.options.selected_filter_item];
+		const fields = ["rank", "id", this.options.selected_filter_item];
 		const filters = fields
 			.map((filter) => {
 				const col = __(frappe.model.unscrub(filter));
@@ -359,10 +359,10 @@ class Leaderboard {
 			})
 		);
 
-		const link = `/app/${frappe.router.slug(this.options.selected_doctype)}/${item.name}`;
+		const link = `/app/${frappe.router.slug(this.options.selected_doctype)}/${item.id}`;
 		const name_html = item.formatted_name
 			? `<span class="text-muted ellipsis list-id">${item.formatted_name}</span>`
-			: `<a class="grey list-id ellipsis" href="${link}"> ${item.name} </a>`;
+			: `<a class="grey list-id ellipsis" href="${link}"> ${item.id} </a>`;
 		return `<div class="list-item">
   				<div class="list-item_content ellipsis list-item__content--flex-2 rank text-center">
   					<span class="text-muted ellipsis">${index}</span>

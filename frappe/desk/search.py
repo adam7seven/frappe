@@ -81,7 +81,7 @@ def search_widget(
         sanitize_searchfield(searchfield)
 
     if not searchfield:
-        searchfield = "name"
+        searchfield = "id"
 
     standard_queries = frappe.get_hooks().standard_queries or {}
 
@@ -134,7 +134,7 @@ def search_widget(
             "Read Only",
             "Text Editor",
         }
-        search_fields = ["name"]
+        search_fields = ["id"]
         if meta.title_field:
             search_fields.append(meta.title_field)
 
@@ -143,7 +143,7 @@ def search_widget(
 
         for f in search_fields:
             fmeta = meta.get_field(f.strip())
-            if not meta.translated_doctype and (f == "name" or (fmeta and fmeta.fieldtype in field_types)):
+            if not meta.translated_doctype and (f == "id" or (fmeta and fmeta.fieldtype in field_types)):
                 or_filters.append([doctype, f.strip(), "like", f"%{txt}%"])
 
     if meta.get("fields", {"fieldname": "enabled", "fieldtype": "Check"}):
@@ -152,14 +152,14 @@ def search_widget(
         filters.append([doctype, "disabled", "!=", 1])
 
     # format a list of fields combining search fields and filter fields
-    fields = get_std_fields_list(meta, searchfield or "name")
+    fields = get_std_fields_list(meta, searchfield or "id")
     if filter_fields:
         fields = list(set(fields + json.loads(filter_fields)))
-    formatted_fields = [f"`tab{meta.name}`.`{f.strip()}`" for f in fields]
+    formatted_fields = [f"`tab{meta.id}`.`{f.strip()}`" for f in fields]
 
-    # Insert title field query after name
+    # Insert title field query after id
     if meta.show_title_field_in_link and meta.title_field:
-        formatted_fields.insert(1, f"`tab{meta.name}`.{meta.title_field} as `label`")
+        formatted_fields.insert(1, f"`tab{meta.id}`.{meta.title_field} as `label`")
 
     order_by_based_on_meta = get_order_by(doctype, meta)
     # `idx` is number of times a document is referred, check link_count.py
@@ -168,7 +168,7 @@ def search_widget(
     if not meta.translated_doctype:
         _txt = frappe.db.escape((txt or "").replace("%", "").replace("@", ""))
         # locate returns 0 if string is not found, convert 0 to null and then sort null to end in order by
-        _relevance = f"(1 / nullif(locate({_txt}, `tab{doctype}`.`name`), 0))"
+        _relevance = f"(1 / nullif(locate({_txt}, `tab{doctype}`.`id`), 0))"
         formatted_fields.append(f"""{_relevance} as `_relevance`""")
         # Since we are sorting by alias postgres needs to know number of column we are sorting
         if frappe.db.db_type == "mariadb":
@@ -229,7 +229,7 @@ def search_widget(
 
 def get_std_fields_list(meta, key):
     # get additional search fields
-    sflist = ["name"]
+    sflist = ["id"]
 
     if meta.title_field and meta.title_field not in sflist:
         sflist.append(meta.title_field)
@@ -257,7 +257,7 @@ def build_for_autosuggest(res: list[tuple], doctype: str) -> list[LinkSearchResu
             if len(item) == 1:
                 item = [item[0], item[0]]
             label = item[1]  # use title as label
-            item[1] = item[0]  # show name in description instead of title
+            item[1] = item[0]  # show id in description instead of title
 
             if len(item) >= 3 and item[2] == label:
                 # remove redundant title ("label") value
@@ -283,12 +283,12 @@ def scrub_custom_query(query, key, txt):
 
 
 def relevance_sorter(key, query, as_dict):
-    value = _(key.name if as_dict else key[0])
+    value = _(key.id if as_dict else key[0])
     return (cstr(value).casefold().startswith(query.casefold()) is not True, value)
 
 
 @frappe.whitelist()
-def get_names_for_mentions(search_term):
+def get_ids_for_mentions(search_term):
     users_for_mentions = frappe.cache.get_value("users_for_mentions", get_users_for_mentions)
     user_groups = frappe.cache.get_value("user_groups", get_user_groups)
 
@@ -309,9 +309,9 @@ def get_names_for_mentions(search_term):
 def get_users_for_mentions():
     return frappe.get_all(
         "User",
-        fields=["name as id", "full_name as value"],
+        fields=["id as id", "full_name as value"],
         filters={
-            "name": ["not in", ("Administrator", "Guest")],
+            "id": ["not in", ("Administrator", "Guest")],
             "allowed_in_mentions": True,
             "user_type": "System User",
             "enabled": True,
@@ -320,7 +320,7 @@ def get_users_for_mentions():
 
 
 def get_user_groups():
-    return frappe.get_all("User Group", fields=["name as id", "name as value"], update={"is_group": True})
+    return frappe.get_all("User Group", fields=["id as id", "id as value"], update={"is_group": True})
 
 
 @frappe.whitelist()

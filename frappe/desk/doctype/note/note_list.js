@@ -1,5 +1,5 @@
 frappe.listview_settings["Note"] = {
-	hide_name_column: true,
+	hide_id_column: true,
 	add_fields: ["public"],
 	get_indicator: function (doc) {
 		if (doc.public) {

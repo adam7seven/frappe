@@ -49,7 +49,7 @@ def create_workspace(**args):
     workspace = frappe.new_doc("Workspace")
     args = frappe._dict(args)
 
-    workspace.name = args.name or "Test Workspace"
+    workspace.id = args.id or "Test Workspace"
     workspace.label = args.label or "Test Workspace"
     workspace.category = args.category or "Modules"
     workspace.is_standard = args.is_standard or 1
@@ -86,11 +86,11 @@ def insert_card(workspace, card_label, doctype1, doctype2, country=None):
     )
 
 
-def create_doctype(doctype_name, module):
+def create_doctype(doctype_id, module):
     frappe.get_doc(
         {
             "doctype": "DocType",
-            "name": doctype_name,
+            "id": doctype_id,
             "module": module,
             "custom": 1,
             "autoid": "field:title",

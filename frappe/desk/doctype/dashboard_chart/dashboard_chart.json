@@ -299,7 +299,7 @@
   "modified": "2025-02-01 21:06:05.808591",
   "modified_by": "Administrator",
   "module": "Desk",
-  "name": "Dashboard Chart",
+  "id": "Dashboard Chart",
   "naming_rule": "By fieldname",
   "owner": "Administrator",
   "permissions": [

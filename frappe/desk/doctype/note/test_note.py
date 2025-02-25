@@ -28,7 +28,7 @@ class TestNote(IntegrationTestCase):
         note.content = "1"
         note.save(ignore_version=False)
 
-        version = frappe.get_doc("Version", dict(docid=note.name))
+        version = frappe.get_doc("Version", dict(docid=note.id))
         data = version.get_data()
 
         self.assertTrue(("title", "test note", "test note 1"), data["changed"])
@@ -41,7 +41,7 @@ class TestNote(IntegrationTestCase):
         note.append("seen_by", {"user": "Administrator"})
         note.save(ignore_version=False)
 
-        version = frappe.get_doc("Version", dict(docid=note.name))
+        version = frappe.get_doc("Version", dict(docid=note.id))
         data = version.get_data()
 
         self.assertEqual(len(data.get("added")), 1)
@@ -56,21 +56,21 @@ class TestNote(IntegrationTestCase):
         note.seen_by[0].user = "Guest"
         note.save(ignore_version=False)
 
-        version = frappe.get_doc("Version", dict(docid=note.name))
+        version = frappe.get_doc("Version", dict(docid=note.id))
         data = version.get_data()
 
         self.assertEqual(len(data.get("row_changed")), 1)
         for row in data.get("row_changed"):
             self.assertEqual(row[0], "seen_by")
             self.assertEqual(row[1], 0)
-            self.assertEqual(row[2], note.seen_by[0].name)
+            self.assertEqual(row[2], note.seen_by[0].id)
             self.assertEqual(row[3], [["user", "Administrator", "Guest"]])
 
         # test remove
         note.seen_by = []
         note.save(ignore_version=False)
 
-        version = frappe.get_doc("Version", dict(docid=note.name))
+        version = frappe.get_doc("Version", dict(docid=note.id))
         data = version.get_data()
 
         self.assertEqual(len(data.get("removed")), 1)

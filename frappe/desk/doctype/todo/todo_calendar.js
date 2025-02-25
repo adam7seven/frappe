@@ -5,7 +5,7 @@ frappe.views.calendar["ToDo"] = {
 	field_map: {
 		start: "date",
 		end: "date",
-		id: "name",
+		id: "id",
 		title: "description",
 		allDay: "allDay",
 		progress: "progress",
@@ -20,7 +20,7 @@ frappe.views.calendar["ToDo"] = {
 		},
 		{
 			fieldtype: "Dynamic Link",
-			fieldname: "reference_name",
+			fieldname: "reference_id",
 			options: "reference_type",
 			label: __("Task"),
 		},

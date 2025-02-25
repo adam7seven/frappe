@@ -29,10 +29,10 @@ def get(args=None):
 
     return frappe.get_all(
         "ToDo",
-        fields=["allocated_to as owner", "name"],
+        fields=["allocated_to as owner", "id"],
         filters={
             "reference_type": args.get("doctype"),
-            "reference_name": args.get("name"),
+            "reference_id": args.get("id"),
             "status": ("not in", ("Cancelled", "Closed")),
         },
         limit=5,
@@ -45,7 +45,7 @@ def add(args=None, *, ignore_permissions=False):
     args = {
             "assign_to": [],
             "doctype": ,
-            "name": ,
+            "id": ,
             "description": ,
             "assignment_rule":
     }
@@ -60,12 +60,12 @@ def add(args=None, *, ignore_permissions=False):
     for assign_to in frappe.parse_json(args.get("assign_to")):
         filters = {
             "reference_type": args["doctype"],
-            "reference_name": args["name"],
+            "reference_id": args["id"],
             "status": "Open",
             "allocated_to": assign_to,
         }
         if not ignore_permissions:
-            frappe.get_doc(args["doctype"], args["name"]).check_permission()
+            frappe.get_doc(args["doctype"], args["id"]).check_permission()
 
         if frappe.get_all("ToDo", filters=filters):
             users_with_duplicate_todo.append(assign_to)
@@ -75,14 +75,14 @@ def add(args=None, *, ignore_permissions=False):
             description = str(args.get("description", ""))
             has_content = strip_html(description) or "<img" in description
             if not has_content:
-                args["description"] = _("Assignment for {0} {1}").format(args["doctype"], args["name"])
+                args["description"] = _("Assignment for {0} {1}").format(args["doctype"], args["id"])
 
             d = frappe.get_doc(
                 {
                     "doctype": "ToDo",
                     "allocated_to": assign_to,
                     "reference_type": args["doctype"],
-                    "reference_name": args["name"],
+                    "reference_id": args["id"],
                     "description": args.get("description"),
                     "priority": args.get("priority", "Medium"),
                     "status": "Open",
@@ -94,9 +94,9 @@ def add(args=None, *, ignore_permissions=False):
 
             # set assigned_to if field exists
             if frappe.get_meta(args["doctype"]).get_field("assigned_to"):
-                frappe.db.set_value(args["doctype"], args["name"], "assigned_to", assign_to)
+                frappe.db.set_value(args["doctype"], args["id"], "assigned_to", assign_to)
 
-            doc = frappe.get_doc(args["doctype"], args["name"])
+            doc = frappe.get_doc(args["doctype"], args["id"])
 
             # if assignee does not have permissions, share or inform
             if not frappe.has_permission(doc=doc, user=assign_to):
@@ -107,19 +107,19 @@ def add(args=None, *, ignore_permissions=False):
                     )
                     frappe.throw(msg, title=_("Missing Permission"))
                 else:
-                    frappe.share.add(doc.doctype, doc.name, assign_to)
+                    frappe.share.add(doc.doctype, doc.id, assign_to)
                     shared_with_users.append(assign_to)
 
             # make this document followed by assigned user
             if frappe.get_cached_value("User", assign_to, "follow_assigned_documents"):
-                follow_document(args["doctype"], args["name"], assign_to)
+                follow_document(args["doctype"], args["id"], assign_to)
 
             # notify
             notify_assignment(
                 d.assigned_by,
                 d.allocated_to,
                 d.reference_type,
-                d.reference_name,
+                d.reference_id,
                 action="ASSIGN",
                 description=args.get("description"),
             )
@@ -140,18 +140,18 @@ def add_multiple(args=None):
     if not args:
         args = frappe.local.form_dict
 
-    docid_list = json.loads(args["name"])
+    docid_list = json.loads(args["id"])
 
     for docid in docid_list:
-        args.update({"name": docid})
+        args.update({"id": docid})
         add(args)
 
 
-def close_all_assignments(doctype, name, ignore_permissions=False):
+def close_all_assignments(doctype, id, ignore_permissions=False):
     assignments = frappe.get_all(
         "ToDo",
-        fields=["allocated_to", "name"],
-        filters=dict(reference_type=doctype, reference_name=name, status=("!=", "Cancelled")),
+        fields=["allocated_to", "id"],
+        filters=dict(reference_type=doctype, reference_id=id, status=("!=", "Cancelled")),
     )
     if not assignments:
         return False
@@ -159,8 +159,8 @@ def close_all_assignments(doctype, name, ignore_permissions=False):
     for assign_to in assignments:
         set_status(
             doctype,
-            name,
-            todo=assign_to.name,
+            id,
+            todo=assign_to.id,
             assign_to=assign_to.allocated_to,
             status="Closed",
             ignore_permissions=ignore_permissions,
@@ -170,44 +170,44 @@ def close_all_assignments(doctype, name, ignore_permissions=False):
 
 
 @frappe.whitelist()
-def remove(doctype, name, assign_to, ignore_permissions=False):
-    return set_status(doctype, name, "", assign_to, status="Cancelled", ignore_permissions=ignore_permissions)
+def remove(doctype, id, assign_to, ignore_permissions=False):
+    return set_status(doctype, id, "", assign_to, status="Cancelled", ignore_permissions=ignore_permissions)
 
 
 @frappe.whitelist()
-def remove_multiple(doctype, names, ignore_permissions=False):
-    docid_list = json.loads(names)
+def remove_multiple(doctype, ids, ignore_permissions=False):
+    docid_list = json.loads(ids)
 
-    for name in docid_list:
-        assignments = get({"doctype": doctype, "name": name})
+    for id in docid_list:
+        assignments = get({"doctype": doctype, "id": id})
 
         if not assignments:
             continue
 
         for assignment in assignments:
-            remove(doctype, name, assignment.get("owner"), ignore_permissions)
+            remove(doctype, id, assignment.get("owner"), ignore_permissions)
 
 
 @frappe.whitelist()
-def close(doctype: str, name: str, assign_to: str, ignore_permissions=False):
+def close(doctype: str, id: str, assign_to: str, ignore_permissions=False):
     if assign_to != frappe.session.user:
         frappe.throw(_("Only the assignee can complete this to-do."))
 
-    return set_status(doctype, name, "", assign_to, status="Closed", ignore_permissions=ignore_permissions)
+    return set_status(doctype, id, "", assign_to, status="Closed", ignore_permissions=ignore_permissions)
 
 
-def set_status(doctype, name, todo=None, assign_to=None, status="Cancelled", ignore_permissions=False):
+def set_status(doctype, id, todo=None, assign_to=None, status="Cancelled", ignore_permissions=False):
     """remove from todo"""
 
     if not ignore_permissions:
-        frappe.get_doc(doctype, name).check_permission()
+        frappe.get_doc(doctype, id).check_permission()
     try:
         if not todo:
             todo = frappe.db.get_value(
                 "ToDo",
                 {
                     "reference_type": doctype,
-                    "reference_name": name,
+                    "reference_id": id,
                     "allocated_to": assign_to,
                     "status": ("!=", status),
                 },
@@ -217,25 +217,25 @@ def set_status(doctype, name, todo=None, assign_to=None, status="Cancelled", ign
             todo.status = status
             todo.save(ignore_permissions=True)
 
-            notify_assignment(todo.assigned_by, todo.allocated_to, todo.reference_type, todo.reference_name)
+            notify_assignment(todo.assigned_by, todo.allocated_to, todo.reference_type, todo.reference_id)
     except frappe.DoesNotExistError:
         pass
 
     # clear assigned_to if field exists
     if frappe.get_meta(doctype).get_field("assigned_to") and status in ("Cancelled", "Closed"):
-        frappe.db.set_value(doctype, name, "assigned_to", None)
+        frappe.db.set_value(doctype, id, "assigned_to", None)
 
-    return get({"doctype": doctype, "name": name})
+    return get({"doctype": doctype, "id": id})
 
 
-def clear(doctype, name, ignore_permissions=False):
+def clear(doctype, id, ignore_permissions=False):
     """
     Clears assignments, return False if not assigned.
     """
     assignments = frappe.get_all(
         "ToDo",
-        fields=["allocated_to", "name"],
-        filters=dict(reference_type=doctype, reference_name=name),
+        fields=["allocated_to", "id"],
+        filters=dict(reference_type=doctype, reference_id=id),
     )
     if not assignments:
         return False
@@ -243,8 +243,8 @@ def clear(doctype, name, ignore_permissions=False):
     for assign_to in assignments:
         set_status(
             doctype,
-            name,
-            todo=assign_to.name,
+            id,
+            todo=assign_to.id,
             assign_to=assign_to.allocated_to,
             status="Cancelled",
             ignore_permissions=ignore_permissions,
@@ -253,11 +253,11 @@ def clear(doctype, name, ignore_permissions=False):
     return True
 
 
-def notify_assignment(assigned_by, allocated_to, doc_type, doc_name, action="CLOSE", description=None):
+def notify_assignment(assigned_by, allocated_to, doc_type, doc_id, action="CLOSE", description=None):
     """
     Notify assignee that there is a change in assignment
     """
-    if not (assigned_by and allocated_to and doc_type and doc_name):
+    if not (assigned_by and allocated_to and doc_type and doc_id):
         return
 
     assigned_user = frappe.db.get_value("User", allocated_to, ["language", "enabled"], as_dict=True)
@@ -268,7 +268,7 @@ def notify_assignment(assigned_by, allocated_to, doc_type, doc_name, action="CLO
 
     # Search for email address in description -- i.e. assignee
     user_name = frappe.get_cached_value("User", frappe.session.user, "full_name")
-    title = get_title(doc_type, doc_name)
+    title = get_title(doc_type, doc_id)
     description_html = f"<div>{description}</div>" if description else None
 
     if action == "CLOSE":
@@ -287,7 +287,7 @@ def notify_assignment(assigned_by, allocated_to, doc_type, doc_name, action="CLO
         "type": "Assignment",
         "document_type": doc_type,
         "subject": subject,
-        "document_name": doc_name,
+        "document_id": doc_id,
         "from_user": frappe.session.user,
         "email_content": description_html,
     }

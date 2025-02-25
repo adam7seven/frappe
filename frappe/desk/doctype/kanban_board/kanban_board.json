@@ -87,7 +87,7 @@
   "modified": "2024-03-23 16:03:28.240133",
   "modified_by": "Administrator",
   "module": "Desk",
-  "name": "Kanban Board",
+  "id": "Kanban Board",
   "naming_rule": "By fieldname",
   "owner": "Administrator",
   "permissions": [

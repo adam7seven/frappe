@@ -11,9 +11,9 @@ frappe.ui.form.on("ToDo", {
 		});
 	},
 	refresh: function (frm) {
-		if (frm.doc.reference_type && frm.doc.reference_name) {
-			frm.add_custom_button(__(frm.doc.reference_name), function () {
-				frappe.set_route("Form", frm.doc.reference_type, frm.doc.reference_name);
+		if (frm.doc.reference_type && frm.doc.reference_id) {
+			frm.add_custom_button(__(frm.doc.reference_id), function () {
+				frappe.set_route("Form", frm.doc.reference_type, frm.doc.reference_id);
 			});
 		}
 

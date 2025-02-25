@@ -43,7 +43,7 @@ frappe.tour["Note"] = [
 	{
 		fieldname: "title",
 		title: "Title of the Note",
-		description: "This is the name by which the note will be saved, you can change this later",
+		description: "This is the id by which the note will be saved, you can change this later",
 	},
 	{
 		fieldname: "public",
