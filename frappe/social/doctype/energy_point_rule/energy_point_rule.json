@@ -120,7 +120,7 @@
   "modified": "2024-03-23 16:03:25.142267",
   "modified_by": "Administrator",
   "module": "Social",
-  "name": "Energy Point Rule",
+  "id": "Energy Point Rule",
   "owner": "Administrator",
   "permissions": [
     {

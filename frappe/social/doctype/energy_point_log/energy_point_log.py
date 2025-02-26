@@ -30,7 +30,7 @@ class EnergyPointLog(Document):
         points: DF.Int
         reason: DF.Text | None
         reference_doctype: DF.Link | None
-        reference_name: DF.Data | None
+        reference_id: DF.Data | None
         revert_of: DF.Link | None
         reverted: DF.Check
         rule: DF.Link | None
@@ -47,8 +47,8 @@ class EnergyPointLog(Document):
     def map_milestone_reference(self):
         # link energy point to the original reference, if set by milestone
         if self.reference_doctype == "Milestone":
-            self.reference_doctype, self.reference_name = frappe.db.get_value(
-                "Milestone", self.reference_name, ["reference_type", "reference_name"]
+            self.reference_doctype, self.reference_id = frappe.db.get_value(
+                "Milestone", self.reference_id, ["reference_type", "reference_id"]
             )
 
     def after_insert(self):
@@ -65,7 +65,7 @@ class EnergyPointLog(Document):
             notification_doc = {
                 "type": "Energy Point",
                 "document_type": self.reference_doctype,
-                "document_name": self.reference_name,
+                "document_id": self.reference_id,
                 "subject": get_notification_message(self),
                 "from_user": reference_user,
                 "email_content": f"<div>{self.reason}</div>" if self.reason else None,
@@ -101,52 +101,52 @@ class EnergyPointLog(Document):
                 "user": self.user,
                 "reason": reason,
                 "reference_doctype": self.reference_doctype,
-                "reference_name": self.reference_name,
-                "revert_of": self.name,
+                "reference_id": self.reference_id,
+                "revert_of": self.id,
             }
         ).insert(ignore_permissions=True)
 
 
 def get_notification_message(doc):
-    owner_name = get_fullname(doc.owner)
+    owner_id = get_fullname(doc.owner)
     points = doc.points
-    title = get_title(doc.reference_doctype, doc.reference_name)
+    title = get_title(doc.reference_doctype, doc.reference_id)
 
     if doc.type == "Auto":
-        owner_name = frappe.bold("You")
+        owner_id = frappe.bold("You")
         if points == 1:
             message = _("{0} gained {1} point for {2} {3}")
         else:
             message = _("{0} gained {1} points for {2} {3}")
-        message = message.format(owner_name, frappe.bold(points), doc.rule, get_title_html(title))
+        message = message.format(owner_id, frappe.bold(points), doc.rule, get_title_html(title))
     elif doc.type == "Appreciation":
         if points == 1:
             message = _("{0} appreciated your work on {1} with {2} point")
         else:
             message = _("{0} appreciated your work on {1} with {2} points")
-        message = message.format(frappe.bold(owner_name), get_title_html(title), frappe.bold(points))
+        message = message.format(frappe.bold(owner_id), get_title_html(title), frappe.bold(points))
     elif doc.type == "Criticism":
         if points == 1:
             message = _("{0} criticized your work on {1} with {2} point")
         else:
             message = _("{0} criticized your work on {1} with {2} points")
 
-        message = message.format(frappe.bold(owner_name), get_title_html(title), frappe.bold(points))
+        message = message.format(frappe.bold(owner_id), get_title_html(title), frappe.bold(points))
     elif doc.type == "Revert":
         if points == 1:
             message = _("{0} reverted your point on {1}")
         else:
             message = _("{0} reverted your points on {1}")
-        message = message.format(frappe.bold(owner_name), get_title_html(title))
+        message = message.format(frappe.bold(owner_id), get_title_html(title))
 
     return message
 
 
 def get_alert_dict(doc):
     alert_dict = frappe._dict()
-    owner_name = get_fullname(doc.owner)
+    owner_id = get_fullname(doc.owner)
     if doc.reference_doctype:
-        doc_link = get_link_to_form(doc.reference_doctype, doc.reference_name)
+        doc_link = get_link_to_form(doc.reference_doctype, doc.reference_id)
     points = doc.points
     bold_points = frappe.bold(doc.points)
     if doc.type == "Auto":
@@ -161,7 +161,7 @@ def get_alert_dict(doc):
             message = _("{0} appreciated your work on {1} with {2} point")
         else:
             message = _("{0} appreciated your work on {1} with {2} points")
-        alert_dict.message = message.format(owner_name, doc_link, bold_points)
+        alert_dict.message = message.format(owner_id, doc_link, bold_points)
         alert_dict.indicator = "green"
     elif doc.type == "Criticism":
         if points == 1:
@@ -169,7 +169,7 @@ def get_alert_dict(doc):
         else:
             message = _("{0} criticized your work on {1} with {2} points")
 
-        alert_dict.message = message.format(owner_name, doc_link, bold_points)
+        alert_dict.message = message.format(owner_id, doc_link, bold_points)
         alert_dict.indicator = "red"
     elif doc.type == "Revert":
         if points == 1:
@@ -177,7 +177,7 @@ def get_alert_dict(doc):
         else:
             message = _("{0} reverted your points on {1}")
         alert_dict.message = message.format(
-            owner_name,
+            owner_id,
             doc_link,
         )
         alert_dict.indicator = "red"
@@ -185,24 +185,24 @@ def get_alert_dict(doc):
     return alert_dict
 
 
-def create_energy_points_log(ref_doctype, ref_name, doc, apply_only_once=False):
+def create_energy_points_log(ref_doctype, ref_id, doc, apply_only_once=False):
     doc = frappe._dict(doc)
     if doc.rule:
-        log_exists = check_if_log_exists(ref_doctype, ref_name, doc.rule, None if apply_only_once else doc.user)
+        log_exists = check_if_log_exists(ref_doctype, ref_id, doc.rule, None if apply_only_once else doc.user)
         if log_exists:
             return frappe.get_doc("Energy Point Log", log_exists)
 
     new_log = frappe.new_doc("Energy Point Log")
     new_log.reference_doctype = ref_doctype
-    new_log.reference_name = ref_name
+    new_log.reference_id = ref_id
     new_log.update(doc)
     new_log.insert(ignore_permissions=True)
     return new_log
 
 
-def check_if_log_exists(ref_doctype, ref_name, rule, user=None):
+def check_if_log_exists(ref_doctype, ref_id, rule, user=None):
     """'Checks if Energy Point Log already exists"""
-    filters = frappe._dict({"rule": rule, "reference_doctype": ref_doctype, "reference_name": ref_name, "reverted": 0})
+    filters = frappe._dict({"rule": rule, "reference_doctype": ref_doctype, "reference_id": ref_id, "reverted": 0})
 
     if user:
         filters.user = user
@@ -219,7 +219,7 @@ def create_review_points_log(user, points, reason=None, doctype=None, docid=None
             "user": user,
             "reason": reason,
             "reference_doctype": doctype,
-            "reference_name": docid,
+            "reference_id": docid,
         }
     ).insert(ignore_permissions=True)
 
@@ -290,7 +290,7 @@ def review(doc, points, to_user, reason, review_type="Appreciation"):
 
     review_doc = create_energy_points_log(
         doc.doctype,
-        doc.name,
+        doc.id,
         {
             "type": review_type,
             "reason": reason,
@@ -305,7 +305,7 @@ def review(doc, points, to_user, reason, review_type="Appreciation"):
         points=-points,
         reason=reason,
         doctype=review_doc.doctype,
-        docid=review_doc.name,
+        docid=review_doc.id,
     )
 
     return review_doc
@@ -317,7 +317,7 @@ def get_reviews(doctype, docid):
         "Energy Point Log",
         filters={
             "reference_doctype": doctype,
-            "reference_name": docid,
+            "reference_id": docid,
             "type": ["in", ("Appreciation", "Criticism")],
         },
         fields=["points", "owner", "type", "user", "reason", "creation"],
@@ -361,7 +361,7 @@ def send_summary(timespan):
     all_users = [
         user.email
         for user in get_enabled_system_users()
-        if is_email_notifications_enabled_for_type(user.name, "Energy Point")
+        if is_email_notifications_enabled_for_type(user.id, "Energy Point")
     ]
 
     frappe.sendmail(
