@@ -4,10 +4,10 @@ frappe.listview_settings["Workflow Action"] = {
 		let docid = "";
 		if (doc.status === "Open") {
 			doctype = doc.reference_doctype;
-			docid = doc.reference_name;
+			docid = doc.reference_id;
 		} else {
 			doctype = "Workflow Action";
-			docid = doc.name;
+			docid = doc.id;
 		}
 		docid = docid.match(/[%'"]/) ? encodeURIComponent(docid) : docid;
 

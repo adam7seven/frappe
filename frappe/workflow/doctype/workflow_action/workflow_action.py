@@ -39,7 +39,7 @@ class WorkflowAction(Document):
         completed_by_role: DF.Link | None
         permitted_roles: DF.TableMultiSelect[WorkflowActionPermittedRole]
         reference_doctype: DF.Link | None
-        reference_name: DF.DynamicLink | None
+        reference_id: DF.DynamicLink | None
         status: DF.Literal["Open", "Completed"]
         user: DF.Link | None
         workflow_state: DF.Data | None
@@ -49,10 +49,10 @@ class WorkflowAction(Document):
 
 
 def on_doctype_update():
-    # The search order in any use case is no ["reference_name", "reference_doctype", "status"]
+    # The search order in any use case is no ["reference_id", "reference_doctype", "status"]
     # The index scan would happen from left to right
     # so even if status is not in the where clause the index will be used
-    frappe.db.add_index("Workflow Action", ["reference_name", "reference_doctype", "status"])
+    frappe.db.add_index("Workflow Action", ["reference_id", "reference_doctype", "status"])
 
 
 def get_permission_query_conditions(user):
@@ -70,12 +70,12 @@ def get_permission_query_conditions(user):
     permitted_workflow_actions = (
         frappe.qb.from_(WorkflowAction)
         .join(WorkflowActionPermittedRole)
-        .on(WorkflowAction.name == WorkflowActionPermittedRole.parent)
-        .select(WorkflowAction.name)
+        .on(WorkflowAction.id == WorkflowActionPermittedRole.parent)
+        .select(WorkflowAction.id)
         .where(WorkflowActionPermittedRole.role.isin(roles))
     ).get_sql()
 
-    return f""" `tabWorkflow Action`.`name` in ({permitted_workflow_actions})
+    return f""" `tabWorkflow Action`.`id` in ({permitted_workflow_actions})
 		and `tabWorkflow Action`.`status`='Open'
 	"""
 
@@ -94,7 +94,7 @@ def process_workflow_actions(doc, state):
         return
 
     if state == "on_trash":
-        clear_workflow_actions(doc.get("doctype"), doc.get("name"))
+        clear_workflow_actions(doc.get("doctype"), doc.get("id"))
         return
 
     if is_workflow_action_already_created(doc):
@@ -166,7 +166,7 @@ def return_success_page(doc):
     frappe.respond_as_web_page(
         _("Success"),
         _("{0}: {1} is set to state {2}").format(
-            doc.get("doctype"), frappe.bold(doc.get("name")), frappe.bold(get_doc_workflow_state(doc))
+            doc.get("doctype"), frappe.bold(doc.get("id")), frappe.bold(get_doc_workflow_state(doc))
         ),
         indicator_color="green",
     )
@@ -174,15 +174,15 @@ def return_success_page(doc):
 
 def return_action_confirmation_page(doc, action, action_link, alert_doc_change=False):
     template_params = {
-        "title": doc.get("name"),
+        "title": doc.get("id"),
         "doctype": doc.get("doctype"),
-        "docid": doc.get("name"),
+        "docid": doc.get("id"),
         "action": action,
         "action_link": action_link,
         "alert_doc_change": alert_doc_change,
     }
 
-    template_params["pdf_link"] = get_pdf_link(doc.get("doctype"), doc.get("name"))
+    template_params["pdf_link"] = get_pdf_link(doc.get("doctype"), doc.get("id"))
 
     frappe.respond_as_web_page(
         title=None,
@@ -197,7 +197,7 @@ def return_link_expired_page(doc, doc_workflow_state):
     frappe.respond_as_web_page(
         _("Link Expired"),
         _("Document {0} has been set to state {1} by {2}").format(
-            frappe.bold(doc.get("name")),
+            frappe.bold(doc.get("id")),
             frappe.bold(doc_workflow_state),
             frappe.bold(frappe.get_value("User", doc.get("modified_by"), "full_name")),
         ),
@@ -235,10 +235,10 @@ def get_workflow_action_by_role(doc, allowed_roles):
     return (
         frappe.qb.from_(WorkflowAction)
         .join(WorkflowActionPermittedRole)
-        .on(WorkflowAction.name == WorkflowActionPermittedRole.parent)
-        .select(WorkflowAction.name, WorkflowActionPermittedRole.role)
+        .on(WorkflowAction.id == WorkflowActionPermittedRole.parent)
+        .select(WorkflowAction.id, WorkflowActionPermittedRole.role)
         .where(
-            (WorkflowAction.reference_name == doc.get("name"))
+            (WorkflowAction.reference_id == doc.get("id"))
             & (WorkflowAction.reference_doctype == doc.get("doctype"))
             & (WorkflowAction.status == "Open")
             & (WorkflowActionPermittedRole.role.isin(list(allowed_roles)))
@@ -260,7 +260,7 @@ def update_completed_workflow_actions_using_role(user=None, workflow_action=None
         .set(WorkflowAction.status, "Completed")
         .set(WorkflowAction.completed_by, user)
         .set(WorkflowAction.completed_by_role, workflow_action[0].role)
-        .where(WorkflowAction.name == workflow_action[0].name)
+        .where(WorkflowAction.id == workflow_action[0].id)
     ).run()
 
 
@@ -327,7 +327,7 @@ def create_workflow_actions_for_roles(roles, doc):
         {
             "doctype": "Workflow Action",
             "reference_doctype": doc.get("doctype"),
-            "reference_name": doc.get("name"),
+            "reference_id": doc.get("id"),
             "workflow_state": get_doc_workflow_state(doc),
             "status": "Open",
         }
@@ -347,7 +347,7 @@ def send_workflow_action_email(doc, transitions):
         email_args = {
             "recipients": [data.get("email")],
             "args": {"actions": list(deduplicate_actions(data.get("possible_actions"))), "message": message},
-            "reference_name": doc.name,
+            "reference_id": doc.id,
             "reference_doctype": doc.doctype,
         }
         email_args.update(common_args)
@@ -373,7 +373,7 @@ def get_workflow_action_url(action, doc, user):
 
     params = {
         "doctype": doc.get("doctype"),
-        "docid": doc.get("name"),
+        "docid": doc.get("id"),
         "action": action,
         "current_state": get_doc_workflow_state(doc),
         "user": user,
@@ -389,7 +389,7 @@ def get_confirm_workflow_action_url(doc, action, user):
     params = {
         "action": action,
         "doctype": doc.get("doctype"),
-        "docid": doc.get("name"),
+        "docid": doc.get("id"),
         "user": user,
     }
 
@@ -400,20 +400,20 @@ def is_workflow_action_already_created(doc):
     return frappe.db.exists(
         {
             "doctype": "Workflow Action",
-            "reference_name": doc.get("name"),
+            "reference_id": doc.get("id"),
             "reference_doctype": doc.get("doctype"),
             "workflow_state": get_doc_workflow_state(doc),
         }
     )
 
 
-def clear_workflow_actions(doctype, name):
-    if not (doctype and name):
+def clear_workflow_actions(doctype, id):
+    if not (doctype and id):
         return
     frappe.db.delete(
         "Workflow Action",
         filters={
-            "reference_name": name,
+            "reference_id": id,
             "reference_doctype": doctype,
         },
     )
@@ -427,7 +427,7 @@ def get_doc_workflow_state(doc):
 
 def get_common_email_args(doc):
     doctype = doc.get("doctype")
-    docid = doc.get("name")
+    docid = doc.get("id")
 
     email_template = get_email_template_from_workflow(doc)
     if email_template:

@@ -19,7 +19,7 @@ frappe.ui.form.on("Workflow", {
 			note = __(
 				"NOTE: If you add states or transitions in the table, it will be reflected in the Workflow Builder but you will have to position them manually. Also Workflow Builder is currently in <b>BETA</b>."
 			);
-			workflow_builder_url += "/" + frm.doc.name;
+			workflow_builder_url += "/" + frm.doc.id;
 		}
 
 		let message = `

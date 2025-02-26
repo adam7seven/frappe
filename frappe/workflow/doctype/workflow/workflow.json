@@ -107,7 +107,7 @@
   "modified": "2024-03-23 16:04:04.849665",
   "modified_by": "Administrator",
   "module": "Workflow",
-  "name": "Workflow",
+  "id": "Workflow",
   "owner": "Administrator",
   "permissions": [
     {
@@ -121,7 +121,7 @@
       "write": 1
     }
   ],
-  "show_name_in_global_search": 1,
+  "show_id_in_global_search": 1,
   "sort_field": "creation",
   "sort_order": "DESC",
   "states": [],

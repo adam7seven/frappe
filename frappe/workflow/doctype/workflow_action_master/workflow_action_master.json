@@ -23,7 +23,7 @@
   "modified": "2024-03-23 16:04:05.108415",
   "modified_by": "Administrator",
   "module": "Workflow",
-  "name": "Workflow Action Master",
+  "id": "Workflow Action Master",
   "owner": "Administrator",
   "permissions": [
     {

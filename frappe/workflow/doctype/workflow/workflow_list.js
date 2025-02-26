@@ -9,16 +9,16 @@ frappe.listview_settings["Workflow"] = {
 	},
 	button: {
 		show(doc) {
-			return doc.name;
+			return doc.id;
 		},
 		get_label() {
 			return frappe.utils.icon("workflow", "sm");
 		},
 		get_description(doc) {
-			return __("Build {0}", [`${doc.name}`]);
+			return __("Build {0}", [`${doc.id}`]);
 		},
 		action(doc) {
-			frappe.set_route("workflow-builder", doc.name);
+			frappe.set_route("workflow-builder", doc.id);
 		},
 	},
 };

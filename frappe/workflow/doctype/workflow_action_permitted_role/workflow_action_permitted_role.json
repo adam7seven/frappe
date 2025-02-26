@@ -21,7 +21,7 @@
   "modified": "2024-03-23 16:04:05.199852",
   "modified_by": "Administrator",
   "module": "Workflow",
-  "name": "Workflow Action Permitted Role",
+  "id": "Workflow Action Permitted Role",
   "naming_rule": "Random",
   "owner": "Administrator",
   "permissions": [],
