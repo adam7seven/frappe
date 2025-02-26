@@ -1,5 +1,5 @@
 import frappe
-from frappe.model.naming import append_number_if_name_exists
+from frappe.model.naming import append_number_if_id_exists
 from frappe.utils.dashboard import get_dashboards_with_link
 
 
@@ -17,15 +17,15 @@ def execute():
 
     modified_charts = get_modified_docs("Dashboard Chart")
     modified_cards = get_modified_docs("Number Card")
-    modified_dashboards = [doc.name for doc in get_modified_docs("Dashboard")]
+    modified_dashboards = [doc.id for doc in get_modified_docs("Dashboard")]
 
     for chart in modified_charts:
-        modified_dashboards += get_dashboards_with_link(chart.name, "Dashboard Chart")
-        rename_modified_doc(chart.name, "Dashboard Chart")
+        modified_dashboards += get_dashboards_with_link(chart.id, "Dashboard Chart")
+        rename_modified_doc(chart.id, "Dashboard Chart")
 
     for card in modified_cards:
-        modified_dashboards += get_dashboards_with_link(card.name, "Number Card")
-        rename_modified_doc(card.name, "Number Card")
+        modified_dashboards += get_dashboards_with_link(card.id, "Number Card")
+        rename_modified_doc(card.id, "Number Card")
 
     modified_dashboards = list(set(modified_dashboards))
 
@@ -38,9 +38,9 @@ def get_modified_docs(doctype):
 
 
 def rename_modified_doc(docid, doctype):
-    new_name = docid + " Custom"
+    new_id = docid + " Custom"
     try:
-        frappe.rename_doc(doctype, docid, new_name)
+        frappe.rename_doc(doctype, docid, new_id)
     except frappe.ValidationError:
-        new_name = append_number_if_name_exists(doctype, new_name)
-        frappe.rename_doc(doctype, docid, new_name)
+        new_id = append_number_if_id_exists(doctype, new_id)
+        frappe.rename_doc(doctype, docid, new_id)
