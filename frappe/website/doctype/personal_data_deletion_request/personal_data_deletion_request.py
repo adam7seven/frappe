@@ -48,7 +48,7 @@ class PersonalDataDeletionRequest(Document):
         }
 
     def autoid(self):
-        from frappe.model.naming import set_name_from_naming_options
+        from frappe.model.naming import set_id_from_naming_options
 
         pattern = re.compile(
             r"^(([a-zA-Z]{1})|([a-zA-Z]{1}[a-zA-Z]{1})|"
@@ -59,14 +59,14 @@ class PersonalDataDeletionRequest(Document):
         domain = frappe.local.site.replace("_", "-")
         site = domain if pattern.match(domain) else f"{domain}.com"
         autoid = f"format:deleted-user-{{####}}@{site}"
-        set_name_from_naming_options(autoid, self)
+        set_id_from_naming_options(autoid, self)
         frappe.utils.validate_email_address(self.email, throw=True)
 
     def after_insert(self):
         self.send_verification_mail()
 
     def generate_url_for_confirmation(self):
-        params = {"email": self.email, "name": self.name, "host_name": frappe.local.site}
+        params = {"email": self.email, "id": self.id, "host_name": frappe.local.site}
         api = frappe.utils.get_url(
             "/api/method/frappe.website.doctype.personal_data_deletion_request"
             ".personal_data_deletion_request.confirm_deletion"
@@ -74,7 +74,7 @@ class PersonalDataDeletionRequest(Document):
         url = f"{api}?{get_signed_params(params)}"
 
         if frappe.conf.developer_mode:
-            print(f"URL generated for {self.doctype} {self.name}: {url}")
+            print(f"URL generated for {self.doctype} {self.id}: {url}")
 
         return url
 
@@ -92,7 +92,7 @@ class PersonalDataDeletionRequest(Document):
             template="delete_data_confirmation",
             args={
                 "email": self.email,
-                "name": self.name,
+                "id": self.id,
                 "host_name": frappe.utils.get_url(),
                 "link": url,
             },
@@ -101,7 +101,7 @@ class PersonalDataDeletionRequest(Document):
 
     def notify_system_managers(self):
         recipients = []
-        for manager in get_system_managers(only_name=True):
+        for manager in get_system_managers(only_id=True):
             if is_email_notifications_enabled(manager):
                 recipients.append(manager)
 
@@ -130,7 +130,7 @@ class PersonalDataDeletionRequest(Document):
     def anonymize_data(self):
         return frappe.enqueue_doc(
             self.doctype,
-            self.name,
+            self.id,
             "_anonymize_data",
             queue="long",
             timeout=3000,
@@ -175,18 +175,18 @@ class PersonalDataDeletionRequest(Document):
         if not doctype.get("rename"):
             return
 
-        def new_name(email, number):
+        def new_id(email, number):
             email_user, domain = email.split("@")
             return f"{email_user}-{number}@{domain}"
 
-        for i, name in enumerate(
+        for i, id in enumerate(
             frappe.get_all(
                 doctype["doctype"],
                 filters={doctype.get("filter_by", "owner"): self.email},
-                pluck="name",
+                pluck="id",
             )
         ):
-            frappe.rename_doc(doctype["doctype"], name, new_name(self.anon, i + 1), force=True, show_alert=False)
+            frappe.rename_doc(doctype["doctype"], id, new_id(self.anon, i + 1), force=True, show_alert=False)
 
     def redact_full_match_data(self, ref, email):
         """Replaces the entire field value by the values set in the anonymization_value_map"""
@@ -195,7 +195,7 @@ class PersonalDataDeletionRequest(Document):
         docs = frappe.get_all(
             ref["doctype"],
             filters={filter_by: email},
-            fields=["name", filter_by],
+            fields=["id", filter_by],
         )
 
         # skip if there are no Documents
@@ -244,17 +244,17 @@ class PersonalDataDeletionRequest(Document):
 
         frappe.db.set_value(
             ref["doctype"],
-            doc["name"],
+            doc["id"],
             self.anonymize_fields_dict,
             modified_by="Administrator",
         )
 
-        if ref.get("rename") and doc["name"] != self.anon:
-            frappe.rename_doc(ref["doctype"], doc["name"], self.anon, force=True, show_alert=False)
+        if ref.get("rename") and doc["id"] != self.anon:
+            frappe.rename_doc(ref["doctype"], doc["id"], self.anon, force=True, show_alert=False)
 
     def _anonymize_data(self, email=None, anon=None, set_data=True, commit=False):
         email = email or self.email
-        anon = anon or self.name
+        anon = anon or self.id
 
         if set_data:
             self.__set_anonymization_data(email, anon)
@@ -302,7 +302,7 @@ class PersonalDataDeletionRequest(Document):
         self.reload()
 
     def __set_anonymization_data(self, email, anon):
-        self.anon = anon or self.name
+        self.anon = anon or self.id
         self.full_name = get_fullname(email)
         self.email_regex = get_pattern(email)
         self.full_name_regex = get_pattern(self.full_name)
@@ -327,7 +327,7 @@ class PersonalDataDeletionRequest(Document):
                 continue
 
             match_fields += [
-                f"`{df.fieldname}`= REPLACE(REPLACE(`{df.fieldname}`, %(name)s,"
+                f"`{df.fieldname}`= REPLACE(REPLACE(`{df.fieldname}`, %(id)s,"
                 f" 'REDACTED'), %(email)s, '{self.anon}')",
             ]
 
@@ -336,7 +336,7 @@ class PersonalDataDeletionRequest(Document):
 
         frappe.db.sql(
             f"UPDATE `tab{doctype['doctype']}` {update_predicate} {where_predicate}",
-            {"name": self.full_name, "email": self.email},
+            {"id": self.full_name, "email": self.email},
         )
 
     @frappe.whitelist()
@@ -349,7 +349,7 @@ def process_data_deletion_request():
     if auto_account_deletion < 1:
         return
 
-    requests = frappe.get_all("Personal Data Deletion Request", filters={"status": "Pending Approval"}, pluck="name")
+    requests = frappe.get_all("Personal Data Deletion Request", filters={"status": "Pending Approval"}, pluck="id")
 
     for request in requests:
         doc = frappe.get_doc("Personal Data Deletion Request", request)
@@ -371,11 +371,11 @@ def remove_unverified_record():
 
 
 @frappe.whitelist(allow_guest=True)
-def confirm_deletion(email, name, host_name):
+def confirm_deletion(email, id, host_name):
     if not verify_request():
         return
 
-    doc = frappe.get_doc("Personal Data Deletion Request", name)
+    doc = frappe.get_doc("Personal Data Deletion Request", id)
     host_name = frappe.utils.get_url()
 
     if doc.status == "Pending Verification":

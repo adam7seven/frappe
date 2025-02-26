@@ -1,13 +1,13 @@
 <div class="testimonial">
 	{% if logo %}
 	<div class="testimonial-logo">
-		<img src="{{ logo }}" alt="{{ name }}">
+		<img src="{{ logo }}" alt="{{ id }}">
 	</div>
 	{% endif %}
 	<div class="testimonial-content">
 		“{{ content }}”
 	</div>
 	<div class="testimonial-by">
-		{{ name }}
+		{{ id }}
 	</div>
 </div>

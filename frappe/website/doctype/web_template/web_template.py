@@ -52,7 +52,7 @@ class WebTemplate(Document):
         routes = frappe.get_all(
             "Web Page",
             filters=[
-                ["Web Page Block", "web_template", "=", self.name],
+                ["Web Page Block", "web_template", "=", self.id],
                 ["Web Page", "published", "=", 1],
             ],
             pluck="route",
@@ -93,14 +93,14 @@ class WebTemplate(Document):
         """Return the absolute path to the template's folder."""
         module = self.module or "Website"
         module_path = get_module_path(module)
-        doctype, docid = scrub_dt_dn(self.doctype, self.name)
+        doctype, docid = scrub_dt_dn(self.doctype, self.id)
 
         return os.path.join(module_path, doctype, docid)
 
     def get_template_path(self):
         """Return the absolute path to the template's HTML file."""
         folder = self.get_template_folder()
-        file_name = frappe.scrub(self.name) + ".html"
+        file_name = frappe.scrub(self.id) + ".html"
 
         return os.path.join(folder, file_name)
 

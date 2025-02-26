@@ -3,9 +3,9 @@
 
 frappe.ui.form.on("Website Route Meta", {
 	refresh: function (frm) {
-		frm.get_field("__newname").set_label("Route");
+		frm.get_field("__newid").set_label("Route");
 		frm.add_custom_button(__("Visit Web Page"), () => {
-			let route = frm.doc.name;
+			let route = frm.doc.id;
 			if (!route.startsWith("/")) {
 				route = "/" + route;
 			}

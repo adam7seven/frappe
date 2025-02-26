@@ -43,8 +43,8 @@ def submit_discussion(doctype, docid, reply, title, topic_name=None, reply_name=
         }
     )
     topic.save(ignore_permissions=True)
-    save_message(reply, topic.name)
-    return topic.name
+    save_message(reply, topic.id)
+    return topic.id
 
 
 def save_message(reply, topic):

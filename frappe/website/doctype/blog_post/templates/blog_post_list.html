@@ -24,7 +24,7 @@
 				<option value="blog">{{ _("Show all blogs") }}</option>
 				{%- endif -%}
 				{%- for category in blog_categories -%}
-				<option value="{{ category.route }}" {{ frappe.form_dict.category == category.name and "selected" or "" }}>
+				<option value="{{ category.route }}" {{ frappe.form_dict.category == category.id and "selected" or "" }}>
 					{{ _(category.title) }}
 				</option>
 				{%- endfor -%}

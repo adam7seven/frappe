@@ -26,8 +26,8 @@ class WebsiteGenerator(Document):
             return out
 
     def autoid(self):
-        if not self.name and self.meta.autoid != "hash":
-            self.name = self.scrubbed_title()
+        if not self.id and self.meta.autoid != "hash":
+            self.id = self.scrubbed_title()
 
     def onload(self):
         self.get("__onload").update({"is_website_generator": True, "published": self.is_website_published()})
@@ -62,7 +62,7 @@ class WebsiteGenerator(Document):
             elif self.meta.has_field("title"):
                 title_field = "title"
             else:
-                title_field = "name"
+                title_field = "id"
 
         return title_field
 
@@ -119,7 +119,7 @@ class WebsiteGenerator(Document):
                 "page_or_generator": "Generator",
                 "ref_doctype": self.doctype,
                 "idx": self.idx,
-                "docid": self.name,
+                "docid": self.id,
                 "controller": get_module_name(self.doctype, self.meta.module),
             }
         )

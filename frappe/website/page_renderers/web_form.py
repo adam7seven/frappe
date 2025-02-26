@@ -8,7 +8,7 @@ class WebFormPage(DocumentPage):
         web_form = get_page_info_from_web_form(self.path)
         if web_form:
             self.doctype = "Web Form"
-            self.docid = web_form.name
+            self.docid = web_form.id
             self.set_headers()
             return True
         else:

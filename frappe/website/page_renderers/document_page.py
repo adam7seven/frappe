@@ -32,7 +32,7 @@ class DocumentPage(BaseTemplatePage):
         d = get_page_info_from_web_page_with_dynamic_routes(self.path)
         if d:
             self.doctype = d.doctype
-            self.docid = d.name
+            self.docid = d.id
             return True
         else:
             return False
@@ -77,7 +77,7 @@ class DocumentPage(BaseTemplatePage):
         if meta.is_published_field:
             condition_field = meta.is_published_field
         elif not meta.custom:
-            controller = get_controller(meta.name)
+            controller = get_controller(meta.id)
             condition_field = controller.website.condition_field
 
         return condition_field
@@ -96,10 +96,10 @@ def _find_matching_document_webview(route: str) -> tuple[str, str] | None:
         try:
             docid = None
             if meta.is_virtual:
-                if doclist := frappe.get_all(doctype, filters=filters, fields=["name"], limit=1):
-                    docid = doclist[0].get("name")
+                if doclist := frappe.get_all(doctype, filters=filters, fields=["id"], limit=1):
+                    docid = doclist[0].get("id")
             else:
-                docid = frappe.db.get_value(doctype, filters, "name")
+                docid = frappe.db.get_value(doctype, filters, "id")
 
             if docid:
                 return (doctype, docid)

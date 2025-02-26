@@ -27,7 +27,7 @@
   "modified": "2024-03-23 16:02:18.000815",
   "modified_by": "Administrator",
   "module": "Website",
-  "name": "Discussion Reply",
+  "id": "Discussion Reply",
   "naming_rule": "Expression (old style)",
   "owner": "Administrator",
   "permissions": [

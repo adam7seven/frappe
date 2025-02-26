@@ -295,8 +295,8 @@ frappe.ui.form.on("Web Form", {
 });
 
 frappe.ui.form.on("Web Form List Column", {
-	fieldname: function (frm, doctype, name) {
-		let doc = frappe.get_doc(doctype, name);
+	fieldname: function (frm, doctype, id) {
+		let doc = frappe.get_doc(doctype, id);
 		let df = frappe.meta.get_docfield(frm.doc.doc_type, doc.fieldname);
 		if (!df) return;
 		doc.fieldtype = df.fieldtype;
@@ -306,8 +306,8 @@ frappe.ui.form.on("Web Form List Column", {
 });
 
 frappe.ui.form.on("Web Form Field", {
-	fieldtype: function (frm, doctype, name) {
-		let doc = frappe.get_doc(doctype, name);
+	fieldtype: function (frm, doctype, id) {
+		let doc = frappe.get_doc(doctype, id);
 
 		if (doc.fieldtype == "Page Break") {
 			let page_break_count = frm.doc.web_form_fields.filter(
@@ -324,8 +324,8 @@ frappe.ui.form.on("Web Form Field", {
 			frm.refresh_field("web_form_fields");
 		}
 	},
-	fieldname: function (frm, doctype, name) {
-		let doc = frappe.get_doc(doctype, name);
+	fieldname: function (frm, doctype, id) {
+		let doc = frappe.get_doc(doctype, id);
 		let df = frappe.meta.get_docfield(frm.doc.doc_type, doc.fieldname);
 		if (!df) return;
 

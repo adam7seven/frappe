@@ -4,7 +4,7 @@
 frappe.ui.form.on("Website Slideshow", {
 	refresh: (frm) => {
 		let intro = frm.doc.__islocal
-			? __("First set the name and save the record.")
+			? __("First set the id and save the record.")
 			: __("Attach files / urls and add in table.");
 		frm.set_intro(intro);
 
@@ -24,19 +24,19 @@ frappe.ui.form.on("Website Slideshow", {
 					{
 						label: __("Name"),
 						fieldtype: "Dynamic Link",
-						fieldname: "reference_name",
+						fieldname: "reference_id",
 						options: "reference_doctype",
 						reqd: 1,
 					},
 				],
 				primary_action_label: __("Add to table"),
-				primary_action: ({ reference_doctype, reference_name }) => {
+				primary_action: ({ reference_doctype, reference_id }) => {
 					frappe.db
 						.get_list("File", {
 							fields: ["file_url"],
 							filters: {
 								attached_to_doctype: reference_doctype,
-								attached_to_name: reference_name,
+								attached_to_id: reference_id,
 							},
 						})
 						.then((images) => {

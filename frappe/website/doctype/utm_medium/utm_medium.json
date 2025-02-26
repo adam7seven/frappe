@@ -24,7 +24,7 @@
   "modified": "2024-06-28 15:04:51.679189",
   "modified_by": "Administrator",
   "module": "Website",
-  "name": "UTM Medium",
+  "id": "UTM Medium",
   "naming_rule": "Set by user",
   "owner": "Administrator",
   "permissions": [
