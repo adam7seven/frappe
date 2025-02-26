@@ -1,9 +1,9 @@
 {% from "frappe/templates/includes/avatar_macro.html" import avatar %}
-{% set creator = frappe.db.get_value("User", topic.owner, ["name", "username", "full_name", "user_image"], as_dict=True) %}
+{% set creator = frappe.db.get_value("User", topic.owner, ["id", "username", "full_name", "user_image"], as_dict=True) %}
 
-<div class="sidebar-parent" data-target="#t{{ topic.name }}" data-toggle="collapse" aria-expanded="false">
+<div class="sidebar-parent" data-target="#t{{ topic.id }}" data-toggle="collapse" aria-expanded="false">
 	<div class="mr-4">
-		{{ avatar(creator.name, size="avatar-medium") }}
+		{{ avatar(creator.id, size="avatar-medium") }}
 	</div>
 	<div class="flex-grow-1">
 		<div class="discussion-topic-title">{{ topic.title }}</div>

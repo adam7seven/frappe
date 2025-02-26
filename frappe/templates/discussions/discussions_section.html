@@ -1,5 +1,5 @@
 {% set topics = frappe.get_all("Discussion Topic",
-{"reference_doctype": doctype, "reference_docid": docid}, ["name", "title", "owner", "creation"]) %}
+{"reference_doctype": doctype, "reference_docid": docid}, ["id", "title", "owner", "creation"]) %}
 
 
 <div class="discussions-parent {% if single_thread %} is-single-thread {% endif %}"
@@ -26,7 +26,7 @@
 		<div class="discussions-sidebar">
 
 			{% for topic in topics %}
-			{% set replies = frappe.get_all("Discussion Reply", {"topic": topic.name})%}
+			{% set replies = frappe.get_all("Discussion Reply", {"topic": topic.id})%}
 			{% include "frappe/templates/discussions/sidebar.html" %}
 
 			{% if loop.index != topics | length %}

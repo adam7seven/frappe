@@ -113,9 +113,9 @@ const insert_message = (data) => {
 	const document_match_found =
 		doctype == topic.reference_doctype && docid == topic.reference_docid;
 
-	if ($(`.discussion-on-page[data-topic=${topic.name}]`).length) {
+	if ($(`.discussion-on-page[data-topic=${topic.id}]`).length) {
 		$(data.template).insertBefore(
-			`.discussion-on-page[data-topic=${topic.name}] .discussion-form`
+			`.discussion-on-page[data-topic=${topic.id}] .discussion-form`
 		);
 	} else if (!first_topic && !this.single_thread && document_match_found) {
 		$(data.sidebar).insertBefore($(`.discussions-sidebar .sidebar-parent`).first());
@@ -129,12 +129,12 @@ const insert_message = (data) => {
 		}
 	} else if (this.single_thread && document_match_found) {
 		$(data.template).insertBefore(`.discussion-form`);
-		$(".discussion-on-page").attr("data-topic", topic.name);
+		$(".discussion-on-page").attr("data-topic", topic.id);
 	} else if (topic.owner == frappe.session.user && document_match_found) {
 		window.location.reload();
 	}
 
-	update_reply_count(topic.name);
+	update_reply_count(topic.id);
 };
 
 const update_message = (data) => {

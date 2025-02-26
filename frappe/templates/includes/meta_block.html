@@ -1,8 +1,8 @@
 {%- if metatags -%}
-{%- for name in metatags %}
-{%- set content = metatags.get(name, '') -%}
+{%- for id in metatags %}
+{%- set content = metatags.get(id, '') -%}
 {%- if content -%}
-<meta {% if name.startswith('og:') %}property="{{ name }}" {% else %}name="{{ name }}"{% endif %} content="{{ content | striptags | escape }}">
+<meta {% if id.startswith('og:') %}property="{{ id }}" {% else %}id="{{ id }}"{% endif %} content="{{ content | striptags | escape }}">
 {%- endif -%}
 {%- endfor -%}
 {%- endif -%}
