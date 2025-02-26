@@ -1,5 +1,5 @@
 import data_field_validation_doctype from "../fixtures/data_field_validation_doctype";
-const doctype_name = data_field_validation_doctype.name;
+const doctype_id = data_field_validation_doctype.id;
 
 context("Data Field Input Validation in New Form", () => {
 	before(() => {
@@ -22,7 +22,7 @@ context("Data Field Input Validation in New Form", () => {
 
 	describe("Data Field Options", () => {
 		it("should validate email address", () => {
-			cy.new_form(doctype_name);
+			cy.new_form(doctype_id);
 			validateField("email", "captian", "hello@test.com");
 		});
 
@@ -38,7 +38,7 @@ context("Data Field Input Validation in New Form", () => {
 			validateField("phone", "america", "89787878");
 		});
 
-		it("should validate name", () => {
+		it("should validate id", () => {
 			validateField("person_name", " 777Hello", "James Bond");
 		});
 	});

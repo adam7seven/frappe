@@ -2,8 +2,8 @@ import doctype_with_child_table from "../fixtures/doctype_with_child_table";
 import child_table_doctype from "../fixtures/child_table_doctype";
 import child_table_doctype_1 from "../fixtures/child_table_doctype_1";
 import doctype_to_link from "../fixtures/doctype_to_link";
-const doctype_to_link_name = doctype_to_link.name;
-const child_table_doctype_name = child_table_doctype.name;
+const doctype_to_link_id = doctype_to_link.id;
+const child_table_doctype_id = child_table_doctype.id;
 
 context("Dashboard links", () => {
 	before(() => {
@@ -18,7 +18,7 @@ context("Dashboard links", () => {
 			.its("frappe")
 			.then((frappe) => {
 				frappe.call("frappe.tests.ui_test_helpers.update_child_table", {
-					name: child_table_doctype_name,
+					name: child_table_doctype_id,
 				});
 			});
 	});
@@ -82,7 +82,7 @@ context("Dashboard links", () => {
 	});
 
 	it("check if child table is populated with linked field on creation from dashboard link", () => {
-		cy.new_form(doctype_to_link_name);
+		cy.new_form(doctype_to_link_id);
 		cy.fill_field("title", "Test Linking");
 		cy.findByRole("button", { name: "Save" }).click();
 

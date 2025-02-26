@@ -104,7 +104,7 @@ Cypress.Commands.add("get_list", (doctype, fields = [], filters = []) => {
 		});
 });
 
-Cypress.Commands.add("get_doc", (doctype, name) => {
+Cypress.Commands.add("get_doc", (doctype, id) => {
 	return cy
 		.window()
 		.its("frappe.csrf_token")
@@ -112,7 +112,7 @@ Cypress.Commands.add("get_doc", (doctype, name) => {
 			return cy
 				.request({
 					method: "GET",
-					url: `/api/resource/${doctype}/${name}`,
+					url: `/api/resource/${doctype}/${id}`,
 					headers: {
 						Accept: "application/json",
 						"X-Frappe-CSRF-Token": csrf_token,
@@ -125,7 +125,7 @@ Cypress.Commands.add("get_doc", (doctype, name) => {
 		});
 });
 
-Cypress.Commands.add("remove_doc", (doctype, name) => {
+Cypress.Commands.add("remove_doc", (doctype, id) => {
 	return cy
 		.window()
 		.its("frappe.csrf_token")
@@ -133,7 +133,7 @@ Cypress.Commands.add("remove_doc", (doctype, name) => {
 			return cy
 				.request({
 					method: "DELETE",
-					url: `/api/resource/${doctype}/${name}`,
+					url: `/api/resource/${doctype}/${id}`,
 					headers: {
 						Accept: "application/json",
 						"X-Frappe-CSRF-Token": csrf_token,
@@ -152,10 +152,10 @@ Cypress.Commands.add("create_records", (doc) => {
 		.then((r) => r.message);
 });
 
-Cypress.Commands.add("set_value", (doctype, name, obj) => {
+Cypress.Commands.add("set_value", (doctype, id, obj) => {
 	return cy.call("frappe.client.set_value", {
 		doctype,
-		name,
+		id,
 		fieldname: obj,
 	});
 });
@@ -278,7 +278,7 @@ Cypress.Commands.add("dialog", (opts) => {
 		.its("frappe", { log: false })
 		.then((frappe) => {
 			Cypress.log({
-				name: "dialog",
+				id: "dialog",
 				displayName: "dialog",
 				message: "frappe.ui.Dialog",
 				consoleProps: () => {

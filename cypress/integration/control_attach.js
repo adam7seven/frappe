@@ -237,14 +237,14 @@ context("Attach Control with Failed Document Save", () => {
 			.type("Attached To Name{enter}")
 			.blur()
 			.wait(500);
-		cy.get('input[data-fieldname="attached_to_name"]').click().type(docid).blur();
+		cy.get('input[data-fieldname="attached_to_id"]').click().type(docid).blur();
 		cy.get(".filter-popover .apply-filters").click({ force: true });
 		cy.get("header .level-right .list-count").should("contain.text", "1 of 1");
 	});
 
 	it("Check if file exists with temporary name", () => {
 		cy.open_list_filter();
-		cy.get('input[data-fieldname="attached_to_name"]').click().clear().type(temp_name).blur();
+		cy.get('input[data-fieldname="attached_to_id"]').click().clear().type(temp_name).blur();
 		cy.get(".filter-popover .apply-filters").click({ force: true });
 		cy.get(".frappe-list > .no-result").should("be.visible");
 	});

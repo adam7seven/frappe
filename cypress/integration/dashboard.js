@@ -6,7 +6,7 @@ describe("Dashboard view", { scrollBehavior: false }, () => {
 
 	it("should load", () => {
 		const chart = "TODO-YEARLY-TRENDS";
-		const dashboard = "TODO-TEST-DASHBOARD"; // check slash in name intentionally.
+		const dashboard = "TODO-TEST-DASHBOARD"; // check slash in id intentionally.
 
 		cy.insert_doc(
 			"Dashboard Chart",
@@ -30,7 +30,7 @@ describe("Dashboard view", { scrollBehavior: false }, () => {
 		cy.insert_doc(
 			"Dashboard",
 			{
-				name: dashboard,
+				id: dashboard,
 				dashboard_name: dashboard,
 				is_standard: 0,
 				charts: [

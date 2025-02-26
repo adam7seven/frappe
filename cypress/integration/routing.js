@@ -6,7 +6,7 @@ const test_queries = [
 	"?status=Open",
 	`?date=%5B"Between"%2C%5B"2022-06-01"%2C"2022-06-30"%5D%5D`,
 	`?date=%5B">"%2C"2022-06-01"%5D`,
-	`?name=%5B"like"%2C"%2542%25"%5D`,
+	`?id=%5B"like"%2C"%2542%25"%5D`,
 	`?status=%5B"not%20in"%2C%5B"Open"%2C"Closed"%5D%5D`,
 	`?status=%5B%22%21%3D%22%2C%22Closed%22%5D&status=%5B%22%21%3D%22%2C%22Cancelled%22%5D`,
 ];

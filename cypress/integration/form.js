@@ -54,7 +54,7 @@ context("Form", () => {
 		cy.visit("/app/contact");
 
 		cy.clear_filters();
-		cy.get('.standard-filter-section [data-fieldname="name"] input')
+		cy.get('.standard-filter-section [data-fieldname="id"] input')
 			.type("Test Form Contact 3")
 			.blur();
 		cy.click_listview_row_item_with_text("Test Form Contact 3");
@@ -71,7 +71,7 @@ context("Form", () => {
 		let expectBackgroundColor = "rgb(255, 245, 245)";
 
 		cy.visit("/app/contact/new");
-		cy.fill_field("company_name", "Test Company");
+		cy.fill_field("company_id", "Test Company");
 
 		cy.get('.frappe-control[data-fieldname="email_ids"]').as("table");
 		cy.get("@table").find("button.grid-add-row").click();
@@ -113,7 +113,7 @@ context("Form", () => {
 				// set property before form_render event of child table
 				cy.get("@table")
 					.find('[data-idx="1"]')
-					.invoke("attr", "data-name")
+					.invoke("attr", "data-id")
 					.then((cdn) => {
 						frm.set_df_property(
 							"phone_nos",
@@ -136,7 +136,7 @@ context("Form", () => {
 				cy.get("@table").find('[data-idx="1"] .btn-open-row').click();
 				cy.get("@table")
 					.find('[data-idx="1"]')
-					.invoke("attr", "data-name")
+					.invoke("attr", "data-id")
 					.then((cdn) => {
 						frm.set_df_property(
 							"phone_nos",

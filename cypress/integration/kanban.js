@@ -125,7 +125,7 @@ context("Kanban Board", () => {
 		cy.get(".kanban .column-options").should("have.length", 0);
 
 		cy.switch_to_user("Administrator");
-		cy.call("frappe.client.delete", { doctype: "User", name: not_system_manager });
+		cy.call("frappe.client.delete", { doctype: "User", id: not_system_manager });
 	});
 
 	after(() => {

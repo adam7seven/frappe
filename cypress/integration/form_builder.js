@@ -1,5 +1,5 @@
 import form_builder_doctype from "../fixtures/form_builder_doctype";
-const doctype_name = form_builder_doctype.name;
+const doctype_id = form_builder_doctype.id;
 context("Form Builder", () => {
 	before(() => {
 		cy.login();
@@ -20,7 +20,7 @@ context("Form Builder", () => {
 	});
 
 	it("Save without change, check form dirty", () => {
-		cy.visit(`/app/doctype/${doctype_name}`);
+		cy.visit(`/app/doctype/${doctype_id}`);
 		cy.findByRole("tab", { name: "Form" }).click();
 
 		// Save without change
@@ -37,7 +37,7 @@ context("Form Builder", () => {
 
 	it("Check if Filters are applied to the link field", () => {
 		// Visit the Form Builder
-		cy.visit(`/app/doctype/${doctype_name}`);
+		cy.visit(`/app/doctype/${doctype_id}`);
 		cy.findByRole("tab", { name: "Form" }).click();
 
 		cy.get("[data-fieldname='gender']").click();
@@ -58,7 +58,7 @@ context("Form Builder", () => {
 		cy.click_doc_primary_button("Save");
 
 		// Open a new Form
-		cy.new_form(doctype_name);
+		cy.new_form(doctype_id);
 		// Click on the "salutation" field
 		cy.get_field("gender").clear().click();
 
@@ -70,7 +70,7 @@ context("Form Builder", () => {
 	});
 
 	it("Add empty section and save", () => {
-		cy.visit(`/app/doctype/${doctype_name}`);
+		cy.visit(`/app/doctype/${doctype_id}`);
 		cy.findByRole("tab", { name: "Form" }).click();
 
 		let first_section = ".tab-content.active .form-section-container:first";
@@ -88,7 +88,7 @@ context("Form Builder", () => {
 	it("Add Table field and check if columns are rendered", () => {
 		cy.intercept("POST", "/api/method/frappe.desk.search.search_link").as("search_link");
 
-		cy.visit(`/app/doctype/${doctype_name}`);
+		cy.visit(`/app/doctype/${doctype_id}`);
 		cy.findByRole("tab", { name: "Form" }).click();
 
 		let first_column = ".tab-content.active .section-columns-container:first .column:first";
@@ -147,7 +147,7 @@ context("Form Builder", () => {
 	});
 	// not important and was flaky on CI
 	it.skip("Drag Field/Column/Section & Tab", () => {
-		cy.visit(`/app/doctype/${doctype_name}`);
+		cy.visit(`/app/doctype/${doctype_id}`);
 		cy.findByRole("tab", { name: "Form" }).click();
 
 		let first_column = ".tab-content.active .section-columns-container:first .column:first";
@@ -208,7 +208,7 @@ context("Form Builder", () => {
 	});
 
 	it("Add New Tab/Section/Column to Form", () => {
-		cy.visit(`/app/doctype/${doctype_name}`);
+		cy.visit(`/app/doctype/${doctype_id}`);
 		cy.findByRole("tab", { name: "Form" }).click();
 
 		let first_section = ".tab-content.active .form-section-container:first";
@@ -251,7 +251,7 @@ context("Form Builder", () => {
 	});
 
 	it("Update Title field Label to New Title through Customize Form", () => {
-		cy.visit(`/app/doctype/${doctype_name}`);
+		cy.visit(`/app/doctype/${doctype_id}`);
 		cy.findByRole("tab", { name: "Form" }).click();
 
 		let first_field =
@@ -269,7 +269,7 @@ context("Form Builder", () => {
 	});
 
 	it("Validate Duplicate Name & reqd + hidden without default logic", () => {
-		cy.visit(`/app/doctype/${doctype_name}`);
+		cy.visit(`/app/doctype/${doctype_id}`);
 		cy.findByRole("tab", { name: "Form" }).click();
 
 		let first_column = ".tab-content.active .section-columns-container:first .column:first";
@@ -286,7 +286,7 @@ context("Form Builder", () => {
 
 		cy.get(last_field).click();
 
-		// validate duplicate name
+		// validate duplicate id
 		cy.get(".sidebar-container .frappe-control[data-fieldname='fieldname'] input")
 			.click()
 			.as("input");
@@ -315,7 +315,7 @@ context("Form Builder", () => {
 	});
 
 	it.skip("Undo/Redo", () => {
-		cy.visit(`/app/doctype/${doctype_name}`);
+		cy.visit(`/app/doctype/${doctype_id}`);
 		cy.findByRole("tab", { name: "Form" }).click();
 
 		// click on second tab

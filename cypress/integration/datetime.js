@@ -1,5 +1,5 @@
 import datetime_doctype from "../fixtures/datetime_doctype";
-const doctype_name = datetime_doctype.name;
+const doctype_id = datetime_doctype.id;
 
 context("Control Date, Time and DateTime", () => {
 	before(() => {
@@ -36,7 +36,7 @@ context("Control Date, Time and DateTime", () => {
 						frappe.sys_defaults.date_format = d.date_format;
 					});
 
-				cy.new_form(doctype_name);
+				cy.new_form(doctype_id);
 				cy.get(".form-control[data-fieldname=date]").focus();
 				cy.get(".datepickers-container .datepicker.active").should("be.visible");
 				cy.get(
@@ -78,7 +78,7 @@ context("Control Date, Time and DateTime", () => {
 					.then((frappe) => {
 						frappe.sys_defaults.time_format = d.time_format;
 					});
-				cy.new_form(doctype_name);
+				cy.new_form(doctype_id);
 				cy.fill_field("time", d.value, "Time").blur();
 				cy.get_field("time").should("have.value", d.match_value);
 			});
@@ -115,7 +115,7 @@ context("Control Date, Time and DateTime", () => {
 						frappe.sys_defaults.date_format = d.date_format;
 						frappe.sys_defaults.time_format = d.time_format;
 					});
-				cy.new_form(doctype_name);
+				cy.new_form(doctype_id);
 				cy.fill_field("datetime", d.value, "Datetime").blur();
 				cy.get_field("datetime").should("have.value", d.input_value);
 

@@ -1,7 +1,7 @@
 import doctype_with_child_table from "../fixtures/doctype_with_child_table";
 import child_table_doctype from "../fixtures/child_table_doctype";
 import child_table_doctype_1 from "../fixtures/child_table_doctype_1";
-const doctype_with_child_table_name = doctype_with_child_table.name;
+const doctype_with_child_table_name = doctype_with_child_table.id;
 
 context("Grid Search", () => {
 	before(() => {

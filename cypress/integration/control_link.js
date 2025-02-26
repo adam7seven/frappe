@@ -254,7 +254,7 @@ context("Control Link", () => {
 			cy.window()
 				.its("frappe")
 				.then((frappe) => {
-					cy.set_value("User", frappe.user.name, { language: "de" });
+					cy.set_value("User", frappe.user.id, { language: "de" });
 				});
 
 			cy.clear_cache();
@@ -286,7 +286,7 @@ context("Control Link", () => {
 		cy.window()
 			.its("frappe")
 			.then((frappe) => {
-				cy.set_value("User", frappe.user.name, { language: "en" });
+				cy.set_value("User", frappe.user.id, { language: "en" });
 			});
 
 		cy.clear_cache();

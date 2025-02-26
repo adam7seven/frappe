@@ -13,12 +13,12 @@ context("Realtime updates", () => {
 
 	it("Shows version conflict warning", { scrollBehavior: false }, () => {
 		cy.insert_doc("ToDo", { description: "old" }).then((doc) => {
-			cy.visit(`/app/todo/${doc.name}`);
+			cy.visit(`/app/todo/${doc.id}`);
 			// make form dirty
 			cy.fill_field("status", "Cancelled", "Select");
 
 			// update doc using api - simulating parallel change by another user
-			cy.update_doc("ToDo", doc.name, { status: "Closed" }).then(() => {
+			cy.update_doc("ToDo", doc.id, { status: "Closed" }).then(() => {
 				cy.findByRole("button", { name: "Refresh" }).click();
 				cy.get_field("status", "Select").should("have.value", "Closed");
 			});
@@ -32,7 +32,7 @@ context("Realtime updates", () => {
 			cy.contains(original).should("be.visible");
 
 			// update doc using api - simulating parallel change by another user
-			cy.update_doc("ToDo", doc.name, { description: updated }).then(() => {
+			cy.update_doc("ToDo", doc.id, { description: updated }).then(() => {
 				cy.contains(updated).should("be.visible");
 			});
 		});
