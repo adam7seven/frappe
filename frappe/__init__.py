@@ -688,7 +688,7 @@ def sendmail(
     as_markdown=False,
     delayed=True,
     reference_doctype=None,
-    reference_name=None,
+    reference_id=None,
     unsubscribe_method=None,
     unsubscribe_params=None,
     unsubscribe_message=None,
@@ -696,7 +696,7 @@ def sendmail(
     attachments=None,
     content=None,
     doctype=None,
-    name=None,
+    id=None,
     reply_to=None,
     queue_separately=False,
     cc=None,
@@ -730,8 +730,8 @@ def sendmail(
     :param delayed: Send via scheduled email sender **Email Queue**. Don't send immediately. Default is true
     :param send_priority: Priority for Email Queue, default 1.
     :param reference_doctype: (or `doctype`) Append as communication to this DocType.
-    :param reference_name: (or `name`) Append as communication to this document name.
-    :param unsubscribe_method: Unsubscribe url with options email, doctype, name. e.g. `/api/method/unsubscribe`
+    :param reference_id: (or `id`) Append as communication to this document id.
+    :param unsubscribe_method: Unsubscribe url with options email, doctype, id. e.g. `/api/method/unsubscribe`
     :param unsubscribe_params: Unsubscribe paramaters to be loaded on the unsubscribe_method [optional] (dict).
     :param attachments: List of attachments.
     :param reply_to: Reply-To Email Address.
@@ -777,7 +777,7 @@ def sendmail(
         message=message,
         text_content=text_content,
         reference_doctype=doctype or reference_doctype,
-        reference_name=name or reference_name,
+        reference_id=id or reference_id,
         add_unsubscribe_link=add_unsubscribe_link,
         unsubscribe_method=unsubscribe_method,
         unsubscribe_params=unsubscribe_params,
@@ -1023,7 +1023,7 @@ def has_permission(
         if doc:
             frappe.permissions.check_doctype_permission(doctype, ptype)
 
-        document_label = f"{_(doctype)} {doc if isinstance(doc, str) else doc.name}" if doc else _(doctype)
+        document_label = f"{_(doctype)} {doc if isinstance(doc, str) else doc.id}" if doc else _(doctype)
         frappe.flags.error_message = _("No permission for {0}").format(document_label)
         raise frappe.PermissionError
 
@@ -1142,7 +1142,7 @@ def get_cached_doc(*args: Any, **kwargs: Any) -> "Document":
 
     # Store in cache
     if not key:
-        key = get_document_cache_key(doc.doctype, doc.name)
+        key = get_document_cache_key(doc.doctype, doc.id)
 
     _set_document_in_cache(key, doc)
 
@@ -1163,21 +1163,21 @@ def can_cache_doc(args) -> str | None:
         return
 
     doctype = args[0]
-    name = doctype if len(args) == 1 or args[1] is None else args[1]
+    id = doctype if len(args) == 1 or args[1] is None else args[1]
 
-    # Only cache if both doctype and name are strings
-    if isinstance(doctype, str) and isinstance(name, str):
-        return get_document_cache_key(doctype, name)
-
-
-def get_document_cache_key(doctype: str, name: str):
-    return f"document_cache::{doctype}::{name}"
+    # Only cache if both doctype and id are strings
+    if isinstance(doctype, str) and isinstance(id, str):
+        return get_document_cache_key(doctype, id)
 
 
-def clear_document_cache(doctype: str, name: str | None = None) -> None:
+def get_document_cache_key(doctype: str, id: str):
+    return f"document_cache::{doctype}::{id}"
+
+
+def clear_document_cache(doctype: str, id: str | None = None) -> None:
     def clear_in_redis():
-        if name is not None:
-            cache.delete_value(get_document_cache_key(doctype, name))
+        if id is not None:
+            cache.delete_value(get_document_cache_key(doctype, id))
         else:
             cache.delete_keys(get_document_cache_key(doctype, ""))
 
@@ -1193,11 +1193,9 @@ def clear_document_cache(doctype: str, name: str | None = None) -> None:
         delattr(local, "website_settings")
 
 
-def get_cached_value(
-    doctype: str, name: str | dict, fieldname: str | Iterable[str] = "name", as_dict: bool = False
-) -> Any:
+def get_cached_value(doctype: str, id: str | dict, fieldname: str | Iterable[str] = "id", as_dict: bool = False) -> Any:
     try:
-        doc = get_cached_doc(doctype, name)
+        doc = get_cached_doc(doctype, id)
     except DoesNotExistError:
         clear_last_message()
         return
@@ -1229,8 +1227,8 @@ def get_doc(doctype: str, /) -> _SingleDocument:
 
 
 @overload
-def get_doc(doctype: str, name: str, /, *, for_update: bool | None = None) -> "Document":
-    """Retrieve DocType from DB, doctype and name must be positional argument."""
+def get_doc(doctype: str, id: str, /, *, for_update: bool | None = None) -> "Document":
+    """Retrieve DocType from DB, doctype and id must be positional argument."""
     pass
 
 
@@ -1249,10 +1247,10 @@ def get_doc(documentdict: dict) -> "_NewDocument":
 
 
 def get_doc(*args: Any, **kwargs: Any) -> "Document":
-    """Return a `frappe.model.document.Document` object of the given type and name.
+    """Return a `frappe.model.document.Document` object of the given type and id.
 
-    :param arg1: DocType name as string **or** document JSON.
-    :param arg2: [optional] Document name as string.
+    :param arg1: DocType id as string **or** document JSON.
+    :param arg2: [optional] Document id as string.
 
     Examples:
 
@@ -1277,7 +1275,7 @@ def get_last_doc(
     for_update=False,
 ):
     """Get last created document of this type."""
-    d = get_all(doctype, filters=filters, limit_page_length=1, order_by=order_by, pluck="name")
+    d = get_all(doctype, filters=filters, limit_page_length=1, order_by=order_by, pluck="id")
     if d:
         return get_doc(doctype, d[0], for_update=for_update)
     else:
@@ -1290,7 +1288,7 @@ def get_single(doctype):
 
 
 def get_meta(doctype, cached=True):
-    """Get `frappe.model.meta.Meta` instance of given doctype name."""
+    """Get `frappe.model.meta.Meta` instance of given doctype id."""
     import frappe.model.meta
 
     return frappe.model.meta.get_meta(doctype, cached=cached)
@@ -1304,7 +1302,7 @@ def get_meta_module(doctype):
 
 def delete_doc(
     doctype: str | None = None,
-    name: str | dict | None = None,
+    id: str | dict | None = None,
     force: bool = False,
     ignore_doctypes: list[str] | None = None,
     for_reload: bool = False,
@@ -1317,7 +1315,7 @@ def delete_doc(
     """Delete a document. Calls `frappe.model.delete_doc.delete_doc`.
 
     :param doctype: DocType of document to be delete.
-    :param name: Name of document to be delete.
+    :param id: Name of document to be delete.
     :param force: Allow even if document is linked. Warning: This may lead to data integrity errors.
     :param ignore_doctypes: Ignore if child table is one of these.
     :param for_reload: Call `before_reload` trigger before deleting.
@@ -1327,7 +1325,7 @@ def delete_doc(
 
     return frappe.model.delete_doc.delete_doc(
         doctype,
-        name,
+        id,
         force,
         ignore_doctypes,
         for_reload,
@@ -1339,13 +1337,13 @@ def delete_doc(
     )
 
 
-def delete_doc_if_exists(doctype, name, force=0):
+def delete_doc_if_exists(doctype, id, force=0):
     """Delete document if exists."""
-    delete_doc(doctype, name, force=force, ignore_missing=True)
+    delete_doc(doctype, id, force=force, ignore_missing=True)
 
 
 def reload_doctype(doctype, force=False, reset_permissions=False):
-    """Reload DocType from model (`[module]/[doctype]/[name]/[name].json`) files."""
+    """Reload DocType from model (`[module]/[doctype]/[id]/[id].json`) files."""
     reload_doc(
         scrub(db.get_value("DocType", doctype, "module")),
         "doctype",
@@ -1362,11 +1360,11 @@ def reload_doc(
     force: bool = False,
     reset_permissions: bool = False,
 ):
-    """Reload Document from model (`[module]/[doctype]/[name]/[name].json`) files.
+    """Reload Document from model (`[module]/[doctype]/[id]/[id].json`) files.
 
     :param module: Module name.
-    :param dt: DocType name.
-    :param dn: Document name.
+    :param dt: DocType id.
+    :param dn: Document id.
     :param force: Reload even if `modified` timestamp matches.
     """
 
@@ -1780,7 +1778,7 @@ def make_property_setter(args, ignore_validate=False, validate_fields_for_doctyp
                 "doctype_or_field": args.doctype_or_field,
                 "doc_type": doctype,
                 "field_name": args.fieldname,
-                "row_name": args.row_name,
+                "row_id": args.row_id,
                 "property": args.property,
                 "value": args.value,
                 "property_type": args.property_type or "Data",
@@ -1813,7 +1811,7 @@ def copy_doc(doc: "Document", ignore_no_copy: bool = True) -> "Document":
             if hasattr(d, df.fieldname):
                 d.set(df.fieldname, None)
 
-    fields_to_clear = ["name", "owner", "creation", "modified", "modified_by"]
+    fields_to_clear = ["id", "owner", "creation", "modified", "modified_by"]
 
     if not local.flags.in_test:
         fields_to_clear.append("docstatus")
@@ -1962,7 +1960,7 @@ def get_list(doctype, *args, **kwargs):
     Example usage:
 
             # simple dict filter
-            frappe.get_list("ToDo", fields=["name", "description"], filters = {"owner":"test@example.com"})
+            frappe.get_list("ToDo", fields=["id", "description"], filters = {"owner":"test@example.com"})
 
             # filter as a list of lists
             frappe.get_list("ToDo", fields="*", filters = [["modified", ">", "2014-01-01"]])
@@ -1977,7 +1975,7 @@ def get_all(doctype, *args, **kwargs):
     Parameters are same as `frappe.get_list`
 
     :param doctype: DocType on which query is to be made.
-    :param fields: List of fields or `*`. Default is: `["name"]`.
+    :param fields: List of fields or `*`. Default is: `["id"]`.
     :param filters: List of filters (see example).
     :param order_by: Order By e.g. `creation desc`.
     :param limit_start: Start results at record #. Default 0.
@@ -1986,7 +1984,7 @@ def get_all(doctype, *args, **kwargs):
     Example usage:
 
             # simple dict filter
-            frappe.get_all("ToDo", fields=["name", "description"], filters = {"owner":"test@example.com"})
+            frappe.get_all("ToDo", fields=["id", "description"], filters = {"owner":"test@example.com"})
 
             # filter as a list of lists
             frappe.get_all("ToDo", fields=["*"], filters = [["modified", ">", "2014-01-01"]])
@@ -2002,8 +2000,8 @@ def get_value(*args, **kwargs):
 
     Alias for `frappe.db.get_value`
 
-    :param doctype: DocType name.
-    :param filters: Filters like `{"x":"y"}` or name of the document. `None` if Single DocType.
+    :param doctype: DocType id.
+    :param filters: Filters like `{"x":"y"}` or id of the document. `None` if Single DocType.
     :param fieldname: Column name.
     :param ignore: Don't raise exception if table, column is missing.
     :param as_dict: Return values as dict.
@@ -2070,7 +2068,7 @@ def format(*args, **kwargs):
 
 def get_print(
     doctype=None,
-    name=None,
+    id=None,
     print_format=None,
     style=None,
     as_pdf=False,
@@ -2084,7 +2082,7 @@ def get_print(
     """Get Print Format for given document.
 
     :param doctype: DocType of document.
-    :param name: Name of document.
+    :param id: Name of document.
     :param print_format: Print Format name. Default 'Standard',
     :param style: Print Format style.
     :param as_pdf: Return as PDF. Default False.
@@ -2095,7 +2093,7 @@ def get_print(
     original_form_dict = copy.deepcopy(local.form_dict)
     try:
         local.form_dict.doctype = doctype
-        local.form_dict.name = name
+        local.form_dict.id = id
         local.form_dict.format = print_format
         local.form_dict.style = style
         local.form_dict.doc = doc
@@ -2116,7 +2114,7 @@ def get_print(
 
 def attach_print(
     doctype,
-    name,
+    id,
     file_name=None,
     print_format=None,
     style=None,
@@ -2152,16 +2150,16 @@ def attach_print(
             content = (
                 get_pdf(html, options={"password": password} if password else None)
                 if html
-                else get_print(doctype, name, **kwargs)
+                else get_print(doctype, id, **kwargs)
             )
         else:
             ext = ".html"
-            content = html or scrub_urls(get_print(doctype, name, **kwargs)).encode("utf-8")
+            content = html or scrub_urls(get_print(doctype, id, **kwargs)).encode("utf-8")
 
     local.flags.ignore_print_permissions = False
 
     if not file_name:
-        file_name = name
+        file_name = id
     file_name = cstr(file_name).replace(" ", "").replace("/", "-") + ext
 
     return {"fname": file_name, "fcontent": content}
@@ -2173,7 +2171,7 @@ def publish_progress(*args, **kwargs):
     :param percent: Percent progress
     :param title: Title
     :param doctype: Optional, for document type
-    :param docid: Optional, for document name
+    :param docid: Optional, for document id
     :param description: Optional description
     """
     import frappe.realtime
@@ -2184,7 +2182,7 @@ def publish_progress(*args, **kwargs):
 def publish_realtime(*args, **kwargs):
     """Publish real-time updates
 
-    :param event: Event name, like `task_progress` etc.
+    :param event: Event id, like `task_progress` etc.
     :param message: JSON message object. For async must contain `task_id`
     :param room: Room in which to publish update (default entire site)
     :param user: Transmit to user
@@ -2248,7 +2246,7 @@ def enqueue_doc(*args, **kwargs):
     Enqueue method to be executed using a background worker
 
     :param doctype: DocType of the document on which you want to run the event
-    :param name: Name of the document on which you want to run the event
+    :param id: Name of the document on which you want to run the event
     :param method: method string or method object
     :param queue: (optional) should be either long, default or short
     :param timeout: (optional) should be set according to the functions
@@ -2287,12 +2285,12 @@ def logger(
     )
 
 
-def get_desk_link(doctype, name):
+def get_desk_link(doctype, id):
     meta = get_meta(doctype)
-    title = get_value(doctype, name, meta.get_title_field())
+    title = get_value(doctype, id, meta.get_title_field())
 
-    html = '<a href="/app/Form/{doctype}/{name}" style="font-weight: bold;">{doctype_local} {title_local}</a>'
-    return html.format(doctype=doctype, name=name, doctype_local=_(doctype), title_local=_(title))
+    html = '<a href="/app/Form/{doctype}/{id}" style="font-weight: bold;">{doctype_local} {title_local}</a>'
+    return html.format(doctype=doctype, id=id, doctype_local=_(doctype), title_local=_(title))
 
 
 def safe_eval(code, eval_globals=None, eval_locals=None):

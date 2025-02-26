@@ -191,7 +191,7 @@ def upload_file():
             {
                 "doctype": "File",
                 "attached_to_doctype": doctype,
-                "attached_to_name": docid,
+                "attached_to_id": docid,
                 "attached_to_field": fieldname,
                 "folder": folder,
                 "file_name": filename,
@@ -202,18 +202,18 @@ def upload_file():
         ).save(ignore_permissions=ignore_permissions)
 
 
-def check_write_permission(doctype: str | None = None, name: str | None = None):
+def check_write_permission(doctype: str | None = None, id: str | None = None):
     if not doctype:
         return
 
-    if not name:
+    if not id:
         frappe.has_permission(doctype, "write", throw=True)
         return
 
     try:
-        doc = frappe.get_doc(doctype, name)
+        doc = frappe.get_doc(doctype, id)
     except frappe.DoesNotExistError:
-        # doc has not been inserted yet, name is set to "new-some-doctype"
+        # doc has not been inserted yet, id is set to "new-some-doctype"
         # If doc inserts fine then only this attachment will be linked see file/utils.py:relink_mismatched_files
         check_doctype_permission(doctype, "write")
         return

@@ -210,19 +210,19 @@ def get_local_with_deprecations() -> "Local":
     from werkzeug.local import Local
 
     class DeprecatedLocalAttribute:
-        def __init__(self, name, warning):
-            self.name = name
+        def __init__(self, id, warning):
+            self.id = id
             self.warning = warning
 
         def __get__(self, obj, type=None):
             self.warning()
-            return obj.__getattr__(self.name)
+            return obj.__getattr__(self.id)
 
         def __set__(self, obj, value):
-            return obj.__setattr__(self.name, value)
+            return obj.__setattr__(self.id, value)
 
         def __delete__(self, obj):
-            return obj.__delattr__(self.name)
+            return obj.__delattr__(self.id)
 
     class LocalWithDeprecations(Local):
         """Can deprecate local attributes."""
@@ -373,14 +373,14 @@ def gzip_decompress(data):
     "v17",
     "Unknown.",
 )
-def send_mail(email_queue_name, smtp_server_instance=None):
+def send_mail(email_queue_id, smtp_server_instance=None):
     """This is equivalent to EmailQueue.send.
 
     This provides a way to make sending mail as a background job.
     """
     from frappe.email.doctype.email_queue.email_queue import EmailQueue
 
-    record = EmailQueue.find(email_queue_name)
+    record = EmailQueue.find(email_queue_id)
     record.send(smtp_server_instance=smtp_server_instance)
 
 
@@ -944,9 +944,9 @@ def tests_utils_get_dependencies(doctype):
     options_list = list(set(options_list))
 
     if hasattr(test_module, "test_ignore"):
-        for doctype_name in test_module.test_ignore:
-            if doctype_name in options_list:
-                options_list.remove(doctype_name)
+        for doctype_id in test_module.test_ignore:
+            if doctype_id in options_list:
+                options_list.remove(doctype_id)
 
     options_list.sort()
 
@@ -1008,7 +1008,7 @@ def compat_preload_test_records_upfront(candidates: list):
             if os.path.exists(test_record_file_path):
                 with open(test_record_file_path) as f:
                     doc = json.loads(f.read())
-                    doctype = doc["name"]
+                    doctype = doc["id"]
                     make_test_records(doctype, commit=True)
 
 

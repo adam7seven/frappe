@@ -129,7 +129,7 @@ def has_permission(
 
     if doc:
         if isinstance(doc, str | int):
-            doc = frappe.get_doc(meta.name, doc)
+            doc = frappe.get_doc(meta.id, doc)
         perm = get_doc_permissions(doc, user=user, ptype=ptype, debug=debug).get(ptype)
         if not perm:
             debug and _debug_log(
@@ -137,7 +137,7 @@ def has_permission(
             )
             msg = _("User {0} does not have access to this document").format(frappe.bold(user))
             if frappe.has_permission(doc.doctype):
-                msg += f": {_(doc.doctype)} - {doc.name}"
+                msg += f": {_(doc.doctype)} - {doc.id}"
             push_perm_check_log(msg, debug=debug)
     else:
         if ptype == "submit" and not cint(meta.is_submittable):
@@ -171,12 +171,12 @@ def has_permission(
         rights = ["read" if ptype in ("email", "print") else ptype]
 
         if doc:
-            doc_name = get_doc_name(doc)
+            doc_id = get_doc_id(doc)
             shared = frappe.share.get_shared(
                 doctype,
                 user,
                 rights=rights,
-                filters=[["share_name", "=", doc_name]],
+                filters=[["share_id", "=", doc_id]],
                 limit=1,
             )
             debug and _debug_log(f"Document is shared with user for {ptype}? {bool(shared)}")
@@ -263,12 +263,12 @@ def get_role_permissions(doctype_meta, user=None, is_owner=None, debug=False):
             }
     """
     if isinstance(doctype_meta, str):
-        doctype_meta = frappe.get_meta(doctype_meta)  # assuming doctype name was passed
+        doctype_meta = frappe.get_meta(doctype_meta)  # assuming doctype id was passed
 
     if not user:
         user = frappe.session.user
 
-    cache_key = (doctype_meta.name, user, bool(is_owner))
+    cache_key = (doctype_meta.id, user, bool(is_owner))
 
     if user == "Administrator":
         debug and _debug_log("all permissions granted because user is Administrator")
@@ -336,7 +336,7 @@ def has_user_permission(doc, user=None, debug=False):
         debug and _debug_log("Strict user permissions will be applied")
 
     doctype = doc.get("doctype")
-    docid = doc.get("name")
+    docid = doc.get("id")
 
     # STEP 1: ---------------------
     # check user permissions on self
@@ -490,7 +490,7 @@ def get_roles(user=None, with_standard=True):
 
     def get():
         if user == "Administrator":
-            return frappe.get_all("Role", pluck="name")  # return all available roles
+            return frappe.get_all("Role", pluck="id")  # return all available roles
         else:
             table = DocType("Has Role")
             roles = (
@@ -534,7 +534,7 @@ def get_doctypes_with_custom_docperms():
 
 def add_user_permission(
     doctype,
-    name,
+    id,
     user,
     ignore_permissions=False,
     applicable_for=None,
@@ -544,15 +544,15 @@ def add_user_permission(
     """Add user permission"""
     from frappe.core.doctype.user_permission.user_permission import user_permission_exists
 
-    if not user_permission_exists(user, doctype, name, applicable_for):
-        if not frappe.db.exists(doctype, name):
-            frappe.throw(_("{0} {1} not found").format(_(doctype), name), frappe.DoesNotExistError)
+    if not user_permission_exists(user, doctype, id, applicable_for):
+        if not frappe.db.exists(doctype, id):
+            frappe.throw(_("{0} {1} not found").format(_(doctype), id), frappe.DoesNotExistError)
 
         frappe.get_doc(
             doctype="User Permission",
             user=user,
             allow=doctype,
-            for_value=name,
+            for_value=id,
             is_default=is_default,
             applicable_for=applicable_for,
             apply_to_all_doctypes=0 if applicable_for else 1,
@@ -560,9 +560,9 @@ def add_user_permission(
         ).insert(ignore_permissions=ignore_permissions)
 
 
-def remove_user_permission(doctype, name, user):
-    user_permission_name = frappe.db.get_value("User Permission", dict(user=user, allow=doctype, for_value=name))
-    frappe.delete_doc("User Permission", user_permission_name, force=True)
+def remove_user_permission(doctype, id, user):
+    user_permission_id = frappe.db.get_value("User Permission", dict(user=user, allow=doctype, for_value=id))
+    frappe.delete_doc("User Permission", user_permission_id, force=True)
 
 
 def clear_user_permissions_for_doctype(doctype, user=None):
@@ -571,7 +571,7 @@ def clear_user_permissions_for_doctype(doctype, user=None):
         filters["user"] = user
     user_permissions_for_doctype = frappe.get_all("User Permission", filters=filters)
     for d in user_permissions_for_doctype:
-        frappe.delete_doc("User Permission", d.name, force=True)
+        frappe.delete_doc("User Permission", d.id, force=True)
 
 
 def can_import(doctype, raise_exception=False):
@@ -661,7 +661,7 @@ def add_permission(doctype, role, permlevel=0, ptype=None):
     custom_docperm.save()
 
     validate_permissions_for_doctype(doctype)
-    return custom_docperm.name
+    return custom_docperm.id
 
 
 def copy_perms(parent):
@@ -677,7 +677,7 @@ def reset_perms(doctype):
     from frappe.desk.notifications import delete_notification_count_for
 
     delete_notification_count_for(doctype)
-    for custom_docperm in frappe.get_all("Custom DocPerm", filters={"parent": doctype}, pluck="name"):
+    for custom_docperm in frappe.get_all("Custom DocPerm", filters={"parent": doctype}, pluck="id"):
         frappe.delete_doc("Custom DocPerm", custom_docperm, ignore_permissions=True, force=True)
 
 
@@ -694,10 +694,10 @@ def get_linked_doctypes(dt: str) -> list:
     return list(set(linked_doctypes))
 
 
-def get_doc_name(doc):
+def get_doc_id(doc):
     if not doc:
         return None
-    return doc if isinstance(doc, str) else str(doc.name)
+    return doc if isinstance(doc, str) else str(doc.id)
 
 
 def allow_everything():
@@ -779,7 +779,7 @@ def has_child_permission(
         if not parentfield:
             push_perm_check_log(
                 _("Parentfield not specified in {0}: {1}").format(
-                    frappe.bold(child_doctype), frappe.bold(child_doc.name)
+                    frappe.bold(child_doctype), frappe.bold(child_doc.id)
                 ),
                 debug=debug,
             )

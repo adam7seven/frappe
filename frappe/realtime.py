@@ -32,7 +32,7 @@ def publish_realtime(
 ):
     """Publish real-time updates
 
-    :param event: Event name, like `task_progress` etc. that will be handled by the client (default is `task_progress` if within task or `global`)
+    :param event: Event id, like `task_progress` etc. that will be handled by the client (default is `task_progress` if within task or `global`)
     :param message: JSON message object. For async must contain `task_id`
     :param room: Room in which to publish update (default entire site)
     :param user: Transmit to user
@@ -98,9 +98,9 @@ def clear_realtime_log():
 def emit_via_redis(event, message, room):
     """Publish real-time updates via redis
 
-    :param event: Event name, like `task_progress` etc.
+    :param event: Event id, like `task_progress` etc.
     :param message: JSON message object. For async must contain `task_id`
-    :param room: name of the room"""
+    :param room: id of the room"""
     from frappe.utils.background_jobs import get_redis_connection_without_auth
 
     with suppress(redis.exceptions.ConnectionError):
@@ -112,8 +112,8 @@ def emit_via_redis(event, message, room):
 
 
 @frappe.whitelist(allow_guest=True)
-def has_permission(doctype: str, name: str) -> bool:
-    frappe.has_permission(doctype, doc=name, throw=True)
+def has_permission(doctype: str, id: str) -> bool:
+    frappe.has_permission(doctype, doc=id, throw=True)
     return True
 
 

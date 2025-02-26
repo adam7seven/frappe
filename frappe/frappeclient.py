@@ -107,7 +107,7 @@ class FrappeClient:
             headers=self.headers,
         )
 
-    def get_list(self, doctype, fields='["name"]', filters=None, limit_start=0, limit_page_length=None):
+    def get_list(self, doctype, fields='["id"]', filters=None, limit_start=0, limit_page_length=None):
         """Return list of records of a particular type."""
         if not isinstance(fields, str):
             fields = json.dumps(fields)
@@ -145,23 +145,23 @@ class FrappeClient:
     def update(self, doc):
         """Update a remote document
 
-        :param doc: dict or Document object to be updated remotely. `name` is mandatory for this"""
-        url = self.url + "/api/resource/" + doc.get("doctype") + "/" + cstr(doc.get("name"))
+        :param doc: dict or Document object to be updated remotely. `id` is mandatory for this"""
+        url = self.url + "/api/resource/" + doc.get("doctype") + "/" + cstr(doc.get("id"))
         res = self.session.put(url, data={"data": frappe.as_json(doc)}, verify=self.verify, headers=self.headers)
         return frappe._dict(self.post_process(res))
 
     def bulk_update(self, docs):
         """Bulk update documents remotely
 
-        :param docs: List of dict or Document objects to be updated remotely (by `name`)"""
+        :param docs: List of dict or Document objects to be updated remotely (by `id`)"""
         return self.post_request({"cmd": "frappe.client.bulk_update", "docs": frappe.as_json(docs)})
 
-    def delete(self, doctype, name):
-        """Delete remote document by name
+    def delete(self, doctype, id):
+        """Delete remote document by id
 
         :param doctype: `doctype` to be deleted
-        :param name: `name` of document to be deleted"""
-        return self.post_request({"cmd": "frappe.client.delete", "doctype": doctype, "name": name})
+        :param id: `id` of document to be deleted"""
+        return self.post_request({"cmd": "frappe.client.delete", "doctype": doctype, "id": id})
 
     def submit(self, doc):
         """Submit remote document
@@ -173,13 +173,13 @@ class FrappeClient:
         """Return a value from a document.
 
         :param doctype: DocType to be queried
-        :param fieldname: Field to be returned (default `name`)
+        :param fieldname: Field to be returned (default `id`)
         :param filters: dict or string for identifying the record"""
         return self.get_request(
             {
                 "cmd": "frappe.client.get_value",
                 "doctype": doctype,
-                "fieldname": fieldname or "name",
+                "fieldname": fieldname or "id",
                 "filters": frappe.as_json(filters),
             }
         )
@@ -188,32 +188,32 @@ class FrappeClient:
         """Set a value in a remote document
 
         :param doctype: DocType of the document to be updated
-        :param docid: name of the document to be updated
+        :param docid: id of the document to be updated
         :param fieldname: fieldname of the document to be updated
         :param value: value to be updated"""
         return self.post_request(
             {
                 "cmd": "frappe.client.set_value",
                 "doctype": doctype,
-                "name": docid,
+                "id": docid,
                 "fieldname": fieldname,
                 "value": value,
             }
         )
 
-    def cancel(self, doctype, name):
+    def cancel(self, doctype, id):
         """Cancel a remote document
 
         :param doctype: DocType of the document to be cancelled
-        :param name: name of the document to be cancelled"""
-        return self.post_request({"cmd": "frappe.client.cancel", "doctype": doctype, "name": name})
+        :param id: id of the document to be cancelled"""
+        return self.post_request({"cmd": "frappe.client.cancel", "doctype": doctype, "id": id})
 
-    def get_doc(self, doctype, name="", filters=None, fields=None):
+    def get_doc(self, doctype, id="", filters=None, fields=None):
         """Return a single remote document.
 
         :param doctype: DocType of the document to be returned
-        :param name: (optional) `name` of the document to be returned
-        :param filters: (optional) Filter by this dict if name is not set
+        :param id: (optional) `id` of the document to be returned
+        :param filters: (optional) Filter by this dict if id is not set
         :param fields: (optional) Fields to be returned, will return everything if not set"""
         params = {}
         if filters:
@@ -222,7 +222,7 @@ class FrappeClient:
             params["fields"] = json.dumps(fields)
 
         res = self.session.get(
-            self.url + "/api/resource/" + doctype + "/" + cstr(name),
+            self.url + "/api/resource/" + doctype + "/" + cstr(id),
             params=params,
             verify=self.verify,
             headers=self.headers,
@@ -230,17 +230,17 @@ class FrappeClient:
 
         return self.post_process(res)
 
-    def rename_doc(self, doctype, old_name, new_name):
+    def rename_doc(self, doctype, old_id, new_id):
         """Rename remote document
 
         :param doctype: DocType of the document to be renamed
-        :param old_name: Current `name` of the document to be renamed
-        :param new_name: New `name` to be set"""
+        :param old_id: Current `id` of the document to be renamed
+        :param new_id: New `id` to be set"""
         params = {
             "cmd": "frappe.client.rename_doc",
             "doctype": doctype,
-            "old_name": old_name,
-            "new_name": new_name,
+            "old_id": old_id,
+            "new_id": new_id,
         }
         return self.post_request(params)
 
@@ -261,7 +261,7 @@ class FrappeClient:
         # build - attach children to parents
         if tables:
             docs = [frappe._dict(doc) for doc in docs]
-            docs_map = {doc.name: doc for doc in docs}
+            docs_map = {doc.id: doc for doc in docs}
 
             for fieldname in tables:
                 for child in tables[fieldname]:
@@ -272,7 +272,7 @@ class FrappeClient:
         if verbose:
             print("inserting " + doctype)
         for doc in docs:
-            if exclude and doc["name"] in exclude:
+            if exclude and doc["id"] in exclude:
                 continue
 
             if preprocess:
@@ -301,16 +301,16 @@ class FrappeClient:
                 if doctype != "Communication":
                     self.migrate_doctype(
                         "Communication",
-                        {"reference_doctype": doctype, "reference_name": doc["name"]},
-                        update={"reference_name": new_doc.name},
+                        {"reference_doctype": doctype, "reference_id": doc["id"]},
+                        update={"reference_id": new_doc.id},
                         verbose=0,
                     )
 
                 if doctype != "File":
                     self.migrate_doctype(
                         "File",
-                        {"attached_to_doctype": doctype, "attached_to_name": doc["name"]},
-                        update={"attached_to_name": new_doc.name},
+                        {"attached_to_doctype": doctype, "attached_to_id": doc["id"]},
+                        update={"attached_to_id": new_doc.id},
                         verbose=0,
                     )
 

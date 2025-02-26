@@ -51,7 +51,7 @@ execute:frappe.rename_doc('Country', 'Iran, Islamic Republic of', 'Iran', ignore
 execute:frappe.rename_doc('Country', 'Tanzania, United Republic of', 'Tanzania', ignore_if_exists=True)
 execute:frappe.rename_doc('Country', 'Syrian Arab Republic', 'Syria', ignore_if_exists=True)
 execute:frappe.reload_doc('desk', 'doctype', 'notification_log')
-execute:frappe.db.sql('update tabReport set module="Desk" where name="ToDo"')
+execute:frappe.db.sql('update tabReport set module="Desk" where id="ToDo"')
 execute:frappe.delete_doc('Page', 'data-import-tool', ignore_missing=True)
 frappe.patches.v10_0.reload_countries_and_currencies # 2021-02-03
 frappe.patches.v10_0.refactor_social_login_keys

@@ -41,7 +41,7 @@ def get_list(
     """Return a list of records by filters, fields, ordering and limit.
 
     :param doctype: DocType of the data to be queried
-    :param fields: fields to be returned. Default is `name`
+    :param fields: fields to be returned. Default is `id`
     :param filters: filter list by this dict
     :param order_by: Order by this fieldname
     :param limit_start: Start at this index
@@ -73,17 +73,17 @@ def get_count(doctype, filters=None, debug=False, cache=False):
 
 
 @frappe.whitelist()
-def get(doctype, name=None, filters=None, parent=None):
-    """Return a document by name or filters.
+def get(doctype, id=None, filters=None, parent=None):
+    """Return a document by id or filters.
 
     :param doctype: DocType of the document to be returned
-    :param name: return document of this `name`
-    :param filters: If name is not set, filter by these values and return the first match"""
+    :param id: return document of this `id`
+    :param filters: If id is not set, filter by these values and return the first match"""
     if frappe.is_table(doctype):
         check_parent_permission(parent, doctype)
 
-    if name:
-        doc = frappe.get_doc(doctype, name)
+    if id:
+        doc = frappe.get_doc(doctype, id)
     elif filters or filters == {}:
         doc = frappe.get_doc(doctype, frappe.parse_json(filters))
     else:
@@ -100,7 +100,7 @@ def get_value(doctype, fieldname, filters=None, as_dict=True, debug=False, paren
     """Return a value from a document.
 
     :param doctype: DocType to be queried
-    :param fieldname: Field to be returned (default `name`)
+    :param fieldname: Field to be returned (default `id`)
     :param filters: dict or string for identifying the record"""
     if frappe.is_table(doctype):
         check_parent_permission(parent, doctype)
@@ -110,12 +110,12 @@ def get_value(doctype, fieldname, filters=None, as_dict=True, debug=False, paren
 
     filters = get_safe_filters(filters)
     if isinstance(filters, str):
-        filters = {"name": filters}
+        filters = {"id": filters}
 
     try:
         fields = frappe.parse_json(fieldname)
     except (TypeError, ValueError):
-        # name passed, not json
+        # id passed, not json
         fields = [fieldname]
 
     # check whether the used filters were really parseable and usable
@@ -154,11 +154,11 @@ def get_single_value(doctype, field):
 
 
 @frappe.whitelist(methods=["POST", "PUT"])
-def set_value(doctype, name, fieldname, value=None):
+def set_value(doctype, id, fieldname, value=None):
     """Set a value using get_doc, group of values
 
     :param doctype: DocType of the document
-    :param name: name of the document
+    :param id: id of the document
     :param fieldname: fieldname string or JSON / dict with key value pair
     :param value: value if fieldname is JSON / dict"""
 
@@ -177,12 +177,12 @@ def set_value(doctype, name, fieldname, value=None):
 
     # check for child table doctype
     if not frappe.get_meta(doctype).istable:
-        doc = frappe.get_doc(doctype, name)
+        doc = frappe.get_doc(doctype, id)
         doc.update(values)
     else:
-        doc = frappe.db.get_value(doctype, name, ["parenttype", "parent"], as_dict=True)
+        doc = frappe.db.get_value(doctype, id, ["parenttype", "parent"], as_dict=True)
         doc = frappe.get_doc(doc.parenttype, doc.parent)
-        child = doc.getone({"doctype": doctype, "name": name})
+        child = doc.getone({"doctype": doctype, "id": id})
         child.update(values)
 
     doc.save()
@@ -212,7 +212,7 @@ def insert_many(docs=None):
     if len(docs) > 200:
         frappe.throw(_("Only 200 inserts allowed in one request"))
 
-    return [insert_doc(doc).name for doc in docs]
+    return [insert_doc(doc).id for doc in docs]
 
 
 @frappe.whitelist(methods=["POST", "PUT"])
@@ -230,14 +230,14 @@ def save(doc):
 
 
 @frappe.whitelist(methods=["POST", "PUT"])
-def rename_doc(doctype, old_name, new_name, merge=False):
+def rename_doc(doctype, old_id, new_id, merge=False):
     """Rename document
 
     :param doctype: DocType of the document to be renamed
-    :param old_name: Current `name` of the document to be renamed
-    :param new_name: New `name` to be set"""
-    new_name = frappe.rename_doc(doctype, old_name, new_name, merge=merge)
-    return new_name
+    :param old_id: Current `id` of the document to be renamed
+    :param new_id: New `id` to be set"""
+    new_id = frappe.rename_doc(doctype, old_id, new_id, merge=merge)
+    return new_id
 
 
 @frappe.whitelist(methods=["POST", "PUT"])
@@ -255,24 +255,24 @@ def submit(doc):
 
 
 @frappe.whitelist(methods=["POST", "PUT"])
-def cancel(doctype, name):
+def cancel(doctype, id):
     """Cancel a document
 
     :param doctype: DocType of the document to be cancelled
-    :param name: name of the document to be cancelled"""
-    wrapper = frappe.get_doc(doctype, name)
+    :param id: id of the document to be cancelled"""
+    wrapper = frappe.get_doc(doctype, id)
     wrapper.cancel()
 
     return wrapper.as_dict()
 
 
 @frappe.whitelist(methods=["DELETE", "POST"])
-def delete(doctype, name):
+def delete(doctype, id):
     """Delete a remote document
 
     :param doctype: DocType of the document to be deleted
-    :param name: name of the document to be deleted"""
-    delete_doc(doctype, name)
+    :param id: id of the document to be deleted"""
+    delete_doc(doctype, id)
 
 
 @frappe.whitelist(methods=["POST", "PUT"])
@@ -299,7 +299,7 @@ def has_permission(doctype, docid, perm_type="read"):
     """Return a JSON with data whether the document has the requested permission.
 
     :param doctype: DocType of the document to be checked
-    :param docid: `name` of the document to be checked
+    :param docid: `id` of the document to be checked
     :param perm_type: one of `read`, `write`, `create`, `submit`, `cancel`, `report`. Default is `read`"""
     # perm_type can be one of read, write, create, submit, cancel, report
     return {"has_permission": frappe.has_permission(doctype, perm_type.lower(), docid)}
@@ -310,22 +310,22 @@ def get_doc_permissions(doctype, docid):
     """Return an evaluated document permissions dict like `{"read":1, "write":1}`.
 
     :param doctype: DocType of the document to be evaluated
-    :param docid: `name` of the document to be evaluated
+    :param docid: `id` of the document to be evaluated
     """
     doc = frappe.get_doc(doctype, docid)
     return {"permissions": frappe.permissions.get_doc_permissions(doc)}
 
 
 @frappe.whitelist()
-def get_password(doctype, name, fieldname):
+def get_password(doctype, id, fieldname):
     """Return a password type property. Only applicable for System Managers
 
     :param doctype: DocType of the document that holds the password
-    :param name: `name` of the document that holds the password
+    :param id: `id` of the document that holds the password
     :param fieldname: `fieldname` of the password property
     """
     frappe.only_for("System Manager")
-    return frappe.get_doc(doctype, name).get_password(fieldname)
+    return frappe.get_doc(doctype, id).get_password(fieldname)
 
 
 from frappe.deprecation_dumpster import get_js as _get_js
@@ -369,7 +369,7 @@ def attach_file(
             "doctype": "File",
             "file_name": filename,
             "attached_to_doctype": doctype,
-            "attached_to_name": docid,
+            "attached_to_id": docid,
             "attached_to_field": docfield,
             "folder": folder,
             "is_private": is_private,
@@ -423,7 +423,7 @@ def validate_link(doctype: str, docid: str, fields=None):
     if is_virtual_doctype(doctype):
         try:
             frappe.get_doc(doctype, docid)
-            values.name = docid
+            values.id = docid
         except frappe.DoesNotExistError:
             frappe.clear_last_message()
             frappe.msgprint(
@@ -431,10 +431,10 @@ def validate_link(doctype: str, docid: str, fields=None):
             )
         return values
 
-    values.name = frappe.db.get_value(doctype, docid, cache=True)
+    values.id = frappe.db.get_value(doctype, docid, cache=True)
 
     fields = frappe.parse_json(fields)
-    if not values.name:
+    if not values.id:
         return values
 
     if not fields:
@@ -475,14 +475,14 @@ def insert_doc(doc) -> "Document":
     return frappe.get_doc(doc).insert()
 
 
-def delete_doc(doctype, name):
+def delete_doc(doctype, id):
     """Deletes document
     if doctype is a child table, then deletes the child record using the parent doc
     so that the parent doc's `on_update` is called
     """
 
     if frappe.is_table(doctype):
-        values = frappe.db.get_value(doctype, name, ["parenttype", "parent", "parentfield"])
+        values = frappe.db.get_value(doctype, id, ["parenttype", "parent", "parentfield"])
         if not values:
             raise frappe.DoesNotExistError(doctype=doctype)
 
@@ -492,9 +492,9 @@ def delete_doc(doctype, name):
             raise frappe.DoesNotExistError(doctype=doctype)
 
         for row in parent.get(parentfield):
-            if row.name == name:
+            if row.id == id:
                 parent.remove(row)
                 parent.save(ignore_permissions=True)
                 break
     else:
-        frappe.delete_doc(doctype, name, ignore_missing=False)
+        frappe.delete_doc(doctype, id, ignore_missing=False)
