@@ -147,20 +147,20 @@ class TestDBUpdate(IntegrationTestCase):
 
     def test_uuid_varchar_migration(self):
         doctype = new_doctype().insert()
-        doctype.autoid = "UUID"
+        doctype.autoname = "UUID"
         doctype.save()
         self.assertEqual(frappe.db.get_column_type(doctype.name, "name"), "uuid")
 
         doc = frappe.new_doc(doctype.name).insert()
 
-        doctype.autoid = "hash"
+        doctype.autoname = "hash"
         doctype.save()
         varchar = "varchar" if frappe.db.db_type == "mariadb" else "character varying"
         self.assertIn(varchar, frappe.db.get_column_type(doctype.name, "name"))
         doc.reload()  # ensure that docs are still accesible
 
     def test_uuid_link_field(self):
-        uuid_doctype = new_doctype().update({"autoid": "UUID"}).insert()
+        uuid_doctype = new_doctype().update({"autoname": "UUID"}).insert()
         self.assertEqual(frappe.db.get_column_type(uuid_doctype.name, "name"), "uuid")
 
         link = "link_field"

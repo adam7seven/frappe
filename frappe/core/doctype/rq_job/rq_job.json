@@ -1,7 +1,7 @@
 {
   "actions": [],
   "allow_copy": 1,
-  "autoid": "field:job_id",
+  "autoname": "field:job_id",
   "creation": "2023-03-22 20:05:22.962044",
   "doctype": "DocType",
   "editable_grid": 1,

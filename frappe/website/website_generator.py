@@ -25,8 +25,8 @@ class WebsiteGenerator(Document):
         else:
             return out
 
-    def autoid(self):
-        if not self.id and self.meta.autoid != "hash":
+    def autoname(self):
+        if not self.id and self.meta.autoname != "hash":
             self.id = self.scrubbed_title()
 
     def onload(self):

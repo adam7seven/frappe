@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "role_profile",
+  "autoname": "role_profile",
   "creation": "2017-08-31 04:16:38.764465",
   "doctype": "DocType",
   "editable_grid": 1,

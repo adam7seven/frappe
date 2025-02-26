@@ -185,12 +185,12 @@ def add_to_deleted_document(doc):
 
 
 def update_naming_series(doc):
-    if doc.meta.autoid:
-        if doc.meta.autoid.startswith("naming_series:") and getattr(doc, "naming_series", None):
+    if doc.meta.autoname:
+        if doc.meta.autoname.startswith("naming_series:") and getattr(doc, "naming_series", None):
             revert_series_if_last(doc.naming_series, doc.id, doc)
 
-        elif doc.meta.autoid.split(":", 1)[0] not in ("Prompt", "field", "hash", "autoincrement"):
-            revert_series_if_last(doc.meta.autoid, doc.id, doc)
+        elif doc.meta.autoname.split(":", 1)[0] not in ("Prompt", "field", "hash", "autoincrement"):
+            revert_series_if_last(doc.meta.autoname, doc.id, doc)
 
 
 def delete_from_table(doctype: str, id: str, ignore_doctypes: list[str], doc):

@@ -1806,7 +1806,7 @@ msgstr "Autoriser l'Impression si Brouillon"
 msgid "Allow Read On All Link Options"
 msgstr "Autoriser la lecture de toutes les options de lien"
 
-#. Label of the allow_reid (Check) field in DocType 'DocType'
+#. Label of the allow_rename (Check) field in DocType 'DocType'
 #: frappe/core/doctype/doctype/doctype.json
 msgid "Allow Rename"
 msgstr "Permettre le Renommage"
@@ -2887,8 +2887,8 @@ msgstr "Automatique"
 msgid "Auto Email Report"
 msgstr "Rapport par Email Automatique"
 
-#. Label of the autoid (Data) field in DocType 'DocType'
-#. Label of the autoid (Data) field in DocType 'Customize Form'
+#. Label of the autoname (Data) field in DocType 'DocType'
+#. Label of the autoname (Data) field in DocType 'Customize Form'
 #: frappe/core/doctype/doctype/doctype.json
 #: frappe/custom/doctype/customize_form/customize_form.json
 msgid "Auto Name"
@@ -4143,7 +4143,7 @@ msgid "Cannot change state of Cancelled Document. Transition row {0}"
 msgstr "Impossible de changer l'état d'un Document Annulé. Ligne de transition {0}"
 
 #: frappe/core/doctype/doctype/doctype.py:1155
-msgid "Cannot change to/from autoincrement autoid in Customize Form"
+msgid "Cannot change to/from autoincrement autoname in Customize Form"
 msgstr ""
 
 #: frappe/core/doctype/communication/communication.py:169
@@ -13377,7 +13377,7 @@ msgid "Invalid field name {0}"
 msgstr "Nom de champ {0} invalide"
 
 #: frappe/core/doctype/doctype/doctype.py:1081
-msgid "Invalid fieldname '{0}' in autoid"
+msgid "Invalid fieldname '{0}' in autoname"
 msgstr "Champ invalide '{0}' dans nom automatique"
 
 #: frappe/deprecation_dumpster.py:319

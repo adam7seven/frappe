@@ -1,7 +1,7 @@
 {
   "actions": [],
-  "allow_reid": 1,
-  "autoid": "field:kanban_board_name",
+  "allow_rename": 1,
+  "autoname": "field:kanban_board_name",
   "creation": "2016-10-19 12:26:04.809812",
   "doctype": "DocType",
   "editable_grid": 1,

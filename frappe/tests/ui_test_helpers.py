@@ -130,7 +130,7 @@ def create_doctype(name, fields):
             "doctype": "DocType",
             "module": "Core",
             "custom": 1,
-            "autoid": "autoincrement",
+            "autoname": "autoincrement",
             "fields": fields,
             "permissions": [{"role": "System Manager", "read": 1}],
             "name": name,
@@ -465,7 +465,7 @@ def setup_tree_doctype():
             "name": "Custom Tree",
             "is_tree": True,
             "naming_rule": "By fieldname",
-            "autoid": "field:tree",
+            "autoname": "field:tree",
         }
     ).insert()
 

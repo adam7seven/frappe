@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "field:report_name",
+  "autoname": "field:report_name",
   "creation": "2013-03-09 15:45:57",
   "doctype": "DocType",
   "document_type": "System",

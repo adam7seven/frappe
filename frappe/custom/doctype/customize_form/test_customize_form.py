@@ -392,9 +392,9 @@ class TestCustomizeForm(IntegrationTestCase):
         d.run_method("save_customization")
         self.assertEqual(d.label, "")
 
-    def test_change_to_autoincrement_autoid(self):
+    def test_change_to_autoincrement_autoname(self):
         d = self.get_customize_form("Event")
-        d.autoid = "autoincrement"
+        d.autoname = "autoincrement"
 
         with self.assertRaises(frappe.ValidationError):
             d.run_method("save_customization")

@@ -1,7 +1,7 @@
 {
   "actions": [],
-  "allow_reid": 1,
-  "autoid": "hash",
+  "allow_rename": 1,
+  "autoname": "hash",
   "creation": "2022-02-21 20:28:05.662187",
   "doctype": "DocType",
   "editable_grid": 1,

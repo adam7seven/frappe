@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "field:access_token",
+  "autoname": "field:access_token",
   "creation": "2016-08-24 14:10:17.471264",
   "doctype": "DocType",
   "document_type": "Document",

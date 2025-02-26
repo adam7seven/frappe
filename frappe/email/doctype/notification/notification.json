@@ -1,7 +1,7 @@
 {
   "actions": [],
-  "allow_reid": 1,
-  "autoid": "Prompt",
+  "allow_rename": 1,
+  "autoname": "Prompt",
   "creation": "2014-07-11 17:18:09.923399",
   "doctype": "DocType",
   "document_type": "System",

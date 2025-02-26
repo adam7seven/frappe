@@ -22,7 +22,7 @@ def execute():
         if id not in [x[0] for x in existing_list_view_settings]:
             list_view_setting["doctype"] = "List View Settings"
             list_view_settings = frappe.get_doc(list_view_setting)
-            # setting id here is necessary because autoid is set as prompt
+            # setting id here is necessary because autoname is set as prompt
             list_view_settings.id = id
             list_view_settings.insert()
 

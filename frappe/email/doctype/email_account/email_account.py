@@ -123,7 +123,7 @@ class EmailAccount(Document):
 
     DOCTYPE = "Email Account"
 
-    def autoid(self):
+    def autoname(self):
         """Set id as `email_account_name` or make title from Email Address."""
         if not self.email_account_name:
             self.email_account_name = (

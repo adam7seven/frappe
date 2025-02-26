@@ -594,7 +594,7 @@ class BaseDocument:
             )
         except Exception as e:
             if frappe.db.is_primary_key_violation(e):
-                if self.meta.autoid == "hash":
+                if self.meta.autoname == "hash":
                     # hash collision? try again
                     self.flags.retry_count = (self.flags.retry_count or 0) + 1
                     if self.flags.retry_count > 5:
@@ -1028,10 +1028,10 @@ class BaseDocument:
             elif language == "PythonExpression":
                 frappe.utils.validate_python_code(code_string, fieldname=field.label)
 
-    def _sync_autoid_field(self):
-        """Keep autoid field in sync with `id`"""
-        autoid = self.meta.autoid or ""
-        _empty, _field_specifier, fieldname = autoid.partition("field:")
+    def _sync_autoname_field(self):
+        """Keep autoname field in sync with `id`"""
+        autoname = self.meta.autoname or ""
+        _empty, _field_specifier, fieldname = autoname.partition("field:")
 
         if fieldname and self.id and self.id != self.get(fieldname):
             self.set(fieldname, self.id)

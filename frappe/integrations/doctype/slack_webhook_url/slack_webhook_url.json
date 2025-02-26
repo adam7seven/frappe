@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "field:webhook_name",
+  "autoname": "field:webhook_name",
   "creation": "2018-05-22 13:20:51.450815",
   "doctype": "DocType",
   "editable_grid": 1,

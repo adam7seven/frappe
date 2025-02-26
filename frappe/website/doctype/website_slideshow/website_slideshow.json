@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "field:slideshow_name",
+  "autoname": "field:slideshow_name",
   "creation": "2013-03-07 15:53:15",
   "description": "Slideshow like display for the website",
   "doctype": "DocType",

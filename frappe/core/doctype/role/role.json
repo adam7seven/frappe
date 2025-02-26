@@ -1,7 +1,7 @@
 {
   "actions": [],
-  "allow_reid": 1,
-  "autoid": "field:role_name",
+  "allow_rename": 1,
+  "autoname": "field:role_name",
   "creation": "2013-01-08 15:50:01",
   "doctype": "DocType",
   "document_type": "Document",

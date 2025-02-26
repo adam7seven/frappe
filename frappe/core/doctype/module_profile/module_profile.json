@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "field:module_profile_name",
+  "autoname": "field:module_profile_name",
   "creation": "2020-12-22 22:00:30.614475",
   "doctype": "DocType",
   "editable_grid": 1,

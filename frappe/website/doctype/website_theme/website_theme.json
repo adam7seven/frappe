@@ -1,7 +1,7 @@
 {
   "actions": [],
   "allow_import": 1,
-  "autoid": "field:theme",
+  "autoname": "field:theme",
   "creation": "2015-02-18 12:46:38.168929",
   "doctype": "DocType",
   "document_type": "Setup",

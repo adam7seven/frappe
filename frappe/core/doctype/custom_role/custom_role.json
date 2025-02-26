@@ -1,7 +1,7 @@
 {
   "actions": [],
   "allow_import": 1,
-  "autoid": "hash",
+  "autoname": "hash",
   "creation": "2017-02-13 14:53:36.240122",
   "doctype": "DocType",
   "editable_grid": 1,

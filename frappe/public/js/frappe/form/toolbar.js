@@ -41,7 +41,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 			if (
 				this.frm.doc.__islocal ||
 				title === this.frm.docid ||
-				this.frm.meta.autoid === "hash"
+				this.frm.meta.autoname === "hash"
 			) {
 				this.page.set_title_sub("");
 			} else {
@@ -87,7 +87,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 		}
 	}
 	can_rename() {
-		return this.frm.perm[0].write && this.frm.meta.allow_reid && !this.frm.doc.__islocal;
+		return this.frm.perm[0].write && this.frm.meta.allow_rename && !this.frm.doc.__islocal;
 	}
 	show_unchanged_document_alert() {
 		frappe.show_alert({
@@ -206,8 +206,8 @@ frappe.ui.form.Toolbar = class Toolbar {
 			// check if docid is updatable
 			if (me.can_rename()) {
 				let label = __("New Name");
-				if (me.frm.meta.autoid && me.frm.meta.autoid.startsWith("field:")) {
-					let fieldname = me.frm.meta.autoid.split(":")[1];
+				if (me.frm.meta.autoname && me.frm.meta.autoname.startsWith("field:")) {
+					let fieldname = me.frm.meta.autoname.split(":")[1];
 					label = __("New {0}", [__(me.frm.get_docfield(fieldname).label)]);
 				}
 

@@ -31,7 +31,7 @@ class IntegrationRequest(Document):
         url: DF.SmallText | None
     # end: auto-generated types
 
-    def autoid(self):
+    def autoname(self):
         if self.flags._id:
             self.id = self.flags._id
 

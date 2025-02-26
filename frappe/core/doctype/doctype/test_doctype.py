@@ -59,10 +59,10 @@ class TestDocType(IntegrationTestCase):
     def test_making_sequence_on_change(self):
         frappe.delete_doc_if_exists("DocType", self._testMethodName)
         dt = new_doctype(self._testMethodName).insert(ignore_permissions=True)
-        autoid = dt.autoid
+        autoname = dt.autoname
 
-        # change autoid
-        dt.autoid = "autoincrement"
+        # change autoname
+        dt.autoname = "autoincrement"
         dt.save()
 
         # check if id type has been changed
@@ -89,8 +89,8 @@ class TestDocType(IntegrationTestCase):
             )
         )
 
-        # change the autoid/naming rule back to original
-        dt.autoid = autoid
+        # change the autoname/naming rule back to original
+        dt.autoname = autoname
         dt.save()
 
         # check if id type has changed
@@ -583,14 +583,14 @@ class TestDocType(IntegrationTestCase):
 
     def test_autoincremented_doctype_transition(self):
         frappe.delete_doc_if_exists("DocType", "testy_autoinc_dt")
-        dt = new_doctype("testy_autoinc_dt", autoid="autoincrement").insert(ignore_permissions=True)
-        dt.autoid = "hash"
+        dt = new_doctype("testy_autoinc_dt", autoname="autoincrement").insert(ignore_permissions=True)
+        dt.autoname = "hash"
 
         dt.save(ignore_permissions=True)
 
         dt_data = frappe.get_doc({"doctype": dt.id, "some_fieldname": "test data"}).insert(ignore_permissions=True)
 
-        dt.autoid = "autoincrement"
+        dt.autoname = "autoincrement"
 
         try:
             dt.save(ignore_permissions=True)

@@ -1,7 +1,7 @@
 {
   "actions": [],
-  "allow_reid": 1,
-  "autoid": "field:print_style_name",
+  "allow_rename": 1,
+  "autoname": "field:print_style_name",
   "creation": "2017-08-17 01:25:56.910716",
   "doctype": "DocType",
   "editable_grid": 1,

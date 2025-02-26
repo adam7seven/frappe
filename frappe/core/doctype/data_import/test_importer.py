@@ -130,7 +130,7 @@ class TestImporter(IntegrationTestCase):
         # update child table id in template date
         i.import_file.raw_data[1][4] = existing_doc.table_field_1[0].id
 
-        # uppercase to check if autoid field isn't replaced in mariadb
+        # uppercase to check if autoname field isn't replaced in mariadb
         if frappe.db.db_type == "mariadb":
             i.import_file.raw_data[1][0] = existing_doc.id.upper()
         else:
@@ -231,7 +231,7 @@ def create_doctype_if_not_exists(doctype_id, force=False):
             "id": doctype_id,
             "module": "Custom",
             "custom": 1,
-            "autoid": "field:title",
+            "autoname": "field:title",
             "fields": [
                 {"label": "Title", "fieldname": "title", "reqd": 1, "fieldtype": "Data"},
                 {"label": "Description", "fieldname": "description", "fieldtype": "Small Text"},

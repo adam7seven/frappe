@@ -44,7 +44,7 @@ class NumberCard(Document):
         type: DF.Literal["Document Type", "Report", "Custom"]
     # end: auto-generated types
 
-    def autoid(self):
+    def autoname(self):
         if not self.id:
             self.id = self.label
 

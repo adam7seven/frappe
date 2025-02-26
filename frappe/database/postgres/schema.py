@@ -30,11 +30,11 @@ class PostgresTable(DBTable):
             )
 
         # creating sequence(s)
-        if not self.meta.issingle and self.meta.autoid == "autoincrement":
+        if not self.meta.issingle and self.meta.autoname == "autoincrement":
             frappe.db.create_sequence(self.doctype, check_not_exists=True)
             id_column = "id bigint primary key"
 
-        elif not self.meta.issingle and self.meta.autoid == "UUID":
+        elif not self.meta.issingle and self.meta.autoname == "UUID":
             id_column = "id uuid primary key"
 
         # TODO: set docstatus length
@@ -192,8 +192,8 @@ class PostgresTable(DBTable):
 
     def alter_primary_key(self) -> str | None:
         # If there are no values in table allow migrating to UUID from varchar
-        autoid = self.meta.autoid
-        if autoid == "UUID" and frappe.db.get_column_type(self.doctype, "id") != "uuid":
+        autoname = self.meta.autoname
+        if autoname == "UUID" and frappe.db.get_column_type(self.doctype, "id") != "uuid":
             if not frappe.db.get_value(self.doctype, {}, order_by=None):
                 return "alter column `id` TYPE uuid USING id::uuid"
             else:
@@ -204,5 +204,5 @@ class PostgresTable(DBTable):
                 )
 
         # Reverting from UUID to VARCHAR
-        if autoid != "UUID" and frappe.db.get_column_type(self.doctype, "id") == "uuid":
+        if autoname != "UUID" and frappe.db.get_column_type(self.doctype, "id") == "uuid":
             return f"alter column `id` TYPE varchar({frappe.db.VARCHAR_LEN})"

@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "format:{connected_app}-{user}",
+  "autoname": "format:{connected_app}-{user}",
   "beta": 1,
   "creation": "2019-01-24 16:56:55.631096",
   "doctype": "DocType",

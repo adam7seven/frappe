@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "field:domain_name",
+  "autoname": "field:domain_name",
   "creation": "2016-03-29 10:50:48.848239",
   "doctype": "DocType",
   "document_type": "Setup",

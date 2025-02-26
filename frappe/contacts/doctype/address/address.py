@@ -8,7 +8,7 @@ from frappe import _, throw
 from frappe.contacts.address_and_contact import set_link_title
 from frappe.core.doctype.dynamic_link.dynamic_link import deduplicate_dynamic_links
 from frappe.model.document import Document
-from frappe.model.naming import make_autoid
+from frappe.model.naming import make_autoname
 from frappe.utils import cstr
 
 
@@ -56,7 +56,7 @@ class Address(Document):
     def __setup__(self):
         self.flags.linked = False
 
-    def autoid(self):
+    def autoname(self):
         if not self.address_title:
             if self.links:
                 self.address_title = self.links[0].link_id
@@ -64,7 +64,7 @@ class Address(Document):
         if self.address_title:
             self.id = cstr(self.address_title).strip() + "-" + cstr(_(self.address_type)).strip()
             if frappe.db.exists("Address", self.id):
-                self.id = make_autoid(
+                self.id = make_autoname(
                     cstr(self.address_title).strip() + "-" + cstr(self.address_type).strip() + "-.#",
                     ignore_validate=True,
                 )

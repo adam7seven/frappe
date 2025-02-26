@@ -1,7 +1,7 @@
 {
   "actions": [],
-  "allow_reid": 1,
-  "autoid": "field:label",
+  "allow_rename": 1,
+  "autoname": "field:label",
   "beta": 1,
   "creation": "2020-01-23 13:45:59.470592",
   "doctype": "DocType",

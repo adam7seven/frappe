@@ -1,7 +1,7 @@
 {
   "actions": [],
   "allow_copy": 1,
-  "autoid": "field:email_id",
+  "autoname": "field:email_id",
   "creation": "2017-03-13 09:20:56.387135",
   "doctype": "DocType",
   "editable_grid": 1,

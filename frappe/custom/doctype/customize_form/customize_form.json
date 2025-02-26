@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "DL.####",
+  "autoname": "DL.####",
   "creation": "2013-01-29 17:55:08",
   "doctype": "DocType",
   "document_type": "Document",
@@ -25,7 +25,7 @@
     "queue_in_background",
     "naming_section",
     "naming_rule",
-    "autoid",
+    "autoname",
     "form_settings_section",
     "image_field",
     "max_attachments",
@@ -301,7 +301,7 @@
     },
     {
       "description": "Naming Options:\n<ol><li><b>field:[fieldname]</b> - By Field</li><li><b>naming_series:</b> - By Naming Series (field called naming_series must be present)</li><li><b>Prompt</b> - Prompt user for a name</li><li><b>[series]</b> - Series by prefix (separated by a dot); for example PRE.#####</li>\n<li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Replace all braced words (fieldnames, date words (DD, MM, YY), series) with their value. Outside braces, any characters can be used.</li></ol>",
-      "fieldname": "autoid",
+      "fieldname": "autoname",
       "fieldtype": "Data",
       "label": "Auto Name"
     },

@@ -184,7 +184,7 @@ def create_test_child_table_with_link_to_doctype_a():
         istable=1,
         fields=[{"fieldname": "title", "fieldtype": "Data", "label": "Title", "reqd": 1, "unique": 1}],
         custom=False,
-        autoid="field:title",
+        autoname="field:title",
         naming_rule="By fieldname",
     ).insert(ignore_if_duplicate=True)
 
@@ -195,7 +195,7 @@ def create_test_child_table_with_link_to_doctype_b():
         istable=1,
         fields=[{"fieldname": "title", "fieldtype": "Data", "label": "Title", "reqd": 1, "unique": 1}],
         custom=False,
-        autoid="field:title",
+        autoname="field:title",
         naming_rule="By fieldname",
     ).insert(ignore_if_duplicate=True)
 
@@ -249,7 +249,7 @@ def create_test_doctype_a_with_test_child_table_with_link_to_doctype_b():
             },
         ],
         custom=False,
-        autoid="field:title",
+        autoname="field:title",
         naming_rule="By fieldname",
     ).insert(ignore_if_duplicate=True)
 
@@ -273,7 +273,7 @@ def create_test_doctype_b_with_test_child_table_with_link_to_doctype_a():
             },
         ],
         custom=False,
-        autoid="field:title",
+        autoname="field:title",
         naming_rule="By fieldname",
     ).insert(ignore_if_duplicate=True)
 
@@ -317,7 +317,7 @@ def create_linked_doctypes():
             },
         ],
         custom=False,
-        autoid="field:title",
+        autoname="field:title",
         naming_rule="By fieldname",
     ).insert(ignore_if_duplicate=True)
 
@@ -333,7 +333,7 @@ def create_linked_doctypes():
             },
         ],
         custom=False,
-        autoid="field:title",
+        autoname="field:title",
         naming_rule="By fieldname",
     ).insert(ignore_if_duplicate=True)
 

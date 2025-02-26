@@ -78,7 +78,7 @@ class File(Document):
             return self.file_url.startswith(URL_PREFIXES)
         return not self.content
 
-    def autoid(self):
+    def autoname(self):
         """Set id for folder"""
         if self.is_folder:
             if self.folder:

@@ -310,11 +310,11 @@ frappe.views.TreeView = class TreeView {
 			{
 				label: __("Rename"),
 				condition: function (node) {
-					let allow_reid = true;
+					let allow_rename = true;
 					if (me.doctype && frappe.get_meta(me.doctype)) {
-						if (!frappe.get_meta(me.doctype).allow_reid) allow_reid = false;
+						if (!frappe.get_meta(me.doctype).allow_rename) allow_rename = false;
 					}
-					return !node.is_root && me.can_write && allow_reid;
+					return !node.is_root && me.can_write && allow_rename;
 				},
 				click: function (node) {
 					frappe.model.rename_doc(me.doctype, node.label, function (new_id) {

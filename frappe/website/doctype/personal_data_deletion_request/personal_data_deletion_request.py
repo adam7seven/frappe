@@ -47,7 +47,7 @@ class PersonalDataDeletionRequest(Document):
             "Name": "REDACTED",
         }
 
-    def autoid(self):
+    def autoname(self):
         from frappe.model.naming import set_id_from_naming_options
 
         pattern = re.compile(
@@ -58,8 +58,8 @@ class PersonalDataDeletionRequest(Document):
         )
         domain = frappe.local.site.replace("_", "-")
         site = domain if pattern.match(domain) else f"{domain}.com"
-        autoid = f"format:deleted-user-{{####}}@{site}"
-        set_id_from_naming_options(autoid, self)
+        autoname = f"format:deleted-user-{{####}}@{site}"
+        set_id_from_naming_options(autoname, self)
         frappe.utils.validate_email_address(self.email, throw=True)
 
     def after_insert(self):

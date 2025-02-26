@@ -137,8 +137,8 @@ def set_new_id(doc):
     Sets the `id` property for the document based on various rules.
 
     1. If amended doc, set suffix.
-    2. If `autoid` method is declared, then call it.
-    3. If `autoid` property is set in the DocType (`meta`), then build it using the `autoid` property.
+    2. If `autoname` method is declared, then call it.
+    3. If `autoname` property is set in the DocType (`meta`), then build it using the `autoname` property.
     4. If no rule defined, use hash.
 
     :param doc: Document to be idd.
@@ -147,16 +147,16 @@ def set_new_id(doc):
     doc.run_method("before_naming")
 
     meta = frappe.get_meta(doc.doctype)
-    autoid = meta.autoid or ""
+    autoname = meta.autoname or ""
 
-    if autoid.lower() not in ("prompt", "uuid") and not frappe.flags.in_import:
+    if autoname.lower() not in ("prompt", "uuid") and not frappe.flags.in_import:
         doc.id = None
 
     if is_autoincremented(doc.doctype, meta):
         doc.id = frappe.db.get_next_sequence_val(doc.doctype)
         return
 
-    if meta.autoid == "UUID":
+    if meta.autoname == "UUID":
         if not doc.id:
             doc.id = str(uuid_utils.uuid7())
         elif isinstance(doc.id, UUID | uuid_utils.UUID):
@@ -180,51 +180,51 @@ def set_new_id(doc):
         set_naming_from_document_naming_rule(doc)
 
     if not doc.id:
-        doc.run_method("autoid")
+        doc.run_method("autoname")
 
-    if not doc.id and autoid:
-        set_id_from_naming_options(autoid, doc)
+    if not doc.id and autoname:
+        set_id_from_naming_options(autoname, doc)
 
     # at this point, we fall back to id generation with the hash option
     if not doc.id:
-        doc.id = make_autoid("hash", doc.doctype)
+        doc.id = make_autoname("hash", doc.doctype)
 
     doc.id = validate_id(doc.doctype, doc.id)
 
 
 def is_autoincremented(doctype: str, meta: Optional["Meta"] = None) -> bool:
-    """Checks if the doctype has autoincrement autoid set"""
+    """Checks if the doctype has autoincrement autoname set"""
 
     if not meta:
         meta = frappe.get_meta(doctype)
 
-    return not getattr(meta, "issingle", False) and meta.autoid == "autoincrement"
+    return not getattr(meta, "issingle", False) and meta.autoname == "autoincrement"
 
 
-def set_id_from_naming_options(autoid, doc):
+def set_id_from_naming_options(autoname, doc):
     """
-    Get a id based on the autoid field option
+    Get a id based on the autoname field option
     """
 
-    _autoid = autoid.lower()
+    _autoname = autoname.lower()
 
-    if _autoid.startswith("field:"):
-        doc.id = _field_autoid(autoid, doc)
+    if _autoname.startswith("field:"):
+        doc.id = _field_autoname(autoname, doc)
 
-        # if the autoid option is 'field:' and no id was derived, we need to
+        # if the autoname option is 'field:' and no id was derived, we need to
         # notify
         if not doc.id:
-            fieldname = autoid[6:]
+            fieldname = autoname[6:]
             frappe.throw(_("{0} is required").format(doc.meta.get_label(fieldname)))
 
-    elif _autoid.startswith("naming_series:"):
+    elif _autoname.startswith("naming_series:"):
         set_id_by_naming_series(doc)
-    elif _autoid.startswith("prompt"):
-        _prompt_autoid(autoid, doc)
-    elif _autoid.startswith("format:"):
-        doc.id = _format_autoid(autoid, doc)
-    elif "#" in autoid:
-        doc.id = make_autoid(autoid, doc=doc)
+    elif _autoname.startswith("prompt"):
+        _prompt_autoname(autoname, doc)
+    elif _autoname.startswith("format:"):
+        doc.id = _format_autoname(autoname, doc)
+    elif "#" in autoname:
+        doc.id = make_autoname(autoname, doc=doc)
 
 
 def set_naming_from_document_naming_rule(doc):
@@ -259,14 +259,14 @@ def set_id_by_naming_series(doc):
     if not doc.naming_series:
         frappe.throw(frappe._("Naming Series mandatory"))
 
-    doc.id = make_autoid(doc.naming_series + ".#####", "", doc)
+    doc.id = make_autoname(doc.naming_series + ".#####", "", doc)
 
 
-def make_autoid(key="", doctype="", doc="", *, ignore_validate=False):
+def make_autoname(key="", doctype="", doc="", *, ignore_validate=False):
     """
-         Creates an autoid from the given key:
+         Creates an autoname from the given key:
 
-         **autoid rules:**
+         **autoname rules:**
 
                   * The key is separated by '.'
                   * '####' represents a series. The string before this part becomes the prefix:
@@ -549,41 +549,41 @@ def _set_amended_id(doc):
     return doc.id
 
 
-def _field_autoid(autoid, doc, skip_slicing=None):
+def _field_autoname(autoname, doc, skip_slicing=None):
     """
     Generate a id using `DocType` field. This is called when the doctype's
-    `autoid` field starts with 'field:'
+    `autoname` field starts with 'field:'
     """
-    fieldname = autoid if skip_slicing else autoid[6:]
+    fieldname = autoname if skip_slicing else autoname[6:]
     return (cstr(doc.get(fieldname)) or "").strip()
 
 
-def _prompt_autoid(autoid, doc):
+def _prompt_autoname(autoname, doc):
     """
     Generate a id using Prompt option. This simply means the user will have to set the id manually.
-    This is called when the doctype's `autoid` field starts with 'prompt'.
+    This is called when the doctype's `autoname` field starts with 'prompt'.
     """
     # set from __newid in save.py
     if not doc.id:
         frappe.throw(_("Please set the document id"))
 
 
-def _format_autoid(autoid: str, doc):
+def _format_autoname(autoname: str, doc):
     """
-    Generate autoid by replacing all instances of braced params (fields, date params ('DD', 'MM', 'YY'), series)
+    Generate autoname by replacing all instances of braced params (fields, date params ('DD', 'MM', 'YY'), series)
     Independent of remaining string or separators.
 
     Example pattern: 'format:LOG-{MM}-{fieldname1}-{fieldname2}-{#####}'
     """
 
-    first_colon_index = autoid.find(":")
-    autoid_value = autoid[first_colon_index + 1 :]
+    first_colon_index = autoname.find(":")
+    autoname_value = autoname[first_colon_index + 1 :]
 
     def get_param_value_for_match(match):
         param = match.group()
         return parse_naming_series([param[1:-1]], doc=doc)
 
     # Replace braced params with their parsed value
-    id = BRACED_PARAMS_PATTERN.sub(get_param_value_for_match, autoid_value)
+    id = BRACED_PARAMS_PATTERN.sub(get_param_value_for_match, autoname_value)
 
     return id

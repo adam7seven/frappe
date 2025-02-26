@@ -43,7 +43,7 @@ def create_tree_docs():
         },
     ]
 
-    tree_doctype = new_doctype("Test Tree DocType", is_tree=True, autoid="field:some_fieldname")
+    tree_doctype = new_doctype("Test Tree DocType", is_tree=True, autoname="field:some_fieldname")
     tree_doctype.insert()
 
     for record in records:

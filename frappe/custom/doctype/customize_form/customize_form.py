@@ -13,7 +13,7 @@ import frappe.translate
 from frappe import _
 from frappe.core.doctype.doctype.doctype import (
     check_email_append_to,
-    validate_autoincrement_autoid,
+    validate_autoincrement_autoname,
     validate_fields_for_doctype,
     validate_series,
 )
@@ -43,7 +43,7 @@ class CustomizeForm(Document):
         allow_auto_repeat: DF.Check
         allow_copy: DF.Check
         allow_import: DF.Check
-        autoid: DF.Data | None
+        autoname: DF.Data | None
         default_email_template: DF.Link | None
         default_print_format: DF.Link | None
         default_view: DF.Literal[None]
@@ -223,8 +223,8 @@ class CustomizeForm(Document):
         if not self.doc_type:
             return
 
-        validate_series(self, self.autoid, self.doc_type)
-        validate_autoincrement_autoid(self)
+        validate_series(self, self.autoname, self.doc_type)
+        validate_autoincrement_autoname(self)
         self.flags.update_db = False
         self.flags.rebuild_doctype_for_global_search = False
         self.update_custom_fields()
@@ -717,7 +717,7 @@ doctype_properties = {
     "subject_field": "Data",
     "sender_field": "Data",
     "naming_rule": "Data",
-    "autoid": "Data",
+    "autoname": "Data",
     "show_title_field_in_link": "Check",
     "is_calendar_and_gantt": "Check",
     "default_view": "Select",

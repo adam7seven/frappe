@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "field:rule_name",
+  "autoname": "field:rule_name",
   "creation": "2018-06-20 10:08:36.275253",
   "doctype": "DocType",
   "editable_grid": 1,

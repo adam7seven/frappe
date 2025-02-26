@@ -1,7 +1,7 @@
 {
   "actions": [],
-  "allow_reid": 1,
-  "autoid": "Prompt",
+  "allow_rename": 1,
+  "autoname": "Prompt",
   "creation": "2016-05-25 09:43:44.767581",
   "doctype": "DocType",
   "engine": "InnoDB",

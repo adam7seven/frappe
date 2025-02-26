@@ -1,7 +1,7 @@
 {
   "actions": [],
-  "allow_reid": 1,
-  "autoid": "field:workflow_action_name",
+  "allow_rename": 1,
+  "autoname": "field:workflow_action_name",
   "creation": "2012-12-28 10:49:56",
   "description": "Workflow Action Master",
   "doctype": "DocType",

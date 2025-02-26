@@ -713,7 +713,7 @@ $.extend(frappe.model, {
 	delete_doc: function (doctype, docid, callback) {
 		let title = docid;
 		const title_field = frappe.get_meta(doctype).title_field;
-		if (frappe.get_meta(doctype).autoid == "hash" && title_field) {
+		if (frappe.get_meta(doctype).autoname == "hash" && title_field) {
 			const value = frappe.model.get_value(doctype, docid, title_field);
 			if (value) {
 				title = `${value} (${docid})`;

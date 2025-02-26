@@ -105,8 +105,8 @@ class DocType(Document):
         allow_events_in_timeline: DF.Check
         allow_guest_to_view: DF.Check
         allow_import: DF.Check
-        allow_reid: DF.Check
-        autoid: DF.Data | None
+        allow_rename: DF.Check
+        autoname: DF.Data | None
         beta: DF.Check
         color: DF.Data | None
         custom: DF.Check
@@ -199,7 +199,7 @@ class DocType(Document):
         self.set_default_in_list_view()
         self.set_default_translatable()
         validate_series(self)
-        self.set("can_change_id_type", validate_autoincrement_autoid(self))
+        self.set("can_change_id_type", validate_autoincrement_autoname(self))
         self.validate_document_type()
         validate_fields(self)
         self.check_indexing_for_dashboard_links()
@@ -565,7 +565,7 @@ class DocType(Document):
 
         id_type = f"varchar({frappe.db.VARCHAR_LEN})"
 
-        if self.autoid == "autoincrement":
+        if self.autoname == "autoincrement":
             id_type = "bigint"
             frappe.db.create_sequence(self.id, check_not_exists=True)
 
@@ -1041,29 +1041,29 @@ class DocType(Document):
             return True
 
 
-def validate_series(dt, autoid=None, id=None):
-    """Validate if `autoid` property is correctly set."""
-    if not autoid:
-        autoid = dt.autoid
+def validate_series(dt, autoname=None, id=None):
+    """Validate if `autoname` property is correctly set."""
+    if not autoname:
+        autoname = dt.autoname
     if not id:
         id = dt.id
 
-    if not autoid and dt.get("fields", {"fieldname": "naming_series"}):
-        dt.autoid = "naming_series:"
-    elif dt.autoid and dt.autoid.startswith("naming_series:"):
-        fieldname = dt.autoid.split("naming_series:", 1)[0] or "naming_series"
+    if not autoname and dt.get("fields", {"fieldname": "naming_series"}):
+        dt.autoname = "naming_series:"
+    elif dt.autoname and dt.autoname.startswith("naming_series:"):
+        fieldname = dt.autoname.split("naming_series:", 1)[0] or "naming_series"
         if not dt.get("fields", {"fieldname": fieldname}):
             frappe.throw(
                 _("Fieldname called {0} must exist to enable autonaming").format(frappe.bold(fieldname)),
                 title=_("Field Missing"),
             )
 
-    # validate field name if autoid field:fieldname is used
-    # Create unique index on autoid field automatically.
-    if autoid and autoid.startswith("field:"):
-        field = autoid.split(":")[1]
+    # validate field name if autoname field:fieldname is used
+    # Create unique index on autoname field automatically.
+    if autoname and autoname.startswith("field:"):
+        field = autoname.split(":")[1]
         if not field or field not in [df.fieldname for df in dt.fields]:
-            frappe.throw(_("Invalid fieldname '{0}' in autoid").format(field))
+            frappe.throw(_("Invalid fieldname '{0}' in autoname").format(field))
         else:
             for df in dt.fields:
                 if df.fieldname == field:
@@ -1071,67 +1071,67 @@ def validate_series(dt, autoid=None, id=None):
                     break
 
     if (
-        autoid
-        and (not autoid.startswith("field:"))
-        and (not autoid.startswith("eval:"))
-        and (autoid.lower() not in ("prompt", "hash"))
-        and (not autoid.startswith("naming_series:"))
-        and (not autoid.startswith("format:"))
+        autoname
+        and (not autoname.startswith("field:"))
+        and (not autoname.startswith("eval:"))
+        and (autoname.lower() not in ("prompt", "hash"))
+        and (not autoname.startswith("naming_series:"))
+        and (not autoname.startswith("format:"))
     ):
-        prefix = autoid.split(".", 1)[0]
+        prefix = autoname.split(".", 1)[0]
         doctype = frappe.qb.DocType("DocType")
         used_in = (
             frappe.qb.from_(doctype)
             .select(doctype.id)
-            .where(doctype.autoid.like(Concat(prefix, ".%")))
+            .where(doctype.autoname.like(Concat(prefix, ".%")))
             .where(doctype.id != id)
         ).run()
         if used_in:
             frappe.throw(_("Series {0} already used in {1}").format(prefix, used_in[0][0]))
 
-    validate_empty_id(dt, autoid)
+    validate_empty_id(dt, autoname)
 
 
-def validate_empty_id(dt, autoid):
+def validate_empty_id(dt, autoname):
     if dt.doctype == "Customize Form":
         return
 
-    if not autoid and not (dt.issingle or dt.istable):
+    if not autoname and not (dt.issingle or dt.istable):
         try:
             controller = get_controller(dt.id)
         except ImportError:
             controller = None
 
-        if not controller or (not hasattr(controller, "autoid")):
+        if not controller or (not hasattr(controller, "autoname")):
             frappe.toast(_("Warning: Naming is not set"), indicator="yellow")
 
 
-def validate_autoincrement_autoid(dt: Union[DocType, "CustomizeForm"]) -> bool:
-    """Checks if can doctype can change to/from autoincrement autoid"""
+def validate_autoincrement_autoname(dt: Union[DocType, "CustomizeForm"]) -> bool:
+    """Checks if can doctype can change to/from autoincrement autoname"""
 
-    def get_autoid_before_save(dt: Union[DocType, "CustomizeForm"]) -> str:
+    def get_autoname_before_save(dt: Union[DocType, "CustomizeForm"]) -> str:
         if dt.doctype == "Customize Form":
             property_value = frappe.db.get_value(
-                "Property Setter", {"doc_type": dt.doc_type, "property": "autoid"}, "value"
+                "Property Setter", {"doc_type": dt.doc_type, "property": "autoname"}, "value"
             )
             # initially no property setter is set,
-            # hence getting autoid value from the doctype itself
+            # hence getting autoname value from the doctype itself
             if not property_value:
-                return frappe.db.get_value("DocType", dt.doc_type, "autoid") or ""
+                return frappe.db.get_value("DocType", dt.doc_type, "autoname") or ""
 
             return property_value
 
-        return getattr(dt.get_doc_before_save(), "autoid", "")
+        return getattr(dt.get_doc_before_save(), "autoname", "")
 
     if not dt.is_new():
-        autoid_before_save = get_autoid_before_save(dt)
-        is_autoid_autoincrement = dt.autoid == "autoincrement"
+        autoname_before_save = get_autoname_before_save(dt)
+        is_autoname_autoincrement = dt.autoname == "autoincrement"
 
-        if (is_autoid_autoincrement and autoid_before_save != "autoincrement") or (
-            not is_autoid_autoincrement and autoid_before_save == "autoincrement"
+        if (is_autoname_autoincrement and autoname_before_save != "autoincrement") or (
+            not is_autoname_autoincrement and autoname_before_save == "autoincrement"
         ):
             if dt.doctype == "Customize Form":
-                frappe.throw(_("Cannot change to/from autoincrement autoid in Customize Form"))
+                frappe.throw(_("Cannot change to/from autoincrement autoname in Customize Form"))
 
             if frappe.get_meta(dt.id).issingle:
                 return False

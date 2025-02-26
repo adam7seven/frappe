@@ -1716,7 +1716,7 @@ msgstr "crwdns91090:0crwdne91090:0"
 msgid "Allow Read On All Link Options"
 msgstr "crwdns128150:0crwdne128150:0"
 
-#. Label of the allow_reid (Check) field in DocType 'DocType'
+#. Label of the allow_rename (Check) field in DocType 'DocType'
 #: frappe/core/doctype/doctype/doctype.json
 msgid "Allow Rename"
 msgstr "crwdns128152:0crwdne128152:0"
@@ -2797,8 +2797,8 @@ msgstr "crwdns128340:0crwdne128340:0"
 msgid "Auto Email Report"
 msgstr "crwdns91536:0crwdne91536:0"
 
-#. Label of the autoid (Data) field in DocType 'DocType'
-#. Label of the autoid (Data) field in DocType 'Customize Form'
+#. Label of the autoname (Data) field in DocType 'DocType'
+#. Label of the autoname (Data) field in DocType 'Customize Form'
 #: frappe/core/doctype/doctype/doctype.json
 #: frappe/custom/doctype/customize_form/customize_form.json
 msgid "Auto Name"
@@ -4053,7 +4053,7 @@ msgid "Cannot change state of Cancelled Document. Transition row {0}"
 msgstr "crwdns92076:0{0}crwdne92076:0"
 
 #: frappe/core/doctype/doctype/doctype.py:1155
-msgid "Cannot change to/from autoincrement autoid in Customize Form"
+msgid "Cannot change to/from autoincrement autoname in Customize Form"
 msgstr "crwdns92078:0crwdne92078:0"
 
 #: frappe/core/doctype/communication/communication.py:169
@@ -13284,7 +13284,7 @@ msgid "Invalid field name {0}"
 msgstr "crwdns96206:0{0}crwdne96206:0"
 
 #: frappe/core/doctype/doctype/doctype.py:1081
-msgid "Invalid fieldname '{0}' in autoid"
+msgid "Invalid fieldname '{0}' in autoname"
 msgstr "crwdns96208:0{0}crwdne96208:0"
 
 #: frappe/deprecation_dumpster.py:319

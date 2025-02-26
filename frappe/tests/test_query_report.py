@@ -141,7 +141,7 @@ class TestQueryReport(IntegrationTestCase):
                     "name": "Doc A",
                     "module": "Core",
                     "custom": 1,
-                    "autoid": "field:first_name",
+                    "autoname": "field:first_name",
                     "fields": fields,
                     "permissions": [{"role": "System Manager"}],
                 }
@@ -153,7 +153,7 @@ class TestQueryReport(IntegrationTestCase):
                     "name": "Doc B",
                     "module": "Core",
                     "custom": 1,
-                    "autoid": "field:last_name",
+                    "autoname": "field:last_name",
                     "fields": fields,
                     "permissions": [{"role": "System Manager"}],
                 }

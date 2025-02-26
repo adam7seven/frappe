@@ -101,7 +101,7 @@ class TypeExporter:
             for parent_field in ("parent", "parentfield", "parenttype"):
                 self.field_types[parent_field] = "DF.Data"
 
-        if self.doc.autoid == "autoincrement":
+        if self.doc.autoname == "autoincrement":
             self.field_types["id"] = "DF.Int | None"
 
         fields_code_block = self._create_fields_code_block()

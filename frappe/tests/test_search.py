@@ -205,7 +205,7 @@ def setup_test_link_field_order(TestCase):
                 "module": "Custom",
                 "custom": 1,
                 "is_tree": 1,
-                "autoid": "field:random",
+                "autoname": "field:random",
                 "fields": [{"fieldname": "random", "label": "Random", "fieldtype": "Data"}],
             }
         ).insert()

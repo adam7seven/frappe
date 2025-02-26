@@ -8,7 +8,7 @@ import frappe
 from frappe.app import make_form_dict
 from frappe.core.doctype.doctype.test_doctype import new_doctype
 from frappe.desk.doctype.note.note import Note
-from frappe.model.naming import make_autoid, parse_naming_series, revert_series_if_last
+from frappe.model.naming import make_autoname, parse_naming_series, revert_series_if_last
 from frappe.tests import IntegrationTestCase
 from frappe.utils import cint, now_datetime, set_request
 from frappe.website.serve import get_response
@@ -34,7 +34,7 @@ class TestDocument(IntegrationTestCase):
         d = frappe.get_doc("DocType", "User")
         self.assertEqual(d.doctype, "DocType")
         self.assertEqual(d.name, "User")
-        self.assertEqual(d.allow_reid, 1)
+        self.assertEqual(d.allow_rename, 1)
         self.assertTrue(isinstance(d.fields, list))
         self.assertTrue(isinstance(d.permissions, list))
         self.assertTrue(filter(lambda d: d.fieldname == "email", d.fields))
@@ -280,7 +280,7 @@ class TestDocument(IntegrationTestCase):
         data = ["TEST-", "TEST/17-18/.test_data./.####", "TEST.YYYY.MM.####"]
 
         for series in data:
-            name = make_autoid(series)
+            name = make_autoname(series)
             prefix = series
 
             if ".#" in series:

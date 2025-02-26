@@ -1,8 +1,8 @@
 {
   "actions": [],
   "allow_import": 1,
-  "allow_reid": 1,
-  "autoid": "Prompt",
+  "allow_rename": 1,
+  "autoname": "Prompt",
   "creation": "2014-06-19 05:20:26.331041",
   "doctype": "DocType",
   "document_type": "Document",

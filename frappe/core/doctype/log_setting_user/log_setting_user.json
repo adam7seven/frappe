@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "field:user",
+  "autoname": "field:user",
   "creation": "2020-10-08 13:09:36.034430",
   "doctype": "DocType",
   "editable_grid": 1,

@@ -227,7 +227,7 @@ class DataExporter:
         _column_start_end = frappe._dict(start=0)
 
         if dt == self.doctype:
-            if (meta.get("autoid") and meta.get("autoid").lower() == "prompt") or (self.with_data):
+            if (meta.get("autoname") and meta.get("autoname").lower() == "prompt") or (self.with_data):
                 self._append_id_column()
 
             # if importing only child table for new record, add parent field

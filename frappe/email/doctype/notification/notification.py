@@ -80,7 +80,7 @@ class Notification(Document):
         if self.is_standard:
             self.message = self.get_template()
 
-    def autoid(self):
+    def autoname(self):
         if not self.id:
             self.id = self.subject
 

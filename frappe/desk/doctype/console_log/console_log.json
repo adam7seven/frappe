@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "format:Log on {timestamp}",
+  "autoname": "format:Log on {timestamp}",
   "creation": "2020-08-18 19:56:12.336427",
   "doctype": "DocType",
   "editable_grid": 1,

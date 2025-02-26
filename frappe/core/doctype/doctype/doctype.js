@@ -89,7 +89,7 @@ frappe.ui.form.on("DocType", {
 			? __("In Grid View")
 			: __("In List View");
 
-		frm.cscript.autoid(frm);
+		frm.cscript.autoname(frm);
 		frm.cscript.set_naming_rule_description(frm);
 		frm.trigger("setup_default_views");
 

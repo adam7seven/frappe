@@ -29,7 +29,7 @@ class PropertySetter(Document):
         value: DF.SmallText | None
     # end: auto-generated types
 
-    def autoid(self):
+    def autoname(self):
         self.id = "{doctype}-{field}-{property}".format(
             doctype=self.doc_type, field=self.field_name or self.row_id or "main", property=self.property
         )

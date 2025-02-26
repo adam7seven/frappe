@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "allow_reid": 1,
+  "allow_rename": 1,
   "beta": 1,
   "creation": "2023-05-16 19:37:51.047664",
   "default_view": "List",

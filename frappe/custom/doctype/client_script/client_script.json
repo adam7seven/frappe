@@ -1,7 +1,7 @@
 {
   "actions": [],
   "allow_import": 1,
-  "autoid": "Prompt",
+  "autoname": "Prompt",
   "creation": "2013-01-10 16:34:01",
   "description": "Adds a custom client script to a DocType",
   "doctype": "DocType",

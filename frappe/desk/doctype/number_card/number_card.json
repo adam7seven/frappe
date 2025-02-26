@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "allow_reid": 1,
+  "allow_rename": 1,
   "creation": "2020-04-15 18:06:39.444683",
   "doctype": "DocType",
   "editable_grid": 1,

@@ -69,15 +69,15 @@ class DocumentNamingSettings(Document):
 
         custom_templates = frappe.get_all(
             "DocType",
-            fields=["autoid"],
+            fields=["autoname"],
             filters={
                 "id": ("not in", doctypes),
-                "autoid": ("like", "%.#%"),
+                "autoname": ("like", "%.#%"),
                 "module": ("not in", ["Core"]),
             },
         )
         if custom_templates:
-            series_templates.update([d.autoid.rsplit(".", 1)[0] for d in custom_templates])
+            series_templates.update([d.autoname.rsplit(".", 1)[0] for d in custom_templates])
 
         return self._evaluate_and_clean_templates(series_templates)
 

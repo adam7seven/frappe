@@ -83,7 +83,7 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm extends frappe.ui.Dialog {
 			return false;
 		}
 
-		this.validate_for_prompt_autoid();
+		this.validate_for_prompt_autoname();
 
 		if (this.has_child_table() || !this.docfields.length) {
 			return false;
@@ -112,8 +112,8 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm extends frappe.ui.Dialog {
 		return false;
 	}
 
-	validate_for_prompt_autoid() {
-		if (this.meta.autoid && this.meta.autoid.toLowerCase() === "prompt") {
+	validate_for_prompt_autoname() {
+		if (this.meta.autoname && this.meta.autoname.toLowerCase() === "prompt") {
 			this.docfields = [
 				{
 					fieldname: "__newid",

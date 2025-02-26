@@ -69,7 +69,7 @@ class SocialLoginKey(Document):
         user_id_property: DF.Data | None
     # end: auto-generated types
 
-    def autoid(self):
+    def autoname(self):
         self.id = frappe.scrub(self.provider_name)
 
     def validate(self):

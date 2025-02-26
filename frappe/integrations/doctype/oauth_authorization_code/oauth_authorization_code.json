@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "field:authorization_code",
+  "autoname": "field:authorization_code",
   "creation": "2016-08-24 14:12:13.647159",
   "doctype": "DocType",
   "document_type": "Document",

@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "field:language_code",
+  "autoname": "field:language_code",
   "creation": "2014-08-22 16:12:17.249590",
   "doctype": "DocType",
   "document_type": "Setup",

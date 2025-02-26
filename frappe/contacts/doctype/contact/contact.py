@@ -49,7 +49,7 @@ class Contact(Document):
         user: DF.Link | None
     # end: auto-generated types
 
-    def autoid(self):
+    def autoname(self):
         self.id = self._get_full_name()
 
         # concat party id if reqd

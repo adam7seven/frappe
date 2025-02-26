@@ -119,7 +119,7 @@ class CustomField(Document):
         width: DF.Data | None
     # end: auto-generated types
 
-    def autoid(self):
+    def autoname(self):
         self.set_fieldname()
         self.id = self.dt + "-" + self.fieldname
 

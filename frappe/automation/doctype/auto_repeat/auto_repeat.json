@@ -1,8 +1,8 @@
 {
   "actions": [],
   "allow_import": 1,
-  "allow_reid": 1,
-  "autoid": "format:AUT-AR-{#####}",
+  "allow_rename": 1,
+  "autoname": "format:AUT-AR-{#####}",
   "creation": "2018-03-09 11:22:31.192349",
   "doctype": "DocType",
   "editable_grid": 1,

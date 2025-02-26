@@ -261,8 +261,8 @@ class Importer:
 		new_doc = frappe.new_doc(self.doctype)
 		new_doc.update(doc)
 
-		if not doc.id and (meta.autoid or "").lower() != "prompt":
-			# id can only be set directly if autoid is prompt
+		if not doc.id and (meta.autoname or "").lower() != "prompt":
+			# id can only be set directly if autoname is prompt
 			new_doc.set("id", None)
 
 		new_doc.flags.updater_reference = {
@@ -1202,19 +1202,19 @@ def build_fields_dict_for_column_matching(parent_doctype):
 				):
 					out[header] = new_df
 
-	# if autoid is based on field
-	# add an entry for "ID (autoid Field)"
-	autoid_field = get_autoid_field(parent_doctype)
-	if autoid_field:
+	# if autoname is based on field
+	# add an entry for "ID (autoname Field)"
+	autoname_field = get_autoname_field(parent_doctype)
+	if autoname_field:
 		for header in (
-			f"ID ({autoid_field.label})",  # label
-			"{} ({})".format(_("ID"), _(autoid_field.label)),  # translated label
-			# ID field should also map to the autoid field
+			f"ID ({autoname_field.label})",  # label
+			"{} ({})".format(_("ID"), _(autoname_field.label)),  # translated label
+			# ID field should also map to the autoname field
 			"ID",
 			_("ID"),
 			"id",
 		):
-			out[header] = autoid_field
+			out[header] = autoname_field
 
 	return out
 
@@ -1233,16 +1233,16 @@ def get_df_for_column_header(doctype, header):
 
 
 def get_id_field(doctype):
-	autoid_field = get_autoid_field(doctype)
-	if autoid_field:
-		return autoid_field
+	autoname_field = get_autoname_field(doctype)
+	if autoname_field:
+		return autoname_field
 	return frappe._dict({"label": "ID", "fieldname": "id", "fieldtype": "Data"})
 
 
-def get_autoid_field(doctype):
+def get_autoname_field(doctype):
 	meta = frappe.get_meta(doctype)
-	if meta.autoid and meta.autoid.startswith("field:"):
-		fieldname = meta.autoid[len("field:") :]
+	if meta.autoname and meta.autoname.startswith("field:"):
+		fieldname = meta.autoname[len("field:") :]
 		return meta.get_field(fieldname)
 
 

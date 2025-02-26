@@ -1,7 +1,7 @@
 {
   "actions": [],
   "allow_import": 1,
-  "autoid": "hash",
+  "autoname": "hash",
   "creation": "2015-02-04 04:33:36.330477",
   "description": "Internal record of document shares",
   "doctype": "DocType",

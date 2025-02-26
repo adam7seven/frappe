@@ -616,10 +616,10 @@ class Document(BaseDocument, DocRef):
         if self.flags.id_set and not force:
             return
 
-        autoid = self.meta.autoid or ""
+        autoname = self.meta.autoname or ""
 
-        # If autoid has set as Prompt (id)
-        if self.get("__newid") and autoid.lower() == "prompt":
+        # If autoname has set as Prompt (id)
+        if self.get("__newid") and autoname.lower() == "prompt":
             self.id = validate_id(self.doctype, self.get("__newid"))
             self.flags.id_set = True
             return
@@ -710,7 +710,7 @@ class Document(BaseDocument, DocRef):
         self._validate_length()
         self._fix_rating_value()
         self._validate_code_fields()
-        self._sync_autoid_field()
+        self._sync_autoname_field()
         self._extract_images_from_editor()
         self._sanitize_content()
         self._save_passwords()
@@ -723,7 +723,7 @@ class Document(BaseDocument, DocRef):
             d._validate_length()
             d._fix_rating_value()
             d._validate_code_fields()
-            d._sync_autoid_field()
+            d._sync_autoname_field()
             d._extract_images_from_editor()
             d._sanitize_content()
             d._save_passwords()

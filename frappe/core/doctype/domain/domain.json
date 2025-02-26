@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "field:domain",
+  "autoname": "field:domain",
   "creation": "2017-05-03 15:07:39.752820",
   "doctype": "DocType",
   "editable_grid": 1,

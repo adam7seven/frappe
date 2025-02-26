@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "SYS-SMS-.#####",
+  "autoname": "SYS-SMS-.#####",
   "creation": "2012-03-27 14:36:47",
   "doctype": "DocType",
   "engine": "InnoDB",

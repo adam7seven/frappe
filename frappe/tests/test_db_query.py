@@ -109,7 +109,7 @@ class TestDBQuery(IntegrationTestCase):
                 "doctype": "DocType",
                 "name": "Parent DocType 1",
                 "module": "Custom",
-                "autoid": "Prompt",
+                "autoname": "Prompt",
                 "custom": 1,
                 "fields": [
                     {"label": "Title", "fieldname": "title", "fieldtype": "Data"},
@@ -128,7 +128,7 @@ class TestDBQuery(IntegrationTestCase):
             {
                 "doctype": "DocType",
                 "name": "Parent DocType 2",
-                "autoid": "Prompt",
+                "autoname": "Prompt",
                 "module": "Custom",
                 "custom": 1,
                 "fields": [
@@ -752,19 +752,19 @@ class TestDBQuery(IntegrationTestCase):
         )
 
     def test_is_set_is_not_set(self):
-        res = DatabaseQuery("DocType").execute(filters={"autoid": ["is", "not set"]})
+        res = DatabaseQuery("DocType").execute(filters={"autoname": ["is", "not set"]})
         self.assertTrue({"name": "Integration Request"} in res)
         self.assertTrue({"name": "User"} in res)
         self.assertFalse({"name": "Blogger"} in res)
 
-        res = DatabaseQuery("DocType").execute(filters={"autoid": ["is", "set"]})
+        res = DatabaseQuery("DocType").execute(filters={"autoname": ["is", "set"]})
         self.assertTrue({"name": "DocField"} in res)
         self.assertTrue({"name": "Prepared Report"} in res)
         self.assertFalse({"name": "Property Setter"} in res)
 
-        frappe.db.set_value("DocType", "Property Setter", "autoid", None, update_modified=False)
+        frappe.db.set_value("DocType", "Property Setter", "autoname", None, update_modified=False)
 
-        res = DatabaseQuery("DocType").execute(filters={"autoid": ["is", "set"]})
+        res = DatabaseQuery("DocType").execute(filters={"autoname": ["is", "set"]})
         self.assertFalse({"name": "Property Setter"} in res)
 
     def test_set_field_tables(self):
@@ -957,7 +957,7 @@ class TestDBQuery(IntegrationTestCase):
         from frappe.core.doctype.doctype.test_doctype import new_doctype
 
         frappe.delete_doc_if_exists("DocType", "autoinc_dt_test")
-        dt = new_doctype("autoinc_dt_test", autoid="autoincrement").insert(ignore_permissions=True)
+        dt = new_doctype("autoinc_dt_test", autoname="autoincrement").insert(ignore_permissions=True)
 
         query = DatabaseQuery("autoinc_dt_test").execute(
             fields=[
@@ -1117,7 +1117,7 @@ class TestDBQuery(IntegrationTestCase):
                     "module": "Custom",
                     "name": "Related Todos",
                     "naming_rule": "Random",
-                    "autoid": "hash",
+                    "autoname": "hash",
                     "fields": [
                         {
                             "label": "Todo One",
@@ -1403,7 +1403,7 @@ def add_child_table_to_blog_post():
             "custom": 1,
             "name": "Test Child",
             "module": "Custom",
-            "autoid": "Prompt",
+            "autoname": "Prompt",
             "fields": [{"fieldname": "test_field", "fieldtype": "Data", "permlevel": 1}],
         }
     )
@@ -1439,7 +1439,7 @@ def create_nested_doctype():
             "module": "Custom",
             "is_tree": 1,
             "custom": 1,
-            "autoid": "Prompt",
+            "autoname": "Prompt",
             "fields": [{"label": "Description", "fieldname": "description"}],
             "permissions": [{"role": "Blogger"}],
         }

@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "format:{document_type}-{track_field}",
+  "autoname": "format:{document_type}-{track_field}",
   "creation": "2019-04-17 09:36:41.774774",
   "description": "Track milestones for any document",
   "doctype": "DocType",

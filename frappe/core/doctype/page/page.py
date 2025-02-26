@@ -34,7 +34,7 @@ class Page(Document):
         title: DF.Data | None
     # end: auto-generated types
 
-    def autoid(self):
+    def autoname(self):
         """
         Creates a url friendly id for this page.
         Will restrict the id to 30 characters, if there exists a similar id,

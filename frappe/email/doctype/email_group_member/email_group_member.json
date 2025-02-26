@@ -1,7 +1,7 @@
 {
   "actions": [],
   "allow_import": 1,
-  "autoid": "hash",
+  "autoname": "hash",
   "creation": "2015-03-18 06:15:59.321619",
   "doctype": "DocType",
   "document_type": "Document",

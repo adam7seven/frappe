@@ -1,7 +1,7 @@
 {
   "actions": [],
-  "allow_reid": 1,
-  "autoid": "field:title",
+  "allow_rename": 1,
+  "autoname": "field:title",
   "creation": "2016-12-29 07:48:06.319665",
   "doctype": "DocType",
   "document_type": "Document",

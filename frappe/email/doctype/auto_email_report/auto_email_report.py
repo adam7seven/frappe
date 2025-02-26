@@ -63,7 +63,7 @@ class AutoEmailReport(Document):
         user: DF.Link
     # end: auto-generated types
 
-    def autoid(self):
+    def autoname(self):
         self.id = _(self.report)
         if frappe.db.exists("Auto Email Report", self.id):
             self.id = append_number_if_id_exists("Auto Email Report", self.id)

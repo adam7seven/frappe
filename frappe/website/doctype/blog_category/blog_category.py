@@ -21,8 +21,8 @@ class BlogCategory(WebsiteGenerator):
         title: DF.Data
     # end: auto-generated types
 
-    def autoid(self):
-        # to override autoid of WebsiteGenerator
+    def autoname(self):
+        # to override autoname of WebsiteGenerator
         self.id = self.scrub(self.title)
 
     def on_update(self):

@@ -1,7 +1,7 @@
 {
   "actions": [],
-  "allow_reid": 1,
-  "autoid": "field:email_account_name",
+  "allow_rename": 1,
+  "autoname": "field:email_account_name",
   "creation": "2024-06-11 16:39:01.323289",
   "doctype": "DocType",
   "document_type": "Setup",

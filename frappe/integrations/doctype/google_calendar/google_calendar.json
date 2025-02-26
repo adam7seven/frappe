@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "field:calendar_name",
+  "autoname": "field:calendar_name",
   "creation": "2019-07-06 17:54:09.450100",
   "doctype": "DocType",
   "editable_grid": 1,

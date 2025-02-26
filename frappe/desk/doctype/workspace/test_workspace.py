@@ -93,7 +93,7 @@ def create_doctype(doctype_id, module):
             "id": doctype_id,
             "module": module,
             "custom": 1,
-            "autoid": "field:title",
+            "autoname": "field:title",
             "fields": [
                 {"label": "Title", "fieldname": "title", "reqd": 1, "fieldtype": "Data"},
                 {"label": "Description", "fieldname": "description", "fieldtype": "Small Text"},

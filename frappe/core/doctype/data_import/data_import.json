@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "format:{reference_doctype} Import on {creation}",
+  "autoname": "format:{reference_doctype} Import on {creation}",
   "beta": 1,
   "creation": "2019-08-04 14:16:08.318714",
   "doctype": "DocType",

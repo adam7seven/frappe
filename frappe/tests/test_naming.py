@@ -16,7 +16,7 @@ from frappe.model.naming import (
     append_number_if_name_exists,
     determine_consecutive_week_number,
     getseries,
-    make_autoid,
+    make_autoname,
     parse_naming_series,
     revert_series_if_last,
 )
@@ -49,7 +49,7 @@ class TestNaming(IntegrationTestCase):
         self.assertEqual(append_number_if_name_exists(DOCTYPE, note.name), f"{note.name}-1")
         self.assertEqual(append_number_if_name_exists(DOCTYPE, TITLE, "title", "_"), f"{TITLE}_1")
 
-    def test_field_autoid_name_sync(self):
+    def test_field_autoname_name_sync(self):
         country = frappe.get_last_doc("Country")
         original_name = country.name
         country.country_name = "Not a country"
@@ -60,8 +60,8 @@ class TestNaming(IntegrationTestCase):
         self.assertEqual(country.name, country.country_name)
 
     def test_child_table_naming(self):
-        child_dt_with_naming = new_doctype(istable=1, autoid="field:some_fieldname").insert()
-        dt_with_child_autoid = new_doctype(
+        child_dt_with_naming = new_doctype(istable=1, autoname="field:some_fieldname").insert()
+        dt_with_child_autoname = new_doctype(
             fields=[
                 {
                     "label": "table with naming",
@@ -74,12 +74,12 @@ class TestNaming(IntegrationTestCase):
 
         name = frappe.generate_hash(length=10)
 
-        doc = frappe.new_doc(dt_with_child_autoid.name)
+        doc = frappe.new_doc(dt_with_child_autoname.name)
         doc.append("table_with_naming", {"some_fieldname": name})
         doc.save()
         self.assertEqual(doc.table_with_naming[0].name, name)
 
-        # change autoid field
+        # change autoname field
         doc.table_with_naming[0].some_fieldname = "Something else"
         doc.save()
 
@@ -87,14 +87,14 @@ class TestNaming(IntegrationTestCase):
         self.assertEqual(doc.table_with_naming[0].some_fieldname, name)
 
         doc.delete()
-        dt_with_child_autoid.delete()
+        dt_with_child_autoname.delete()
         child_dt_with_naming.delete()
 
-    def test_format_autoid(self):
+    def test_format_autoname(self):
         """
-        Test if braced params are replaced in format autoid
+        Test if braced params are replaced in format autoname
         """
-        doctype = new_doctype(autoid="format:TODO-{MM}-{some_fieldname}-{##}").insert()
+        doctype = new_doctype(autoname="format:TODO-{MM}-{some_fieldname}-{##}").insert()
 
         description = "Format"
 
@@ -107,9 +107,9 @@ class TestNaming(IntegrationTestCase):
 
         self.assertEqual(doc.name, f"TODO-{now_datetime().strftime('%m')}-{description}-{series:02}")
 
-    def test_format_autoid_for_datetime_field(self):
+    def test_format_autoname_for_datetime_field(self):
         """Test if datetime, date and time objects get converted to strings for naming."""
-        doctype = new_doctype(autoid="format:TODO-{field}-{##}").insert()
+        doctype = new_doctype(autoname="format:TODO-{field}-{##}").insert()
 
         for field in [now_datetime(), nowdate(), nowtime()]:
             doc = frappe.new_doc(doctype.name)
@@ -121,14 +121,14 @@ class TestNaming(IntegrationTestCase):
 
             self.assertEqual(doc.name, f"TODO-{field}-{series:02}")
 
-    def test_format_autoid_for_consecutive_week_number(self):
+    def test_format_autoname_for_consecutive_week_number(self):
         """
-        Test if braced params are replaced for consecutive week number in format autoid
+        Test if braced params are replaced for consecutive week number in format autoname
         """
         doctype = "ToDo"
 
         todo_doctype = frappe.get_doc("DocType", doctype)
-        todo_doctype.autoid = "format:TODO-{WW}-{##}"
+        todo_doctype.autoname = "format:TODO-{WW}-{##}"
         todo_doctype.save()
 
         description = "Format"
@@ -292,7 +292,7 @@ class TestNaming(IntegrationTestCase):
         from frappe.core.doctype.doctype.test_doctype import new_doctype
 
         doctype = "autoinc_doctype" + frappe.generate_hash(length=5)
-        dt = new_doctype(doctype, autoid="autoincrement").insert(ignore_permissions=True)
+        dt = new_doctype(doctype, autoname="autoincrement").insert(ignore_permissions=True)
 
         for i in range(1, 20):
             self.assertEqual(frappe.new_doc(doctype).save(ignore_permissions=True).name, i)
@@ -369,7 +369,7 @@ class TestNaming(IntegrationTestCase):
 
     @run_only_if(db_type_is.MARIADB)
     def test_hash_collision(self):
-        doctype = new_doctype(autoid="hash").insert().name
+        doctype = new_doctype(autoname="hash").insert().name
         name = frappe.generate_hash()
         for _ in range(10):
             frappe.flags.in_import = True
@@ -404,11 +404,11 @@ class TestNaming(IntegrationTestCase):
         names = []
         for _ in range(10):
             time.sleep(0.1)
-            names.append(make_autoid("hash"))
+            names.append(make_autoname("hash"))
         self.assertEqual(names, sorted(names))
 
     def test_uuid_naming(self):
-        uuid_doctype = new_doctype(autoid="UUID").insert().name
+        uuid_doctype = new_doctype(autoname="UUID").insert().name
         self.assertEqual("uuid", frappe.db.get_column_type(uuid_doctype, "name"))
 
         # Auto set names

@@ -1,7 +1,7 @@
 {
   "actions": [],
-  "allow_reid": 1,
-  "autoid": "Prompt",
+  "allow_rename": 1,
+  "autoname": "Prompt",
   "creation": "2019-02-28 17:12:18.815830",
   "description": "Automatically Assign Documents to Users",
   "doctype": "DocType",

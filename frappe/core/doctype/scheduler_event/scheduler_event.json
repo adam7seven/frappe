@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "allow_reid": 1,
+  "allow_rename": 1,
   "creation": "2025-01-13 10:20:09.095079",
   "doctype": "DocType",
   "engine": "InnoDB",

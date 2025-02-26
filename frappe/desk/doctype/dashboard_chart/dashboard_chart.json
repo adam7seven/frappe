@@ -1,7 +1,7 @@
 {
   "actions": [],
-  "allow_reid": 1,
-  "autoid": "field:chart_name",
+  "allow_rename": 1,
+  "autoname": "field:chart_name",
   "creation": "2019-01-10 12:28:06.282875",
   "doctype": "DocType",
   "editable_grid": 1,

@@ -27,7 +27,7 @@ class HelpCategory(WebsiteGenerator):
     def before_insert(self):
         self.published = 1
 
-    def autoid(self):
+    def autoname(self):
         self.id = self.category_id
 
     def validate(self):

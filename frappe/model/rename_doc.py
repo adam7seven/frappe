@@ -338,14 +338,14 @@ def rename_eps_records(doctype: str, old: str, new: str) -> None:
 def rename_parent_and_child(doctype: str, old: str, new: str, meta: "Meta") -> None:
     frappe.qb.update(doctype).set("id", new).where(Field("id") == old).run()
 
-    update_autoid_field(doctype, new, meta)
+    update_autoname_field(doctype, new, meta)
     update_child_docs(old, new, meta)
 
 
-def update_autoid_field(doctype: str, new: str, meta: "Meta") -> None:
-    # update the value of the autoid field on rename of the docid
-    if meta.get("autoid"):
-        field = meta.get("autoid").split(":")
+def update_autoname_field(doctype: str, new: str, meta: "Meta") -> None:
+    # update the value of the autoname field on rename of the docid
+    if meta.get("autoname"):
+        field = meta.get("autoname").split(":")
         if field and field[0] == "field":
             frappe.qb.update(doctype).set(field[1], new).where(Field("id") == new).run()
 
@@ -398,7 +398,7 @@ def validate_rename(
         if not (ignore_permissions or frappe.permissions.has_permission(**kwargs)):
             frappe.throw(_("You need write permission on {0} {1} to merge").format(doctype, new))
 
-    if not force and not ignore_permissions and not meta.allow_reid:
+    if not force and not ignore_permissions and not meta.allow_rename:
         frappe.throw(_("{0} not allowed to be renamed").format(_(doctype)))
 
     # validate naming like it's done in doc.py

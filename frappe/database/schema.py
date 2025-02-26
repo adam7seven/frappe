@@ -365,7 +365,7 @@ def get_definition(fieldtype, precision=None, length=None, *, options=None):
         # This is largely limitation of how migration happens though.
         # Maybe we can sort by creation and then modified?
         and frappe.db.exists("DocType", options)
-        and frappe.get_meta(options).autoid == "UUID"
+        and frappe.get_meta(options).autoname == "UUID"
     ):
         d = ("uuid", None)
 

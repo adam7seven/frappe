@@ -1,7 +1,7 @@
 {
   "actions": [],
-  "allow_reid": 1,
-  "autoid": "Prompt",
+  "allow_rename": 1,
+  "autoname": "Prompt",
   "creation": "2021-09-04 11:54:35.155687",
   "doctype": "DocType",
   "editable_grid": 1,

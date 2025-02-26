@@ -48,7 +48,7 @@ class PackageRelease(Document):
             )
             self.patch = value + 1
 
-    def autoid(self):
+    def autoname(self):
         self.set_version()
         self.id = "{}-{}.{}.{}".format(
             frappe.db.get_value("Package", self.package, "package_name"), self.major, self.minor, self.patch

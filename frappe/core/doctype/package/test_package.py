@@ -82,7 +82,7 @@ def make_test_doctype():
             id="Test DocType for Package",
             custom=1,
             module="Test Module for Package",
-            autoid="Prompt",
+            autoname="Prompt",
             fields=[dict(fieldname="test_field", fieldtype="Data", label="Test Field")],
         ).insert()
 

@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoid": "hash",
+  "autoname": "hash",
   "creation": "2012-08-02 15:17:28",
   "description": "Email Queue records.",
   "doctype": "DocType",

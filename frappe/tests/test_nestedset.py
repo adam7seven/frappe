@@ -60,7 +60,7 @@ class NestedSetTestUtil:
         frappe.db.delete("DocType", TEST_DOCTYPE)
         frappe.db.sql_ddl(f"drop table if exists `tab{TEST_DOCTYPE}`")
 
-        self.tree_doctype = new_doctype(TEST_DOCTYPE, is_tree=True, autoid="field:some_fieldname")
+        self.tree_doctype = new_doctype(TEST_DOCTYPE, is_tree=True, autoname="field:some_fieldname")
         self.tree_doctype.insert()
 
         for record in records:
@@ -314,7 +314,7 @@ class TestNestedSet(IntegrationTestCase):
                     },
                 ],
                 is_tree=True,
-                autoid="field:some_fieldname",
+                autoname="field:some_fieldname",
             )
             .insert()
             .name

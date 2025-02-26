@@ -144,7 +144,7 @@ class User(Document):
         # because it is handled separately
         self.flags.ignore_save_passwords = ["new_password"]
 
-    def autoid(self):
+    def autoname(self):
         """set id as Email Address"""
         if self.get("is_admin") or self.get("is_guest"):
             self.id = self.first_name

@@ -107,7 +107,7 @@ class TestRenameDoc(IntegrationTestCase):
                     "doctype": "Property Setter",
                     "doctype_or_field": "DocType",
                     "doc_type": self.test_doctype,
-                    "property": "allow_reid",
+                    "property": "allow_rename",
                     "property_type": "Check",
                     "value": "1",
                 }
@@ -259,8 +259,8 @@ class TestRenameDoc(IntegrationTestCase):
             "options": child.name,
         }
 
-        parent_a = new_doctype(fields=[table_field], allow_reid=1, autoid="Prompt").insert()
-        parent_b = new_doctype(fields=[table_field], allow_reid=1, autoid="Prompt").insert()
+        parent_a = new_doctype(fields=[table_field], allow_rename=1, autoname="Prompt").insert()
+        parent_b = new_doctype(fields=[table_field], allow_rename=1, autoname="Prompt").insert()
 
         parent_a_instance = frappe.get_doc(
             doctype=parent_a.name, test_table=[{"some_fieldname": "x"}], name="XYZ"
@@ -281,7 +281,7 @@ class TestRenameDoc(IntegrationTestCase):
             new_doctype(
                 "Autoincrement DocType",
                 naming_rule="Autoincrement",
-                autoid="autoincrement",
+                autoname="autoincrement",
                 fields=[
                     {
                         "label": "First Name",

@@ -330,7 +330,7 @@ def print_mandatory_fields(doctype, initial_doctype):
     if initial_doctype:
         head += f" via {initial_doctype}"
     msg.append(head)
-    msg.append(f"autoid {meta.autoid or '':<30}")
+    msg.append(f"autoname {meta.autoname or '':<30}")
     mandatory_fields = meta.get("fields", {"reqd": 1})
     if mandatory_fields:
         msg.append("Mandatory Fields")

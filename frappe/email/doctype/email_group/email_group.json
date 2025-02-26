@@ -1,8 +1,8 @@
 {
   "actions": [],
   "allow_import": 1,
-  "allow_reid": 1,
-  "autoid": "field:title",
+  "allow_rename": 1,
+  "autoname": "field:title",
   "creation": "2015-03-18 06:08:32.729800",
   "doctype": "DocType",
   "document_type": "Setup",

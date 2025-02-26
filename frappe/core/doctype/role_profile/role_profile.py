@@ -21,7 +21,7 @@ class RoleProfile(Document):
         roles: DF.Table[HasRole]
     # end: auto-generated types
 
-    def autoid(self):
+    def autoname(self):
         """set id as Role Profile name"""
         self.id = self.role_profile
 

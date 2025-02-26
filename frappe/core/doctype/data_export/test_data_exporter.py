@@ -55,7 +55,7 @@ class TestDataExporter(IntegrationTestCase):
                 "id": doctype_id,
                 "module": "Custom",
                 "custom": 1,
-                "autoid": "field:title",
+                "autoname": "field:title",
                 "fields": [
                     {"label": "Title", "fieldname": "title", "reqd": 1, "fieldtype": "Data"},
                     {"label": "Number", "fieldname": "number", "fieldtype": "Int"},

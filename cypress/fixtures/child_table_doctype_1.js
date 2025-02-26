@@ -2,7 +2,7 @@ export default {
 	id: "Child Table Doctype 1",
 	actions: [],
 	custom: 1,
-	autoid: "format: Test-{####}",
+	autoname: "format: Test-{####}",
 	creation: "2022-02-09 20:15:21.242213",
 	doctype: "DocType",
 	editable_grid: 1,

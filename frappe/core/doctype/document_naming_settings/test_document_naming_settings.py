@@ -34,7 +34,7 @@ class TestNamingSeries(IntegrationTestCase):
                         "options": f"\n{frappe.generate_hash()}-.###",
                     }
                 ],
-                autoid="naming_series:",
+                autoname="naming_series:",
                 is_submittable=1,
             )
             .insert()
