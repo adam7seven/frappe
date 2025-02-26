@@ -1864,7 +1864,7 @@ def get_host_name() -> str:
 	return get_url().rsplit("//", 1)[-1]
 
 
-def get_link_to_form(doctype: str, name: str | None = None, label: str | None = None) -> str:
+def get_link_to_form(doctype: str, id: str | None = None, label: str | None = None) -> str:
 	"""Return the HTML link to the given document's form view.
 
 	e.g. get_link_to_form("Sales Invoice", "INV-0001", "Link Label") returns:
@@ -1873,9 +1873,9 @@ def get_link_to_form(doctype: str, name: str | None = None, label: str | None = 
 	from frappe import _
 
 	if not label:
-		label = name or _(doctype)
+		label = id or _(doctype)
 
-	return f"""<a href="{get_url_to_form(doctype, name)}">{label}</a>"""
+	return f"""<a href="{get_url_to_form(doctype, id)}">{label}</a>"""
 
 
 def get_link_to_report(
@@ -1913,24 +1913,24 @@ def get_link_to_report(
 		return f"""<a href='{get_url_to_report(name, report_type, doctype)}'>{label}</a>"""
 
 
-def get_absolute_url(doctype: str, name: str) -> str:
+def get_absolute_url(doctype: str, id: str) -> str:
 	"""Return the absolute route for the form view of the given document in the desk.
 
-	e.g. when doctype="Sales Invoice" and name="INV-00001", returns '/app/sales-invoice/INV-00001'
+	e.g. when doctype="Sales Invoice" and id="INV-00001", returns '/app/sales-invoice/INV-00001'
 	"""
-	return f"/app/{quoted(slug(doctype))}/{quoted(name)}"
+	return f"/app/{quoted(slug(doctype))}/{quoted(id)}"
 
 
-def get_url_to_form(doctype: str, name: str | None = None) -> str:
+def get_url_to_form(doctype: str, id: str | None = None) -> str:
 	"""Return the absolute URL for the form view of the given document in the desk.
 
 	e.g. when doctype="Sales Invoice" and your site URL is "https://frappe.io",
 	         returns 'https://frappe.io/app/sales-invoice/INV-00001'
 	"""
-	if not name:
+	if not id:
 		uri = f"/app/{quoted(slug(doctype))}"
 	else:
-		uri = f"/app/{quoted(slug(doctype))}/{quoted(name)}"
+		uri = f"/app/{quoted(slug(doctype))}/{quoted(id)}"
 
 	return get_url(uri=uri)
 
@@ -1944,10 +1944,10 @@ def get_url_to_list(doctype: str) -> str:
 	return get_url(uri=f"/app/{quoted(slug(doctype))}")
 
 
-def get_url_to_report(name, report_type: str | None = None, doctype: str | None = None) -> str:
+def get_url_to_report(id, report_type: str | None = None, doctype: str | None = None) -> str:
 	"""Return the absolute URL for the report in the desk.
 
-	e.g. when name="Sales Register" and your site URL is "https://frappe.io",
+	e.g. when id="Sales Register" and your site URL is "https://frappe.io",
 	         returns 'https://frappe.io/app/query-report/Sales%20Register'
 
 	You can optionally pass `report_type` and `doctype` to get the URL for a Report Builder report.
@@ -1955,17 +1955,17 @@ def get_url_to_report(name, report_type: str | None = None, doctype: str | None 
 	get_url_to_report("Revenue", "Report Builder", "Sales Invoice") -> 'https://frappe.io/app/sales-invoice/view/report/Revenue'
 	"""
 	if report_type == "Report Builder":
-		return get_url(uri=f"/app/{quoted(slug(doctype))}/view/report/{quoted(name)}")
+		return get_url(uri=f"/app/{quoted(slug(doctype))}/view/report/{quoted(id)}")
 	else:
-		return get_url(uri=f"/app/query-report/{quoted(name)}")
+		return get_url(uri=f"/app/query-report/{quoted(id)}")
 
 
-def get_url_to_report_with_filters(name, filters, report_type=None, doctype=None):
+def get_url_to_report_with_filters(id, filters, report_type=None, doctype=None):
 	"""Return the absolute URL for the report in the desk with filters."""
 	if report_type == "Report Builder":
 		return get_url(uri=f"/app/{quoted(slug(doctype))}/view/report?{filters}")
 
-	return get_url(uri=f"/app/query-report/{quoted(name)}?{filters}")
+	return get_url(uri=f"/app/query-report/{quoted(id)}?{filters}")
 
 
 def sql_like(value: str, pattern: str) -> bool:
@@ -2100,7 +2100,7 @@ def get_filter(doctype: str, filters: FilterSignature, filters_config=None) -> "
 		# verify fieldname belongs to the doctype
 		meta = frappe.get_meta(f.doctype)
 		if not meta.has_field(f.fieldname):
-			# try and match the doctype name from child tables
+			# try and match the doctype id from child tables
 			for df in meta.get_table_fields():
 				if frappe.get_meta(df.options).has_field(f.fieldname):
 					f.doctype = df.options
@@ -2425,7 +2425,7 @@ def validate_json_string(string: str) -> None:
 class _UserInfo(typing.TypedDict):
 	email: str
 	image: str | None
-	name: str
+	id: str
 
 
 def get_user_info_for_avatar(user_id: str) -> _UserInfo:
@@ -2434,16 +2434,16 @@ def get_user_info_for_avatar(user_id: str) -> _UserInfo:
 	e.g. {
 	        "email": "faris@frappe.io",
 	        "image": "/assets/frappe/images/ui/avatar.png",
-	        "name": "Faris Ansari"
+	        "id": "Faris Ansari"
 	}
 	"""
 	try:
 		user = frappe.get_cached_doc("User", user_id)
-		return {"email": user.email, "image": user.user_image, "name": user.full_name}
+		return {"email": user.email, "image": user.user_image, "id": user.full_id}
 
 	except frappe.DoesNotExistError:
 		frappe.clear_last_message()
-		return {"email": user_id, "image": "", "name": user_id}
+		return {"email": user_id, "image": "", "id": user_id}
 
 
 def validate_python_code(string: str, fieldname: str | None = None, is_expression: bool = True) -> None:
@@ -2513,12 +2513,12 @@ def parse_timedelta(s: str) -> datetime.timedelta:
 	return datetime.timedelta(**{key: float(val) for key, val in m.groupdict().items()})
 
 
-def get_job_name(key: str, doctype: str | None = None, doc_name: str | None = None) -> str:
+def get_job_name(key: str, doctype: str | None = None, doc_id: str | None = None) -> str:
 	job_name = key
 	if doctype:
 		job_name += f"_{doctype}"
-	if doc_name:
-		job_name += f"_{doc_name}"
+	if doc_id:
+		job_name += f"_{doc_id}"
 	return job_name
 
 
@@ -2595,28 +2595,28 @@ def map_trackers(url_trackers: dict, create: bool = False):
 	frappe_trackers = {}
 
 	if url_source := url_trackers.get("utm_source", url_trackers.get("source")):
-		source = frappe.db.get_value("UTM Source", {"slug": slug(url_source)}, "name") or url_source
+		source = frappe.db.get_value("UTM Source", {"slug": slug(url_source)}, "id") or url_source
 		if create and source == url_source and not frappe.db.exists("UTM Source", source):
 			source = frappe.new_doc("UTM Source")
-			source.name = url_source
+			source.id = url_source
 			source.description = f"Autogenerated from {url_trackers}"
 			source.save(ignore_permissions=True)
 		frappe_trackers["utm_source"] = source
 
 	if url_medium := url_trackers.get("utm_medium", url_trackers.get("medium")):
-		medium = frappe.db.get_value("UTM Medium", {"slug": slug(url_medium)}, "name") or url_medium
+		medium = frappe.db.get_value("UTM Medium", {"slug": slug(url_medium)}, "id") or url_medium
 		if create and medium == url_medium and not frappe.db.exists("UTM Medium", medium):
 			medium = frappe.new_doc("UTM Medium")
-			medium.name = url_medium
+			medium.id = url_medium
 			medium.description = f"Autogenerated from {url_trackers}"
 			medium.save(ignore_permissions=True)
 		frappe_trackers["utm_medium"] = medium
 
 	if url_campaign := url_trackers.get("utm_campaign", url_trackers.get("campaign")):
-		campaign = frappe.db.get_value("UTM Campaign", {"slug": slug(url_campaign)}, "name") or url_campaign
+		campaign = frappe.db.get_value("UTM Campaign", {"slug": slug(url_campaign)}, "id") or url_campaign
 		if create and campaign == url_campaign and not frappe.db.exists("UTM Campaign", campaign):
 			campaign = frappe.new_doc("UTM Campaign")
-			campaign.name = url_campaign
+			campaign.id = url_campaign
 			campaign.campaign_description = f"Autogenerated from {url_trackers}"
 			campaign.save(ignore_permissions=True)
 		frappe_trackers["utm_campaign"] = campaign

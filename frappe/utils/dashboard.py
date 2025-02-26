@@ -20,7 +20,7 @@ def cache_source(function):
         no_cache = kwargs.get("no_cache")
         if no_cache:
             return function(chart=chart, no_cache=no_cache)
-        chart_name = frappe.parse_json(chart).name
+        chart_name = frappe.parse_json(chart).id
         cache_key = f"chart-data:{chart_name}"
         if cint(kwargs.get("refresh")):
             results = generate_and_cache_results(kwargs, function, cache_key, chart)
@@ -56,7 +56,7 @@ def generate_and_cache_results(args, function, cache_key, chart):
             # ref: https://github.com/frappe/frappe/pull/9403
             frappe.throw(
                 _("Please check the filter values set for Dashboard Chart: {}").format(
-                    get_link_to_form(chart.doctype, chart.name)
+                    get_link_to_form(chart.doctype, chart.id)
                 ),
                 title=_("Invalid Filter Value"),
             )

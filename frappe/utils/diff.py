@@ -29,7 +29,7 @@ def get_version_diff(from_version: int | str, to_version: int | str, fieldname: 
 
 
 def _get_value_from_version(version_name: int | str, fieldname: str):
-    version = frappe.get_list("Version", fields=["data", "modified"], filters={"name": version_name})
+    version = frappe.get_list("Version", fields=["data", "modified"], filters={"id": version_name})
     if version:
         data = json.loads(version[0].data)
         changed_fields = data.get("changed", [])
@@ -56,10 +56,10 @@ def version_query(doctype, txt, searchfield, start, page_len, filters):
 
     results = frappe.get_list(
         "Version",
-        fields=["name", "modified", "owner"],
+        fields=["id", "modified", "owner"],
         filters=version_filters,
         limit_start=start,
         limit_page_length=page_len,
         order_by="creation desc",
     )
-    return [(d.name, pretty_date(d.modified), d.modified, d.owner) for d in results]
+    return [(d.id, pretty_date(d.modified), d.modified, d.owner) for d in results]

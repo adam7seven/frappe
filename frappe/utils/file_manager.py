@@ -62,7 +62,7 @@ def upload():
         )
 
     return {
-        "name": file_doc.name,
+        "id": file_doc.id,
         "file_name": file_doc.file_name,
         "file_url": file_doc.file_url,
         "is_private": file_doc.is_private,
@@ -116,7 +116,7 @@ def save_url(file_url, filename, dt, dn, folder, is_private, df=None):
             "file_url": file_url,
             "file_name": filename,
             "attached_to_doctype": dt,
-            "attached_to_name": dn,
+            "attached_to_id": dn,
             "attached_to_field": df,
             "folder": folder,
             "file_size": file_size,
@@ -169,7 +169,7 @@ def save_file(fname, content, dt, dn, folder=None, decode=False, is_private=0, d
         {
             "doctype": "File",
             "attached_to_doctype": dt,
-            "attached_to_name": dn,
+            "attached_to_id": dn,
             "attached_to_field": df,
             "folder": folder,
             "file_size": file_size,
@@ -189,8 +189,8 @@ def save_file(fname, content, dt, dn, folder=None, decode=False, is_private=0, d
 
 
 def get_file_data_from_hash(content_hash, is_private=0):
-    for name in frappe.get_all("File", {"content_hash": content_hash, "is_private": is_private}, pluck="name"):
-        b = frappe.get_doc("File", name)
+    for id in frappe.get_all("File", {"content_hash": content_hash, "is_private": is_private}, pluck="id"):
+        b = frappe.get_doc("File", id)
         return {k: b.get(k) for k in frappe.get_hooks()["write_file_keys"]}
     return False
 
@@ -241,7 +241,7 @@ def write_file(content, fname, is_private=0):
 def remove_all(dt, dn, from_delete=False, delete_permanently=False):
     """remove all files in a transaction"""
     try:
-        for fid in frappe.get_all("File", {"attached_to_doctype": dt, "attached_to_name": dn}, pluck="name"):
+        for fid in frappe.get_all("File", {"attached_to_doctype": dt, "attached_to_id": dn}, pluck="id"):
             if from_delete:
                 # If deleting a doc, directly delete files
                 frappe.delete_doc("File", fid, ignore_permissions=True, delete_permanently=delete_permanently)
@@ -250,7 +250,7 @@ def remove_all(dt, dn, from_delete=False, delete_permanently=False):
                 remove_file(
                     fid=fid,
                     attached_to_doctype=dt,
-                    attached_to_name=dn,
+                    attached_to_id=dn,
                     from_delete=from_delete,
                     delete_permanently=delete_permanently,
                 )
@@ -262,20 +262,20 @@ def remove_all(dt, dn, from_delete=False, delete_permanently=False):
 def remove_file(
     fid=None,
     attached_to_doctype=None,
-    attached_to_name=None,
+    attached_to_id=None,
     from_delete=False,
     delete_permanently=False,
 ):
     """Remove file and File entry"""
     file_name = None
-    if not (attached_to_doctype and attached_to_name):
-        attached = frappe.db.get_value("File", fid, ["attached_to_doctype", "attached_to_name", "file_name"])
+    if not (attached_to_doctype and attached_to_id):
+        attached = frappe.db.get_value("File", fid, ["attached_to_doctype", "attached_to_id", "file_name"])
         if attached:
-            attached_to_doctype, attached_to_name, file_name = attached
+            attached_to_doctype, attached_to_id, file_name = attached
 
     ignore_permissions, comment = False, None
-    if attached_to_doctype and attached_to_name and not from_delete:
-        doc = frappe.get_doc(attached_to_doctype, attached_to_name)
+    if attached_to_doctype and attached_to_id and not from_delete:
+        doc = frappe.get_doc(attached_to_doctype, attached_to_id)
         ignore_permissions = frappe.flags.in_web_form or doc.has_permission("write")
         if not file_name:
             file_name = frappe.db.get_value("File", fid, "file_name")
@@ -378,7 +378,7 @@ def get_file_name(fname, optional_suffix):
     # convert to unicode
     fname = cstr(fname)
 
-    n_records = frappe.get_all("File", {"file_name": fname}, pluck="name")
+    n_records = frappe.get_all("File", {"file_name": fname}, pluck="id")
     if len(n_records) > 0 or os.path.exists(encode(get_files_path(fname))):
         f = fname.rsplit(".", 1)
         if len(f) == 1:
@@ -390,7 +390,7 @@ def get_file_name(fname, optional_suffix):
 
 
 @frappe.whitelist()
-def add_attachments(doctype, name, attachments):
+def add_attachments(doctype, id, attachments):
     """Add attachments to the given DocType"""
     if isinstance(attachments, str):
         attachments = json.loads(attachments)
@@ -398,9 +398,9 @@ def add_attachments(doctype, name, attachments):
     files = []
     for a in attachments:
         if isinstance(a, str):
-            attach = frappe.db.get_value("File", {"name": a}, ["file_name", "file_url", "is_private"], as_dict=1)
+            attach = frappe.db.get_value("File", {"id": a}, ["file_name", "file_url", "is_private"], as_dict=1)
             # save attachments to new doc
-            f = save_url(attach.file_url, attach.file_name, doctype, name, "Home/Attachments", attach.is_private)
+            f = save_url(attach.file_url, attach.file_name, doctype, id, "Home/Attachments", attach.is_private)
             files.append(f)
 
     return files
