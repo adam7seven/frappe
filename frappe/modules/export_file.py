@@ -42,11 +42,11 @@ def write_document_file(doc, record_module=None, create_init=True, folder_name=N
 
     # create folder
     if folder_name:
-        folder = create_folder(module, folder_name, doc.name, create_init, is_custom_module)
+        folder = create_folder(module, folder_name, doc.id, create_init, is_custom_module)
     else:
-        folder = create_folder(module, doc.doctype, doc.name, create_init, is_custom_module)
+        folder = create_folder(module, doc.doctype, doc.id, create_init, is_custom_module)
 
-    fname = scrub(doc.name)
+    fname = scrub(doc.id)
     write_code_files(folder, fname, doc, doc_export)
 
     # write the data file
@@ -55,7 +55,7 @@ def write_document_file(doc, record_module=None, create_init=True, folder_name=N
         frappe.throw("Invalid export path: " + Path(path).as_posix())
     with open(path, "w+") as txtfile:
         txtfile.write(frappe.as_json(doc_export))
-    print(f"Wrote document file for {doc.doctype} {doc.name} at {path}")
+    print(f"Wrote document file for {doc.doctype} {doc.id} at {path}")
 
 
 def strip_default_fields(doc, doc_export):
@@ -89,7 +89,7 @@ def write_code_files(folder, fname, doc, doc_export):
 
 def get_module_name(doc):
     if doc.doctype == "Module Def":
-        module = doc.name
+        module = doc.id
     elif doc.doctype == "Workflow":
         module = frappe.db.get_value("DocType", doc.document_type, "module")
     elif hasattr(doc, "module"):
