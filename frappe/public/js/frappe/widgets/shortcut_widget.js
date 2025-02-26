@@ -10,7 +10,7 @@ export default class ShortcutWidget extends Widget {
 
 	get_config() {
 		return {
-			name: this.name,
+			id: this.id,
 			icon: this.icon,
 			label: this.label,
 			format: this.format,
@@ -31,7 +31,7 @@ export default class ShortcutWidget extends Widget {
 
 			let route = frappe.utils.generate_route({
 				route: this.route,
-				name: this.link_to,
+				id: this.link_to,
 				type: this.type,
 				is_query_report: this.is_query_report,
 				doctype: this.ref_doctype,

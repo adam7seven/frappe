@@ -5,34 +5,31 @@ frappe.provide("frappe.views.pageview");
 frappe.provide("frappe.standard_pages");
 
 frappe.views.pageview = {
-	with_page: function (name, callback) {
-		if (frappe.standard_pages[name]) {
-			if (!frappe.pages[name]) {
-				frappe.standard_pages[name]();
+	with_page: function (id, callback) {
+		if (frappe.standard_pages[id]) {
+			if (!frappe.pages[id]) {
+				frappe.standard_pages[id]();
 			}
 			callback();
 			return;
 		}
 
-		if (
-			(locals.Page && locals.Page[name] && locals.Page[name].script) ||
-			name == window.page_name
-		) {
+		if ((locals.Page && locals.Page[id] && locals.Page[id].script) || id == window.page_name) {
 			// already loaded
 			callback();
-		} else if (localStorage["_page:" + name] && frappe.boot.developer_mode != 1) {
+		} else if (localStorage["_page:" + id] && frappe.boot.developer_mode != 1) {
 			// cached in local storage
-			frappe.model.sync(JSON.parse(localStorage["_page:" + name]));
+			frappe.model.sync(JSON.parse(localStorage["_page:" + id]));
 			callback();
-		} else if (name) {
+		} else if (id) {
 			// get fresh
 			return frappe.call({
 				method: "frappe.desk.desk_page.getpage",
-				args: { name: name },
+				args: { id: id },
 				callback: function (r) {
 					if (!r.docs._dynamic_page) {
 						try {
-							localStorage["_page:" + name] = JSON.stringify(r.docs);
+							localStorage["_page:" + id] = JSON.stringify(r.docs);
 						} catch (e) {
 							console.warn(e);
 						}
@@ -44,42 +41,42 @@ frappe.views.pageview = {
 		}
 	},
 
-	show: function (name) {
-		if (!name) {
-			name = frappe.boot ? frappe.boot.home_page : window.page_name;
+	show: function (id) {
+		if (!id) {
+			id = frappe.boot ? frappe.boot.home_page : window.page_name;
 		}
 		frappe.model.with_doctype("Page", function () {
-			frappe.views.pageview.with_page(name, function (r) {
+			frappe.views.pageview.with_page(id, function (r) {
 				if (r && r.exc) {
-					if (!r["403"]) frappe.show_not_found(name);
-				} else if (!frappe.pages[name]) {
-					new frappe.views.Page(name);
+					if (!r["403"]) frappe.show_not_found(id);
+				} else if (!frappe.pages[id]) {
+					new frappe.views.Page(id);
 				}
-				frappe.container.change_to(name);
+				frappe.container.change_to(id);
 			});
 		});
 	},
 };
 
 frappe.views.Page = class Page {
-	constructor(name) {
-		this.name = name;
+	constructor(id) {
+		this.id = id;
 		var me = this;
 
 		// web home page
-		if (name == window.page_name) {
-			this.wrapper = document.getElementById("page-" + name);
+		if (id == window.page_name) {
+			this.wrapper = document.getElementById("page-" + id);
 			this.wrapper.label = document.title || window.page_name;
 			this.wrapper.page_name = window.page_name;
 			frappe.pages[window.page_name] = this.wrapper;
 		} else {
-			this.pagedoc = locals.Page[this.name];
+			this.pagedoc = locals.Page[this.id];
 			if (!this.pagedoc) {
-				frappe.show_not_found(name);
+				frappe.show_not_found(id);
 				return;
 			}
-			this.wrapper = frappe.container.add_page(this.name);
-			this.wrapper.page_name = this.pagedoc.name;
+			this.wrapper = frappe.container.add_page(this.id);
+			this.wrapper.page_name = this.pagedoc.id;
 
 			// set content, script and style
 			if (this.pagedoc.content) this.wrapper.innerHTML = this.pagedoc.content;

@@ -50,8 +50,8 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
 			var label;
 			if (meta.title_field) {
 				label = item.progress
-					? __("{0} ({1}) - {2}%", [item[meta.title_field], item.name, item.progress])
-					: __("{0} ({1})", [item[meta.title_field], item.name]);
+					? __("{0} ({1}) - {2}%", [item[meta.title_field], item.id, item.progress])
+					: __("{0} ({1})", [item[meta.title_field], item.id]);
 			} else {
 				label = item[field_map.title];
 			}
@@ -59,8 +59,8 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
 			var r = {
 				start: item[field_map.start],
 				end: item[field_map.end],
-				name: label,
-				id: item[field_map.id || "name"],
+				id: label,
+				id: item[field_map.id || "id"],
 				doctype: me.doctype,
 				progress: progress,
 				dependencies: item.depends_on_tasks || "",
@@ -139,7 +139,7 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
 			custom_popup_html: (task) => {
 				var item = me.get_item(task.id);
 
-				var html = `<div class="title">${task.name}</div>
+				var html = `<div class="title">${task.id}</div>
 					<div class="subtitle">${moment(task._start).format("MMM D")} - ${moment(task._end).format(
 					"MMM D"
 				)}</div>`;
@@ -219,8 +219,8 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
 		this.$result.prepend(style);
 	}
 
-	get_item(name) {
-		return this.data.find((item) => item.name === name);
+	get_item(id) {
+		return this.data.find((item) => item.id === id);
 	}
 
 	get required_libs() {

@@ -25,7 +25,7 @@ frappe.ui.form.States = class FormStates {
 				frappe.workflow.setup(me.frm.doctype);
 				var state = me.get_state();
 				var d = new frappe.ui.Dialog({
-					title: "Workflow: " + frappe.workflow.workflows[me.frm.doctype].name,
+					title: "Workflow: " + frappe.workflow.workflows[me.frm.doctype].id,
 				});
 
 				frappe.workflow.get_transitions(me.frm.doc).then((transitions) => {

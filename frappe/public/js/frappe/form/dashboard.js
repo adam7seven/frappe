@@ -360,21 +360,21 @@ frappe.ui.form.Dashboard = class FormDashboard {
 			: this.data.fieldname;
 
 		frappe.provide("frappe.route_options");
-		frappe.route_options[fieldname] = this.frm.doc.name;
+		frappe.route_options[fieldname] = this.frm.doc.id;
 		frappe.set_route("query-report", report);
 	}
 
 	open_document_list($link, show_open) {
 		// show document list with filters
 		let doctype = $link.attr("data-doctype"),
-			names = $link.attr("data-names") || [];
+			ids = $link.attr("data-ids") || [];
 
 		if (
 			this.internal_links_found &&
 			this.internal_links_found.find((d) => d.doctype === doctype)
 		) {
-			if (names.length) {
-				frappe.route_options = { name: ["in", names] };
+			if (ids.length) {
+				frappe.route_options = { id: ["in", ids] };
 			} else {
 				return false;
 			}
@@ -390,7 +390,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 
 	get_document_filter(doctype) {
 		// return the default filter for the given document
-		// like {"customer": frm.doc.name}
+		// like {"customer": frm.doc.id}
 		let filter = {};
 		let fieldname = this.data.non_standard_fieldnames
 			? this.data.non_standard_fieldnames[doctype] || this.data.fieldname
@@ -401,7 +401,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 			filter[dynamic_fieldname] = this.data.dynamic_links[fieldname][0];
 		}
 
-		filter[fieldname] = this.frm.doc.name;
+		filter[fieldname] = this.frm.doc.id;
 		return filter;
 	}
 
@@ -432,7 +432,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 			method: method,
 			args: {
 				doctype: this.frm.doctype,
-				name: this.frm.docid,
+				id: this.frm.docid,
 				items: items,
 			},
 			callback: function (r) {
@@ -459,7 +459,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 				d.doctype,
 				cint(d.open_count),
 				cint(d.count),
-				d.names
+				d.ids
 			);
 		});
 
@@ -480,15 +480,15 @@ frappe.ui.form.Dashboard = class FormDashboard {
 		this.set_badge_count_common(open_count, count, $link);
 	}
 
-	set_badge_count_for_internal_link(doctype, open_count, count, names) {
+	set_badge_count_for_internal_link(doctype, open_count, count, ids) {
 		let $link = $(this.transactions_area).find(
 			'.document-link[data-doctype="' + doctype + '"]'
 		);
 
 		this.set_badge_count_common(open_count, count, $link);
 
-		if (names && names.length) {
-			$link.attr("data-names", names ? names.join(",") : "");
+		if (ids && ids.length) {
+			$link.attr("data-ids", ids ? ids.join(",") : "");
 		} else {
 			$link.find("a").attr("disabled", true);
 		}
@@ -579,7 +579,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 		let method = this.data.graph_method;
 		let args = {
 			doctype: this.frm.doctype,
-			docid: this.frm.doc.name,
+			docid: this.frm.doc.id,
 		};
 		$.extend(args, this.data.graph_method_args);
 

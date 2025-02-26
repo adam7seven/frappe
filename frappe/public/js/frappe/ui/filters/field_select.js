@@ -4,7 +4,7 @@ frappe.ui.FieldSelect = class FieldSelect {
 	constructor(opts) {
 		var me = this;
 		$.extend(this, opts);
-		this.fields_by_name = {};
+		this.fields_by_id = {};
 		this.options = [];
 		this.$input = $('<input class="form-control">')
 			.appendTo(this.parent)
@@ -44,7 +44,7 @@ frappe.ui.FieldSelect = class FieldSelect {
 		} else {
 			this.build_options();
 		}
-		this.set_value(this.doctype, "name");
+		this.set_value(this.doctype, "id");
 	}
 	get_value() {
 		return this.selected_doctype
@@ -89,7 +89,7 @@ frappe.ui.FieldSelect = class FieldSelect {
 		me.table_fields = [];
 		var std_filters = $.map(frappe.model.std_fields, function (d) {
 			var opts = { parent: me.doctype };
-			if (d.fieldname == "name") opts.options = me.doctype;
+			if (d.fieldname == "id") opts.options = me.doctype;
 			return $.extend(copy_dict(d), opts);
 		});
 
@@ -175,7 +175,7 @@ frappe.ui.FieldSelect = class FieldSelect {
 
 		if (
 			frappe.model.no_value_type.indexOf(df.fieldtype) == -1 &&
-			!(me.fields_by_name[df.parent] && me.fields_by_name[df.parent][df.fieldname])
+			!(me.fields_by_id[df.parent] && me.fields_by_id[df.parent][df.fieldname])
 		) {
 			this.options.push({
 				label: label,
@@ -183,8 +183,8 @@ frappe.ui.FieldSelect = class FieldSelect {
 				fieldname: df.fieldname,
 				doctype: df.parent,
 			});
-			if (!me.fields_by_name[df.parent]) me.fields_by_name[df.parent] = {};
-			me.fields_by_name[df.parent][df.fieldname] = df;
+			if (!me.fields_by_id[df.parent]) me.fields_by_id[df.parent] = {};
+			me.fields_by_id[df.parent][df.fieldname] = df;
 		}
 	}
 };

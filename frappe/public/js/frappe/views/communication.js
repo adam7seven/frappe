@@ -366,7 +366,7 @@ frappe.views.CommunicationComposer = class {
 			}
 
 			if (!this.subject) {
-				this.subject = this.frm.doc.name;
+				this.subject = this.frm.doc.id;
 				if (this.frm.meta.subject_field && this.frm.doc[this.frm.meta.subject_field]) {
 					this.subject = this.frm.doc[this.frm.meta.subject_field];
 				} else if (this.frm.meta.title_field && this.frm.doc[this.frm.meta.title_field]) {
@@ -376,10 +376,10 @@ frappe.views.CommunicationComposer = class {
 
 			// always add an identifier to catch a reply
 			// some email clients (outlook) may not send the message id to identify
-			// the thread. So as a backup we use the name of the document as identifier
-			const identifier = `#${this.frm.doc.name}`;
+			// the thread. So as a backup we use the id of the document as identifier
+			const identifier = `#${this.frm.doc.id}`;
 
-			// converting to str for int names
+			// converting to str for int ids
 			if (!cstr(this.subject).includes(identifier)) {
 				this.subject = `${this.subject} (${identifier})`;
 			}
@@ -450,7 +450,7 @@ frappe.views.CommunicationComposer = class {
 		}
 
 		if (this.last_email) {
-			this.key = this.key + ":" + this.last_email.name;
+			this.key = this.key + ":" + this.last_email.id;
 		}
 
 		if (this.subject) {
@@ -553,7 +553,7 @@ frappe.views.CommunicationComposer = class {
 		$(fields.select_print_format.wrapper).toggle(false);
 
 		if (this.frm) {
-			const print_formats = frappe.meta.get_print_formats(this.frm.meta.name);
+			const print_formats = frappe.meta.get_print_formats(this.frm.meta.id);
 			$(fields.select_print_format.input)
 				.empty()
 				.add_options(print_formats)
@@ -628,7 +628,7 @@ frappe.views.CommunicationComposer = class {
 			if (files.length) {
 				$.each(files, (i, f) => {
 					if (!f.file_name) return;
-					if (!attachment_rows.find(`[data-file-name="${f.name}"]`).length) {
+					if (!attachment_rows.find(`[data-file-name="${f.id}"]`).length) {
 						f.file_url = frappe.urllib.get_full_url(f.file_url);
 						attachment_rows.append(this.get_attachment_row(f));
 					}
@@ -642,7 +642,7 @@ frappe.views.CommunicationComposer = class {
 			<label title="${attachment.file_name}" style="max-width: 100%">
 				<input
 					type="checkbox"
-					data-file-name="${attachment.name}"
+					data-file-name="${attachment.id}"
 					${checked ? "checked" : ""}>
 				</input>
 				<span
@@ -791,7 +791,7 @@ frappe.views.CommunicationComposer = class {
 				subject: form_values.subject,
 				content: form_values.content,
 				doctype: me.doc.doctype,
-				name: me.doc.name,
+				id: me.doc.id,
 				send_email: 1,
 				print_html: print_html,
 				send_me_a_copy: form_values.send_me_a_copy,

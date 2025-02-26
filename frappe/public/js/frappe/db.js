@@ -8,7 +8,7 @@ frappe.db = {
 		}
 		args.doctype = doctype;
 		if (!args.fields) {
-			args.fields = ["name"];
+			args.fields = ["id"];
 		}
 		if (!("limit" in args)) {
 			args.limit = 20;
@@ -24,16 +24,16 @@ frappe.db = {
 			});
 		});
 	},
-	exists: function (doctype, nameOrFilters) {
+	exists: function (doctype, idOrFilters) {
 		return new Promise((resolve) => {
 			let filters;
-			if (typeof nameOrFilters === "string") {
+			if (typeof idOrFilters === "string") {
 				// may be cached and more effecient
-				frappe.db.get_value(doctype, { name: nameOrFilters }, "name").then((r) => {
-					r.message && r.message.name ? resolve(true) : resolve(false);
+				frappe.db.get_value(doctype, { id: idOrFilters }, "id").then((r) => {
+					r.message && r.message.id ? resolve(true) : resolve(false);
 				});
-			} else if (typeof nameOrFilters === "object") {
-				frappe.db.count(doctype, { filters: nameOrFilters, limit: 1 }).then((count) => {
+			} else if (typeof idOrFilters === "object") {
+				frappe.db.count(doctype, { filters: idOrFilters, limit: 1 }).then((count) => {
 					resolve(count > 0);
 				});
 			}
@@ -70,7 +70,7 @@ frappe.db = {
 			method: "frappe.client.set_value",
 			args: {
 				doctype: doctype,
-				name: docid,
+				id: docid,
 				fieldname: fieldname,
 				value: value,
 			},
@@ -79,13 +79,13 @@ frappe.db = {
 			},
 		});
 	},
-	get_doc: function (doctype, name, filters) {
+	get_doc: function (doctype, id, filters) {
 		return new Promise((resolve, reject) => {
 			frappe
 				.call({
 					method: "frappe.client.get",
 					type: "GET",
-					args: { doctype, name, filters },
+					args: { doctype, id, filters },
 					callback: (r) => {
 						frappe.model.sync(r.message);
 						resolve(r.message);
@@ -97,9 +97,9 @@ frappe.db = {
 	insert: function (doc) {
 		return frappe.xcall("frappe.client.insert", { doc });
 	},
-	delete_doc: function (doctype, name) {
+	delete_doc: function (doctype, id) {
 		return new Promise((resolve) => {
-			frappe.call("frappe.client.delete", { doctype, name }, (r) => resolve(r.message));
+			frappe.call("frappe.client.delete", { doctype, id }, (r) => resolve(r.message));
 		});
 	},
 	count: function (doctype, args = {}, cache = false) {

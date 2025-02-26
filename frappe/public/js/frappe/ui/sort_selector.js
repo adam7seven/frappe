@@ -120,7 +120,7 @@ frappe.ui.SortSelector = class SortSelector {
 			// default options
 			var _options = [
 				{ fieldname: "modified" },
-				{ fieldname: "name" },
+				{ fieldname: "id" },
 				{ fieldname: "creation" },
 				{ fieldname: "idx" },
 			];
@@ -194,12 +194,12 @@ frappe.ui.SortSelector = class SortSelector {
 		}
 	}
 	get_sql_string() {
-		// build string like: `tabSales Invoice`.subject, `tabSales Invoice`.name desc
+		// build string like: `tabSales Invoice`.subject, `tabSales Invoice`.id desc
 		const table_name = "`tab" + this.doctype + "`";
 		const sort_by = `${table_name}.${this.sort_by}`;
-		if (!["name", "creation", "modified"].includes(this.sort_by)) {
-			// add name column for deterministic ordering
-			return `${sort_by} ${this.sort_order}, ${table_name}.name ${this.sort_order}`;
+		if (!["id", "creation", "modified"].includes(this.sort_by)) {
+			// add id column for deterministic ordering
+			return `${sort_by} ${this.sort_order}, ${table_name}.id ${this.sort_order}`;
 		} else {
 			return `${sort_by} ${this.sort_order}`;
 		}

@@ -231,13 +231,13 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 	}
 
 	on_update(data) {
-		if (this.doctype === data.doctype && data.name) {
+		if (this.doctype === data.doctype && data.id) {
 			// flash row when doc is updated by some other user
 			const flash_row = data.user !== frappe.session.user;
-			if (this.data.find((d) => d.name === data.name)) {
+			if (this.data.find((d) => d.id === data.id)) {
 				// update existing
 				frappe.db
-					.get_doc(data.doctype, data.name)
+					.get_doc(data.doctype, data.id)
 					.then((doc) => this.update_row(doc, flash_row));
 			} else {
 				// refresh
@@ -250,7 +250,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 		const to_refresh = [];
 
 		this.data = this.data.map((d, i) => {
-			if (d.name === doc.name) {
+			if (d.id === doc.id) {
 				for (let fieldname in d) {
 					if (fieldname.includes(":")) {
 						// child table field
@@ -264,7 +264,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 							)
 							.map((key) => doc[key])
 							.map((a) => a[0])
-							.filter((cdoc) => cdoc.name === d[cdt + ":name"])[0];
+							.filter((cdoc) => cdoc.id === d[cdt + ":id"])[0];
 						if (cdt_row) {
 							d[fieldname] = cdt_row[_field];
 						}
@@ -497,7 +497,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 
 	build_chart_args(x_axis, y_axes, chart_type) {
 		let datasets = y_axes.map((y_axis) => ({
-			name: this.columns_map[y_axis].content,
+			id: this.columns_map[y_axis].content,
 			values: this.data.map((d) => d[y_axis]),
 		}));
 
@@ -577,19 +577,19 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 			setValue: (value) => {
 				const cell = this.datatable.getCell(colIndex, rowIndex);
 				let fieldname = this.datatable.getColumn(colIndex).docfield.fieldname;
-				let docid = cell.name;
+				let docid = cell.id;
 				let doctype = cell.doctype;
 
 				control.set_value(value);
 				return this.set_control_value(doctype, docid, fieldname, value)
 					.then((updated_doc) => {
 						const _data = this.data
-							.filter((b) => b.name === updated_doc.name)
+							.filter((b) => b.id === updated_doc.id)
 							.find(
 								(a) =>
 									// child table cell
 									(doctype != updated_doc.doctype &&
-										a[doctype + ":name"] == docid) ||
+										a[doctype + ":id"] == docid) ||
 									doctype == updated_doc.doctype
 							);
 
@@ -605,7 +605,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 											updated_doc[key][0].doctype === cdt
 									)
 									.map((key) => updated_doc[key])[0]
-									.filter((cdoc) => cdoc.name === _data[cdt + ":name"])[0];
+									.filter((cdoc) => cdoc.id === _data[cdt + ":id"])[0];
 								if (cdt_row) {
 									_data[field] = cdt_row[_field];
 								}
@@ -727,7 +727,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 
 	set_fields() {
 		// default fields
-		["name", "docstatus"].map((f) => this._add_field(f));
+		["id", "docstatus"].map((f) => this._add_field(f));
 
 		if (this.report_name && this.report_doc.json.fields) {
 			let fields = this.report_doc.json.fields.slice();
@@ -783,7 +783,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 	}
 
 	reorder_fields() {
-		// generate table fields in the required format ["name", "DocType"]
+		// generate table fields in the required format ["id", "DocType"]
 		// these are fields in the column before adding new fields
 		let table_fields = this.columns.map((df) => [df.field, df.docfield.parent]);
 
@@ -817,10 +817,10 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 			}
 			return column_name;
 		});
-		const cdt_name_fields = this.get_unique_cdt_in_view().map(
-			(cdt) => frappe.model.get_full_column_name("name", cdt) + " as " + `'${cdt}:name'`
+		const cdt_id_fields = this.get_unique_cdt_in_view().map(
+			(cdt) => frappe.model.get_full_column_name("id", cdt) + " as " + `'${cdt}:id'`
 		);
-		fields = fields.concat(cdt_name_fields);
+		fields = fields.concat(cdt_id_fields);
 
 		return fields;
 	}
@@ -887,7 +887,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 		if (index === -1) return;
 		const field = this.fields[index];
 
-		if (field[0] === "name") {
+		if (field[0] === "id") {
 			this.refresh();
 			frappe.throw(__("Cannot remove ID field"));
 		}
@@ -946,8 +946,8 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 
 		doctype_fields = [
 			{
-				label: __("ID", null, "Label of name column in report"),
-				fieldname: "name",
+				label: __("ID", null, "Label of id column in report"),
+				fieldname: "id",
 				fieldtype: "Data",
 				reqd: 1,
 			},
@@ -987,7 +987,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 			columns: 2,
 			options: columns[this.doctype]
 				.filter((df) => {
-					return !df.hidden && df.fieldname !== "name";
+					return !df.hidden && df.fieldname !== "id";
 				})
 				.map((df) => ({
 					label: __(df.label, null, df.parent),
@@ -1092,13 +1092,13 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 					}
 				}
 				docfield.parent = this.doctype;
-				if (fieldname == "name") {
+				if (fieldname == "id") {
 					docfield.options = this.doctype;
 				}
 				if (fieldname == "docstatus" && !frappe.meta.has_field(this.doctype, "status")) {
 					docfield.label = "Status";
 					docfield.fieldtype = "Data";
-					docfield.name = "status";
+					docfield.id = "status";
 				}
 			}
 		}
@@ -1182,7 +1182,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 			const totals = this.get_columns_totals(data);
 			const totals_row = this.columns.map((col, i) => {
 				return {
-					name: __("Totals Row"),
+					id: __("Totals Row"),
 					content: totals[col.id],
 					format: (value) => {
 						let formatted_value = frappe.format(
@@ -1221,12 +1221,12 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 			if (col.docfield.parent !== this.doctype) {
 				// child table field
 				const cdt_field = (f) => `${col.docfield.parent}:${f}`;
-				const name = d[cdt_field("name")];
+				const id = d[cdt_field("id")];
 				return {
-					name: name,
+					id: id,
 					doctype: col.docfield.parent,
 					content: d[cdt_field(col.field)] || d[col.field],
-					editable: Boolean(name && this.is_editable(col.docfield, d)),
+					editable: Boolean(id && this.is_editable(col.docfield, d)),
 					format: (value) => {
 						return frappe.format(
 							value,
@@ -1246,7 +1246,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 					// add status dependency column
 					this.add_status_dependency_column(dependent_col, this.doctype);
 					return {
-						name: d.name,
+						id: d.id,
 						doctype: col.docfield.parent,
 						content: status[0],
 						editable: false,
@@ -1258,7 +1258,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 			} else if (col.field in d) {
 				const value = d[col.field];
 				return {
-					name: d.name,
+					id: d.id,
 					doctype: col.docfield.parent,
 					content: value,
 					editable: this.is_editable(col.docfield, d),
@@ -1275,7 +1275,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 		const items = indexes.map((i) => this.data[i]).filter((i) => i != undefined);
 
 		if (only_docids) {
-			return items.map((d) => d.name);
+			return items.map((d) => d.id);
 		}
 
 		return items;
@@ -1286,7 +1286,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 	}
 
 	save_report(save_type) {
-		const _save_report = (name) => {
+		const _save_report = (id) => {
 			// callback
 			const report_settings = {
 				filters: this.filter_area.get(),
@@ -1302,7 +1302,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 			return frappe.call({
 				method: "frappe.desk.reportview.save_report",
 				args: {
-					name: name,
+					id: id,
 					doctype: this.doctype,
 					report_settings: JSON.stringify(report_settings),
 				},
@@ -1335,9 +1335,9 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 			_save_report(this.report_name);
 		} else {
 			frappe.prompt(
-				{ fieldname: "name", label: __("New Report name"), reqd: 1, fieldtype: "Data" },
+				{ fieldname: "id", label: __("New Report name"), reqd: 1, fieldtype: "Data" },
 				(data) => {
-					_save_report(data.name);
+					_save_report(data.id);
 				},
 				__("Save As")
 			);
@@ -1347,7 +1347,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 	delete_report() {
 		return frappe.call({
 			method: "frappe.desk.reportview.delete_report",
-			args: { name: this.report_name },
+			args: { id: this.report_name },
 			callback(response) {
 				if (response.exc) return;
 				window.history.back();
@@ -1502,7 +1502,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 					if (this.add_totals_row) {
 						const total_data = this.get_columns_totals(this.data);
 
-						total_data["name"] = __("Total");
+						total_data["id"] = __("Total");
 						total_data.is_total_row = true;
 						rows_in_order.push(total_data);
 					}
@@ -1545,8 +1545,8 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 								fields = fields.concat(values[cdt].map((f) => [f, cdt]));
 							}
 
-							// always keep name (ID) column
-							this.fields = [["name", this.doctype], ...fields];
+							// always keep id (ID) column
+							this.fields = [["id", this.doctype], ...fields];
 
 							this.fields.map((f) => this.add_currency_column(f[0], f[1]));
 
@@ -1707,7 +1707,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 				action: () => {
 					const args = {
 						doctype: "Report",
-						name: this.report_name,
+						id: this.report_name,
 					};
 					frappe.set_route("List", "User Permission", args);
 				},

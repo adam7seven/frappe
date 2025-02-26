@@ -118,11 +118,11 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				// If generated report and currently active Prepared Report has same fiters
 				// then refresh the Prepared Report
 				// Otherwise show alert with the link to the Prepared Report
-				if (data.name == this.prepared_report_doc_name) {
+				if (data.id == this.prepared_report_doc_id) {
 					this.refresh();
 				} else {
 					let alert_message = `Report ${this.report_name} generated.
-						<a href="#query-report/${this.report_name}/?prepared_report_name=${data.name}">View</a>`;
+						<a href="#query-report/${this.report_name}/?prepared_report_name=${data.id}">View</a>`;
 					frappe.show_alert({ message: alert_message, indicator: "orange" });
 				}
 			}
@@ -376,18 +376,18 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		);
 	}
 
-	add_to_dashboard(method, args, dashboard_name, name, doctype) {
+	add_to_dashboard(method, args, dashboard_name, id, doctype) {
 		frappe.xcall(method, { args: args }).then(() => {
 			let message;
 			if (dashboard_name) {
 				let dashboard_route_html = `<a href="/app/dashboard-view/${dashboard_name}">${dashboard_name}</a>`;
 				message = __("New {0} {1} added to Dashboard {2}", [
 					__(doctype),
-					name,
+					id,
 					dashboard_route_html,
 				]);
 			} else {
-				message = __("New {0} {1} created", [__(doctype), name]);
+				message = __("New {0} {1} created", [__(doctype), id]);
 			}
 
 			frappe.msgprint(message, __("New {0} Created", [__(doctype)]));
@@ -774,7 +774,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 						frappe.urllib.get_full_url(
 							"/api/method/frappe.core.doctype.prepared_report.prepared_report.download_attachment?" +
 								"dn=" +
-								encodeURIComponent(doc.name)
+								encodeURIComponent(doc.id)
 						)
 					);
 				},
@@ -905,7 +905,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 			</p>`;
 
 		let get_item_html = (item) =>
-			`<a class="underline" href="/app/prepared-report/${item.name}">${item.name}</a>`;
+			`<a class="underline" href="/app/prepared-report/${item.id}">${item.id}</a>`;
 
 		warning_message += reports.map(get_item_html).join(", ");
 
@@ -938,10 +938,10 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				})
 			).then((r) => {
 				const data = r.message;
-				// Rememeber the name of Prepared Report doc
-				this.prepared_report_doc_name = data.name;
+				// Rememeber the id of Prepared Report doc
+				this.prepared_report_doc_id = data.id;
 				let alert_message =
-					`<a href='/app/prepared-report/${data.name}'>` +
+					`<a href='/app/prepared-report/${data.id}'>` +
 					__("Report initiated, click to view status") +
 					`</a>`;
 				frappe.show_alert({ message: alert_message, indicator: "orange" }, 10);
@@ -1784,7 +1784,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 								args: {
 									field: values.field,
 									doctype: values.doctype,
-									names: Array.from(
+									ids: Array.from(
 										this.doctype_field_map[values.doctype][fieldname]
 									),
 								},
@@ -1812,7 +1812,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				action: () =>
 					frappe.set_route("List", "User Permission", {
 						doctype: "Report",
-						name: this.report_name,
+						id: this.report_name,
 					}),
 				condition: () => frappe.user.has_role("System Manager"),
 				standard: true,
@@ -1906,7 +1906,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				});
 			} else if (df.fieldtype == "Dynamic Link" && df.options) {
 				dynamic_links.push({
-					link_name: df.options,
+					link_id: df.options,
 					fieldname: df.fieldname,
 				});
 			}
@@ -1914,8 +1914,8 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 
 		this.data.forEach((row) => {
 			dynamic_links.forEach((field) => {
-				if (row[field.link_name]) {
-					dynamic_doctypes.add(row[field.link_name] + ":" + field.fieldname);
+				if (row[field.link_id]) {
+					dynamic_doctypes.add(row[field.link_id] + ":" + field.fieldname);
 				}
 			});
 		});
@@ -2104,7 +2104,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 			if (i === undefined) return items;
 
 			const item = this.data[i];
-			items.push(only_docids ? item.name : item);
+			items.push(only_docids ? item.id : item);
 			return items;
 		}, []);
 	}

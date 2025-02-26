@@ -270,7 +270,7 @@ function get_version_comment(version_doc, text) {
 					version_comment += unlinked_content
 						? frappe.utils.get_form_link(
 								"Version",
-								version_doc.name,
+								version_doc.id,
 								true,
 								unlinked_content
 						  )
@@ -284,7 +284,7 @@ function get_version_comment(version_doc, text) {
 			if (unlinked_content) {
 				version_comment += frappe.utils.get_form_link(
 					"Version",
-					version_doc.name,
+					version_doc.id,
 					true,
 					unlinked_content
 				);
@@ -294,7 +294,7 @@ function get_version_comment(version_doc, text) {
 			// pass
 		}
 	}
-	return frappe.utils.get_form_link("Version", version_doc.name, true, text);
+	return frappe.utils.get_form_link("Version", version_doc.id, true, text);
 }
 
 function format_content_for_timeline(content) {

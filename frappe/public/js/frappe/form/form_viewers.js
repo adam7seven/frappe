@@ -10,22 +10,22 @@ frappe.ui.form.FormViewers = class FormViewers {
 	}
 
 	get past_users() {
-		return this._past_users[this.frm?.doc?.name] || [];
+		return this._past_users[this.frm?.doc?.id] || [];
 	}
 
 	set past_users(users) {
-		const docid = this.frm?.doc?.name;
+		const docid = this.frm?.doc?.id;
 		if (!docid) return;
 
 		this._past_users[docid] = users;
 	}
 
 	get active_users() {
-		return this._active_users[this.frm?.doc?.name] || [];
+		return this._active_users[this.frm?.doc?.id] || [];
 	}
 
 	set active_users(users) {
-		const docid = this.frm?.doc?.name;
+		const docid = this.frm?.doc?.id;
 		if (!docid) return;
 
 		this._active_users[docid] = users;
@@ -65,7 +65,7 @@ frappe.ui.form.FormViewers = class FormViewers {
 		this.active_users = users;
 		this.past_users = users;
 
-		if (this.frm?.doc?.doctype === doctype && this.frm?.doc?.name == docid) {
+		if (this.frm?.doc?.doctype === doctype && this.frm?.doc?.id == docid) {
 			this.refresh();
 		}
 	}

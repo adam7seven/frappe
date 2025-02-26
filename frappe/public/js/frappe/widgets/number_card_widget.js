@@ -10,7 +10,7 @@ export default class NumberCardWidget extends Widget {
 
 	get_config() {
 		return {
-			name: this.name,
+			id: this.id,
 			number_card_name: this.number_card_name,
 			label: this.label,
 			color: this.color,
@@ -28,7 +28,7 @@ export default class NumberCardWidget extends Widget {
 	}
 
 	make_card() {
-		frappe.model.with_doc("Number Card", this.number_card_name || this.name).then((card) => {
+		frappe.model.with_doc("Number Card", this.number_card_name || this.id).then((card) => {
 			if (!card) {
 				if (this.document_type) {
 					frappe.run_serially([
@@ -56,9 +56,9 @@ export default class NumberCardWidget extends Widget {
 				args: this.card_doc,
 			})
 			.then((doc) => {
-				this.name = doc.name;
+				this.id = doc.id;
 				this.card_doc = doc;
-				this.widget.attr("data-widget-name", this.name);
+				this.widget.attr("data-widget-name", this.id);
 			});
 	}
 
@@ -76,9 +76,9 @@ export default class NumberCardWidget extends Widget {
 		}
 
 		const is_document_type = this.card_doc.type !== "Report";
-		const name = is_document_type ? this.card_doc.document_type : this.card_doc.report_name;
+		const id = is_document_type ? this.card_doc.document_type : this.card_doc.report_name;
 		const route = frappe.utils.generate_route({
-			name: name,
+			id: id,
 			type: is_document_type ? "doctype" : "report",
 			is_query_report: !is_document_type,
 		});
@@ -335,7 +335,7 @@ export default class NumberCardWidget extends Widget {
 				label: __("Edit"),
 				action: "action-edit",
 				handler: () => {
-					let number_card = this.number_card_name || this.name;
+					let number_card = this.number_card_name || this.id;
 					frappe.set_route("Form", "Number Card", number_card);
 				},
 			},

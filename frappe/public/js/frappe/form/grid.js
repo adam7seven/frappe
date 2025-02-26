@@ -125,7 +125,7 @@ export default class Grid {
 		this.setup_add_row();
 
 		this.setup_grid_pagination();
-		this.update_idx_and_name();
+		this.update_idx_and_id();
 
 		this.custom_buttons = {};
 		this.grid_buttons = this.wrapper.find(".grid-buttons");
@@ -148,13 +148,13 @@ export default class Grid {
 		}
 	}
 
-	update_idx_and_name() {
+	update_idx_and_id() {
 		this.data.forEach((d, ri) => {
 			if (d.idx === undefined) {
 				d.idx = ri + 1;
 			}
-			if (d.name === undefined) {
-				d.name = "row " + d.idx;
+			if (d.id === undefined) {
+				d.id = "row " + d.idx;
 			}
 		});
 	}
@@ -190,7 +190,7 @@ export default class Grid {
 			const $check = $(e.currentTarget);
 			const checked = $check.prop("checked");
 			const is_select_all = $check.parents(".grid-heading-row:first").length !== 0;
-			const docid = $check.parents(".grid-row:first")?.attr("data-name");
+			const docid = $check.parents(".grid-row:first")?.attr("data-id");
 
 			if (is_select_all) {
 				// (un)check all visible checkboxes
@@ -245,7 +245,7 @@ export default class Grid {
 					this.df.data = this.get_data();
 					this.df.data = this.df.data.filter((row) => row.idx != doc.idx);
 				}
-				this.grid_rows_by_docid[doc.name]?.remove();
+				this.grid_rows_by_docid[doc.id]?.remove();
 				dirty = true;
 			});
 			tasks.push(() => frappe.timeout(0.1));
@@ -291,8 +291,8 @@ export default class Grid {
 		frappe.utils.scroll_to(this.wrapper);
 	}
 
-	select_row(name) {
-		this.grid_rows_by_docid[name].select();
+	select_row(id) {
+		this.grid_rows_by_docid[id].select();
 	}
 
 	remove_all() {
@@ -327,7 +327,7 @@ export default class Grid {
 	get_selected() {
 		return (this.grid_rows || [])
 			.map((row) => {
-				return row.doc.__checked ? row.doc.name : null;
+				return row.doc.__checked ? row.doc.id : null;
 			})
 			.filter((d) => {
 				return d;
@@ -483,8 +483,8 @@ export default class Grid {
 			if (d.idx === undefined) {
 				d.idx = ri + 1;
 			}
-			if (d.name === undefined) {
-				d.name = "row " + d.idx;
+			if (d.id === undefined) {
+				d.id = "row " + d.idx;
 			}
 			let grid_row;
 			if (this.grid_rows[ri] && !append_row) {
@@ -503,7 +503,7 @@ export default class Grid {
 				this.grid_rows[ri] = grid_row;
 			}
 
-			this.grid_rows_by_docid[d.name] = grid_row;
+			this.grid_rows_by_docid[d.id] = grid_row;
 		}
 	}
 
@@ -583,7 +583,7 @@ export default class Grid {
 
 	make_sortable($rows) {
 		this.grid_sortable = new Sortable($rows.get(0), {
-			group: { name: this.df.fieldname },
+			group: { id: this.df.fieldname },
 			handle: ".sortable-handle",
 			draggable: ".grid-row",
 			animation: 100,
@@ -608,7 +608,7 @@ export default class Grid {
 					this.frm.script_manager.trigger(
 						this.df.fieldname + "_move",
 						this.df.options,
-						doc.name
+						doc.id
 					);
 				this.refresh();
 				this.frm && this.frm.dirty();
@@ -694,7 +694,7 @@ export default class Grid {
 	get_modal_data() {
 		return this.df.get_data
 			? this.df.get_data().filter((data) => {
-					if (!this.deleted_docs || !this.deleted_docs.includes(data.name)) {
+					if (!this.deleted_docs || !this.deleted_docs.includes(data.id)) {
 						return data;
 					}
 			  })
@@ -800,8 +800,8 @@ export default class Grid {
 	}
 
 	set_value(fieldname, value, doc) {
-		if (this.display_status !== "None" && doc?.name && this.grid_rows_by_docid?.[doc.name]) {
-			this.grid_rows_by_docid[doc.name].refresh_field(fieldname, value);
+		if (this.display_status !== "None" && doc?.id && this.grid_rows_by_docid?.[doc.id]) {
+			this.grid_rows_by_docid[doc.id].refresh_field(fieldname, value);
 		}
 	}
 
@@ -833,7 +833,7 @@ export default class Grid {
 					d = this.duplicate_row(d, copy_doc);
 				}
 				d.__unedited = true;
-				this.frm.script_manager.trigger(this.df.fieldname + "_add", d.doctype, d.name);
+				this.frm.script_manager.trigger(this.df.fieldname + "_add", d.doctype, d.id);
 				this.refresh();
 			} else {
 				if (!this.df.data) {
@@ -880,13 +880,13 @@ export default class Grid {
 			let $item = $(item);
 			let index =
 				(this.grid_pagination.page_index - 1) * this.grid_pagination.page_length + i;
-			let d = this.grid_rows_by_docid[$item.attr("data-name")].doc;
+			let d = this.grid_rows_by_docid[$item.attr("data-id")].doc;
 			d.idx = index + 1;
 			$item.attr("data-idx", d.idx);
 
 			if (this.frm) this.frm.doc[this.df.fieldname][index] = d;
 			this.data[index] = d;
-			this.grid_rows[index] = this.grid_rows_by_docid[d.name];
+			this.grid_rows[index] = this.grid_rows_by_docid[d.id];
 		});
 	}
 
@@ -899,7 +899,7 @@ export default class Grid {
 			"owner",
 			"parent",
 			"doctype",
-			"name",
+			"id",
 			"parentfield",
 		]);
 

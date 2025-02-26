@@ -89,7 +89,7 @@ export class ReminderManager {
 				remind_at: this.dialog.get_value("remind_at"),
 				description: this.dialog.get_value("description"),
 				reminder_doctype: this.frm?.doc.doctype,
-				reminder_docid: this.frm?.doc.name,
+				reminder_docid: this.frm?.doc.id,
 			})
 			.then((reminder) => {
 				frappe.show_alert(

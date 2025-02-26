@@ -16,9 +16,9 @@ frappe.ui.GroupBy = class {
 
 	init_group_by_popover() {
 		const sql_aggregate_functions = [
-			{ name: "count", label: __("Count") },
-			{ name: "sum", label: __("Sum") },
-			{ name: "avg", label: __("Average") },
+			{ id: "count", label: __("Count") },
+			{ id: "sum", label: __("Sum") },
+			{ id: "avg", label: __("Average") },
 		];
 
 		const group_by_template = $(
@@ -188,8 +188,8 @@ frappe.ui.GroupBy = class {
 	}
 
 	apply_settings(settings) {
-		let get_fieldname = (name) => name.split(".")[1].replace(/`/g, "");
-		let get_doctype = (name) => name.split(".")[0].replace(/`/g, "").replace("tab", "");
+		let get_fieldname = (id) => id.split(".")[1].replace(/`/g, "");
+		let get_doctype = (id) => id.split(".")[0].replace(/`/g, "").replace("tab", "");
 
 		if (!settings.group_by.startsWith("`tab")) {
 			settings.group_by = "`tab" + this.doctype + "`.`" + settings.group_by + "`";
@@ -298,7 +298,7 @@ frappe.ui.GroupBy = class {
 
 			Object.assign(args, {
 				with_comment_count: false,
-				aggregate_on_field: this.aggregate_on_field || "name",
+				aggregate_on_field: this.aggregate_on_field || "id",
 				aggregate_on_doctype: this.aggregate_on_doctype || this.doctype,
 				aggregate_function: this.aggregate_function || "count",
 				group_by: this.report_view.group_by || null,
@@ -367,7 +367,7 @@ frappe.ui.GroupBy = class {
 		this.group_by_fields = {};
 		this.all_fields = {};
 
-		let excluded_fields = ["_liked_by", "idx", "name"];
+		let excluded_fields = ["_liked_by", "idx", "id"];
 		const standard_fields = frappe.model.std_fields.filter(
 			(df) => !excluded_fields.includes(df.fieldname)
 		);

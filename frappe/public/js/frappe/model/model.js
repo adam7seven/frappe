@@ -62,7 +62,7 @@ $.extend(frappe.model, {
 	layout_fields: ["Section Break", "Column Break", "Tab Break", "Fold"],
 
 	std_fields_list: [
-		"name",
+		"id",
 		"owner",
 		"creation",
 		"modified",
@@ -96,7 +96,7 @@ $.extend(frappe.model, {
 	],
 
 	restricted_fields: [
-		"name",
+		"id",
 		"parent",
 		"creation",
 		"modified",
@@ -119,7 +119,7 @@ $.extend(frappe.model, {
 	],
 
 	std_fields: [
-		{ fieldname: "name", fieldtype: "Link", label: __("ID") },
+		{ fieldname: "id", fieldtype: "Link", label: __("ID") },
 		{ fieldname: "owner", fieldtype: "Link", label: __("Created By"), options: "User" },
 		{ fieldname: "idx", fieldtype: "Int", label: __("Index") },
 		{ fieldname: "creation", fieldtype: "Datetime", label: __("Created On") },
@@ -143,21 +143,21 @@ $.extend(frappe.model, {
 
 	table_fields: ["Table", "Table MultiSelect"],
 
-	new_names: {},
+	new_ids: {},
 	events: {},
 	user_settings: {},
 
 	init: function () {
 		// setup refresh if the document is updated somewhere else
 		frappe.realtime.on("doc_update", function (data) {
-			var doc = locals[data.doctype] && locals[data.doctype][data.name];
+			var doc = locals[data.doctype] && locals[data.doctype][data.id];
 
 			if (doc) {
 				// current document is dirty, show message if its not me
 				if (
 					frappe.get_route()[0] === "Form" &&
 					cur_frm.doc.doctype === doc.doctype &&
-					cur_frm.doc.name === doc.name
+					cur_frm.doc.id === doc.id
 				) {
 					if (data.modified !== cur_frm.doc.modified && !frappe.ui.form.is_saving) {
 						if (!cur_frm.is_dirty()) {
@@ -170,7 +170,7 @@ $.extend(frappe.model, {
 				} else {
 					if (!doc.__unsaved) {
 						// no local changes, remove from locals
-						frappe.model.remove_from_locals(doc.doctype, doc.name);
+						frappe.model.remove_from_locals(doc.doctype, doc.id);
 					} else {
 						// show message when user navigates back
 						doc.__needs_refresh = true;
@@ -248,7 +248,7 @@ $.extend(frappe.model, {
 			let cached_docs = frappe.model.get_from_localstorage(doctype);
 
 			if (cached_docs) {
-				meta = cached_docs.filter((doc) => doc.name === doctype)[0];
+				meta = cached_docs.filter((doc) => doc.id === doctype)[0];
 				if (meta) {
 					cached_timestamp = meta.modified;
 				}
@@ -288,7 +288,7 @@ $.extend(frappe.model, {
 	},
 
 	init_doctype: function (meta) {
-		if (meta.name === "DocType") {
+		if (meta.id === "DocType") {
 			// store doctype "meta" separate as it will be overridden by doctype "doc"
 			// meta has sugar, like __js and other properties that doc won't have
 			frappe.meta.__doctype_meta = JSON.parse(JSON.stringify(meta));
@@ -310,45 +310,41 @@ $.extend(frappe.model, {
 		}
 	},
 
-	with_doc: function (doctype, name, callback) {
+	with_doc: function (doctype, id, callback) {
 		return new Promise((resolve) => {
-			if (!name) name = doctype; // single type
-			if (
-				locals[doctype] &&
-				locals[doctype][name] &&
-				frappe.model.get_docinfo(doctype, name)
-			) {
-				callback && callback(name);
-				resolve(frappe.get_doc(doctype, name));
+			if (!id) id = doctype; // single type
+			if (locals[doctype] && locals[doctype][id] && frappe.model.get_docinfo(doctype, id)) {
+				callback && callback(id);
+				resolve(frappe.get_doc(doctype, id));
 			} else {
 				return frappe.call({
 					method: "frappe.desk.form.load.getdoc",
 					type: "GET",
 					args: {
 						doctype: doctype,
-						name: name,
+						id: id,
 					},
 					callback: function (r) {
-						callback && callback(name, r);
-						resolve(frappe.get_doc(doctype, name));
+						callback && callback(id, r);
+						resolve(frappe.get_doc(doctype, id));
 					},
 				});
 			}
 		});
 	},
 
-	get_docinfo: function (doctype, name) {
-		return (frappe.model.docinfo[doctype] && frappe.model.docinfo[doctype][name]) || null;
+	get_docinfo: function (doctype, id) {
+		return (frappe.model.docinfo[doctype] && frappe.model.docinfo[doctype][id]) || null;
 	},
 
-	set_docinfo: function (doctype, name, key, value) {
-		if (frappe.model.docinfo[doctype] && frappe.model.docinfo[doctype][name]) {
-			frappe.model.docinfo[doctype][name][key] = value;
+	set_docinfo: function (doctype, id, key, value) {
+		if (frappe.model.docinfo[doctype] && frappe.model.docinfo[doctype][id]) {
+			frappe.model.docinfo[doctype][id][key] = value;
 		}
 	},
 
-	get_shared: function (doctype, name) {
-		return frappe.model.get_docinfo(doctype, name).shared;
+	get_shared: function (doctype, id) {
+		return frappe.model.get_docinfo(doctype, id).shared;
 	},
 
 	get_server_module_name: function (doctype) {
@@ -620,14 +616,14 @@ $.extend(frappe.model, {
 		return frappe.run_serially(tasks);
 	},
 
-	get_doc: function (doctype, name) {
-		if (!name) name = doctype;
-		if ($.isPlainObject(name)) {
+	get_doc: function (doctype, id) {
+		if (!id) id = doctype;
+		if ($.isPlainObject(id)) {
 			// not string, filter
-			var doc = frappe.get_list(doctype, name);
+			var doc = frappe.get_list(doctype, id);
 			return doc && doc.length ? doc[0] : null;
 		}
-		return locals[doctype] ? locals[doctype][name] : null;
+		return locals[doctype] ? locals[doctype][id] : null;
 	},
 
 	get_children: function (doctype, parent, parentfield, filters) {
@@ -649,8 +645,8 @@ $.extend(frappe.model, {
 	},
 
 	get_doc_title(doc) {
-		if (typeof doc.name == "string") {
-			if (doc.name.startsWith("new-" + doc.doctype.toLowerCase().replace(/ /g, "-"))) {
+		if (typeof doc.id == "string") {
+			if (doc.id.startsWith("new-" + doc.doctype.toLowerCase().replace(/ /g, "-"))) {
 				return __("New {0}", [__(doc.doctype)]);
 			}
 		}
@@ -658,26 +654,26 @@ $.extend(frappe.model, {
 		if (meta.title_field) {
 			return doc[meta.title_field];
 		} else {
-			return String(doc.name);
+			return String(doc.id);
 		}
 	},
 
 	clear_table: function (doc, parentfield) {
 		for (const d of doc[parentfield] || []) {
-			delete locals[d.doctype][d.name];
+			delete locals[d.doctype][d.id];
 		}
 		doc[parentfield] = [];
 	},
 
-	remove_from_locals: function (doctype, name) {
-		this.clear_doc(doctype, name);
+	remove_from_locals: function (doctype, id) {
+		this.clear_doc(doctype, id);
 		if (frappe.views.formview[doctype]) {
-			delete frappe.views.formview[doctype].frm.opendocs[name];
+			delete frappe.views.formview[doctype].frm.opendocs[id];
 		}
 	},
 
-	clear_doc: function (doctype, name) {
-		var doc = locals[doctype] && locals[doctype][name];
+	clear_doc: function (doctype, id) {
+		var doc = locals[doctype] && locals[doctype][id];
 		if (!doc) return;
 
 		var parent = null;
@@ -686,13 +682,13 @@ $.extend(frappe.model, {
 			var parenttype = doc.parenttype,
 				parentfield = doc.parentfield;
 		}
-		delete locals[doctype][name];
+		delete locals[doctype][id];
 		if (parent) {
 			var parent_doc = locals[parenttype][parent];
 			var newlist = [],
 				idx = 1;
 			$.each(parent_doc[parentfield], function (i, d) {
-				if (d.name != name) {
+				if (d.id != id) {
 					newlist.push(d);
 					d.idx = idx;
 					idx++;
@@ -703,7 +699,7 @@ $.extend(frappe.model, {
 	},
 
 	get_no_copy_list: function (doctype) {
-		var no_copy_list = ["name", "amended_from", "amendment_date", "cancel_reason"];
+		var no_copy_list = ["id", "amended_from", "amendment_date", "cancel_reason"];
 
 		var docfields = frappe.get_meta(doctype).fields || [];
 		for (var i = 0, j = docfields.length; i < j; i++) {
@@ -728,7 +724,7 @@ $.extend(frappe.model, {
 				method: "frappe.client.delete",
 				args: {
 					doctype: doctype,
-					name: docid,
+					id: docid,
 				},
 				freeze: true,
 				freeze_message: __("Deleting {0}...", [title]),
@@ -753,7 +749,7 @@ $.extend(frappe.model, {
 			fields: [
 				{
 					label: __("New Name"),
-					fieldname: "new_name",
+					fieldname: "new_id",
 					fieldtype: "Data",
 					reqd: 1,
 					default: docid,
@@ -773,17 +769,13 @@ $.extend(frappe.model, {
 				args: {
 					doctype: doctype,
 					old: docid,
-					new: args.new_name,
+					new: args.new_id,
 					merge: args.merge,
 				},
 				btn: d.get_primary_btn(),
 				callback: function (r, rt) {
 					if (!r.exc) {
-						$(document).trigger("rename", [
-							doctype,
-							docid,
-							r.message || args.new_name,
-						]);
+						$(document).trigger("rename", [doctype, docid, r.message || args.new_id]);
 						if (locals[doctype] && locals[doctype][docid])
 							delete locals[doctype][docid];
 						d.hide();
@@ -815,7 +807,7 @@ $.extend(frappe.model, {
 			frappe.throw(
 				__("Please specify") +
 					": " +
-					__(frappe.meta.get_label(doc.doctype, fieldname, doc.parent || doc.name))
+					__(frappe.meta.get_label(doc.doctype, fieldname, doc.parent || doc.id))
 			);
 		}
 	},

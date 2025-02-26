@@ -34,7 +34,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 	set_title() {
 		let title;
 		if (this.frm.is_new()) {
-			title = __("New {0}", [__(this.frm.meta.name)]);
+			title = __("New {0}", [__(this.frm.meta.id)]);
 		} else if (this.frm.meta.title_field) {
 			let title_field = (this.frm.doc[this.frm.meta.title_field] || "").toString().trim();
 			title = strip_html(title_field || this.frm.docid);
@@ -95,9 +95,9 @@ frappe.ui.form.Toolbar = class Toolbar {
 			message: __("Unchanged"),
 		});
 	}
-	rename_document_title(input_name, input_title, merge = false) {
+	rename_document_title(input_id, input_title, merge = false) {
 		let confirm_message = null;
-		const docid = this.frm.doc.name;
+		const docid = this.frm.doc.id;
 		const title_field = this.frm.meta.title_field || "";
 		const doctype = this.frm.doctype;
 		let queue;
@@ -105,22 +105,22 @@ frappe.ui.form.Toolbar = class Toolbar {
 			queue = this.frm.__rename_queue;
 		}
 
-		if (input_name) {
+		if (input_id) {
 			const warning = __("This cannot be undone");
 			const message = __("Are you sure you want to merge {0} with {1}?", [
 				docid.bold(),
-				input_name.bold(),
+				input_id.bold(),
 			]);
 			confirm_message = `${message}<br><b>${warning}<b>`;
 		}
 
 		let rename_document = () => {
-			if (input_name != docid) frappe.realtime.doctype_subscribe(doctype, input_name);
+			if (input_id != docid) frappe.realtime.doctype_subscribe(doctype, input_id);
 			return frappe
 				.xcall("frappe.model.rename_doc.update_document_title", {
 					doctype,
 					docid,
-					name: input_name,
+					id: input_id,
 					title: input_title,
 					enqueue: true,
 					merge,
@@ -129,22 +129,22 @@ frappe.ui.form.Toolbar = class Toolbar {
 					queue,
 				})
 				.then((new_docid) => {
-					const reload_form = (input_name) => {
-						$(document).trigger("rename", [doctype, docid, input_name]);
+					const reload_form = (input_id) => {
+						$(document).trigger("rename", [doctype, docid, input_id]);
 						if (locals[doctype] && locals[doctype][docid])
 							delete locals[doctype][docid];
 						this.frm.reload_doc();
 					};
 
 					// handle document renaming queued action
-					if (input_name != docid) {
+					if (input_id != docid) {
 						frappe.realtime.on("list_update", (data) => {
-							if (data.doctype == doctype && data.name == input_name) {
-								reload_form(input_name);
+							if (data.doctype == doctype && data.id == input_id) {
+								reload_form(input_id);
 								frappe.show_alert({
 									message: __("Document renamed from {0} to {1}", [
 										docid.bold(),
-										input_name.bold(),
+										input_id.bold(),
 									]),
 									indicator: "success",
 								});
@@ -153,20 +153,20 @@ frappe.ui.form.Toolbar = class Toolbar {
 						frappe.show_alert(
 							__("Document renaming from {0} to {1} has been queued", [
 								docid.bold(),
-								input_name.bold(),
+								input_id.bold(),
 							])
 						);
 					}
 
 					// handle document sync rename action
-					if (input_name && (new_docid || input_name) != docid) {
-						reload_form(new_docid || input_name);
+					if (input_id && (new_docid || input_id) != docid) {
+						reload_form(new_docid || input_id);
 					}
 				});
 		};
 
 		return new Promise((resolve, reject) => {
-			if (input_title === this.frm.doc[title_field] && input_name === docid) {
+			if (input_title === this.frm.doc[title_field] && input_id === docid) {
 				this.show_unchanged_document_alert();
 				resolve();
 			} else if (merge) {
@@ -187,7 +187,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 
 		this.page.$title_area.find(".title-text").on("click", () => {
 			let fields = [];
-			let docid = me.frm.doc.name;
+			let docid = me.frm.doc.id;
 			let title_field = me.frm.meta.title_field || "";
 
 			// check if title is updatable
@@ -215,7 +215,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 					...[
 						{
 							label: label,
-							fieldname: "name",
+							fieldname: "id",
 							fieldtype: "Data",
 							reqd: 1,
 							default: docid,
@@ -240,7 +240,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 				d.set_primary_action(__("Rename"), (values) => {
 					d.disable_primary_action();
 					d.hide();
-					this.rename_document_title(values.name, values.title, values.merge)
+					this.rename_document_title(values.id, values.title, values.merge)
 						.then(() => {
 							d.hide();
 						})
@@ -664,7 +664,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 						"frappe.client.is_document_amended",
 						{
 							doctype: doc.doctype,
-							docid: doc.name,
+							docid: doc.id,
 						},
 						"GET",
 						{ cache: true }
@@ -830,7 +830,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 		frappe
 			.call("frappe.desk.form.document_follow.update_follow", {
 				doctype: this.frm.doctype,
-				doc_name: this.frm.doc.name,
+				doc_id: this.frm.doc.id,
 				following: !is_followed,
 			})
 			.then((r) => {
@@ -838,7 +838,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 
 				frappe.model.set_docinfo(
 					this.frm.doctype,
-					this.frm.doc.name,
+					this.frm.doc.id,
 					"is_document_followed",
 					is_followed
 				);

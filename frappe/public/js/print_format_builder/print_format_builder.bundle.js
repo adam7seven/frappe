@@ -28,7 +28,7 @@ class PrintFormatBuilder {
 			frappe.set_route("print-format-builder-beta");
 		});
 
-		let app = createApp(PrintFormatBuilderComponent, { print_format_name: print_format });
+		let app = createApp(PrintFormatBuilderComponent, { print_format_id: print_format });
 		SetVueGlobals(app);
 		this.$component = app.mount(this.$wrapper.get(0));
 

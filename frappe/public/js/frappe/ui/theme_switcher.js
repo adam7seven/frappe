@@ -33,7 +33,7 @@ frappe.ui.ThemeSwitcher = class ThemeSwitcher {
 			}
 
 			const current_index = this.themes.findIndex((theme) => {
-				return theme.name === this.current_theme;
+				return theme.id === this.current_theme;
 			});
 
 			const new_theme = this.themes[current_index + increment_by];
@@ -55,17 +55,17 @@ frappe.ui.ThemeSwitcher = class ThemeSwitcher {
 		return new Promise((resolve) => {
 			this.themes = [
 				{
-					name: "light",
+					id: "light",
 					label: __("Frappe Light"),
 					info: __("Light Theme"),
 				},
 				{
-					name: "dark",
+					id: "dark",
 					label: __("Timeless Night"),
 					info: __("Dark Theme"),
 				},
 				{
-					name: "automatic",
+					id: "automatic",
 					label: __("Automatic"),
 					info: __("Uses system's theme to switch between light and dark mode"),
 				},
@@ -84,13 +84,13 @@ frappe.ui.ThemeSwitcher = class ThemeSwitcher {
 	}
 
 	get_preview_html(theme) {
-		const is_auto_theme = theme.name === "automatic";
-		const preview = $(`<div class="${this.current_theme == theme.name ? "selected" : ""}">
-			<div data-theme=${is_auto_theme ? "light" : theme.name}
+		const is_auto_theme = theme.id === "automatic";
+		const preview = $(`<div class="${this.current_theme == theme.id ? "selected" : ""}">
+			<div data-theme=${is_auto_theme ? "light" : theme.id}
 				data-is-auto-theme="${is_auto_theme}" title="${theme.info}">
 				<div class="background">
 					<div>
-						<div class="preview-check" data-theme=${is_auto_theme ? "dark" : theme.name}>
+						<div class="preview-check" data-theme=${is_auto_theme ? "dark" : theme.id}>
 							${frappe.utils.icon("tick", "xs")}
 						</div>
 					</div>
@@ -111,14 +111,14 @@ frappe.ui.ThemeSwitcher = class ThemeSwitcher {
 		</div>`);
 
 		preview.on("click", () => {
-			if (this.current_theme === theme.name) return;
+			if (this.current_theme === theme.id) return;
 
 			this.themes.forEach((th) => {
 				th.$html.removeClass("selected");
 			});
 
 			preview.addClass("selected");
-			this.toggle_theme(theme.name);
+			this.toggle_theme(theme.id);
 		});
 
 		return preview;

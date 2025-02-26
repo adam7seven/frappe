@@ -73,7 +73,7 @@ export default class Widget {
 	}
 
 	make_widget() {
-		this.widget = $(`<div class="widget" data-widget-name="${this.name ? this.name : ""}">
+		this.widget = $(`<div class="widget" data-widget-name="${this.id ? this.id : ""}">
 			<div class="widget-head">
 				<div class="widget-label">
 					<div class="widget-title"></div>
@@ -95,7 +95,7 @@ export default class Widget {
 	}
 
 	set_title(max_chars) {
-		let base = this.title || this.label || this.name;
+		let base = this.title || this.label || this.id;
 		let title = max_chars ? frappe.ellipsis(base, max_chars) : base;
 
 		this.title_field[0].innerHTML = `<span class="ellipsis" title="${__(title)}">${__(
@@ -110,7 +110,7 @@ export default class Widget {
 	delete(animate = true, dismissed = false) {
 		let remove_widget = (setup_new) => {
 			this.widget.remove();
-			!dismissed && this.options.on_delete && this.options.on_delete(this.name, setup_new);
+			!dismissed && this.options.on_delete && this.options.on_delete(this.id, setup_new);
 		};
 
 		if (animate) {
@@ -134,7 +134,7 @@ export default class Widget {
 			values: this.get_config(),
 			primary_action: (data) => {
 				Object.assign(this, data);
-				data.name = this.name;
+				data.id = this.id;
 				this.new = true;
 				this.refresh();
 				this.options.on_edit && this.options.on_edit(data);

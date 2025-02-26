@@ -88,10 +88,10 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 			primary_action: () => {
 				let filters_data = this.get_custom_filters();
 				const data_values = cur_dialog.get_values(); // to pass values of data fields
-				const filtered_children = this.get_selected_child_names();
+				const filtered_children = this.get_selected_child_ids();
 				const selected_documents = [
 					...this.get_checked_values(),
-					...this.get_parent_name_of_selected_children(),
+					...this.get_parent_id_of_selected_children(),
 				];
 				this.action(selected_documents, {
 					...this.args,
@@ -191,7 +191,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 	get_child_datatable_columns() {
 		const parent = this.doctype;
 		return [parent, ...this.child_columns].map((d) => ({
-			name: frappe.unscrub(d),
+			id: frappe.unscrub(d),
 			editable: false,
 		}));
 	}
@@ -204,7 +204,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 		}
 		return this.child_results
 			.slice(0, this.child_page_length)
-			.map((d) => Object.values(d).slice(1)); // slice name field
+			.map((d) => Object.values(d).slice(1)); // slice id field
 	}
 
 	setup_child_datatable() {
@@ -340,11 +340,11 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 			if (!$(e.target).is(":checkbox") && !$(e.target).is("a")) {
 				$(this).find(":checkbox").trigger("click");
 			}
-			let name = $(this).attr("data-item-name").trim();
+			let id = $(this).attr("data-item-id").trim();
 			if ($(this).find(":checkbox").is(":checked")) {
-				me.selected_fields.add(name);
+				me.selected_fields.add(id);
 			} else {
-				me.selected_fields.delete(name);
+				me.selected_fields.delete(id);
 			}
 		});
 
@@ -352,11 +352,11 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 			let checked = $(e.target).is(":checked");
 			this.$results.find(".list-item-container .list-row-check").each(function () {
 				$(this).prop("checked", checked);
-				const name = $(this).closest(".list-item-container").attr("data-item-name").trim();
+				const id = $(this).closest(".list-item-container").attr("data-item-id").trim();
 				if (checked) {
-					me.selected_fields.add(name);
+					me.selected_fields.add(id);
 				} else {
-					me.selected_fields.delete(name);
+					me.selected_fields.delete(id);
 				}
 			});
 		});
@@ -388,49 +388,49 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 		});
 	}
 
-	get_parent_name_of_selected_children() {
+	get_parent_id_of_selected_children() {
 		if (!this.child_datatable || !this.child_datatable.datamanager.rows.length) return [];
 
-		let parent_names = this.child_datatable.rowmanager.checkMap.reduce(
-			(parent_names, checked, index) => {
+		let parent_ids = this.child_datatable.rowmanager.checkMap.reduce(
+			(parent_ids, checked, index) => {
 				if (checked == 1) {
-					const parent_name = this.child_results[index].parent;
-					if (!parent_names.includes(parent_name)) {
-						parent_names.push(parent_name);
+					const parent_id = this.child_results[index].parent;
+					if (!parent_ids.includes(parent_id)) {
+						parent_ids.push(parent_id);
 					}
 				}
-				return parent_names;
+				return parent_ids;
 			},
 			[]
 		);
 
-		return parent_names;
+		return parent_ids;
 	}
 
-	get_selected_child_names() {
+	get_selected_child_ids() {
 		if (!this.child_datatable || !this.child_datatable.datamanager.rows.length) return [];
 
-		let checked_names = this.child_datatable.rowmanager.checkMap.reduce(
-			(checked_names, checked, index) => {
+		let checked_ids = this.child_datatable.rowmanager.checkMap.reduce(
+			(checked_ids, checked, index) => {
 				if (checked == 1) {
-					const child_row_name = this.child_results[index].name;
-					checked_names.push(child_row_name);
+					const child_row_id = this.child_results[index].id;
+					checked_ids.push(child_row_id);
 				}
-				return checked_names;
+				return checked_ids;
 			},
 			[]
 		);
 
-		return checked_names;
+		return checked_ids;
 	}
 
 	get_checked_values() {
-		// Return name of checked value.
+		// Return id of checked value.
 		return this.$results
 			.find(".list-item-container")
 			.map(function () {
 				if ($(this).find(".list-row-check:checkbox:checked").length > 0) {
-					return $(this).attr("data-item-name");
+					return $(this).attr("data-item-id");
 				}
 			})
 			.get();
@@ -439,16 +439,15 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 	get_checked_items() {
 		// Return checked items with all the column values.
 		let checked_values = this.get_checked_values();
-		return this.results.filter((res) => checked_values.includes(res.name));
+		return this.results.filter((res) => checked_values.includes(res.id));
 	}
 
 	get_datatable_columns() {
 		if (this.get_query && this.get_query().query && this.columns) return this.columns;
 
-		if (Array.isArray(this.setters))
-			return ["name", ...this.setters.map((df) => df.fieldname)];
+		if (Array.isArray(this.setters)) return ["id", ...this.setters.map((df) => df.fieldname)];
 
-		return ["name", ...Object.keys(this.setters)];
+		return ["id", ...Object.keys(this.setters)];
 	}
 
 	make_list_row(result = {}) {
@@ -464,7 +463,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 						? `<span class="ellipsis text-muted" title="${__(
 								frappe.model.unscrub(column)
 						  )}">${__(frappe.model.unscrub(column))}</span>`
-						: column !== "name"
+						: column !== "id"
 						? `<span class="ellipsis result-row" title="${__(
 								result[column] || ""
 						  )}">${__(result[column] || "")}</span>`
@@ -479,7 +478,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 
 		let $row = $(`<div class="list-item">
 			<div class="list-item__content" style="flex: 0 0 10px;">
-				<input type="checkbox" class="list-row-check" data-item-name="${result.name}" ${
+				<input type="checkbox" class="list-row-check" data-item-id="${result.id}" ${
 			result.checked ? "checked" : ""
 		}>
 			</div>
@@ -489,7 +488,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 		head
 			? $row.addClass("list-item--head")
 			: ($row = $(
-					`<div class="list-item-container" data-item-name="${result.name}"></div>`
+					`<div class="list-item-container" data-item-id="${result.id}"></div>`
 			  ).append($row));
 
 		return $row;
@@ -512,7 +511,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 		let checked = this.get_checked_values();
 
 		results
-			.filter((result) => !checked.includes(result.name))
+			.filter((result) => !checked.includes(result.id))
 			.forEach((result) => {
 				me.$results.append(me.make_list_row(result));
 			});
@@ -527,7 +526,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 	empty_list() {
 		// Store all checked items
 		let checked = this.results
-			.filter((result) => this.selected_fields.has(result.name))
+			.filter((result) => this.selected_fields.has(result.id))
 			.map((item) => ({
 				...item,
 				checked: true,
@@ -617,20 +616,20 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 
 	async get_filtered_parents_for_child_search() {
 		const parent_search_args = this.get_args_for_search();
-		parent_search_args.filter_fields = ["name"];
+		parent_search_args.filter_fields = ["id"];
 		const [results, _] = await this.perform_search(parent_search_args);
 
-		let parent_names = [];
+		let parent_ids = [];
 		if (results.length) {
-			parent_names = results.map((v) => v.name);
+			parent_ids = results.map((v) => v.id);
 		}
-		return parent_names;
+		return parent_ids;
 	}
 
 	async add_parent_filters(filters) {
-		const parent_names = await this.get_filtered_parents_for_child_search();
-		if (parent_names.length) {
-			filters.push(["parent", "in", parent_names]);
+		const parent_ids = await this.get_filtered_parents_for_child_search();
+		if (parent_ids.length) {
+			filters.push(["parent", "in", parent_ids]);
 		}
 	}
 
@@ -655,7 +654,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 			args: {
 				doctype: this.child_doctype,
 				filters: filters,
-				fields: ["name", "parent", ...this.child_columns],
+				fields: ["id", "parent", ...this.child_columns],
 				parent: this.doctype,
 				limit_page_length: this.child_page_length + 5,
 				order_by: "parent",

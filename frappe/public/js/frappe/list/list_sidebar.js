@@ -119,14 +119,14 @@ frappe.views.ListSidebar = class ListSidebar {
 		var divider = false;
 
 		var add_reports = function (reports) {
-			$.each(reports, function (name, r) {
+			$.each(reports, function (id, r) {
 				if (!r.ref_doctype || r.ref_doctype == me.doctype) {
 					var report_type =
 						r.report_type === "Report Builder"
 							? `List/${r.ref_doctype}/Report`
 							: "query-report";
 
-					var route = r.route || report_type + "/" + (r.title || r.name);
+					var route = r.route || report_type + "/" + (r.title || r.id);
 
 					if (added.indexOf(route) === -1) {
 						// don't repeat
@@ -138,7 +138,7 @@ frappe.views.ListSidebar = class ListSidebar {
 						}
 
 						$(
-							'<li><a href="#' + route + '">' + __(r.title || r.name) + "</a></li>"
+							'<li><a href="#' + route + '">' + __(r.title || r.id) + "</a></li>"
 						).appendTo(dropdown);
 					}
 				}

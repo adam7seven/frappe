@@ -68,7 +68,7 @@ export function create_default_layout(meta, print_format) {
 				if (field_template) {
 					field.label = `${__(df.label, null, df.parent)} (${__("Field Template")})`;
 					field.fieldtype = "Field Template";
-					field.field_template = field_template.name;
+					field.field_template = field_template.id;
 					field.fieldname = df.fieldname = "_template";
 				}
 
@@ -126,8 +126,8 @@ function get_field_template(print_format, fieldname) {
 
 function get_default_header(meta) {
 	return `<div class="document-header">
-	<h3>${meta.name}</h3>
-	<p>{{ doc.name }}</p>
+	<h3>${meta.id}</h3>
+	<p>{{ doc.id }}</p>
 </div>`;
 }
 

@@ -86,12 +86,12 @@ export default class WidgetGroup {
 			height: this.height || null,
 			options: {
 				...this.options,
-				on_delete: (name) => this.on_delete(name),
+				on_delete: (id) => this.on_delete(id),
 			},
 		});
 
 		this.widgets_list.push(widget_object);
-		this.widgets_dict[widget.name] = widget_object;
+		this.widgets_dict[widget.id] = widget_object;
 
 		return widget_object;
 	}
@@ -99,9 +99,9 @@ export default class WidgetGroup {
 	remove_widget(widget_obj) {
 		widget_obj.widget.remove();
 		this.widgets_list.filter((widget) => {
-			if (widget.name == widget_obj.name) return false;
+			if (widget.id == widget_obj.id) return false;
 		});
-		delete this.widgets_dict[widget_obj.name];
+		delete this.widgets_dict[widget_obj.id];
 	}
 
 	customize() {
@@ -145,9 +145,9 @@ export default class WidgetGroup {
 		}
 	}
 
-	on_delete(name, setup_new) {
-		this.widgets_list = this.widgets_list.filter((wid) => name != wid.name);
-		delete this.widgets_dict[name];
+	on_delete(id, setup_new) {
+		this.widgets_list = this.widgets_list.filter((wid) => id != wid.id);
+		delete this.widgets_dict[id];
 		this.update_widget_order();
 
 		if (!this.new_widget && setup_new) this.setup_new_widget();
@@ -156,9 +156,9 @@ export default class WidgetGroup {
 	update_widget_order() {
 		this.widget_order = [];
 		this.body.children().each((index, element) => {
-			let name = element.dataset.widgetName;
-			if (name) {
-				this.widget_order.push(name);
+			let id = element.dataset.widgetName;
+			if (id) {
+				this.widget_order.push(id);
 			}
 		});
 	}
@@ -178,8 +178,8 @@ export default class WidgetGroup {
 
 		this.widgets_list.forEach((wid) => {
 			let config = wid.get_config();
-			let name = config.docid ? config.docid : config.name;
-			prepared_dict[name] = config;
+			let id = config.docid ? config.docid : config.id;
+			prepared_dict[id] = config;
 		});
 
 		return {
@@ -214,7 +214,7 @@ export class SingleWidgetGroup {
 			},
 		});
 		this.widgets_list.push(widget_object);
-		this.widgets_dict[widget.name] = widget_object;
+		this.widgets_dict[widget.id] = widget_object;
 
 		return widget_object;
 	}

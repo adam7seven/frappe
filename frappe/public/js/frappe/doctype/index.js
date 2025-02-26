@@ -27,7 +27,7 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
 	}
 
 	show_db_utilization() {
-		const doctype = this.frm.doc.doc_type || this.frm.doc.name;
+		const doctype = this.frm.doc.doc_type || this.frm.doc.id;
 		frappe
 			.xcall("frappe.core.doctype.doctype.doctype.get_row_size_utilization", {
 				doctype,

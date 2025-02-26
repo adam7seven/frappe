@@ -20,8 +20,8 @@ class WidgetDialog {
 			primary_action: (data) => {
 				data = this.process_data(data);
 
-				if (!this.editing && !data.name) {
-					data.name = `${this.type}-${this.label}-${frappe.utils.get_random(20)}`;
+				if (!this.editing && !data.id) {
+					data.id = `${this.type}-${this.label}-${frappe.utils.get_random(20)}`;
 				}
 
 				this.dialog.hide();
@@ -434,9 +434,9 @@ class ShortcutDialog extends WidgetDialog {
 							const response = await frappe.db.get_value(
 								"Kanban Board",
 								{ reference_doctype: doctype },
-								"name"
+								"id"
 							);
-							if (response?.message?.name) views.push("Kanban");
+							if (response?.message?.id) views.push("Kanban");
 
 							this.dialog.set_df_property("doc_view", "options", views.join("\n"));
 						});
@@ -761,7 +761,7 @@ class NumberCardDialog extends WidgetDialog {
 		}
 
 		if (data.new_or_existing == "Existing Card") {
-			data.name = data.card;
+			data.id = data.card;
 		}
 		data.stats_filter = this.filter_group && JSON.stringify(this.filter_group.get_filters());
 		data.document_type = this.document_type;

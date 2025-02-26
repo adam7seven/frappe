@@ -457,9 +457,9 @@ frappe.views.BaseList = class BaseList {
 	}
 
 	get_group_by() {
-		let name_field = this.fields && this.fields.find((f) => f[0] == "name");
-		if (name_field) {
-			return frappe.model.get_full_column_name(name_field[0], name_field[1]);
+		let id_field = this.fields && this.fields.find((f) => f[0] == "id");
+		if (id_field) {
+			return frappe.model.get_full_column_name(id_field[0], id_field[1]);
 		}
 		return null;
 	}
@@ -569,7 +569,7 @@ frappe.views.BaseList = class BaseList {
 			this.data = this.data.concat(data);
 		}
 
-		this.data = this.data.uniqBy((d) => d.name);
+		this.data = this.data.uniqBy((d) => d.id);
 	}
 
 	reset_defaults() {
@@ -605,7 +605,7 @@ frappe.views.BaseList = class BaseList {
 	}
 
 	call_for_selected_items(method, args = {}) {
-		args.names = this.get_checked_items(true);
+		args.ids = this.get_checked_items(true);
 
 		frappe.call({
 			method: method,
@@ -799,12 +799,12 @@ class FilterArea {
 		);
 		let fields = [];
 
-		if (!this.list_view.settings.hide_name_filter) {
+		if (!this.list_view.settings.hide_id_filter) {
 			fields.push({
 				fieldtype: "Data",
 				label: "ID",
 				condition: "like",
-				fieldname: "name",
+				fieldname: "id",
 				onchange: () => this.debounced_refresh_list_view(),
 			});
 		}

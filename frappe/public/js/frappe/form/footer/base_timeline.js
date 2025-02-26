@@ -99,7 +99,7 @@ class BaseTimeline {
 		// hide_timestamp, is_card
 		const timeline_item = $(`<div class="timeline-item">`);
 
-		if (item.name == "load-more") {
+		if (item.id == "load-more") {
 			timeline_item.append(
 				`<div class="timeline-load-more">
 					<button class="btn btn-default btn-sm btn-load-more">
@@ -117,7 +117,7 @@ class BaseTimeline {
 
 		timeline_item.attr({
 			"data-doctype": item.doctype,
-			"data-name": item.name,
+			"data-id": item.id,
 			"data-timestamp": item.creation,
 		});
 		if (item.icon) {

@@ -320,7 +320,7 @@ frappe.search.AwesomeBar = class AwesomeBar {
 			const doctype = frappe.container.page?.list_view?.doctype;
 			if (!doctype) return;
 			var meta = frappe.get_meta(doctype);
-			var search_field = meta.title_field || "name";
+			var search_field = meta.title_field || "id";
 			var options = {};
 			options[search_field] = ["like", "%" + txt + "%"];
 			this.options.push({

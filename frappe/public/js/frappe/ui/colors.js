@@ -57,7 +57,7 @@ frappe.ui.color = {
 	all: function () {
 		return Object.values(frappe.ui.color_map).reduce((acc, curr) => acc.concat(curr), []);
 	},
-	names: function () {
+	ids: function () {
 		return Object.keys(frappe.ui.color_map);
 	},
 	is_standard: function (color_name) {

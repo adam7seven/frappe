@@ -148,7 +148,7 @@ frappe.ui.Filter = class {
 	}
 
 	setup() {
-		const fieldname = this.fieldname || "name";
+		const fieldname = this.fieldname || "id";
 		// set the field
 		return this.set_values(this.doctype, fieldname, this.condition, this.value);
 	}
@@ -218,7 +218,7 @@ frappe.ui.Filter = class {
 		let cur = {};
 		if (this.field) for (let k in this.field.df) cur[k] = this.field.df[k];
 
-		let original_docfield = (this.fieldselect.fields_by_name[doctype] || {})[fieldname];
+		let original_docfield = (this.fieldselect.fields_by_id[doctype] || {})[fieldname];
 
 		if (!original_docfield) {
 			console.warn(`Field ${fieldname} is not selectable.`);

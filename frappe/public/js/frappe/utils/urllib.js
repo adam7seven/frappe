@@ -1,8 +1,8 @@
 frappe.urllib = {
 	// get argument from url
-	get_arg: function (name) {
-		name = name.replace(/[[]/, "\\[").replace(/[\]]/, "\\]");
-		var regexS = "[\\?&]" + name + "=([^&#]*)";
+	get_arg: function (id) {
+		id = id.replace(/[[]/, "\\[").replace(/[\]]/, "\\]");
+		var regexS = "[\\?&]" + id + "=([^&#]*)";
 		var regex = new RegExp(regexS);
 		var results = regex.exec(window.location.href);
 		if (results == null) return "";
@@ -61,7 +61,7 @@ window.open_url_post = function open_url_post(URL, PARAMS, new_window) {
 		PARAMS["csrf_token"] = frappe.csrf_token;
 		for (var x in PARAMS) {
 			var opt = document.createElement("textarea");
-			opt.name = x;
+			opt.id = x;
 			var val = PARAMS[x];
 			if (typeof val != "string") val = JSON.stringify(val);
 			opt.value = val;

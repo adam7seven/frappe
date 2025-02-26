@@ -113,14 +113,14 @@ frappe.ui.Sidebar = class Sidebar {
 			frappe.workspace_list = [];
 			frappe.workspace_map = {};
 			for (let page of this.all_pages) {
-				frappe.workspaces[frappe.router.slug(page.name)] = {
-					name: page.name,
+				frappe.workspaces[frappe.router.slug(page.id)] = {
+					id: page.id,
 					public: page.public,
 				};
 				if (!page.app && page.module) {
 					page.app = frappe.boot.module_app[frappe.slug(page.module)];
 				}
-				frappe.workspace_map[page.name] = page;
+				frappe.workspace_map[page.id] = page;
 				frappe.workspace_list.push(page);
 			}
 			this.make_sidebar();
@@ -139,11 +139,11 @@ frappe.ui.Sidebar = class Sidebar {
 
 		let app_workspaces = frappe.boot.app_data_map[frappe.current_app || "frappe"].workspaces;
 
-		let parent_pages = this.all_pages.filter((p) => !p.parent_page).uniqBy((p) => p.name);
+		let parent_pages = this.all_pages.filter((p) => !p.parent_page).uniqBy((p) => p.id);
 		if (frappe.current_app === "private") {
 			parent_pages = parent_pages.filter((p) => !p.public);
 		} else {
-			parent_pages = parent_pages.filter((p) => p.public && app_workspaces.includes(p.name));
+			parent_pages = parent_pages.filter((p) => p.public && app_workspaces.includes(p.id));
 		}
 
 		this.build_sidebar_section("All", parent_pages);
@@ -229,14 +229,14 @@ frappe.ui.Sidebar = class Sidebar {
 		item.selected = is_current_page;
 
 		if (is_current_page) {
-			this.current_page = { name: item.name, public: item.public };
+			this.current_page = { id: item.id, public: item.public };
 		}
 
 		let $item_container = this.sidebar_item_container(item);
 		let sidebar_control = $item_container.find(".sidebar-item-control");
 
 		let child_items = this.all_pages.filter(
-			(page) => page.parent_page == item.name || page.parent_page == item.title
+			(page) => page.parent_page == item.id || page.parent_page == item.title
 		);
 		if (child_items.length > 0) {
 			let child_container = $item_container.find(".sidebar-child-item");
@@ -245,7 +245,7 @@ frappe.ui.Sidebar = class Sidebar {
 		}
 
 		$item_container.appendTo(container);
-		this.sidebar_items[item.public ? "public" : "private"][item.name] = $item_container;
+		this.sidebar_items[item.public ? "public" : "private"][item.id] = $item_container;
 
 		if ($item_container.parent().hasClass("hidden") && is_current_page) {
 			$item_container.parent().toggleClass("hidden");
@@ -266,20 +266,20 @@ frappe.ui.Sidebar = class Sidebar {
 			if (item.link_type === "Report") {
 				path = frappe.utils.generate_route({
 					type: item.link_type,
-					name: item.link_to,
+					id: item.link_to,
 					is_query_report: item.report.report_type === "Query Report",
 					report_ref_doctype: item.report.ref_doctype,
 				});
 			} else {
-				path = frappe.utils.generate_route({ type: item.link_type, name: item.link_to });
+				path = frappe.utils.generate_route({ type: item.link_type, id: item.link_to });
 			}
 		} else if (item.type === "URL") {
 			path = item.external_link;
 		} else {
 			if (item.public) {
-				path = "/app/" + frappe.router.slug(item.name);
+				path = "/app/" + frappe.router.slug(item.id);
 			} else {
-				path = "/app/private/" + frappe.router.slug(item.name.split("-")[0]);
+				path = "/app/private/" + frappe.router.slug(item.id.split("-")[0]);
 			}
 		}
 
@@ -287,7 +287,7 @@ frappe.ui.Sidebar = class Sidebar {
 			<div
 				class="sidebar-item-container ${item.is_editable ? "is-draggable" : ""}"
 				item-parent="${item.parent_page}"
-				item-name="${item.name}"
+				item-id="${item.id}"
 				item-title="${item.title}"
 				item-public="${item.public || 0}"
 				item-is-hidden="${item.is_hidden || 0}"
@@ -318,7 +318,7 @@ frappe.ui.Sidebar = class Sidebar {
 		let drop_icon = "es-line-down";
 		if (
 			this.current_page &&
-			item_container.find(`[item-name="${this.current_page.name}"]`).length
+			item_container.find(`[item-id="${this.current_page.id}"]`).length
 		) {
 			drop_icon = "small-up";
 		}
@@ -331,7 +331,7 @@ frappe.ui.Sidebar = class Sidebar {
 		if (
 			this.all_pages.some(
 				(e) =>
-					(e.parent_page == item.title || e.parent_page == item.name) &&
+					(e.parent_page == item.title || e.parent_page == item.id) &&
 					(e.is_hidden == 0 || !this.is_read_only)
 			)
 		) {
@@ -371,11 +371,11 @@ frappe.ui.Sidebar = class Sidebar {
 								parent = $(item)
 									.parent()
 									.closest(".sidebar-item-container")
-									.attr("item-name");
+									.attr("item-id");
 							}
 
 							sidebar_items.push({
-								name: item.getAttribute("item-name"),
+								id: item.getAttribute("item-id"),
 								parent: parent,
 							});
 						}

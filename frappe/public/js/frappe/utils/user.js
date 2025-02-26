@@ -27,7 +27,7 @@ frappe.update_user_info = function (user_info) {
 frappe.provide("frappe.user");
 
 $.extend(frappe.user, {
-	name: "Guest",
+	id: "Guest",
 	full_name: function (uid) {
 		return uid === frappe.session.user
 			? __(
@@ -122,10 +122,10 @@ $.extend(frappe.user, {
 	 * if (frappe.user === 'Administrator')
 	 *
 	 * frappe.user will cast to a string
-	 * returning frappe.user.name
+	 * returning frappe.user.id
 	 */
 	toString: function () {
-		return this.name;
+		return this.id;
 	},
 });
 

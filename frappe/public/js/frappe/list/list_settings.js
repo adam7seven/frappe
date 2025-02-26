@@ -335,7 +335,7 @@ export default class ListSettings {
 
 		me.subject_field = {
 			label: __("ID"),
-			fieldname: "name",
+			fieldname: "id",
 		};
 
 		if (meta.title_field) {

@@ -62,9 +62,9 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 	show_link_and_clear_buttons() {
 		if (this.$input.val() && this.get_options()) {
 			const doctype = this.get_options();
-			const name = this.get_input_value();
+			const id = this.get_input_value();
 			this.$link.toggle(true);
-			this.$link_open.attr("href", frappe.utils.get_form_link(doctype, name));
+			this.$link_open.attr("href", frappe.utils.get_form_link(doctype, id));
 		}
 	}
 
@@ -180,15 +180,15 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 			frappe.route_options = {};
 		}
 
-		// partially entered name field
-		frappe.route_options.name_field = this.get_label_value();
+		// partially entered id field
+		frappe.route_options.id_field = this.get_label_value();
 
 		// reference to calling link
 		frappe._from_link = frappe.utils.deep_clone(this);
 		frappe._from_link_scrollY = $(document).scrollTop();
 
 		frappe.ui.form.make_quick_entry(doctype, (doc) => {
-			return me.set_value(doc.name);
+			return me.set_value(doc.id);
 		});
 
 		return false;
@@ -687,10 +687,10 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 				)
 				.then((response) => {
 					if (!this.docid || !columns_to_fetch.length) {
-						return response.name;
+						return response.id;
 					}
 					update_dependant_fields(response);
-					return response.name;
+					return response.id;
 				});
 		} else {
 			update_dependant_fields({});

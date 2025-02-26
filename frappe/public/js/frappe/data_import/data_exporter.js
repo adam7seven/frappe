@@ -201,7 +201,7 @@ frappe.data_import.DataExporter = class DataExporter {
 		let update_existing_records =
 			this.dialog.get_value("exporting_for") == "Update Existing Records";
 		this.dialog.$wrapper
-			.find(`:checkbox${update_existing_records ? ":not([data-unit=name])" : ""}`)
+			.find(`:checkbox${update_existing_records ? ":not([data-unit=id])" : ""}`)
 			.prop("checked", false)
 			.trigger("change");
 	}
@@ -280,7 +280,7 @@ frappe.data_import.DataExporter = class DataExporter {
 			if (autoid_field && df.fieldname == autoid_field.fieldname) {
 				return true;
 			}
-			if (df.fieldname === "name") {
+			if (df.fieldname === "id") {
 				return true;
 			}
 			return false;
@@ -288,7 +288,7 @@ frappe.data_import.DataExporter = class DataExporter {
 
 		return fields
 			.filter((df) => {
-				if (autoid_field && df.fieldname === "name") {
+				if (autoid_field && df.fieldname === "id") {
 					return false;
 				}
 				return true;
@@ -328,7 +328,7 @@ export function get_columns_for_picker(doctype) {
 	out[doctype] = [
 		{
 			label: __("ID"),
-			fieldname: "name",
+			fieldname: "id",
 			fieldtype: "Data",
 			reqd: 1,
 		},
@@ -343,7 +343,7 @@ export function get_columns_for_picker(doctype) {
 		out[df.fieldname] = [
 			{
 				label: __("ID"),
-				fieldname: "name",
+				fieldname: "id",
 				fieldtype: "Data",
 				reqd: 1,
 			},

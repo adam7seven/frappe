@@ -317,9 +317,9 @@ frappe.views.TreeView = class TreeView {
 					return !node.is_root && me.can_write && allow_reid;
 				},
 				click: function (node) {
-					frappe.model.rename_doc(me.doctype, node.label, function (new_name) {
-						node.$tree_link.find("a").text(new_name);
-						node.label = new_name;
+					frappe.model.rename_doc(me.doctype, node.label, function (new_id) {
+						node.$tree_link.find("a").text(new_id);
+						node.label = new_id;
 						me.tree.refresh();
 					});
 				},

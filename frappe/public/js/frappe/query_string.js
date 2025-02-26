@@ -1,7 +1,7 @@
 frappe.provide("frappe.utils");
 
-function get_url_arg(name) {
-	return get_query_params()[name] || "";
+function get_url_arg(id) {
+	return get_query_params()[id] || "";
 }
 
 function get_query_string(url) {

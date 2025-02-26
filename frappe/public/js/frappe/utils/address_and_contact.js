@@ -63,14 +63,14 @@ function new_record(doctype, frm) {
 	frappe.dynamic_link = {
 		doctype: frm.doc.doctype,
 		doc: frm.doc,
-		fieldname: "name",
+		fieldname: "id",
 	};
 
 	if (frappe.boot.enable_address_autocompletion === 1 && doctype === "Address") {
 		new frappe.ui.AddressAutocompleteDialog({
 			title: __("New Address"),
 			link_doctype: frm.doc.doctype,
-			link_name: frm.doc.name,
+			link_id: frm.doc.id,
 			after_insert: function (doc) {
 				frm.reload_doc();
 			},

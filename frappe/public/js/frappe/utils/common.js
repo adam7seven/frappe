@@ -423,7 +423,7 @@ frappe.utils.new_auto_repeat_prompt = function (frm) {
 				method: "frappe.automation.doctype.auto_repeat.auto_repeat.make_auto_repeat",
 				args: {
 					doctype: frm.doc.doctype,
-					docid: frm.doc.name,
+					docid: frm.doc.id,
 					frequency: values["frequency"],
 					start_date: values["start_date"],
 					end_date: values["end_date"],

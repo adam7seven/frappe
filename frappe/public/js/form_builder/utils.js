@@ -253,10 +253,10 @@ export function move_children_to_parent(props, parent, child, current_container)
 	let index = children.indexOf(props[child]);
 
 	if (index > 0) {
-		const name = parent.charAt(0).toUpperCase() + parent.slice(1);
+		const id = parent.charAt(0).toUpperCase() + parent.slice(1);
 		// move current children and children after that to a new column
 		let new_parent = {
-			df: store.get_df(name + " Break"),
+			df: store.get_df(id + " Break"),
 			[child + "s"]: children.splice(index),
 		};
 
@@ -268,7 +268,7 @@ export function move_children_to_parent(props, parent, child, current_container)
 		// remove current child and after that
 		children.splice(index + 1);
 
-		return new_parent.df.name;
+		return new_parent.df.id;
 	}
 }
 
@@ -319,7 +319,7 @@ export function scrub_field_names(fields) {
 
 export function clone_field(field) {
 	let cloned_field = JSON.parse(JSON.stringify(field));
-	cloned_field.df.name = frappe.utils.get_random(8);
+	cloned_field.df.id = frappe.utils.get_random(8);
 	return cloned_field;
 }
 

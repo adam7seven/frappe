@@ -61,7 +61,7 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
 	setup_defaults() {
 		return super.setup_defaults().then(() => {
 			let get_board_name = () => {
-				return this.kanbans.length && this.kanbans[0].name;
+				return this.kanbans.length && this.kanbans[0].id;
 			};
 
 			this.board_name = frappe.get_route()[3] || get_board_name() || null;
@@ -250,7 +250,7 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
 		}
 
 		if (!title_field) {
-			title_field = frappe.meta.get_field(this.doctype, "name");
+			title_field = frappe.meta.get_field(this.doctype, "id");
 		}
 
 		return {
@@ -290,9 +290,9 @@ frappe.views.KanbanView.get_kanbans = function (doctype) {
 		if (kanban_boards) {
 			kanban_boards.forEach((board) => {
 				let route = `/app/${frappe.router.slug(board.reference_doctype)}/view/kanban/${
-					board.name
+					board.id
 				}`;
-				kanbans.push({ name: board.name, route: route });
+				kanbans.push({ id: board.id, route: route });
 			});
 		}
 

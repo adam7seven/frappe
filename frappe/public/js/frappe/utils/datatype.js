@@ -47,7 +47,7 @@ window.validate_phone = function (txt) {
 };
 
 window.validate_name = function (txt) {
-	return frappe.utils.validate_type(txt, "name");
+	return frappe.utils.validate_type(txt, "id");
 };
 
 window.validate_url = function (txt) {

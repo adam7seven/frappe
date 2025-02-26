@@ -142,7 +142,7 @@ frappe.search.utils = {
 								search_result.marked_string,
 							]),
 							value: __("Find {0} in {1}", [__(parts[0]), __(item)]),
-							route_options: { name: ["like", "%" + parts[0] + "%"] },
+							route_options: { id: ["like", "%" + parts[0] + "%"] },
 							index: 1 + search_result.score,
 							route: ["List", item],
 						});
@@ -262,9 +262,9 @@ frappe.search.utils = {
 		var me = this;
 		var out = [];
 		this.pages = {};
-		$.each(frappe.boot.page_info, function (name, p) {
+		$.each(frappe.boot.page_info, function (id, p) {
 			me.pages[p.title] = p;
-			p.name = name;
+			p.id = id;
 		});
 		Object.keys(this.pages).forEach(function (item) {
 			if (item == "Hub" || item == "hub") return;
@@ -278,7 +278,7 @@ frappe.search.utils = {
 					value: __("Open {0}", [__(item)]),
 					match: item,
 					index: level,
-					route: [page.route || page.name],
+					route: [page.route || page.id],
 				});
 			}
 		});
@@ -318,15 +318,15 @@ frappe.search.utils = {
 		var me = this;
 		var out = [];
 		frappe.boot.allowed_workspaces.forEach(function (item) {
-			const search_result = me.fuzzy_search(keywords, item.name, true);
+			const search_result = me.fuzzy_search(keywords, item.id, true);
 			var level = search_result.score;
 			if (level > 0) {
 				var ret = {
 					type: "Workspace",
-					label: __("Open {0}", [search_result.marked_string || __(item.name)]),
-					value: __("Open {0}", [__(item.name)]),
+					label: __("Open {0}", [search_result.marked_string || __(item.id)]),
+					value: __("Open {0}", [__(item.id)]),
 					index: level,
-					route: [frappe.router.slug(item.name)],
+					route: [frappe.router.slug(item.id)],
 				};
 
 				out.push(ret);
@@ -339,15 +339,15 @@ frappe.search.utils = {
 		var me = this;
 		var out = [];
 		frappe.boot.dashboards.forEach(function (item) {
-			const search_result = me.fuzzy_search(keywords, item.name, true);
+			const search_result = me.fuzzy_search(keywords, item.id, true);
 			var level = search_result.score;
 			if (level > 0) {
 				var ret = {
 					type: "Dashboard",
-					label: __("{0} Dashboard", [search_result.marked_string || __(item.name)]),
-					value: __("{0} Dashboard", [__(item.name)]),
+					label: __("{0} Dashboard", [search_result.marked_string || __(item.id)]),
+					value: __("{0} Dashboard", [__(item.id)]),
 					index: level,
-					route: ["dashboard-view", item.name],
+					route: ["dashboard-view", item.id],
 				};
 
 				out.push(ret);
@@ -368,7 +368,7 @@ frappe.search.utils = {
 				});
 			}
 
-			function make_description(content, doc_name) {
+			function make_description(content, doc_id) {
 				var parts = content.split(" ||| ");
 				var result_max_length = 300;
 				var field_length = 120;
@@ -407,16 +407,16 @@ frappe.search.utils = {
 						// Find remaining result_length and add field length to result_current_length
 						var remaining_length = result_max_length - result_current_length;
 						result_current_length += field_name.length + field_value.length + 2;
-						const search_result_name = me.fuzzy_search(keywords, field_name, true);
+						const search_result_id = me.fuzzy_search(keywords, field_name, true);
 						const search_result_value = me.fuzzy_search(keywords, field_value, true);
 						if (result_current_length < result_max_length) {
 							// We have room, push the entire field
 							field_text =
 								'<span class="field-name text-muted">' +
-								search_result_name.marked_string +
+								search_result_id.marked_string +
 								": </span> " +
 								search_result_value.marked_string;
-							if (fields.indexOf(field_text) === -1 && doc_name !== field_value) {
+							if (fields.indexOf(field_text) === -1 && doc_id !== field_value) {
 								fields.push(field_text);
 							}
 						} else {
@@ -426,7 +426,7 @@ frappe.search.utils = {
 								remaining_length -= field_name.length;
 								field_text =
 									'<span class="field-name text-muted">' +
-									search_result_name.marked_string +
+									search_result_id.marked_string +
 									": </span> ";
 								field_value = field_value.slice(0, remaining_length);
 								field_value =
@@ -447,10 +447,10 @@ frappe.search.utils = {
 			data.forEach(function (d) {
 				// more properties
 				result = {
-					label: d.title || d.name, // show title if exists
-					value: d.name,
-					description: make_description(d.content, d.name),
-					route: ["Form", d.doctype, d.name],
+					label: d.title || d.id, // show title if exists
+					value: d.id,
+					description: make_description(d.content, d.id),
+					route: ["Form", d.doctype, d.id],
 				};
 				if (d.image || d.image === null) {
 					result.image = d.image;
@@ -647,7 +647,7 @@ frappe.search.utils = {
 		}
 
 		this.searchable_functions.push({
-			label: label || _function.name,
+			label: label || _function.id,
 			action: _function,
 			args: args,
 		});
@@ -664,7 +664,7 @@ frappe.search.utils = {
 					index: search_result.score * 0.8,
 					route: [
 						`https://frappecloud.com/${item.route}?utm_source=awesomebar`,
-						item.name,
+						item.id,
 					],
 				};
 

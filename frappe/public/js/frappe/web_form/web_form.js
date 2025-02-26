@@ -149,7 +149,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 	}
 
 	set_field_values() {
-		if (this.doc.name) this.set_values(this.doc);
+		if (this.doc.id) this.set_values(this.doc);
 		else return;
 	}
 
@@ -373,7 +373,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 
 		Object.assign(this.doc, doc_values);
 		this.doc.doctype = this.doc_type;
-		this.doc.web_form_name = this.name;
+		this.doc.web_form_name = this.id;
 
 		// Save
 		window.saving = true;
@@ -384,7 +384,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 			method: "frappe.website.doctype.web_form.web_form.accept",
 			args: {
 				data: this.doc,
-				web_form: this.name,
+				web_form: this.id,
 				for_payment,
 			},
 			btn: $("btn-primary"),
@@ -404,7 +404,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 							args: {
 								file_url: response.message.attachment || response.message.file,
 								doctype: response.message.doctype,
-								docid: response.message.name,
+								docid: response.message.id,
 							},
 						});
 					}
@@ -442,17 +442,17 @@ export default class WebForm extends frappe.ui.FieldGroup {
 	}
 
 	render_success_page(data) {
-		if (this.allow_edit && data.name) {
+		if (this.allow_edit && data.id) {
 			$(".success-footer").append(`
-				<a href="/${this.route}/${data.name}/edit" class="edit-button btn btn-default btn-md">
+				<a href="/${this.route}/${data.id}/edit" class="edit-button btn btn-default btn-md">
 					${__("Edit your response", null, "Button in web form")}
 				</a>
 			`);
 		}
 
-		if (this.login_required && !this.allow_multiple && !this.show_list && data.name) {
+		if (this.login_required && !this.allow_multiple && !this.show_list && data.id) {
 			$(".success-footer").append(`
-				<a href="/${this.route}/${data.name}" class="view-button btn btn-default btn-md">
+				<a href="/${this.route}/${data.id}" class="view-button btn btn-default btn-md">
 					${__("View your response", null, "Button in web form")}
 				</a>
 			`);

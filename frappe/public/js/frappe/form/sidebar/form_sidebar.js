@@ -139,7 +139,7 @@ frappe.ui.form.Sidebar = class {
 				args: {
 					doctype: "Auto Repeat",
 					filters: {
-						name: this.frm.doc.auto_repeat,
+						id: this.frm.doc.auto_repeat,
 					},
 					fieldname: ["frequency"],
 				},
@@ -231,7 +231,7 @@ frappe.ui.form.Sidebar = class {
 			method: "frappe.desk.form.load.get_docinfo",
 			args: {
 				doctype: this.frm.doctype,
-				name: this.frm.docid,
+				id: this.frm.docid,
 			},
 			callback: (r) => {
 				// docinfo will be synced

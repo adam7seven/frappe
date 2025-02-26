@@ -23,9 +23,9 @@ export default class BulkOperations {
 					frappe.user.has_role("Administrator")
 				);
 			})
-			.map((doc) => doc.name);
+			.map((doc) => doc.id);
 
-		const invalid_docs = docs.filter((doc) => !valid_docs.includes(doc.name));
+		const invalid_docs = docs.filter((doc) => !valid_docs.includes(doc.id));
 
 		if (invalid_docs.length > 0) {
 			frappe.msgprint(__("You selected Draft or Cancelled documents"));
@@ -117,7 +117,7 @@ export default class BulkOperations {
 				frappe
 					.call("frappe.utils.print_format.download_multi_pdf_async", {
 						doctype: this.doctype,
-						name: json_string,
+						id: json_string,
 						format: print_format,
 						no_letterhead: with_letterhead ? "0" : "1",
 						letterhead: letterhead,
@@ -145,7 +145,7 @@ export default class BulkOperations {
 					"/api/method/frappe.utils.print_format.download_multi_pdf?" +
 						"doctype=" +
 						encodeURIComponent(this.doctype) +
-						"&name=" +
+						"&id=" +
 						encodeURIComponent(json_string) +
 						"&format=" +
 						encodeURIComponent(print_format) +
@@ -172,7 +172,7 @@ export default class BulkOperations {
 			method: "frappe.client.get_list",
 			args: {
 				doctype: "Letter Head",
-				fields: ["name", "is_default"],
+				fields: ["id", "is_default"],
 				filters: { disabled: 0 },
 				limit_page_length: 0,
 			},
@@ -181,9 +181,9 @@ export default class BulkOperations {
 				if (r.message) {
 					r.message.forEach((letterhead) => {
 						if (letterhead.is_default) {
-							letterhead_options.unshift(letterhead.name);
+							letterhead_options.unshift(letterhead.id);
 						} else {
-							letterhead_options.push(letterhead.name);
+							letterhead_options.push(letterhead.id);
 						}
 					});
 				}
@@ -245,7 +245,7 @@ export default class BulkOperations {
 					method: "frappe.desk.form.assign_to.remove_multiple",
 					args: {
 						doctype: this.doctype,
-						names: docids,
+						ids: docids,
 						ignore_permissions: true,
 					},
 					freeze: true,
@@ -464,7 +464,7 @@ export default class BulkOperations {
 			);
 			data_exporter.dialog.set_value("export_records", "by_filter");
 			data_exporter.filter_group.add_filters_to_filter_group([
-				[doctype, "name", "in", docids, false],
+				[doctype, "id", "in", docids, false],
 			]);
 		});
 	}

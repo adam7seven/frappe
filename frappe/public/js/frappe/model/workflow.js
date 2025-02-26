@@ -50,10 +50,10 @@ frappe.workflow = {
 	is_self_approval_enabled: function (doctype) {
 		return frappe.workflow.workflows[doctype].allow_self_approval;
 	},
-	is_read_only: function (doctype, name) {
+	is_read_only: function (doctype, id) {
 		var state_fieldname = frappe.workflow.get_state_fieldname(doctype);
 		if (state_fieldname) {
-			var doc = locals[doctype][name];
+			var doc = locals[doctype][id];
 			if (!doc) return false;
 			if (doc.__islocal) return false;
 

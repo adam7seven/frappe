@@ -1,16 +1,8 @@
 <template>
-	<div
-		:class="['column', selected ? 'selected' : hovered ? 'hovered' : '']"
-		:title="column.df.fieldname"
-		@click.stop="store.form.selected_field = column.df"
-		@mouseover.stop="hovered = true"
-		@mouseout.stop="hovered = false"
-	>
-		<div
-			v-if="column.df.label"
-			class="column-header"
-			:hidden="!column.df.label && store.read_only"
-		>
+	<div :class="['column', selected ? 'selected' : hovered ? 'hovered' : '']" :title="column.df.fieldname"
+		@click.stop="store.form.selected_field = column.df" @mouseover.stop="hovered = true"
+		@mouseout.stop="hovered = false">
+		<div v-if="column.df.label" class="column-header" :hidden="!column.df.label && store.read_only">
 			<div class="column-label">
 				<span>{{ __(column.df.label) }}</span>
 			</div>
@@ -18,22 +10,12 @@
 		<div v-if="column.df.description" class="column-description">
 			{{ __(column.df.description) }}
 		</div>
-		<draggable
-			class="column-container"
-			v-model="column.fields"
-			group="fields"
-			:delay="is_touch_screen_device() ? 200 : 0"
-			:animation="200"
-			:easing="store.get_animation"
-			item-key="id"
-			:disabled="store.read_only"
-		>
+		<draggable class="column-container" v-model="column.fields" group="fields"
+			:delay="is_touch_screen_device() ? 200 : 0" :animation="200" :easing="store.get_animation" item-key="id"
+			:disabled="store.read_only">
 			<template #item="{ element }">
-				<Field
-					:column="column"
-					:field="element"
-					:data-is-user-generated="store.is_user_generated_field(element)"
-				/>
+				<Field :column="column" :field="element"
+					:data-is-user-generated="store.is_user_generated_field(element)" />
 			</template>
 		</draggable>
 		<div class="empty-column" :hidden="store.read_only">
@@ -46,27 +28,27 @@
 </template>
 
 <script setup>
-import draggable from "vuedraggable";
-import Field from "./Field.vue";
-import AddFieldButton from "./AddFieldButton.vue";
-import { computed, ref } from "vue";
-import { useStore } from "../store";
-import { is_touch_screen_device } from "../utils";
-import { useMagicKeys, whenever } from "@vueuse/core";
+	import draggable from "vuedraggable";
+	import Field from "./Field.vue";
+	import AddFieldButton from "./AddFieldButton.vue";
+	import { computed, ref } from "vue";
+	import { useStore } from "../store";
+	import { is_touch_screen_device } from "../utils";
+	import { useMagicKeys, whenever } from "@vueuse/core";
 
-const props = defineProps(["section", "column"]);
-const store = useStore();
+	const props = defineProps(["section", "column"]);
+	const store = useStore();
 
-// delete/backspace to delete the field
-const { Backspace } = useMagicKeys();
-whenever(Backspace, (value) => {
-	if (value && selected.value && store.not_using_input) {
-		remove_column();
-	}
-});
+	// delete/backspace to delete the field
+	const { Backspace } = useMagicKeys();
+	whenever(Backspace, (value) => {
+		if (value && selected.value && store.not_using_input) {
+			remove_column();
+		}
+	});
 
-const hovered = ref(false);
-const selected = computed(() => store.selected(props.column.df.name));
+	const hovered = ref(false);
+	const selected = computed(() => store.selected(props.column.df.id));
 </script>
 
 <style lang="scss" scoped>
@@ -141,7 +123,8 @@ const selected = computed(() => store.selected(props.column.df.name));
 
 		&:empty {
 			flex: 1;
-			& + .empty-column {
+
+			&+.empty-column {
 				display: flex;
 				justify-content: center;
 				flex-direction: column;
@@ -165,7 +148,7 @@ const selected = computed(() => store.selected(props.column.df.name));
 			}
 		}
 
-		& + .empty-column {
+		&+.empty-column {
 			display: none;
 		}
 	}

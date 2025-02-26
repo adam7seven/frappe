@@ -124,7 +124,7 @@ export default class GridRowForm {
 		const field = this.fields_dict[fieldname];
 		if (!field) return;
 
-		field.docid = this.row.doc.name;
+		field.docid = this.row.doc.id;
 		field.refresh();
 		this.layout && this.layout.refresh_dependency();
 	}

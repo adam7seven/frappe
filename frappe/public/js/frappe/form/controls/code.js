@@ -145,7 +145,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
 							a = { value: a };
 						}
 						return {
-							name: "frappe",
+							id: "frappe",
 							value: a.value,
 							score: a.score,
 							meta: a.meta,

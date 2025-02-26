@@ -82,7 +82,7 @@ frappe.views.RenderPreviewer = class RenderPreviewer {
 					frappe
 						.xcall("run_doc_method", {
 							dt: me.doc.doctype,
-							dn: me.doc.name,
+							dn: me.doc.id,
 							method: spec.method,
 							arg: preview_document,
 						})

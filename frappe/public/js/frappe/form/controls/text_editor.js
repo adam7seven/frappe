@@ -231,8 +231,7 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 			mentionDenotationChars: ["@"],
 			isolateCharacter: true,
 			source: frappe.utils.debounce(async function (search_term, renderList) {
-				let method =
-					me.mention_search_method || "frappe.desk.search.get_names_for_mentions";
+				let method = me.mention_search_method || "frappe.desk.search.get_ids_for_mentions";
 				let values = await frappe.xcall(method, {
 					search_term,
 				});

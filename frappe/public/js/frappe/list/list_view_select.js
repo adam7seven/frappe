@@ -160,10 +160,10 @@ frappe.views.ListViewSelect = class ListViewSelect {
 		} else {
 			const page_name = this.get_page_name();
 			items.map((item) => {
-				if (item.name.toLowerCase() == page_name.toLowerCase()) {
-					placeholder = item.name;
+				if (item.id.toLowerCase() == page_name.toLowerCase()) {
+					placeholder = item.id;
 				} else {
-					html += `<li><a class="dropdown-item" href="${item.route}">${item.name}</a></li>`;
+					html += `<li><a class="dropdown-item" href="${item.route}">${item.id}</a></li>`;
 				}
 			});
 		}
@@ -190,8 +190,8 @@ frappe.views.ListViewSelect = class ListViewSelect {
 		kanbans.map((k) => {
 			this.page.add_custom_menu_item(
 				kanban_switcher,
-				k.name,
-				() => this.set_route("kanban", k.name),
+				k.id,
+				() => this.set_route("kanban", k.id),
 				false
 			);
 		});
@@ -225,13 +225,13 @@ frappe.views.ListViewSelect = class ListViewSelect {
 							? `/app/list/${r.ref_doctype}/report`
 							: "/app/query-report";
 
-					const route = r.route || report_type + "/" + (r.title || r.name);
+					const route = r.route || report_type + "/" + (r.title || r.id);
 
 					if (added.indexOf(route) === -1) {
 						// don't repeat
 						added.push(route);
 						reports_to_add.push({
-							name: __(r.title || r.name),
+							id: __(r.title || r.id),
 							route: route,
 						});
 					}
@@ -258,18 +258,13 @@ frappe.views.ListViewSelect = class ListViewSelect {
 
 	setup_kanban_boards() {
 		function fetch_kanban_board(doctype) {
-			frappe.db.get_value(
-				"Kanban Board",
-				{ reference_doctype: doctype },
-				"name",
-				(board) => {
-					if (!$.isEmptyObject(board)) {
-						frappe.set_route("list", doctype, "kanban", board.name);
-					} else {
-						frappe.views.KanbanView.show_kanban_dialog(doctype);
-					}
+			frappe.db.get_value("Kanban Board", { reference_doctype: doctype }, "id", (board) => {
+				if (!$.isEmptyObject(board)) {
+					frappe.set_route("list", doctype, "kanban", board.id);
+				} else {
+					frappe.views.KanbanView.show_kanban_dialog(doctype);
 				}
-			);
+			});
 		}
 
 		const last_opened_kanban =
@@ -303,14 +298,14 @@ frappe.views.ListViewSelect = class ListViewSelect {
 				if (frappe.views.calendar[this.doctype]) {
 					// has standard calendar view
 					calendars.push({
-						name: "Default",
+						id: "Default",
 						route: `/app/${this.slug()}/view/calendar/default`,
 					});
 				}
 				result.map((calendar) => {
 					calendars.push({
-						name: calendar.name,
-						route: `/app/${this.slug()}/view/calendar/${calendar.name}`,
+						id: calendar.id,
+						route: `/app/${this.slug()}/view/calendar/${calendar.id}`,
 					});
 				});
 
@@ -332,7 +327,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 				: account.email_account;
 
 			accounts_to_add.push({
-				name: display_name,
+				id: display_name,
 				route: route,
 			});
 		});

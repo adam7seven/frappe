@@ -13,14 +13,14 @@ Object.assign(frappe.energy_points, {
 		const separator = `<span>&nbsp;-&nbsp;</span>`;
 		return `<span>
   			<!--${this.get_points(log.points)}&nbsp;-->
-  			<a href="/app/energy-point-log/${log.name}">${this.get_form_log_message(log)}</a>
+  			<a href="/app/energy-point-log/${log.id}">${this.get_form_log_message(log)}</a>
   			${log.reason ? separator + log.reason : ""}
   		</span>`;
 	},
 	format_history_log(log) {
 		// redundant code to honor readability and to avoid confusion
 		const separator = `<span>&nbsp;-&nbsp;</span>`;
-		const route = frappe.utils.get_form_link(log.reference_doctype, log.reference_name);
+		const route = frappe.utils.get_form_link(log.reference_doctype, log.reference_id);
 		return `<div class="flex">
   			<span class="${log.points >= 0 ? "green" : "red"} mr-2">
   				${this.get_points(log.points)}

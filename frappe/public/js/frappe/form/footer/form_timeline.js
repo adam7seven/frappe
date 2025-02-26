@@ -214,7 +214,7 @@ class FormTimeline extends BaseTimeline {
 			let load_more_button = {
 				creation: last_communication_time,
 				content: __("Load More Communications", null, "Form timeline"),
-				name: "load-more",
+				id: "load-more",
 			};
 			all_communications.push(load_more_button);
 		}
@@ -240,8 +240,8 @@ class FormTimeline extends BaseTimeline {
 				is_card: true,
 				content: this.get_communication_timeline_content(communication),
 				doctype: "Communication",
-				id: `communication-${communication.name}`,
-				name: communication.name,
+				id: `communication-${communication.id}`,
+				name: communication.id,
 			});
 		});
 
@@ -256,7 +256,7 @@ class FormTimeline extends BaseTimeline {
 			method: "frappe.desk.form.load.get_communications",
 			args: {
 				doctype: this.doc_info.doctype,
-				name: this.doc_info.name,
+				id: this.doc_info.id,
 				start: start,
 				limit: 21,
 			},
@@ -280,7 +280,7 @@ class FormTimeline extends BaseTimeline {
 	}
 
 	get_communication_timeline_content(doc, allow_reply = true) {
-		doc._url = frappe.utils.get_form_link("Communication", doc.name);
+		doc._url = frappe.utils.get_form_link("Communication", doc.id);
 		this.set_communication_doc_status(doc);
 		if (doc.attachments && typeof doc.attachments === "string") {
 			doc.attachments = JSON.parse(doc.attachments);
@@ -321,7 +321,7 @@ class FormTimeline extends BaseTimeline {
 				is_card: true,
 				content: this.get_communication_timeline_content(message, false),
 				doctype: "Communication",
-				name: message.name,
+				id: message.id,
 			});
 		});
 		return auto_messages_timeline_contents;
@@ -342,8 +342,8 @@ class FormTimeline extends BaseTimeline {
 			creation: comment.creation,
 			is_card: true,
 			doctype: "Comment",
-			id: `comment-${comment.name}`,
-			name: comment.name,
+			id: `comment-${comment.id}`,
+			name: comment.id,
 			content: this.get_comment_timeline_content(comment),
 		};
 	}
@@ -618,7 +618,7 @@ class FormTimeline extends BaseTimeline {
 						${__("Delete")}
 					</a>
 				</li>
-			`).click(() => this.delete_comment(doc.name));
+			`).click(() => this.delete_comment(doc.id));
 			more_actions_wrapper.find(".dropdown-menu").append(delete_option);
 		}
 
@@ -638,7 +638,7 @@ class FormTimeline extends BaseTimeline {
 			edit_box.quill.enable(false);
 
 			doc.content = value;
-			this.update_comment(doc.name, value)
+			this.update_comment(doc.id, value)
 				.then(edit_button.toggle_edit_mode)
 				.finally(() => {
 					edit_button.prop("disabled", false);
@@ -686,12 +686,10 @@ class FormTimeline extends BaseTimeline {
 		});
 	}
 
-	update_comment(name, content) {
-		return frappe
-			.xcall("frappe.desk.form.utils.update_comment", { name, content })
-			.then(() => {
-				frappe.utils.play_sound("click");
-			});
+	update_comment(id, content) {
+		return frappe.xcall("frappe.desk.form.utils.update_comment", { id, content }).then(() => {
+			frappe.utils.play_sound("click");
+		});
 	}
 
 	get_last_email(from_recipient) {
@@ -717,12 +715,12 @@ class FormTimeline extends BaseTimeline {
 		return filtered_records[0] || null;
 	}
 
-	delete_comment(comment_name) {
+	delete_comment(comment_id) {
 		frappe.confirm(__("Delete comment?"), () => {
 			return frappe
 				.xcall("frappe.client.delete", {
 					doctype: "Comment",
-					name: comment_name,
+					id: comment_id,
 				})
 				.then(() => {
 					frappe.utils.play_sound("delete");

@@ -22,7 +22,7 @@ frappe.ui.form.ControlTable = class ControlTable extends frappe.ui.form.Control 
 			const grid_pagination = grid.grid_pagination;
 			const grid_rows = grid.grid_rows;
 			const doctype = grid.doctype;
-			const row_docid = $(e.target).closest(".grid-row").data("name");
+			const row_docid = $(e.target).closest(".grid-row").data("id");
 			const in_grid_form = $(e.target).closest(".form-in-grid").length;
 			const value_formatter_map = {
 				Date: (val) => (val ? frappe.datetime.user_to_str(val) : val),
@@ -82,7 +82,7 @@ frappe.ui.form.ControlTable = class ControlTable extends frappe.ui.form.Control 
 							grid_pagination.go_to_page(grid_pagination.page_index + 1);
 						}
 
-						const row_name = grid_rows[row_idx - 1].doc.name;
+						const row_id = grid_rows[row_idx - 1].doc.id;
 						row.forEach((value, data_index) => {
 							if (fieldnames[data_index]) {
 								// format value before setting
@@ -91,7 +91,7 @@ frappe.ui.form.ControlTable = class ControlTable extends frappe.ui.form.Control 
 									: value;
 								frappe.model.set_value(
 									doctype,
-									row_name,
+									row_id,
 									fieldnames[data_index],
 									value
 								);

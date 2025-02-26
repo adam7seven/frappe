@@ -45,7 +45,7 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 		L.control.scale().addTo(this.map);
 		if (this.coords.features && this.coords.features.length) {
 			this.coords.features.forEach((coords) =>
-				L.geoJSON(coords).bindPopup(coords.properties.name).addTo(this.map)
+				L.geoJSON(coords).bindPopup(coords.properties.id).addTo(this.map)
 			);
 			let lastCoords = this.coords.features[0].geometry.coordinates.reverse();
 			this.map.panTo(lastCoords, 8);

@@ -202,7 +202,7 @@ frappe.form.formatters = {
 					frappe.router.slug(doctype)
 				)}/${encodeURIComponent(original_value)}`;
 				a.dataset.doctype = doctype;
-				a.dataset.name = original_value;
+				a.dataset.id = original_value;
 				a.dataset.value = original_value;
 				a.innerText = __((options && options.label) || link_title || value);
 				return a.outerHTML;

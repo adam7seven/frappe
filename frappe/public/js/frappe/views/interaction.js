@@ -34,7 +34,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 				me.render_attach();
 
 				// check latest added
-				checked_items.push(attachment.name);
+				checked_items.push(attachment.id);
 
 				$.each(checked_items, function (i, filename) {
 					wrapper.find('[data-file-name="' + filename + '"]').prop("checked", true);
@@ -183,7 +183,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 				$(
 					repl(
 						'<p class="checkbox">' +
-							'<label><span><input type="checkbox" data-file-name="%(name)s"></input></span>' +
+							'<label><span><input type="checkbox" data-file-name="%(id)s"></input></span>' +
 							'<span class="small">%(file_name)s</span>' +
 							' <a href="%(file_url)s" target="_blank" class="text-muted small">' +
 							'<i class="fa fa-share" style="vertical-align: middle; margin-left: 3px;"></i>' +
@@ -217,7 +217,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 		let values = this.dialog.get_values(true);
 		if (values) {
 			values["reference_doctype"] = me.frm.doc.doctype;
-			values["reference_document"] = me.frm.doc.name;
+			values["reference_document"] = me.frm.doc.id;
 		}
 
 		return values;
@@ -285,7 +285,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 			method: "frappe.desk.form.assign_to.add",
 			args: {
 				doctype: doc.doctype,
-				name: doc.name,
+				id: doc.id,
 				assign_to: JSON.stringify([assignee]),
 			},
 			callback: function (r) {
@@ -311,7 +311,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 			method: "frappe.utils.file_manager.add_attachments",
 			args: {
 				doctype: doc.doctype,
-				name: doc.name,
+				id: doc.id,
 				attachments: JSON.stringify(attachments),
 			},
 			callback: function (r) {
@@ -351,7 +351,7 @@ function get_doc_mappings() {
 				description: "description",
 				due_date: "date",
 				reference_doctype: "reference_type",
-				reference_document: "reference_name",
+				reference_document: "reference_id",
 				assigned_to: "allocated_to",
 			},
 			reqd_fields: ["description"],

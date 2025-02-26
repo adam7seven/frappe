@@ -20,7 +20,7 @@ frappe.ui.form.Attachments = class Attachments {
 			frappe.open_in_new_tab = true;
 			frappe.set_route("List", "File", {
 				attached_to_doctype: this.frm.doctype,
-				attached_to_name: this.frm.docid,
+				attached_to_id: this.frm.docid,
 			});
 		});
 
@@ -115,7 +115,7 @@ frappe.ui.form.Attachments = class Attachments {
 	add_attachment(attachment) {
 		var file_name = attachment.file_name;
 		var file_url = this.get_file_url(attachment);
-		var fileid = attachment.name;
+		var fileid = attachment.id;
 		if (!file_name) {
 			file_name = file_url;
 		}
@@ -130,18 +130,18 @@ frappe.ui.form.Attachments = class Attachments {
 			</a>`;
 
 		let remove_action = null;
-		if (frappe.model.can_write(this.frm.doctype, this.frm.name)) {
+		if (frappe.model.can_write(this.frm.doctype, this.frm.id)) {
 			remove_action = function (target_id) {
 				frappe.confirm(__("Are you sure you want to delete the attachment?"), function () {
 					let target_attachment = me
 						.get_attachments()
-						.find((attachment) => attachment.name === target_id);
+						.find((attachment) => attachment.id === target_id);
 					let to_be_removed = me
 						.get_attachments()
 						.filter(
 							(attachment) => attachment.file_name === target_attachment.file_name
 						);
-					to_be_removed.forEach((attachment) => me.remove_attachment(attachment.name));
+					to_be_removed.forEach((attachment) => me.remove_attachment(attachment.id));
 				});
 				return false;
 			};
@@ -172,7 +172,7 @@ frappe.ui.form.Attachments = class Attachments {
 		var fid;
 		$.each(this.get_attachments(), function (i, attachment) {
 			if (attachment.file_url === file_url) {
-				fid = attachment.name;
+				fid = attachment.id;
 				return false;
 			}
 		});
@@ -248,7 +248,7 @@ frappe.ui.form.Attachments = class Attachments {
 		}
 	}
 	update_attachment(attachment) {
-		if (attachment.name) {
+		if (attachment.id) {
 			this.add_to_attachments(attachment);
 			this.refresh();
 		}
@@ -257,7 +257,7 @@ frappe.ui.form.Attachments = class Attachments {
 		var form_attachments = this.get_attachments();
 		for (var i in form_attachments) {
 			// prevent duplicate
-			if (form_attachments[i]["name"] === attachment.name) return;
+			if (form_attachments[i]["id"] === attachment.id) return;
 		}
 		form_attachments.push(attachment);
 	}
@@ -265,7 +265,7 @@ frappe.ui.form.Attachments = class Attachments {
 		var attachments = this.get_attachments();
 		var new_attachments = [];
 		$.each(attachments, function (i, attachment) {
-			if (attachment.name != fileid) {
+			if (attachment.id != fileid) {
 				new_attachments.push(attachment);
 			}
 		});

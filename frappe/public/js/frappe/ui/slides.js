@@ -11,7 +11,7 @@ frappe.ui.Slide = class Slide {
 
 	setup() {
 		this.$wrapper = $('<div class="slide-wrapper hidden"></div>')
-			.attr({ "data-slide-id": this.id, "data-slide-name": this.name })
+			.attr({ "data-slide-id": this.id, "data-slide-name": this.id })
 			.appendTo(this.parent);
 	}
 

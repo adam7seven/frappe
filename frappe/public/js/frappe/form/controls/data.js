@@ -183,7 +183,7 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
 			((this.meta.autoid &&
 				this.meta.autoid.substr(0, 6) === "field:" &&
 				this.meta.autoid.substr(6) === this.df.fieldname) ||
-				this.df.fieldname === "__newname")
+				this.df.fieldname === "__newid")
 		) {
 			this.$input.on("keyup", () => {
 				this.set_description("");
@@ -193,15 +193,15 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
 						// clear any pending calls
 						if (this.last_check) clearTimeout(this.last_check);
 
-						// check if name exists
+						// check if id exists
 						frappe.db.get_value(
 							this.doctype,
 							this.$input.val(),
-							"name",
+							"id",
 							(val) => {
-								if (val && val.name) {
+								if (val && val.id) {
 									this.set_description(
-										__("{0} already exists. Select another name", [val.name])
+										__("{0} already exists. Select another id", [val.id])
 									);
 								}
 							},
@@ -268,7 +268,7 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
 			this.df.invalid = !validate_phone(v);
 			return v;
 		} else if (this.df.options == "Name") {
-			this.df.invalid = !validate_name(v);
+			this.df.invalid = !validate_id(v);
 			return v;
 		} else if (this.df.options == "Email") {
 			var email_list = frappe.utils.split_emails(v);

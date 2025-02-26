@@ -266,7 +266,7 @@ class NotificationsView extends BaseNotificationsView {
 
 		let item_html = $(`<a class="recent-item notification-item ${read_class}"
 				href="${doc_link}"
-				data-name="${notification_log.name}"
+				data-id="${notification_log.id}"
 			>
 				<div class="notification-body">
 					${user_avatar}
@@ -282,12 +282,12 @@ class NotificationsView extends BaseNotificationsView {
 			mark_btn.on("click", (e) => {
 				e.preventDefault();
 				e.stopImmediatePropagation();
-				this.mark_as_read(notification_log.name, item_html);
+				this.mark_as_read(notification_log.id, item_html);
 			});
 		}
 
 		item_html.on("click", () => {
-			!notification_log.read && this.mark_as_read(notification_log.name, item_html);
+			!notification_log.read && this.mark_as_read(notification_log.id, item_html);
 			this.notifications_icon.trigger("click");
 		});
 
@@ -340,9 +340,9 @@ class NotificationsView extends BaseNotificationsView {
 		const link_doctype = notification_doc.document_type
 			? notification_doc.document_type
 			: "Notification Log";
-		const link_docid = notification_doc.document_name
-			? notification_doc.document_name
-			: notification_doc.name;
+		const link_docid = notification_doc.document_id
+			? notification_doc.document_id
+			: notification_doc.id;
 		return frappe.utils.get_form_link(link_doctype, link_docid);
 	}
 
@@ -428,7 +428,7 @@ class EventsView extends BaseNotificationsView {
 					location = `, ${event.location}`;
 				}
 
-				return `<a class="recent-item event" href="/app/event/${event.name}">
+				return `<a class="recent-item event" href="/app/event/${event.id}">
 					<div class="event-border" style="border-color: ${event.color}"></div>
 					<div class="event-item">
 						<div class="event-subject">${event.subject}</div>
@@ -476,7 +476,7 @@ class ChangelogFeedView extends BaseNotificationsView {
 
 				const item_html = `<a class="recent-item notification-item"
 								href="${changelog_feed_item.link}"
-								data-name="${changelog_feed_item.title}"
+								data-id="${changelog_feed_item.title}"
 								target="_blank" rel="noopener noreferrer"
 							>
 							<div class="notification-body">

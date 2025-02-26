@@ -105,7 +105,7 @@ frappe.views.InboxView = class InboxView extends frappe.views.ListView {
 		let link = "";
 		if (email.reference_doctype && email.reference_doctype !== this.doctype) {
 			link = `<a class="text-muted grey"
-				href="${frappe.utils.get_form_link(email.reference_doctype, email.reference_name)}"
+				href="${frappe.utils.get_form_link(email.reference_doctype, email.reference_id)}"
 				title="${__("Linked with {0}", [email.reference_doctype])}">
 				<i class="fa fa-link fa-large"></i>
 			</a>`;

@@ -210,7 +210,7 @@ export default class OnboardingWidget extends Widget {
 
 	open_report(step) {
 		let route = frappe.utils.generate_route({
-			name: step.reference_report,
+			id: step.reference_report,
 			type: "report",
 			is_query_report: step.report_type !== "Report Builder",
 			doctype: step.report_reference_doctype,
@@ -273,8 +273,8 @@ export default class OnboardingWidget extends Widget {
 					},
 				});
 			};
-			const tour_name = step.form_tour;
-			frm.tour.init({ tour_name, on_finish }).then(() => frm.tour.start());
+			const tour_id = step.form_tour;
+			frm.tour.init({ tour_id, on_finish }).then(() => frm.tour.start());
 		};
 
 		frappe.set_route(route);
@@ -366,8 +366,8 @@ export default class OnboardingWidget extends Widget {
 					this.mark_complete(step);
 				};
 			};
-			const tour_name = step.form_tour;
-			frm.tour.init({ tour_name, on_finish }).then(() => frm.tour.start());
+			const tour_id = step.form_tour;
+			frm.tour.init({ tour_id, on_finish }).then(() => frm.tour.start());
 		};
 
 		let callback = () => {
@@ -493,7 +493,7 @@ export default class OnboardingWidget extends Widget {
 
 		frappe
 			.call("frappe.desk.desktop.update_onboarding_step", {
-				name: step.name,
+				id: step.id,
 				field: status,
 				value: value,
 			})
@@ -620,7 +620,7 @@ export default class OnboardingWidget extends Widget {
 
 		if (message.first_document) {
 			await frappe.db.get_list(doctype, { order_by: "creation" }).then((res) => {
-				if (Array.isArray(res) && res.length) docid = res[0].name;
+				if (Array.isArray(res) && res.length) docid = res[0].id;
 			});
 		}
 

@@ -113,9 +113,9 @@ frappe.router = {
 		}
 		if (frappe.boot.doctype_layouts) {
 			for (let doctype_layout of frappe.boot.doctype_layouts) {
-				this.routes[this.slug(doctype_layout.name)] = {
+				this.routes[this.slug(doctype_layout.id)] = {
 					doctype: doctype_layout.document_type,
-					doctype_layout: doctype_layout.name,
+					doctype_layout: doctype_layout.id,
 				};
 			}
 		}
@@ -165,15 +165,15 @@ frappe.router = {
 		// /app/event/view/calendar/default = ["List", "Event", "Calendar", "Default"]
 		if (frappe.workspaces[route[0]]) {
 			// public workspace
-			route = ["Workspaces", frappe.workspaces[route[0]].name];
+			route = ["Workspaces", frappe.workspaces[route[0]].id];
 		} else if (route[0] == "private") {
 			// private workspace
-			let private_workspace = route[1] && `${route[1]}-${frappe.user.name.toLowerCase()}`;
+			let private_workspace = route[1] && `${route[1]}-${frappe.user.id.toLowerCase()}`;
 			if (!frappe.workspaces[private_workspace]) {
 				frappe.msgprint(__("Workspace <b>{0}</b> does not exist", [route[1]]));
 				return ["Workspaces"];
 			}
-			route = ["Workspaces", "private", frappe.workspaces[private_workspace].name];
+			route = ["Workspaces", "private", frappe.workspaces[private_workspace].id];
 		} else if (this.routes[route[0]]) {
 			// route
 			route = await this.set_doctype_route(route);
@@ -467,8 +467,8 @@ frappe.router = {
 		// 3. Public home
 		// 4. First workspace in list of current app
 		// 5. First workspace in list
-		let private_home = `home-${frappe.user.name.toLowerCase()}`;
-		let default_workspace = frappe.router.slug(frappe.boot.user.default_workspace?.name || "");
+		let private_home = `home-${frappe.user.id.toLowerCase()}`;
+		let default_workspace = frappe.router.slug(frappe.boot.user.default_workspace?.id || "");
 
 		let workspace =
 			frappe.workspaces[default_workspace] ||
@@ -479,7 +479,7 @@ frappe.router = {
 
 		if (workspace) {
 			return (
-				"/app/" + (workspace.public ? "" : "private/") + frappe.router.slug(workspace.name)
+				"/app/" + (workspace.public ? "" : "private/") + frappe.router.slug(workspace.id)
 			);
 		}
 
@@ -563,8 +563,8 @@ frappe.router = {
 		}
 	},
 
-	slug(name) {
-		return name.toLowerCase().replace(/ /g, "-");
+	slug(id) {
+		return id.toLowerCase().replace(/ /g, "-");
 	},
 };
 

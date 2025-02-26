@@ -33,7 +33,7 @@ export const useStore = defineStore("form-builder-store", () => {
 	});
 
 	let current_tab = computed(() => {
-		return form.value.layout.tabs.find((tab) => tab.df.name == form.value.active_tab);
+		return form.value.layout.tabs.find((tab) => tab.df.id == form.value.active_tab);
 	});
 
 	const active_element = useActiveElement();
@@ -46,14 +46,14 @@ export const useStore = defineStore("form-builder-store", () => {
 	);
 
 	// Actions
-	function selected(name) {
-		return form.value.selected_field?.name == name;
+	function selected(id) {
+		return form.value.selected_field?.id == id;
 	}
 
 	function get_df(fieldtype, fieldname = "", label = "") {
 		let docfield = is_customize_form.value ? "Customize Form Field" : "DocField";
 		let df = frappe.model.get_new_doc(docfield);
-		df.name = frappe.utils.get_random(8);
+		df.id = frappe.utils.get_random(8);
 		df.fieldtype = fieldtype;
 		df.fieldname = fieldname;
 		df.label = label;
@@ -108,7 +108,7 @@ export const useStore = defineStore("form-builder-store", () => {
 		}
 
 		form.value.layout = get_layout();
-		form.value.active_tab = form.value.layout.tabs[0].df.name;
+		form.value.active_tab = form.value.layout.tabs[0].df.id;
 		form.value.selected_field = null;
 
 		nextTick(() => {
@@ -262,7 +262,7 @@ export const useStore = defineStore("form-builder-store", () => {
 				idx++;
 				tab.df.idx = idx;
 				if (tab.df.__unsaved && tab.df.__islocal) {
-					tab.df.name = new_field_name + idx;
+					tab.df.id = new_field_name + idx;
 				}
 				fields.push(tab.df);
 			}
@@ -278,7 +278,7 @@ export const useStore = defineStore("form-builder-store", () => {
 					idx++;
 					section.df.idx = idx;
 					if (section.df.__unsaved && section.df.__islocal) {
-						section.df.name = new_field_name + idx;
+						section.df.id = new_field_name + idx;
 					}
 					fields.push(section.df);
 				}
@@ -293,7 +293,7 @@ export const useStore = defineStore("form-builder-store", () => {
 						idx++;
 						column.df.idx = idx;
 						if (column.df.__unsaved && column.df.__islocal) {
-							column.df.name = new_field_name + idx;
+							column.df.id = new_field_name + idx;
 						}
 						fields.push(column.df);
 					}
@@ -302,7 +302,7 @@ export const useStore = defineStore("form-builder-store", () => {
 						idx++;
 						field.df.idx = idx;
 						if (field.df.__unsaved && field.df.__islocal) {
-							field.df.name = new_field_name + idx;
+							field.df.id = new_field_name + idx;
 						}
 						fields.push(field.df);
 						section.has_fields = true;
@@ -323,8 +323,8 @@ export const useStore = defineStore("form-builder-store", () => {
 	function is_df_updated(df, new_df) {
 		let df_copy = JSON.parse(JSON.stringify(df));
 		let new_df_copy = JSON.parse(JSON.stringify(new_df));
-		delete df_copy.name;
-		delete new_df_copy.name;
+		delete df_copy.id;
+		delete new_df_copy.id;
 		return JSON.stringify(df_copy) != JSON.stringify(new_df_copy);
 	}
 
@@ -344,7 +344,7 @@ export const useStore = defineStore("form-builder-store", () => {
 	}
 
 	function activate_tab(tab) {
-		form.value.active_tab = tab.df.name;
+		form.value.active_tab = tab.df.id;
 		form.value.selected_field = tab.df;
 
 		// scroll to active tab

@@ -13,7 +13,7 @@ export default class ChartWidget extends Widget {
 
 	get_config() {
 		return {
-			name: this.name,
+			id: this.id,
 			chart_name: this.chart_name,
 			label: this.label,
 			hidden: this.hidden,
@@ -299,7 +299,7 @@ export default class ChartWidget extends Widget {
 				label: __("Edit"),
 				action: "action-edit",
 				handler: () => {
-					frappe.set_route("Form", "Dashboard Chart", this.chart_doc.name);
+					frappe.set_route("Form", "Dashboard Chart", this.chart_doc.id);
 				},
 			},
 			{
@@ -502,7 +502,7 @@ export default class ChartWidget extends Widget {
 			};
 		} else {
 			args = {
-				chart_name: this.chart_doc.name,
+				chart_name: this.chart_doc.id,
 				filters: filters,
 				refresh: refresh ? 1 : 0,
 				time_interval: args && args.time_interval ? args.time_interval : null,
@@ -716,7 +716,7 @@ export default class ChartWidget extends Widget {
 	}
 
 	update_chart_object() {
-		frappe.db.get_doc("Dashboard Chart", this.chart_doc.name).then((doc) => {
+		frappe.db.get_doc("Dashboard Chart", this.chart_doc.id).then((doc) => {
 			this.chart_doc = doc;
 			this.update_last_synced();
 		});
@@ -784,7 +784,7 @@ export default class ChartWidget extends Widget {
 						const method =
 							"frappe.desk.doctype.dashboard_chart_source.dashboard_chart_source.get_config";
 						return frappe
-							.xcall(method, { name: this.chart_doc.source })
+							.xcall(method, { id: this.chart_doc.source })
 							.then((config) => {
 								frappe.dom.eval(config);
 								this.settings =

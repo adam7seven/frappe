@@ -4,14 +4,14 @@
 frappe.provide("frappe.model");
 
 $.extend(frappe.model, {
-	new_names: {},
+	new_ids: {},
 
 	get_new_doc: function (doctype, parent_doc, parentfield, with_mandatory_children) {
 		frappe.provide("locals." + doctype);
 		var doc = {
 			docstatus: 0,
 			doctype: doctype,
-			name: frappe.model.get_new_name(doctype),
+			id: frappe.model.get_new_id(doctype),
 			__islocal: 1,
 			__unsaved: 1,
 			owner: frappe.session.user,
@@ -20,7 +20,7 @@ $.extend(frappe.model, {
 
 		if (parent_doc) {
 			$.extend(doc, {
-				parent: parent_doc.name,
+				parent: parent_doc.id,
 				parentfield: parentfield,
 				parenttype: parent_doc.doctype,
 			});
@@ -28,7 +28,7 @@ $.extend(frappe.model, {
 			doc.idx = parent_doc[parentfield].length + 1;
 			parent_doc[parentfield].push(doc);
 		} else {
-			frappe.provide("frappe.model.docinfo." + doctype + "." + doc.name);
+			frappe.provide("frappe.model.docinfo." + doctype + "." + doc.id);
 		}
 
 		frappe.model.add_to_locals(doc);
@@ -41,19 +41,19 @@ $.extend(frappe.model, {
 			doc.__run_link_triggers = 1;
 		}
 
-		// set the name if called from a link field
-		if (frappe.route_options && frappe.route_options.name_field) {
+		// set the id if called from a link field
+		if (frappe.route_options && frappe.route_options.id_field) {
 			var meta = frappe.get_meta(doctype);
-			// set title field / name as name
+			// set title field / id as id
 			if (meta.autoid && meta.autoid.indexOf("field:") !== -1) {
-				doc[meta.autoid.substr(6)] = frappe.route_options.name_field;
+				doc[meta.autoid.substr(6)] = frappe.route_options.id_field;
 			} else if (meta.autoid && meta.autoid === "prompt") {
-				doc.__newname = frappe.route_options.name_field;
+				doc.__newid = frappe.route_options.id_field;
 			} else if (meta.title_field) {
-				doc[meta.title_field] = frappe.route_options.name_field;
+				doc[meta.title_field] = frappe.route_options.id_field;
 			}
 
-			delete frappe.route_options.name_field;
+			delete frappe.route_options.id_field;
 		}
 
 		// set route options
@@ -70,11 +70,11 @@ $.extend(frappe.model, {
 		return doc;
 	},
 
-	make_new_doc_and_get_name: function (doctype, with_mandatory_children) {
-		return frappe.model.get_new_doc(doctype, null, null, with_mandatory_children).name;
+	make_new_doc_and_get_id: function (doctype, with_mandatory_children) {
+		return frappe.model.get_new_doc(doctype, null, null, with_mandatory_children).id;
 	},
 
-	get_new_name: function (doctype) {
+	get_new_id: function (doctype) {
 		// random hash is added to idenity mislinked files when doc is not saved and file is uploaded.
 		return frappe.router.slug(`new-${doctype}-${frappe.utils.get_random(10)}`);
 	},
@@ -279,11 +279,11 @@ $.extend(frappe.model, {
 	},
 
 	copy_doc: function (doc, from_amend, parent_doc, parentfield) {
-		let no_copy_list = ["name", "amended_from", "amendment_date", "cancel_reason"];
+		let no_copy_list = ["id", "amended_from", "amendment_date", "cancel_reason"];
 		let newdoc = frappe.model.get_new_doc(doc.doctype, parent_doc, parentfield);
 
 		for (let key in doc) {
-			// don't copy name and blank fields
+			// don't copy id and blank fields
 			let df = frappe.meta.get_docfield(doc.doctype, key);
 
 			const is_internal_field = key.substring(0, 2) === "__";
@@ -316,7 +316,7 @@ $.extend(frappe.model, {
 		newdoc.rgt = null;
 
 		if (from_amend && parent_doc) {
-			newdoc._amended_from = doc.name;
+			newdoc._amended_from = doc.id;
 		}
 
 		return newdoc;
@@ -327,10 +327,10 @@ $.extend(frappe.model, {
 			frappe.throw(
 				__("You have unsaved changes in this form. Please save before you continue.")
 			);
-		} else if (!opts.source_name && opts.frm) {
-			opts.source_name = opts.frm.doc.name;
-		} else if (!opts.frm && !opts.source_name) {
-			opts.source_name = null;
+		} else if (!opts.source_id && opts.frm) {
+			opts.source_id = opts.frm.doc.id;
+		} else if (!opts.frm && !opts.source_id) {
+			opts.source_id = null;
 		}
 
 		return frappe.call({
@@ -338,7 +338,7 @@ $.extend(frappe.model, {
 			method: "frappe.model.mapper.make_mapped_doc",
 			args: {
 				method: opts.method,
-				source_name: opts.source_name,
+				source_id: opts.source_id,
 				args: opts.args || null,
 				selected_children: opts.frm ? opts.frm.get_selected() : null,
 			},
@@ -348,12 +348,9 @@ $.extend(frappe.model, {
 				if (!r.exc) {
 					frappe.model.sync(r.message);
 					if (opts.run_link_triggers) {
-						frappe.get_doc(
-							r.message.doctype,
-							r.message.name
-						).__run_link_triggers = true;
+						frappe.get_doc(r.message.doctype, r.message.id).__run_link_triggers = true;
 					}
-					frappe.set_route("Form", r.message.doctype, r.message.name);
+					frappe.set_route("Form", r.message.doctype, r.message.id);
 				}
 			},
 		});

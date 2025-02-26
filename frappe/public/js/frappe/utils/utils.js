@@ -523,11 +523,11 @@ Object.assign(frappe.utils, {
 
 	get_indicator_color: function (state) {
 		return frappe.db
-			.get_list("Workflow State", { filters: { name: state }, fields: ["name", "style"] })
+			.get_list("Workflow State", { filters: { id: state }, fields: ["id", "style"] })
 			.then((res) => {
 				const state = res[0];
 				if (!state.style) {
-					return frappe.utils.guess_colour(state.name);
+					return frappe.utils.guess_colour(state.id);
 				}
 				const style = state.style;
 				const colour_map = {
@@ -897,14 +897,14 @@ Object.assign(frappe.utils, {
 	},
 	get_form_link: function (
 		doctype,
-		name,
+		id,
 		html = false,
 		display_text = null,
 		query_params_obj = null
 	) {
-		display_text = display_text || name;
-		name = encodeURIComponent(name);
-		let route = `/app/${encodeURIComponent(doctype.toLowerCase().replace(/ /g, "-"))}/${name}`;
+		display_text = display_text || id;
+		id = encodeURIComponent(id);
+		let route = `/app/${encodeURIComponent(doctype.toLowerCase().replace(/ /g, "-"))}/${id}`;
 		if (query_params_obj) {
 			route += frappe.utils.make_query_string(query_params_obj);
 		}
@@ -963,12 +963,12 @@ Object.assign(frappe.utils, {
 				const text_element = $elements.eq(i).find(text_class);
 				const text = text_element.text().toLowerCase();
 
-				let name = "";
+				let id = "";
 				if (data_attr && text_element.attr(data_attr)) {
-					name = text_element.attr(data_attr).toLowerCase();
+					id = text_element.attr(data_attr).toLowerCase();
 				}
 
-				if (text.includes(text_filter) || name.includes(text_filter)) {
+				if (text.includes(text_filter) || id.includes(text_filter)) {
 					$elements.eq(i).css("display", "");
 				} else {
 					$elements.eq(i).css("display", "none");
@@ -1249,7 +1249,7 @@ Object.assign(frappe.utils, {
 	generate_route(item) {
 		const type = item.type.toLowerCase();
 		if (type === "doctype") {
-			item.doctype = item.name;
+			item.doctype = item.id;
 		}
 		let route = "";
 		if (!item.route) {
@@ -1298,17 +1298,17 @@ Object.assign(frappe.utils, {
 				}
 			} else if (type === "report") {
 				if (item.is_query_report) {
-					route = "query-report/" + item.name;
+					route = "query-report/" + item.id;
 				} else if (!item.is_query_report && item.report_ref_doctype) {
 					route =
-						frappe.router.slug(item.report_ref_doctype) + "/view/report/" + item.name;
+						frappe.router.slug(item.report_ref_doctype) + "/view/report/" + item.id;
 				} else {
-					route = "report/" + item.name;
+					route = "report/" + item.id;
 				}
 			} else if (type === "page") {
-				route = item.name;
+				route = item.id;
 			} else if (type === "dashboard") {
-				route = `dashboard-view/${item.name}`;
+				route = `dashboard-view/${item.id}`;
 			}
 		} else {
 			route = item.route;
@@ -1410,7 +1410,7 @@ Object.assign(frappe.utils, {
 			frappe.urllib.get_full_url(
 				"/printview?doctype=" +
 					encodeURIComponent(doctype) +
-					"&name=" +
+					"&id=" +
 					encodeURIComponent(docid) +
 					"&trigger_print=1" +
 					"&format=" +
@@ -1534,16 +1534,16 @@ Object.assign(frappe.utils, {
 		return arr;
 	},
 
-	get_link_title(doctype, name) {
-		if (!doctype || !name || !frappe._link_titles) {
+	get_link_title(doctype, id) {
+		if (!doctype || !id || !frappe._link_titles) {
 			return;
 		}
 
-		return frappe._link_titles[doctype + "::" + name];
+		return frappe._link_titles[doctype + "::" + id];
 	},
 
-	add_link_title(doctype, name, value) {
-		if (!doctype || !name) {
+	add_link_title(doctype, id, value) {
+		if (!doctype || !id) {
 			return;
 		}
 
@@ -1552,27 +1552,27 @@ Object.assign(frappe.utils, {
 			frappe._link_titles = {};
 		}
 
-		frappe._link_titles[doctype + "::" + name] = value;
+		frappe._link_titles[doctype + "::" + id] = value;
 	},
 
-	fetch_link_title(doctype, name) {
-		if (!doctype || !name) {
+	fetch_link_title(doctype, id) {
+		if (!doctype || !id) {
 			return;
 		}
 		try {
 			return frappe
 				.xcall("frappe.desk.search.get_link_title", {
 					doctype: doctype,
-					docid: name,
+					docid: id,
 				})
 				.then((title) => {
-					frappe.utils.add_link_title(doctype, name, title);
+					frappe.utils.add_link_title(doctype, id, title);
 					return title;
 				});
 		} catch (error) {
 			console.log("Error while fetching link title.");
 			console.log(error);
-			return Promise.resolve(name);
+			return Promise.resolve(id);
 		}
 	},
 

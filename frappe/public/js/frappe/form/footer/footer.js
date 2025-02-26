@@ -35,7 +35,7 @@ frappe.ui.form.Footer = class FormFooter {
 					frappe
 						.xcall("frappe.desk.form.utils.add_comment", {
 							reference_doctype: this.frm.doctype,
-							reference_name: this.frm.docid,
+							reference_id: this.frm.docid,
 							content: comment,
 							comment_email: frappe.session.user,
 							comment_by: frappe.session.user_fullname,
@@ -85,7 +85,7 @@ frappe.ui.form.Footer = class FormFooter {
 		frappe.ui.setup_like_popover(this.wrapper.find(".form-stats-likes"), ".like-icon");
 
 		this.like_icon.on("click", () => {
-			frappe.ui.toggle_like(this.like_wrapper, this.frm.doctype, this.frm.doc.name, () => {
+			frappe.ui.toggle_like(this.like_wrapper, this.frm.doctype, this.frm.doc.id, () => {
 				this.refresh_like();
 			});
 		});
@@ -102,7 +102,7 @@ frappe.ui.form.Footer = class FormFooter {
 			.toggleClass("not-liked", !liked)
 			.toggleClass("liked", liked)
 			.attr("data-doctype", this.frm.doctype)
-			.attr("data-name", this.frm.doc.name);
+			.attr("data-id", this.frm.doc.id);
 
 		this.like_count && this.like_count.text(JSON.parse(this.frm.doc._liked_by || "[]").length);
 	}

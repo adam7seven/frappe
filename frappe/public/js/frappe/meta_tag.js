@@ -12,8 +12,8 @@ frappe.utils.set_meta_tag = function (route) {
 		} else {
 			// new doc
 			const doc = frappe.model.get_new_doc("Website Route Meta");
-			doc.__newname = route;
-			frappe.set_route("Form", doc.doctype, doc.name);
+			doc.__newid = route;
+			frappe.set_route("Form", doc.doctype, doc.id);
 		}
 	});
 };

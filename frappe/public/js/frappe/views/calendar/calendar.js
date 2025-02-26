@@ -87,7 +87,7 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 					}
 					Object.assign(options, {
 						field_map: {
-							id: "name",
+							id: "id",
 							start: doc.start_date_field,
 							end: doc.end_date_field,
 							title: doc.subject_field,
@@ -109,7 +109,7 @@ frappe.views.Calendar = class Calendar {
 	constructor(options) {
 		$.extend(this, options);
 		this.field_map = this.field_map || {
-			id: "name",
+			id: "id",
 			start: "start",
 			end: "end",
 			allDay: "all_day",
@@ -324,7 +324,7 @@ frappe.views.Calendar = class Calendar {
 					// incase of all day or multiple day events -1 sec
 					event[me.field_map.end] = me.get_system_datetime(info.end - 1);
 				}
-				frappe.set_route("Form", me.doctype, event.name);
+				frappe.set_route("Form", me.doctype, event.id);
 			},
 			dateClick: function (info) {
 				if (info.view.type === "dayGridMonth") {
@@ -377,7 +377,7 @@ frappe.views.Calendar = class Calendar {
 		var me = this;
 
 		return (events || []).map((d) => {
-			d.id = d.name;
+			d.id = d.id;
 			d.editable = frappe.model.can_write(d.doctype || me.doctype);
 
 			// do not allow submitted/cancelled events to be moved / extended
@@ -459,7 +459,7 @@ frappe.views.Calendar = class Calendar {
 	get_update_args(event) {
 		var me = this;
 		var args = {
-			name: event.id,
+			id: event.id,
 		};
 
 		args[this.field_map.start] = me.get_system_datetime(event.start);

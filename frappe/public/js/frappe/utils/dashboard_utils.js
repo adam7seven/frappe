@@ -70,7 +70,7 @@ frappe.dashboard_utils = {
 		if (chart.chart_type === "Custom" && chart.source) {
 			const method =
 				"frappe.desk.doctype.dashboard_chart_source.dashboard_chart_source.get_config";
-			return frappe.xcall(method, { name: chart.source }).then((config) => {
+			return frappe.xcall(method, { id: chart.source }).then((config) => {
 				frappe.dom.eval(config);
 				return frappe.dashboards.chart_sources[chart.source].filters;
 			});
@@ -87,7 +87,7 @@ frappe.dashboard_utils = {
 		return frappe.db
 			.get_list("Dashboard Settings", {
 				filters: {
-					name: frappe.session.user,
+					id: frappe.session.user,
 				},
 				fields: ["*"],
 			})
@@ -263,13 +263,13 @@ frappe.dashboard_utils = {
 			title: __("Add to Dashboard"),
 			fields: [field],
 			primary_action: (values) => {
-				values.name = docid;
+				values.id = docid;
 				values.set_standard = frappe.boot.developer_mode;
 				frappe.xcall(method, { args: values }).then(() => {
 					let dashboard_route_html = `<a href = "/app/dashboard/${values.dashboard}">${values.dashboard}</a>`;
 					let message = __("{0} {1} added to Dashboard {2}", [
 						doctype,
-						values.name,
+						values.id,
 						dashboard_route_html,
 					]);
 

@@ -457,7 +457,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 						.then((doc) => {
 							this.chart_group.new_widget.on_create({
 								chart_name: doc.chart_name,
-								name: doc.chart_name,
+								id: doc.chart_name,
 								label: chart.label,
 							});
 						});
@@ -465,7 +465,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 					this.chart_group.new_widget.on_create({
 						chart_name: chart.chart,
 						label: chart.chart,
-						name: chart.chart,
+						id: chart.chart,
 					});
 				}
 				dialog.hide();

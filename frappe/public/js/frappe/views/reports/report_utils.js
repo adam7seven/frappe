@@ -12,7 +12,7 @@ frappe.report_utils = {
 
 		let labels = get_column_values(x_field);
 		let datasets = y_fields.map((y_field) => ({
-			name: frappe.model.unscrub(y_field),
+			id: frappe.model.unscrub(y_field),
 			values: get_column_values(y_field).map((d) => Number(d)),
 		}));
 
@@ -243,7 +243,7 @@ frappe.report_utils = {
 			const report = is_query_report ? frappe.query_report : cur_list;
 			const columns = report.columns.filter((col) => col.hidden !== 1);
 			let PREVIEW_DATA = [
-				columns.map((col) => __(is_query_report ? col.label : col.name)),
+				columns.map((col) => __(is_query_report ? col.label : col.id)),
 				...report.data
 					.slice(0, 3)
 					.map((row) =>

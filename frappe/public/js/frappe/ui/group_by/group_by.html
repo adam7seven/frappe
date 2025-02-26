@@ -23,7 +23,7 @@
 		<div class="col-sm-3 form-group">
 			<select class="aggregate-function form-control input-xs">
 				{% for condition in aggregate_function_conditions %}
-				<option value="{{condition.name}}">{{ __(condition.label) }}</option>
+				<option value="{{condition.id}}">{{ __(condition.label) }}</option>
 				{% endfor %}
 			</select>
 		</div>

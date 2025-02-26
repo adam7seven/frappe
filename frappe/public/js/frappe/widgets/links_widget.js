@@ -10,7 +10,7 @@ export default class LinksWidget extends Widget {
 
 	get_config() {
 		return {
-			name: this.name,
+			id: this.id,
 			links: JSON.stringify(this.links),
 			link_count: this.links.length,
 			label: this.label,
@@ -88,7 +88,7 @@ export default class LinksWidget extends Widget {
 
 		this.link_list = this.links.map((item) => {
 			const opts = {
-				name: item.link_to,
+				id: item.link_to,
 				type: item.link_type,
 				doctype: item.doctype,
 				is_query_report: item.is_query_report,
@@ -100,7 +100,7 @@ export default class LinksWidget extends Widget {
 			}
 
 			const route = frappe.utils.generate_route(opts);
-			item.link_title = item.label ? item.label : item.name;
+			item.link_title = item.label ? item.label : item.id;
 
 			const $link = $(`
 				<a href="${route}" class="link-item ellipsis

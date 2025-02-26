@@ -75,7 +75,7 @@ frappe.ui.form.AssignTo = class AssignTo {
 		return frappe
 			.xcall("frappe.desk.form.assign_to.remove", {
 				doctype: this.frm.doctype,
-				name: this.frm.docid,
+				id: this.frm.docid,
 				assign_to: owner,
 			})
 			.then((assignments) => {
@@ -108,7 +108,7 @@ frappe.ui.form.AssignToDialog = class AssignToDialog {
 						method: me.method,
 						args: $.extend(args, {
 							doctype: me.doctype,
-							name: me.docid,
+							id: me.docid,
 							assign_to: args.assign_to,
 							bulk_assign: me.bulk_assign || false,
 							re_assign: me.re_assign || false,
@@ -299,7 +299,7 @@ frappe.ui.form.AssignmentDialog = class {
 		return frappe
 			.xcall("frappe.desk.form.assign_to.add", {
 				doctype: this.frm.doctype,
-				name: this.frm.docid,
+				id: this.frm.docid,
 				assign_to: [assignment],
 			})
 			.then((assignments) => {
@@ -310,14 +310,14 @@ frappe.ui.form.AssignmentDialog = class {
 	remove_assignment(assignment) {
 		return frappe.xcall("frappe.desk.form.assign_to.remove", {
 			doctype: this.frm.doctype,
-			name: this.frm.docid,
+			id: this.frm.docid,
 			assign_to: assignment,
 		});
 	}
 	close_assignment(assignment) {
 		return frappe.xcall("frappe.desk.form.assign_to.close", {
 			doctype: this.frm.doctype,
-			name: this.frm.docid,
+			id: this.frm.docid,
 			assign_to: assignment,
 		});
 	}

@@ -284,7 +284,7 @@ frappe.ui.form.Form = class FrappeForm {
 			"*",
 			function (fieldname, value, doc, skip_dirty_trigger = false) {
 				// set input
-				if (doc.name == me.docid) {
+				if (doc.id == me.docid) {
 					if (!skip_dirty_trigger) {
 						me.dirty();
 					}
@@ -300,7 +300,7 @@ frappe.ui.form.Form = class FrappeForm {
 
 					me.layout.refresh_dependency();
 					me.layout.refresh_sections();
-					return me.script_manager.trigger(fieldname, doc.doctype, doc.name);
+					return me.script_manager.trigger(fieldname, doc.doctype, doc.id);
 				}
 			}
 		);
@@ -322,7 +322,7 @@ frappe.ui.form.Form = class FrappeForm {
 						}
 
 						me.fields_dict[df.fieldname].grid.set_value(fieldname, value, doc);
-						return me.script_manager.trigger(fieldname, doc.doctype, doc.name);
+						return me.script_manager.trigger(fieldname, doc.doctype, doc.id);
 					}
 				}
 			);
@@ -330,8 +330,8 @@ frappe.ui.form.Form = class FrappeForm {
 	}
 
 	setup_notify_on_rename() {
-		$(document).on("rename", (ev, dt, old_name, new_name) => {
-			if (dt == this.doctype) this.rename_notify(dt, old_name, new_name);
+		$(document).on("rename", (ev, dt, old_id, new_id) => {
+			if (dt == this.doctype) this.rename_notify(dt, old_id, new_id);
 		});
 
 		frappe.realtime.on("doc_rename", (data) => {
@@ -569,9 +569,9 @@ frappe.ui.form.Form = class FrappeForm {
 			});
 		} else {
 			this.render_form(switched);
-			if (this.doc.localname) {
-				// trigger form-rename and remove .localname
-				delete this.doc.localname;
+			if (this.doc.localid) {
+				// trigger form-rename and remove .localid
+				delete this.doc.localid;
 				$(document).trigger("form-rename", [this]);
 			}
 		}
@@ -595,7 +595,7 @@ frappe.ui.form.Form = class FrappeForm {
 
 		// update seen
 		if (this.meta.track_seen) {
-			$('.list-id[data-name="' + me.docid + '"]').addClass("seen");
+			$('.list-id[data-id="' + me.docid + '"]').addClass("seen");
 		}
 	}
 
@@ -908,7 +908,7 @@ frappe.ui.form.Form = class FrappeForm {
 				method: "frappe.desk.form.linked_with.get_submitted_linked_docs",
 				args: {
 					doctype: me.doc.doctype,
-					name: me.doc.name,
+					id: me.doc.id,
 					ignore_doctypes_on_cancel_all: me.ignore_doctypes_on_cancel_all,
 				},
 				freeze: true,
@@ -941,7 +941,7 @@ frappe.ui.form.Form = class FrappeForm {
 			if (!me.ignore_doctypes_on_cancel_all.includes(doctype)) {
 				let docids = links
 					.filter((link) => link.doctype == doctype)
-					.map((link) => frappe.utils.get_form_link(link.doctype, link.name, true))
+					.map((link) => frappe.utils.get_form_link(link.doctype, link.id, true))
 					.join(", ");
 				links_text += `<li><strong>${__(doctype)}</strong>: ${docids}</li>`;
 			}
@@ -950,7 +950,7 @@ frappe.ui.form.Form = class FrappeForm {
 
 		let confirm_message = __("{0} {1} is linked with the following submitted documents: {2}", [
 			__(me.doc.doctype).bold(),
-			me.doc.name,
+			me.doc.id,
 			links_text,
 		]);
 
@@ -1058,7 +1058,7 @@ frappe.ui.form.Form = class FrappeForm {
 					method: "frappe.desk.form.save.discard",
 					args: {
 						doctype: me.doc.doctype,
-						name: me.doc.name,
+						id: me.doc.id,
 					},
 					btn: btn,
 					callback: function (r) {
@@ -1095,7 +1095,7 @@ frappe.ui.form.Form = class FrappeForm {
 		frappe
 			.xcall("frappe.client.is_document_amended", {
 				doctype: this.doc.doctype,
-				docid: this.doc.name,
+				docid: this.doc.id,
 			})
 			.then((is_amended) => {
 				if (is_amended) {
@@ -1275,22 +1275,22 @@ frappe.ui.form.Form = class FrappeForm {
 
 	// rename the form
 	// notify this form of renamed records
-	rename_notify(dt, old, name) {
+	rename_notify(dt, old, id) {
 		// from form
 		if (this.meta.istable) return;
 
-		if (this.docid == old) this.docid = name;
+		if (this.docid == old) this.docid = id;
 		else return;
 
 		// cleanup
 		if (this && this.opendocs[old] && frappe.meta.docfield_copy[dt]) {
 			// delete docfield copy
-			frappe.meta.docfield_copy[dt][name] = frappe.meta.docfield_copy[dt][old];
+			frappe.meta.docfield_copy[dt][id] = frappe.meta.docfield_copy[dt][old];
 			delete frappe.meta.docfield_copy[dt][old];
 		}
 
 		delete this.opendocs[old];
-		this.opendocs[name] = true;
+		this.opendocs[id] = true;
 
 		if (this.meta.in_dialog || !this.in_form) {
 			return;
@@ -1298,8 +1298,8 @@ frappe.ui.form.Form = class FrappeForm {
 
 		frappe.re_route[frappe.router.get_sub_path()] = `${encodeURIComponent(
 			frappe.router.slug(this.doctype)
-		)}/${encodeURIComponent(name)}`;
-		!frappe._from_link && frappe.set_route("Form", this.doctype, name);
+		)}/${encodeURIComponent(id)}`;
+		!frappe._from_link && frappe.set_route("Form", this.doctype, id);
 	}
 
 	// ACTIONS
@@ -1317,7 +1317,7 @@ frappe.ui.form.Form = class FrappeForm {
 		frappe.route_options = {
 			frm: this,
 		};
-		frappe.set_route("print", this.doctype, this.doc.name);
+		frappe.set_route("print", this.doctype, this.doc.id);
 	}
 
 	navigate_records(prev) {
@@ -1365,7 +1365,7 @@ frappe.ui.form.Form = class FrappeForm {
 		new frappe.views.CommunicationComposer({
 			doc: this.doc,
 			frm: this,
-			subject: __(this.meta.name) + ": " + this.docid,
+			subject: __(this.meta.id) + ": " + this.docid,
 			recipients: this.doc.email || this.doc.email_id || this.doc.contact_email,
 			attach_document_print: true,
 			message: message,
@@ -1381,7 +1381,7 @@ frappe.ui.form.Form = class FrappeForm {
 		if (onload) {
 			onload(newdoc);
 		}
-		frappe.set_route("Form", newdoc.doctype, newdoc.name);
+		frappe.set_route("Form", newdoc.doctype, newdoc.id);
 	}
 
 	reload_doc() {
@@ -1611,7 +1611,7 @@ frappe.ui.form.Form = class FrappeForm {
 		}
 	}
 
-	set_df_property(fieldname, property, value, docid, table_field, table_row_name = null) {
+	set_df_property(fieldname, property, value, docid, table_field, table_row_id = null) {
 		let df;
 
 		if (!docid || !table_field) {
@@ -1625,7 +1625,7 @@ frappe.ui.form.Form = class FrappeForm {
 				df = frappe.meta.get_docfield(
 					filtered_fields[0].parent,
 					table_field,
-					table_row_name
+					table_row_id
 				);
 			}
 		}
@@ -1633,10 +1633,10 @@ frappe.ui.form.Form = class FrappeForm {
 		if (df && df[property] != value) {
 			df[property] = value;
 
-			if (table_field && table_row_name) {
-				if (this.fields_dict[fieldname].grid.grid_rows_by_docid[table_row_name]) {
+			if (table_field && table_row_id) {
+				if (this.fields_dict[fieldname].grid.grid_rows_by_docid[table_row_id]) {
 					this.fields_dict[fieldname].grid.grid_rows_by_docid[
-						table_row_name
+						table_row_id
 					].refresh_field(table_field);
 				}
 			} else {
@@ -1696,7 +1696,7 @@ frappe.ui.form.Form = class FrappeForm {
 		if (values) {
 			// Values of unique keys should not be overridden
 			var d = {};
-			var unique_keys = ["idx", "name"];
+			var unique_keys = ["idx", "id"];
 
 			Object.keys(values).map((key) => {
 				if (!unique_keys.includes(key)) {
@@ -1714,7 +1714,7 @@ frappe.ui.form.Form = class FrappeForm {
 		var _set = function (f, v) {
 			var fieldobj = me.fields_dict[f];
 			if (fieldobj) {
-				if (!if_missing || !frappe.model.has_value(me.doctype, me.doc.name, f)) {
+				if (!if_missing || !frappe.model.has_value(me.doctype, me.doc.id, f)) {
 					if (
 						frappe.model.table_fields.includes(fieldobj.df.fieldtype) &&
 						$.isArray(v)
@@ -1747,7 +1747,7 @@ frappe.ui.form.Form = class FrappeForm {
 					} else {
 						return frappe.model.set_value(
 							me.doctype,
-							me.doc.name,
+							me.doc.id,
 							f,
 							v,
 							me.fieldtype,
@@ -1794,7 +1794,7 @@ frappe.ui.form.Form = class FrappeForm {
 				if ($.isPlainObject(r.message)) {
 					if (opts.child) {
 						// update child doc
-						opts.child = locals[opts.child.doctype][opts.child.name];
+						opts.child = locals[opts.child.doctype][opts.child.id];
 						// if child row is deleted, don't update
 						if (opts.child) {
 							var std_field_list = ["doctype"]
@@ -1866,7 +1866,7 @@ frappe.ui.form.Form = class FrappeForm {
 	}
 
 	get_selected() {
-		// returns list of children that are selected. returns [parentfield, name] for each
+		// returns list of children that are selected. returns [parentfield, id] for each
 		var selected = {},
 			me = this;
 		frappe.meta.get_table_fields(this.doctype).forEach(function (df) {
@@ -1916,13 +1916,13 @@ frappe.ui.form.Form = class FrappeForm {
 					label = value;
 				}
 
-				const escaped_name = encodeURIComponent(value);
+				const escaped_id = encodeURIComponent(value);
 
 				return `
 						<a class="indicator ${get_color(doc || {})}"
-							href="/app/${frappe.router.slug(df.options)}/${escaped_name}"
+							href="/app/${frappe.router.slug(df.options)}/${escaped_id}"
 							data-doctype="${df.options}"
-							data-name="${frappe.utils.escape_html(value)}">
+							data-id="${frappe.utils.escape_html(value)}">
 							${label}
 						</a>
 					`;
@@ -1975,7 +1975,7 @@ frappe.ui.form.Form = class FrappeForm {
 				me.set_link_field(doctype, new_doc);
 
 				frappe.ui.form.make_quick_entry(doctype, null, null, new_doc);
-				// frappe.set_route('Form', doctype, new_doc.name);
+				// frappe.set_route('Form', doctype, new_doc.id);
 			});
 		}
 	}
@@ -1984,7 +1984,7 @@ frappe.ui.form.Form = class FrappeForm {
 		let me = this;
 		frappe.get_meta(doctype).fields.forEach(function (df) {
 			if (df.fieldtype === "Link" && df.options === me.doctype) {
-				new_doc[df.fieldname] = me.doc.name;
+				new_doc[df.fieldname] = me.doc.id;
 			} else if (["Link", "Dynamic Link"].includes(df.fieldtype) && me.doc[df.fieldname]) {
 				new_doc[df.fieldname] = me.doc[df.fieldname];
 			} else if (df.fieldtype === "Table" && df.options && df.reqd) {
@@ -2002,10 +2002,8 @@ frappe.ui.form.Form = class FrappeForm {
 
 		frappe.model
 			.get_children(this.doc, table_fieldname)
-			.filter((child) => !frappe.model.has_value(child.doctype, child.name, fieldname))
-			.forEach((child) =>
-				frappe.model.set_value(child.doctype, child.name, fieldname, value)
-			);
+			.filter((child) => !frappe.model.has_value(child.doctype, child.id, fieldname))
+			.forEach((child) => frappe.model.set_value(child.doctype, child.id, fieldname, value));
 	}
 
 	get_sum(table_fieldname, fieldname) {
@@ -2062,15 +2060,15 @@ frappe.ui.form.Form = class FrappeForm {
 		frappe.realtime.on("docinfo_update", ({ doc, key, action = "update" }) => {
 			if (
 				!doc.reference_doctype ||
-				!doc.reference_name ||
+				!doc.reference_id ||
 				doc.reference_doctype !== doctype ||
-				doc.reference_name !== docid
+				doc.reference_id !== docid
 			) {
 				return;
 			}
 			let doc_list = frappe.model.docinfo[doctype][docid][key] || [];
 			let docindex = doc_list.findIndex((old_doc) => {
-				return old_doc.name === doc.name;
+				return old_doc.id === doc.id;
 			});
 
 			if (action === "add") {
@@ -2120,7 +2118,7 @@ frappe.ui.form.Form = class FrappeForm {
 						fieldname,
 						"options",
 						options,
-						this.doc.name,
+						this.doc.id,
 						table_fieldname
 					);
 				resolve(options);

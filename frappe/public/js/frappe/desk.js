@@ -72,7 +72,7 @@ frappe.Application = class Application {
 		if (frappe.sys_defaults.email_user_password) {
 			var email_list = frappe.sys_defaults.email_user_password.split(",");
 			for (var u in email_list) {
-				if (email_list[u] === frappe.user.name) {
+				if (email_list[u] === frappe.user.id) {
 					this.set_password(email_list[u]);
 				}
 			}
@@ -280,7 +280,7 @@ frappe.Application = class Application {
 			if (frappe.boot.print_css) {
 				frappe.dom.set_style(frappe.boot.print_css, "print-style");
 			}
-			frappe.user.name = frappe.boot.user.name;
+			frappe.user.id = frappe.boot.user.id;
 			frappe.router.setup();
 		} else {
 			this.set_as_guest();
@@ -294,7 +294,7 @@ frappe.Application = class Application {
 
 		for (let page of frappe.boot.allowed_workspaces || []) {
 			frappe.modules[page.module] = page;
-			frappe.workspaces[frappe.router.slug(page.name)] = page;
+			frappe.workspaces[frappe.router.slug(page.id)] = page;
 		}
 	}
 
@@ -317,8 +317,8 @@ frappe.Application = class Application {
 	}
 
 	set_globals() {
-		frappe.session.user = frappe.boot.user.name;
-		frappe.session.logged_in_user = frappe.boot.user.name;
+		frappe.session.user = frappe.boot.user.id;
+		frappe.session.logged_in_user = frappe.boot.user.id;
 		frappe.session.user_email = frappe.boot.user.email;
 		frappe.session.user_fullname = frappe.user_info().fullname;
 
@@ -337,11 +337,11 @@ frappe.Application = class Application {
 		if (localStorage["page_info"]) {
 			frappe.boot.allowed_pages = [];
 			var page_info = JSON.parse(localStorage["page_info"]);
-			$.each(frappe.boot.page_info, function (name, p) {
-				if (!page_info[name] || page_info[name].modified != p.modified) {
-					delete localStorage["_page:" + name];
+			$.each(frappe.boot.page_info, function (id, p) {
+				if (!page_info[id] || page_info[id].modified != p.modified) {
+					delete localStorage["_page:" + id];
 				}
-				frappe.boot.allowed_pages.push(name);
+				frappe.boot.allowed_pages.push(id);
 			});
 		} else {
 			frappe.boot.allowed_pages = Object.keys(frappe.boot.page_info);
@@ -458,7 +458,7 @@ frappe.Application = class Application {
 	}
 
 	add_browser_class() {
-		$("html").addClass(frappe.utils.get_browser().name.toLowerCase());
+		$("html").addClass(frappe.utils.get_browser().id.toLowerCase());
 	}
 
 	set_fullwidth_if_enabled() {
@@ -480,7 +480,7 @@ frappe.Application = class Application {
 							frappe.call({
 								method: "frappe.desk.doctype.note.note.mark_as_seen",
 								args: {
-									note: note.name,
+									note: note.id,
 								},
 							});
 						}
@@ -520,11 +520,11 @@ frappe.Application = class Application {
 					sleep(500).then(() => {
 						let res = frappe.model.with_doctype(doc.doctype, () => {
 							let newdoc = frappe.model.copy_doc(doc);
-							newdoc.__newname = doc.name;
-							delete doc.name;
+							newdoc.__newid = doc.id;
+							delete doc.id;
 							newdoc.idx = null;
 							newdoc.__run_link_triggers = false;
-							frappe.set_route("Form", newdoc.doctype, newdoc.name);
+							frappe.set_route("Form", newdoc.doctype, newdoc.id);
 							frappe.dom.unfreeze();
 						});
 						res && res.fail?.(frappe.dom.unfreeze);

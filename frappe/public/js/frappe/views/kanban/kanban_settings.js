@@ -51,7 +51,7 @@ export default class KanbanSettings {
 			frappe.call({
 				method: "frappe.desk.doctype.kanban_board.kanban_board.save_settings",
 				args: {
-					board_name: this.settings.name,
+					board_name: this.settings.id,
 					settings: this.dialog.get_values(),
 				},
 				callback: (r) => {
@@ -217,7 +217,7 @@ export default class KanbanSettings {
 			"_liked_by",
 			"_comments",
 			"_assign",
-			this.meta.title_field || "name",
+			this.meta.title_field || "id",
 		];
 
 		const ignore_fieldtypes = [

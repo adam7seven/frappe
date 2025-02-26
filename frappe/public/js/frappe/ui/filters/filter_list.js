@@ -99,7 +99,7 @@ frappe.ui.FilterGroup = class {
 				this.set_filter_events();
 			}
 			this.toggle_empty_filters(false);
-			!hide_empty_filters && this.add_filter(this.doctype, "name");
+			!hide_empty_filters && this.add_filter(this.doctype, "id");
 		});
 
 		this.filter_button.on("hidden.bs.popover", () => {
@@ -149,7 +149,7 @@ frappe.ui.FilterGroup = class {
 	set_filter_events() {
 		this.wrapper.find(".add-filter").on("click", () => {
 			this.toggle_empty_filters(false);
-			this.add_filter(this.doctype, "name");
+			this.add_filter(this.doctype, "id");
 		});
 
 		this.wrapper.find(".clear-filters").on("click", () => {

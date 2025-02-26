@@ -207,10 +207,10 @@ frappe.breadcrumbs = {
 
 		let title = frappe.model.get_doc_title(doc);
 
-		if (title == doc.name) return; // title and name are same, don't add breadcrumb
+		if (title == doc.id) return; // title and id are same, don't add breadcrumb
 
 		let form_route = `/app/${frappe.router.slug(doctype)}/${encodeURIComponent(docid)}`;
-		this.append_breadcrumb_element(form_route, doc.name);
+		this.append_breadcrumb_element(form_route, doc.id);
 
 		if (view === "form") {
 			let last_crumb = this.$breadcrumbs.find("li").last();
@@ -238,9 +238,9 @@ frappe.breadcrumbs = {
 		}
 	},
 
-	rename(doctype, old_name, new_name) {
-		var old_route_str = ["Form", doctype, old_name].join("/");
-		var new_route_str = ["Form", doctype, new_name].join("/");
+	rename(doctype, old_id, new_id) {
+		var old_route_str = ["Form", doctype, old_id].join("/");
+		var new_route_str = ["Form", doctype, new_id].join("/");
 		this.all[new_route_str] = this.all[old_route_str];
 		delete frappe.breadcrumbs.all[old_route_str];
 		this.update();
