@@ -55,7 +55,7 @@ class TypeExporter:
         from frappe.model.base_document import get_controller
 
         self.doc = doc
-        self.doctype = doc.name
+        self.doctype = doc.id
         self.field_types = {}
 
         self.imports = {"from frappe.types import DF"}
@@ -70,9 +70,9 @@ class TypeExporter:
         self._replace_or_add_code(new_code)
 
     def _replace_or_add_code(self, new_code: str):
-        despaced_name = self.doctype.replace(" ", "")
+        despaced_id = self.doctype.replace(" ", "")
 
-        class_definition = f"class {despaced_name}("  # )
+        class_definition = f"class {despaced_id}("  # )
         code = self.controller_path.read_text()
 
         first_line, *_, last_line = new_code.splitlines()
@@ -83,7 +83,7 @@ class TypeExporter:
             code = code[:existing_block_start] + new_code + "\n\n" + code[existing_block_end:].lstrip("\n")
         elif class_definition in code:  # Add just after class definition
             # Regex by default will only match till line ends, span end is when we need to stop
-            if class_def := re.search(rf"class {despaced_name}\(.*", code):  # )
+            if class_def := re.search(rf"class {despaced_id}\(.*", code):  # )
                 class_definition_end = class_def.span()[1] + 1
                 code = code[:class_definition_end] + new_code + "\n\n" + code[class_definition_end:].lstrip("\n")
 
@@ -102,7 +102,7 @@ class TypeExporter:
                 self.field_types[parent_field] = "DF.Data"
 
         if self.doc.autoid == "autoincrement":
-            self.field_types["name"] = "DF.Int | None"
+            self.field_types["id"] = "DF.Int | None"
 
         fields_code_block = self._create_fields_code_block()
         imports = self._create_imports_block()
