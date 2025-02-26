@@ -80,7 +80,7 @@
   "modified": "2025-01-15 17:54:35.661941",
   "modified_by": "Administrator",
   "module": "Integrations",
-  "name": "OAuth Bearer Token",
+  "id": "OAuth Bearer Token",
   "naming_rule": "By fieldname",
   "owner": "Administrator",
   "permissions": [

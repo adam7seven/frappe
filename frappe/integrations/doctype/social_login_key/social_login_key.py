@@ -70,7 +70,7 @@ class SocialLoginKey(Document):
     # end: auto-generated types
 
     def autoid(self):
-        self.name = frappe.scrub(self.provider_name)
+        self.id = frappe.scrub(self.provider_name)
 
     def validate(self):
         self.set_icon()

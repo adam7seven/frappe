@@ -91,7 +91,7 @@
   "modified": "2024-09-14 05:52:41.583612",
   "modified_by": "Administrator",
   "module": "Integrations",
-  "name": "Webhook Request Log",
+  "id": "Webhook Request Log",
   "naming_rule": "Random",
   "owner": "Administrator",
   "permissions": [

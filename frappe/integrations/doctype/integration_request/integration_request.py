@@ -32,8 +32,8 @@ class IntegrationRequest(Document):
     # end: auto-generated types
 
     def autoid(self):
-        if self.flags._name:
-            self.name = self.flags._name
+        if self.flags._id:
+            self.id = self.flags._id
 
     def clear_old_logs(days=30):
         from frappe.query_builder import Interval

@@ -144,7 +144,7 @@ def get_context(doc):
 def enqueue_webhook(doc, webhook) -> None:
     request_url = headers = data = r = None
     try:
-        webhook: Webhook = frappe.get_doc("Webhook", webhook.get("name"))
+        webhook: Webhook = frappe.get_doc("Webhook", webhook.get("id"))
         request_url = webhook.request_url
         if webhook.is_dynamic_url:
             request_url = frappe.render_template(webhook.request_url, get_context(doc))
@@ -153,7 +153,7 @@ def enqueue_webhook(doc, webhook) -> None:
 
     except Exception as e:
         frappe.logger().debug({"enqueue_webhook_error": e})
-        log_request(webhook.name, doc.doctype, doc.name, request_url, headers, data)
+        log_request(webhook.id, doc.doctype, doc.id, request_url, headers, data)
         return
 
     for i in range(3):
@@ -167,16 +167,16 @@ def enqueue_webhook(doc, webhook) -> None:
             )
             r.raise_for_status()
             frappe.logger().debug({"webhook_success": r.text})
-            log_request(webhook.name, doc.doctype, doc.name, request_url, headers, data, r)
+            log_request(webhook.id, doc.doctype, doc.id, request_url, headers, data, r)
             break
 
         except requests.exceptions.ReadTimeout as e:
             frappe.logger().debug({"webhook_error": e, "try": i + 1})
-            log_request(webhook.name, doc.doctype, doc.name, request_url, headers, data)
+            log_request(webhook.id, doc.doctype, doc.id, request_url, headers, data)
 
         except Exception as e:
             frappe.logger().debug({"webhook_error": e, "try": i + 1})
-            log_request(webhook.name, doc.doctype, doc.name, request_url, headers, data, r)
+            log_request(webhook.id, doc.doctype, doc.id, request_url, headers, data, r)
             sleep(3 * i + 1)
             if i != 2:
                 continue

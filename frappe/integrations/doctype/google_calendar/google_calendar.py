@@ -138,7 +138,7 @@ def authorize_access(g_calendar, reauthorize=None):
     )
 
     if not google_calendar.authorization_code or reauthorize:
-        frappe.cache.hset("google_calendar", "google_calendar", google_calendar.name)
+        frappe.cache.hset("google_calendar", "google_calendar", google_calendar.id)
         return get_authentication_url(client_id=google_settings.client_id, redirect_uri=redirect_uri)
     else:
         try:
@@ -152,12 +152,12 @@ def authorize_access(g_calendar, reauthorize=None):
             r = requests.post(GoogleOAuth.OAUTH_URL, data=data).json()
 
             if "refresh_token" in r:
-                frappe.db.set_value("Google Calendar", google_calendar.name, "refresh_token", r.get("refresh_token"))
+                frappe.db.set_value("Google Calendar", google_calendar.id, "refresh_token", r.get("refresh_token"))
                 frappe.db.commit()
 
             frappe.local.response["type"] = "redirect"
             frappe.local.response["location"] = "/app/Form/{}/{}".format(
-                quote("Google Calendar"), quote(google_calendar.name)
+                quote("Google Calendar"), quote(google_calendar.id)
             )
 
             frappe.msgprint(_("Google Calendar has been configured."))
@@ -190,12 +190,12 @@ def sync(g_calendar=None):
     filters = {"enable": 1}
 
     if g_calendar:
-        filters.update({"name": g_calendar})
+        filters.update({"id": g_calendar})
 
     google_calendars = frappe.get_list("Google Calendar", filters=filters)
 
     for g in google_calendars:
-        return sync_events_from_google_calendar(g.name)
+        return sync_events_from_google_calendar(g.id)
 
 
 def get_google_calendar_object(g_calendar):
@@ -223,7 +223,7 @@ def get_google_calendar_object(g_calendar):
 
 def check_google_calendar(account, google_calendar):
     """
-    Checks if Google Calendar is present with the specified name.
+    Checks if Google Calendar is present with the specified id.
     If not, creates one.
     """
     account.load_from_db()
@@ -237,12 +237,12 @@ def check_google_calendar(account, google_calendar):
                 "timeZone": frappe.get_system_settings("time_zone"),
             }
             created_calendar = google_calendar.calendars().insert(body=calendar).execute()
-            frappe.db.set_value("Google Calendar", account.name, "google_calendar_id", created_calendar.get("id"))
+            frappe.db.set_value("Google Calendar", account.id, "google_calendar_id", created_calendar.get("id"))
             frappe.db.commit()
     except HttpError as err:
         frappe.throw(
             _("Google Calendar - Could not create Calendar for {0}, error code {1}.").format(
-                account.name, err.resp.status
+                account.id, err.resp.status
             )
         )
 
@@ -283,7 +283,7 @@ def sync_events_from_google_calendar(g_calendar, method=None):
             )
 
             if err.resp.status == 410:
-                set_encrypted_password("Google Calendar", account.name, "", "next_sync_token")
+                set_encrypted_password("Google Calendar", account.id, "", "next_sync_token")
                 frappe.db.commit()
                 msg += " " + _("Sync token was invalid and has been reset, Retry syncing.")
                 frappe.msgprint(msg, title="Invalid Sync Token", indicator="blue")
@@ -331,13 +331,13 @@ def sync_events_from_google_calendar(g_calendar, method=None):
                     "doctype": "Comment",
                     "comment_type": "Info",
                     "reference_doctype": "Event",
-                    "reference_name": frappe.db.get_value(
+                    "reference_id": frappe.db.get_value(
                         "Event",
                         {
                             "google_calendar_id": account.google_calendar_id,
                             "google_calendar_event_id": event.get("id"),
                         },
-                        "name",
+                        "id",
                     ),
                     "content": " - Event deleted from Google Calendar.",
                 }
@@ -362,7 +362,7 @@ def insert_event_to_calendar(account, event, recurrence=None):
         "subject": event.get("summary"),
         "description": event.get("description"),
         "google_calendar_event": 1,
-        "google_calendar": account.name,
+        "google_calendar": account.id,
         "google_calendar_id": account.google_calendar_id,
         "google_calendar_event_id": event.get("id"),
         "google_meet_link": event.get("hangoutLink"),
@@ -395,7 +395,7 @@ def insert_event_in_google_calendar(doc, method=None):
     if (
         not doc.sync_with_google_calendar
         or doc.pulled_from_google_calendar
-        or not frappe.db.exists("Google Calendar", {"name": doc.google_calendar})
+        or not frappe.db.exists("Google Calendar", {"id": doc.google_calendar})
     ):
         return
 
@@ -436,7 +436,7 @@ def insert_event_in_google_calendar(doc, method=None):
 
         frappe.db.set_value(
             "Event",
-            doc.name,
+            doc.id,
             {"google_calendar_event_id": event.get("id"), "google_meet_link": event.get("hangoutLink")},
             update_modified=False,
         )
@@ -445,7 +445,7 @@ def insert_event_in_google_calendar(doc, method=None):
     except HttpError as err:
         frappe.throw(
             _("Google Calendar - Could not insert event in Google Calendar {0}, error code {1}.").format(
-                account.name, err.resp.status
+                account.id, err.resp.status
             )
         )
 
@@ -459,7 +459,7 @@ def update_event_in_google_calendar(doc, method=None):
     if (
         not doc.sync_with_google_calendar
         or doc.modified == doc.creation
-        or not frappe.db.exists("Google Calendar", {"name": doc.google_calendar})
+        or not frappe.db.exists("Google Calendar", {"id": doc.google_calendar})
     ):
         return
 
@@ -517,7 +517,7 @@ def update_event_in_google_calendar(doc, method=None):
         # if add_video_conferencing enabled or disabled during update, overwrite
         frappe.db.set_value(
             "Event",
-            doc.name,
+            doc.id,
             {"google_meet_link": event.get("hangoutLink")},
             update_modified=False,
         )
@@ -527,7 +527,7 @@ def update_event_in_google_calendar(doc, method=None):
     except HttpError as err:
         frappe.throw(
             _("Google Calendar - Could not update Event {0} in Google Calendar, error code {1}.").format(
-                doc.name, err.resp.status
+                doc.id, err.resp.status
             )
         )
 
@@ -537,7 +537,7 @@ def delete_event_from_google_calendar(doc, method=None):
     Delete Events from Google Calendar if Frappe Event is deleted.
     """
 
-    if not frappe.db.exists("Google Calendar", {"name": doc.google_calendar}):
+    if not frappe.db.exists("Google Calendar", {"id": doc.google_calendar}):
         return
 
     google_calendar, account = get_google_calendar_object(doc.google_calendar)
@@ -560,7 +560,7 @@ def delete_event_from_google_calendar(doc, method=None):
     except HttpError as err:
         frappe.msgprint(
             _("Google Calendar - Could not delete Event {0} from Google Calendar, error code {1}.").format(
-                doc.name, err.resp.status
+                doc.id, err.resp.status
             )
         )
 
@@ -742,7 +742,7 @@ def get_recurrence_parameters(recurrence):
 
 def get_conference_data(doc):
     return {
-        "createRequest": {"requestId": doc.name, "conferenceSolutionKey": {"type": "hangoutsMeet"}},
+        "createRequest": {"requestId": doc.id, "conferenceSolutionKey": {"type": "hangoutsMeet"}},
         "notes": doc.description,
     }
 

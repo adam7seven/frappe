@@ -110,7 +110,7 @@ def create_request_log(
     data,
     integration_type=None,
     service_name=None,
-    name=None,
+    id=None,
     error=None,
     request_headers=None,
     output=None,
@@ -148,8 +148,8 @@ def create_request_log(
         }
     )
 
-    if name:
-        integration_request.flags._name = name
+    if id:
+        integration_request.flags._id = id
 
     integration_request.insert(ignore_permissions=True)
     frappe.db.commit()
