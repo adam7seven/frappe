@@ -34,13 +34,13 @@ class PrintContext(TypedDict):
     lang: str
     layout_direction: str
     doctype: str
-    name: str
+    id: str
     key: str
 
 
 def get_context(context) -> PrintContext:
     """Build context for print"""
-    if not ((frappe.form_dict.doctype and frappe.form_dict.name) or frappe.form_dict.doc):
+    if not ((frappe.form_dict.doctype and frappe.form_dict.id) or frappe.form_dict.doc):
         return PrintContext(
             print_style="",
             comment="",
@@ -48,11 +48,11 @@ def get_context(context) -> PrintContext:
             lang="en",
             layout_direction="ltr",
             doctype="",
-            name="",
+            id="",
             key="",
             body=f"""
 <h1>Error</h1>
-<p>Parameters doctype and name required</p>
+<p>Parameters doctype and id required</p>
 <pre>{escape_html(frappe.as_json(frappe.form_dict, indent=2))}</pre>
 """,
         )
@@ -60,7 +60,7 @@ def get_context(context) -> PrintContext:
     if frappe.form_dict.doc:
         doc = frappe.form_dict.doc
     else:
-        doc = frappe.get_doc(frappe.form_dict.doctype, frappe.form_dict.name)
+        doc = frappe.get_doc(frappe.form_dict.doctype, frappe.form_dict.id)
 
     set_link_titles(doc)
 
@@ -82,19 +82,19 @@ def get_context(context) -> PrintContext:
         settings=settings,
     )
 
-    make_access_log(doctype=frappe.form_dict.doctype, document=frappe.form_dict.name, file_type="PDF", method="Print")
+    make_access_log(doctype=frappe.form_dict.doctype, document=frappe.form_dict.id, file_type="PDF", method="Print")
 
     return {
         "body": body,
         "print_style": get_print_style(frappe.form_dict.style, print_format),
         "comment": frappe.session.user,
-        "title": frappe.utils.strip_html(cstr(doc.get_title() or doc.name)),
+        "title": frappe.utils.strip_html(cstr(doc.get_title() or doc.id)),
         "lang": frappe.local.lang,
         "layout_direction": "rtl" if is_rtl() else "ltr",
         "doctype": frappe.form_dict.doctype,
-        "name": frappe.form_dict.name,
+        "id": frappe.form_dict.id,
         "key": frappe.form_dict.get("key"),
-        "print_format": getattr(print_format, "name", None),
+        "print_format": getattr(print_format, "id", None),
         "letterhead": letterhead,
         "no_letterhead": frappe.form_dict.no_letterhead,
     }
@@ -253,7 +253,7 @@ def get_rendered_template(
 
 
 def set_link_titles(doc: "Document") -> None:
-    # Adds name with title of link field doctype to __link_titles
+    # Adds id with title of link field doctype to __link_titles
     if not doc.get("__link_titles"):
         setattr(doc, "__link_titles", {})
 
@@ -311,7 +311,7 @@ def convert_markdown(doc: "Document") -> None:
 @frappe.whitelist()
 def get_html_and_style(
     doc: str,
-    name: str | None = None,
+    id: str | None = None,
     print_format: str | None = None,
     no_letterhead: bool | None = None,
     letterhead: str | None = None,
@@ -321,8 +321,8 @@ def get_html_and_style(
 ) -> dict[str, str | None]:
     """Return `html` and `style` of print format, used in PDF etc."""
 
-    if isinstance(name, str):
-        document = frappe.get_doc(doc, name)
+    if isinstance(id, str):
+        document = frappe.get_doc(doc, id)
     else:
         document = frappe.get_doc(json.loads(doc))
 
@@ -349,11 +349,11 @@ def get_html_and_style(
 
 
 @frappe.whitelist()
-def get_rendered_raw_commands(doc: str, name: str | None = None, print_format: str | None = None) -> dict:
+def get_rendered_raw_commands(doc: str, id: str | None = None, print_format: str | None = None) -> dict:
     """Return Rendered Raw Commands of print format, used to send directly to printer."""
 
-    if isinstance(name, str):
-        document = frappe.get_doc(doc, name)
+    if isinstance(id, str):
+        document = frappe.get_doc(doc, id)
     else:
         document = frappe.get_doc(json.loads(doc))
 
@@ -384,7 +384,7 @@ def validate_print_permission(doc: "Document") -> None:
 def validate_key(key: str, doc: "Document") -> None:
     document_key_expiry = frappe.get_cached_value(
         "Document Share Key",
-        {"reference_doctype": doc.doctype, "reference_docid": doc.name, "key": key},
+        {"reference_doctype": doc.doctype, "reference_docid": doc.id, "key": key},
         ["expires_on"],
     )
     if document_key_expiry is not None:
@@ -426,7 +426,7 @@ def get_letter_head(doc: "Document", no_letterhead: bool, letterhead: str | None
 
 def get_print_format(doctype: str, print_format: "PrintFormat") -> str:
     if print_format.disabled:
-        frappe.throw(_("Print Format {0} is disabled").format(print_format.name), frappe.DoesNotExistError)
+        frappe.throw(_("Print Format {0} is disabled").format(print_format.id), frappe.DoesNotExistError)
 
     # server, find template
     module = print_format.module or frappe.db.get_value("DocType", doctype, "module")
@@ -439,8 +439,8 @@ def get_print_format(doctype: str, print_format: "PrintFormat") -> str:
             return print_format.html
 
     path = os.path.join(
-        get_module_path(module, "Print Format", print_format.name),
-        frappe.scrub(print_format.name) + ".html",
+        get_module_path(module, "Print Format", print_format.id),
+        frappe.scrub(print_format.id) + ".html",
     )
     if os.path.exists(path):
         with open(path) as pffile:

@@ -29,7 +29,7 @@ ga('send', 'pageview');
 				.then(result => {
 					frappe.call("frappe.website.doctype.web_page_view.web_page_view.make_view_log", {
 						referrer: document.referrer,
-						browser: browser.name,
+						browser: browser.id,
 						version: browser.version,
 						user_tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
 						source: query_params.source || query_params.utm_source,

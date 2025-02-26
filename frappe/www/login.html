@@ -91,7 +91,7 @@
 							{% for provider in provider_logins %}
 							<div class="login-button-wrapper">
 								<a href="{{ provider.auth_url }}"
-									class="btn btn-block btn-default btn-sm btn-login-option btn-{{ provider.name }}">
+									class="btn btn-block btn-default btn-sm btn-login-option btn-{{ provider.id }}">
 									{% if provider.icon %}
 										{{ provider.icon }}
 									{% endif %}

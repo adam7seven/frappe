@@ -13,8 +13,8 @@
 </p>
 
 {% for app_info in apps %}
-<section id="{{ app_info.name }}">
-    <h2><a href="#{{ app_info.name }}">{{ app_info.name }}</a></h2>
+<section id="{{ app_info.id }}">
+    <h2><a href="#{{ app_info.id }}">{{ app_info.id }}</a></h2>
     <table class="table">
         <tr>
             <th>{{ _("Authors") }}</th>
@@ -41,7 +41,7 @@
                         {% for package in app_info["dependencies"] %}
                         <tr>
                             <td class="package">
-                                {{ package.name | e }}
+                                {{ package.id | e }}
                             </td>
                             <td class="type">{{ package.type }}</td>
                             <td class="license"><i class="fa fa-spinner fa-spin"></i></td>
@@ -62,18 +62,18 @@
     tables.forEach((table) => {
         var package_cells = table.querySelectorAll('td.package');
         package_cells.forEach((package_cell) => {
-            var name = package_cell.innerText;
+            var id = package_cell.innerText;
             var type_cell = package_cell.nextElementSibling;
             var license_cell = type_cell.nextElementSibling;
             var author_cell = license_cell.nextElementSibling;
             if (type_cell.innerText === "JavaScript") {
-                get_info_from_npm(name).then((info) => {
+                get_info_from_npm(id).then((info) => {
                     license_cell.innerText = info.license?.slice(0, 50);
                     author_cell.innerText = info.author;
                 });
             }
             else if (type_cell.innerText === "Python") {
-                get_info_from_pypi(name).then((info) => {
+                get_info_from_pypi(id).then((info) => {
                     license_cell.innerText = info.license?.slice(0, 50);
                     author_cell.innerText = info.author;
                 });
@@ -91,8 +91,8 @@
                         typeof data.license === "object" ? data.license.type : data.license
                     ) || "Unknown",
                     author: (
-                        data.author?.name ||
-                        data.maintainers?.map((c) => c.name).join(", ") ||
+                        data.author?.id ||
+                        data.maintainers?.map((c) => c.id).join(", ") ||
                         "Unknown"
                     )
                 }

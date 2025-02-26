@@ -11,7 +11,7 @@
 			        <title>{{ i.title }}</title>
 			        <description>{{ i.blog_intro }}</description>
 			        <link>{{ i.link }}</link>
-			        <guid>{{ i.name }}</guid>
+			        <guid>{{ i.id }}</guid>
 			        <pubDate>{{ i.published_on }}</pubDate>
 		</item>{% endfor %}
 </channel>
