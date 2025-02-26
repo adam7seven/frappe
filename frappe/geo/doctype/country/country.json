@@ -59,7 +59,7 @@
   "modified": "2025-01-03 13:01:46.030113",
   "modified_by": "Administrator",
   "module": "Geo",
-  "name": "Country",
+  "id": "Country",
   "naming_rule": "By fieldname",
   "owner": "Administrator",
   "permissions": [
