@@ -29,7 +29,7 @@ class WorkflowPermissionError(frappe.ValidationError):
 def get_workflow_name(doctype):
     workflow_name = frappe.cache.hget("workflow", doctype)
     if workflow_name is None:
-        workflow_name = frappe.db.get_value("Workflow", {"document_type": doctype, "is_active": 1}, "name")
+        workflow_name = frappe.db.get_value("Workflow", {"document_type": doctype, "is_active": 1}, "id")
         frappe.cache.hset("workflow", doctype, workflow_name or "")
 
     return workflow_name
@@ -278,7 +278,7 @@ def _bulk_workflow_action(docids, doctype, action):
             frappe.log_error(
                 title=f"Workflow {action} threw an error for {doctype} {docid}",
                 reference_doctype="Workflow",
-                reference_name=action,
+                reference_id=action,
             )
         finally:
             if not message_dict:

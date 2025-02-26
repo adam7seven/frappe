@@ -142,7 +142,7 @@ def get_mapped_doc(
                     if (
                         frappe.flags.selected_children
                         and (df.fieldname in frappe.flags.selected_children)
-                        and source_d.name not in frappe.flags.selected_children[df.fieldname]
+                        and source_d.id not in frappe.flags.selected_children[df.fieldname]
                     ):
                         continue
 
@@ -209,10 +209,10 @@ def map_fields(source_doc, target_doc, table_map, source_parent):
                 if not target_doc.get(df.fieldname):
                     # map link fields having options == source doctype
                     if df.options == source_doc.doctype:
-                        target_doc.set(df.fieldname, source_doc.name)
+                        target_doc.set(df.fieldname, source_doc.id)
 
                     elif source_parent and df.options == source_parent.doctype:
-                        target_doc.set(df.fieldname, source_parent.name)
+                        target_doc.set(df.fieldname, source_parent.id)
 
     # map other fields
     field_map = table_map.get("field_map")

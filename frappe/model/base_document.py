@@ -19,7 +19,7 @@ from frappe.model import (
 )
 from frappe.model.docstatus import DocStatus
 from frappe.model.dynamic_links import invalidate_distinct_link_doctypes
-from frappe.model.naming import set_new_name
+from frappe.model.naming import set_new_id
 from frappe.model.utils.link_count import notify_link_count
 from frappe.modules import load_doctype_module
 from frappe.utils import (
@@ -61,7 +61,7 @@ def get_controller(doctype):
 
     For `custom` type, return `frappe.model.document.Document`.
 
-    :param doctype: DocType name as string.
+    :param doctype: DocType id as string.
     """
 
     site_controllers = frappe.controllers.setdefault(frappe.local.site, {})
@@ -183,9 +183,9 @@ class BaseDocument:
                 })
         """
 
-        # set name first, as it is used a reference in child document
-        if "name" in d:
-            self.name = d["name"]
+        # set id first, as it is used a reference in child document
+        if "id" in d:
+            self.id = d["id"]
 
         ignore_children = hasattr(self, "flags") and self.flags.ignore_children
         for key, value in d.items():
@@ -209,7 +209,7 @@ class BaseDocument:
                 self.set(key, value)
 
     def get_db_value(self, key):
-        return frappe.db.get_value(self.doctype, self.name, key)
+        return frappe.db.get_value(self.doctype, self.id, key)
 
     def get(self, key, filters=None, limit=None, default=None):
         if isinstance(key, dict):
@@ -328,7 +328,7 @@ class BaseDocument:
             value["doctype"] = doctype
             value = get_controller(doctype)(value)
 
-        value.parent = self.name
+        value.parent = self.id
         value.parenttype = self.doctype
         value.parentfield = key
 
@@ -341,9 +341,9 @@ class BaseDocument:
             else:
                 value.idx = 1
 
-        if not getattr(value, "name", None):
+        if not getattr(value, "id", None):
             value.__dict__["__islocal"] = 1
-            value.__dict__["__temporary_name"] = frappe.generate_hash(length=10)
+            value.__dict__["__temporary_id"] = frappe.generate_hash(length=10)
 
         return value
 
@@ -559,15 +559,15 @@ class BaseDocument:
                                                 at database level (postgres)
                                                 in python (mariadb)
         """
-        if not self.name:
-            # name will be set by document class in most cases
-            set_new_name(self)
+        if not self.id:
+            # id will be set by document class in most cases
+            set_new_id(self)
 
         conflict_handler = ""
         # On postgres we can't implcitly ignore PK collision
-        # So instruct pg to ignore `name` field conflicts
+        # So instruct pg to ignore `id` field conflicts
         if ignore_if_duplicate and frappe.db.db_type == "postgres":
-            conflict_handler = "on conflict (name) do nothing"
+            conflict_handler = "on conflict (id) do nothing"
 
         if not self.creation:
             self.creation = self.modified = now()
@@ -599,17 +599,17 @@ class BaseDocument:
                     self.flags.retry_count = (self.flags.retry_count or 0) + 1
                     if self.flags.retry_count > 5:
                         raise
-                    self.name = None
+                    self.id = None
                     self.db_insert()
                     return
 
                 if not ignore_if_duplicate:
                     frappe.msgprint(
-                        _("{0} {1} already exists").format(_(self.doctype), frappe.bold(self.name)),
+                        _("{0} {1} already exists").format(_(self.doctype), frappe.bold(self.id)),
                         title=_("Duplicate Name"),
                         indicator="red",
                     )
-                    raise frappe.DuplicateEntryError(self.doctype, self.name, e)
+                    raise frappe.DuplicateEntryError(self.doctype, self.id, e)
 
             elif frappe.db.is_unique_key_violation(e):
                 # unique constraint
@@ -621,7 +621,7 @@ class BaseDocument:
         self.set("__islocal", False)
 
     def db_update(self):
-        if self.get("__islocal") or not self.name:
+        if self.get("__islocal") or not self.id:
             self.db_insert()
             return
 
@@ -631,19 +631,19 @@ class BaseDocument:
             ignore_virtual=True,
         )
 
-        # don't update name, as case might've been changed
-        name = cstr(d["name"])
-        del d["name"]
+        # don't update id, as case might've been changed
+        id = cstr(d["id"])
+        del d["id"]
 
         columns = list(d)
 
         try:
             frappe.db.sql(
                 """UPDATE `tab{doctype}`
-				SET {values} WHERE `name`=%s""".format(
+				SET {values} WHERE `id`=%s""".format(
                     doctype=self.doctype, values=", ".join("`" + c + "`=%s" for c in columns)
                 ),
-                [*list(d.values()), name],
+                [*list(d.values()), id],
             )
         except Exception as e:
             if frappe.db.is_unique_key_violation(e):
@@ -675,7 +675,7 @@ class BaseDocument:
             frappe.msgprint(_("{0} must be unique").format(label or fieldname))
 
         # this is used to preserve traceback
-        raise frappe.UniqueValidationError(self.doctype, self.name, e)
+        raise frappe.UniqueValidationError(self.doctype, self.id, e)
 
     def get_field_name_by_key_name(self, key_name):
         """MariaDB stores a mapping between `key_name` and `column_name`.
@@ -724,7 +724,7 @@ class BaseDocument:
         if getattr(self.meta, "issingle", False):
             frappe.db.set_single_value(self.doctype, "modified", self.modified, update_modified=False)
         else:
-            frappe.db.set_value(self.doctype, self.name, "modified", self.modified, update_modified=False)
+            frappe.db.set_value(self.doctype, self.id, "modified", self.modified, update_modified=False)
 
     def _fix_numeric_types(self):
         for df in self.meta.get("fields"):
@@ -827,9 +827,9 @@ class BaseDocument:
                 if not meta.get("is_virtual"):
                     if not fields_to_fetch:
                         # cache a single value type
-                        values = _dict(name=frappe.db.get_value(doctype, docid, "name", cache=True))
+                        values = _dict(id=frappe.db.get_value(doctype, docid, "id", cache=True))
                     else:
-                        values_to_fetch = ["name"] + [_df.fetch_from.split(".")[-1] for _df in fields_to_fetch]
+                        values_to_fetch = ["id"] + [_df.fetch_from.split(".")[-1] for _df in fields_to_fetch]
 
                         # fallback to dict with field_to_fetch=None if link field value is not found
                         # (for compatibility, `values` must have same data type)
@@ -838,14 +838,14 @@ class BaseDocument:
                         values = frappe.db.get_value(doctype, docid, values_to_fetch, as_dict=True) or empty_values
 
                 if getattr(meta, "issingle", 0):
-                    values.name = doctype
+                    values.id = doctype
 
                 if meta.get("is_virtual"):
                     values = frappe.get_doc(doctype, docid).as_dict()
 
                 if values:
                     if not df.get("is_virtual"):
-                        setattr(self, df.fieldname, values.name)
+                        setattr(self, df.fieldname, values.id)
 
                     for _df in fields_to_fetch:
                         if self.is_new() or not self.docstatus.is_submitted() or _df.allow_on_submit:
@@ -854,7 +854,7 @@ class BaseDocument:
                     if not meta.istable:
                         notify_link_count(doctype, docid)
 
-                    if not values.name:
+                    if not values.id:
                         invalid_links.append((df.fieldname, docid, get_msg(df, docid)))
 
                     elif (
@@ -920,7 +920,7 @@ class BaseDocument:
         from frappe.utils import (
             split_emails,
             validate_email_address,
-            validate_name,
+            validate_id,
             validate_phone_number,
             validate_phone_number_with_country_code,
             validate_url,
@@ -950,7 +950,7 @@ class BaseDocument:
                     validate_email_address(email_address, throw=True)
 
             if data_field_options == "Name":
-                validate_name(data, throw=True)
+                validate_id(data, throw=True)
 
             if data_field_options == "Phone":
                 validate_phone_number(data, throw=True)
@@ -964,7 +964,7 @@ class BaseDocument:
 
         constants = [d.fieldname for d in self.meta.get("fields", {"set_only_once": ("=", 1)})]
         if constants:
-            values = frappe.db.get_value(self.doctype, self.name, constants, as_dict=True)
+            values = frappe.db.get_value(self.doctype, self.id, constants, as_dict=True)
 
         for fieldname in constants:
             df = self.meta.get_field(fieldname)
@@ -1029,19 +1029,19 @@ class BaseDocument:
                 frappe.utils.validate_python_code(code_string, fieldname=field.label)
 
     def _sync_autoid_field(self):
-        """Keep autoid field in sync with `name`"""
+        """Keep autoid field in sync with `id`"""
         autoid = self.meta.autoid or ""
         _empty, _field_specifier, fieldname = autoid.partition("field:")
 
-        if fieldname and self.name and self.name != self.get(fieldname):
-            self.set(fieldname, self.name)
+        if fieldname and self.id and self.id != self.get(fieldname):
+            self.set(fieldname, self.id)
 
     def throw_length_exceeded_error(self, df, max_length, value):
         # check if parentfield exists (only applicable for child table doctype)
         if self.get("parentfield"):
             reference = _("{0}, Row {1}").format(_(self.doctype), self.idx)
         else:
-            reference = f"{_(self.doctype)} {self.name}"
+            reference = f"{_(self.doctype)} {self.id}"
 
         frappe.throw(
             _("{0}: '{1}' ({3}) will get truncated, as max characters allowed is {2}").format(
@@ -1053,7 +1053,7 @@ class BaseDocument:
 
     def _validate_update_after_submit(self):
         # get the full doc with children
-        db_values = frappe.get_doc(self.doctype, self.name).as_dict()
+        db_values = frappe.get_doc(self.doctype, self.id).as_dict()
 
         for key in self.as_dict():
             df = self.meta.get_field(key)
@@ -1143,11 +1143,11 @@ class BaseDocument:
             new_password = self.get(df.fieldname)
 
             if not new_password:
-                remove_encrypted_password(self.doctype, self.name, df.fieldname)
+                remove_encrypted_password(self.doctype, self.id, df.fieldname)
 
             if new_password and not self.is_dummy_password(new_password):
                 # is not a dummy password like '*****'
-                set_encrypted_password(self.doctype, self.name, new_password, df.fieldname)
+                set_encrypted_password(self.doctype, self.id, new_password, df.fieldname)
 
                 # set dummy password like '*****'
                 self.set(df.fieldname, "*" * len(new_password))
@@ -1158,7 +1158,7 @@ class BaseDocument:
         if self.get(fieldname) and not self.is_dummy_password(self.get(fieldname)):
             return self.get(fieldname)
 
-        return get_decrypted_password(self.doctype, self.name, fieldname, raise_exception=raise_exception)
+        return get_decrypted_password(self.doctype, self.id, fieldname, raise_exception=raise_exception)
 
     def is_dummy_password(self, pwd):
         return "".join(set(pwd)) == "*"
@@ -1283,7 +1283,7 @@ class BaseDocument:
                 # get values from old doc
                 if self.parent_doc:
                     parent_doc = self.parent_doc.get_latest()
-                    child_docs = [d for d in parent_doc.get(self.parentfield) if d.name == self.name]
+                    child_docs = [d for d in parent_doc.get(self.parentfield) if d.id == self.id]
                     if not child_docs:
                         return
                     ref_doc = child_docs[0]

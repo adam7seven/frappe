@@ -146,13 +146,13 @@ def remove_orphan_doctypes():
     So this is supposed to be non-destrictive operation.
     """
 
-    doctype_names = frappe.get_all("DocType", {"custom": 0}, pluck="name")
+    doctype_ids = frappe.get_all("DocType", {"custom": 0}, pluck="id")
     orphan_doctypes = []
 
     clear_controller_cache()
     class_overrides = frappe.get_hooks("override_doctype_class", {})
 
-    for doctype in doctype_names:
+    for doctype in doctype_ids:
         if doctype in class_overrides:
             continue
         try:
@@ -166,8 +166,8 @@ def remove_orphan_doctypes():
         return
 
     print(f"Orphaned DocType(s) found: {', '.join(orphan_doctypes)}")
-    for i, name in enumerate(orphan_doctypes):
-        frappe.delete_doc("DocType", name, force=True, ignore_missing=True)
+    for i, id in enumerate(orphan_doctypes):
+        frappe.delete_doc("DocType", id, force=True, ignore_missing=True)
         update_progress_bar("Deleting orphaned DocTypes", i, len(orphan_doctypes))
     frappe.db.commit()
     print()
