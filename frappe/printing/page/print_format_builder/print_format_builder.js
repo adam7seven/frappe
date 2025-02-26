@@ -12,9 +12,9 @@ frappe.pages["print-format-builder"].on_page_show = function (wrapper) {
 		});
 	} else if (frappe.route_options) {
 		if (frappe.route_options.make_new) {
-			let { doctype, name, based_on, beta } = frappe.route_options;
+			let { doctype, id, based_on, beta } = frappe.route_options;
 			frappe.route_options = null;
-			frappe.print_format_builder.setup_new_print_format(doctype, name, based_on, beta);
+			frappe.print_format_builder.setup_new_print_format(doctype, id, based_on, beta);
 		} else {
 			frappe.print_format_builder.print_format = frappe.route_options.doc;
 			frappe.route_options = null;
@@ -34,7 +34,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 		if (!this.print_format) {
 			this.show_start();
 		} else {
-			this.page.set_title(this.print_format.name);
+			this.page.set_title(this.print_format.id);
 			this.setup_print_format();
 		}
 	}
@@ -87,10 +87,10 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 
 		// create a new print format.
 		this.page.main.find(".btn-edit-print-format").on("click", function () {
-			var name = me.print_format_input.get_value();
-			if (!name) return;
-			frappe.model.with_doc("Print Format", name, function (doc) {
-				frappe.set_route("print-format-builder", name);
+			var id = me.print_format_input.get_value();
+			if (!id) return;
+			frappe.model.with_doc("Print Format", id, function (doc) {
+				frappe.set_route("print-format-builder", id);
 			});
 		});
 	}
@@ -121,20 +121,20 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 
 		this.page.main.find(".btn-new-print-format").on("click", function () {
 			var doctype = me.doctype_input.get_value(),
-				name = me.name_input.get_value();
-			if (!(doctype && name)) {
+				id = me.name_input.get_value();
+			if (!(doctype && id)) {
 				frappe.msgprint(__("Both DocType and Name required"));
 				return;
 			}
-			me.setup_new_print_format(doctype, name);
+			me.setup_new_print_format(doctype, id);
 		});
 	}
-	setup_new_print_format(doctype, name, based_on, beta) {
+	setup_new_print_format(doctype, id, based_on, beta) {
 		frappe.call({
 			method: "frappe.printing.page.print_format_builder.print_format_builder.create_custom_format",
 			args: {
 				doctype: doctype,
-				name: name,
+				id: id,
 				based_on: based_on,
 				beta: Boolean(beta),
 			},
@@ -142,7 +142,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 				if (r.message) {
 					let print_format = r.message;
 					if (print_format.print_format_builder_beta) {
-						frappe.set_route("print-format-builder-beta", print_format.name);
+						frappe.set_route("print-format-builder-beta", print_format.id);
 					} else {
 						this.print_format = print_format;
 						this.refresh();
@@ -171,7 +171,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 			);
 			me.page.clear_inner_toolbar();
 			me.page.add_inner_button(__("Edit Properties"), function () {
-				frappe.set_route("Form", "Print Format", me.print_format.name);
+				frappe.set_route("Form", "Print Format", me.print_format.id);
 			});
 		});
 	}
@@ -225,7 +225,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 				'<div class="print-heading">\
 				<h2><div>' +
 				__(this.print_format.doc_type) +
-				'</div><br><small class="sub-heading">{{ _(doc.name) }}</small>\
+				'</div><br><small class="sub-heading">{{ _(doc.id) }}</small>\
 				</h2></div>';
 		}
 
@@ -257,7 +257,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 		// so that it is easier to render in a template
 		$.each(this.data, function (i, f) {
 			me.fields_dict[f.fieldname] = f;
-			if (!f.name && f.fieldname) {
+			if (!f.id && f.fieldname) {
 				// from format_data (designed format)
 				// print_hide should always be false
 				if (f.fieldname === "_custom_html") {
@@ -634,18 +634,18 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 			var $body = $(d.body);
 
 			var doc_fields = frappe.get_meta(doctype).fields;
-			var docfields_by_name = {};
+			var docfields_by_id = {};
 
 			// docfields by fieldname
 			$.each(doc_fields, function (j, f) {
-				if (f) docfields_by_name[f.fieldname] = f;
+				if (f) docfields_by_id[f.fieldname] = f;
 			});
 
 			// add field which are in column_names first to preserve order
 			var fields = [];
 			$.each(column_names, function (i, v) {
-				if (Object.keys(docfields_by_name).includes(v)) {
-					fields.push(docfields_by_name[v]);
+				if (Object.keys(docfields_by_id).includes(v)) {
+					fields.push(docfields_by_id[v]);
 				}
 			});
 			// add remaining fields
@@ -750,7 +750,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 							"You can add dynamic properties from the document by using Jinja templating."
 						) +
 						__("For example: If you want to include the document ID, use {0}", [
-							"<code>{{ doc.name }}</code>",
+							"<code>{{ doc.id }}</code>",
 						]) +
 						"</p>",
 				},
@@ -846,7 +846,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 			method: "frappe.client.set_value",
 			args: {
 				doctype: "Print Format",
-				name: this.print_format.name,
+				id: this.print_format.id,
 				fieldname: "format_data",
 				value: JSON.stringify(data),
 			},
@@ -854,7 +854,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 			btn: this.page.btn_primary,
 			callback: function (r) {
 				me.print_format = r.message;
-				locals["Print Format"][me.print_format.name] = r.message;
+				locals["Print Format"][me.print_format.id] = r.message;
 				frappe.show_alert({ message: __("Saved"), indicator: "green" });
 			},
 		});

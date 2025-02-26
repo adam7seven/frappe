@@ -52,16 +52,16 @@ class PrintFormat(Document):
     def onload(self):
         templates = frappe.get_all(
             "Print Format Field Template",
-            fields=["template", "field", "name"],
+            fields=["template", "field", "id"],
             filters={"document_type": self.doc_type},
         )
         self.set_onload("print_templates", templates)
 
     def get_html(self, docid, letterhead=None):
-        return get_html(self.doc_type, docid, self.name, letterhead)
+        return get_html(self.doc_type, docid, self.id, letterhead)
 
     def download_pdf(self, docid, letterhead=None):
-        return download_pdf(self.doc_type, docid, self.name, letterhead)
+        return download_pdf(self.doc_type, docid, self.id, letterhead)
 
     def validate(self):
         if (
@@ -74,7 +74,7 @@ class PrintFormat(Document):
             frappe.throw(frappe._("Standard Print Format cannot be updated"))
 
         # old_doc_type is required for clearing item cache
-        self.old_doc_type = frappe.db.get_value("Print Format", self.name, "doc_type")
+        self.old_doc_type = frappe.db.get_value("Print Format", self.id, "doc_type")
 
         self.extract_images()
 
@@ -139,15 +139,15 @@ class PrintFormat(Document):
 
 
 @frappe.whitelist()
-def make_default(name):
+def make_default(id):
     """Set print format as default"""
     frappe.has_permission("Print Format", "write")
 
-    print_format = frappe.get_doc("Print Format", name)
+    print_format = frappe.get_doc("Print Format", id)
 
     doctype = frappe.get_doc("DocType", print_format.doc_type)
     if doctype.custom:
-        doctype.default_print_format = name
+        doctype.default_print_format = id
         doctype.save()
     else:
         # "Customize form"
@@ -156,12 +156,12 @@ def make_default(name):
                 "doctype_or_field": "DocType",
                 "doctype": print_format.doc_type,
                 "property": "default_print_format",
-                "value": name,
+                "value": id,
             }
         )
 
     frappe.msgprint(
         frappe._("{0} is now default print format for {1} doctype").format(
-            frappe.bold(name), frappe.bold(print_format.doc_type)
+            frappe.bold(id), frappe.bold(print_format.doc_type)
         )
     )

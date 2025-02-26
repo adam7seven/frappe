@@ -46,7 +46,7 @@
   "modified": "2024-03-23 16:03:35.511731",
   "modified_by": "Administrator",
   "module": "Printing",
-  "name": "Print Style",
+  "id": "Print Style",
   "owner": "Administrator",
   "permissions": [
     {

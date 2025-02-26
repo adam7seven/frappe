@@ -219,7 +219,7 @@ frappe.ui.form.PrintView = class {
 		frappe
 			.xcall("frappe.printing.page.print.print.get_print_settings_to_show", {
 				doctype: this.frm.doc.doctype,
-				docid: this.frm.doc.name,
+				docid: this.frm.doc.id,
 			})
 			.then((settings) => this.add_settings_to_sidebar(settings));
 	}
@@ -243,20 +243,20 @@ frappe.ui.form.PrintView = class {
 	edit_print_format() {
 		let print_format = this.get_print_format();
 		let is_custom_format =
-			print_format.name &&
+			print_format.id &&
 			(print_format.print_format_builder || print_format.print_format_builder_beta) &&
 			print_format.standard === "No";
-		let is_standard_but_editable = print_format.name && print_format.custom_format;
+		let is_standard_but_editable = print_format.id && print_format.custom_format;
 
 		if (is_standard_but_editable) {
-			frappe.set_route("Form", "Print Format", print_format.name);
+			frappe.set_route("Form", "Print Format", print_format.id);
 			return;
 		}
 		if (is_custom_format) {
 			if (print_format.print_format_builder_beta) {
-				frappe.set_route("print-format-builder-beta", print_format.name);
+				frappe.set_route("print-format-builder-beta", print_format.id);
 			} else {
-				frappe.set_route("print-format-builder", print_format.name);
+				frappe.set_route("print-format-builder", print_format.id);
 			}
 			return;
 		}
@@ -273,7 +273,7 @@ frappe.ui.form.PrintView = class {
 					label: __("Based On"),
 					fieldname: "based_on",
 					fieldtype: "Read Only",
-					default: print_format.name || "Standard",
+					default: print_format.id || "Standard",
 				},
 				{
 					label: __("Use the new Print Format Builder"),
@@ -285,7 +285,7 @@ frappe.ui.form.PrintView = class {
 				frappe.route_options = {
 					make_new: true,
 					doctype: this.frm.doctype,
-					name: data.print_format_name,
+					id: data.print_format_name,
 					based_on: data.based_on,
 					beta: data.beta,
 				};
@@ -327,14 +327,14 @@ frappe.ui.form.PrintView = class {
 						label: __("Based On"),
 						fieldname: "based_on",
 						fieldtype: "Read Only",
-						default: print_format.name || "Standard",
+						default: print_format.id || "Standard",
 					},
 				],
 				(data) => {
 					frappe.route_options = {
 						make_new: true,
 						doctype: this.frm.doctype,
-						name: data.print_format_name,
+						id: data.print_format_name,
 						based_on: data.based_on,
 					};
 					frappe.set_route("print-format-builder");
@@ -358,8 +358,8 @@ frappe.ui.form.PrintView = class {
 		}
 
 		return frappe.db
-			.get_value("Letter Head", { disabled: 0, is_default: 1 }, "name")
-			.then(({ message }) => this.letterhead_selector.val(message.name));
+			.get_value("Letter Head", { disabled: 0, is_default: 1 }, "id")
+			.then(({ message }) => this.letterhead_selector.val(message.id));
 	}
 
 	set_user_lang() {
@@ -419,8 +419,8 @@ frappe.ui.form.PrintView = class {
 		const iframe = this.print_wrapper.find(".preview-beta-wrapper iframe");
 		let params = new URLSearchParams({
 			doctype: this.frm.doc.doctype,
-			name: this.frm.doc.name,
-			print_format: print_format.name,
+			id: this.frm.doc.id,
+			print_format: print_format.id,
 		});
 		let letterhead = this.get_letterhead();
 		if (letterhead) {
@@ -566,7 +566,7 @@ frappe.ui.form.PrintView = class {
 				method: "frappe.utils.print_format.print_by_server",
 				args: {
 					doctype: me.frm.doc.doctype,
-					name: me.frm.doc.name,
+					id: me.frm.doc.id,
 					printer_setting: localStorage.getItem("network_printer"),
 					print_format: me.selected_format(),
 					no_letterhead: me.with_letterhead(),
@@ -629,8 +629,8 @@ frappe.ui.form.PrintView = class {
 		if (print_format.print_format_builder_beta) {
 			let params = new URLSearchParams({
 				doctype: this.frm.doc.doctype,
-				name: this.frm.doc.name,
-				print_format: print_format.name,
+				id: this.frm.doc.id,
+				print_format: print_format.id,
 				letterhead: this.get_letterhead(),
 			});
 			let w = window.open(`/api/method/frappe.utils.weasyprint.download_pdf?${params}`);
@@ -650,8 +650,8 @@ frappe.ui.form.PrintView = class {
 				method +
 					"doctype=" +
 					encodeURIComponent(this.frm.doc.doctype) +
-					"&name=" +
-					encodeURIComponent(this.frm.doc.name) +
+					"&id=" +
+					encodeURIComponent(this.frm.doc.id) +
 					(printit ? "&trigger_print=1" : "") +
 					"&format=" +
 					encodeURIComponent(this.selected_format()) +

@@ -39,7 +39,7 @@
   "modified": "2024-03-23 16:03:30.772015",
   "modified_by": "Administrator",
   "module": "Printing",
-  "name": "Network Printer Settings",
+  "id": "Network Printer Settings",
   "naming_rule": "Set by user",
   "owner": "Administrator",
   "permissions": [

@@ -91,12 +91,12 @@ function load_print_format_builder_beta(wrapper) {
 					frappe.db
 						.insert({
 							doctype: "Print Format",
-							name: print_format_name,
+							id: print_format_name,
 							doc_type: doctype,
 							print_format_builder_beta: 1,
 						})
 						.then((doc) => {
-							frappe.set_route("print-format-builder-beta", doc.name);
+							frappe.set_route("print-format-builder-beta", doc.id);
 						})
 						.finally(() => {
 							d.get_primary_btn().prop("disabled", false);
