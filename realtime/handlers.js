@@ -9,12 +9,12 @@ function frappe_handlers(socket) {
 		socket.join(SITE_ROOM);
 	}
 
-	socket.has_permission = (doctype, name) => {
+	socket.has_permission = (doctype, id) => {
 		return new Promise((resolve) => {
 			socket
 				.frappe_request("/api/method/frappe.realtime.has_permission", {
 					doctype,
-					name: name || "",
+					id: id || "",
 				})
 				.then((res) => res.json())
 				.then(({ message }) => {
