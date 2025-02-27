@@ -452,7 +452,7 @@
     },
     {
       "fieldname": "link_filters",
-      "fieldtype": "JSON",
+      "fieldtype": "Long Text",
       "hidden": 1,
       "label": "Link Filters"
     },

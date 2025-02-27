@@ -95,7 +95,7 @@ class CustomField(Document):
         is_virtual: DF.Check
         label: DF.Data | None
         length: DF.Int
-        link_filters: DF.JSON | None
+        link_filters: DF.LongText | None
         mandatory_depends_on: DF.Code | None
         module: DF.Link | None
         no_copy: DF.Check
