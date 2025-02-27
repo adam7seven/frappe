@@ -306,7 +306,7 @@ frappe.unscrub = function (txt) {
 
 frappe.get_data_pill = (
 	label,
-	target_id = null,
+	target_name = null,
 	remove_action = null,
 	image = null,
 	colored = false
@@ -333,7 +333,7 @@ frappe.get_data_pill = (
 		`);
 		if (typeof remove_action === "function") {
 			remove_btn.click(() => {
-				remove_action(target_id || label, data_pill_wrapper);
+				remove_action(target_name || label, data_pill_wrapper);
 			});
 		}
 		data_pill_wrapper.append(remove_btn);

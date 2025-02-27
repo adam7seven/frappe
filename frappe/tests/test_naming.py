@@ -267,22 +267,22 @@ class TestNaming(IntegrationTestCase):
         # case 1: check same name as doctype
         # set name via prompt
         tag = frappe.get_doc({"doctype": "Tag", "__newname": "Tag"})
-        self.assertRaises(frappe.NameError, tag.insert)
+        self.assertRaises(frappe.IDError, tag.insert)
 
         # set by passing set_name as ToDo
-        self.assertRaises(frappe.NameError, make_invalid_todo)
+        self.assertRaises(frappe.IDError, make_invalid_todo)
 
         # name (via title field) cannot be the same as the doctype
         note = frappe.get_doc({"doctype": "Currency", "currency_name": "Currency"})
-        self.assertRaises(frappe.NameError, note.insert)
+        self.assertRaises(frappe.IDError, note.insert)
 
         # case 2: set name with "New ---"
         tag = frappe.get_doc({"doctype": "Tag", "__newname": "New Tag"})
-        self.assertRaises(frappe.NameError, tag.insert)
+        self.assertRaises(frappe.IDError, tag.insert)
 
         # case 3: set name with special characters
         tag = frappe.get_doc({"doctype": "Tag", "__newname": "Tag<>"})
-        self.assertRaises(frappe.NameError, tag.insert)
+        self.assertRaises(frappe.IDError, tag.insert)
 
         # case 4: no name specified
         tag = frappe.get_doc({"doctype": "Tag", "__newname": ""})

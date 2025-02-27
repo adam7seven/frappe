@@ -327,10 +327,10 @@ $.extend(frappe.model, {
 			frappe.throw(
 				__("You have unsaved changes in this form. Please save before you continue.")
 			);
-		} else if (!opts.source_id && opts.frm) {
-			opts.source_id = opts.frm.doc.id;
-		} else if (!opts.frm && !opts.source_id) {
-			opts.source_id = null;
+		} else if (!opts.source_name && opts.frm) {
+			opts.source_name = opts.frm.doc.id;
+		} else if (!opts.frm && !opts.source_name) {
+			opts.source_name = null;
 		}
 
 		return frappe.call({
@@ -338,7 +338,7 @@ $.extend(frappe.model, {
 			method: "frappe.model.mapper.make_mapped_doc",
 			args: {
 				method: opts.method,
-				source_id: opts.source_id,
+				source_name: opts.source_name,
 				args: opts.args || null,
 				selected_children: opts.frm ? opts.frm.get_selected() : null,
 			},

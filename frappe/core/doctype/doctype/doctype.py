@@ -1001,12 +1001,12 @@ class DocType(Document):
             # length(tab + <Doctype ID>) should be equal to 64 characters hence doctype should be 61 characters
             frappe.throw(
                 _("Doctype id is limited to {0} characters ({1})").format(max_length, id),
-                frappe.NameError,
+                frappe.IDError,
             )
 
         # a DocType id should not start or end with an empty space
         if WHITESPACE_PADDING_PATTERN.search(id):
-            frappe.throw(_("DocType's id should not start or end with whitespace"), frappe.NameError)
+            frappe.throw(_("DocType's id should not start or end with whitespace"), frappe.IDError)
 
         # a DocType's id should not start with a number or underscore
         # and should only contain letters, numbers, underscore, and hyphen
@@ -1016,7 +1016,7 @@ class DocType(Document):
                     "A DocType's id should start with a letter and can only "
                     "consist of letters, numbers, spaces, underscores and hyphens"
                 ),
-                frappe.NameError,
+                frappe.IDError,
                 title="Invalid ID",
             )
 

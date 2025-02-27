@@ -20,7 +20,7 @@ class UnitTestPage(UnitTestCase):
 class TestPage(IntegrationTestCase):
     def test_naming(self):
         self.assertRaises(
-            frappe.NameError,
+            frappe.IDError,
             frappe.get_doc(doctype="Page", page_name="DocType", module="Core").insert,
         )
 

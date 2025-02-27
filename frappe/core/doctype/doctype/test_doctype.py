@@ -42,11 +42,11 @@ class TestDocType(IntegrationTestCase):
         frappe.db.rollback()
 
     def test_validate_id(self):
-        self.assertRaises(frappe.NameError, new_doctype("_Some DocType").insert)
-        self.assertRaises(frappe.NameError, new_doctype("8Some DocType").insert)
-        self.assertRaises(frappe.NameError, new_doctype("Some (DocType)").insert)
+        self.assertRaises(frappe.IDError, new_doctype("_Some DocType").insert)
+        self.assertRaises(frappe.IDError, new_doctype("8Some DocType").insert)
+        self.assertRaises(frappe.IDError, new_doctype("Some (DocType)").insert)
         self.assertRaises(
-            frappe.NameError,
+            frappe.IDError,
             new_doctype("Some Doctype with a id whose length is more than 61 characters").insert,
         )
         for id in ("Some DocType", "Some_DocType", "Some-DocType"):

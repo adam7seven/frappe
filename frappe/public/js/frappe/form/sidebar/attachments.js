@@ -131,11 +131,11 @@ frappe.ui.form.Attachments = class Attachments {
 
 		let remove_action = null;
 		if (frappe.model.can_write(this.frm.doctype, this.frm.id)) {
-			remove_action = function (target_id) {
+			remove_action = function (target_name) {
 				frappe.confirm(__("Are you sure you want to delete the attachment?"), function () {
 					let target_attachment = me
 						.get_attachments()
-						.find((attachment) => attachment.id === target_id);
+						.find((attachment) => attachment.id === target_name);
 					let to_be_removed = me
 						.get_attachments()
 						.filter(

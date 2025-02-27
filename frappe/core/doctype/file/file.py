@@ -143,7 +143,7 @@ class File(Document):
         if self.attached_to_field and SPECIAL_CHAR_PATTERN.search(self.attached_to_field):
             frappe.throw(_("The fieldname you've specified in Attached To Field is invalid"))
 
-    def after_reid(self, *args, **kwargs):
+    def after_rename(self, *args, **kwargs):
         for successor in self.get_successors():
             setup_folder_path(successor, self.id)
 

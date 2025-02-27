@@ -18,7 +18,7 @@ def validate_route_conflict(doctype, id):
 
     if slug(id) in all_ids:
         frappe.msgprint(frappe._("ID already taken, please set a new id"))
-        raise frappe.NameError
+        raise frappe.IDError
 
 
 def slug(id):

@@ -920,7 +920,7 @@ class BaseDocument:
         from frappe.utils import (
             split_emails,
             validate_email_address,
-            validate_id,
+            validate_name,
             validate_phone_number,
             validate_phone_number_with_country_code,
             validate_url,
@@ -950,7 +950,7 @@ class BaseDocument:
                     validate_email_address(email_address, throw=True)
 
             if data_field_options == "Name":
-                validate_id(data, throw=True)
+                validate_name(data, throw=True)
 
             if data_field_options == "Phone":
                 validate_phone_number(data, throw=True)

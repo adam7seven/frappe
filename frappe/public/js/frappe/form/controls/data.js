@@ -268,7 +268,7 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
 			this.df.invalid = !validate_phone(v);
 			return v;
 		} else if (this.df.options == "Name") {
-			this.df.invalid = !validate_id(v);
+			this.df.invalid = !validate_name(v);
 			return v;
 		} else if (this.df.options == "Email") {
 			var email_list = frappe.utils.split_emails(v);

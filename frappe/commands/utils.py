@@ -259,7 +259,7 @@ def execute(context: CliCtxObj, method, args=None, kwargs=None, profile=False):
             if args:
                 try:
                     fn_args = eval(args)
-                except NameError:
+                except IDError:
                     fn_args = [args]
             else:
                 fn_args = ()
@@ -457,13 +457,13 @@ def data_import(context: CliCtxObj, file_path, doctype, import_type=None, submit
     frappe.destroy()
 
 
-@click.command("bulk-reid")
+@click.command("bulk-rename")
 @click.argument("doctype")
 @click.argument("path")
 @pass_context
-def bulk_reid(context: CliCtxObj, doctype, path):
+def bulk_rename(context: CliCtxObj, doctype, path):
     "Reid multiple records via CSV file"
-    from frappe.model.reid_doc import bulk_reid
+    from frappe.model.rename_doc import bulk_rename
     from frappe.utils.csvutils import read_csv_content
 
     site = get_site(context)
@@ -474,7 +474,7 @@ def bulk_reid(context: CliCtxObj, doctype, path):
     frappe.init(site)
     frappe.connect()
 
-    bulk_reid(doctype, rows, via_console=True)
+    bulk_rename(doctype, rows, via_console=True)
 
     frappe.destroy()
 
@@ -1026,7 +1026,7 @@ commands = [
     set_config,
     show_config,
     watch,
-    bulk_reid,
+    bulk_rename,
     add_to_email_queue,
     rebuild_global_search,
     list_sites,

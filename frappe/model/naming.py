@@ -485,19 +485,19 @@ def validate_id(doctype: str, id: int | str):
             frappe.db.set_next_sequence_val(doctype, id, is_val_used=True)
             return id
 
-        frappe.throw(_("Invalid id type (integer) for varchar id column"), frappe.NameError)
+        frappe.throw(_("Invalid id type (integer) for varchar id column"), frappe.IDError)
 
     if id.startswith("New " + doctype):
-        frappe.throw(_("There were some errors setting the id, please contact the administrator"), frappe.NameError)
+        frappe.throw(_("There were some errors setting the id, please contact the administrator"), frappe.IDError)
     id = id.strip()
 
     if not frappe.get_meta(doctype).get("issingle") and (doctype == id) and (id != "DocType"):
-        frappe.throw(_("ID of {0} cannot be {1}").format(doctype, id), frappe.NameError)
+        frappe.throw(_("ID of {0} cannot be {1}").format(doctype, id), frappe.IDError)
 
     special_characters = "<>"
     if re.findall(f"[{special_characters}]+", id):
         message = ", ".join(f"'{c}'" for c in special_characters)
-        frappe.throw(_("ID cannot contain special characters like {0}").format(message), frappe.NameError)
+        frappe.throw(_("ID cannot contain special characters like {0}").format(message), frappe.IDError)
 
     return id
 
