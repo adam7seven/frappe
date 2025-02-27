@@ -226,7 +226,7 @@ def download_vcard(contact: str):
     contact.check_permission()
 
     vcard = contact.get_vcard()
-    make_access_log(doctype="Contact", document=contact.idfile_type="vcf")
+    make_access_log(doctype="Contact", document=contact.id, file_type="vcf")
 
     frappe.response["filename"] = f"{contact.id}.vcf"
     frappe.response["filecontent"] = vcard.serialize().encode("utf-8")

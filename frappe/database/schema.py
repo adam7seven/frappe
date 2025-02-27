@@ -163,7 +163,7 @@ class DBTable:
     def setup_table_columns(self):
         # TODO: figure out a way to get key data
         for c in frappe.db.get_table_columns_description(self.table_name):
-            self.current_columns[c.id.lower()] = c
+            self.current_columns[c.name.lower()] = c
 
     def alter(self):
         pass
