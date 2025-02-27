@@ -158,6 +158,25 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 		if (["Data", "Long Text", "Small Text", "Text", "Password"].includes(this.df.fieldtype)) {
 			value = frappe.utils.escape_html(value);
 		}
+		if (this.df.fieldtype === "Select" && this.df.options_has_label && this.df.options) {
+			let options = this.df.options.split("\n");
+			for (var i = 0; i < options.length; i++) {
+				var opt = options[i];
+				var comma_index = opt.indexOf(",");
+				if (comma_index === 0) {
+					if (!value) {
+						value = __(opt.substring(1));
+						break;
+					}
+				} else if (comma_index > 0) {
+					if (value === opt.substring(0, comma_index)) {
+						value = __(opt.substring(comma_index + 1));
+						break;
+					}
+				}
+			}
+		}
+
 		let doc = this.doc || (this.frm && this.frm.doc);
 		let display_value = frappe.format(value, this.df, { no_icon: true, inline: true }, doc);
 		// This is used to display formatted output AND showing values in read only fields
