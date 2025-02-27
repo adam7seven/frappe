@@ -952,6 +952,10 @@ export default class Grid {
 					? _df
 					: this.fields_map[_df.fieldname];
 
+			if (this.editable_fields && this.editable_fields.length > 0) {
+				df = Object.assign(df, _df);
+			}
+
 			if (
 				df &&
 				!df.hidden &&

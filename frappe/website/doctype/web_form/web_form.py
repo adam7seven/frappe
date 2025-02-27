@@ -16,6 +16,7 @@ from frappe.utils import dict_with_keys, strip_html
 from frappe.utils.caching import redis_cache
 from frappe.website.utils import get_boot_data, get_comment_list, get_sidebar_items
 from frappe.website.website_generator import WebsiteGenerator
+from frappe.utils.data import get_select_options
 
 
 class WebForm(WebsiteGenerator):
@@ -289,7 +290,8 @@ def get_context(context):
         for field in self.web_form_fields:
             messages.extend([field.label, field.description])
             if field.fieldtype == "Select" and field.options:
-                messages.extend(field.options.split("\n"))
+                options = get_select_options(field.options, field.options_has_label)
+                messages.extend(options)
 
         # When at least one field in self.web_form_fields has fieldtype "Table" then add "No data" to messages
         if any(field.fieldtype == "Table" for field in self.web_form_fields):

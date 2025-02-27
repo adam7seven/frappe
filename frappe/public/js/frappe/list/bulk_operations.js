@@ -389,6 +389,19 @@ export default class BulkOperations {
 				let options = [];
 				if (typeof new_df.options === "string") {
 					options = new_df.options.split("\n");
+
+					//如果选项中包含逗号，则按逗号隔开
+					if (df.options_has_label) {
+						for (var i = 0; i < options.length; i++) {
+							var opt = options[i];
+							var comma_index = opt.indexOf(",");
+							if (comma_index === 0) {
+								options[i] = "";
+							} else if (comma_index > 0) {
+								options[i] = opt.substring(0, comma_index);
+							}
+						}
+					}
 				}
 				//set second option as default if first option is an empty string
 				new_df.default = options[0] || options[1];

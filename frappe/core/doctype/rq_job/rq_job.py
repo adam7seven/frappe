@@ -94,7 +94,7 @@ class RQJob(Document):
 
         matched_job_ids = []
         for queue in get_queues():
-            if not queue.id.endswith(tuple(queues)):
+            if not queue.name.endswith(tuple(queues)):
                 continue
             for status in statuses:
                 matched_job_ids.extend(fetch_job_ids(queue, status))

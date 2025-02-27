@@ -465,6 +465,9 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 
 		// convert object style to array
 		if (!Array.isArray(filters)) {
+			if (typeof filters === "object" && Object.keys(filters).length === 0) {
+				return null;
+			}
 			for (let fieldname in filters) {
 				let value = filters[fieldname];
 				if (!Array.isArray(value)) {
@@ -473,6 +476,9 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 				filter_array.push([fieldname, ...value]); // fieldname, operator, value
 			}
 		} else {
+			if (filters.length === 0) {
+				return null;
+			}
 			filter_array = filters;
 		}
 

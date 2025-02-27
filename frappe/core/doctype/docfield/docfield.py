@@ -3,6 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.utils.data import get_select_options
 
 
 class DocField(Document):
@@ -97,6 +98,7 @@ class DocField(Document):
         oldfieldname: DF.Data | None
         oldfieldtype: DF.Data | None
         options: DF.SmallText | None
+        options_has_label: DF.Check
         parent: DF.Data
         parentfield: DF.Data
         parenttype: DF.Data
@@ -147,8 +149,7 @@ class DocField(Document):
 
     def get_select_options(self):
         if self.fieldtype == "Select":
-            options = self.options or ""
-            return [d for d in options.split("\n") if d]
+            return get_select_options(self.options, self.options_has_label, True)
 
     def __repr__(self):
         unsaved = "unsaved" if not self.id else ""

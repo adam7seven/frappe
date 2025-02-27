@@ -63,21 +63,10 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
 		var options = this.df.options || [];
 
 		if (typeof this.df.options === "string") {
-			options = this.df.options.split("\n");
-
-			//如果选项中包含逗号，则按逗号隔开
-			for (var i = 0; i < options.length; i++) {
-				var opt = options[i];
-				var comma_index = opt.indexOf(",");
-				if (comma_index === 0) {
-					options[i] = { label: __(opt.substring(1)), value: "" };
-				} else if (comma_index > 0) {
-					options[i] = {
-						label: __(opt.substring(comma_index + 1)),
-						value: opt.substring(0, comma_index),
-					};
-				}
-			}
+			options = this.get_select_options_value_label(
+				this.df.options,
+				this.df.options_has_label
+			);
 		}
 
 		// nothing changed
@@ -119,6 +108,40 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
 	toggle_placeholder() {
 		const input_set = Boolean(this.$input.find("option:selected").text());
 		this.$wrapper.find(".placeholder").toggle(!input_set);
+	}
+	get_select_options_value_label(options, options_has_label = false, remove_empty = false) {
+		if (!options) {
+			return [];
+		}
+		if (typeof options !== "string") {
+			return [];
+		}
+
+		let option_list = options.split("\n");
+		if (remove_empty) {
+			option_list = option_list.filter((x) => x);
+		}
+
+		let result = [];
+		if (!options_has_label) {
+			result = option_list.map((item) => ({ label: __(item), value: item }));
+			return result;
+		}
+
+		//如果选项中包含逗号，则按逗号隔开
+		for (var i = 0; i < option_list.length; i++) {
+			var opt = option_list[i];
+			var comma_index = opt.indexOf(",");
+			if (comma_index === 0) {
+				result.push({ label: __(opt.substring(1)), value: "" });
+			} else if (comma_index > 0) {
+				result.push({
+					label: __(opt.substring(comma_index + 1)),
+					value: opt.substring(0, comma_index),
+				});
+			}
+		}
+		return result;
 	}
 };
 

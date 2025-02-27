@@ -34,6 +34,7 @@ from frappe.modules.import_file import get_file_path
 from frappe.permissions import ALL_USER_ROLE, AUTOMATIC_ROLES, SYSTEM_USER_ROLE
 from frappe.query_builder.functions import Concat
 from frappe.utils import cint, flt, get_datetime, is_a_property, random_string
+from frappe.utils.data import get_select_options
 from frappe.website.utils import clear_cache
 
 if TYPE_CHECKING:
@@ -1345,10 +1346,12 @@ def validate_fields(meta: Meta):
                 frappe.throw(
                     _("Options for {0} must be set before setting the default value.").format(frappe.bold(d.fieldname))
                 )
-            elif d.default not in d.options.split("\n"):
-                frappe.throw(
-                    _("Default value for {0} must be in the list of options.").format(frappe.bold(d.fieldname))
-                )
+            else:
+                options = get_select_options(d.options, d.options_has_label)
+                if d.default not in options:
+                    frappe.throw(
+                        _("Default value for {0} must be in the list of options.").format(frappe.bold(d.fieldname))
+                    )
 
     def check_precision(d):
         if (

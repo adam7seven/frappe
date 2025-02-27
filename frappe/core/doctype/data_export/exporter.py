@@ -12,6 +12,7 @@ from frappe.core.doctype.access_log.access_log import make_access_log
 from frappe.model.utils import is_virtual_doctype
 from frappe.utils import cint, cstr, format_datetime, format_duration, formatdate, parse_json
 from frappe.utils.csvutils import UnicodeWriter
+from frappe.utils.data import get_select_options
 
 reflags = {"I": re.I, "L": re.L, "M": re.M, "U": re.U, "S": re.S, "X": re.X, "D": re.DEBUG}
 
@@ -316,7 +317,8 @@ class DataExporter:
             if not docfield.options:
                 return ""
             else:
-                return _("One of") + ": {}".format(", ".join(filter(None, docfield.options.split("\n"))))
+                options = get_select_options(docfield.options, docfield.options_has_label)
+                return _("One of") + ": {}".format(", ".join(filter(None, options)))
         elif docfield.fieldtype == "Link":
             return "Valid {}".format(docfield.options)
         elif docfield.fieldtype == "Int":

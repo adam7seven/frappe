@@ -35,6 +35,7 @@ from frappe.utils import (
 )
 from frappe.utils.defaults import get_not_null_defaults
 from frappe.utils.html_utils import unescape_html
+from frappe.utils.data import get_select_options
 
 if TYPE_CHECKING:
     from frappe.model.document import Document
@@ -396,7 +397,7 @@ class BaseDocument:
                             eval_locals={"doc": self},
                         )
 
-                if isinstance(value, list) and df.fieldtype not in table_fields:
+                if isinstance(value, list) and df.fieldtype != "JSON" and df.fieldtype not in table_fields:
                     frappe.throw(_("Value for {0} cannot be a list").format(_(df.label, context=df.parent)))
 
                 if df.fieldtype == "Check":
@@ -405,7 +406,7 @@ class BaseDocument:
                 elif df.fieldtype == "Int" and not isinstance(value, int):
                     value = cint(value)
 
-                elif df.fieldtype == "JSON" and isinstance(value, dict):
+                elif df.fieldtype == "JSON" and (isinstance(value, dict) or isinstance(value, list)):
                     value = json.dumps(value, separators=(",", ":"))
 
                 elif df.fieldtype in float_like_fields and not isinstance(value, float):
@@ -896,11 +897,7 @@ class BaseDocument:
             if df.fieldname == "naming_series" or not self.get(df.fieldname) or not df.options:
                 continue
 
-            options = (df.options or "").split("\n")
-            for i in range(0, len(options)):
-                opts = options[i].split(",")
-                if len(opts) > 0:
-                    options[i] = opts[0]
+            options = get_select_options(df.options, df.options_has_label, False)
 
             # if only empty options
             if not filter(None, options):

@@ -861,6 +861,20 @@ class FilterArea {
 					}
 					if (df.fieldtype == "Select" && df.options) {
 						options = df.options.split("\n");
+
+						//如果选项中包含逗号，则按逗号隔开
+						if (df.options_has_label) {
+							for (var i = 0; i < options.length; i++) {
+								var opt = options[i];
+								var comma_index = opt.indexOf(",");
+								if (comma_index === 0) {
+									options[i] = "";
+								} else if (comma_index > 0) {
+									options[i] = opt.substring(0, comma_index);
+								}
+							}
+						}
+
 						if (options.length > 0 && options[0] != "") {
 							options.unshift("");
 							options = options.join("\n");

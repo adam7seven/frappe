@@ -627,7 +627,7 @@ def generate_qname(qtype: str) -> str:
 def is_queue_accessible(qobj: Queue) -> bool:
     """Checks whether queue is relate to current bench or not."""
     accessible_queues = [generate_qname(q) for q in list(get_queues_timeout())]
-    return qobj.id in accessible_queues
+    return qobj.name in accessible_queues
 
 
 def enqueue_test_job():

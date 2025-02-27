@@ -152,22 +152,22 @@ class Meta(Document):
     @__init__.register(str)
     def _(self, doctype):
         super().__init__("DocType", doctype)
-        self.process()
+        self.execute_process()
 
     @__init__.register(DocRef)
     def _(self, doc_ref):
         super().__init__("DocType", doc_ref.doctype)
-        self.process()
+        self.execute_process()
 
     @__init__.register(dict)
     def _(self, doc_ref):
         super().__init__("DocType", doc_ref.get("doctype"))
-        self.process()
+        self.execute_process()
 
     @__init__.register(NoneType)
     def _(self, _args, bootstrap):
         super().__init__(bootstrap.as_dict())
-        self.process()
+        self.execute_process()
 
     def load_from_db(self):
         try:
@@ -178,7 +178,7 @@ class Meta(Document):
             else:
                 raise
 
-    def process(self):
+    def execute_process(self):
         # don't process for special doctypes
         # prevents circular dependency
         if self.id in self.special_doctypes:

@@ -727,7 +727,26 @@ export default class GridRow {
 				: __(df.label, null, df.parent);
 
 			if (this.doc && df.fieldtype === "Select") {
-				txt = __(txt);
+				if (!df.options_has_label) {
+					txt = __(txt);
+				} else {
+					let options = df.options.split("\n");
+					for (var i = 0; i < options.length; i++) {
+						var opt = options[i];
+						var comma_index = opt.indexOf(",");
+						if (comma_index === 0) {
+							if (!txt) {
+								txt = __(opt.substring(1));
+								break;
+							}
+						} else if (comma_index > 0) {
+							if (txt === opt.substring(0, comma_index)) {
+								txt = __(opt.substring(comma_index + 1));
+								break;
+							}
+						}
+					}
+				}
 			}
 			let column;
 			if (!this.columns[df.fieldname] && !this.show_search) {

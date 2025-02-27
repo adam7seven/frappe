@@ -393,6 +393,7 @@ class Document(BaseDocument, DocRef):
         self.set_user_and_timestamp()
         self.set_docstatus()
         self.check_if_latest()
+        self.run_method("before_validate_links")
         self._validate_links()
         self.check_permission("create")
         self.run_method("before_insert")

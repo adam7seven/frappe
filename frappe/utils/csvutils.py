@@ -11,6 +11,7 @@ import frappe
 from frappe import _, msgprint
 from frappe.core.doctype.file.file import FILE_ENCODING_OPTIONS
 from frappe.utils import cint, comma_or, cstr, flt
+from frappe.utils.data import get_select_options
 
 
 def read_csv_content_from_attached_file(doc):
@@ -152,10 +153,11 @@ def check_record(d):
                 frappe.msgprint(_("{0} is required").format(docfield.label), raise_exception=1)
 
             if docfield.fieldtype == "Select" and val and docfield.options:
-                if val not in docfield.options.split("\n"):
+                options = get_select_options(docfield.options, docfield.options_has_label)
+                if val not in options:
                     frappe.throw(
                         _("{0} must be one of {1}").format(
-                            _(docfield.label, context=docfield.parent), comma_or(docfield.options.split("\n"))
+                            _(docfield.label, context=docfield.parent), comma_or(options)
                         )
                     )
 

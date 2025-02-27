@@ -17,6 +17,7 @@ from frappe.utils.xlsxutils import (
 	read_xls_file_from_attached_file,
 	read_xlsx_file_from_attached_file,
 )
+from frappe.utils.data import get_select_options
 
 INVALID_VALUES = ("", None)
 MAX_ROWS_IN_PREVIEW = 10
@@ -708,7 +709,7 @@ class Row:
 	def validate_value(self, value, col):
 		df = col.df
 		if df.fieldtype == "Select":
-			select_options = get_select_options(df)
+			select_options = get_select_options(df.options, df.options_has_label, True)
 			if select_options and cstr(value) not in select_options:
 				options_string = ", ".join(frappe.bold(d) for d in select_options)
 				msg = _("Value must be one of {0}").format(options_string)
@@ -1045,7 +1046,7 @@ class Column:
 					}
 				)
 		elif self.df.fieldtype == "Select":
-			options = get_select_options(self.df)
+			options = get_select_options(self.df.options, self.df.options_has_label, True)
 			if options:
 				values = {cstr(v) for v in self.column_values if v}
 				invalid = values - set(options)
@@ -1268,9 +1269,6 @@ def df_as_json(df):
 		"default": df.default,
 	}
 
-
-def get_select_options(df):
-	return [d for d in (df.options or "").split("\n") if d]
 
 
 def create_import_log(data_import, log_index, log_details):

@@ -849,11 +849,34 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 						${frappe.utils.icon("restriction")}
 					</div>`;
 			} else if (df.fieldtype === "Select") {
+				var label = "";
+				//如果选项中包含逗号，则按逗号隔开
+				if (df.options_has_label) {
+					let options = df.options.split("\n");
+					for (var i = 0; i < options.length; i++) {
+						var opt = options[i];
+						var comma_index = opt.indexOf(",");
+						if (comma_index === 0) {
+							if (!_value) {
+								label = __(opt.substring(1));
+								break;
+							}
+						} else if (comma_index > 0) {
+							if (opt.substring(0, comma_index) == _value) {
+								label = __(opt.substring(comma_index + 1));
+								break;
+							}
+						}
+					}
+				} else {
+					label = __(_value);
+				}
+
 				html = `<span class="filterable indicator-pill ${frappe.utils.guess_colour(
 					_value
 				)} ellipsis"
-					data-filter="${fieldname},=,${value}">
-					<span class="ellipsis"> ${__(_value)} </span>
+					data-filter="${fieldname},=,${label}">
+					<span class="ellipsis"> ${label} </span>
 				</span>`;
 			} else if (df.fieldtype === "Link") {
 				html = `<a class="filterable ellipsis"

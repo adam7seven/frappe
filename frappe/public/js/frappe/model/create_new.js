@@ -110,7 +110,21 @@ $.extend(frappe.model, {
 				typeof f.options === "string" &&
 				!["[Select]", "Loading..."].includes(f.options)
 			) {
-				doc[f.fieldname] = f.options.split("\n")[0];
+				var options = f.options;
+				//如果选项中包含逗号，则按逗号隔开
+				for (var i = 0; i < options.length; i++) {
+					var opt = options[i];
+					var comma_index = opt.indexOf(",");
+					if (comma_index === 0) {
+						options[i] = { label: __(opt.substring(1)), value: "" };
+					} else if (comma_index > 0) {
+						options[i] = {
+							label: __(opt.substring(comma_index + 1)),
+							value: opt.substring(0, comma_index),
+						};
+					}
+				}
+				doc[f.fieldname] = options[0];
 			}
 		});
 		return updated;
