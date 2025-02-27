@@ -195,7 +195,7 @@ frappe.views.TreeView = class TreeView {
 			method: me.get_tree_nodes,
 			args: me.args,
 			callback: function (r) {
-				if (r.message) {
+				if (r.message && r.message.length > 0) {
 					me.root_label = me.doctype;
 					me.root_value = "";
 					me.make_tree();

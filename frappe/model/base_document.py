@@ -897,6 +897,10 @@ class BaseDocument:
                 continue
 
             options = (df.options or "").split("\n")
+            for i in range(0, len(options)):
+                opts = options[i].split(",")
+                if len(opts) > 0:
+                    options[i] = opts[0]
 
             # if only empty options
             if not filter(None, options):
