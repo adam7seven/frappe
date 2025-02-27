@@ -34,9 +34,9 @@ def update_document_title(
     Update the id or title of a document. Return `id` if document was renamed, `docid` if renaming operation was queued.
 
     :param doctype: DocType of the document
-    :param docid: Name of the document
+    :param docid: ID of the document
     :param title: New Title of the document
-    :param id: New Name of the document
+    :param id: New ID of the document
     :param merge: Merge the current Document with the existing one if exists
     :param enqueue: Enqueue the rename operation, title is updated in current process
     """
@@ -108,7 +108,7 @@ def update_document_title(
                 if frappe.db.is_duplicate_entry(e):
                     frappe.throw(
                         _("{0} {1} already exists").format(doctype, frappe.bold(docid)),
-                        title=_("Duplicate Name"),
+                        title=_("Duplicate ID"),
                         exc=frappe.DuplicateEntryError,
                     )
                 raise

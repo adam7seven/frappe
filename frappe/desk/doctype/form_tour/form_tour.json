@@ -94,7 +94,7 @@
       "depends_on": "eval:(!doc.ui_tour && !doc.first_document)",
       "fieldname": "include_id_field",
       "fieldtype": "Check",
-      "label": "Include Name Field"
+      "label": "Include ID Field"
     },
     {
       "default": "0",

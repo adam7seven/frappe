@@ -117,7 +117,7 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm extends frappe.ui.Dialog {
 			this.docfields = [
 				{
 					fieldname: "__newid",
-					label: __("{0} Name", [__(this.meta.id)]),
+					label: __("{0} ID", [__(this.meta.id)]),
 					reqd: 1,
 					fieldtype: "Data",
 				},

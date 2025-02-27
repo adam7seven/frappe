@@ -30,7 +30,7 @@ def execute(filters=None):
 
 
 def get_columns_and_fields(doctype):
-    columns = [f"Name:Link/{doctype}:200"]
+    columns = [f"ID:Link/{doctype}:200"]
     fields = ["id"]
     for df in frappe.get_meta(doctype).fields:
         if df.in_list_view and df.fieldtype in data_fieldtypes:

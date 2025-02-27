@@ -13,7 +13,7 @@
   "id": "Addresses And Contacts",
   "owner": "Administrator",
   "ref_doctype": "Address",
-  "report_id": "Addresses And Contacts",
+  "report_name": "Addresses And Contacts",
   "report_type": "Script Report",
   "roles": [
     {

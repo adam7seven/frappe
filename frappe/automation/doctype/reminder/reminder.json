@@ -37,7 +37,7 @@
       "fieldname": "reminder_docid",
       "fieldtype": "Dynamic Link",
       "in_list_view": 1,
-      "label": "Document Name",
+      "label": "Document ID",
       "options": "reminder_doctype",
       "read_only": 1
     },

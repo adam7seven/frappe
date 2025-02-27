@@ -18,7 +18,7 @@
       "fieldname": "reference_docid",
       "fieldtype": "Dynamic Link",
       "in_list_view": 1,
-      "label": "Reference Name",
+      "label": "Reference ID",
       "options": "reference_doctype",
       "reqd": 1
     },

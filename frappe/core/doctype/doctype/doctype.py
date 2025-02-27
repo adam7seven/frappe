@@ -995,10 +995,10 @@ class DocType(Document):
             id = self.id
 
         # a Doctype id is the tablename created in database
-        # `tab<Doctype Name>` the length of tablename is limited to 64 characters
+        # `tab<Doctype ID>` the length of tablename is limited to 64 characters
         max_length = frappe.db.MAX_COLUMN_LENGTH - 3
         if len(id) > max_length:
-            # length(tab + <Doctype Name>) should be equal to 64 characters hence doctype should be 61 characters
+            # length(tab + <Doctype ID>) should be equal to 64 characters hence doctype should be 61 characters
             frappe.throw(
                 _("Doctype id is limited to {0} characters ({1})").format(max_length, id),
                 frappe.NameError,
@@ -1017,7 +1017,7 @@ class DocType(Document):
                     "consist of letters, numbers, spaces, underscores and hyphens"
                 ),
                 frappe.NameError,
-                title="Invalid Name",
+                title="Invalid ID",
             )
 
         validate_route_conflict(self.doctype, self.id)

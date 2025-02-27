@@ -47,7 +47,7 @@ class TestReport(IntegrationTestCase):
     def test_query_report(self):
         report = frappe.get_doc("Report", "Permitted Documents For User")
         columns, data = report.get_data(filters={"user": "Administrator", "doctype": "DocType"})
-        self.assertEqual(columns[0].get("label"), "Name")
+        self.assertEqual(columns[0].get("label"), "ID")
         self.assertEqual(columns[1].get("label"), "Module")
         self.assertTrue("User" in [d.get("id") for d in data])
 

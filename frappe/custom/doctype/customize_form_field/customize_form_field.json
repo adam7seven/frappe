@@ -99,7 +99,7 @@
       "fieldname": "fieldname",
       "fieldtype": "Data",
       "in_list_view": 1,
-      "label": "Name",
+      "label": "Field Name",
       "oldfieldname": "fieldname",
       "oldfieldtype": "Data",
       "read_only": 1,

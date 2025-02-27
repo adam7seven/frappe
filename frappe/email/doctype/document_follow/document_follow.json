@@ -19,7 +19,7 @@
       "fieldname": "ref_docid",
       "fieldtype": "Dynamic Link",
       "in_list_view": 1,
-      "label": "Document Name",
+      "label": "Document ID",
       "options": "ref_doctype",
       "reqd": 1,
       "search_index": 1

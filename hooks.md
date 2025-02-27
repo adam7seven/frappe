@@ -13,7 +13,6 @@
 1. `before_install` - method
 1. `after_install` - method
 
-
 #### Javascript / CSS Builds
 
 1. `app_include_js` - include in "app"

@@ -16,7 +16,7 @@ def extract(fileobj, *args, **kwargs):
 
     doctype = data.get("id")
 
-    yield None, "_", doctype, ["Name of a DocType"]
+    yield None, "_", doctype, ["ID of a DocType"]
 
     doctype_description = data.get("description")
     if doctype_description:

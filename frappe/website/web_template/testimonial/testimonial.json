@@ -12,7 +12,7 @@
     {
       "fieldname": "id",
       "fieldtype": "Data",
-      "label": "Name",
+      "label": "ID",
       "reqd": 0
     },
     {

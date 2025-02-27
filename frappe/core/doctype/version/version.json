@@ -30,7 +30,7 @@
       "fieldname": "docid",
       "fieldtype": "Data",
       "in_list_view": 1,
-      "label": "Document Name",
+      "label": "Document ID",
       "reqd": 1
     },
     {

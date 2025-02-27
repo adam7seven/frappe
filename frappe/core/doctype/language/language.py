@@ -47,7 +47,7 @@ class Language(Document):
         validate_with_regex(self.language_code, "Language Code")
 
     def before_rename(self, old, new, merge=False):
-        validate_with_regex(new, "Name")
+        validate_with_regex(new, "ID")
 
     def on_update(self):
         frappe.cache.delete_value("languages_with_name")

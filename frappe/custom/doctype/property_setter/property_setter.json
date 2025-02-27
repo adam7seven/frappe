@@ -93,7 +93,7 @@
       "description": "For DocType Link / DocType Action",
       "fieldname": "row_id",
       "fieldtype": "Data",
-      "label": "Row Name"
+      "label": "Row ID"
     },
     {
       "fieldname": "module",

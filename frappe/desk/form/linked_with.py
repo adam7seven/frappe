@@ -18,7 +18,7 @@ def get_submitted_linked_docs(doctype: str, id: str, ignore_doctypes_on_cancel_a
     """Get all the nested submitted documents those are present in referencing tables (dependent tables).
 
     :param doctype: Document type
-    :param id: Name of the document
+    :param id: ID of the document
 
     Use-case:
     * User should be able to cancel the linked documents along with the one user trying to cancel.

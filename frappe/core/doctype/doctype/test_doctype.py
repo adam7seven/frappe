@@ -315,9 +315,9 @@ class TestDocType(IntegrationTestCase):
         self.assertRaises(UniqueFieldnameError, doc.insert)
 
     def test_fieldname_is_not_id(self):
-        doc = new_doctype("Test Name Field")
+        doc = new_doctype("Test ID Field")
         field_1 = doc.append("fields", {})
-        field_1.label = "Name"
+        field_1.label = "ID"
         field_1.fieldtype = "Data"
         doc.insert()
         self.assertEqual(doc.fields[1].fieldname, "id1")

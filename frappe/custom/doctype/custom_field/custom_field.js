@@ -89,7 +89,7 @@ frappe.ui.form.on("Custom Field", {
 	fieldtype: function (frm) {
 		if (frm.doc.fieldtype == "Link") {
 			frm.fields_dict["options_help"].disp_area.innerHTML = __(
-				"Name of the Document Type (DocType) you want this field to be linked to. e.g. Customer"
+				"ID of the Document Type (DocType) you want this field to be linked to. e.g. Customer"
 			);
 		} else if (frm.doc.fieldtype == "Select") {
 			frm.fields_dict["options_help"].disp_area.innerHTML =

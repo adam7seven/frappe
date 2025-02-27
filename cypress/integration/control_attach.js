@@ -234,7 +234,7 @@ context("Attach Control with Failed Document Save", () => {
 		cy.open_list_filter();
 		cy.get(".fieldname-select-area .form-control")
 			.click()
-			.type("Attached To Name{enter}")
+			.type("Attached To ID{enter}")
 			.blur()
 			.wait(500);
 		cy.get('input[data-fieldname="attached_to_id"]').click().type(docid).blur();

@@ -33,7 +33,7 @@ frappe.listview_settings["User Permission"] = {
 					},
 					{
 						fieldname: "docid",
-						label: __("Document Name"),
+						label: __("Document ID"),
 						fieldtype: "Dynamic Link",
 						options: "doctype",
 						hidden: 1,

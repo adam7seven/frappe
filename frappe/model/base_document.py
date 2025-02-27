@@ -606,7 +606,7 @@ class BaseDocument:
                 if not ignore_if_duplicate:
                     frappe.msgprint(
                         _("{0} {1} already exists").format(_(self.doctype), frappe.bold(self.id)),
-                        title=_("Duplicate Name"),
+                        title=_("Duplicate ID"),
                         indicator="red",
                     )
                     raise frappe.DuplicateEntryError(self.doctype, self.id, e)

@@ -30,7 +30,7 @@ export default class ListFilter {
 		this.filter_input = frappe.ui.form.make_control({
 			df: {
 				fieldtype: "Data",
-				placeholder: __("Filter Name"),
+				placeholder: __("Filter ID"),
 				input_class: "input-xs",
 			},
 			parent: this.$input_area,
@@ -141,7 +141,7 @@ export default class ListFilter {
 					let help_text = __("Press Enter to save");
 
 					if (this.filter_id_exists(value)) {
-						help_text = __("Duplicate Filter Name");
+						help_text = __("Duplicate Filter ID");
 					}
 
 					this.filter_input.set_description(has_value ? help_text : "");

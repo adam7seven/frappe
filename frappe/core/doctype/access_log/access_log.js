@@ -7,11 +7,11 @@ frappe.ui.form.on("Access Log", {
 	},
 
 	show_report: function (frm) {
-		if (frm.doc.report_id.includes("/")) {
-			frappe.set_route(frm.doc.report_id);
+		if (frm.doc.report_name.includes("/")) {
+			frappe.set_route(frm.doc.report_name);
 		} else {
 			let filters = frm.doc.filters ? JSON.parse(frm.doc.filters) : {};
-			frappe.set_route("query-report", frm.doc.report_id, filters);
+			frappe.set_route("query-report", frm.doc.report_name, filters);
 		}
 	},
 });

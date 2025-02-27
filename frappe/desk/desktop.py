@@ -680,7 +680,7 @@ def update_onboarding_step(id, field, value):
     """Update status of onboaridng step
 
     Args:
-            id (string): Name of the doc
+            id (string): ID of the doc
             field (string): field to be updated
             value: Value to be updated
 

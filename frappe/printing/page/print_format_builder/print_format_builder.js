@@ -123,7 +123,7 @@ frappe.PrintFormatBuilder = class PrintFormatBuilder {
 			var doctype = me.doctype_input.get_value(),
 				id = me.name_input.get_value();
 			if (!(doctype && id)) {
-				frappe.msgprint(__("Both DocType and Name required"));
+				frappe.msgprint(__("Both DocType and ID required"));
 				return;
 			}
 			me.setup_new_print_format(doctype, id);

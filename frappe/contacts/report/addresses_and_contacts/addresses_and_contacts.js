@@ -19,7 +19,7 @@ frappe.query_reports["Addresses And Contacts"] = {
 		},
 		{
 			fieldname: "reference_id",
-			label: __("Entity Name"),
+			label: __("Entity ID"),
 			fieldtype: "Dynamic Link",
 			get_options: function () {
 				let reference_doctype = frappe.query_report.get_filter_value("reference_doctype");

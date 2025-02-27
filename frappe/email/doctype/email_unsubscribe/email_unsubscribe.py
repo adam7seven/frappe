@@ -23,7 +23,7 @@ class EmailUnsubscribe(Document):
 
     def validate(self):
         if not self.global_unsubscribe and not (self.reference_doctype and self.reference_id):
-            frappe.throw(_("Reference DocType and Reference Name are required"), frappe.MandatoryError)
+            frappe.throw(_("Reference DocType and Reference ID are required"), frappe.MandatoryError)
 
         if not self.global_unsubscribe and frappe.db.get_value(self.doctype, self.id, "global_unsubscribe"):
             frappe.throw(_("Delete this record to allow sending to this email address"))

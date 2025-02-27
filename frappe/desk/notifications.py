@@ -243,7 +243,7 @@ def get_open_count(doctype: str, id: str, items=None):
     """Get count for internal and external links for given transactions
 
     :param doctype: Reference DocType
-    :param id: Reference Name
+    :param id: Reference ID
     :param items: Optional list of transactions (json/dict)"""
 
     if frappe.flags.in_migrate or frappe.flags.in_install:

@@ -113,7 +113,7 @@ def update(doctype: str, role: str, permlevel: int, ptype: str, value=None, if_o
     """Update role permission params.
 
     Args:
-            doctype (str): Name of the DocType to update params for
+            doctype (str): ID of the DocType to update params for
             role (str): Role to be updated for, eg "Website Manager".
             permlevel (int): perm level the provided rule applies to
             ptype (str): permission type, example "read", "delete", etc.

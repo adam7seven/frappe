@@ -268,7 +268,7 @@ context("Form Builder", () => {
 		cy.get("[data-fieldname='data3'] .clearfix label").should("have.text", "New Title");
 	});
 
-	it("Validate Duplicate Name & reqd + hidden without default logic", () => {
+	it("Validate Duplicate ID & reqd + hidden without default logic", () => {
 		cy.visit(`/app/doctype/${doctype_id}`);
 		cy.findByRole("tab", { name: "Form" }).click();
 

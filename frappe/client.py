@@ -355,7 +355,7 @@ def attach_file(
     :param filename: filename e.g. test-file.txt
     :param filedata: base64 encode filedata which must be urlencoded
     :param doctype: Reference DocType to attach file to
-    :param docid: Reference DocName to attach file to
+    :param docid: Reference DocID to attach file to
     :param folder: Folder to add File into
     :param decode_base64: decode filedata from base64 encode, default is False
     :param is_private: Attach file as private file (1 or 0)
@@ -403,7 +403,7 @@ def validate_link(doctype: str, docid: str, fields=None):
         frappe.throw(_("DocType must be a string"))
 
     if not isinstance(docid, str):
-        frappe.throw(_("Document Name must be a string"))
+        frappe.throw(_("Document ID must be a string"))
 
     if doctype != "DocType":
         parent_doctype = None

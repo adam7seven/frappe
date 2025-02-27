@@ -21,7 +21,7 @@ def toggle_like(doctype, id, add=False):
     Document API
 
     :param doctype: DocType of the document to like
-    :param id: Name of the document to like
+    :param id: ID of the document to like
     :param add: `Yes` if like is to be added. If not `Yes` the like will be removed."""
 
     _toggle_like(doctype, id, add)

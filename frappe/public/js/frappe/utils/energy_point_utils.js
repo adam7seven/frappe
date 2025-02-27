@@ -32,7 +32,7 @@ Object.assign(frappe.energy_points, {
 	},
 	get_history_log_message(log) {
 		const owner_name = frappe.user.full_name(log.owner).bold();
-		const ref_doc = log.reference_name;
+		const ref_doc = log.reference_id;
 
 		if (log.type === "Appreciation") {
 			return __("{0} appreciated on {1}", [owner_name, ref_doc]);

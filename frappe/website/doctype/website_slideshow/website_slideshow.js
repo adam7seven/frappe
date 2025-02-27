@@ -22,7 +22,7 @@ frappe.ui.form.on("Website Slideshow", {
 						reqd: 1,
 					},
 					{
-						label: __("Name"),
+						label: __("ID"),
 						fieldtype: "Dynamic Link",
 						fieldname: "reference_id",
 						options: "reference_doctype",

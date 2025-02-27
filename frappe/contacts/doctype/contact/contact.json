@@ -242,7 +242,7 @@
     {
       "fieldname": "company_id",
       "fieldtype": "Data",
-      "label": "Company Name"
+      "label": "Company ID"
     },
     {
       "fieldname": "full_name",

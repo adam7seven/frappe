@@ -19,7 +19,7 @@ frappe.listview_settings["DocType"] = {
 		let non_developer = frappe.session.user !== "Administrator" || !frappe.boot.developer_mode;
 		let fields = [
 			{
-				label: __("Name"),
+				label: __("ID"),
 				fieldname: "id",
 				fieldtype: "Data",
 				reqd: 1,

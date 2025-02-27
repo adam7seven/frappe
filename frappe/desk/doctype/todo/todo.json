@@ -104,7 +104,7 @@
     {
       "fieldname": "reference_id",
       "fieldtype": "Dynamic Link",
-      "label": "Reference Name",
+      "label": "Reference ID",
       "oldfieldname": "reference_id",
       "oldfieldtype": "Data",
       "options": "reference_type"

@@ -30,7 +30,7 @@ class TestCommunication(IntegrationTestCase):
             "Surname, Name <name.surname@domain.com>",
             "Purchase@ABC <purchase@abc.com>",
             "xyz@abc2.com <xyz@abc.com>",
-            "Name [something else] <name@domain.com>",
+            "ID [something else] <name@domain.com>",
         ]
 
         invalid_email_list = [
@@ -59,7 +59,7 @@ class TestCommunication(IntegrationTestCase):
             "Surname, Name <name.surname@domain.com>",
             "Purchase@ABC <purchase@abc.com>",
             "xyz@abc2.com <xyz@abc.com>",
-            "Name [something else] <name@domain.com>",
+            "ID [something else] <name@domain.com>",
         ]
 
         invalid_email_list = [
@@ -255,13 +255,13 @@ class TestCommunication(IntegrationTestCase):
     def test_get_emails(self):
         emails = get_emails(
             [
-                "comm_recipient+DocType+DocName@example.com",
+                "comm_recipient+DocType+DocID@example.com",
                 '"First, LastName" <first.lastname@email.com>',
                 "test@user.com",
             ]
         )
 
-        self.assertEqual(emails[0], "comm_recipient+DocType+DocName@example.com")
+        self.assertEqual(emails[0], "comm_recipient+DocType+DocID@example.com")
         self.assertEqual(emails[1], "first.lastname@email.com")
         self.assertEqual(emails[2], "test@user.com")
 

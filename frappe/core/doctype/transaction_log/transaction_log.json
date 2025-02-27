@@ -39,7 +39,7 @@
     {
       "fieldname": "document_id",
       "fieldtype": "Data",
-      "label": "Document Name",
+      "label": "Document ID",
       "read_only": 1
     },
     {

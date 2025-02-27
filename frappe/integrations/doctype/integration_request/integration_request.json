@@ -68,7 +68,7 @@
     {
       "fieldname": "reference_docid",
       "fieldtype": "Dynamic Link",
-      "label": "Reference Document Name",
+      "label": "Reference Document ID",
       "options": "reference_doctype",
       "read_only": 1
     },

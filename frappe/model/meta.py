@@ -266,7 +266,7 @@ class Meta(Document):
         """Return list of fields with `in_global_search` set and `id` if set."""
         fields = self.get("fields", {"in_global_search": 1, "fieldtype": ["not in", no_value_fields]})
         if getattr(self, "show_id_in_global_search", None):
-            fields.append(frappe._dict(fieldtype="Data", fieldname="id", label="Name"))
+            fields.append(frappe._dict(fieldtype="Data", fieldname="id", label="ID"))
 
         return fields
 
@@ -651,7 +651,7 @@ class Meta(Document):
         )
 
         if self.id in user_permission_doctypes:
-            fields.append(frappe._dict({"label": "Name", "fieldname": "id", "options": self.id}))
+            fields.append(frappe._dict({"label": "ID", "fieldname": "id", "options": self.id}))
 
         return fields
 

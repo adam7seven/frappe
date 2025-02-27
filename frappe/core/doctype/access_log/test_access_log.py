@@ -116,7 +116,7 @@ class TestAccessLog(IntegrationTestCase):
 
         self.test_doctype = "File"
         self.test_document = "Test Document"
-        self.test_report_id = "General Ledger"
+        self.test_report_name = "General Ledger"
         self.test_file_type = "CSV"
         self.test_method = "Test Method"
         self.file_name = frappe.utils.random_string(10) + ".txt"
@@ -129,7 +129,7 @@ class TestAccessLog(IntegrationTestCase):
         make_access_log(
             doctype=self.test_doctype,
             document=self.test_document,
-            report_id=self.test_report_id,
+            report_name=self.test_report_name,
             page=self.test_html_template,
             file_type=self.test_file_type,
             method=self.test_method,

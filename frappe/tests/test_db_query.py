@@ -1385,13 +1385,13 @@ class TestReportView(IntegrationTestCase):
         Test if the 'not set' filter always translates correctly with/without qb under the hood.
         """
         frappe.get_doc({"doctype": "ToDo", "description": "filter test"}).insert()
-        frappe.get_doc({"doctype": "ToDo", "description": "filter test", "reference_name": ""}).insert()
+        frappe.get_doc({"doctype": "ToDo", "description": "filter test", "reference_id": ""}).insert()
 
         # `get_all` does not use QueryBuilder while `count` does. Both should return the same result.
         # `not set` must consider empty strings and NULL values both.
         self.assertEqual(
-            len(frappe.get_all("ToDo", filters={"reference_name": ["is", "not set"]})),
-            frappe.db.count("ToDo", {"reference_name": ["is", "not set"]}),
+            len(frappe.get_all("ToDo", filters={"reference_id": ["is", "not set"]})),
+            frappe.db.count("ToDo", {"reference_id": ["is", "not set"]}),
         )
 
 

@@ -91,7 +91,7 @@ def get_columns(filters=None):
             "width": 150,
         },
         {
-            "label": _("Reference Name"),
+            "label": _("Reference ID"),
             "fieldname": "reference_id",
             "fieldtype": "Data",
             "width": 150,

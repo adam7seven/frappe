@@ -11,7 +11,7 @@
       "fieldname": "number_card_id",
       "fieldtype": "Link",
       "in_list_view": 1,
-      "label": "Number Card Name",
+      "label": "Number Card ID",
       "options": "Number Card",
       "reqd": 1
     },

@@ -18,7 +18,7 @@
       "fieldname": "link_id",
       "fieldtype": "Dynamic Link",
       "in_list_view": 1,
-      "label": "Link Name",
+      "label": "Link ID",
       "options": "link_doctype",
       "reqd": 1
     },

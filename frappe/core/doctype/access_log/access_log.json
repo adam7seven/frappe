@@ -17,7 +17,7 @@
     "file_type",
     "method",
     "report_information_section",
-    "report_id",
+    "report_name",
     "filters",
     "show_report",
     "raw_information_log_section",
@@ -63,7 +63,7 @@
       "read_only": 1
     },
     {
-      "fieldname": "report_id",
+      "fieldname": "report_name",
       "fieldtype": "Data",
       "label": "Report Name",
       "read_only": 1
@@ -105,7 +105,7 @@
       "read_only": 1
     },
     {
-      "depends_on": "report_id",
+      "depends_on": "report_name",
       "fieldname": "show_report",
       "fieldtype": "Button",
       "label": "Show Report"

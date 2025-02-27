@@ -748,7 +748,7 @@ $.extend(frappe.model, {
 			title: __("Rename {0}", [__(docid)]),
 			fields: [
 				{
-					label: __("New Name"),
+					label: __("New ID"),
 					fieldname: "new_id",
 					fieldtype: "Data",
 					reqd: 1,

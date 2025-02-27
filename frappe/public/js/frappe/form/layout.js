@@ -72,7 +72,7 @@ frappe.ui.form.Layout = class Layout {
 			fieldname: "__newid",
 			reqd: 1,
 			hidden: 1,
-			label: __("Name"),
+			label: __("ID"),
 			get_status: function (field) {
 				if (
 					field.frm &&

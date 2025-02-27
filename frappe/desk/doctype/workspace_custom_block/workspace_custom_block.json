@@ -11,7 +11,7 @@
       "fieldname": "custom_block_id",
       "fieldtype": "Link",
       "in_list_view": 1,
-      "label": "Custom Block Name",
+      "label": "Custom Block ID",
       "options": "Custom HTML Block"
     },
     {

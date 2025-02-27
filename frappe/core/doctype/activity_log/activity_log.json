@@ -95,7 +95,7 @@
     {
       "fieldname": "reference_id",
       "fieldtype": "Dynamic Link",
-      "label": "Reference Name",
+      "label": "Reference ID",
       "options": "reference_doctype"
     },
     {
@@ -117,7 +117,7 @@
     {
       "fieldname": "timeline_id",
       "fieldtype": "Dynamic Link",
-      "label": "Timeline Name",
+      "label": "Timeline ID",
       "options": "timeline_doctype"
     },
     {
@@ -130,7 +130,7 @@
     {
       "fieldname": "link_id",
       "fieldtype": "Dynamic Link",
-      "label": "Link Name",
+      "label": "Link ID",
       "options": "link_doctype",
       "read_only": 1
     },

@@ -7587,7 +7587,7 @@ msgstr ""
 msgid "Doctype required"
 msgstr "Doctype المطلوبة"
 
-#. Label of the reference_name (Data) field in DocType 'Milestone'
+#. Label of the reference_id (Data) field in DocType 'Milestone'
 #. Label of the document (Dynamic Link) field in DocType 'Audit Trail'
 #. Option for the 'Show in Module Section' (Select) field in DocType 'DocType'
 #. Label of the docid (Dynamic Link) field in DocType 'Permission Inspector'
@@ -19876,8 +19876,8 @@ msgstr ""
 #. Description of the 'Auto Reply Message' (Text Editor) field in DocType
 #. 'Email Account'
 #: frappe/email/doctype/email_account/email_account.json
-msgid "ProTip: Add <code>Reference: {{ reference_doctype }} {{ reference_name }}</code> to send document reference"
-msgstr "ProTip: إضافة <code>Reference: {{ reference_doctype }} {{ reference_name }}</code> لإرسال وثيقة مرجعية"
+msgid "ProTip: Add <code>Reference: {{ reference_doctype }} {{ reference_id }}</code> to send document reference"
+msgstr "ProTip: إضافة <code>Reference: {{ reference_doctype }} {{ reference_id }}</code> لإرسال وثيقة مرجعية"
 
 #: frappe/core/doctype/document_naming_rule/document_naming_rule.js:22
 msgid "Proceed"
@@ -20691,7 +20691,7 @@ msgstr "المرجع تاريخ"
 msgid "Reference Datetime"
 msgstr ""
 
-#. Label of the reference_name (Data) field in DocType 'Email Queue'
+#. Label of the reference_id (Data) field in DocType 'Email Queue'
 #: frappe/email/doctype/email_queue/email_queue.json
 msgid "Reference DocName"
 msgstr "مرجع DocName"
@@ -20704,7 +20704,7 @@ msgid "Reference DocType"
 msgstr "مرجع DOCTYPE"
 
 #: frappe/email/doctype/email_unsubscribe/email_unsubscribe.py:26
-msgid "Reference DocType and Reference Name are required"
+msgid "Reference DocType and Reference ID are required"
 msgstr "مطلوب مرجع دوكتيب واسم مرجع"
 
 #. Label of the ref_docid (Dynamic Link) field in DocType 'Submission Queue'
@@ -20797,18 +20797,18 @@ msgstr ""
 msgid "Reference Document Type"
 msgstr "مرجع نوع الوثيقة"
 
-#. Label of the reference_name (Dynamic Link) field in DocType 'Activity Log'
-#. Label of the reference_name (Dynamic Link) field in DocType 'Comment'
-#. Label of the reference_name (Dynamic Link) field in DocType 'Communication'
+#. Label of the reference_id (Dynamic Link) field in DocType 'Activity Log'
+#. Label of the reference_id (Dynamic Link) field in DocType 'Comment'
+#. Label of the reference_id (Dynamic Link) field in DocType 'Communication'
 #. Label of the docid (Data) field in DocType 'Data Import Log'
-#. Label of the reference_name (Data) field in DocType 'Error Log'
+#. Label of the reference_id (Data) field in DocType 'Error Log'
 #. Label of the reference_docid (Dynamic Link) field in DocType 'Event
 #. Participants'
-#. Label of the reference_name (Dynamic Link) field in DocType 'ToDo'
-#. Label of the reference_name (Dynamic Link) field in DocType 'Email
+#. Label of the reference_id (Dynamic Link) field in DocType 'ToDo'
+#. Label of the reference_id (Dynamic Link) field in DocType 'Email
 #. Unsubscribe'
-#. Label of the reference_name (Data) field in DocType 'Energy Point Log'
-#. Label of the reference_name (Dynamic Link) field in DocType 'Workflow
+#. Label of the reference_id (Data) field in DocType 'Energy Point Log'
+#. Label of the reference_id (Dynamic Link) field in DocType 'Workflow
 #. Action'
 #: frappe/core/doctype/activity_log/activity_log.json
 #: frappe/core/doctype/comment/comment.json
@@ -20822,7 +20822,7 @@ msgstr "مرجع نوع الوثيقة"
 #: frappe/email/doctype/email_unsubscribe/email_unsubscribe.json
 #: frappe/social/doctype/energy_point_log/energy_point_log.json
 #: frappe/workflow/doctype/workflow_action/workflow_action.json
-msgid "Reference Name"
+msgid "Reference ID"
 msgstr "اسم الإشارة"
 
 #. Label of the reference_owner (Read Only) field in DocType 'Activity Log'
@@ -20854,7 +20854,7 @@ msgstr "نوع المرجع"
 msgid "Reference document has been cancelled"
 msgstr "تم الغاء الوثيقة المرجعية"
 
-#. Label of the reference_name (Dynamic Link) field in DocType 'View Log'
+#. Label of the reference_id (Dynamic Link) field in DocType 'View Log'
 #: frappe/core/doctype/view_log/view_log.json
 msgid "Reference name"
 msgstr "اسم المرجع"

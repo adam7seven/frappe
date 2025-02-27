@@ -35,7 +35,7 @@
       "fieldtype": "Dynamic Link",
       "in_list_view": 1,
       "in_standard_filter": 1,
-      "label": "Document Name",
+      "label": "Document ID",
       "options": "document_type",
       "read_only": 1
     }

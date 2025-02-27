@@ -1315,7 +1315,7 @@ def delete_doc(
     """Delete a document. Calls `frappe.model.delete_doc.delete_doc`.
 
     :param doctype: DocType of document to be delete.
-    :param id: Name of document to be delete.
+    :param id: ID of document to be delete.
     :param force: Allow even if document is linked. Warning: This may lead to data integrity errors.
     :param ignore_doctypes: Ignore if child table is one of these.
     :param for_reload: Call `before_reload` trigger before deleting.
@@ -2082,7 +2082,7 @@ def get_print(
     """Get Print Format for given document.
 
     :param doctype: DocType of document.
-    :param id: Name of document.
+    :param id: ID of document.
     :param print_format: Print Format name. Default 'Standard',
     :param style: Print Format style.
     :param as_pdf: Return as PDF. Default False.
@@ -2246,7 +2246,7 @@ def enqueue_doc(*args, **kwargs):
     Enqueue method to be executed using a background worker
 
     :param doctype: DocType of the document on which you want to run the event
-    :param id: Name of the document on which you want to run the event
+    :param id: ID of the document on which you want to run the event
     :param method: method string or method object
     :param queue: (optional) should be either long, default or short
     :param timeout: (optional) should be set according to the functions

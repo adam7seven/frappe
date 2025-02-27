@@ -58,7 +58,7 @@
     {
       "fieldname": "reference_id",
       "fieldtype": "Data",
-      "label": "Reference Name",
+      "label": "Reference ID",
       "read_only": 1,
       "search_index": 1
     },

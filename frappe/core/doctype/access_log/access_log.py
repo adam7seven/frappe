@@ -23,7 +23,7 @@ class AccessLog(Document):
         method: DF.Data | None
         page: DF.HTMLEditor | None
         reference_document: DF.Data | None
-        report_id: DF.Data | None
+        report_name: DF.Data | None
         timestamp: DF.Datetime | None
         user: DF.Link | None
     # end: auto-generated types
@@ -43,7 +43,7 @@ def make_access_log(
     document=None,
     method=None,
     file_type=None,
-    report_id=None,
+    report_name=None,
     filters=None,
     page=None,
     columns=None,
@@ -53,7 +53,7 @@ def make_access_log(
         document,
         method,
         file_type,
-        report_id,
+        report_name,
         filters,
         page,
         columns,
@@ -71,7 +71,7 @@ def _make_access_log(
     document=None,
     method=None,
     file_type=None,
-    report_id=None,
+    report_name=None,
     filters=None,
     page=None,
     columns=None,
@@ -86,7 +86,7 @@ def _make_access_log(
             "export_from": doctype,
             "reference_document": document,
             "file_type": file_type,
-            "report_id": report_id,
+            "report_name": report_name,
             "page": page,
             "method": method,
             "filters": cstr(filters) or None,

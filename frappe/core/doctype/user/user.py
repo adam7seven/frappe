@@ -1229,7 +1229,7 @@ def throttle_user_creation():
 
 @frappe.whitelist()
 def get_module_profile(module_profile: str):
-    module_profile = frappe.get_doc("Module Profile", {"module_profile_id": module_profile})
+    module_profile = frappe.get_doc("Module Profile", {"module_profile_name": module_profile})
     return module_profile.get("block_modules")
 
 

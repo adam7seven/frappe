@@ -138,7 +138,7 @@
     {
       "fieldname": "attached_to_id",
       "fieldtype": "Data",
-      "label": "Attached To Name",
+      "label": "Attached To ID",
       "read_only": 1
     },
     {

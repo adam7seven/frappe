@@ -370,7 +370,7 @@ class Document(BaseDocument, DocRef):
         :param ignore_links: Do not check validity of links if True.
         :param ignore_if_duplicate: Do not raise error if a duplicate entry exists.
         :param ignore_mandatory: Do not check missing mandatory fields if True.
-        :param set_id: Name to set for the document, if valid.
+        :param set_id: ID to set for the document, if valid.
         :param set_child_ids: Whether to set ids for the child documents.
         """
         if self.flags.in_print:

@@ -138,7 +138,7 @@ class File(Document):
             return
 
         if not self.attached_to_id or not isinstance(self.attached_to_id, str | int):
-            frappe.throw(_("Attached To Name must be a string or an integer"), frappe.ValidationError)
+            frappe.throw(_("Attached To ID must be a string or an integer"), frappe.ValidationError)
 
         if self.attached_to_field and SPECIAL_CHAR_PATTERN.search(self.attached_to_field):
             frappe.throw(_("The fieldname you've specified in Attached To Field is invalid"))

@@ -103,7 +103,7 @@ class TestHooks(IntegrationTestCase):
                 "doctype": "ToDo",
                 "description": "Test ToDo",
                 "reference_type": "Event",
-                "reference_name": event.name,
+                "reference_id": event.name,
             }
         )
         todo.insert()

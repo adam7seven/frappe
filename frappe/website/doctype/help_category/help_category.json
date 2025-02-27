@@ -16,7 +16,7 @@
       "fieldname": "category_id",
       "fieldtype": "Data",
       "in_list_view": 1,
-      "label": "Category Name",
+      "label": "Category ID",
       "reqd": 1
     },
     {

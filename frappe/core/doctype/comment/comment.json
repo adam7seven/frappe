@@ -71,7 +71,7 @@
     {
       "fieldname": "reference_id",
       "fieldtype": "Dynamic Link",
-      "label": "Reference Name",
+      "label": "Reference ID",
       "options": "reference_doctype"
     },
     {

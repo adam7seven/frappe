@@ -23429,8 +23429,8 @@ msgstr ""
 #. 'Email Account'
 #: email/doctype/email_account/email_account.json
 msgctxt "Email Account"
-msgid "ProTip: Add <code>Reference: {{ reference_doctype }} {{ reference_name }}</code> to send document reference"
-msgstr "ProTip：添加<code>Reference: {{ reference_doctype }} {{ reference_name }}</code>發送文檔引用"
+msgid "ProTip: Add <code>Reference: {{ reference_doctype }} {{ reference_id }}</code> to send document reference"
+msgstr "ProTip：添加<code>Reference: {{ reference_doctype }} {{ reference_id }}</code>發送文檔引用"
 
 #: core/doctype/document_naming_rule/document_naming_rule.js:22
 msgid "Proceed"
@@ -24441,7 +24441,7 @@ msgid "Reference DocType"
 msgstr "DocType參照"
 
 #: email/doctype/email_unsubscribe/email_unsubscribe.py:25
-msgid "Reference DocType and Reference Name are required"
+msgid "Reference DocType and Reference ID are required"
 msgstr "參考的DocType和參考名稱是必需的"
 
 #. Label of a Dynamic Link field in DocType 'Discussion Topic'
@@ -24643,67 +24643,67 @@ msgstr ""
 
 #: core/doctype/communication/communication.js:152
 #: core/report/transaction_log_report/transaction_log_report.py:94
-msgid "Reference Name"
+msgid "Reference ID"
 msgstr "參考名稱"
 
 #. Label of a Dynamic Link field in DocType 'Activity Log'
 #: core/doctype/activity_log/activity_log.json
 msgctxt "Activity Log"
-msgid "Reference Name"
+msgid "Reference ID"
 msgstr "參考名稱"
 
 #. Label of a Dynamic Link field in DocType 'Comment'
 #: core/doctype/comment/comment.json
 msgctxt "Comment"
-msgid "Reference Name"
+msgid "Reference ID"
 msgstr "參考名稱"
 
 #. Label of a Dynamic Link field in DocType 'Communication'
 #: core/doctype/communication/communication.json
 msgctxt "Communication"
-msgid "Reference Name"
+msgid "Reference ID"
 msgstr "參考名稱"
 
 #. Label of a Data field in DocType 'Data Import Log'
 #: core/doctype/data_import_log/data_import_log.json
 msgctxt "Data Import Log"
-msgid "Reference Name"
+msgid "Reference ID"
 msgstr "參考名稱"
 
 #. Label of a Dynamic Link field in DocType 'Email Unsubscribe'
 #: email/doctype/email_unsubscribe/email_unsubscribe.json
 msgctxt "Email Unsubscribe"
-msgid "Reference Name"
+msgid "Reference ID"
 msgstr "參考名稱"
 
 #. Label of a Data field in DocType 'Energy Point Log'
 #: social/doctype/energy_point_log/energy_point_log.json
 msgctxt "Energy Point Log"
-msgid "Reference Name"
+msgid "Reference ID"
 msgstr "參考名稱"
 
 #. Label of a Data field in DocType 'Error Log'
 #: core/doctype/error_log/error_log.json
 msgctxt "Error Log"
-msgid "Reference Name"
+msgid "Reference ID"
 msgstr "參考名稱"
 
 #. Label of a Dynamic Link field in DocType 'Event Participants'
 #: desk/doctype/event_participants/event_participants.json
 msgctxt "Event Participants"
-msgid "Reference Name"
+msgid "Reference ID"
 msgstr "參考名稱"
 
 #. Label of a Dynamic Link field in DocType 'ToDo'
 #: desk/doctype/todo/todo.json
 msgctxt "ToDo"
-msgid "Reference Name"
+msgid "Reference ID"
 msgstr "參考名稱"
 
 #. Label of a Dynamic Link field in DocType 'Workflow Action'
 #: workflow/doctype/workflow_action/workflow_action.json
 msgctxt "Workflow Action"
-msgid "Reference Name"
+msgid "Reference ID"
 msgstr "參考名稱"
 
 #. Label of a Read Only field in DocType 'Activity Log'

@@ -149,7 +149,7 @@ frappe.ui.form.on("Communication", {
 				{
 					fieldtype: "Dynamic Link",
 					options: "reference_doctype",
-					label: __("Reference Name"),
+					label: __("Reference ID"),
 					fieldname: "reference_id",
 				},
 			],
