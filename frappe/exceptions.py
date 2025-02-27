@@ -37,6 +37,18 @@ class SessionExpired(Exception):
     http_status_code = 401
 
 
+class LicenseNotFoundError(Exception):
+    http_status_code = 403
+
+
+class LicenseInvalidError(Exception):
+    http_status_code = 403
+
+
+class LicenseExpiredError(Exception):
+    http_status_code = 403
+
+
 class PermissionError(Exception):
     http_status_code = 403
 
