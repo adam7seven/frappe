@@ -462,7 +462,7 @@ def data_import(context: CliCtxObj, file_path, doctype, import_type=None, submit
 @click.argument("path")
 @pass_context
 def bulk_rename(context: CliCtxObj, doctype, path):
-    "Reid multiple records via CSV file"
+    "Rename multiple records via CSV file"
     from frappe.model.rename_doc import bulk_rename
     from frappe.utils.csvutils import read_csv_content
 

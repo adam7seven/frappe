@@ -2413,7 +2413,7 @@ def get_user_info_for_avatar(user_id: str) -> _UserInfo:
     """
     try:
         user = frappe.get_cached_doc("User", user_id)
-        return {"email": user.email, "image": user.user_image, "id": user.full_id}
+        return {"email": user.email, "image": user.user_image, "id": user.full_name}
 
     except frappe.DoesNotExistError:
         frappe.clear_last_message()

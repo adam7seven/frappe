@@ -253,7 +253,10 @@ frappe.Application = class Application {
                     d.hide(); //hide waiting indication
                     if (!passed["message"]) {
                         frappe.show_alert(
-                            { message: __("Login Failed please try again"), indicator: "error" },
+                            {
+                                message: __("Login Failed please try again"),
+                                indicator: "error",
+                            },
                             5
                         );
                         me.email_password_prompt(email_account, user, i);
@@ -463,7 +466,7 @@ frappe.Application = class Application {
     }
 
     add_browser_class() {
-        $("html").addClass(frappe.utils.get_browser().id.toLowerCase());
+        $("html").addClass(frappe.utils.get_browser().name.toLowerCase());
     }
 
     set_fullwidth_if_enabled() {

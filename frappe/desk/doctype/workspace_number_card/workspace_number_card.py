@@ -15,7 +15,7 @@ class WorkspaceNumberCard(Document):
         from frappe.types import DF
 
         label: DF.Data | None
-        number_card_id: DF.Link
+        number_card_name: DF.Link
         parent: DF.Data
         parentfield: DF.Data
         parenttype: DF.Data

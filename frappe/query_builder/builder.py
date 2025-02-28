@@ -90,7 +90,7 @@ class Postgres(Base, PostgreSQLQuery):
     def from_(cls, table, *args, **kwargs):
         if isinstance(table, Table):
             if table._schema:
-                if table._schema._id == "information_schema":
+                if table._schema._name == "information_schema":
                     table = cls.schema_translation.get(table._table_name) or table
 
         elif isinstance(table, str):

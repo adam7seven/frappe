@@ -491,7 +491,7 @@ def get_jobs(site=None, queue=None, key="method"):
     return jobs_per_site
 
 
-def get_queue_list(queue_list=None, build_queue_id=False):
+def get_queue_list(queue_list=None, build_queue_name=False):
     """Defines possible queues. Also wraps a given queue in a list after validating."""
     default_queue_list = list(get_queues_timeout())
     if queue_list:
@@ -502,7 +502,7 @@ def get_queue_list(queue_list=None, build_queue_id=False):
             validate_queue(queue, default_queue_list)
     else:
         queue_list = default_queue_list
-    return [generate_qname(qtype) for qtype in queue_list] if build_queue_id else queue_list
+    return [generate_qname(qtype) for qtype in queue_list] if build_queue_name else queue_list
 
 
 def get_workers(queue=None):

@@ -373,14 +373,14 @@ def gzip_decompress(data):
     "v17",
     "Unknown.",
 )
-def send_mail(email_queue_id, smtp_server_instance=None):
+def send_mail(email_queue_name, smtp_server_instance=None):
     """This is equivalent to EmailQueue.send.
 
     This provides a way to make sending mail as a background job.
     """
     from frappe.email.doctype.email_queue.email_queue import EmailQueue
 
-    record = EmailQueue.find(email_queue_id)
+    record = EmailQueue.find(email_queue_name)
     record.send(smtp_server_instance=smtp_server_instance)
 
 

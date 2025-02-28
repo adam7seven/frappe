@@ -280,7 +280,7 @@
       "default": "1",
       "fieldname": "allow_rename",
       "fieldtype": "Check",
-      "label": "Allow Reid",
+      "label": "Allow Rename",
       "oldfieldname": "allow_rename",
       "oldfieldtype": "Check"
     },
