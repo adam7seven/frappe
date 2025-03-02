@@ -169,7 +169,7 @@ def search_widget(
         _txt = frappe.db.escape((txt or "").replace("%", "").replace("@", ""))
         # locate returns 0 if string is not found, convert 0 to null and then sort null to end in order by
         _relevance = ""
-        if meta.autoid == "autoincrement":
+        if meta.autoname == "autoincrement":
             val = 0
             if _txt and _txt.isdigit():
                 val = int(_txt)

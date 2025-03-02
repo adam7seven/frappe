@@ -233,13 +233,18 @@ class Document(BaseDocument, DocRef):
 
         else:
             if isinstance(self.id, str) and self.doctype != "DocType":
+                # If autoname is autoincrement, the column type of id is bigint, cannot use default id with "new-doctype-xxx"
+                doc_id = self.id
+                if self.meta.autoname and self.meta.autoname == "autoincrement" and self.id.startswith("new-"):
+                    doc_id = -1
+
                 # Fast path - use raw SQL to avoid QB/ORM overheads.
                 d = frappe.db.sql(
                     "SELECT * FROM {table_name} WHERE `id` = %s {for_update}".format(
                         table_name=get_table_name(self.doctype, wrap_in_backticks=True),
                         for_update="FOR UPDATE" if self.flags.for_update else "",
                     ),
-                    (self.id),
+                    (doc_id),
                     as_dict=True,
                 )
                 d = d[0] if d else d

@@ -33,10 +33,10 @@ from frappe.utils import (
 )
 from frappe.utils.data import DateTimeLikeObject, get_datetime, getdate, sbool
 
-LOCATE_PATTERN = re.compile(r"locate\([^,]+,\s*[`\"]?name[`\"]?\s*\)", flags=re.IGNORECASE)
-LOCATE_CAST_PATTERN = re.compile(r"locate\(([^,]+),\s*([`\"]?name[`\"]?)\s*\)", flags=re.IGNORECASE)
-FUNC_IFNULL_PATTERN = re.compile(r"(strpos|ifnull|coalesce)\(\s*[`\"]?name[`\"]?\s*,", flags=re.IGNORECASE)
-CAST_VARCHAR_PATTERN = re.compile(r"([`\"]?tab[\w`\" -]+\.[`\"]?name[`\"]?)(?!\w)", flags=re.IGNORECASE)
+LOCATE_PATTERN = re.compile(r"locate\([^,]+,\s*[`\"]?id[`\"]?\s*\)", flags=re.IGNORECASE)
+LOCATE_CAST_PATTERN = re.compile(r"locate\(([^,]+),\s*([`\"]?id[`\"]?)\s*\)", flags=re.IGNORECASE)
+FUNC_IFNULL_PATTERN = re.compile(r"(strpos|ifnull|coalesce)\(\s*[`\"]?id[`\"]?\s*,", flags=re.IGNORECASE)
+CAST_VARCHAR_PATTERN = re.compile(r"([`\"]?tab[\w`\" -]+\.[`\"]?id[`\"]?)(?!\w)", flags=re.IGNORECASE)
 ORDER_BY_PATTERN = re.compile(r"\ order\ by\ |\ asc|\ ASC|\ desc|\ DESC", flags=re.IGNORECASE)
 SUB_QUERY_PATTERN = re.compile("^.*[,();@].*")
 IS_QUERY_PATTERN = re.compile(r"^(select|delete|update|drop|create)\s")
@@ -248,7 +248,6 @@ class DatabaseQuery:
 			{limit}""".format(
             **args
         )
-
         return frappe.db.sql(
             query,
             as_dict=not self.as_list,

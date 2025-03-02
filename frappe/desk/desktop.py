@@ -600,7 +600,7 @@ def clean_up(original_page, blocks):
 
     for wid in ["shortcut", "card", "chart", "quick_list", "number_card", "custom_block"]:
         # get list of widget's name from blocks
-        page_widgets[wid] = [x["data"][wid + "_id"] for x in loads(blocks) if x["type"] == wid]
+        page_widgets[wid] = [x["data"][wid + "_name"] for x in loads(blocks) if x["type"] == wid]
 
     # shortcut, chart, quick_list, number_card & custom_block cleanup
     for wid in ["shortcut", "chart", "quick_list", "number_card", "custom_block"]:
