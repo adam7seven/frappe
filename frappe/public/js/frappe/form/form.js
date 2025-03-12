@@ -1202,9 +1202,9 @@ frappe.ui.form.Form = class FrappeForm {
                 this.dashboard.clear_headline();
                 this.dashboard.set_headline_alert(
                     __("This form has been modified after you have loaded it") +
-                        '<button class="btn btn-xs btn-primary pull-right" onclick="cur_frm.reload_doc()">' +
-                        __("Refresh") +
-                        "</button>",
+                    '<button class="btn btn-xs btn-primary pull-right" onclick="cur_frm.reload_doc()">' +
+                    __("Refresh") +
+                    "</button>",
                     "alert-warning"
                 );
             } else {
@@ -1240,7 +1240,7 @@ frappe.ui.form.Form = class FrappeForm {
     add_web_link(path, label) {
         label = __(label) || __("See on Website");
         this.web_link = this.sidebar
-            .add_user_action(__(label), function () {})
+            .add_user_action(__(label), function () { })
             .attr("href", path || this.doc.route)
             .attr("target", "_blank");
     }
@@ -1408,18 +1408,27 @@ frappe.ui.form.Form = class FrappeForm {
         }
     }
 
+    refresh_child_field(table_field, child_field, rowid) {
+        if (this.fields_dict[table_field] && this.fields_dict[table_field].grid) {
+            let grid_row = this.fields_dict[table_field].grid.grid_rows_by_docid[rowid]
+            if (grid_row && grid_row.refresh_field) {
+                grid_row.refresh_field(child_field);
+            }
+        }
+    }
+
     // UTILITIES
     add_fetch(link_field, source_field, target_field, target_doctype) {
         /*
-		Example fetch dict to get sender_email from email_id field in sender:
-			{
-				"Notification": {
-					"sender": {
-						"sender_email": "email_id"
-					}
-				}
-			}
-		*/
+        Example fetch dict to get sender_email from email_id field in sender:
+            {
+                "Notification": {
+                    "sender": {
+                        "sender_email": "email_id"
+                    }
+                }
+            }
+        */
 
         if (!target_doctype) target_doctype = "*";
 
@@ -1639,7 +1648,12 @@ frappe.ui.form.Form = class FrappeForm {
             df[property] = value;
 
             if (table_field && table_row_id) {
-                if (this.fields_dict[fieldname].grid.grid_rows_by_docid[table_row_id]) {
+                let grid_row = this.fields_dict[fieldname].grid.grid_rows_by_docid[table_row_id]
+                if (grid_row) {
+                    if (grid_row.on_grid_fields_dict[table_field] && grid_row.on_grid_fields_dict[table_field].df[property] != value) {
+                        grid_row.on_grid_fields_dict[table_field].df[property] = value;
+                    }
+
                     this.fields_dict[fieldname].grid.grid_rows_by_docid[
                         table_row_id
                     ].refresh_field(table_field);
@@ -1648,6 +1662,11 @@ frappe.ui.form.Form = class FrappeForm {
                 this.refresh_field(fieldname);
             }
         }
+    }
+
+    //由于set_df_property方法中的fieldname参数在设置子表是用作子表在附表中的字段名，容易错误，所以这个方法将它反过来
+    set_child_df_property(fieldname, property, value, field_of_table, table_row_id = null) {
+        this.set_df_property(field_of_table, property, value, "-", fieldname, table_row_id)
     }
 
     toggle_enable(fnames, enable) {
@@ -2236,8 +2255,8 @@ frappe.ui.form.Form = class FrappeForm {
 						</div>
 						<div class="col-md-6">
 							<a href='/app/submission-queue?ref_doctype=${encodeURIComponent(
-                                this.doctype
-                            )}&ref_docid=${encodeURIComponent(this.docid)}'>${__(
+                            this.doctype
+                        )}&ref_docid=${encodeURIComponent(this.docid)}'>${__(
                             "All Submissions"
                         )}</a>
 						`;

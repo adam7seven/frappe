@@ -159,7 +159,10 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
             value = frappe.utils.escape_html(value);
         }
         if (this.df.fieldtype === "Select" && this.df.options_has_label && this.df.options) {
-            let options = this.df.options.split("\n");
+            let options = this.df.options;
+            if (!Array.isArray(this.df.options)) {
+                options = this.df.options?.split("\n") || [];
+            }
             for (var i = 0; i < options.length; i++) {
                 var opt = options[i];
                 var comma_index = opt.indexOf(",");
@@ -190,7 +193,7 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
         var icon = "";
         this.label_span.innerHTML =
             (icon ? '<i class="' + icon + '"></i> ' : "") +
-                __(this.df.label, null, this.df.parent) || "&nbsp;";
+            __(this.df.label, null, this.df.parent) || "&nbsp;";
         this._label = this.df.label;
     }
 

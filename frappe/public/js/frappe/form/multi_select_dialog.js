@@ -464,18 +464,16 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
         let contents = ``;
         this.get_datatable_columns().forEach(function (column) {
             contents += `<div class="list-item__content ellipsis">
-				${
-                    head
-                        ? `<span class="ellipsis text-muted" title="${__(
-                              frappe.model.unscrub(column)
-                          )}">${__(frappe.model.unscrub(column))}</span>`
-                        : column !== "id"
+				${head
+                    ? `<span class="ellipsis text-muted" title="${__(
+                        frappe.model.unscrub(column)
+                    )}">${__(frappe.model.unscrub(column))}</span>`
+                    : column !== "id"
                         ? `<span class="ellipsis result-row" title="${__(
-                              result[column] || ""
-                          )}">${__(result[column] || "")}</span>`
-                        : `<a href="${
-                              "/app/" + frappe.router.slug(me.doctype) + "/" + result[column] || ""
-                          }" class="list-id ellipsis" title="${__(result[column] || "")}">
+                            result[column] || ""
+                        )}">${__(result[column] || "")}</span>`
+                        : `<a href="${"/app/" + frappe.router.slug(me.doctype) + "/" + result[column] || ""
+                        }" class="list-id ellipsis" title="${__(result[column] || "")}">
 							${__(result[column] || "")}</a>`
                 }
 			</div>`;
@@ -483,9 +481,8 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 
         let $row = $(`<div class="list-item">
 			<div class="list-item__content" style="flex: 0 0 10px;">
-				<input type="checkbox" class="list-row-check" data-item-id="${result.id}" ${
-            result.checked ? "checked" : ""
-        }>
+				<input type="checkbox" class="list-row-check" data-item-id="${result.id}" ${result.checked ? "checked" : ""
+            }>
 			</div>
 			${contents}
 		</div>`);
@@ -493,8 +490,8 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
         head
             ? $row.addClass("list-item--head")
             : ($row = $(
-                  `<div class="list-item-container" data-item-id="${result.id}"></div>`
-              ).append($row));
+                `<div class="list-item-container" data-item-id="${result.id}"></div>`
+            ).append($row));
 
         return $row;
     }

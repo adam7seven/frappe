@@ -851,7 +851,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
             } else if (df.fieldtype === "Select") {
                 var label = "";
                 //如果选项中包含逗号，则按逗号隔开
-                if (df.options_has_label) {
+                if (df.options_has_label && df.options) {
                     let options = df.options.split("\n");
                     for (var i = 0; i < options.length; i++) {
                         var opt = options[i];
