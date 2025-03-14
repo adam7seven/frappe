@@ -1214,7 +1214,6 @@ frappe.ui.form.Form = class FrappeForm {
     }
 
     show_submit_message() {
-        console.log("show_submit_message");
         if (
             this.meta.is_submittable &&
             this.perm[0] &&
