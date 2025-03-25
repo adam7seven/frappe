@@ -872,7 +872,7 @@ class DatabaseQuery:
             if isinstance(f.value, Column):
                 can_be_null = False  # added to avoid the ifnull/coalesce addition
                 quote = '"' if frappe.conf.db_type == "postgres" else "`"
-                value = f"{tname}.{quote}{f.value.id}{quote}"
+                value = f"{tname}.{quote}{f.value.name}{quote}"
 
             # escape value
             elif escape and isinstance(value, str):
