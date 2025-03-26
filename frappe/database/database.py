@@ -235,8 +235,8 @@ class Database:
 			query += f" /* FRAPPE_TRACE_ID: {trace_id} */"
 
 		try:
-			print(f"SQL Query: {query}")
-			print(f"SQL Query Params: {values or ''}")
+			# print(f"SQL Query: {query}")
+			# print(f"SQL Query Params: {values or ''}")
 			self._cursor.execute(query, values)
 		except Exception as e:
 			if self.is_syntax_error(e):
