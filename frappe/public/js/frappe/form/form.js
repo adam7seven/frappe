@@ -46,8 +46,7 @@ frappe.ui.form.Form = class FrappeForm {
         this.beforeUnloadListener = (event) => {
             event.preventDefault();
             // A String is returned for compatability with older Browsers. Return Value has to be truthy to trigger "Leave Site" Dialog
-            return (event.returnValue =
-                "There are unsaved changes, are you sure you want to exit?");
+            return (event.returnValue = "There are unsaved changes, are you sure you want to exit?");
         };
     }
 
@@ -279,31 +278,27 @@ frappe.ui.form.Form = class FrappeForm {
         var me = this;
 
         // on main doc
-        frappe.model.on(
-            me.doctype,
-            "*",
-            function (fieldname, value, doc, skip_dirty_trigger = false) {
-                // set input
-                if (doc.id == me.docid) {
-                    if (!skip_dirty_trigger) {
-                        me.dirty();
-                    }
-
-                    let field = me.fields_dict[fieldname];
-                    field && field.refresh(fieldname);
-
-                    // Validate value for link field explicitly
-                    field &&
-                        ["Link", "Dynamic Link"].includes(field.df.fieldtype) &&
-                        field.validate &&
-                        field.validate(value);
-
-                    me.layout.refresh_dependency();
-                    me.layout.refresh_sections();
-                    return me.script_manager.trigger(fieldname, doc.doctype, doc.id);
+        frappe.model.on(me.doctype, "*", function (fieldname, value, doc, skip_dirty_trigger = false) {
+            // set input
+            if (doc.id == me.docid) {
+                if (!skip_dirty_trigger) {
+                    me.dirty();
                 }
+
+                let field = me.fields_dict[fieldname];
+                field && field.refresh(fieldname);
+
+                // Validate value for link field explicitly
+                field &&
+                    ["Link", "Dynamic Link"].includes(field.df.fieldtype) &&
+                    field.validate &&
+                    field.validate(value);
+
+                me.layout.refresh_dependency();
+                me.layout.refresh_sections();
+                return me.script_manager.trigger(fieldname, doc.doctype, doc.id);
             }
-        );
+        });
 
         // on table fields
         var table_fields = frappe.get_children("DocType", me.doctype, "fields", {
@@ -312,20 +307,16 @@ frappe.ui.form.Form = class FrappeForm {
 
         // using $.each to preserve df via closure
         $.each(table_fields, function (i, df) {
-            frappe.model.on(
-                df.options,
-                "*",
-                function (fieldname, value, doc, skip_dirty_trigger = false) {
-                    if (doc.parent == me.docid && doc.parentfield === df.fieldname) {
-                        if (!skip_dirty_trigger) {
-                            me.dirty();
-                        }
-
-                        me.fields_dict[df.fieldname].grid.set_value(fieldname, value, doc);
-                        return me.script_manager.trigger(fieldname, doc.doctype, doc.id);
+            frappe.model.on(df.options, "*", function (fieldname, value, doc, skip_dirty_trigger = false) {
+                if (doc.parent == me.docid && doc.parentfield === df.fieldname) {
+                    if (!skip_dirty_trigger) {
+                        me.dirty();
                     }
+
+                    me.fields_dict[df.fieldname].grid.set_value(fieldname, value, doc);
+                    return me.script_manager.trigger(fieldname, doc.doctype, doc.id);
                 }
-            );
+            });
         });
     }
 
@@ -664,10 +655,7 @@ frappe.ui.form.Form = class FrappeForm {
             return;
         }
 
-        layout_wrapper
-            .find(":input:visible:first")
-            .not("[data-fieldtype^='Date']")
-            .trigger("focus");
+        layout_wrapper.find(":input:visible:first").not("[data-fieldtype^='Date']").trigger("focus");
     }
 
     run_after_load_hook() {
@@ -710,11 +698,7 @@ frappe.ui.form.Form = class FrappeForm {
             }
         }
 
-        if (
-            this.meta.autoname &&
-            this.meta.autoname.substr(0, 6) == "field:" &&
-            !this.doc.__islocal
-        ) {
+        if (this.meta.autoname && this.meta.autoname.substr(0, 6) == "field:" && !this.doc.__islocal) {
             var fn = this.meta.autoname.substr(6);
 
             if (this.doc[fn]) {
@@ -884,8 +868,7 @@ frappe.ui.form.Form = class FrappeForm {
                                         .then(() => resolve(me))
                                         .then(() => {
                                             if (frappe.route_hooks.after_submit) {
-                                                let route_callback =
-                                                    frappe.route_hooks.after_submit;
+                                                let route_callback = frappe.route_hooks.after_submit;
                                                 delete frappe.route_hooks.after_submit;
                                                 route_callback(me);
                                             }
@@ -1029,11 +1012,7 @@ frappe.ui.form.Form = class FrappeForm {
         if (skip_confirm) {
             cancel_doc();
         } else {
-            frappe.confirm(
-                __("Permanently Cancel {0}?", [this.docid]),
-                cancel_doc,
-                me.handle_save_fail(btn, on_error)
-            );
+            frappe.confirm(__("Permanently Cancel {0}?", [this.docid]), cancel_doc, me.handle_save_fail(btn, on_error));
         }
     }
 
@@ -1103,9 +1082,7 @@ frappe.ui.form.Form = class FrappeForm {
             })
             .then((is_amended) => {
                 if (is_amended) {
-                    frappe.throw(
-                        __("This document is already amended, you cannot ammend it again")
-                    );
+                    frappe.throw(__("This document is already amended, you cannot ammend it again"));
                 }
                 this.validate_form_action("Amend");
                 var me = this;
@@ -1142,11 +1119,7 @@ frappe.ui.form.Form = class FrappeForm {
             }
 
             frappe.throw(
-                __(
-                    "No permission to '{0}' {1}",
-                    [__(action), __(this.doc.doctype)],
-                    "{0} = verb, {1} = object"
-                )
+                __("No permission to '{0}' {1}", [__(action), __(this.doc.doctype)], "{0} = verb, {1} = object")
             );
         }
     }
@@ -1202,9 +1175,9 @@ frappe.ui.form.Form = class FrappeForm {
                 this.dashboard.clear_headline();
                 this.dashboard.set_headline_alert(
                     __("This form has been modified after you have loaded it") +
-                    '<button class="btn btn-xs btn-primary pull-right" onclick="cur_frm.reload_doc()">' +
-                    __("Refresh") +
-                    "</button>",
+                        '<button class="btn btn-xs btn-primary pull-right" onclick="cur_frm.reload_doc()">' +
+                        __("Refresh") +
+                        "</button>",
                     "alert-warning"
                 );
             } else {
@@ -1239,7 +1212,7 @@ frappe.ui.form.Form = class FrappeForm {
     add_web_link(path, label) {
         label = __(label) || __("See on Website");
         this.web_link = this.sidebar
-            .add_user_action(__(label), function () { })
+            .add_user_action(__(label), function () {})
             .attr("href", path || this.doc.route)
             .attr("target", "_blank");
     }
@@ -1266,10 +1239,7 @@ frappe.ui.form.Form = class FrappeForm {
                 // throw 'doctype open conflict'
             }
         } else {
-            if (
-                frappe.views.formview.DocType &&
-                frappe.views.formview.DocType.frm.opendocs[this.doctype]
-            ) {
+            if (frappe.views.formview.DocType && frappe.views.formview.DocType.frm.opendocs[this.doctype]) {
                 window.location.reload();
                 //	frappe.msgprint(__("Cannot open instance when its {0} is open", ['DocType']))
                 // throw 'doctype open conflict'
@@ -1409,7 +1379,7 @@ frappe.ui.form.Form = class FrappeForm {
 
     refresh_child_field(table_field, child_field, rowid) {
         if (this.fields_dict[table_field] && this.fields_dict[table_field].grid) {
-            let grid_row = this.fields_dict[table_field].grid.grid_rows_by_docid[rowid]
+            let grid_row = this.fields_dict[table_field].grid.grid_rows_by_docid[rowid];
             if (grid_row && grid_row.refresh_field) {
                 grid_row.refresh_field(child_field);
             }
@@ -1432,8 +1402,7 @@ frappe.ui.form.Form = class FrappeForm {
         if (!target_doctype) target_doctype = "*";
 
         // Target field kept as key because source field could be non-unique
-        this.fetch_dict.setDefault(target_doctype, {}).setDefault(link_field, {})[target_field] =
-            source_field;
+        this.fetch_dict.setDefault(target_doctype, {}).setDefault(link_field, {})[target_field] = source_field;
     }
 
     has_perm(ptype) {
@@ -1461,10 +1430,7 @@ frappe.ui.form.Form = class FrappeForm {
     }
 
     is_form_builder() {
-        return (
-            ["DocType", "Customize Form"].includes(this.doctype) &&
-            this.get_active_tab().label == "Form"
-        );
+        return ["DocType", "Customize Form"].includes(this.doctype) && this.get_active_tab().label == "Form";
     }
 
     get_perm(permlevel, access_type) {
@@ -1505,11 +1471,7 @@ frappe.ui.form.Form = class FrappeForm {
         // Remove actions from menu
         delete this.custom_buttons[label];
         let menu_item_label = group ? `${group} > ${label}` : label;
-        let $btn = this.page.is_in_group_button_dropdown(
-            this.page.menu,
-            "li > a.grey-link > span",
-            menu_item_label
-        );
+        let $btn = this.page.is_in_group_button_dropdown(this.page.menu, "li > a.grey-link > span", menu_item_label);
 
         if ($btn) {
             let $linkBody = $btn.parent().parent();
@@ -1541,8 +1503,7 @@ frappe.ui.form.Form = class FrappeForm {
             if ($(window.location.hash).length) {
                 frappe.utils.scroll_to(window.location.hash, true, 200, null, null, true);
             } else {
-                this.scroll_to_field(window.location.hash.replace("#", "")) &&
-                    history.replaceState(null, null, " ");
+                this.scroll_to_field(window.location.hash.replace("#", "")) && history.replaceState(null, null, " ");
             }
         }
     }
@@ -1572,13 +1533,9 @@ frappe.ui.form.Form = class FrappeForm {
         $.each(fields_list, function (i, fname) {
             var docfield = frappe.meta.docfield_map[doctype][fname];
             if (docfield) {
-                var label = __(docfield.label || "", null, docfield.parent).replace(
-                    /\([^\)]*\)/g,
-                    ""
-                ); // eslint-disable-line
+                var label = __(docfield.label || "", null, docfield.parent).replace(/\([^\)]*\)/g, ""); // eslint-disable-line
                 if (parentfield) {
-                    grid_field_label_map[doctype + "-" + fname] =
-                        label.trim() + " (" + __(currency) + ")";
+                    grid_field_label_map[doctype + "-" + fname] = label.trim() + " (" + __(currency) + ")";
                 } else {
                     field_label_map[fname] = label.trim() + " (" + currency + ")";
                 }
@@ -1635,11 +1592,7 @@ frappe.ui.form.Form = class FrappeForm {
                 fieldname: table_field,
             });
             if (filtered_fields.length) {
-                df = frappe.meta.get_docfield(
-                    filtered_fields[0].parent,
-                    table_field,
-                    table_row_id
-                );
+                df = frappe.meta.get_docfield(filtered_fields[0].parent, table_field, table_row_id);
             }
         }
 
@@ -1647,16 +1600,13 @@ frappe.ui.form.Form = class FrappeForm {
             df[property] = value;
 
             if (table_field && table_row_id) {
-                let grid_row = this.fields_dict[fieldname].grid.grid_rows_by_docid[table_row_id]
-                if (grid_row) {
-                    if (grid_row.on_grid_fields_dict[table_field] && grid_row.on_grid_fields_dict[table_field].df[property] != value) {
-                        grid_row.on_grid_fields_dict[table_field].df[property] = value;
-                    }
-
-                    this.fields_dict[fieldname].grid.grid_rows_by_docid[
-                        table_row_id
-                    ].refresh_field(table_field);
+                let user_defined_columns = this.fields_dict[fieldname].grid.user_defined_columns;
+                let column = user_defined_columns.find((column) => column.fieldname == table_field);
+                if (column) {
+                    column[property] = value;
                 }
+
+                this.fields_dict[fieldname].grid.grid_rows_by_docid[table_row_id].refresh_field(table_field);
             } else {
                 this.refresh_field(fieldname);
             }
@@ -1665,7 +1615,7 @@ frappe.ui.form.Form = class FrappeForm {
 
     //由于set_df_property方法中的fieldname参数在设置子表是用作子表在附表中的字段名，容易错误，所以这个方法将它反过来
     set_child_df_property(fieldname, property, value, field_of_table, table_row_id = null) {
-        this.set_df_property(field_of_table, property, value, "-", fieldname, table_row_id)
+        this.set_df_property(field_of_table, property, value, "-", fieldname, table_row_id);
     }
 
     toggle_enable(fnames, enable) {
@@ -1687,9 +1637,7 @@ frappe.ui.form.Form = class FrappeForm {
     }
 
     get_files() {
-        return this.attachments
-            ? frappe.utils.sort(this.attachments.get_attachments(), "file_name", "string")
-            : [];
+        return this.attachments ? frappe.utils.sort(this.attachments.get_attachments(), "file_name", "string") : [];
     }
 
     set_query(fieldname, opt1, opt2) {
@@ -1738,10 +1686,7 @@ frappe.ui.form.Form = class FrappeForm {
             var fieldobj = me.fields_dict[f];
             if (fieldobj) {
                 if (!if_missing || !frappe.model.has_value(me.doctype, me.doc.id, f)) {
-                    if (
-                        frappe.model.table_fields.includes(fieldobj.df.fieldtype) &&
-                        $.isArray(v)
-                    ) {
+                    if (frappe.model.table_fields.includes(fieldobj.df.fieldtype) && $.isArray(v)) {
                         // set entire child table from specified array as value
                         frappe.model.clear_table(me.doc, fieldobj.df.fieldname);
 
@@ -1768,14 +1713,7 @@ frappe.ui.form.Form = class FrappeForm {
                         me.refresh_field(f);
                         return Promise.resolve();
                     } else {
-                        return frappe.model.set_value(
-                            me.doctype,
-                            me.doc.id,
-                            f,
-                            v,
-                            me.fieldtype,
-                            skip_dirty_trigger
-                        );
+                        return frappe.model.set_value(me.doctype, me.doc.id, f, v, me.fieldtype, skip_dirty_trigger);
                     }
                 }
             } else {
@@ -1923,12 +1861,7 @@ frappe.ui.form.Form = class FrappeForm {
             });
         }
 
-        frappe.meta.docfield_map[doctype][fieldname].formatter = function (
-            value,
-            df,
-            options,
-            doc
-        ) {
+        frappe.meta.docfield_map[doctype][fieldname].formatter = function (value, df, options, doc) {
             if (value) {
                 var label;
                 if (get_text) {
@@ -2108,11 +2041,7 @@ frappe.ui.form.Form = class FrappeForm {
             // no need to update timeline of owner of comment
             // gets handled via comment submit code
             if (
-                !(
-                    ["add", "update"].includes(action) &&
-                    doc.doctype === "Comment" &&
-                    doc.owner === frappe.session.user
-                )
+                !(["add", "update"].includes(action) && doc.doctype === "Comment" && doc.owner === frappe.session.user)
             ) {
                 this.timeline && this.timeline.refresh();
             }
@@ -2120,30 +2049,16 @@ frappe.ui.form.Form = class FrappeForm {
     }
 
     // Filters fields from the reference doctype and sets them as options for a Select field
-    set_fields_as_options(
-        fieldname,
-        reference_doctype,
-        filter_function,
-        default_options = [],
-        table_fieldname
-    ) {
+    set_fields_as_options(fieldname, reference_doctype, filter_function, default_options = [], table_fieldname) {
         if (!reference_doctype) return Promise.resolve();
         let options = default_options || [];
         if (!filter_function) filter_function = (f) => f;
         return new Promise((resolve) => {
             frappe.model.with_doctype(reference_doctype, () => {
                 frappe.get_meta(reference_doctype).fields.map((df) => {
-                    filter_function(df) &&
-                        options.push({ label: df.label || df.fieldname, value: df.fieldname });
+                    filter_function(df) && options.push({ label: df.label || df.fieldname, value: df.fieldname });
                 });
-                options &&
-                    this.set_df_property(
-                        fieldname,
-                        "options",
-                        options,
-                        this.doc.id,
-                        table_fieldname
-                    );
+                options && this.set_df_property(fieldname, "options", options, this.doc.id, table_fieldname);
                 resolve(options);
             });
         });
@@ -2253,11 +2168,9 @@ frappe.ui.form.Form = class FrappeForm {
                         secondary = `
 						</div>
 						<div class="col-md-6">
-							<a href='/app/submission-queue?ref_doctype=${encodeURIComponent(
-                            this.doctype
-                        )}&ref_docid=${encodeURIComponent(this.docid)}'>${__(
-                            "All Submissions"
-                        )}</a>
+							<a href='/app/submission-queue?ref_doctype=${encodeURIComponent(this.doctype)}&ref_docid=${encodeURIComponent(
+                            this.docid
+                        )}'>${__("All Submissions")}</a>
 						`;
                     }
 
