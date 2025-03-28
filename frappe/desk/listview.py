@@ -11,90 +11,90 @@ from frappe.query_builder.utils import DocType
 
 @frappe.whitelist()
 def get_list_settings(doctype):
-    try:
-        return frappe.get_cached_doc("List View Settings", doctype)
-    except frappe.DoesNotExistError:
-        frappe.clear_messages()
+	try:
+		return frappe.get_cached_doc("List View Settings", doctype)
+	except frappe.DoesNotExistError:
+		frappe.clear_messages()
 
 
 @frappe.whitelist()
 def set_list_settings(doctype, values):
-    try:
-        doc = frappe.get_doc("List View Settings", doctype)
-    except frappe.DoesNotExistError:
-        doc = frappe.new_doc("List View Settings")
-        doc.id = doctype
-        frappe.clear_messages()
-    doc.update(frappe.parse_json(values))
-    doc.save()
+	try:
+		doc = frappe.get_doc("List View Settings", doctype)
+	except frappe.DoesNotExistError:
+		doc = frappe.new_doc("List View Settings")
+		doc.id = doctype
+		frappe.clear_messages()
+	doc.update(frappe.parse_json(values))
+	doc.save()
 
 
 @frappe.whitelist()
 def get_group_by_count(doctype: str, current_filters: str, field: str) -> list[dict]:
-    current_filters = frappe.parse_json(current_filters)
+	current_filters = frappe.parse_json(current_filters)
 
-    if field == "assigned_to":
-        ToDo = DocType("ToDo")
-        User = DocType("User")
-        count = Count("*").as_("count")
-        filtered_records = frappe.qb.get_query(
-            doctype,
-            filters=current_filters,
-            fields=["id"],
-            validate_filters=True,
-        )
+	if field == "assigned_to":
+		ToDo = DocType("ToDo")
+		User = DocType("User")
+		count = Count("*").as_("count")
+		filtered_records = frappe.qb.get_query(
+			doctype,
+			filters=current_filters,
+			fields=["id"],
+			validate_filters=True,
+		)
 
-        return (
-            frappe.qb.from_(ToDo)
-            .from_(User)
-            .select(ToDo.allocated_to.as_("id"), count)
-            .where(
-                (ToDo.status != "Cancelled")
-                & (ToDo.allocated_to == User.id)
-                & (User.user_type == "System User")
-                & (ToDo.reference_id.isin(SubQuery(filtered_records)))
-            )
-            .groupby(ToDo.allocated_to)
-            .orderby(count, order=Order.desc)
-            .limit(50)
-            .run(as_dict=True)
-        )
+		return (
+			frappe.qb.from_(ToDo)
+			.from_(User)
+			.select(ToDo.allocated_to.as_("id"), count)
+			.where(
+				(ToDo.status != "Cancelled")
+				& (ToDo.allocated_to == User.id)
+				& (User.user_type == "System User")
+				& (ToDo.reference_id.isin(SubQuery(filtered_records)))
+			)
+			.groupby(ToDo.allocated_to)
+			.orderby(count, order=Order.desc)
+			.limit(50)
+			.run(as_dict=True)
+		)
 
-    meta = frappe.get_meta(doctype)
+	meta = frappe.get_meta(doctype)
 
-    if not meta.has_field(field) and not is_default_field(field):
-        raise ValueError("Field does not belong to doctype")
+	if not meta.has_field(field) and not is_default_field(field):
+		raise ValueError("Field does not belong to doctype")
 
-    data = frappe.get_list(
-        doctype,
-        filters=current_filters,
-        group_by=f"`tab{doctype}`.{field}",
-        fields=["count(*) as count", f"`{field}` as id"],
-        order_by="count desc",
-        limit=1000,
-    )
+	data = frappe.get_list(
+		doctype,
+		filters=current_filters,
+		group_by=f"`tab{doctype}`.{field}",
+		fields=["count(*) as count", f"`{field}` as id"],
+		order_by="count desc",
+		limit=1000,
+	)
 
-    if field == "owner":
-        owner_idx = None
+	if field == "owner":
+		owner_idx = None
 
-        for idx, item in enumerate(data):
-            if item.id == frappe.session.user:
-                owner_idx = idx
-                break
+		for idx, item in enumerate(data):
+			if item.id == frappe.session.user:
+				owner_idx = idx
+				break
 
-        if owner_idx:
-            data = [data.pop(owner_idx)] + data[0:49]
-        else:
-            data = data[0:50]
-    else:
-        data = data[0:50]
+		if owner_idx:
+			data = [data.pop(owner_idx)] + data[0:49]
+		else:
+			data = data[0:50]
+	else:
+		data = data[0:50]
 
-    # Add in title if it's a link field and `show_title_field_in_link` is set
-    if (field_meta := meta.get_field(field)) and field_meta.fieldtype == "Link":
-        link_meta = frappe.get_meta(field_meta.options)
-        if link_meta.show_title_field_in_link:
-            title_field = link_meta.get_title_field()
-            for item in data:
-                item.title = frappe.get_value(field_meta.options, item.id, title_field)
+	# Add in title if it's a link field and `show_title_field_in_link` is set
+	if (field_meta := meta.get_field(field)) and field_meta.fieldtype == "Link":
+		link_meta = frappe.get_meta(field_meta.options)
+		if link_meta.show_title_field_in_link:
+			title_field = link_meta.get_title_field()
+			for item in data:
+				item.title = frappe.get_value(field_meta.options, item.id, title_field)
 
-    return data
+	return data

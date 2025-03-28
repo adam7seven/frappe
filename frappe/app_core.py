@@ -1,15 +1,15 @@
+import datetime
 import os
 
-import frappe.utils
-import frappe.utils.data
 from werkzeug.exceptions import NotFound
 from werkzeug.wrappers import Request
 
 import frappe
+import frappe.utils
+import frappe.utils.data
 from frappe import _
 from frappe.auth import HTTPRequest
 from frappe.utils import CallbackManager, cint, get_site_name
-import datetime
 
 
 def init_request(request, site, sites_path):
@@ -125,7 +125,7 @@ def load_license_from_file():
 		return "NotFound", None
 
 	content = ""
-	with open(license_file, "r") as file:
+	with open(license_file) as file:
 		content = file.read()
 
 	if not content:
@@ -191,7 +191,7 @@ def validate_license(license):
 
 def get_mac_address():
 	mac_address = None
-	with open("/sys/class/net/eth0/address", "r") as f:
+	with open("/sys/class/net/eth0/address") as f:
 		mac_address = f.read().strip()
 	return mac_address
 

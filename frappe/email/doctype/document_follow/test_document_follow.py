@@ -15,234 +15,236 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestDocumentFollow(UnitTestCase):
-    """
-    Unit tests for DocumentFollow.
-    Use this class for testing individual functions and methods.
-    """
+	"""
+	Unit tests for DocumentFollow.
+	Use this class for testing individual functions and methods.
+	"""
 
-    pass
+	pass
 
 
 class TestDocumentFollow(IntegrationTestCase):
-    def test_document_follow_version(self):
-        user = get_user()
-        event_doc = get_event()
+	def test_document_follow_version(self):
+		user = get_user()
+		event_doc = get_event()
 
-        event_doc.description = "This is a test description for sending mail"
-        event_doc.save(ignore_version=False)
+		event_doc.description = "This is a test description for sending mail"
+		event_doc.save(ignore_version=False)
 
-        document_follow.unfollow_document("Event", event_doc.id, user.id)
-        doc = document_follow.follow_document("Event", event_doc.id, user.id)
-        self.assertEqual(doc.user, user.id)
+		document_follow.unfollow_document("Event", event_doc.id, user.id)
+		doc = document_follow.follow_document("Event", event_doc.id, user.id)
+		self.assertEqual(doc.user, user.id)
 
-        document_follow.send_hourly_updates()
-        emails = get_emails(event_doc, "%This is a test description for sending mail%")
-        self.assertIsNotNone(emails)
+		document_follow.send_hourly_updates()
+		emails = get_emails(event_doc, "%This is a test description for sending mail%")
+		self.assertIsNotNone(emails)
 
-    def test_document_follow_comment(self):
-        user = get_user()
-        event_doc = get_event()
+	def test_document_follow_comment(self):
+		user = get_user()
+		event_doc = get_event()
 
-        add_comment(event_doc.doctype, event_doc.id, "This is a test comment", "Administrator@example.com", "Bosh")
+		add_comment(
+			event_doc.doctype, event_doc.id, "This is a test comment", "Administrator@example.com", "Bosh"
+		)
 
-        document_follow.unfollow_document("Event", event_doc.id, user.id)
-        doc = document_follow.follow_document("Event", event_doc.id, user.id)
-        self.assertEqual(doc.user, user.id)
+		document_follow.unfollow_document("Event", event_doc.id, user.id)
+		doc = document_follow.follow_document("Event", event_doc.id, user.id)
+		self.assertEqual(doc.user, user.id)
 
-        document_follow.send_hourly_updates()
-        emails = get_emails(event_doc, "%This is a test comment%")
-        self.assertIsNotNone(emails)
+		document_follow.send_hourly_updates()
+		emails = get_emails(event_doc, "%This is a test comment%")
+		self.assertIsNotNone(emails)
 
-    def test_follow_limit(self):
-        user = get_user()
-        for _ in range(25):
-            event_doc = get_event()
-            document_follow.unfollow_document("Event", event_doc.id, user.id)
-            doc = document_follow.follow_document("Event", event_doc.id, user.id)
-            self.assertEqual(doc.user, user.id)
-        self.assertEqual(len(get_document_followed_by_user(user.id)), 20)
+	def test_follow_limit(self):
+		user = get_user()
+		for _ in range(25):
+			event_doc = get_event()
+			document_follow.unfollow_document("Event", event_doc.id, user.id)
+			doc = document_follow.follow_document("Event", event_doc.id, user.id)
+			self.assertEqual(doc.user, user.id)
+		self.assertEqual(len(get_document_followed_by_user(user.id)), 20)
 
-    def test_follow_on_create(self):
-        user = get_user(DocumentFollowConditions(1))
-        frappe.set_user(user.id)
-        event = get_event()
+	def test_follow_on_create(self):
+		user = get_user(DocumentFollowConditions(1))
+		frappe.set_user(user.id)
+		event = get_event()
 
-        event.description = "This is a test description for sending mail"
-        event.save(ignore_version=False)
+		event.description = "This is a test description for sending mail"
+		event.save(ignore_version=False)
 
-        documents_followed = get_events_followed_by_user(event.id, user.id)
-        self.assertTrue(documents_followed)
+		documents_followed = get_events_followed_by_user(event.id, user.id)
+		self.assertTrue(documents_followed)
 
-    def test_do_not_follow_on_create(self):
-        user = get_user()
-        frappe.set_user(user.id)
+	def test_do_not_follow_on_create(self):
+		user = get_user()
+		frappe.set_user(user.id)
 
-        event = get_event()
+		event = get_event()
 
-        documents_followed = get_events_followed_by_user(event.id, user.id)
-        self.assertFalse(documents_followed)
+		documents_followed = get_events_followed_by_user(event.id, user.id)
+		self.assertFalse(documents_followed)
 
-    def test_do_not_follow_on_update(self):
-        user = get_user()
-        frappe.set_user(user.id)
-        event = get_event()
+	def test_do_not_follow_on_update(self):
+		user = get_user()
+		frappe.set_user(user.id)
+		event = get_event()
 
-        event.description = "This is a test description for sending mail"
-        event.save(ignore_version=False)
+		event.description = "This is a test description for sending mail"
+		event.save(ignore_version=False)
 
-        documents_followed = get_events_followed_by_user(event.id, user.id)
-        self.assertFalse(documents_followed)
+		documents_followed = get_events_followed_by_user(event.id, user.id)
+		self.assertFalse(documents_followed)
 
-    def test_follow_on_comment(self):
-        user = get_user(DocumentFollowConditions(0, 1))
-        frappe.set_user(user.id)
-        event = get_event()
+	def test_follow_on_comment(self):
+		user = get_user(DocumentFollowConditions(0, 1))
+		frappe.set_user(user.id)
+		event = get_event()
 
-        add_comment(event.doctype, event.id, "This is a test comment", "Administrator@example.com", "Bosh")
+		add_comment(event.doctype, event.id, "This is a test comment", "Administrator@example.com", "Bosh")
 
-        documents_followed = get_events_followed_by_user(event.id, user.id)
-        self.assertTrue(documents_followed)
+		documents_followed = get_events_followed_by_user(event.id, user.id)
+		self.assertTrue(documents_followed)
 
-    def test_do_not_follow_on_comment(self):
-        user = get_user()
-        frappe.set_user(user.id)
-        event = get_event()
+	def test_do_not_follow_on_comment(self):
+		user = get_user()
+		frappe.set_user(user.id)
+		event = get_event()
 
-        add_comment(event.doctype, event.id, "This is a test comment", "Administrator@example.com", "Bosh")
+		add_comment(event.doctype, event.id, "This is a test comment", "Administrator@example.com", "Bosh")
 
-        documents_followed = get_events_followed_by_user(event.id, user.id)
-        self.assertFalse(documents_followed)
+		documents_followed = get_events_followed_by_user(event.id, user.id)
+		self.assertFalse(documents_followed)
 
-    def test_follow_on_like(self):
-        user = get_user(DocumentFollowConditions(0, 0, 1))
-        frappe.set_user(user.id)
-        event = get_event()
+	def test_follow_on_like(self):
+		user = get_user(DocumentFollowConditions(0, 0, 1))
+		frappe.set_user(user.id)
+		event = get_event()
 
-        toggle_like(event.doctype, event.id, add="Yes")
+		toggle_like(event.doctype, event.id, add="Yes")
 
-        documents_followed = get_events_followed_by_user(event.id, user.id)
-        self.assertTrue(documents_followed)
+		documents_followed = get_events_followed_by_user(event.id, user.id)
+		self.assertTrue(documents_followed)
 
-    def test_do_not_follow_on_like(self):
-        user = get_user()
-        frappe.set_user(user.id)
-        event = get_event()
+	def test_do_not_follow_on_like(self):
+		user = get_user()
+		frappe.set_user(user.id)
+		event = get_event()
 
-        toggle_like(event.doctype, event.id)
+		toggle_like(event.doctype, event.id)
 
-        documents_followed = get_events_followed_by_user(event.id, user.id)
-        self.assertFalse(documents_followed)
+		documents_followed = get_events_followed_by_user(event.id, user.id)
+		self.assertFalse(documents_followed)
 
-    def test_follow_on_assign(self):
-        user = get_user(DocumentFollowConditions(0, 0, 0, 1))
-        event = get_event()
+	def test_follow_on_assign(self):
+		user = get_user(DocumentFollowConditions(0, 0, 0, 1))
+		event = get_event()
 
-        add({"assign_to": [user.id], "doctype": event.doctype, "id": event.id})
+		add({"assign_to": [user.id], "doctype": event.doctype, "id": event.id})
 
-        documents_followed = get_events_followed_by_user(event.id, user.id)
-        self.assertTrue(documents_followed)
+		documents_followed = get_events_followed_by_user(event.id, user.id)
+		self.assertTrue(documents_followed)
 
-    def test_do_not_follow_on_assign(self):
-        user = get_user()
-        frappe.set_user(user.id)
-        event = get_event()
+	def test_do_not_follow_on_assign(self):
+		user = get_user()
+		frappe.set_user(user.id)
+		event = get_event()
 
-        add({"assign_to": [user.id], "doctype": event.doctype, "id": event.id})
+		add({"assign_to": [user.id], "doctype": event.doctype, "id": event.id})
 
-        documents_followed = get_events_followed_by_user(event.id, user.id)
-        self.assertFalse(documents_followed)
+		documents_followed = get_events_followed_by_user(event.id, user.id)
+		self.assertFalse(documents_followed)
 
-    def test_follow_on_share(self):
-        user = get_user(DocumentFollowConditions(0, 0, 0, 0, 1))
-        event = get_event()
+	def test_follow_on_share(self):
+		user = get_user(DocumentFollowConditions(0, 0, 0, 0, 1))
+		event = get_event()
 
-        share(user=user.id, doctype=event.doctype, id=event.id)
+		share(user=user.id, doctype=event.doctype, id=event.id)
 
-        documents_followed = get_events_followed_by_user(event.id, user.id)
-        self.assertTrue(documents_followed)
+		documents_followed = get_events_followed_by_user(event.id, user.id)
+		self.assertTrue(documents_followed)
 
-    def test_do_not_follow_on_share(self):
-        user = get_user()
-        event = get_event()
+	def test_do_not_follow_on_share(self):
+		user = get_user()
+		event = get_event()
 
-        share(user=user.id, doctype=event.doctype, id=event.id)
+		share(user=user.id, doctype=event.doctype, id=event.id)
 
-        documents_followed = get_events_followed_by_user(event.id, user.id)
-        self.assertFalse(documents_followed)
+		documents_followed = get_events_followed_by_user(event.id, user.id)
+		self.assertFalse(documents_followed)
 
-    def tearDown(self):
-        frappe.db.rollback()
-        frappe.db.delete("Email Queue")
-        frappe.db.delete("Email Queue Recipient")
-        frappe.db.delete("Document Follow")
-        frappe.db.delete("Event")
+	def tearDown(self):
+		frappe.db.rollback()
+		frappe.db.delete("Email Queue")
+		frappe.db.delete("Email Queue Recipient")
+		frappe.db.delete("Document Follow")
+		frappe.db.delete("Event")
 
 
 def get_events_followed_by_user(event_id, user_id):
-    DocumentFollow = DocType("Document Follow")
-    return (
-        frappe.qb.from_(DocumentFollow)
-        .where(DocumentFollow.ref_doctype == "Event")
-        .where(DocumentFollow.ref_docid == event_id)
-        .where(DocumentFollow.user == user_id)
-        .select(DocumentFollow.id)
-    ).run()
+	DocumentFollow = DocType("Document Follow")
+	return (
+		frappe.qb.from_(DocumentFollow)
+		.where(DocumentFollow.ref_doctype == "Event")
+		.where(DocumentFollow.ref_docid == event_id)
+		.where(DocumentFollow.user == user_id)
+		.select(DocumentFollow.id)
+	).run()
 
 
 def get_event():
-    doc = frappe.get_doc(
-        {
-            "doctype": "Event",
-            "subject": "_Test_Doc_Follow",
-            "doc.starts_on": frappe.utils.now(),
-            "doc.ends_on": frappe.utils.add_days(frappe.utils.now(), 5),
-            "doc.description": "Hello",
-        }
-    )
-    doc.insert()
-    return doc
+	doc = frappe.get_doc(
+		{
+			"doctype": "Event",
+			"subject": "_Test_Doc_Follow",
+			"doc.starts_on": frappe.utils.now(),
+			"doc.ends_on": frappe.utils.add_days(frappe.utils.now(), 5),
+			"doc.description": "Hello",
+		}
+	)
+	doc.insert()
+	return doc
 
 
 def get_user(document_follow=None):
-    frappe.set_user("Administrator")
-    if frappe.db.exists("User", "test@docsub.com"):
-        doc = frappe.delete_doc("User", "test@docsub.com")
-    doc = frappe.new_doc("User")
-    doc.email = "test@docsub.com"
-    doc.first_name = "Test"
-    doc.last_name = "User"
-    doc.send_welcome_email = 0
-    doc.document_follow_notify = 1
-    doc.document_follow_frequency = "Hourly"
-    doc.__dict__.update(document_follow.__dict__ if document_follow else {})
-    doc.insert()
-    doc.add_roles("System Manager")
-    return doc
+	frappe.set_user("Administrator")
+	if frappe.db.exists("User", "test@docsub.com"):
+		doc = frappe.delete_doc("User", "test@docsub.com")
+	doc = frappe.new_doc("User")
+	doc.email = "test@docsub.com"
+	doc.first_name = "Test"
+	doc.last_name = "User"
+	doc.send_welcome_email = 0
+	doc.document_follow_notify = 1
+	doc.document_follow_frequency = "Hourly"
+	doc.__dict__.update(document_follow.__dict__ if document_follow else {})
+	doc.insert()
+	doc.add_roles("System Manager")
+	return doc
 
 
 def get_emails(event_doc, search_string):
-    EmailQueue = DocType("Email Queue")
-    EmailQueueRecipient = DocType("Email Queue Recipient")
+	EmailQueue = DocType("Email Queue")
+	EmailQueueRecipient = DocType("Email Queue Recipient")
 
-    return (
-        frappe.qb.from_(EmailQueue)
-        .join(EmailQueueRecipient)
-        .on(EmailQueueRecipient.parent == Cast_(EmailQueue.id, "varchar"))
-        .where(
-            EmailQueueRecipient.recipient == "test@docsub.com",
-        )
-        .where(EmailQueue.message.like(f"%{event_doc.doctype}%"))
-        .where(EmailQueue.message.like(f"%{event_doc.id}%"))
-        .where(EmailQueue.message.like(search_string))
-        .select(EmailQueue.message)
-        .limit(1)
-    ).run()
+	return (
+		frappe.qb.from_(EmailQueue)
+		.join(EmailQueueRecipient)
+		.on(EmailQueueRecipient.parent == Cast_(EmailQueue.id, "varchar"))
+		.where(
+			EmailQueueRecipient.recipient == "test@docsub.com",
+		)
+		.where(EmailQueue.message.like(f"%{event_doc.doctype}%"))
+		.where(EmailQueue.message.like(f"%{event_doc.id}%"))
+		.where(EmailQueue.message.like(search_string))
+		.select(EmailQueue.message)
+		.limit(1)
+	).run()
 
 
 @dataclass
 class DocumentFollowConditions:
-    follow_created_documents: int = 0
-    follow_commented_documents: int = 0
-    follow_liked_documents: int = 0
-    follow_assigned_documents: int = 0
-    follow_shared_documents: int = 0
+	follow_created_documents: int = 0
+	follow_commented_documents: int = 0
+	follow_liked_documents: int = 0
+	follow_assigned_documents: int = 0
+	follow_shared_documents: int = 0

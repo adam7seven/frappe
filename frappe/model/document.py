@@ -242,7 +242,7 @@ class Document(BaseDocument, DocRef):
 						table_name=get_table_name(self.doctype, wrap_in_backticks=True),
 						for_update="FOR UPDATE" if self.flags.for_update else "",
 					),
-					(doc_id),
+					(self.id),
 					as_dict=True,
 				)
 				d = d[0] if d else d

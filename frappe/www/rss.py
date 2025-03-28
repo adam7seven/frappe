@@ -11,37 +11,37 @@ base_template_path = "www/rss.xml"
 
 
 def get_context(context):
-    """generate rss feed"""
+	"""generate rss feed"""
 
-    host = get_request_site_address()
+	host = get_request_site_address()
 
-    blog_list = frappe.get_all(
-        "Blog Post",
-        fields=["id", "published_on", "modified", "title", "blog_intro", "route"],
-        filters={"published": 1},
-        order_by="published_on desc",
-        limit=20,
-    )
+	blog_list = frappe.get_all(
+		"Blog Post",
+		fields=["id", "published_on", "modified", "title", "blog_intro", "route"],
+		filters={"published": 1},
+		order_by="published_on desc",
+		limit=20,
+	)
 
-    for blog in blog_list:
-        blog.link = urljoin(host, blog.route)
-        blog.blog_intro = escape_html(blog.blog_intro or "")
-        blog.title = escape_html(blog.title or "")
+	for blog in blog_list:
+		blog.link = urljoin(host, blog.route)
+		blog.blog_intro = escape_html(blog.blog_intro or "")
+		blog.title = escape_html(blog.title or "")
 
-    if blog_list:
-        modified = max(blog["modified"] for blog in blog_list)
-    else:
-        modified = now()
+	if blog_list:
+		modified = max(blog["modified"] for blog in blog_list)
+	else:
+		modified = now()
 
-    blog_settings = frappe.get_doc("Blog Settings", "Blog Settings")
+	blog_settings = frappe.get_doc("Blog Settings", "Blog Settings")
 
-    context = {
-        "title": blog_settings.blog_title or "Blog",
-        "description": blog_settings.blog_introduction or "",
-        "modified": modified,
-        "items": blog_list,
-        "link": host + "/blog",
-    }
+	context = {
+		"title": blog_settings.blog_title or "Blog",
+		"description": blog_settings.blog_introduction or "",
+		"modified": modified,
+		"items": blog_list,
+		"link": host + "/blog",
+	}
 
-    # print context
-    return context
+	# print context
+	return context

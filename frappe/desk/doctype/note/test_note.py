@@ -6,77 +6,77 @@ from frappe.tests import IntegrationTestCase, UnitTestCase
 
 
 class UnitTestNote(UnitTestCase):
-    """
-    Unit tests for Note.
-    Use this class for testing individual functions and methods.
-    """
+	"""
+	Unit tests for Note.
+	Use this class for testing individual functions and methods.
+	"""
 
-    pass
+	pass
 
 
 class TestNote(IntegrationTestCase):
-    def insert_note(self):
-        frappe.db.delete("Version")
-        frappe.db.delete("Note")
-        frappe.db.delete("Note Seen By")
+	def insert_note(self):
+		frappe.db.delete("Version")
+		frappe.db.delete("Note")
+		frappe.db.delete("Note Seen By")
 
-        return frappe.get_doc(doctype="Note", title="test note", content="test note content").insert()
+		return frappe.get_doc(doctype="Note", title="test note", content="test note content").insert()
 
-    def test_version(self):
-        note = self.insert_note()
-        note.title = "test note 1"
-        note.content = "1"
-        note.save(ignore_version=False)
+	def test_version(self):
+		note = self.insert_note()
+		note.title = "test note 1"
+		note.content = "1"
+		note.save(ignore_version=False)
 
-        version = frappe.get_doc("Version", dict(docid=note.id))
-        data = version.get_data()
+		version = frappe.get_doc("Version", dict(docid=note.id))
+		data = version.get_data()
 
-        self.assertTrue(("title", "test note", "test note 1"), data["changed"])
-        self.assertTrue(("content", "test note content", "1"), data["changed"])
+		self.assertTrue(("title", "test note", "test note 1"), data["changed"])
+		self.assertTrue(("content", "test note content", "1"), data["changed"])
 
-    def test_rows(self):
-        note = self.insert_note()
+	def test_rows(self):
+		note = self.insert_note()
 
-        # test add
-        note.append("seen_by", {"user": "Administrator"})
-        note.save(ignore_version=False)
+		# test add
+		note.append("seen_by", {"user": "Administrator"})
+		note.save(ignore_version=False)
 
-        version = frappe.get_doc("Version", dict(docid=note.id))
-        data = version.get_data()
+		version = frappe.get_doc("Version", dict(docid=note.id))
+		data = version.get_data()
 
-        self.assertEqual(len(data.get("added")), 1)
-        self.assertEqual(len(data.get("removed")), 0)
-        self.assertEqual(len(data.get("changed")), 0)
+		self.assertEqual(len(data.get("added")), 1)
+		self.assertEqual(len(data.get("removed")), 0)
+		self.assertEqual(len(data.get("changed")), 0)
 
-        for row in data.get("added"):
-            self.assertEqual(row[0], "seen_by")
-            self.assertEqual(row[1]["user"], "Administrator")
+		for row in data.get("added"):
+			self.assertEqual(row[0], "seen_by")
+			self.assertEqual(row[1]["user"], "Administrator")
 
-        # test row change
-        note.seen_by[0].user = "Guest"
-        note.save(ignore_version=False)
+		# test row change
+		note.seen_by[0].user = "Guest"
+		note.save(ignore_version=False)
 
-        version = frappe.get_doc("Version", dict(docid=note.id))
-        data = version.get_data()
+		version = frappe.get_doc("Version", dict(docid=note.id))
+		data = version.get_data()
 
-        self.assertEqual(len(data.get("row_changed")), 1)
-        for row in data.get("row_changed"):
-            self.assertEqual(row[0], "seen_by")
-            self.assertEqual(row[1], 0)
-            self.assertEqual(row[2], note.seen_by[0].id)
-            self.assertEqual(row[3], [["user", "Administrator", "Guest"]])
+		self.assertEqual(len(data.get("row_changed")), 1)
+		for row in data.get("row_changed"):
+			self.assertEqual(row[0], "seen_by")
+			self.assertEqual(row[1], 0)
+			self.assertEqual(row[2], note.seen_by[0].id)
+			self.assertEqual(row[3], [["user", "Administrator", "Guest"]])
 
-        # test remove
-        note.seen_by = []
-        note.save(ignore_version=False)
+		# test remove
+		note.seen_by = []
+		note.save(ignore_version=False)
 
-        version = frappe.get_doc("Version", dict(docid=note.id))
-        data = version.get_data()
+		version = frappe.get_doc("Version", dict(docid=note.id))
+		data = version.get_data()
 
-        self.assertEqual(len(data.get("removed")), 1)
-        for row in data.get("removed"):
-            self.assertEqual(row[0], "seen_by")
-            self.assertEqual(row[1]["user"], "Guest")
+		self.assertEqual(len(data.get("removed")), 1)
+		for row in data.get("removed"):
+			self.assertEqual(row[0], "seen_by")
+			self.assertEqual(row[1]["user"], "Guest")
 
-        # self.assertTrue(('title', 'test note', 'test note 1'), data['changed'])
-        # self.assertTrue(('content', 'test note content', '1'), data['changed'])
+		# self.assertTrue(('title', 'test note', 'test note 1'), data['changed'])
+		# self.assertTrue(('content', 'test note content', '1'), data['changed'])

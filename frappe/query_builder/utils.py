@@ -14,63 +14,63 @@ from .builder import Base, MariaDB, Postgres
 
 
 class PseudoColumnMapper(PseudoColumn):
-    def __init__(self, id: str) -> None:
-        super().__init__(id)
+	def __init__(self, id: str) -> None:
+		super().__init__(id)
 
-    def get_sql(self, **kwargs):
-        if frappe.db.db_type == "postgres":
-            self.id = self.id.replace("`", '"')
-        return self.id
+	def get_sql(self, **kwargs):
+		if frappe.db.db_type == "postgres":
+			self.id = self.id.replace("`", '"')
+		return self.id
 
 
 class db_type_is(Enum):
-    MARIADB = "mariadb"
-    POSTGRES = "postgres"
+	MARIADB = "mariadb"
+	POSTGRES = "postgres"
 
 
 class ImportMapper:
-    def __init__(self, func_map: dict[db_type_is, Callable]) -> None:
-        self.func_map = func_map
+	def __init__(self, func_map: dict[db_type_is, Callable]) -> None:
+		self.func_map = func_map
 
-    def __call__(self, *args: Any, **kwds: Any) -> Callable:
-        db = db_type_is(frappe.conf.db_type)
-        return self.func_map[db](*args, **kwds)
+	def __call__(self, *args: Any, **kwds: Any) -> Callable:
+		db = db_type_is(frappe.conf.db_type)
+		return self.func_map[db](*args, **kwds)
 
 
 class BuilderIdentificationFailed(Exception):
-    def __init__(self):
-        super().__init__("Couldn't guess builder")
+	def __init__(self):
+		super().__init__("Couldn't guess builder")
 
 
 def get_query_builder(type_of_db: str) -> Postgres | MariaDB:
-    """Return the query builder object.
+	"""Return the query builder object.
 
-    Args:
-            type_of_db: string value of the db used
-    """
-    db = db_type_is(type_of_db)
-    picks = {db_type_is.MARIADB: MariaDB, db_type_is.POSTGRES: Postgres}
-    return picks[db]
+	Args:
+			type_of_db: string value of the db used
+	"""
+	db = db_type_is(type_of_db)
+	picks = {db_type_is.MARIADB: MariaDB, db_type_is.POSTGRES: Postgres}
+	return picks[db]
 
 
 def get_query(*args, **kwargs) -> QueryBuilder:
-    from frappe.database.query import Engine
+	from frappe.database.query import Engine
 
-    return Engine().get_query(*args, **kwargs)
+	return Engine().get_query(*args, **kwargs)
 
 
 def get_attr(method_string):
-    modulename = ".".join(method_string.split(".")[:-1])
-    methodname = method_string.split(".")[-1]
-    return getattr(import_module(modulename), methodname)
+	modulename = ".".join(method_string.split(".")[:-1])
+	methodname = method_string.split(".")[-1]
+	return getattr(import_module(modulename), methodname)
 
 
 def DocType(*args, **kwargs):
-    return frappe.qb.DocType(*args, **kwargs)
+	return frappe.qb.DocType(*args, **kwargs)
 
 
 def Table(*args, **kwargs):
-    return frappe.qb.Table(*args, **kwargs)
+	return frappe.qb.Table(*args, **kwargs)
 
 
 def execute_query(query, *args, **kwargs):
@@ -132,14 +132,14 @@ def patch_query_execute():
 	QueryBuilder.run = execute_query
 	QueryBuilder.walk = prepare_query
 
-    # To support running union queries
-    _SetOperation.run = execute_query
-    _SetOperation.walk = prepare_query
+	# To support running union queries
+	_SetOperation.run = execute_query
+	_SetOperation.walk = prepare_query
 
 
 def patch_query_aggregation():
-    """Patch aggregation functions to frappe.qb"""
-    from frappe.query_builder.functions import _avg, _max, _min, _sum
+	"""Patch aggregation functions to frappe.qb"""
+	from frappe.query_builder.functions import _avg, _max, _min, _sum
 
 	Base.max = _max
 	Base.min = _min

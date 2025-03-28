@@ -7,69 +7,69 @@ from frappe.contacts.doctype.contact.contact import get_contact_id
 from frappe.core.doctype.user.user import create_contact
 from frappe.tests import IntegrationTestCase, UnitTestCase
 from frappe.website.doctype.personal_data_download_request.personal_data_download_request import (
-    get_user_data,
+	get_user_data,
 )
 
 
 class UnitTestPersonalDataDownloadRequest(UnitTestCase):
-    """
-    Unit tests for PersonalDataDownloadRequest.
-    Use this class for testing individual functions and methods.
-    """
+	"""
+	Unit tests for PersonalDataDownloadRequest.
+	Use this class for testing individual functions and methods.
+	"""
 
-    pass
+	pass
 
 
 class TestRequestPersonalData(IntegrationTestCase):
-    def setUp(self):
-        create_user_if_not_exists(email="test_privacy@example.com")
+	def setUp(self):
+		create_user_if_not_exists(email="test_privacy@example.com")
 
-    def tearDown(self):
-        frappe.db.delete("Personal Data Download Request")
+	def tearDown(self):
+		frappe.db.delete("Personal Data Download Request")
 
-    def test_user_data_creation(self):
-        user_data = json.loads(get_user_data("test_privacy@example.com"))
-        contact_id = get_contact_id("test_privacy@example.com")
-        expected_data = {"Contact": frappe.get_all("Contact", {"id": contact_id}, ["*"])}
-        expected_data = json.loads(json.dumps(expected_data, default=str))
-        self.assertEqual({"Contact": user_data["Contact"]}, expected_data)
+	def test_user_data_creation(self):
+		user_data = json.loads(get_user_data("test_privacy@example.com"))
+		contact_id = get_contact_id("test_privacy@example.com")
+		expected_data = {"Contact": frappe.get_all("Contact", {"id": contact_id}, ["*"])}
+		expected_data = json.loads(json.dumps(expected_data, default=str))
+		self.assertEqual({"Contact": user_data["Contact"]}, expected_data)
 
-    def test_file_and_email_creation(self):
-        frappe.set_user("test_privacy@example.com")
-        download_request = frappe.get_doc(
-            {"doctype": "Personal Data Download Request", "user": "test_privacy@example.com"}
-        )
-        download_request.save(ignore_permissions=True)
+	def test_file_and_email_creation(self):
+		frappe.set_user("test_privacy@example.com")
+		download_request = frappe.get_doc(
+			{"doctype": "Personal Data Download Request", "user": "test_privacy@example.com"}
+		)
+		download_request.save(ignore_permissions=True)
 
-        frappe.set_user("Administrator")
+		frappe.set_user("Administrator")
 
-        file_count = frappe.db.count(
-            "File",
-            {
-                "attached_to_doctype": "Personal Data Download Request",
-                "attached_to_id": download_request.id,
-            },
-        )
+		file_count = frappe.db.count(
+			"File",
+			{
+				"attached_to_doctype": "Personal Data Download Request",
+				"attached_to_id": download_request.id,
+			},
+		)
 
-        self.assertEqual(file_count, 1)
+		self.assertEqual(file_count, 1)
 
-        email_queue = frappe.get_all("Email Queue", fields=["message"], order_by="creation DESC", limit=1)
-        self.assertIn(frappe._("Download Your Data"), email_queue[0].message)
+		email_queue = frappe.get_all("Email Queue", fields=["message"], order_by="creation DESC", limit=1)
+		self.assertIn(frappe._("Download Your Data"), email_queue[0].message)
 
-        frappe.db.delete("Email Queue")
+		frappe.db.delete("Email Queue")
 
 
 def create_user_if_not_exists(email, first_name=None):
-    frappe.delete_doc_if_exists("User", email)
+	frappe.delete_doc_if_exists("User", email)
 
-    user = frappe.get_doc(
-        {
-            "doctype": "User",
-            "user_type": "Website User",
-            "email": email,
-            "send_welcome_email": 0,
-            "first_name": first_name or email.split("@", 1)[0],
-            "birth_date": frappe.utils.now_datetime(),
-        }
-    ).insert(ignore_permissions=True)
-    create_contact(user=user)
+	user = frappe.get_doc(
+		{
+			"doctype": "User",
+			"user_type": "Website User",
+			"email": email,
+			"send_welcome_email": 0,
+			"first_name": first_name or email.split("@", 1)[0],
+			"birth_date": frappe.utils.now_datetime(),
+		}
+	).insert(ignore_permissions=True)
+	create_contact(user=user)

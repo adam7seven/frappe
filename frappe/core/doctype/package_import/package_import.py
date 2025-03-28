@@ -14,67 +14,67 @@ from frappe.utils import get_files_path
 
 
 class PackageImport(Document):
-    # begin: auto-generated types
-    # This code is auto-generated. Do not modify anything in this block.
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
 
-    from typing import TYPE_CHECKING
+	from typing import TYPE_CHECKING
 
-    if TYPE_CHECKING:
-        from frappe.types import DF
+	if TYPE_CHECKING:
+		from frappe.types import DF
 
-        activate: DF.Check
-        attach_package: DF.Attach | None
-        force: DF.Check
-        log: DF.Code | None
-    # end: auto-generated types
+		activate: DF.Check
+		attach_package: DF.Attach | None
+		force: DF.Check
+		log: DF.Code | None
+	# end: auto-generated types
 
-    def validate(self):
-        if self.activate:
-            self.import_package()
+	def validate(self):
+		if self.activate:
+			self.import_package()
 
-    def import_package(self):
-        attachment = get_attachments(self.doctype, self.id)
+	def import_package(self):
+		attachment = get_attachments(self.doctype, self.id)
 
-        if not attachment:
-            frappe.throw(frappe._("Please attach the package"))
+		if not attachment:
+			frappe.throw(frappe._("Please attach the package"))
 
-        attachment = attachment[0]
+		attachment = attachment[0]
 
-        # get package_name from file (package_name-0.0.0.tar.gz)
-        package_name = attachment.file_name.split(".", 1)[0].rsplit("-", 1)[0]
-        if not os.path.exists(frappe.get_site_path("packages")):
-            os.makedirs(frappe.get_site_path("packages"))
+		# get package_name from file (package_name-0.0.0.tar.gz)
+		package_name = attachment.file_name.split(".", 1)[0].rsplit("-", 1)[0]
+		if not os.path.exists(frappe.get_site_path("packages")):
+			os.makedirs(frappe.get_site_path("packages"))
 
-        # extract
-        subprocess.check_output(
-            [
-                "tar",
-                "xzf",
-                get_files_path(attachment.file_name, is_private=attachment.is_private),
-                "-C",
-                frappe.get_site_path("packages"),
-            ]
-        )
+		# extract
+		subprocess.check_output(
+			[
+				"tar",
+				"xzf",
+				get_files_path(attachment.file_name, is_private=attachment.is_private),
+				"-C",
+				frappe.get_site_path("packages"),
+			]
+		)
 
-        package_path = frappe.get_site_path("packages", package_name)
+		package_path = frappe.get_site_path("packages", package_name)
 
-        # import Package
-        with open(os.path.join(package_path, package_name + ".json")) as packagefile:
-            doc_dict = json.loads(packagefile.read())
+		# import Package
+		with open(os.path.join(package_path, package_name + ".json")) as packagefile:
+			doc_dict = json.loads(packagefile.read())
 
-        frappe.flags.package = import_doc(doc_dict)
+		frappe.flags.package = import_doc(doc_dict)
 
-        # collect modules
-        files = []
-        log = []
-        for module in os.listdir(package_path):
-            module_path = os.path.join(package_path, module)
-            if os.path.isdir(module_path):
-                files = get_doc_files(files, module_path)
+		# collect modules
+		files = []
+		log = []
+		for module in os.listdir(package_path):
+			module_path = os.path.join(package_path, module)
+			if os.path.isdir(module_path):
+				files = get_doc_files(files, module_path)
 
-        # import files
-        for file in files:
-            import_file_by_path(file, force=self.force, ignore_version=True)
-            log.append(f"Imported {file}")
+		# import files
+		for file in files:
+			import_file_by_path(file, force=self.force, ignore_version=True)
+			log.append(f"Imported {file}")
 
-        self.log = "\n".join(log)
+		self.log = "\n".join(log)

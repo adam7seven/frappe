@@ -20,6 +20,7 @@ import frappe.rate_limiter
 import frappe.recorder
 import frappe.utils.response
 from frappe import _
+from frappe.app_core import init_request
 from frappe.auth import SAFE_HTTP_METHODS, UNSAFE_HTTP_METHODS, HTTPRequest, check_request_ip, validate_auth
 from frappe.middlewares import StaticDataMiddleware
 from frappe.permissions import handle_does_not_exist_error
@@ -28,8 +29,6 @@ from frappe.utils.data import escape_html
 from frappe.utils.error import log_error, log_error_snapshot
 from frappe.website.page_renderers.error_page import ErrorPage
 from frappe.website.serve import get_response
-
-from frappe.app_core import init_request
 
 _site = None
 _sites_path = os.environ.get("SITES_PATH", ".")
@@ -69,376 +68,376 @@ import frappe.website.website_generator  # web page doctypes
 
 
 def after_response_wrapper(app):
-    """Wrap a WSGI application to call after_response hooks after we have responded.
+	"""Wrap a WSGI application to call after_response hooks after we have responded.
 
-    This is done to reduce response time by deferring expensive tasks."""
+	This is done to reduce response time by deferring expensive tasks."""
 
-    @functools.wraps(app)
-    def application(environ, start_response):
-        return ClosingIterator(
-            app(environ, start_response),
-            (
-                frappe.rate_limiter.update,
-                frappe.recorder.dump,
-                frappe.request.after_response.run,
-                frappe.destroy,
-            ),
-        )
+	@functools.wraps(app)
+	def application(environ, start_response):
+		return ClosingIterator(
+			app(environ, start_response),
+			(
+				frappe.rate_limiter.update,
+				frappe.recorder.dump,
+				frappe.request.after_response.run,
+				frappe.destroy,
+			),
+		)
 
-    return application
+	return application
 
 
 @after_response_wrapper
 @Request.application
 def application(request: Request):
-    response = None
+	response = None
 
-    try:
-        rollback = True
+	try:
+		rollback = True
 
-        init_request(request, _site, _sites_path)
+		init_request(request, _site, _sites_path)
 
-        validate_auth()
+		validate_auth()
 
-        if request.method == "OPTIONS":
-            response = Response()
+		if request.method == "OPTIONS":
+			response = Response()
 
-        elif frappe.form_dict.cmd:
-            from frappe.deprecation_dumpster import deprecation_warning
+		elif frappe.form_dict.cmd:
+			from frappe.deprecation_dumpster import deprecation_warning
 
-            deprecation_warning(
-                "unknown",
-                "v17",
-                f"{frappe.form_dict.cmd}: Sending `cmd` for RPC calls is deprecated, call REST API instead `/api/method/cmd`",
-            )
-            frappe.handler.handle()
-            response = frappe.utils.response.build_response("json")
+			deprecation_warning(
+				"unknown",
+				"v17",
+				f"{frappe.form_dict.cmd}: Sending `cmd` for RPC calls is deprecated, call REST API instead `/api/method/cmd`",
+			)
+			frappe.handler.handle()
+			response = frappe.utils.response.build_response("json")
 
-        elif request.path.startswith("/api/"):
-            response = frappe.api.handle(request)
+		elif request.path.startswith("/api/"):
+			response = frappe.api.handle(request)
 
-        elif request.path.startswith("/backups"):
-            response = frappe.utils.response.download_backup(request.path)
+		elif request.path.startswith("/backups"):
+			response = frappe.utils.response.download_backup(request.path)
 
-        elif request.path.startswith("/private/files/"):
-            response = frappe.utils.response.download_private_file(request.path)
+		elif request.path.startswith("/private/files/"):
+			response = frappe.utils.response.download_private_file(request.path)
 
-        elif request.method in ("GET", "HEAD", "POST"):
-            response = get_response()
+		elif request.method in ("GET", "HEAD", "POST"):
+			response = get_response()
 
-        else:
-            raise NotFound
+		else:
+			raise NotFound
 
-    except HTTPException as e:
-        return e
+	except HTTPException as e:
+		return e
 
-    except Exception as e:
-        response = handle_exception(e)
+	except Exception as e:
+		response = handle_exception(e)
 
-    else:
-        rollback = sync_database(rollback)
+	else:
+		rollback = sync_database(rollback)
 
-    finally:
-        # Important note:
-        # this function *must* always return a response, hence any exception thrown outside of
-        # try..catch block like this finally block needs to be handled appropriately.
+	finally:
+		# Important note:
+		# this function *must* always return a response, hence any exception thrown outside of
+		# try..catch block like this finally block needs to be handled appropriately.
 
-        if rollback and request.method in UNSAFE_HTTP_METHODS and frappe.db:
-            frappe.db.rollback()
+		if rollback and request.method in UNSAFE_HTTP_METHODS and frappe.db:
+			frappe.db.rollback()
 
-        try:
-            run_after_request_hooks(request, response)
-        except Exception:
-            # We can not handle exceptions safely here.
-            frappe.logger().error("Failed to run after request hook", exc_info=True)
+		try:
+			run_after_request_hooks(request, response)
+		except Exception:
+			# We can not handle exceptions safely here.
+			frappe.logger().error("Failed to run after request hook", exc_info=True)
 
-    log_request(request, response)
-    process_response(response)
+	log_request(request, response)
+	process_response(response)
 
-    return response
+	return response
 
 
 def run_after_request_hooks(request, response):
-    if not getattr(frappe.local, "initialised", False):
-        return
+	if not getattr(frappe.local, "initialised", False):
+		return
 
-    for after_request_task in frappe.get_hooks("after_request"):
-        frappe.call(after_request_task, response=response, request=request)
+	for after_request_task in frappe.get_hooks("after_request"):
+		frappe.call(after_request_task, response=response, request=request)
 
 
 def log_request(request, response):
-    if hasattr(frappe.local, "conf") and frappe.local.conf.enable_frappe_logger:
-        frappe.logger("frappe.web", allow_site=frappe.local.site).info(
-            {
-                "site": get_site_name(request.host),
-                "remote_addr": getattr(request, "remote_addr", "NOTFOUND"),
-                "pid": os.getpid(),
-                "user": getattr(frappe.local.session, "user", "NOTFOUND"),
-                "base_url": getattr(request, "base_url", "NOTFOUND"),
-                "full_path": getattr(request, "full_path", "NOTFOUND"),
-                "method": getattr(request, "method", "NOTFOUND"),
-                "scheme": getattr(request, "scheme", "NOTFOUND"),
-                "http_status_code": getattr(response, "status_code", "NOTFOUND"),
-            }
-        )
+	if hasattr(frappe.local, "conf") and frappe.local.conf.enable_frappe_logger:
+		frappe.logger("frappe.web", allow_site=frappe.local.site).info(
+			{
+				"site": get_site_name(request.host),
+				"remote_addr": getattr(request, "remote_addr", "NOTFOUND"),
+				"pid": os.getpid(),
+				"user": getattr(frappe.local.session, "user", "NOTFOUND"),
+				"base_url": getattr(request, "base_url", "NOTFOUND"),
+				"full_path": getattr(request, "full_path", "NOTFOUND"),
+				"method": getattr(request, "method", "NOTFOUND"),
+				"scheme": getattr(request, "scheme", "NOTFOUND"),
+				"http_status_code": getattr(response, "status_code", "NOTFOUND"),
+			}
+		)
 
 
 NO_CACHE_HEADERS = {"Cache-Control": "no-store,no-cache,must-revalidate,max-age=0"}
 
 
 def process_response(response: Response):
-    if not response:
-        return
+	if not response:
+		return
 
-    # Default for all requests is no-cache unless explicitly opted-in by endpoint
-    response.headers.setdefault("Cache-Control", NO_CACHE_HEADERS["Cache-Control"])
+	# Default for all requests is no-cache unless explicitly opted-in by endpoint
+	response.headers.setdefault("Cache-Control", NO_CACHE_HEADERS["Cache-Control"])
 
-    # rate limiter headers
-    if hasattr(frappe.local, "rate_limiter"):
-        response.headers.update(frappe.local.rate_limiter.headers())
+	# rate limiter headers
+	if hasattr(frappe.local, "rate_limiter"):
+		response.headers.update(frappe.local.rate_limiter.headers())
 
-    if trace_id := frappe.monitor.get_trace_id():
-        response.headers.update({"X-Frappe-Request-Id": trace_id})
+	if trace_id := frappe.monitor.get_trace_id():
+		response.headers.update({"X-Frappe-Request-Id": trace_id})
 
-    # CORS headers
-    if hasattr(frappe.local, "conf"):
-        set_cors_headers(response)
+	# CORS headers
+	if hasattr(frappe.local, "conf"):
+		set_cors_headers(response)
 
-    # Update custom headers added during request processing
-    response.headers.update(frappe.local.response_headers)
+	# Update custom headers added during request processing
+	response.headers.update(frappe.local.response_headers)
 
-    # Set cookies, only if response is non-cacheable to avoid proxy cache invalidation
-    public_cache = any("public" in h for h in response.headers.getlist("Cache-Control"))
-    if hasattr(frappe.local, "cookie_manager") and not public_cache:
-        frappe.local.cookie_manager.flush_cookies(response=response)
+	# Set cookies, only if response is non-cacheable to avoid proxy cache invalidation
+	public_cache = any("public" in h for h in response.headers.getlist("Cache-Control"))
+	if hasattr(frappe.local, "cookie_manager") and not public_cache:
+		frappe.local.cookie_manager.flush_cookies(response=response)
 
-    if frappe._dev_server:
-        response.headers.update(NO_CACHE_HEADERS)
+	if frappe._dev_server:
+		response.headers.update(NO_CACHE_HEADERS)
 
 
 def set_cors_headers(response):
-    if not (
-        (allowed_origins := frappe.conf.allow_cors)
-        and (request := frappe.local.request)
-        and (origin := request.headers.get("Origin"))
-    ):
-        return
+	if not (
+		(allowed_origins := frappe.conf.allow_cors)
+		and (request := frappe.local.request)
+		and (origin := request.headers.get("Origin"))
+	):
+		return
 
-    if allowed_origins != "*":
-        if not isinstance(allowed_origins, list):
-            allowed_origins = [allowed_origins]
+	if allowed_origins != "*":
+		if not isinstance(allowed_origins, list):
+			allowed_origins = [allowed_origins]
 
-        if origin not in allowed_origins:
-            return
+		if origin not in allowed_origins:
+			return
 
-    cors_headers = {
-        "Access-Control-Allow-Credentials": "true",
-        "Access-Control-Allow-Origin": origin,
-        "Vary": "Origin",
-    }
+	cors_headers = {
+		"Access-Control-Allow-Credentials": "true",
+		"Access-Control-Allow-Origin": origin,
+		"Vary": "Origin",
+	}
 
-    # only required for preflight requests
-    if request.method == "OPTIONS":
-        cors_headers["Access-Control-Allow-Methods"] = request.headers.get("Access-Control-Request-Method")
+	# only required for preflight requests
+	if request.method == "OPTIONS":
+		cors_headers["Access-Control-Allow-Methods"] = request.headers.get("Access-Control-Request-Method")
 
-        if allowed_headers := request.headers.get("Access-Control-Request-Headers"):
-            cors_headers["Access-Control-Allow-Headers"] = allowed_headers
+		if allowed_headers := request.headers.get("Access-Control-Request-Headers"):
+			cors_headers["Access-Control-Allow-Headers"] = allowed_headers
 
-        # allow browsers to cache preflight requests for upto a day
-        if not frappe.conf.developer_mode:
-            cors_headers["Access-Control-Max-Age"] = "86400"
+		# allow browsers to cache preflight requests for upto a day
+		if not frappe.conf.developer_mode:
+			cors_headers["Access-Control-Max-Age"] = "86400"
 
-    response.headers.update(cors_headers)
+	response.headers.update(cors_headers)
 
 
 @handle_does_not_exist_error
 def handle_exception(e):
-    response = None
-    http_status_code = getattr(e, "http_status_code", 500)
-    accept_header = frappe.get_request_header("Accept") or ""
-    respond_as_json = (
-        frappe.get_request_header("Accept") and (frappe.local.is_ajax or "application/json" in accept_header)
-    ) or (frappe.local.request.path.startswith("/api/") and not accept_header.startswith("text"))
+	response = None
+	http_status_code = getattr(e, "http_status_code", 500)
+	accept_header = frappe.get_request_header("Accept") or ""
+	respond_as_json = (
+		frappe.get_request_header("Accept") and (frappe.local.is_ajax or "application/json" in accept_header)
+	) or (frappe.local.request.path.startswith("/api/") and not accept_header.startswith("text"))
 
-    if not frappe.session.user:
-        # If session creation fails then user won't be unset. This causes a lot of code that
-        # assumes presence of this to fail. Session creation fails => guest or expired login
-        # usually.
-        frappe.session.user = "Guest"
+	if not frappe.session.user:
+		# If session creation fails then user won't be unset. This causes a lot of code that
+		# assumes presence of this to fail. Session creation fails => guest or expired login
+		# usually.
+		frappe.session.user = "Guest"
 
-    if respond_as_json:
-        # handle ajax responses first
-        # if the request is ajax, send back the trace or error message
-        response = frappe.utils.response.report_error(http_status_code)
+	if respond_as_json:
+		# handle ajax responses first
+		# if the request is ajax, send back the trace or error message
+		response = frappe.utils.response.report_error(http_status_code)
 
-    elif isinstance(e, frappe.SessionStopped):
-        response = frappe.utils.response.handle_session_stopped()
+	elif isinstance(e, frappe.SessionStopped):
+		response = frappe.utils.response.handle_session_stopped()
 
-    elif (
-        http_status_code == 500
-        and (frappe.db and isinstance(e, frappe.db.InternalError))
-        and (frappe.db and (frappe.db.is_deadlocked(e) or frappe.db.is_timedout(e)))
-    ):
-        http_status_code = 508
+	elif (
+		http_status_code == 500
+		and (frappe.db and isinstance(e, frappe.db.InternalError))
+		and (frappe.db and (frappe.db.is_deadlocked(e) or frappe.db.is_timedout(e)))
+	):
+		http_status_code = 508
 
-    elif http_status_code == 401:
-        response = ErrorPage(
-            http_status_code=http_status_code,
-            title=_("Session Expired"),
-            message=_("Your session has expired, please login again to continue."),
-        ).render()
+	elif http_status_code == 401:
+		response = ErrorPage(
+			http_status_code=http_status_code,
+			title=_("Session Expired"),
+			message=_("Your session has expired, please login again to continue."),
+		).render()
 
-    elif http_status_code == 403:
-        response = ErrorPage(
-            http_status_code=http_status_code,
-            title=_("Not Permitted"),
-            message=_("You do not have enough permissions to complete the action"),
-        ).render()
+	elif http_status_code == 403:
+		response = ErrorPage(
+			http_status_code=http_status_code,
+			title=_("Not Permitted"),
+			message=_("You do not have enough permissions to complete the action"),
+		).render()
 
-    elif http_status_code == 404:
-        response = ErrorPage(
-            http_status_code=http_status_code,
-            title=_("Not Found"),
-            message=_("The resource you are looking for is not available"),
-        ).render()
+	elif http_status_code == 404:
+		response = ErrorPage(
+			http_status_code=http_status_code,
+			title=_("Not Found"),
+			message=_("The resource you are looking for is not available"),
+		).render()
 
-    elif http_status_code == 429:
-        response = frappe.rate_limiter.respond()
+	elif http_status_code == 429:
+		response = frappe.rate_limiter.respond()
 
-    else:
-        response = ErrorPage(
-            http_status_code=http_status_code, title=_("Server Error"), message=_("Uncaught Exception")
-        ).render()
+	else:
+		response = ErrorPage(
+			http_status_code=http_status_code, title=_("Server Error"), message=_("Uncaught Exception")
+		).render()
 
-    if e.__class__ == frappe.AuthenticationError:
-        if hasattr(frappe.local, "login_manager"):
-            frappe.local.login_manager.clear_cookies()
+	if e.__class__ == frappe.AuthenticationError:
+		if hasattr(frappe.local, "login_manager"):
+			frappe.local.login_manager.clear_cookies()
 
-    if http_status_code >= 500 or frappe.conf.developer_mode:
-        log_error_snapshot(e)
+	if http_status_code >= 500 or frappe.conf.developer_mode:
+		log_error_snapshot(e)
 
-    if frappe.conf.get("developer_mode") and not respond_as_json:
-        # don't fail silently for non-json response errors
-        print(frappe.get_traceback())
+	if frappe.conf.get("developer_mode") and not respond_as_json:
+		# don't fail silently for non-json response errors
+		print(frappe.get_traceback())
 
-    return response
+	return response
 
 
 def sync_database(rollback: bool) -> bool:
-    # if HTTP method would change server state, commit if necessary
-    if frappe.db and (frappe.local.flags.commit or frappe.local.request.method in UNSAFE_HTTP_METHODS):
-        frappe.db.commit()
-        rollback = False
-    elif frappe.db:
-        frappe.db.rollback()
-        rollback = False
+	# if HTTP method would change server state, commit if necessary
+	if frappe.db and (frappe.local.flags.commit or frappe.local.request.method in UNSAFE_HTTP_METHODS):
+		frappe.db.commit()
+		rollback = False
+	elif frappe.db:
+		frappe.db.rollback()
+		rollback = False
 
-    # update session
-    if session := getattr(frappe.local, "session_obj", None):
-        if session.update():
-            rollback = False
+	# update session
+	if session := getattr(frappe.local, "session_obj", None):
+		if session.update():
+			rollback = False
 
-    return rollback
+	return rollback
 
 
 # Always initialize sentry SDK if the DSN is sent
 if sentry_dsn := os.getenv("FRAPPE_SENTRY_DSN"):
-    import sentry_sdk
-    from sentry_sdk.integrations.argv import ArgvIntegration
-    from sentry_sdk.integrations.atexit import AtexitIntegration
-    from sentry_sdk.integrations.dedupe import DedupeIntegration
-    from sentry_sdk.integrations.excepthook import ExcepthookIntegration
-    from sentry_sdk.integrations.modules import ModulesIntegration
-    from sentry_sdk.integrations.wsgi import SentryWsgiMiddleware
+	import sentry_sdk
+	from sentry_sdk.integrations.argv import ArgvIntegration
+	from sentry_sdk.integrations.atexit import AtexitIntegration
+	from sentry_sdk.integrations.dedupe import DedupeIntegration
+	from sentry_sdk.integrations.excepthook import ExcepthookIntegration
+	from sentry_sdk.integrations.modules import ModulesIntegration
+	from sentry_sdk.integrations.wsgi import SentryWsgiMiddleware
 
-    from frappe.utils.sentry import FrappeIntegration, before_send
+	from frappe.utils.sentry import FrappeIntegration, before_send
 
-    integrations = [
-        AtexitIntegration(),
-        ExcepthookIntegration(),
-        DedupeIntegration(),
-        ModulesIntegration(),
-        ArgvIntegration(),
-    ]
+	integrations = [
+		AtexitIntegration(),
+		ExcepthookIntegration(),
+		DedupeIntegration(),
+		ModulesIntegration(),
+		ArgvIntegration(),
+	]
 
-    experiments = {}
-    kwargs = {}
+	experiments = {}
+	kwargs = {}
 
-    if os.getenv("ENABLE_SENTRY_DB_MONITORING"):
-        integrations.append(FrappeIntegration())
-        experiments["record_sql_params"] = True
+	if os.getenv("ENABLE_SENTRY_DB_MONITORING"):
+		integrations.append(FrappeIntegration())
+		experiments["record_sql_params"] = True
 
-    if tracing_sample_rate := os.getenv("SENTRY_TRACING_SAMPLE_RATE"):
-        kwargs["traces_sample_rate"] = float(tracing_sample_rate)
-        application = SentryWsgiMiddleware(application)
+	if tracing_sample_rate := os.getenv("SENTRY_TRACING_SAMPLE_RATE"):
+		kwargs["traces_sample_rate"] = float(tracing_sample_rate)
+		application = SentryWsgiMiddleware(application)
 
-    if profiling_sample_rate := os.getenv("SENTRY_PROFILING_SAMPLE_RATE"):
-        kwargs["profiles_sample_rate"] = float(profiling_sample_rate)
+	if profiling_sample_rate := os.getenv("SENTRY_PROFILING_SAMPLE_RATE"):
+		kwargs["profiles_sample_rate"] = float(profiling_sample_rate)
 
-    sentry_sdk.init(
-        dsn=sentry_dsn,
-        before_send=before_send,
-        attach_stacktrace=True,
-        release=frappe.__version__,
-        auto_enabling_integrations=False,
-        default_integrations=False,
-        integrations=integrations,
-        _experiments=experiments,
-        **kwargs,
-    )
+	sentry_sdk.init(
+		dsn=sentry_dsn,
+		before_send=before_send,
+		attach_stacktrace=True,
+		release=frappe.__version__,
+		auto_enabling_integrations=False,
+		default_integrations=False,
+		integrations=integrations,
+		_experiments=experiments,
+		**kwargs,
+	)
 
 
 def serve(
-    port=8000,
-    profile=False,
-    no_reload=False,
-    no_threading=False,
-    site=None,
-    sites_path=".",
-    proxy=False,
+	port=8000,
+	profile=False,
+	no_reload=False,
+	no_threading=False,
+	site=None,
+	sites_path=".",
+	proxy=False,
 ):
-    global application, _site, _sites_path
-    _site = site
-    _sites_path = sites_path
+	global application, _site, _sites_path
+	_site = site
+	_sites_path = sites_path
 
-    from werkzeug.serving import run_simple
+	from werkzeug.serving import run_simple
 
 	if profile or os.environ.get("USE_PROFILER"):
 		application = ProfilerMiddleware(application, sort_by=("cumtime", "calls"), restrictions=(200,))
 
-    if not os.environ.get("NO_STATICS"):
-        application = application_with_statics()
+	if not os.environ.get("NO_STATICS"):
+		application = application_with_statics()
 
-    if proxy or os.environ.get("USE_PROXY"):
-        application = ProxyFix(application, x_for=1, x_proto=1, x_host=1, x_port=1, x_prefix=1)
+	if proxy or os.environ.get("USE_PROXY"):
+		application = ProxyFix(application, x_for=1, x_proto=1, x_host=1, x_port=1, x_prefix=1)
 
-    application.debug = True
-    application.config = {"SERVER_NAME": "127.0.0.1:8000"}
+	application.debug = True
+	application.config = {"SERVER_NAME": "127.0.0.1:8000"}
 
-    log = logging.getLogger("werkzeug")
-    log.propagate = False
+	log = logging.getLogger("werkzeug")
+	log.propagate = False
 
-    in_test_env = os.environ.get("CI")
-    if in_test_env:
-        log.setLevel(logging.ERROR)
+	in_test_env = os.environ.get("CI")
+	if in_test_env:
+		log.setLevel(logging.ERROR)
 
-    run_simple(
-        "0.0.0.0",
-        int(port),
-        application,
-        exclude_patterns=["test_*"],
-        use_reloader=False if in_test_env else not no_reload,
-        use_debugger=not in_test_env,
-        use_evalex=not in_test_env,
-        threaded=not no_threading,
-    )
+	run_simple(
+		"0.0.0.0",
+		int(port),
+		application,
+		exclude_patterns=["test_*"],
+		use_reloader=False if in_test_env else not no_reload,
+		use_debugger=not in_test_env,
+		use_evalex=not in_test_env,
+		threaded=not no_threading,
+	)
 
 
 def application_with_statics():
-    global application, _sites_path
+	global application, _sites_path
 
-    application = SharedDataMiddleware(application, {"/assets": str(os.path.join(_sites_path, "assets"))})
+	application = SharedDataMiddleware(application, {"/assets": str(os.path.join(_sites_path, "assets"))})
 
-    application = StaticDataMiddleware(application, {"/files": str(os.path.abspath(_sites_path))})
+	application = StaticDataMiddleware(application, {"/files": str(os.path.abspath(_sites_path))})
 
-    return application
+	return application
