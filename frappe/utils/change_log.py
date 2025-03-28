@@ -235,9 +235,10 @@ def parse_latest_non_beta_release(response: list, current_version: Version) -> l
     return None
 
 
-def check_release_on_github(owner: str, repo: str, current_version: Version) -> tuple[Version, str] | tuple[None, None]:
-    """Check the latest release for a repo URL on GitHub."""
-    import requests
+def check_release_on_github(
+	owner: str, repo: str, current_version: Version
+) -> tuple[Version, str] | tuple[None, None]:
+	"""Check the latest release for a repo URL on GitHub."""
 
     if not owner:
         raise ValueError("Owner cannot be empty")
@@ -362,11 +363,9 @@ def show_update_popup():
 							v{app.available_version}
 						</a> {security_msg}<br>
 					"""
-            if release_links:
-                message = _("New {} releases for the following apps are available").format(_(update_type))
-                update_message += "<div class='new-version-log'>{}<div class='new-version-links'>{}</div></div>".format(
-                    message, release_links
-                )
+			if release_links:
+				message = _("New {} releases for the following apps are available").format(_(update_type))
+				update_message += f"<div class='new-version-log'>{message}<div class='new-version-links'>{release_links}</div></div>"
 
     primary_action = None
     if on_frappecloud():

@@ -19,6 +19,8 @@ from frappe.model.utils import is_virtual_doctype
 from frappe.utils import add_user_info, cint, format_duration
 from frappe.utils.data import sbool
 
+DISALLOWED_PARAMS = ("cmd", "data", "ignore_permissions", "view", "user", "csrf_token", "join")
+
 
 @frappe.whitelist()
 @frappe.read_only()
@@ -241,8 +243,9 @@ def update_wildcard_field_param(data):
 
 
 def clean_params(data):
-    for param in ("cmd", "data", "ignore_permissions", "view", "user", "csrf_token", "join"):
-        data.pop(param, None)
+	for param in DISALLOWED_PARAMS:
+		if param in data:
+			del data[param]
 
 
 def parse_json(data):
@@ -414,15 +417,17 @@ def export_query():
     data = [[_("Sr"), *labels]]
     processed_data = []
 
-    if frappe.local.lang == "en" or not translate_values:
-        data.extend([i + 1, *list(row)] for i, row in enumerate(ret))
-    elif translate_values:
-        translatable_fields = [field["translatable"] for field in fields_info]
-        processed_data = []
-        for i, row in enumerate(ret):
-            processed_row = [i + 1] + [_(value) if translatable_fields[idx] else value for idx, value in enumerate(row)]
-            processed_data.append(processed_row)
-            data.extend(processed_data)
+	if frappe.local.lang == "en" or not translate_values:
+		data.extend([i + 1, *list(row)] for i, row in enumerate(ret))
+	elif translate_values:
+		translatable_fields = [field["translatable"] for field in fields_info]
+		processed_data = []
+		for i, row in enumerate(ret):
+			processed_row = [i + 1] + [
+				_(value) if translatable_fields[idx] else value for idx, value in enumerate(row)
+			]
+			processed_data.append(processed_row)
+		data.extend(processed_data)
 
     data = handle_duration_fieldtype_values(doctype, data, db_query.fields)
 
@@ -561,35 +566,41 @@ def delete_items():
 
 
 def delete_bulk(doctype, items):
-    undeleted_items = []
-    for i, d in enumerate(items):
-        try:
-            frappe.flags.in_bulk_delete = True
-            frappe.delete_doc(doctype, d)
-            if len(items) >= 5:
-                frappe.publish_realtime(
-                    "progress",
-                    dict(progress=[i + 1, len(items)], title=_("Deleting {0}").format(doctype), description=d),
-                    user=frappe.session.user,
-                )
-            # Commit after successful deletion
-            frappe.db.commit()
-        except Exception:
-            # rollback if any record failed to delete
-            # if not rollbacked, queries get committed on after_request method in app.py
-            undeleted_items.append(d)
-            frappe.db.rollback()
-    if undeleted_items and len(items) != len(undeleted_items):
-        frappe.clear_messages()
-        delete_bulk(doctype, undeleted_items)
-    elif undeleted_items:
-        frappe.msgprint(
-            _("Failed to delete {0} documents: {1}").format(len(undeleted_items), ", ".join(undeleted_items)),
-            realtime=True,
-            title=_("Bulk Operation Failed"),
-        )
-    else:
-        frappe.msgprint(_("Deleted all documents successfully"), realtime=True, title=_("Bulk Operation Successful"))
+	undeleted_items = []
+	for i, d in enumerate(items):
+		try:
+			frappe.flags.in_bulk_delete = True
+			frappe.delete_doc(doctype, d)
+			if len(items) >= 5:
+				frappe.publish_realtime(
+					"progress",
+					dict(
+						progress=[i + 1, len(items)],
+						title=_("Deleting {0}").format(_(doctype)),
+						description=d,
+					),
+					user=frappe.session.user,
+				)
+			# Commit after successful deletion
+			frappe.db.commit()
+		except Exception:
+			# rollback if any record failed to delete
+			# if not rollbacked, queries get committed on after_request method in app.py
+			undeleted_items.append(d)
+			frappe.db.rollback()
+	if undeleted_items and len(items) != len(undeleted_items):
+		frappe.clear_messages()
+		delete_bulk(doctype, undeleted_items)
+	elif undeleted_items:
+		frappe.msgprint(
+			_("Failed to delete {0} documents: {1}").format(len(undeleted_items), ", ".join(undeleted_items)),
+			realtime=True,
+			title=_("Bulk Operation Failed"),
+		)
+	else:
+		frappe.msgprint(
+			_("Deleted all documents successfully"), realtime=True, title=_("Bulk Operation Successful")
+		)
 
 
 @frappe.whitelist()

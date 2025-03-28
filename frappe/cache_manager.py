@@ -66,11 +66,10 @@ user_cache_keys = (
 )
 
 doctype_cache_keys = (
-    "doctype_form_meta",
-    "last_modified",
-    "linked_doctypes",
-    "workflow",
-    "data_import_column_header_map",
+	"last_modified",
+	"linked_doctypes",
+	"workflow",
+	"data_import_column_header_map",
 )
 
 wildcard_keys = (
@@ -137,10 +136,13 @@ def _clear_doctype_cache_from_redis(doctype: str | None = None):
 
     if doctype:
 
-        def clear_single(dt):
-            frappe.clear_document_cache(dt)
-            frappe.cache.hdel_names(doctype_cache_keys, dt)
-            clear_meta_cache(dt)
+		def clear_single(dt):
+			frappe.clear_document_cache(dt)
+			# Wild card for all keys containing this doctype.
+			# this can be excessive but this function isn't called often... ideally.
+			frappe.client_cache.delete_keys(f"*{dt}*")
+			frappe.cache.hdel_names(doctype_cache_keys, dt)
+			clear_meta_cache(dt)
 
         clear_single(doctype)
 

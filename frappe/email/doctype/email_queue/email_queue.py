@@ -45,26 +45,26 @@ class EmailQueue(Document):
         from frappe.email.doctype.email_queue_recipient.email_queue_recipient import EmailQueueRecipient
         from frappe.types import DF
 
-        add_unsubscribe_link: DF.Check
-        attachments: DF.Code | None
-        communication: DF.Link | None
-        email_account: DF.Link | None
-        error: DF.Code | None
-        expose_recipients: DF.Data | None
-        message: DF.Code | None
-        message_id: DF.SmallText | None
-        priority: DF.Int
-        recipients: DF.Table[EmailQueueRecipient]
-        reference_doctype: DF.Link | None
-        reference_id: DF.Data | None
-        retry: DF.Int
-        send_after: DF.Datetime | None
-        sender: DF.Data | None
-        show_as_cc: DF.SmallText | None
-        status: DF.Literal["Not Sent", "Sending", "Sent", "Partially Sent", "Error"]
-        unsubscribe_method: DF.Data | None
-        unsubscribe_param: DF.Data | None
-    # end: auto-generated types
+		add_unsubscribe_link: DF.Check
+		attachments: DF.Code | None
+		communication: DF.Link | None
+		email_account: DF.Link | None
+		error: DF.Code | None
+		expose_recipients: DF.Data | None
+		message: DF.Code | None
+		message_id: DF.SmallText | None
+		priority: DF.Int
+		recipients: DF.Table[EmailQueueRecipient]
+		reference_doctype: DF.Link | None
+		reference_name: DF.Data | None
+		retry: DF.Int
+		send_after: DF.Datetime | None
+		sender: DF.Data | None
+		show_as_cc: DF.SmallText | None
+		status: DF.Literal["Not Sent", "Sending", "Sent", "Partially Sent", "Error"]
+		unsubscribe_method: DF.Data | None
+		unsubscribe_params: DF.Code | None
+	# end: auto-generated types
 
     DOCTYPE = "Email Queue"
 
@@ -93,12 +93,15 @@ class EmailQueue(Document):
         if not data.get("recipients"):
             return
 
-        recipients = data.pop("recipients")
-        doc = frappe.new_doc(cls.DOCTYPE)
-        doc.update(data)
-        doc.set_recipients(recipients)
-        doc.insert(ignore_permissions=ignore_permissions)
-        return doc
+		if isinstance(data["unsubscribe_params"], dict):
+			data["unsubscribe_params"] = json.dumps(data["unsubscribe_params"])
+
+		recipients = data.pop("recipients")
+		doc = frappe.new_doc(cls.DOCTYPE)
+		doc.update(data)
+		doc.set_recipients(recipients)
+		doc.insert(ignore_permissions=ignore_permissions)
+		return doc
 
     @classmethod
     def find(cls, id) -> "EmailQueue":
@@ -335,14 +338,14 @@ class SendMailContext:
     def get_unsubscribe_str(self, recipient_email: str) -> str:
         unsubscribe_url = ""
 
-        if self.queue_doc.add_unsubscribe_link and self.queue_doc.reference_doctype:
-            unsubscribe_url = get_unsubcribed_url(
-                reference_doctype=self.queue_doc.reference_doctype,
-                reference_id=self.queue_doc.reference_id,
-                email=recipient_email,
-                unsubscribe_method=self.queue_doc.unsubscribe_method,
-                unsubscribe_params=self.queue_doc.unsubscribe_param,
-            )
+		if self.queue_doc.add_unsubscribe_link and self.queue_doc.reference_doctype:
+			unsubscribe_url = get_unsubcribed_url(
+				reference_doctype=self.queue_doc.reference_doctype,
+				reference_id=self.queue_doc.reference_id,
+				email=recipient_email,
+				unsubscribe_method=self.queue_doc.unsubscribe_method,
+				unsubscribe_params=self.queue_doc.unsubscribe_params,
+			)
 
         return quopri.encodestring(unsubscribe_url.encode()).decode()
 
@@ -679,25 +682,25 @@ class QueueBuilder:
                     attachments.append(att)
         return attachments
 
-    def prepare_email_content(self):
-        email_account = self.get_outgoing_email_account()
-        if isinstance(self._bcc, list) and email_account.always_bcc:
-            self._bcc.append(email_account.always_bcc)
-        mail = get_email(
-            recipients=self.final_recipients(),
-            sender=self.sender,
-            subject=self.subject,
-            formatted=self.email_html_content(),
-            text_content=self.email_text_content(),
-            attachments=self._attachments,
-            reply_to=self.reply_to,
-            cc=self.final_cc(),
-            bcc=self.bcc,
-            email_account=email_account,
-            expose_recipients=self.expose_recipients,
-            inline_images=self.inline_images,
-            header=self.header,
-        )
+	def prepare_email_content(self):
+		email_account = self.get_outgoing_email_account()
+		if email_account.always_bcc:
+			self._bcc = [*self.bcc, email_account.always_bcc]
+		mail = get_email(
+			recipients=self.final_recipients(),
+			sender=self.sender,
+			subject=self.subject,
+			formatted=self.email_html_content(),
+			text_content=self.email_text_content(),
+			attachments=self._attachments,
+			reply_to=self.reply_to,
+			cc=self.final_cc(),
+			bcc=self.bcc,
+			email_account=email_account,
+			expose_recipients=self.expose_recipients,
+			inline_images=self.inline_images,
+			header=self.header,
+		)
 
         mail.set_message_id(self.message_id, self.is_notification)
         if self.read_receipt:

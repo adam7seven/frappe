@@ -188,17 +188,17 @@ def get_children_data(doctype, meta):
     all_children = frappe._dict()
     child_search_fields = frappe._dict()
 
-    for child in meta.get_table_fields():
-        child_meta = frappe.get_meta(child.options)
-        search_fields = child_meta.get_global_search_fields()
-        if search_fields:
-            child_search_fields.setdefault(child.options, search_fields)
-            child_fieldnames = get_selected_fields(child_meta, search_fields)
-            child_records = frappe.get_all(
-                child.options,
-                fields=child_fieldnames,
-                filters={"docstatus": ["!=", 1], "parenttype": doctype},
-            )
+	for child in meta.get_table_fields():
+		child_meta = frappe.get_meta(child.options)
+		search_fields = child_meta.get_global_search_fields()
+		if search_fields:
+			child_search_fields.setdefault(child.options, search_fields)
+			child_fieldnames = get_selected_fields(child_meta, search_fields)
+			child_records = frappe.get_all(
+				child.options,
+				fields=child_fieldnames,
+				filters={"docstatus": ["!=", 2], "parenttype": doctype},
+			)
 
             for record in child_records:
                 all_children.setdefault(record.parent, frappe._dict()).setdefault(child.options, []).append(record)

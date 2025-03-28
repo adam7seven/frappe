@@ -380,10 +380,8 @@ class File(Document):
                 "is_private": self.is_private,
             }
 
-            if self.id:
-                filters.update({"id": ("!=", self.id)})
-            else:
-                filters.update({"file_name": self.file_name})
+			if self.id:
+				filters.update({"id": ("!=", self.id)})
 
             if self.attached_to_doctype and self.attached_to_id:
                 filters.update(
@@ -654,11 +652,15 @@ class File(Document):
                 as_dict=True,
             )
 
-        if duplicate_file:
-            file_doc: File = frappe.get_cached_doc("File", duplicate_file.id)
-            if file_doc.exists_on_disk():
-                self.file_url = duplicate_file.file_url
-                file_exists = True
+		if duplicate_file:
+			file_doc: File = frappe.get_cached_doc("File", duplicate_file.id)
+			if file_doc.exists_on_disk():
+				if self.exists_on_disk():
+					if not self.file_url:
+						self.file_url = duplicate_file.file_url
+				else:
+					self.file_url = duplicate_file.file_url
+				file_exists = True
 
         if not file_exists:
             if not overwrite:

@@ -422,11 +422,11 @@ class EmailAccount(Document):
         if doc:
             return {"default": doc}
 
-        if _raise_error:
-            frappe.throw(
-                _("Please setup default Email Account from Settings > Email Account"),
-                frappe.OutgoingEmailError,
-            )
+		if _raise_error:
+			frappe.throw(
+				_("Please setup default outgoing Email Account from Tools > Email Account"),
+				frappe.OutgoingEmailError,
+			)
 
     @classmethod
     def find_default_outgoing(cls):

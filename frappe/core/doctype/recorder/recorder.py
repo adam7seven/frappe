@@ -126,21 +126,13 @@ def add_indexes(indexes):
 
 
 def _add_index(table, column):
-    doctype = get_doctype_id(table)
-    frappe.db.add_index(doctype, [column])
-    make_property_setter(
-        doctype,
-        column,
-        property="search_index",
-        value="1",
-        property_type="Check",
-        for_doctype=False,  # Applied on docfield
-    )
-    frappe.msgprint(
-        _("Index created successfully on column {0} of doctype {1}").format(column, doctype),
-        alert=True,
-        realtime=True,
-    )
+	doctype = get_doctype_id(table)
+	frappe.db.add_index(doctype, [column])
+	frappe.msgprint(
+		_("Index created successfully on column {0} of doctype {1}").format(column, doctype),
+		alert=True,
+		realtime=True,
+	)
 
 
 @frappe.whitelist()

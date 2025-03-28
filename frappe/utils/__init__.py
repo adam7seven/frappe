@@ -1131,5 +1131,13 @@ class CallbackManager:
             _func = self._functions.popleft()
             _func()
 
-    def reset(self):
-        self._functions.clear()
+	def reset(self):
+		self._functions.clear()
+
+
+def safe_eval(code, eval_globals=None, eval_locals=None):
+	"""A safer `eval`"""
+
+	from frappe.utils.safe_exec import safe_eval
+
+	return safe_eval(code, eval_globals, eval_locals)

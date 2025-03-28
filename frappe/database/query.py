@@ -2,14 +2,14 @@ import re
 from ast import literal_eval
 from functools import lru_cache
 from types import BuiltinFunctionType
-from typing import TYPE_CHECKING, TypeAlias
+from typing import TYPE_CHECKING
 
 import sqlparse
 from pypika.queries import QueryBuilder, Table
 
 import frappe
 from frappe import _
-from frappe.database.operator_map import OPERATOR_MAP
+from frappe.database.operator_map import NESTED_SET_OPERATORS, OPERATOR_MAP
 from frappe.database.schema import SPECIAL_CHAR_PATTERN
 from frappe.database.utils import DefaultOrderBy, FilterValue, convert_to_value, get_doctype_id
 from frappe.query_builder import Criterion, Field, Order, functions
@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 TAB_PATTERN = re.compile("^tab")
 WORDS_PATTERN = re.compile(r"\w+")
 BRACKETS_PATTERN = re.compile(r"\(.*?\)|$")
-SQL_FUNCTIONS = [sql_function.value for sql_function in SqlFunctions]
+SQL_FUNCTIONS = tuple(f"{sql_function.value}(" for sql_function in SqlFunctions)  # ) <- ignore this comment.
 COMMA_PATTERN = re.compile(r",\s*(?![^()]*\))")
 
 # less restrictive version of frappe.core.doctype.doctype.doctype.START_WITH_LETTERS_PATTERN
@@ -32,46 +32,49 @@ TABLE_NAME_PATTERN = re.compile(r"^[\w -]*$", flags=re.ASCII)
 
 
 class Engine:
-    def get_query(
-        self,
-        table: str | Table,
-        fields: str | list | tuple | None = None,
-        filters: dict[str, FilterValue] | FilterValue | list[list | FilterValue] | None = None,
-        order_by: str | None = None,
-        group_by: str | None = None,
-        limit: int | None = None,
-        offset: int | None = None,
-        distinct: bool = False,
-        for_update: bool = False,
-        update: bool = False,
-        into: bool = False,
-        delete: bool = False,
-        *,
-        validate_filters: bool = False,
-        skip_locked: bool = False,
-        wait: bool = True,
-    ) -> QueryBuilder:
-        self.is_mariadb = frappe.db.db_type == "mariadb"
-        self.is_postgres = frappe.db.db_type == "postgres"
-        self.validate_filters = validate_filters
+	def get_query(
+		self,
+		table: str | Table,
+		fields: str | list | tuple | None = None,
+		filters: dict[str, FilterValue] | FilterValue | list[list | FilterValue] | None = None,
+		order_by: str | None = None,
+		group_by: str | None = None,
+		limit: int | None = None,
+		offset: int | None = None,
+		distinct: bool = False,
+		for_update: bool = False,
+		update: bool = False,
+		into: bool = False,
+		delete: bool = False,
+		*,
+		validate_filters: bool = False,
+		skip_locked: bool = False,
+		wait: bool = True,
+	) -> QueryBuilder:
+		qb = frappe.local.qb
+		db_type = frappe.local.db.db_type
 
-        if isinstance(table, Table):
-            self.table = table
-            self.doctype = get_doctype_id(table.get_sql())
-        else:
-            self.doctype = table
-            self.validate_doctype()
-            self.table = frappe.qb.DocType(table)
+		self.is_mariadb = db_type == "mariadb"
+		self.is_postgres = db_type == "postgres"
+		self.validate_filters = validate_filters
 
-        if update:
-            self.query = frappe.qb.update(self.table)
-        elif into:
-            self.query = frappe.qb.into(self.table)
-        elif delete:
-            self.query = frappe.qb.from_(self.table).delete()
-        else:
-            self.query = frappe.qb.from_(self.table)
-            self.apply_fields(fields)
+		if isinstance(table, Table):
+			self.table = table
+			self.doctype = get_doctype_id(table.get_sql())
+		else:
+			self.doctype = table
+			self.validate_doctype()
+			self.table = qb.DocType(table)
+
+		if update:
+			self.query = qb.update(self.table)
+		elif into:
+			self.query = qb.into(self.table)
+		elif delete:
+			self.query = qb.from_(self.table).delete()
+		else:
+			self.query = qb.from_(self.table)
+			self.apply_fields(fields)
 
         self.apply_filters(filters)
         self.apply_order_by(order_by)
@@ -195,10 +198,10 @@ class Engine:
         if not _value and isinstance(_value, list | tuple | set):
             _value = ("",)
 
-        # Nested set
-        if _operator in OPERATOR_MAP["nested_set"]:
-            hierarchy = _operator
-            docid = _value
+		# Nested set
+		if _operator in NESTED_SET_OPERATORS:
+			hierarchy = _operator
+			docid = _value
 
             _df = frappe.get_meta(self.doctype).get_field(field)
             ref_doctype = _df.options if _df else self.doctype
@@ -292,15 +295,13 @@ class Engine:
             return self.table[field].as_(alias)
         return self.table[field]
 
-    def parse_fields(self, fields: str | list | tuple | None) -> list:
-        if not fields:
-            return []
-        fields = self.sanitize_fields(fields)
-        if isinstance(fields, list | tuple | set) and None in fields and Field not in fields:
-            return []
+	def parse_fields(self, fields: str | list | tuple | None) -> list:
+		if not fields:
+			return []
 
-        if not isinstance(fields, list | tuple):
-            fields = [fields]
+		fields = self.sanitize_fields(fields)
+		if not isinstance(fields, list | tuple):
+			fields = [fields]
 
         def parse_field(field: str):
             if has_function(field):
@@ -329,15 +330,16 @@ class Engine:
 
         return _fields
 
-    def apply_order_by(self, order_by: str | None):
-        if not order_by or order_by == DefaultOrderBy:
-            return
-        for declaration in order_by.split(","):
-            if _order_by := declaration.strip():
-                parts = _order_by.split(" ")
-                order_field, order_direction = parts[0], parts[1] if len(parts) > 1 else "desc"
-                order_direction = Order.asc if order_direction.lower() == "asc" else Order.desc
-                self.query = self.query.orderby(order_field, order=order_direction)
+	def apply_order_by(self, order_by: str | None):
+		if not order_by or order_by == DefaultOrderBy:
+			return
+
+		for declaration in order_by.split(","):
+			if _order_by := declaration.strip():
+				parts = _order_by.split(" ")
+				order_field = parts[0]
+				order_direction = Order.asc if (len(parts) > 1 and parts[1].lower() == "asc") else Order.desc
+				self.query = self.query.orderby(order_field, order=order_direction)
 
 
 class Permission:
@@ -509,11 +511,11 @@ def literal_eval_(literal):
         return literal
 
 
-def has_function(field):
-    _field = field.casefold() if (isinstance(field, str) and "`" not in field) else field
-    if not issubclass(type(_field), Criterion):
-        if any([f"{func}(" in _field for func in SQL_FUNCTIONS]):  # ) <- ignore this comment.
-            return True
+def has_function(field: str):
+	if "`" not in field:
+		field = field.casefold()
+
+	return any(func in field for func in SQL_FUNCTIONS)
 
 
 def get_nested_set_hierarchy_result(doctype: str, id: str, hierarchy: str) -> list[str]:
@@ -550,9 +552,9 @@ def get_nested_set_hierarchy_result(doctype: str, id: str, hierarchy: str) -> li
 
 @lru_cache(maxsize=1024)
 def _sanitize_field(field: str, is_mariadb):
-    if field == "*" or not SPECIAL_CHAR_PATTERN.match(field):
-        # Skip checking if there are no special characters
-        return field
+	if field == "*" or not SPECIAL_CHAR_PATTERN.search(field):
+		# Skip checking if there are no special characters
+		return field
 
     stripped_field = sqlparse.format(field, strip_comments=True, keyword_case="lower")
     if is_mariadb:

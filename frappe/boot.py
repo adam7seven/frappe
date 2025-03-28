@@ -15,6 +15,7 @@ from frappe.desk.doctype.form_tour.form_tour import get_onboarding_ui_tours
 from frappe.desk.doctype.route_history.route_history import frequently_visited_links
 from frappe.desk.form.load import get_meta_bundle
 from frappe.email.inbox import get_email_accounts
+from frappe.integrations.frappe_providers.frappecloud_billing import is_fc_site
 from frappe.model.base_document import get_controller
 from frappe.permissions import has_permission
 from frappe.query_builder import DocType
@@ -90,29 +91,30 @@ def get_bootinfo():
         bootinfo.lang = str(bootinfo.lang)
     bootinfo.versions = {k: v["version"] for k, v in get_versions().items()}
 
-    bootinfo.error_report_email = frappe.conf.error_report_email
-    bootinfo.calendars = sorted(frappe.get_hooks("calendars"))
-    bootinfo.treeviews = frappe.get_hooks("treeviews") or []
-    bootinfo.lang_dict = get_lang_dict()
-    bootinfo.success_action = get_success_action()
-    bootinfo.update(get_email_accounts(user=frappe.session.user))
-    bootinfo.energy_points_enabled = is_energy_point_enabled()
-    bootinfo.website_tracking_enabled = is_tracking_enabled()
-    bootinfo.sms_gateway_enabled = bool(frappe.db.get_single_value("SMS Settings", "sms_gateway_url"))
-    bootinfo.points = get_energy_points(frappe.session.user)
-    bootinfo.frequently_visited_links = frequently_visited_links()
-    bootinfo.link_preview_doctypes = get_link_preview_doctypes()
-    bootinfo.additional_filters_config = get_additional_filters_from_hooks()
-    bootinfo.desk_settings = get_desk_settings()
-    bootinfo.app_logo_url = get_app_logo()
-    bootinfo.link_title_doctypes = get_link_title_doctypes()
-    bootinfo.translated_doctypes = get_translated_doctypes()
-    bootinfo.subscription_conf = add_subscription_conf()
-    bootinfo.marketplace_apps = get_marketplace_apps()
-    bootinfo.changelog_feed = get_changelog_feed_items()
-    bootinfo.enable_address_autocompletion = frappe.db.get_single_value(
-        "Geolocation Settings", "enable_address_autocompletion"
-    )
+	bootinfo.error_report_email = frappe.conf.error_report_email
+	bootinfo.calendars = sorted(frappe.get_hooks("calendars"))
+	bootinfo.treeviews = frappe.get_hooks("treeviews") or []
+	bootinfo.lang_dict = get_lang_dict()
+	bootinfo.success_action = get_success_action()
+	bootinfo.update(get_email_accounts(user=frappe.session.user))
+	bootinfo.energy_points_enabled = is_energy_point_enabled()
+	bootinfo.website_tracking_enabled = is_tracking_enabled()
+	bootinfo.sms_gateway_enabled = bool(frappe.db.get_single_value("SMS Settings", "sms_gateway_url"))
+	bootinfo.points = get_energy_points(frappe.session.user)
+	bootinfo.frequently_visited_links = frequently_visited_links()
+	bootinfo.link_preview_doctypes = get_link_preview_doctypes()
+	bootinfo.additional_filters_config = get_additional_filters_from_hooks()
+	bootinfo.desk_settings = get_desk_settings()
+	bootinfo.app_logo_url = get_app_logo()
+	bootinfo.link_title_doctypes = get_link_title_doctypes()
+	bootinfo.translated_doctypes = get_translated_doctypes()
+	bootinfo.subscription_conf = add_subscription_conf()
+	bootinfo.marketplace_apps = get_marketplace_apps()
+	bootinfo.is_fc_site = is_fc_site()
+	bootinfo.changelog_feed = get_changelog_feed_items()
+	bootinfo.enable_address_autocompletion = frappe.db.get_single_value(
+		"Geolocation Settings", "enable_address_autocompletion"
+	)
 
     if sentry_dsn := get_sentry_dsn():
         bootinfo.sentry_dsn = sentry_dsn
@@ -134,10 +136,10 @@ def get_letter_heads():
 def load_conf_settings(bootinfo):
     from frappe.core.api.file import get_max_file_size
 
-    bootinfo.max_file_size = get_max_file_size()
-    for key in ("developer_mode", "socketio_port", "file_watcher_port", "fc_communication_secret"):
-        if key in frappe.conf:
-            bootinfo[key] = frappe.conf.get(key)
+	bootinfo.max_file_size = get_max_file_size()
+	for key in ("developer_mode", "socketio_port", "file_watcher_port"):
+		if key in frappe.conf:
+			bootinfo[key] = frappe.conf.get(key)
 
 
 def load_desktop_data(bootinfo):

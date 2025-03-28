@@ -25,7 +25,7 @@ from frappe.model import (
     no_value_fields,
     table_fields,
 )
-from frappe.model.base_document import get_controller
+from frappe.model.base_document import RESERVED_KEYWORDS, get_controller
 from frappe.model.docfield import supports_translation
 from frappe.model.document import Document
 from frappe.model.meta import Meta
@@ -1247,15 +1247,15 @@ def validate_fields(meta: Meta):
     def check_illegal_characters(fieldname):
         validate_column_name(fieldname)
 
-    def check_invalid_fieldnames(docid, fieldname):
-        if fieldname in Document._reserved_keywords:
-            frappe.throw(
-                _("{0}: fieldname cannot be set to reserved keyword {1}").format(
-                    frappe.bold(docid),
-                    frappe.bold(fieldname),
-                ),
-                title=_("Invalid Fieldname"),
-            )
+	def check_invalid_fieldnames(docid, fieldname):
+		if fieldname in RESERVED_KEYWORDS:
+			frappe.throw(
+				_("{0}: fieldname cannot be set to reserved keyword {1}").format(
+					frappe.bold(docid),
+					frappe.bold(fieldname),
+				),
+				title=_("Invalid Fieldname"),
+			)
 
     def check_unique_fieldname(docid, fieldname):
         duplicates = list(filter(None, map(lambda df: (df.fieldname == fieldname and str(df.idx)) or None, fields)))

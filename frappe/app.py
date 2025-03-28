@@ -403,8 +403,8 @@ def serve(
 
     from werkzeug.serving import run_simple
 
-    if profile or os.environ.get("USE_PROFILER"):
-        application = ProfilerMiddleware(application, sort_by=("cumtime", "calls"))
+	if profile or os.environ.get("USE_PROFILER"):
+		application = ProfilerMiddleware(application, sort_by=("cumtime", "calls"), restrictions=(200,))
 
     if not os.environ.get("NO_STATICS"):
         application = application_with_statics()

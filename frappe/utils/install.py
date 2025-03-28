@@ -64,75 +64,74 @@ def create_user_type():
 
 
 def install_basic_docs():
-    # core users / roles
-    install_docs = [
-        {
-            "doctype": "User",
-            "id": "Administrator",
-            "first_name": "Administrator",
-            "email": "admin@example.com",
-            "enabled": 1,
-            "is_admin": 1,
-            "roles": [{"role": "Administrator"}],
-            "thread_notify": 0,
-            "send_me_a_copy": 0,
-        },
-        {
-            "doctype": "User",
-            "id": "Guest",
-            "first_name": "Guest",
-            "email": "guest@example.com",
-            "enabled": 1,
-            "is_guest": 1,
-            "roles": [{"role": "Guest"}],
-            "thread_notify": 0,
-            "send_me_a_copy": 0,
-        },
-        {"doctype": "Role", "role_name": "Report Manager"},
-        {"doctype": "Role", "role_name": "Translator"},
-        {
-            "doctype": "Workflow State",
-            "workflow_state_name": "Pending",
-            "icon": "question-sign",
-            "style": "",
-        },
-        {
-            "doctype": "Workflow State",
-            "workflow_state_name": "Approved",
-            "icon": "ok-sign",
-            "style": "Success",
-        },
-        {
-            "doctype": "Workflow State",
-            "workflow_state_name": "Rejected",
-            "icon": "remove",
-            "style": "Danger",
-        },
-        {"doctype": "Workflow Action Master", "workflow_action_name": "Approve"},
-        {"doctype": "Workflow Action Master", "workflow_action_name": "Reject"},
-        {"doctype": "Workflow Action Master", "workflow_action_name": "Review"},
-        {
-            "doctype": "Email Domain",
-            "domain_name": "example.com",
-            "email_id": "account@example.com",
-            "password": "pass",
-            "email_server": "imap.example.com",
-            "use_imap": 1,
-            "smtp_server": "smtp.example.com",
-        },
-        {
-            "doctype": "Email Account",
-            "domain": "example.com",
-            "email_id": "notifications@example.com",
-            "default_outgoing": 1,
-        },
-        {
-            "doctype": "Email Account",
-            "domain": "example.com",
-            "email_id": "replies@example.com",
-            "default_incoming": 1,
-        },
-    ]
+	# core users / roles
+	install_docs = [
+		{
+			"doctype": "User",
+			"id": "Administrator",
+			"first_name": "Administrator",
+			"email": "admin@example.com",
+			"enabled": 1,
+			"is_admin": 1,
+			"roles": [{"role": "Administrator"}],
+			"thread_notify": 0,
+			"send_me_a_copy": 0,
+		},
+		{
+			"doctype": "User",
+			"id": "Guest",
+			"first_name": "Guest",
+			"email": "guest@example.com",
+			"enabled": 1,
+			"is_guest": 1,
+			"roles": [{"role": "Guest"}],
+			"thread_notify": 0,
+			"send_me_a_copy": 0,
+		},
+		{"doctype": "Role", "role_name": "Translator"},
+		{
+			"doctype": "Workflow State",
+			"workflow_state_name": "Pending",
+			"icon": "question-sign",
+			"style": "",
+		},
+		{
+			"doctype": "Workflow State",
+			"workflow_state_name": "Approved",
+			"icon": "ok-sign",
+			"style": "Success",
+		},
+		{
+			"doctype": "Workflow State",
+			"workflow_state_name": "Rejected",
+			"icon": "remove",
+			"style": "Danger",
+		},
+		{"doctype": "Workflow Action Master", "workflow_action_name": "Approve"},
+		{"doctype": "Workflow Action Master", "workflow_action_name": "Reject"},
+		{"doctype": "Workflow Action Master", "workflow_action_name": "Review"},
+		{
+			"doctype": "Email Domain",
+			"domain_name": "example.com",
+			"email_id": "account@example.com",
+			"password": "pass",
+			"email_server": "imap.example.com",
+			"use_imap": 1,
+			"smtp_server": "smtp.example.com",
+		},
+		{
+			"doctype": "Email Account",
+			"domain": "example.com",
+			"email_id": "notifications@example.com",
+			"default_outgoing": 1,
+		},
+		{
+			"doctype": "Email Account",
+			"domain": "example.com",
+			"email_id": "replies@example.com",
+			"default_incoming": 1,
+		},
+	]
 
     for d in install_docs:
         try:

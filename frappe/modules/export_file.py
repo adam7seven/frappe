@@ -49,13 +49,13 @@ def write_document_file(doc, record_module=None, create_init=True, folder_name=N
     fname = scrub(doc.id)
     write_code_files(folder, fname, doc, doc_export)
 
-    # write the data file
-    path = os.path.join(folder, f"{fname}.json")
-    if is_custom_module and not Path(path).resolve().is_relative_to(Path(frappe.get_site_path()).resolve()):
-        frappe.throw("Invalid export path: " + Path(path).as_posix())
-    with open(path, "w+") as txtfile:
-        txtfile.write(frappe.as_json(doc_export))
-    print(f"Wrote document file for {doc.doctype} {doc.id} at {path}")
+	# write the data file
+	path = os.path.join(folder, f"{fname}.json")
+	if is_custom_module and not Path(path).resolve().is_relative_to(Path(frappe.get_site_path()).resolve()):
+		frappe.throw("Invalid export path: " + Path(path).as_posix())
+	with open(path, "w+") as txtfile:
+		txtfile.write(frappe.as_json(doc_export) + "\n")
+	print(f"Wrote document file for {doc.doctype} {doc.id} at {path}")
 
 
 def strip_default_fields(doc, doc_export):

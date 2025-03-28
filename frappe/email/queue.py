@@ -81,13 +81,13 @@ def get_unsubscribe_message(unsubscribe_message: str, expose_recipients: str) ->
 
 
 def get_unsubcribed_url(reference_doctype, reference_id, email, unsubscribe_method, unsubscribe_params):
-    params = {
-        "email": cstr(email),
-        "doctype": cstr(reference_doctype),
-        "id": cstr(reference_id),
-    }
-    if unsubscribe_params:
-        params.update(unsubscribe_params)
+	params = {
+		"email": cstr(email),
+		"doctype": cstr(reference_doctype),
+		"id": cstr(reference_id),
+	}
+	if unsubscribe_params:
+		params.update(frappe.parse_json(unsubscribe_params))
 
     return get_url(unsubscribe_method + "?" + get_signed_params(params))
 

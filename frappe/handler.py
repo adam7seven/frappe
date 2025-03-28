@@ -61,11 +61,8 @@ def handle():
 
 
 def execute_cmd(cmd, from_async=False):
-    """execute a request as python module"""
-    for hook in reversed(frappe.get_hooks("override_whitelisted_methods", {}).get(cmd, [])):
-        # override using the last hook
-        cmd = hook
-        break
+	"""execute a request as python module"""
+	cmd = frappe.override_whitelisted_method(cmd)
 
     # via server script
     server_script = get_server_script_map().get("_api", {}).get(cmd)
@@ -210,13 +207,13 @@ def check_write_permission(doctype: str | None = None, id: str | None = None):
         frappe.has_permission(doctype, "write", throw=True)
         return
 
-    try:
-        doc = frappe.get_doc(doctype, id)
-    except frappe.DoesNotExistError:
-        # doc has not been inserted yet, id is set to "new-some-doctype"
-        # If doc inserts fine then only this attachment will be linked see file/utils.py:relink_mismatched_files
-        check_doctype_permission(doctype, "write")
-        return
+	try:
+		doc = frappe.get_doc(doctype, id)
+	except frappe.DoesNotExistError:
+		# doc has not been inserted yet, id is set to "new-some-doctype"
+		# If doc inserts fine then only this attachment will be linked see file/utils.py:relink_mismatched_files
+		frappe.new_doc(doctype).check_permission("write")
+		return
 
     doc.check_permission("write")
 

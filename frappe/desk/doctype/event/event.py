@@ -13,17 +13,18 @@ from frappe.desk.doctype.notification_settings.notification_settings import (
 from frappe.desk.reportview import get_filters_cond
 from frappe.model.document import Document
 from frappe.utils import (
-    add_days,
-    add_months,
-    cint,
-    cstr,
-    date_diff,
-    format_datetime,
-    get_datetime_str,
-    getdate,
-    month_diff,
-    now_datetime,
-    nowdate,
+	add_days,
+	add_months,
+	cint,
+	cstr,
+	date_diff,
+	format_datetime,
+	get_datetime_str,
+	get_fullname,
+	getdate,
+	month_diff,
+	now_datetime,
+	nowdate,
 )
 from frappe.utils.caching import http_cache
 from frappe.utils.user import get_enabled_system_users
@@ -37,6 +38,11 @@ communication_mapping = {
     "Sent/Received Email": "Email",
     "Other": "Other",
 }
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+	from frappe.core.doctype.communication.communication import Communication
 
 
 class Event(Document):
@@ -105,50 +111,59 @@ class Event(Document):
     def on_update(self):
         self.sync_communication()
 
-    def on_trash(self):
-        communications = frappe.get_all("Communication", dict(reference_doctype=self.doctype, reference_id=self.id))
-        if communications:
-            for communication in communications:
-                frappe.delete_doc_if_exists("Communication", communication.id, force=True)
+	def on_trash(self):
+		communications = frappe.get_all(
+			"Communication",
+			filters={"reference_doctype": self.doctype, "reference_id": self.id},
+			pluck="id",
+		)
+		for communication in communications:
+			frappe.delete_doc("Communication", communication, force=True)
 
-    def sync_communication(self):
-        if self.event_participants:
-            for participant in self.event_participants:
-                filters = [
-                    ["Communication", "reference_doctype", "=", self.doctype],
-                    ["Communication", "reference_id", "=", self.id],
-                    ["Communication Link", "link_doctype", "=", participant.reference_doctype],
-                    ["Communication Link", "link_id", "=", participant.reference_docid],
-                ]
-                if comms := frappe.get_all("Communication", filters=filters, fields=["id"], distinct=True):
-                    for comm in comms:
-                        communication = frappe.get_doc("Communication", comm.id)
-                        self.update_communication(participant, communication)
-                else:
-                    meta = frappe.get_meta(participant.reference_doctype)
-                    if hasattr(meta, "allow_events_in_timeline") and meta.allow_events_in_timeline == 1:
-                        self.create_communication(participant)
+	def sync_communication(self):
+		if not self.event_participants:
+			return
 
-    def create_communication(self, participant):
-        communication = frappe.new_doc("Communication")
-        self.update_communication(participant, communication)
-        self.communication = communication.id
+		for participant in self.event_participants:
+			if communications := frappe.get_all(
+				"Communication",
+				filters=[
+					["Communication", "reference_doctype", "=", self.doctype],
+					["Communication", "reference_id", "=", self.id],
+					["Communication Link", "link_doctype", "=", participant.reference_doctype],
+					["Communication Link", "link_id", "=", participant.reference_docid],
+				],
+				pluck="id",
+				distinct=True,
+			):
+				for comm in communications:
+					communication = frappe.get_doc("Communication", comm)
+					self.update_communication(participant, communication)
+			else:
+				meta = frappe.get_meta(participant.reference_doctype)
+				if hasattr(meta, "allow_events_in_timeline") and meta.allow_events_in_timeline == 1:
+					self.create_communication(participant)
 
-    def update_communication(self, participant, communication):
-        communication.communication_medium = "Event"
-        communication.subject = self.subject
-        communication.content = self.description if self.description else self.subject
-        communication.communication_date = self.starts_on
-        communication.sender = self.owner
-        communication.sender_full_name = frappe.utils.get_fullname(self.owner)
-        communication.reference_doctype = self.doctype
-        communication.reference_id = self.id
-        communication.communication_medium = (
-            communication_mapping.get(self.event_category) if self.event_category else ""
-        )
-        communication.status = "Linked"
-        communication.add_link(participant.reference_doctype, participant.reference_docid)
-        communication.save(ignore_permissions=True)
+	def create_communication(self, participant: "EventParticipants"):
+		communication = frappe.new_doc("Communication")
+		self.update_communication(participant, communication)
+		self.communication = communication.id
+
+	def update_communication(self, participant: "EventParticipants", communication: "Communication"):
+		communication.communication_medium = "Event"
+		communication.subject = self.subject
+		communication.content = self.description if self.description else self.subject
+		communication.communication_date = self.starts_on
+		communication.sender = self.owner
+		communication.sender_full_name = get_fullname(self.owner)
+		communication.reference_doctype = self.doctype
+		communication.reference_id = self.id
+		communication.communication_medium = (
+			communication_mapping.get(self.event_category) if self.event_category else ""
+		)
+		communication.status = "Linked"
+		communication.add_link(participant.reference_doctype, participant.reference_docid)
+		communication.save(ignore_permissions=True)
 
     def add_participant(self, doctype, docid):
         """Add a single participant to event participants
@@ -191,28 +206,24 @@ class Event(Document):
 
 @frappe.whitelist()
 def delete_communication(event, reference_doctype, reference_docid):
-    deleted_participant = frappe.get_doc(reference_doctype, reference_docid)
-    if isinstance(event, str):
-        event = json.loads(event)
+	if isinstance(event, str):
+		event = json.loads(event)
 
-    filters = [
-        ["Communication", "reference_doctype", "=", event.get("doctype")],
-        ["Communication", "reference_id", "=", event.get("id")],
-        ["Communication Link", "link_doctype", "=", deleted_participant.reference_doctype],
-        ["Communication Link", "link_id", "=", deleted_participant.reference_docid],
-    ]
+	deleted_participant = frappe.get_doc(reference_doctype, reference_docid)
 
-    comms = frappe.get_list("Communication", filters=filters, fields=["id"])
+	comms = frappe.get_list(
+		"Communication",
+		filters=[
+			["Communication", "reference_doctype", "=", event.get("doctype")],
+			["Communication", "reference_id", "=", event.get("id")],
+			["Communication Link", "link_doctype", "=", deleted_participant.reference_doctype],
+			["Communication Link", "link_id", "=", deleted_participant.reference_docid],
+		],
+		pluck="id",
+	)
 
-    if comms:
-        deletion = []
-        for comm in comms:
-            delete = frappe.get_doc("Communication", comm.id).delete()
-            deletion.append(delete)
-
-        return deletion
-
-    return {}
+	for comm in comms:
+		frappe.delete_doc("Communication", comm)
 
 
 def get_permission_query_conditions(user):

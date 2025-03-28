@@ -172,11 +172,14 @@ class TestRQJob(IntegrationTestCase):
         rss = job.latest_result().return_value
         msg = """Memory usage of simple background job increased. Potential root cause can be a newly added python module import. Check and move them to approriate file/function to avoid loading the module by default."""
 
-        # If this starts failing analyze memory usage using memray or some equivalent tool to find
-        # offending imports/function calls.
-        # Refer this PR: https://github.com/frappe/frappe/pull/21467
-        LAST_MEASURED_USAGE = 41
-        self.assertLessEqual(rss, LAST_MEASURED_USAGE * 1.05, msg)
+		# If this starts failing analyze memory usage using memray or some equivalent tool to find
+		# offending imports/function calls.
+		# Refer this PR: https://github.com/frappe/frappe/pull/21467
+		LAST_MEASURED_USAGE = 41
+		if frappe.conf.use_mysqlclient:
+			# TEMP: Add extra allowance for running two connectors, this should be rolled back before v16
+			LAST_MEASURED_USAGE += 2
+		self.assertLessEqual(rss, LAST_MEASURED_USAGE * 1.05, msg)
 
     def test_clear_failed_jobs(self):
         limit = 10

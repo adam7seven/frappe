@@ -14,7 +14,6 @@ import random
 import time
 from typing import NoReturn
 
-import setproctitle
 from croniter import CroniterBadCronError
 from filelock import FileLock, Timeout
 
@@ -36,10 +35,6 @@ def cprint(*args, **kwargs):
         pass
 
 
-def _proctitle(message):
-    setproctitle.setthreadtitle(f"frappe-scheduler: {message}")
-
-
 def start_scheduler() -> NoReturn:
     """Run enqueue_events_for_all_sites based on scheduler tick.
     Specify scheduler_interval in seconds in common_site_config.json"""
@@ -56,10 +51,9 @@ def start_scheduler() -> NoReturn:
         frappe.logger("scheduler").debug("Scheduler already running")
         return
 
-    while True:
-        _proctitle("idle")
-        time.sleep(sleep_duration(tick))
-        enqueue_events_for_all_sites()
+	while True:
+		time.sleep(sleep_duration(tick))
+		enqueue_events_for_all_sites()
 
 
 def _get_scheduler_lock_file() -> True:
@@ -117,12 +111,11 @@ def enqueue_events_for_site(site: str) -> None:
     def log_exc():
         frappe.logger("scheduler").error(f"Exception in Enqueue Events for Site {site}", exc_info=True)
 
-    try:
-        _proctitle(f"scheduling events for {site}")
-        frappe.init(site)
-        frappe.connect()
-        if is_scheduler_inactive():
-            return
+	try:
+		frappe.init(site)
+		frappe.connect()
+		if is_scheduler_inactive():
+			return
 
         enqueue_events()
 
@@ -215,17 +208,25 @@ def schedule_jobs_based_on_activity(check_time=None):
         return True
 
 
+@redis_cache(ttl=60 * 60)
 def is_dormant(check_time=None):
-    # Assume never dormant if developer_mode is enabled
-    if frappe.conf.developer_mode:
-        return False
-    last_activity_log_timestamp = _get_last_creation_timestamp("Activity Log")
-    since = (frappe.get_system_settings("dormant_days") or 4) * 86400
-    if not last_activity_log_timestamp:
-        return True
-    if ((check_time or now_datetime()) - last_activity_log_timestamp).total_seconds() >= since:
-        return True
-    return False
+	from frappe.utils.frappecloud import on_frappecloud
+
+	if frappe.conf.developer_mode or not on_frappecloud():
+		return False
+	threshold = cint(frappe.get_system_settings("dormant_days")) * 86400
+	if not threshold:
+		return False
+
+	last_activity = frappe.db.get_value(
+		"User", filters={}, fieldname="last_active", order_by="last_active desc"
+	)
+
+	if not last_activity:
+		return True
+	if ((check_time or now_datetime()) - last_activity).total_seconds() >= threshold:
+		return True
+	return False
 
 
 def _get_last_creation_timestamp(doctype):

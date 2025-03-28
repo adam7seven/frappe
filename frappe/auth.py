@@ -121,24 +121,21 @@ class LoginManager:
         self.full_name = None
         self.user_type = None
 
-        if frappe.local.form_dict.get("cmd") == "login" or frappe.local.request.path == "/api/method/login":
-            if self.login() is False:
-                return
-            self.resume = False
-
-            # run login triggers
-            self.run_trigger("on_session_creation")
-        else:
-            try:
-                self.resume = True
-                self.make_session(resume=True)
-                self.get_user_info()
-                self.set_user_info(resume=True)
-            except AttributeError:
-                self.user = "Guest"
-                self.get_user_info()
-                self.make_session()
-                self.set_user_info()
+		if frappe.local.form_dict.get("cmd") == "login" or frappe.local.request.path == "/api/method/login":
+			if self.login() is False:
+				return
+			self.resume = False
+		else:
+			try:
+				self.resume = True
+				self.make_session(resume=True)
+				self.get_user_info()
+				self.set_user_info(resume=True)
+			except AttributeError:
+				self.user = "Guest"
+				self.get_user_info()
+				self.make_session()
+				self.set_user_info()
 
     def login(self):
         self.run_trigger("before_login")
@@ -227,10 +224,12 @@ class LoginManager:
             audit_user=audit_user,
         )
 
-        # reset user if changed to Guest
-        self.user = frappe.local.session_obj.user
-        frappe.local.session = frappe.local.session_obj.data
-        self.clear_active_sessions()
+		# reset user if changed to Guest
+		self.user = frappe.local.session_obj.user
+		frappe.local.session = frappe.local.session_obj.data
+		self.clear_active_sessions()
+		if not resume:
+			self.run_trigger("on_session_creation")
 
     def clear_active_sessions(self):
         """Clear other sessions of the current user if `deny_multiple_sessions` is not set"""

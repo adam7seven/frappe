@@ -590,9 +590,10 @@ frappe.db.connect()
 
 
 def _console_cleanup():
-    # Execute after_rollback on console close
-    frappe.db.rollback()
-    frappe.destroy()
+	# Execute after_rollback on console close
+	if frappe.db:
+		frappe.db.rollback()
+	frappe.destroy()
 
 
 def store_logs(terminal: "InteractiveShellEmbed") -> None:

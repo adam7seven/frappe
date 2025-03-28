@@ -163,30 +163,33 @@ def get_home_page_via_hooks():
 
 
 def get_boot_data():
-    from frappe.locale import get_date_format, get_first_day_of_the_week, get_number_format, get_time_format
+	from frappe.integrations.frappe_providers.frappecloud_billing import is_fc_site
+	from frappe.locale import get_date_format, get_first_day_of_the_week, get_number_format, get_time_format
 
-    return {
-        "lang": frappe.local.lang or "en",
-        "apps_data": {
-            "apps": get_apps() or [],
-            "is_desk_apps": 1 if bool(is_desk_apps(get_apps())) else 0,
-            "default_path": get_default_path() or "",
-        },
-        "sysdefaults": {
-            "float_precision": cint(frappe.get_system_settings("float_precision")) or 3,
-            "date_format": get_date_format(),
-            "time_format": get_time_format(),
-            "first_day_of_the_week": get_first_day_of_the_week(),
-            "number_format": get_number_format().string,
-            "currency": frappe.get_system_settings("currency"),
-        },
-        "time_zone": {
-            "system": get_system_timezone(),
-            "user": frappe.get_cached_value("User", frappe.session.user, "time_zone") or get_system_timezone(),
-        },
-        "assets_json": get_assets_json(),
-        "sitename": frappe.local.site,
-    }
+	return {
+		"lang": frappe.local.lang or "en",
+		"apps_data": {
+			"apps": get_apps() or [],
+			"is_desk_apps": 1 if bool(is_desk_apps(get_apps())) else 0,
+			"default_path": get_default_path() or "",
+		},
+		"sysdefaults": {
+			"float_precision": cint(frappe.get_system_settings("float_precision")) or 3,
+			"date_format": get_date_format(),
+			"time_format": get_time_format(),
+			"first_day_of_the_week": get_first_day_of_the_week(),
+			"number_format": get_number_format().string,
+			"currency": frappe.get_system_settings("currency"),
+		},
+		"time_zone": {
+			"system": get_system_timezone(),
+			"user": frappe.get_cached_value("User", frappe.session.user, "time_zone")
+			or get_system_timezone(),
+		},
+		"assets_json": get_assets_json(),
+		"sitename": frappe.local.site,
+		"is_fc_site": 1 if is_fc_site() else 0,
+	}
 
 
 def is_signup_disabled():
@@ -556,7 +559,8 @@ def build_response(path, data, http_status_code, headers: dict | None = None):
     response.headers["X-Page-Name"] = cstr(cstr(path).encode("ascii", errors="xmlcharrefreplace"))
     response.headers["X-From-Cache"] = frappe.local.response.from_cache or False
 
-    add_preload_for_bundled_assets(response)
+	if http_status_code != 404:
+		add_preload_for_bundled_assets(response)
 
     if headers:
         for key, val in headers.items():

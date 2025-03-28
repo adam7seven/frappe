@@ -88,31 +88,32 @@ def search_widget(
     if not query and doctype in standard_queries:
         query = standard_queries[doctype][-1]
 
-    if query:  # Query = custom search query i.e. python function
-        try:
-            is_whitelisted(frappe.get_attr(query))
-            return frappe.call(
-                query,
-                doctype,
-                txt,
-                searchfield,
-                start,
-                page_length,
-                filters,
-                as_dict=as_dict,
-                reference_doctype=reference_doctype,
-            )
-        except (frappe.PermissionError, frappe.AppNotInstalledError, ImportError):
-            if frappe.local.conf.developer_mode:
-                raise
-            else:
-                frappe.respond_as_web_page(
-                    title="Invalid Method",
-                    html="Method not found",
-                    indicator_color="red",
-                    http_status_code=404,
-                )
-                return []
+	if query:  # Query = custom search query i.e. python function
+		try:
+			is_whitelisted(frappe.get_attr(query))
+			return frappe.call(
+				query,
+				doctype,
+				txt,
+				searchfield,
+				start,
+				page_length,
+				filters,
+				as_dict=as_dict,
+				reference_doctype=reference_doctype,
+				ignore_user_permissions=ignore_user_permissions,
+			)
+		except (frappe.PermissionError, frappe.AppNotInstalledError, ImportError):
+			if frappe.local.conf.developer_mode:
+				raise
+			else:
+				frappe.respond_as_web_page(
+					title="Invalid Method",
+					html="Method not found",
+					indicator_color="red",
+					http_status_code=404,
+				)
+				return []
 
     meta = frappe.get_meta(doctype)
 

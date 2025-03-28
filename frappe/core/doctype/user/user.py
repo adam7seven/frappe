@@ -31,7 +31,8 @@ from frappe.utils import (
     now_datetime,
     today,
 )
-from frappe.utils.data import sha256_hash, strip_html
+from frappe.utils.data import sha256_hash
+from frappe.utils.html_utils import sanitize_html
 from frappe.utils.password import check_password, get_password_reset_limit
 from frappe.utils.password import update_password as _update_password
 from frappe.utils.user import get_system_managers
@@ -311,13 +312,10 @@ class User(Document):
         """Return True if current user is the session user."""
         return self.id == frappe.session.user
 
-    def clean_name(self):
-        if self.first_name:
-            self.first_name = strip_html(self.first_name)
-        if self.middle_name:
-            self.middle_name = strip_html(self.middle_name)
-        if self.last_name:
-            self.last_name = strip_html(self.last_name)
+	def clean_name(self):
+		for field in ("first_name", "middle_name", "last_name"):
+			if field_value := self.get(field):
+				self.set(field, sanitize_html(field_value, always_sanitize=True))
 
     def set_full_name(self):
         self.full_name = " ".join(filter(None, [self.first_name, self.last_name]))
@@ -432,9 +430,9 @@ class User(Document):
         if password_expired:
             url = "/update-password?key=" + key + "&password_expired=true"
 
-        link = get_url(url)
-        if send_email:
-            self.password_reset_mail(link)
+		link = get_url(url, allow_header_override=False)
+		if send_email:
+			self.password_reset_mail(link)
 
         return link
 
@@ -877,11 +875,13 @@ def update_password(
 
     user_doc, redirect_url = reset_user_data(user)
 
-    # get redirect url from cache
-    redirect_to = frappe.cache.hget("redirect_after_login", user)
-    if redirect_to:
-        redirect_url = redirect_to
-        frappe.cache.hdel("redirect_after_login", user)
+	user_doc.validate_reset_password()
+
+	# get redirect url from cache
+	redirect_to = frappe.cache.hget("redirect_after_login", user)
+	if redirect_to:
+		redirect_url = redirect_to
+		frappe.cache.hdel("redirect_after_login", user)
 
     frappe.local.login_manager.login_as(user)
 

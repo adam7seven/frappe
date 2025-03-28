@@ -26,13 +26,13 @@ def savedocs(doc, action):
 
     set_local_id(doc)
 
-    # action
-    doc.docstatus = {
-        "Save": DocStatus.draft(),
-        "Submit": DocStatus.submitted(),
-        "Update": DocStatus.submitted(),
-        "Cancel": DocStatus.cancelled(),
-    }[action]
+	# action
+	doc.docstatus = {
+		"Save": DocStatus.DRAFT,
+		"Submit": DocStatus.SUBMITTED,
+		"Update": DocStatus.SUBMITTED,
+		"Cancel": DocStatus.CANCELLED,
+	}[action]
 
     if doc.docstatus.is_submitted():
         if action == "Submit" and doc.meta.queue_in_background and not is_scheduler_inactive():

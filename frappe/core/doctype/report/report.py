@@ -29,25 +29,26 @@ class Report(Document):
         from frappe.core.doctype.report_filter.report_filter import ReportFilter
         from frappe.types import DF
 
-        add_total_row: DF.Check
-        columns: DF.Table[ReportColumn]
-        disabled: DF.Check
-        filters: DF.Table[ReportFilter]
-        is_standard: DF.Literal["No", "Yes"]
-        javascript: DF.Code | None
-        json: DF.Code | None
-        letter_head: DF.Link | None
-        module: DF.Link | None
-        prepared_report: DF.Check
-        query: DF.Code | None
-        ref_doctype: DF.Link
-        reference_report: DF.Data | None
-        report_name: DF.Data
-        report_script: DF.Code | None
-        report_type: DF.Literal["Report Builder", "Query Report", "Script Report", "Custom Report"]
-        roles: DF.Table[HasRole]
-        timeout: DF.Int
-    # end: auto-generated types
+		add_total_row: DF.Check
+		add_translate_data: DF.Check
+		columns: DF.Table[ReportColumn]
+		disabled: DF.Check
+		filters: DF.Table[ReportFilter]
+		is_standard: DF.Literal["No", "Yes"]
+		javascript: DF.Code | None
+		json: DF.Code | None
+		letter_head: DF.Link | None
+		module: DF.Link | None
+		prepared_report: DF.Check
+		query: DF.Code | None
+		ref_doctype: DF.Link
+		reference_report: DF.Data | None
+		report_name: DF.Data
+		report_script: DF.Code | None
+		report_type: DF.Literal["Report Builder", "Query Report", "Script Report", "Custom Report"]
+		roles: DF.Table[HasRole]
+		timeout: DF.Int
+	# end: auto-generated types
 
     def validate(self):
         """only administrator can save standard report"""
@@ -167,14 +168,16 @@ class Report(Document):
             )
             prepared_report_watcher.start()
 
-        # The JOB
-        if self.is_standard == "Yes":
-            res = self.execute_module(filters)
-        else:
-            res = self.execute_script(filters)
+		# The JOB
+		try:
+			if self.is_standard == "Yes":
+				res = self.execute_module(filters)
+			else:
+				res = self.execute_script(filters)
+		finally:
+			prepared_report_watcher and prepared_report_watcher.cancel()
 
-        prepared_report_watcher and prepared_report_watcher.cancel()
-        execution_time = (datetime.datetime.now() - start_time).total_seconds()
+		execution_time = (datetime.datetime.now() - start_time).total_seconds()
 
         frappe.cache.hset("report_execution_time", self.id, execution_time)
 

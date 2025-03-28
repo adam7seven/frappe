@@ -491,10 +491,10 @@ def delete_doc(doctype, id):
         if not parent.has_permission("write"):
             raise frappe.DoesNotExistError(doctype=doctype)
 
-        for row in parent.get(parentfield):
-            if row.id == id:
-                parent.remove(row)
-                parent.save(ignore_permissions=True)
-                break
-    else:
-        frappe.delete_doc(doctype, id, ignore_missing=False)
+		for row in parent.get(parentfield):
+			if row.id == id:
+				parent.remove(row)
+				parent.save()
+				break
+	else:
+		frappe.delete_doc(doctype, id, ignore_missing=False)

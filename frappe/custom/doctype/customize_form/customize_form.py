@@ -39,53 +39,54 @@ class CustomizeForm(Document):
         from frappe.custom.doctype.customize_form_field.customize_form_field import CustomizeFormField
         from frappe.types import DF
 
-        actions: DF.Table[DocTypeAction]
-        allow_auto_repeat: DF.Check
-        allow_copy: DF.Check
-        allow_import: DF.Check
-        autoname: DF.Data | None
-        default_email_template: DF.Link | None
-        default_print_format: DF.Link | None
-        default_view: DF.Literal[None]
-        doc_type: DF.Link | None
-        editable_grid: DF.Check
-        email_append_to: DF.Check
-        fields: DF.Table[CustomizeFormField]
-        force_re_route_to_default_view: DF.Check
-        image_field: DF.Data | None
-        is_calendar_and_gantt: DF.Check
-        istable: DF.Check
-        label: DF.Data | None
-        link_filters: DF.LongText | None
-        links: DF.Table[DocTypeLink]
-        make_attachments_public: DF.Check
-        max_attachments: DF.Int
-        naming_rule: DF.Literal[
-            "",
-            "Set by user",
-            "By fieldname",
-            'By "Naming Series" field',
-            "Expression",
-            "Expression (old style)",
-            "Random",
-            "By script",
-        ]
-        queue_in_background: DF.Check
-        quick_entry: DF.Check
-        search_fields: DF.Data | None
-        sender_field: DF.Data | None
-        sender_name_field: DF.Data | None
-        show_preview_popup: DF.Check
-        show_title_field_in_link: DF.Check
-        sort_field: DF.Literal[None]
-        sort_order: DF.Literal["ASC", "DESC"]
-        states: DF.Table[DocTypeState]
-        subject_field: DF.Data | None
-        title_field: DF.Data | None
-        track_changes: DF.Check
-        track_views: DF.Check
-        translated_doctype: DF.Check
-    # end: auto-generated types
+		actions: DF.Table[DocTypeAction]
+		allow_auto_repeat: DF.Check
+		allow_copy: DF.Check
+		allow_import: DF.Check
+		autoname: DF.Data | None
+		default_email_template: DF.Link | None
+		default_print_format: DF.Link | None
+		default_view: DF.Literal[None]
+		doc_type: DF.Link | None
+		editable_grid: DF.Check
+		email_append_to: DF.Check
+		fields: DF.Table[CustomizeFormField]
+		force_re_route_to_default_view: DF.Check
+		grid_page_length: DF.Int
+		image_field: DF.Data | None
+		is_calendar_and_gantt: DF.Check
+		istable: DF.Check
+		label: DF.Data | None
+		link_filters: DF.LongText | None
+		links: DF.Table[DocTypeLink]
+		make_attachments_public: DF.Check
+		max_attachments: DF.Int
+		naming_rule: DF.Literal[
+			"",
+			"Set by user",
+			"By fieldname",
+			'By "Naming Series" field',
+			"Expression",
+			"Expression (old style)",
+			"Random",
+			"By script",
+		]
+		queue_in_background: DF.Check
+		quick_entry: DF.Check
+		search_fields: DF.Data | None
+		sender_field: DF.Data | None
+		sender_name_field: DF.Data | None
+		show_preview_popup: DF.Check
+		show_title_field_in_link: DF.Check
+		sort_field: DF.Literal[None]
+		sort_order: DF.Literal["ASC", "DESC"]
+		states: DF.Table[DocTypeState]
+		subject_field: DF.Data | None
+		title_field: DF.Data | None
+		track_changes: DF.Check
+		track_views: DF.Check
+		translated_doctype: DF.Check
+	# end: auto-generated types
 
     def on_update(self):
         frappe.db.delete("Singles", {"doctype": "Customize Form"})
@@ -694,35 +695,36 @@ def get_link_filters_from_doc_without_customisations(doctype, fieldname):
 
 
 doctype_properties = {
-    "search_fields": "Data",
-    "title_field": "Data",
-    "image_field": "Data",
-    "sort_field": "Data",
-    "sort_order": "Data",
-    "default_print_format": "Data",
-    "allow_copy": "Check",
-    "istable": "Check",
-    "quick_entry": "Check",
-    "queue_in_background": "Check",
-    "editable_grid": "Check",
-    "max_attachments": "Int",
-    "make_attachments_public": "Check",
-    "track_changes": "Check",
-    "track_views": "Check",
-    "allow_auto_repeat": "Check",
-    "allow_import": "Check",
-    "show_preview_popup": "Check",
-    "default_email_template": "Data",
-    "email_append_to": "Check",
-    "subject_field": "Data",
-    "sender_field": "Data",
-    "naming_rule": "Data",
-    "autoname": "Data",
-    "show_title_field_in_link": "Check",
-    "is_calendar_and_gantt": "Check",
-    "default_view": "Select",
-    "force_re_route_to_default_view": "Check",
-    "translated_doctype": "Check",
+	"search_fields": "Data",
+	"title_field": "Data",
+	"image_field": "Data",
+	"sort_field": "Data",
+	"sort_order": "Data",
+	"default_print_format": "Data",
+	"allow_copy": "Check",
+	"istable": "Check",
+	"quick_entry": "Check",
+	"queue_in_background": "Check",
+	"editable_grid": "Check",
+	"max_attachments": "Int",
+	"make_attachments_public": "Check",
+	"track_changes": "Check",
+	"track_views": "Check",
+	"allow_auto_repeat": "Check",
+	"allow_import": "Check",
+	"show_preview_popup": "Check",
+	"default_email_template": "Data",
+	"email_append_to": "Check",
+	"subject_field": "Data",
+	"sender_field": "Data",
+	"naming_rule": "Data",
+	"autoname": "Data",
+	"show_title_field_in_link": "Check",
+	"is_calendar_and_gantt": "Check",
+	"default_view": "Select",
+	"force_re_route_to_default_view": "Check",
+	"translated_doctype": "Check",
+	"grid_page_length": "Int",
 }
 
 docfield_properties = {

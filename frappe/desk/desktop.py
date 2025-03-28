@@ -79,10 +79,10 @@ class Workspace:
         if has_common(roles, allowed):
             return True
 
-    def get_cached(self, cache_key, fallback_fn):
-        value = frappe.cache.get_value(cache_key, user=frappe.session.user)
-        if value:
-            return value
+	def get_cached(self, cache_key, fallback_fn):
+		value = frappe.cache.get_value(cache_key, user=frappe.session.user)
+		if value is not None:
+			return value
 
         value = fallback_fn()
 

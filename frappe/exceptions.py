@@ -275,6 +275,10 @@ class SessionBootFailed(ValidationError):
     http_status_code = 500
 
 
+class QueueOverloaded(ValidationError):
+	http_status_code = 503
+
+
 class PrintFormatError(ValidationError):
     pass
 

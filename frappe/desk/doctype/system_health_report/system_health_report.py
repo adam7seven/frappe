@@ -27,7 +27,12 @@ from frappe.model.document import Document
 from frappe.utils.background_jobs import get_queue, get_queue_list, get_redis_conn
 from frappe.utils.caching import redis_cache
 from frappe.utils.data import add_to_date
-from frappe.utils.scheduler import get_scheduler_status, get_scheduler_tick, is_schduler_process_running
+from frappe.utils.scheduler import (
+	get_scheduler_status,
+	get_scheduler_tick,
+	is_dormant,
+	is_schduler_process_running,
+)
 
 
 @contextmanager
@@ -46,17 +51,19 @@ def no_wait(func):
 def health_check(step: str):
     assert isinstance(step, str), "Invalid usage of decorator, Usage: @health_check('step name')"
 
-    def suppress_exception(func: Callable):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            except Exception as e:
-                frappe.log(frappe.get_traceback())
-                # nosemgrep
-                frappe.msgprint(
-                    f"System Health check step {frappe.bold(step)} failed: {e}", alert=True, indicator="red"
-                )
+	def suppress_exception(func: Callable):
+		@functools.wraps(func)
+		def wrapper(*args, **kwargs):
+			try:
+				return func(*args, **kwargs)
+			except Exception as e:
+				if frappe.flags.in_test:
+					raise
+				frappe.log(frappe.get_traceback())
+				# nosemgrep
+				frappe.msgprint(
+					f"System Health check step {frappe.bold(step)} failed: {e}", alert=True, indicator="red"
+				)
 
         return wrapper
 
@@ -144,17 +151,16 @@ class SystemHealthReport(Document):
         self.fetch_storage_details()
         self.fetch_user_stats()
 
-    @health_check("Background Jobs")
-    @no_wait(get_redis_conn)
-    def fetch_background_jobs(self):
-        self.background_jobs_check = "failed"
-        # This just checks connection life
-        self.test_job_id = frappe.enqueue("frappe.ping", at_front=True).id
-        self.background_jobs_check = "queued"
-        self.scheduler_status = get_scheduler_status().get("status")
-        workers = frappe.get_all("RQ Worker")
-        self.total_background_workers = len(workers)
-        queue_summary = defaultdict(list)
+	@health_check("Background Jobs")
+	@no_wait(get_redis_conn)
+	def fetch_background_jobs(self):
+		self.background_jobs_check = "failed"
+		# This just checks connection life
+		self.test_job_id = frappe.enqueue("frappe.ping", at_front=True).id
+		self.background_jobs_check = "queued"
+		workers = frappe.get_all("RQ Worker")
+		self.total_background_workers = len(workers)
+		queue_summary = defaultdict(list)
 
         for worker in workers:
             queue_summary[worker.queue_type].append(worker)
@@ -180,13 +186,22 @@ class SystemHealthReport(Document):
                 },
             )
 
-    @health_check("Scheduler")
-    def fetch_scheduler(self):
-        lower_threshold = add_to_date(None, days=-7, as_datetime=True)
-        # Exclude "maybe" curently executing job
-        upper_threshold = add_to_date(None, minutes=-30, as_datetime=True)
-        scheduler_running = get_scheduler_status().get("status") == "active" and is_schduler_process_running()
-        self.scheduler_status = "Active" if scheduler_running else "Inactive"
+	@health_check("Scheduler")
+	def fetch_scheduler(self):
+		scheduler_enabled = get_scheduler_status().get("status") == "active"
+
+		if not is_schduler_process_running():
+			self.scheduler_status = "Process Not Found"
+		elif is_dormant():
+			self.scheduler_status = "Dormant"
+		elif scheduler_enabled:
+			self.scheduler_status = "Active"
+		else:
+			self.scheduler_status = "Inactive"
+
+		lower_threshold = add_to_date(None, days=-7, as_datetime=True)
+		# Exclude "maybe" curently executing job
+		upper_threshold = add_to_date(None, minutes=-30, as_datetime=True)
 
         mariadb_query = """
   				SELECT scheduled_job_type,

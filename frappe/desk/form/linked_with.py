@@ -481,16 +481,23 @@ def get_linked_docs(doctype: str, id: str, linkinfo: dict | None = None) -> dict
                 order_by=None,
             )
 
-        elif link_fieldnames := link_context.get("fieldname"):
-            if isinstance(link_fieldnames, str):
-                link_fieldnames = [link_fieldnames]
-            or_filters = [[linked_doctype, fieldname, "=", id] for fieldname in link_fieldnames]
-            # dynamic link_context
-            if doctype_fieldname := link_context.get("doctype_fieldname"):
-                filters.append([linked_doctype, doctype_fieldname, "=", doctype])
-            ret = frappe.get_list(
-                doctype=linked_doctype, fields=fields, filters=filters, or_filters=or_filters, order_by=None
-            )
+		elif link_fieldnames := link_context.get("fieldname"):
+			if isinstance(link_fieldnames, str):
+				link_fieldnames = [link_fieldnames]
+			or_filters = [[linked_doctype, fieldname, "=", id] for fieldname in link_fieldnames]
+			# dynamic link_context
+			if doctype_fieldname := link_context.get("doctype_fieldname"):
+				filters.append([linked_doctype, doctype_fieldname, "=", doctype])
+			# check for child table that no one links to
+			if linked_doctype_meta.istable:
+				if not (
+					frappe.db.exists("DocField", {"options": linked_doctype})
+					or frappe.db.exists(linked_doctype, {"parenttype": doctype, "parent": id})
+				):
+					continue
+			ret = frappe.get_list(
+				doctype=linked_doctype, fields=fields, filters=filters, or_filters=or_filters, order_by=None
+			)
 
         if ret:
             results[linked_doctype] = ret

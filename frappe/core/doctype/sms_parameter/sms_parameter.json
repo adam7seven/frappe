@@ -15,15 +15,16 @@
       "reqd": 1,
       "width": "150px"
     },
-    {
-      "fieldname": "value",
-      "fieldtype": "Data",
-      "in_list_view": 1,
-      "label": "Value",
-      "print_width": "150px",
-      "reqd": 1,
-      "width": "150px"
-    },
+   {
+    "fieldname": "value",
+    "fieldtype": "Data",
+    "in_list_view": 1,
+    "label": "Value",
+    "print_width": "150px",
+    "length": 255,
+    "reqd": 1,
+    "width": "150px"
+   },
     {
       "default": "0",
       "fieldname": "header",

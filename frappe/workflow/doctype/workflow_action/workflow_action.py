@@ -294,20 +294,21 @@ def get_users_next_action_data(transitions, doc):
 
         return has_permission(doctype=doc, user=user)
 
-    for transition in transitions:
-        users = get_users_with_role(transition.allowed)
-        filtered_users = [
-            user for user in users if has_approval_access(user, doc, transition) and user_has_permission(user)
-        ]
-
-        for user in filtered_users:
-            if not user_data_map.get(user):
-                user_data_map[user] = frappe._dict(
-                    {
-                        "possible_actions": [],
-                        "email": frappe.db.get_value("User", user, "email"),
-                    }
-                )
+	for transition in transitions:
+		users = get_users_with_role(transition.allowed)
+		filtered_users = [
+			user for user in users if has_approval_access(user, doc, transition) and user_has_permission(user)
+		]
+		if doc.get("owner") in filtered_users and not transition.get("send_email_to_creator"):
+			filtered_users.remove(doc.get("owner"))
+		for user in filtered_users:
+			if not user_data_map.get(user):
+				user_data_map[user] = frappe._dict(
+					{
+						"possible_actions": [],
+						"email": frappe.db.get_value("User", user, "email"),
+					}
+				)
 
             user_data_map[user].get("possible_actions").append(
                 frappe._dict(

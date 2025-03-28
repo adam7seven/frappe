@@ -88,9 +88,9 @@ def generate_report_result(report, filters=None, user=None, custom_columns=None,
 
     result = normalize_result(result, columns)
 
-    if report.custom_columns:
-        # saved columns (with custom columns / with different column order)
-        columns = report.custom_columns
+	if report.get("custom_columns"):
+		# saved columns (with custom columns / with different column order)
+		columns = report.custom_columns
 
     # unsaved custom_columns
     if custom_columns:
@@ -109,16 +109,20 @@ def generate_report_result(report, filters=None, user=None, custom_columns=None,
     if cint(report.add_total_row) and result and not skip_total_row:
         result = add_total_row(result, columns, is_tree=is_tree, parent_field=parent_field)
 
-    return {
-        "result": result,
-        "columns": columns,
-        "message": message,
-        "chart": chart,
-        "report_summary": report_summary,
-        "skip_total_row": skip_total_row or 0,
-        "status": None,
-        "execution_time": frappe.cache.hget("report_execution_time", report.id) or 0,
-    }
+	if isinstance(filters, dict) and filters.get("translate_data"):
+		total_row = cint(report.add_total_row) and result and not skip_total_row
+		result = translate_report_data(result, total_row)
+
+	return {
+		"result": result,
+		"columns": columns,
+		"message": message,
+		"chart": chart,
+		"report_summary": report_summary,
+		"skip_total_row": skip_total_row or 0,
+		"status": None,
+		"execution_time": frappe.cache.hget("report_execution_time", report.id) or 0,
+	}
 
 
 def normalize_result(result, columns):
@@ -205,8 +209,8 @@ def run(
 
     result = None
 
-    if sbool(are_default_filters) and report.custom_filters:
-        filters = report.custom_filters
+	if sbool(are_default_filters) and report.get("custom_filters"):
+		filters = report.custom_filters
 
     try:
         if report.prepared_report and not sbool(ignore_prepared_report) and not custom_columns:
@@ -227,8 +231,8 @@ def run(
 
     result["add_total_row"] = report.add_total_row and not result.get("skip_total_row", False)
 
-    if sbool(are_default_filters) and report.custom_filters:
-        result["custom_filters"] = report.custom_filters
+	if sbool(are_default_filters) and report.get("custom_filters"):
+		result["custom_filters"] = report.custom_filters
 
     return result
 
@@ -337,8 +341,10 @@ def export_query():
         )
         return
 
-    format_duration_fields(data)
-    xlsx_data, column_widths = build_xlsx_data(data, visible_idx, include_indentation, include_filters=include_filters)
+	format_fields(data)
+	xlsx_data, column_widths = build_xlsx_data(
+		data, visible_idx, include_indentation, include_filters=include_filters
+	)
 
     if file_format_type == "CSV":
         content = get_csv_bytes(xlsx_data, csv_params)
@@ -349,18 +355,30 @@ def export_query():
         file_extension = "xlsx"
         content = make_xlsx(xlsx_data, "Query Report", column_widths=column_widths).getvalue()
 
-    provide_binary_file(report_name, file_extension, content)
+	for value in (data.filters or {}).values():
+		if len(report_name) > 200:
+			break
+
+		if isinstance(value, list) and value:
+			report_name += "_" + ",".join(value)
+		elif isinstance(value, str) and value not in {"Yes", "No"}:
+			report_name += f"_{value}"
+
+	provide_binary_file(report_name, file_extension, content)
 
 
-def format_duration_fields(data: frappe._dict) -> None:
-    for i, col in enumerate(data.columns):
-        if col.get("fieldtype") != "Duration":
-            continue
-
-        for row in data.result:
-            index = col.get("fieldname") if isinstance(row, dict) else i
-            if row[index]:
-                row[index] = format_duration(row[index])
+def format_fields(data: frappe._dict) -> None:
+	for i, col in enumerate(data.columns):
+		if col.get("fieldtype") == "Duration":
+			for row in data.result:
+				index = col.get("fieldname") if isinstance(row, dict) else i
+				if row[index]:
+					row[index] = format_duration(row[index])
+		elif col.get("fieldtype") == "Currency" and col.get("precision"):
+			for row in data.result:
+				index = col.get("fieldname") if isinstance(row, dict) else i
+				if row[index]:
+					row[index] = round(row[index], col.get("precision"))
 
 
 def build_xlsx_data(data, visible_idx, include_indentation, include_filters=False, ignore_visible_idx=False):
@@ -783,13 +801,25 @@ def validate_filters_permissions(report_name, filters=None, user=None):
     if isinstance(filters, str):
         filters = json.loads(filters)
 
-    report = frappe.get_doc("Report", report_name)
-    for field in report.filters:
-        if field.fieldname in filters and field.fieldtype == "Link":
-            linked_doctype = field.options
-            if not has_permission(
-                doctype=linked_doctype, ptype="read", doc=filters[field.fieldname], user=user
-            ) and not has_permission(doctype=linked_doctype, ptype="select", doc=filters[field.fieldname], user=user):
-                frappe.throw(
-                    _("You do not have permission to access {0}: {1}.").format(linked_doctype, filters[field.fieldname])
-                )
+	report = frappe.get_doc("Report", report_name)
+	for field in report.filters:
+		if field.fieldname in filters and field.fieldtype == "Link":
+			linked_doctype = field.options
+			if not has_permission(
+				doctype=linked_doctype, ptype="read", doc=filters[field.fieldname], user=user
+			) and not has_permission(
+				doctype=linked_doctype, ptype="select", doc=filters[field.fieldname], user=user
+			):
+				frappe.throw(
+					_("You do not have permission to access {0}: {1}.").format(
+						linked_doctype, filters[field.fieldname]
+					)
+				)
+
+
+def translate_report_data(data, total_row):
+	for d in data[:-1] if total_row else data:
+		for field, value in d.items():
+			if isinstance(value, str):
+				d[field] = _(value)
+	return data

@@ -33,19 +33,21 @@ PDF_CONTENT_ERRORS = [
 ]
 
 
-def pdf_header_html(soup, head, content, styles, html_id, css):
-    return frappe.render_template(
-        "templates/print_formats/pdf_header_footer.html",
-        {
-            "head": head,
-            "content": content,
-            "styles": styles,
-            "html_id": html_id,
-            "css": css,
-            "lang": frappe.local.lang,
-            "layout_direction": "rtl" if is_rtl() else "ltr",
-        },
-    )
+def pdf_header_html(soup, head, content, styles, html_id, css, path=None):
+	if not path:
+		path = "templates/print_formats/pdf_header_footer.html"
+	return frappe.render_template(
+		path,
+		{
+			"head": head,
+			"content": content,
+			"styles": styles,
+			"html_id": html_id,
+			"css": css,
+			"lang": frappe.local.lang,
+			"layout_direction": "rtl" if is_rtl() else "ltr",
+		},
+	)
 
 
 def pdf_body_html(template, args, **kwargs):
@@ -73,8 +75,10 @@ def _guess_template_error_line_number(template) -> int | None:
                 return frame.lineno
 
 
-def pdf_footer_html(soup, head, content, styles, html_id, css):
-    return pdf_header_html(soup=soup, head=head, content=content, styles=styles, html_id=html_id, css=css)
+def pdf_footer_html(soup, head, content, styles, html_id, css, path=None):
+	return pdf_header_html(
+		soup=soup, head=head, content=content, styles=styles, html_id=html_id, css=css, path=path
+	)
 
 
 def get_pdf(html, options=None, output: PdfWriter | None = None):
@@ -309,17 +313,18 @@ def prepare_header_footer(soup: BeautifulSoup):
             for tag in soup.find_all(id=html_id):
                 tag.extract()
 
-            toggle_visible_pdf(content)
-            id_map = {"header-html": "pdf_header_html", "footer-html": "pdf_footer_html"}
-            hook_func = frappe.get_hooks(id_map.get(html_id))
-            html = frappe.get_attr(hook_func[-1])(
-                soup=soup,
-                head=head,
-                content=content,
-                styles=styles,
-                html_id=html_id,
-                css=css,
-            )
+			toggle_visible_pdf(content)
+			id_map = {"header-html": "pdf_header_html", "footer-html": "pdf_footer_html"}
+			hook_func = frappe.get_hooks(id_map.get(html_id))
+			html = frappe.call(
+				hook_func[-1],
+				soup=soup,
+				head=head,
+				content=content,
+				styles=styles,
+				html_id=html_id,
+				css=css,
+			)
 
             # create temp file
             fname = os.path.join("/tmp", f"frappe-pdf-{frappe.generate_hash()}.html")

@@ -17,14 +17,14 @@ class Note(Document):
         from frappe.desk.doctype.note_seen_by.note_seen_by import NoteSeenBy
         from frappe.types import DF
 
-        content: DF.TextEditor | None
-        expire_notification_on: DF.Date | None
-        notify_on_every_login: DF.Check
-        notify_on_login: DF.Check
-        public: DF.Check
-        seen_by: DF.Table[NoteSeenBy]
-        title: DF.Data
-    # end: auto-generated types
+		content: DF.TextEditor | None
+		expire_notification_on: DF.Datetime | None
+		notify_on_every_login: DF.Check
+		notify_on_login: DF.Check
+		public: DF.Check
+		seen_by: DF.Table[NoteSeenBy]
+		title: DF.Data
+	# end: auto-generated types
 
     def validate(self):
         if self.notify_on_login and not self.expire_notification_on:

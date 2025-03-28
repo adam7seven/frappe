@@ -91,12 +91,14 @@ class TypeExporter:
         if self._validate_code(code):
             self.controller_path.write_text(code)
 
-    def _generate_code(self):
-        for field in self.doc.fields:
-            if iskeyword(field.fieldname):
-                continue
-            if python_type := self._map_fieldtype(field):
-                self.field_types[field.fieldname] = python_type
+	def _generate_code(self):
+		for field in self.doc.fields:
+			if iskeyword(field.fieldname):
+				continue
+			if field.is_virtual and not field.options:
+				continue
+			if python_type := self._map_fieldtype(field):
+				self.field_types[field.fieldname] = python_type
 
         if self.doc.istable:
             for parent_field in ("parent", "parentfield", "parenttype"):

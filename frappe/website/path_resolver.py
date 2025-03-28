@@ -126,8 +126,11 @@ def resolve_redirect(path, query_string=None):
     if redirect_to is False:
         return
 
-    redirects = frappe.get_hooks("website_redirects")
-    redirects += frappe.get_all("Website Route Redirect", ["source", "target", "redirect_http_status"], order_by=None)
+	redirects = frappe.get_hooks("website_redirects")
+	redirects += [
+		{"source": r.source, "target": r.target, "redirect_http_status": r.redirect_http_status}
+		for r in (frappe.get_website_settings("route_redirects") or [])
+	]
 
     if not redirects:
         return

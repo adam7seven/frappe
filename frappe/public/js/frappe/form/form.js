@@ -415,12 +415,11 @@ frappe.ui.form.Form = class FrappeForm {
                 table.grid.refresh();
             });
 
-            // read only (workflow)
+			// read only (workflow)
             this.read_only = frappe.workflow.is_read_only(this.doctype, this.docid);
-            if (this.read_only) {
-                this.set_read_only();
-                frappe.show_alert(__("This form is not editable due to a Workflow."));
-            }
+			if (this.read_only) {
+				this.set_read_only();
+			}
 
             // check if doctype is already open
             if (!this.opendocs[this.docid]) {
@@ -439,17 +438,12 @@ frappe.ui.form.Form = class FrappeForm {
             // load the record for the first time, if not loaded (call 'onload')
             this.trigger_onload(switched);
 
-            // if print format is shown, refresh the format
-            // if(this.print_preview.wrapper.is(":visible")) {
-            // 	this.print_preview.preview();
-            // }
-
-            if (switched) {
-                if (this.show_print_first && this.doc.docstatus === 1) {
-                    // show print view
-                    this.print_doc();
-                }
-            }
+			if (switched) {
+				if (this.show_print_first && this.doc.docstatus === 1) {
+					// show print view
+					this.print_doc();
+				}
+			}
 
             // set status classes
             this.$wrapper
@@ -730,10 +724,11 @@ frappe.ui.form.Form = class FrappeForm {
         this.dashboard.refresh();
         frappe.breadcrumbs.update();
 
-        this.show_submit_message();
-        this.clear_custom_buttons();
-        this.show_web_link();
-    }
+		this.show_submit_message();
+		this.clear_custom_buttons();
+		this.show_web_link();
+		this.show_workflow_read_only_banner();
+	}
 
     // SAVE
 
@@ -1235,14 +1230,10 @@ frappe.ui.form.Form = class FrappeForm {
         } else if (this.doctype == "DocType") {
             if (frappe.views.formview[docid] || frappe.pages["List/" + docid]) {
                 window.location.reload();
-                //	frappe.msgprint(__("Cannot open {0} when its instance is open", ['DocType']))
-                // throw 'doctype open conflict'
             }
         } else {
             if (frappe.views.formview.DocType && frappe.views.formview.DocType.frm.opendocs[this.doctype]) {
                 window.location.reload();
-                //	frappe.msgprint(__("Cannot open instance when its {0} is open", ['DocType']))
-                // throw 'doctype open conflict'
             }
         }
     }
@@ -1613,7 +1604,7 @@ frappe.ui.form.Form = class FrappeForm {
         }
     }
 
-    //由于set_df_property方法中的fieldname参数在设置子表是用作子表在附表中的字段名，容易错误，所以这个方法将它反过来
+    //����set_df_property�����е�fieldname�����������ӱ��������ӱ��ڸ����е��ֶ��������״������������������������
     set_child_df_property(fieldname, property, value, field_of_table, table_row_id = null) {
         this.set_df_property(field_of_table, property, value, "-", fieldname, table_row_id);
     }
@@ -2182,14 +2173,34 @@ frappe.ui.form.Form = class FrappeForm {
 					</div>
 					`;
 
-                    wrapper.removeClass("red").removeClass("yellow");
-                    wrapper.addClass(r.message.status == "Failed" ? "red" : "yellow");
-                    wrapper.html(html);
-                } else {
-                    wrapper.remove();
-                }
-            });
-    }
+					wrapper.removeClass("red").removeClass("yellow");
+					wrapper.addClass(r.message.status == "Failed" ? "red" : "yellow");
+					wrapper.html(html);
+				} else {
+					wrapper.remove();
+				}
+			});
+	}
+
+	show_workflow_read_only_banner() {
+		if (!this.read_only) {
+			return;
+		}
+
+		const _show_read_only_banner = () => {
+			this.dashboard.set_headline(
+				__("This form is not editable due to a Workflow."),
+				"blue",
+				true
+			);
+		};
+
+		if (this.dashboard) {
+			_show_read_only_banner();
+		} else {
+			frappe.after_ajax(_show_read_only_banner);
+		}
+	}
 };
 
 frappe.validated = 0;

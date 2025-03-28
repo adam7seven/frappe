@@ -200,78 +200,80 @@ doc_events = {
 }
 
 scheduler_events = {
-    "cron": {
-        # 5 minutes
-        "0/5 * * * *": [
-            "frappe.email.doctype.notification.notification.trigger_offset_alerts",
-        ],
-        # 15 minutes
-        "0/15 * * * *": [
-            "frappe.oauth.delete_oauth2_data",
-            "frappe.website.doctype.web_page.web_page.check_publish_status",
-            "frappe.twofactor.delete_all_barcodes_for_users",
-            "frappe.email.doctype.email_account.email_account.notify_unreplied",
-            "frappe.utils.global_search.sync_global_search",
-            "frappe.deferred_insert.save_to_db",
-            "frappe.automation.doctype.reminder.reminder.send_reminders",
-        ],
-        # 10 minutes
-        "0/10 * * * *": [
-            "frappe.email.doctype.email_account.email_account.pull",
-        ],
-        # Hourly but offset by 30 minutes
-        "30 * * * *": [
-            "frappe.core.doctype.prepared_report.prepared_report.expire_stalled_report",
-        ],
-        # Daily but offset by 45 minutes
-        "45 0 * * *": [
-            "frappe.core.doctype.log_settings.log_settings.run_log_clean_up",
-        ],
-    },
-    "all": [
-        "frappe.email.queue.flush",
-        "frappe.monitor.flush",
-    ],
-    "hourly": [
-        "frappe.model.utils.link_count.update_link_count",
-        "frappe.model.utils.user_settings.sync_user_settings",
-        "frappe.desk.page.backups.backups.delete_downloadable_backups",
-        "frappe.desk.form.document_follow.send_hourly_updates",
-        "frappe.integrations.doctype.google_calendar.google_calendar.sync",
-        "frappe.email.doctype.newsletter.newsletter.send_scheduled_email",
-        "frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.process_data_deletion_request",
-    ],
-    "daily": [
-        "frappe.desk.notifications.clear_notifications",
-        "frappe.desk.doctype.event.event.send_event_digest",
-        "frappe.sessions.clear_expired_sessions",
-        "frappe.email.doctype.notification.notification.trigger_daily_alerts",
-        "frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.remove_unverified_record",
-        "frappe.desk.form.document_follow.send_daily_updates",
-        "frappe.social.doctype.energy_point_settings.energy_point_settings.allocate_review_points",
-        "frappe.integrations.doctype.google_contacts.google_contacts.sync",
-        "frappe.automation.doctype.auto_repeat.auto_repeat.make_auto_repeat_entry",
-    ],
-    "daily_long": [
-        "frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backups_daily",
-        "frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_daily",
-        "frappe.email.doctype.auto_email_report.auto_email_report.send_daily",
-        "frappe.integrations.doctype.google_drive.google_drive.daily_backup",
-    ],
-    "weekly_long": [
-        "frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backups_weekly",
-        "frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_weekly",
-        "frappe.desk.form.document_follow.send_weekly_updates",
-        "frappe.utils.change_log.check_for_update",
-        "frappe.social.doctype.energy_point_log.energy_point_log.send_weekly_summary",
-        "frappe.integrations.doctype.google_drive.google_drive.weekly_backup",
-        "frappe.desk.doctype.changelog_feed.changelog_feed.fetch_changelog_feed",
-    ],
-    "monthly": [
-        "frappe.email.doctype.auto_email_report.auto_email_report.send_monthly",
-        "frappe.social.doctype.energy_point_log.energy_point_log.send_monthly_summary",
-    ],
-    "monthly_long": ["frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_monthly"],
+	"cron": {
+		# 5 minutes
+		"0/5 * * * *": [
+			"frappe.email.doctype.notification.notification.trigger_offset_alerts",
+		],
+		# 15 minutes
+		"0/15 * * * *": [
+			"frappe.oauth.delete_oauth2_data",
+			"frappe.website.doctype.web_page.web_page.check_publish_status",
+			"frappe.twofactor.delete_all_barcodes_for_users",
+			"frappe.email.doctype.email_account.email_account.notify_unreplied",
+			"frappe.utils.global_search.sync_global_search",
+			"frappe.deferred_insert.save_to_db",
+			"frappe.automation.doctype.reminder.reminder.send_reminders",
+		],
+		# 10 minutes
+		"0/10 * * * *": [
+			"frappe.email.doctype.email_account.email_account.pull",
+		],
+		# Hourly but offset by 30 minutes
+		"30 * * * *": [
+			"frappe.core.doctype.prepared_report.prepared_report.expire_stalled_report",
+		],
+		# Daily but offset by 45 minutes
+		"45 0 * * *": [
+			"frappe.core.doctype.log_settings.log_settings.run_log_clean_up",
+		],
+	},
+	"all": [
+		"frappe.email.queue.flush",
+		"frappe.monitor.flush",
+		"frappe.integrations.doctype.google_calendar.google_calendar.sync",
+	],
+	"hourly": [
+		"frappe.model.utils.link_count.update_link_count",
+		"frappe.model.utils.user_settings.sync_user_settings",
+		"frappe.desk.page.backups.backups.delete_downloadable_backups",
+		"frappe.desk.form.document_follow.send_hourly_updates",
+		"frappe.email.doctype.newsletter.newsletter.send_scheduled_email",
+		"frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.process_data_deletion_request",
+	],
+	"daily": [
+		"frappe.desk.notifications.clear_notifications",
+		"frappe.desk.doctype.event.event.send_event_digest",
+		"frappe.sessions.clear_expired_sessions",
+		"frappe.email.doctype.notification.notification.trigger_daily_alerts",
+		"frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.remove_unverified_record",
+		"frappe.desk.form.document_follow.send_daily_updates",
+		"frappe.social.doctype.energy_point_settings.energy_point_settings.allocate_review_points",
+		"frappe.integrations.doctype.google_contacts.google_contacts.sync",
+		"frappe.automation.doctype.auto_repeat.auto_repeat.make_auto_repeat_entry",
+	],
+	"daily_long": [
+		"frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backups_daily",
+		"frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_daily",
+		"frappe.email.doctype.auto_email_report.auto_email_report.send_daily",
+		"frappe.integrations.doctype.google_drive.google_drive.daily_backup",
+	],
+	"weekly_long": [
+		"frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backups_weekly",
+		"frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_weekly",
+		"frappe.desk.form.document_follow.send_weekly_updates",
+		"frappe.utils.change_log.check_for_update",
+		"frappe.social.doctype.energy_point_log.energy_point_log.send_weekly_summary",
+		"frappe.integrations.doctype.google_drive.google_drive.weekly_backup",
+		"frappe.desk.doctype.changelog_feed.changelog_feed.fetch_changelog_feed",
+	],
+	"monthly": [
+		"frappe.email.doctype.auto_email_report.auto_email_report.send_monthly",
+		"frappe.social.doctype.energy_point_log.energy_point_log.send_monthly_summary",
+	],
+	"monthly_long": [
+		"frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_monthly"
+	],
 }
 
 sounds = [
@@ -451,10 +453,9 @@ if os.getenv("FRAPPE_SENTRY_DSN") and (
     before_job.append("frappe.utils.sentry.set_sentry_context")
 
 after_job = [
-    "frappe.recorder.dump",
-    "frappe.monitor.stop",
-    "frappe.utils.file_lock.release_document_locks",
-    "frappe.utils.background_jobs.flush_telemetry",
+	"frappe.recorder.dump",
+	"frappe.monitor.stop",
+	"frappe.utils.file_lock.release_document_locks",
 ]
 
 extend_bootinfo = [

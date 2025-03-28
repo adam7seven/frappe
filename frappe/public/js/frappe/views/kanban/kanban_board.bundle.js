@@ -590,6 +590,7 @@ frappe.provide("frappe.views");
 				animation: 150,
 				dataIdAttr: "data-id",
 				forceFallback: true,
+				fallbackTolerance: 20,
 				onStart: function () {
 					wrapper.find(".kanban-card.add-card").fadeOut(200, function () {
 						wrapper.find(".kanban-cards").height("100vh");
