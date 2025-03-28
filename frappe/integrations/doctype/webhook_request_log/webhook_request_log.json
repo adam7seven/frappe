@@ -92,7 +92,7 @@
  "modified": "2025-02-25 15:16:24.028963",
  "modified_by": "Administrator",
  "module": "Integrations",
- "name": "Webhook Request Log",
+ "id": "Webhook Request Log",
  "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [

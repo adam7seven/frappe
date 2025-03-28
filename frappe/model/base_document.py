@@ -298,7 +298,7 @@ class BaseDocument:
 		if (table := self.__dict__.get(key)) is None:
 			self.__dict__[key] = table = []
 
-		d = self._init_child(value, key, set_defaults)
+		d = self._init_child(value, key)
 
 		if position == -1:
 			table.append(d)
@@ -370,7 +370,7 @@ class BaseDocument:
 			child.__init__(value)
 
 		__dict = child.__dict__
-		__dict["parent"] = self.name
+		__dict["parent"] = self.id
 		__dict["parenttype"] = self.doctype
 		__dict["parentfield"] = key
 

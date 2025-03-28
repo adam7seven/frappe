@@ -12,7 +12,7 @@
  "modified": "2025-02-07 17:27:53.441631",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "Prepared Report Analytics",
+ "id": "Prepared Report Analytics",
  "owner": "Administrator",
  "prepared_report": 0,
  "ref_doctype": "Prepared Report",
