@@ -882,7 +882,7 @@ class DatabaseQuery:
 				value = cstr(f.value) or "''"
 				fallback = "''"
 
-			elif f.fieldname == "id":
+			elif f.fieldname == "id" or f.fieldname == "parent":
 				value = f.value or "''"
 				fallback = "''"
 

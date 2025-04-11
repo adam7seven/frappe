@@ -684,6 +684,9 @@ class Meta(Document):
 		permitted_fieldnames = []
 
 		if self.istable and not parenttype:
+			title_field = self.get_title_field()
+			if title_field and title_field != "id":
+				permitted_fieldnames.append(title_field)
 			return permitted_fieldnames
 
 		if not permission_type:

@@ -415,11 +415,11 @@ frappe.ui.form.Form = class FrappeForm {
                 table.grid.refresh();
             });
 
-			// read only (workflow)
+            // read only (workflow)
             this.read_only = frappe.workflow.is_read_only(this.doctype, this.docid);
-			if (this.read_only) {
-				this.set_read_only();
-			}
+            if (this.read_only) {
+                this.set_read_only();
+            }
 
             // check if doctype is already open
             if (!this.opendocs[this.docid]) {
@@ -438,12 +438,12 @@ frappe.ui.form.Form = class FrappeForm {
             // load the record for the first time, if not loaded (call 'onload')
             this.trigger_onload(switched);
 
-			if (switched) {
-				if (this.show_print_first && this.doc.docstatus === 1) {
-					// show print view
-					this.print_doc();
-				}
-			}
+            if (switched) {
+                if (this.show_print_first && this.doc.docstatus === 1) {
+                    // show print view
+                    this.print_doc();
+                }
+            }
 
             // set status classes
             this.$wrapper
@@ -724,11 +724,11 @@ frappe.ui.form.Form = class FrappeForm {
         this.dashboard.refresh();
         frappe.breadcrumbs.update();
 
-		this.show_submit_message();
-		this.clear_custom_buttons();
-		this.show_web_link();
-		this.show_workflow_read_only_banner();
-	}
+        this.show_submit_message();
+        this.clear_custom_buttons();
+        this.show_web_link();
+        this.show_workflow_read_only_banner();
+    }
 
     // SAVE
 
@@ -1604,7 +1604,6 @@ frappe.ui.form.Form = class FrappeForm {
         }
     }
 
-    //����set_df_property�����е�fieldname�����������ӱ��������ӱ��ڸ����е��ֶ��������״������������������������
     set_child_df_property(fieldname, property, value, field_of_table, table_row_id = null) {
         this.set_df_property(field_of_table, property, value, "-", fieldname, table_row_id);
     }
@@ -2173,34 +2172,30 @@ frappe.ui.form.Form = class FrappeForm {
 					</div>
 					`;
 
-					wrapper.removeClass("red").removeClass("yellow");
-					wrapper.addClass(r.message.status == "Failed" ? "red" : "yellow");
-					wrapper.html(html);
-				} else {
-					wrapper.remove();
-				}
-			});
-	}
+                    wrapper.removeClass("red").removeClass("yellow");
+                    wrapper.addClass(r.message.status == "Failed" ? "red" : "yellow");
+                    wrapper.html(html);
+                } else {
+                    wrapper.remove();
+                }
+            });
+    }
 
-	show_workflow_read_only_banner() {
-		if (!this.read_only) {
-			return;
-		}
+    show_workflow_read_only_banner() {
+        if (!this.read_only) {
+            return;
+        }
 
-		const _show_read_only_banner = () => {
-			this.dashboard.set_headline(
-				__("This form is not editable due to a Workflow."),
-				"blue",
-				true
-			);
-		};
+        const _show_read_only_banner = () => {
+            this.dashboard.set_headline(__("This form is not editable due to a Workflow."), "blue", true);
+        };
 
-		if (this.dashboard) {
-			_show_read_only_banner();
-		} else {
-			frappe.after_ajax(_show_read_only_banner);
-		}
-	}
+        if (this.dashboard) {
+            _show_read_only_banner();
+        } else {
+            frappe.after_ajax(_show_read_only_banner);
+        }
+    }
 };
 
 frappe.validated = 0;
