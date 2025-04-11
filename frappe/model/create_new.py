@@ -13,6 +13,7 @@ from frappe.core.doctype.user_permission.user_permission import get_user_permiss
 from frappe.model import data_fieldtypes
 from frappe.permissions import filter_allowed_docs_for_doctype
 from frappe.utils import cstr, now_datetime, nowdate, nowtime
+from frappe.utils.data import get_select_options
 
 
 def get_new_doc(doctype, parent_doc=None, parentfield=None, as_dict=False):
@@ -115,7 +116,8 @@ def get_static_default_value(df, doctype_user_permissions, allowed_records):
 				return df.default
 
 	elif df.fieldtype == "Select" and df.options and df.options not in ("[Select]", "Loading..."):
-		return df.options.split("\n", 1)[0]
+		options = get_select_options(df.options, df.options_has_label, False)
+		return options[0]
 
 
 def validate_value_via_user_permissions(df, doctype_user_permissions, allowed_records, user_default=None):
