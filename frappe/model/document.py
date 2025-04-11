@@ -236,13 +236,19 @@ class Document(BaseDocument, DocRef):
 
 		else:
 			if not is_doctype and isinstance(self.id, str):
+				id = self.id
+
+				# if autoname is autoincrement, id cannot be string, but the id of doc starts with "new-", so use 0 instead.
+				if self.meta.autoname == "autoincrement" and id.startswith("new-"):
+					id = 0
+
 				# Fast path - use raw SQL to avoid QB/ORM overheads.
 				d = frappe.db.sql(
 					"SELECT * FROM {table_name} WHERE `id` = %s {for_update}".format(
 						table_name=get_table_name(self.doctype, wrap_in_backticks=True),
 						for_update="FOR UPDATE" if self.flags.for_update else "",
 					),
-					(self.id),
+					(id),
 					as_dict=True,
 				)
 				d = d[0] if d else d
@@ -406,7 +412,6 @@ class Document(BaseDocument, DocRef):
 		self.check_permission("create")
 		self.run_method("before_insert")
 		self.set_new_id(set_id=set_id, set_child_ids=set_child_ids)
-		self.set_parent_in_children()
 		self.validate_higher_perm_levels()
 
 		self.flags.in_insert = True
@@ -665,6 +670,8 @@ class Document(BaseDocument, DocRef):
 			set_new_id(self)
 
 		if set_child_ids:
+			self.set_parent_in_children()
+
 			# set id for children
 			for d in self.get_all_children():
 				set_new_id(d)
