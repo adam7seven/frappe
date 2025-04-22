@@ -511,7 +511,8 @@
 	overflow: auto;
 	margin: auto;
 	padding: var(--padding-sm) var(--padding-md);
-	max-width: 865px;
+	// max-width: 865px;
+	width: 80%;
 	position: fixed;
 	top: 5%;
 	left: 50%;
