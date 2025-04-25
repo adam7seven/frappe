@@ -702,16 +702,18 @@ def validate_auth_via_api_keys(authorization_header):
 def validate_api_key_secret(api_key, api_secret, frappe_authorization_source=None):
 	"""frappe_authorization_source to provide api key and secret for a doctype apart from User"""
 	doctype = frappe_authorization_source or "User"
-	doc = frappe.db.get_value(doctype=doctype, filters={"api_key": api_key}, fieldname=["id"])
-	if not doc:
+	docid = frappe.db.get_value(
+		doctype=doctype, filters={"api_key": api_key, "enabled": True}, fieldname=["id"]
+	)
+	if not docid:
 		raise frappe.AuthenticationError
 	form_dict = frappe.local.form_dict
-	doc_secret = get_decrypted_password(doctype, doc, fieldname="api_secret")
+	doc_secret = get_decrypted_password(doctype, docid, fieldname="api_secret")
 	if api_secret == doc_secret:
 		if doctype == "User":
 			user = frappe.db.get_value(doctype="User", filters={"api_key": api_key}, fieldname=["id"])
 		else:
-			user = frappe.db.get_value(doctype, doc, "user")
+			user = frappe.db.get_value(doctype, docid, "user")
 		if frappe.local.login_manager.user in ("", "Guest"):
 			frappe.set_user(user)
 		frappe.local.form_dict = form_dict

@@ -483,9 +483,7 @@ def make_auto_repeat_entry():
 	if not jobs or enqueued_method not in jobs[frappe.local.site]:
 		date = getdate(today())
 		data = get_auto_repeat_entries(date)
-		frappe.enqueue(enqueued_method, data=data)
-		# Set auto-repeat to complete when all auto-repeats are added to the queue
-		set_auto_repeat_as_completed(data)
+		frappe.enqueue(enqueued_method, data=data, queue="long")
 
 
 def create_repeated_entries(data):
@@ -500,6 +498,10 @@ def create_repeated_entries(data):
 			schedule_date = doc.get_next_schedule_date(schedule_date=schedule_date)
 			if schedule_date and not doc.disabled:
 				frappe.db.set_value("Auto Repeat", doc.id, "next_schedule_date", schedule_date)
+
+		if doc.is_completed():
+			doc.status = "Completed"
+			doc.save()
 
 
 def get_auto_repeat_entries(date=None):

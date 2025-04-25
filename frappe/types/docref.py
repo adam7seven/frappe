@@ -15,20 +15,6 @@ class DocRef:
 		return self.id
 
 	@override
-	def __hash__(self: Union[type, "DocRef"]) -> int:
-		if isinstance(self, type):
-			raise TypeError("Only document instances can be hashed.")
-		try:
-			id = self.id
-		except AttributeError:
-			raise TypeError("Partially instantiated document instances can't be hashed.")
-		if id:
-			return hash(self.doctype + id)
-		raise TypeError(
-			f"Only named documents can be hashed; maybe the document ({self.doctype}) is unsaved."
-		)
-
-	@override
 	def __str__(self) -> str:
 		return f"{self.doctype} ({self.id or 'n/a'})"
 

@@ -38,7 +38,7 @@ LOCATE_CAST_PATTERN = re.compile(r"locate\(([^,]+),\s*([`\"]?id[`\"]?)\s*\)", fl
 FUNC_IFNULL_PATTERN = re.compile(r"(strpos|ifnull|coalesce)\(\s*[`\"]?id[`\"]?\s*,", flags=re.IGNORECASE)
 CAST_VARCHAR_PATTERN = re.compile(r"([`\"]?tab[\w`\" -]+\.[`\"]?id[`\"]?)(?!\w)", flags=re.IGNORECASE)
 ORDER_BY_PATTERN = re.compile(r"\ order\ by\ |\ asc|\ ASC|\ desc|\ DESC", flags=re.IGNORECASE)
-SUB_QUERY_PATTERN = re.compile("^.*[,();@].*")
+SUB_QUERY_PATTERN = re.compile("^.*[,();@].*", flags=re.DOTALL)
 IS_QUERY_PATTERN = re.compile(r"^(select|delete|update|drop|create)\s")
 IS_QUERY_PREDICATE_PATTERN = re.compile(r"\s*[0-9a-zA-z]*\s*( from | group by | order by | where | join )")
 FIELD_QUOTE_PATTERN = re.compile(r"[0-9a-zA-Z]+\s*'")
@@ -420,9 +420,11 @@ class DatabaseQuery:
 			lower_field = field.lower().strip()
 
 			if SUB_QUERY_PATTERN.match(field):
-				if lower_field[0] == "(":
-					subquery_token = lower_field[1:].lstrip().split(" ", 1)[0]
-					if subquery_token in blacklisted_keywords:
+				# Check for subquery anywhere in the field, not just at the beginning
+				if "(" in lower_field:
+					location = lower_field.index("(")
+					subquery_token = lower_field[location + 1 :].lstrip().split(" ", 1)[0]
+					if any(keyword in subquery_token for keyword in blacklisted_keywords):
 						_raise_exception()
 
 				function = lower_field.split("(", 1)[0].rstrip()
@@ -1179,8 +1181,7 @@ def cast_id(column: str) -> str:
 	Example:
 	input - "ifnull(`tabBlog Post`.`id`, '')=''"
 	output - "ifnull(cast(`tabBlog Post`.`id` as varchar), '')=''" """
-
-	if frappe.db.db_type == "mariadb":
+	if frappe.db.db_type != "postgres":
 		return column
 
 	kwargs = {"string": column}

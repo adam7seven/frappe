@@ -474,37 +474,36 @@
 							props.on_success(file_doc, r);
 						}
 
-						if (
-							i == files.value.length - 1 &&
-							files.value.every((file) => file.request_succeeded)
-						) {
-							close_dialog.value = true;
-						}
-					} else if (xhr.status === 403) {
-						file.failed = true;
-						let response = JSON.parse(xhr.responseText);
-						file.error_message = `Not permitted. ${response._error_message || ""}.`;
-
-						try {
-							// Append server messages which are useful hint for perm issues
-							let server_messages = JSON.parse(response._server_messages);
-
-							server_messages.forEach((m) => {
-								m = JSON.parse(m);
-								file.error_message += `\n ${m.message} `;
-							});
-						} catch (e) {
-							console.warning("Failed to parse server message", e);
-						}
-					} else if (xhr.status === 413) {
-						file.failed = true;
-						file.error_message = "Size exceeds the maximum allowed file size.";
-					} else {
-						file.failed = true;
-						file.error_message =
-							xhr.status === 0
-								? "XMLHttpRequest Error"
-								: `${xhr.status} : ${xhr.statusText}`;
+					if (
+						i == files.value.length - 1 &&
+						files.value.every((file) => file.request_succeeded)
+					) {
+						close_dialog.value = true;
+					}
+				} else if (xhr.status === 403) {
+					file.failed = true;
+					let response = parse_error_response(xhr.responseText);
+					file.error_message = `Not permitted. ${response.error_message || ""}.`;
+					if (response.server_messages.length) {
+						file.error_message += `\n${response.server_messages.join("\n")}`;
+					}
+				} else if (xhr.status === 413) {
+					file.failed = true;
+					file.error_message = "Size exceeds the maximum allowed file size.";
+				} else if (xhr.status === 417) {
+					// regular frappe.throw() in backend
+					file.failed = true;
+					file.error_message = null;
+					let response = parse_error_response(xhr.responseText);
+					if (response.server_messages.length) {
+						file.error_message = response.server_messages.join("\n");
+					}
+				} else {
+					file.failed = true;
+					file.error_message =
+						xhr.status === 0
+							? "XMLHttpRequest Error"
+							: `${xhr.status} : ${xhr.statusText}`;
 
 						let error = null;
 						try {
@@ -563,47 +562,67 @@
 				form_data.append("max_height", 200);
 			}
 
-			xhr.send(form_data);
+		xhr.send(form_data);
+	});
+}
+function parse_error_response(response_text) {
+	let response = JSON.parse(response_text);
+	let error_message = response._error_message;
+	let server_messages = [];
+
+	try {
+		server_messages.push(
+			...JSON.parse(response._server_messages).map((m) => {
+				let parsed = JSON.parse(m);
+				return parsed.message;
+			})
+		);
+	} catch (e) {
+		console.warning("Failed to parse server message", e);
+	}
+	return {
+		error_message,
+		server_messages,
+	};
+}
+function capture_image() {
+	const capture = new frappe.ui.Capture({
+		animate: false,
+		error: true,
+	});
+	capture.show();
+	capture.submit((data_urls) => {
+		data_urls.forEach((data_url) => {
+			let filename = `capture_${frappe.datetime
+				.now_datetime()
+				.replaceAll(/[: -]/g, "_")}.png`;
+			url_to_file(data_url, filename, "image/png").then((file) => add_files([file]));
 		});
-	}
-	function capture_image() {
-		const capture = new frappe.ui.Capture({
-			animate: false,
-			error: true,
+	});
+}
+function show_google_drive_picker() {
+	close_dialog.value = true;
+	let google_drive = new GoogleDrivePicker({
+		pickerCallback: (data) => google_drive_callback(data),
+		...google_drive_settings.value,
+	});
+	google_drive.loadPicker();
+}
+function google_drive_callback(data) {
+	if (data.action == google.picker.Action.PICKED) {
+		upload_file({
+			file_url: data.docs[0].url,
+			file_name: data.docs[0].id,
 		});
-		capture.show();
-		capture.submit((data_urls) => {
-			data_urls.forEach((data_url) => {
-				let filename = `capture_${frappe.datetime
-					.now_datetime()
-					.replaceAll(/[: -]/g, "_")}.png`;
-				url_to_file(data_url, filename, "image/png").then((file) => add_files([file]));
-			});
-		});
+	} else if (data.action == google.picker.Action.CANCEL) {
+		cur_frm.attachments.new_attachment();
 	}
-	function show_google_drive_picker() {
-		close_dialog.value = true;
-		let google_drive = new GoogleDrivePicker({
-			pickerCallback: (data) => google_drive_callback(data),
-			...google_drive_settings.value,
-		});
-		google_drive.loadPicker();
-	}
-	function google_drive_callback(data) {
-		if (data.action == google.picker.Action.PICKED) {
-			upload_file({
-				file_url: data.docs[0].url,
-				file_name: data.docs[0].id,
-			});
-		} else if (data.action == google.picker.Action.CANCEL) {
-			cur_frm.attachments.new_attachment();
-		}
-	}
-	function url_to_file(url, filename, mime_type) {
-		return fetch(url)
-			.then((res) => res.arrayBuffer())
-			.then((buffer) => new File([buffer], filename, { type: mime_type }));
-	}
+}
+function url_to_file(url, filename, mime_type) {
+	return fetch(url)
+		.then((res) => res.arrayBuffer())
+		.then((buffer) => new File([buffer], filename, { type: mime_type }));
+}
 
 	// computed
 	let upload_complete = computed(() => {

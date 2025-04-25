@@ -6,7 +6,7 @@
 	--surface-modal: rgba(255, 255, 255, 1);
 	--divider-color: rgba(237, 237, 237, 1);
 	--sidebar-width: 220px;
-	--left-sidebar-width: 240px;
+	--left-sidebar-width: 220px;
 }
 [data-theme="dark"] {
 	--sidebar-hover-color: rgba(43, 43, 43, 1);
@@ -122,13 +122,6 @@ body {
 	.app-logo {
 		width: 32px;
 		height: 32px;
-	}
-
-	.sidebar-items {
-		width: 224px;
-		padding-left: 1px;
-		padding-right: 1px;
-		width: 100%;
 	}
 
 	.divider {
@@ -253,15 +246,15 @@ body {
 		position: absolute;
 		width: var(--left-sidebar-width);
 		.app-switcher-dropdown {
-			width: 224px;
+			width: 100%;
 			left: 0px;
 			padding: 3px;
 		}
 		.body-sidebar-top {
-			width: 224px;
+			width: 100%;
 			overflow-y: hidden;
 			.app-switcher-dropdown {
-				width: 224px;
+				width: 100%;
 			}
 		}
 		.sidebar-item-container {
@@ -277,12 +270,12 @@ body {
 
 		.sidebar-items {
 			padding: 0px;
+			width: 100%;
 		}
 		.collapse-sidebar-link {
 			visibility: visible;
 		}
 		.body-sidebar-bottom {
-			width: 224px;
 			position: static;
 		}
 	}
@@ -870,60 +863,6 @@ body {
 	}
 	&:focus {
 		box-shadow: none;
-	}
-}
-
-.form-reviews {
-	.reviews {
-		display: flex;
-		flex-wrap: wrap;
-	}
-	.review {
-		display: flex;
-		font-weight: 500;
-		height: 28px;
-		border-radius: 14px;
-		font-size: var(--text-xs);
-		margin-bottom: var(--margin-sm);
-		margin-right: var(--margin-xs);
-		border: 1px solid var(--dark-border-color);
-		padding: 2px 3px;
-		align-items: center;
-		min-width: 60px;
-		background: var(--fg-color);
-		.avatar {
-			width: 20px;
-			height: 20px;
-		}
-		.review-points {
-			margin-left: 3px;
-			flex: 1;
-			text-align: center;
-		}
-	}
-}
-
-.review-popover {
-	padding: 0px;
-	min-width: 200px;
-	max-width: 250px;
-
-	.popover-body,
-	.popover-content {
-		padding: 0;
-	}
-	.body {
-		border-bottom: 1px solid $border-color;
-	}
-
-	.subject,
-	.body {
-		padding: var(--padding-sm);
-		overflow-wrap: break-word;
-		p {
-			margin-top: var(--margin-xs);
-			margin-bottom: 0px;
-		}
 	}
 }
 

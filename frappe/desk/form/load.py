@@ -149,7 +149,7 @@ def add_comments(doc, docinfo):
 
 	comments = frappe.get_all(
 		"Comment",
-		fields=["id", "creation", "content", "owner", "comment_type"],
+		fields=["id", "creation", "content", "owner", "comment_type", "published"],
 		filters={"reference_doctype": doc.doctype, "reference_id": doc.id},
 	)
 
@@ -246,19 +246,6 @@ def get_comments(doctype: str, id: str, comment_type: str | list[str] = "Comment
 	return comments
 
 
-def get_point_logs(doctype, docid):
-	from frappe.social.doctype.energy_point_settings.energy_point_settings import is_energy_point_enabled
-
-	if not is_energy_point_enabled():
-		return []
-
-	return frappe.get_all(
-		"Energy Point Log",
-		filters={"reference_doctype": doctype, "reference_id": docid, "type": ["!=", "Review"]},
-		fields=["*"],
-	)
-
-
 def _get_communications(doctype, id, start=0, limit=20):
 	communications = get_communication_data(doctype, id, start, limit)
 	for c in communications:
@@ -319,15 +306,32 @@ def get_communication_data(
 		{conditions}
 	"""
 
-	return frappe.db.sql(
-		"""
+	sqlite_query = f"""
+		SELECT * FROM (
+			SELECT * FROM ({part1})
+			UNION ALL
+			SELECT * FROM ({part2})
+		) AS combined
+		{group_by or ""}
+		ORDER BY communication_date DESC
+		LIMIT %(limit)s
+		OFFSET %(start)s"""
+
+	query = f"""
 		SELECT *
 		FROM (({part1}) UNION ({part2})) AS combined
-		{group_by}
+		{group_by or ""}
 		ORDER BY communication_date DESC
 		LIMIT %(limit)s
 		OFFSET %(start)s
-	""".format(part1=part1, part2=part2, group_by=(group_by or "")),
+		"""
+
+	return frappe.db.multisql(
+		{
+			"sqlite": sqlite_query,
+			"postgres": query,
+			"mariadb": query,
+		},
 		dict(
 			doctype=doctype,
 			id=id,

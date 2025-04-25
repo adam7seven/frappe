@@ -159,6 +159,7 @@ frappe.request.call = function (opts) {
                     title: __("Not permitted"),
                     indicator: "red",
                     message: xhr.responseJSON._error_message,
+                    re_route: true,
                 });
 
                 xhr.responseJSON._server_messages = null;
@@ -185,9 +186,7 @@ frappe.request.call = function (opts) {
             frappe.msgprint({
                 title: __("Please try again"),
                 indicator: "red",
-                message: __(
-                    "Another transaction is blocking this one. Please try again in a few seconds."
-                ),
+                message: __("Another transaction is blocking this one. Please try again in a few seconds."),
             });
             opts.error_callback && opts.error_callback();
         },
@@ -331,10 +330,7 @@ frappe.request.call = function (opts) {
         })
         .fail(function (xhr, textStatus) {
             try {
-                if (
-                    xhr.getResponseHeader("content-type") == "application/json" &&
-                    xhr.responseText
-                ) {
+                if (xhr.getResponseHeader("content-type") == "application/json" && xhr.responseText) {
                     var data;
                     try {
                         data = JSON.parse(xhr.responseText);
@@ -375,10 +371,7 @@ frappe.request.is_fresh = function (args, threshold) {
 
     for (let past_request of frappe.request.logs[args.cmd]) {
         // check if request has same args and was made recently
-        if (
-            new Date() - past_request.timestamp < threshold &&
-            frappe.utils.deep_equal(args, past_request.args)
-        ) {
+        if (new Date() - past_request.timestamp < threshold && frappe.utils.deep_equal(args, past_request.args)) {
             console.log("throttled");
             return true;
         }
@@ -431,10 +424,7 @@ frappe.request.cleanup = function (opts, r) {
 
     if (r) {
         // session expired? - Guest has no business here!
-        if (
-            r.session_expired ||
-            (frappe.session.user === "Guest" && frappe.session.logged_in_user !== "Guest")
-        ) {
+        if (r.session_expired || (frappe.session.user === "Guest" && frappe.session.logged_in_user !== "Guest")) {
             frappe.app.handle_session_expired();
             return;
         }
@@ -600,10 +590,7 @@ frappe.request.report_error = function (xhr, request_opts) {
                 id: frappe.session.user,
             },
         });
-        communication_composer.dialog.$wrapper.css(
-            "z-index",
-            cint(frappe.msg_dialog.$wrapper.css("z-index")) + 1
-        );
+        communication_composer.dialog.$wrapper.css("z-index", cint(frappe.msg_dialog.$wrapper.css("z-index")) + 1);
     };
 
     if (exc) {

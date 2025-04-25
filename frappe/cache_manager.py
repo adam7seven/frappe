@@ -6,7 +6,6 @@ import frappe
 common_default_keys = ["__default", "__global"]
 
 doctypes_for_mapping = {
-	"Energy Point Rule",
 	"Assignment Rule",
 	"Milestone Tracker",
 	"Document Naming Rule",
@@ -203,13 +202,24 @@ def build_table_count_cache():
 	):
 		return
 
-	table_name = frappe.qb.Field("table_name").as_("id")
-	table_rows = frappe.qb.Field("table_rows").as_("count")
-	information_schema = frappe.qb.Schema("information_schema")
+	if frappe.db.db_type != "sqlite":
+		table_name = frappe.qb.Field("table_name").as_("id")
+		table_rows = frappe.qb.Field("table_rows").as_("count")
+		information_schema = frappe.qb.Schema("information_schema")
 
-	data = (frappe.qb.from_(information_schema.tables).select(table_name, table_rows)).run(as_dict=True)
-	counts = {d.get("id").replace("tab", "", 1): d.get("count", None) for d in data}
-	frappe.cache.set_value("information_schema:counts", counts)
+		data = (frappe.qb.from_(information_schema.tables).select(table_name, table_rows)).run(as_dict=True)
+		counts = {d.get("id").replace("tab", "", 1): d.get("count", None) for d in data}
+		frappe.cache.set_value("information_schema:counts", counts)
+	else:
+		counts = {}
+		id = frappe.qb.Field("id")
+		type = frappe.qb.Field("type")
+		sqlite_master = frappe.qb.Schema("sqlite_master")
+		data = frappe.qb.from_(sqlite_master).select(id).where(type == "table").run(as_dict=True)
+		for table in data:
+			count = frappe.db.sql(f"SELECT COUNT(*) FROM `{table.id}`")[0][0]
+			counts[table.id.replace("tab", "", 1)] = count
+		frappe.cache.set_value("information_schema:counts", counts)
 
 	return counts
 

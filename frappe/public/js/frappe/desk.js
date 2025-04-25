@@ -41,7 +41,6 @@ frappe.Application = class Application {
         this.set_favicon();
         this.set_fullwidth_if_enabled();
         this.add_browser_class();
-        this.setup_energy_point_listeners();
         this.setup_copy_doc_listener();
         this.setup_broadcast_listeners();
 
@@ -120,11 +119,7 @@ frappe.Application = class Application {
     }
 
     setup_tours() {
-        if (
-            !window.Cypress &&
-            frappe.boot.onboarding_tours &&
-            frappe.boot.user.onboarding_status != null
-        ) {
+        if (!window.Cypress && frappe.boot.onboarding_tours && frappe.boot.user.onboarding_status != null) {
             let pending_tours = !frappe.boot.onboarding_tours.every(
                 (tour) => frappe.boot.user.onboarding_status[tour[0]]?.is_complete
             );
@@ -160,9 +155,7 @@ frappe.Application = class Application {
 
         frappe.realtime.on("version-update", function () {
             var dialog = frappe.msgprint({
-                message: __(
-                    "The application has been updated to a new version, please refresh this page"
-                ),
+                message: __("The application has been updated to a new version, please refresh this page"),
                 indicator: "green",
                 title: __("Version Updated"),
             });
@@ -214,11 +207,7 @@ frappe.Application = class Application {
                 {
                     fieldname: "password",
                     fieldtype: "Password",
-                    label: __(
-                        "Please enter the password for: <b>{0}</b>",
-                        [email_id],
-                        "Email Account"
-                    ),
+                    label: __("Please enter the password for: <b>{0}</b>", [email_id], "Email Account"),
                     reqd: 1,
                 },
                 {
@@ -363,9 +352,7 @@ frappe.Application = class Application {
     make_page_container() {
         if ($("#body").length) {
             $(".splash").remove();
-            frappe.temp_container = $("<div id='temp-container' style='display: none;'>").appendTo(
-                "body"
-            );
+            frappe.temp_container = $("<div id='temp-container' style='display: none;'>").appendTo("body");
             frappe.container = new frappe.views.Container();
         }
     }
@@ -505,12 +492,6 @@ frappe.Application = class Application {
         if (frappe.boot.developer_mode) {
             frappe.require("build_events.bundle.js");
         }
-    }
-
-    setup_energy_point_listeners() {
-        frappe.realtime.on("energy_point_alert", (message) => {
-            frappe.show_alert(message);
-        });
     }
 
     setup_copy_doc_listener() {

@@ -199,8 +199,6 @@ def rename_doc(
 
 	rename_versions(doctype, old, new)
 
-	rename_eps_records(doctype, old, new)
-
 	# call after_rename
 	new_doc = frappe.get_doc(doctype, new)
 
@@ -326,14 +324,6 @@ def rename_versions(doctype: str, old: str, new: str) -> None:
 
 	frappe.qb.update(Version).set(Version.docid, new).where(
 		(Version.docid == old) & (Version.ref_doctype == doctype)
-	).run()
-
-
-def rename_eps_records(doctype: str, old: str, new: str) -> None:
-	EPL = frappe.qb.DocType("Energy Point Log")
-
-	frappe.qb.update(EPL).set(EPL.reference_id, new).where(
-		(EPL.reference_doctype == doctype) & (EPL.reference_id == old)
 	).run()
 
 

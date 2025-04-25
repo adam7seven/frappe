@@ -259,12 +259,7 @@ frappe.views.BaseList = class BaseList {
                 if (item.condition && item.condition() === false) {
                     return;
                 }
-                const $item = this.page.add_menu_item(
-                    item.label,
-                    item.action,
-                    item.standard,
-                    item.shortcut
-                );
+                const $item = this.page.add_menu_item(item.label, item.action, item.standard, item.shortcut);
                 if (item.class) {
                     $item && $item.addClass(item.class);
                 }
@@ -440,11 +435,7 @@ frappe.views.BaseList = class BaseList {
     set_result_height() {
         // place it at the footer of the page
         this.$result.css({
-            height:
-                window.innerHeight -
-                this.$result.get(0).offsetTop -
-                this.$paging_area.get(0).offsetHeight +
-                "px",
+            height: window.innerHeight - this.$result.get(0).offsetTop - this.$paging_area.get(0).offsetHeight + "px",
         });
         this.$no_result.css({
             height: window.innerHeight - this.$no_result.get(0).offsetTop + "px",
@@ -629,17 +620,12 @@ class FilterArea {
             ? this.list_view.page.custom_actions
             : this.list_view.page.page_form;
 
-        this.list_view.$filter_section = $('<div class="filter-section flex">').appendTo(
-            filter_area
-        );
+        this.list_view.$filter_section = $('<div class="filter-section flex">').appendTo(filter_area);
 
         this.$filter_list_wrapper = this.list_view.$filter_section;
         this.trigger_refresh = true;
 
-        this.debounced_refresh_list_view = frappe.utils.debounce(
-            this.refresh_list_view.bind(this),
-            300
-        );
+        this.debounced_refresh_list_view = frappe.utils.debounce(this.refresh_list_view.bind(this), 300);
         this.setup();
     }
 
@@ -681,10 +667,7 @@ class FilterArea {
 
         return promise
             .then(() => {
-                return (
-                    non_standard_filters.length > 0 &&
-                    this.filter_list.add_filters(non_standard_filters)
-                );
+                return non_standard_filters.length > 0 && this.filter_list.add_filters(non_standard_filters);
             })
             .then(() => {
                 refresh && this.list_view.refresh();
@@ -739,8 +722,7 @@ class FilterArea {
                 fields_dict[fieldname] &&
                 (condition === "=" ||
                     (condition === "like" && fields_dict[fieldname]?.df?.fieldtype != "Link") ||
-                    (condition === "descendants of (inclusive)" &&
-                        fields_dict[fieldname]?.df?.fieldtype == "Link"))
+                    (condition === "descendants of (inclusive)" && fields_dict[fieldname]?.df?.fieldtype == "Link"))
             ) {
                 // standard filter
                 out.promise = out.promise.then(() => fields_dict[fieldname].set_value(value));
@@ -794,9 +776,7 @@ class FilterArea {
     }
 
     async make_standard_filters() {
-        this.standard_filters_wrapper = this.list_view.page.page_form.find(
-            ".standard-filter-section"
-        );
+        this.standard_filters_wrapper = this.list_view.page.page_form.find(".standard-filter-section");
         let fields = [];
 
         if (!this.list_view.settings.hide_id_filter) {
@@ -809,17 +789,11 @@ class FilterArea {
             });
         }
 
-        if (
-            this.list_view.custom_filter_configs ||
-            this.list_view.settings.custom_filter_configs
-        ) {
+        if (this.list_view.custom_filter_configs || this.list_view.settings.custom_filter_configs) {
             const custom_filter_configs =
-                this.list_view.custom_filter_configs ||
-                this.list_view.settings.custom_filter_configs;
+                this.list_view.custom_filter_configs || this.list_view.settings.custom_filter_configs;
             await Promise.resolve(
-                typeof custom_filter_configs === "function"
-                    ? custom_filter_configs()
-                    : custom_filter_configs
+                typeof custom_filter_configs === "function" ? custom_filter_configs() : custom_filter_configs
             ).then((configs) => {
                 configs.forEach((config) => {
                     config.onchange = () => this.debounced_refresh_list_view();
@@ -836,8 +810,9 @@ class FilterArea {
             doctype_fields
                 .filter(
                     (df) =>
-                        df.fieldname === title_field ||
-                        (df.in_standard_filter && frappe.model.is_value_type(df.fieldtype))
+                        (df.fieldname === title_field ||
+                            (df.in_standard_filter && frappe.model.is_value_type(df.fieldtype))) &&
+                        frappe.perm.has_perm(this.list_view.doctype, df.permlevel)
                 )
                 .map((df) => {
                     let options = df.options;
@@ -861,30 +836,12 @@ class FilterArea {
                     }
                     if (df.fieldtype == "Select" && df.options) {
                         options = df.options.split("\n");
-
-                        //如果选项中包含逗号，则按逗号隔开
-                        if (df.options_has_label) {
-                            for (var i = 0; i < options.length; i++) {
-                                var opt = options[i];
-                                var comma_index = opt.indexOf(",");
-                                if (comma_index === 0) {
-                                    options[i] = "";
-                                } else if (comma_index > 0) {
-                                    options[i] = opt.substring(0, comma_index);
-                                }
-                            }
-                        }
-
                         if (options.length > 0 && options[0] != "") {
                             options.unshift("");
                             options = options.join("\n");
                         }
                     }
-                    if (
-                        df.fieldtype == "Link" &&
-                        df.options &&
-                        frappe.boot.treeviews.includes(df.options)
-                    ) {
+                    if (df.fieldtype == "Link" && df.options && frappe.boot.treeviews.includes(df.options)) {
                         condition = "descendants of (inclusive)";
                     }
 

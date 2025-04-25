@@ -464,7 +464,7 @@ class TestNotification(IntegrationTestCase):
 			frappe.db.delete("Notification Log", {"subject": n.subject})
 
 			user = frappe.get_doc("User", "test@example.com")
-			user.birth_date = frappe.utils.add_days(user.birth_date, 1)
+			user.birth_date = frappe.utils.add_days(user.birth_date, 1).date()
 			user.save()
 
 			user.reload()
@@ -506,6 +506,7 @@ class TestNotification(IntegrationTestCase):
 		self.assertEqual(notification.enabled, 1)
 
 
+# ruff: noqa: RUF001
 """
 PROOF OF TEST for TestNotificationOffsetRange below.
 
