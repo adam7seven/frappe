@@ -123,7 +123,6 @@ def get_docinfo(doc=None, doctype=None, id=None):
 			"permissions": get_doc_permissions(doc),
 			"shared": get_docshares(doc),
 			"views": get_view_logs(doc),
-			"energy_point_logs": get_point_logs(doc.doctype, doc.id),
 			"additional_timeline_content": get_additional_timeline_content(doc.doctype, doc.id),
 			"milestones": get_milestones(doc.doctype, doc.id),
 			"is_document_followed": is_document_followed(doc.doctype, doc.id, frappe.session.user),

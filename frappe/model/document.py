@@ -232,6 +232,12 @@ class Document(BaseDocument, DocRef):
 
 		else:
 			if not is_doctype and isinstance(self.id, str | int):
+				id = self.id
+
+				# if autoname is autoincrement, id cannot be string, but the id of doc starts with "new-", so use 0 instead.
+				if self.meta.autoname == "autoincrement" and isinstance(id, str) and id.startswith("new-"):
+					id = 0
+
 				for_update = ""
 				if self.flags.for_update and frappe.db.db_type != "sqlite":
 					for_update = "FOR UPDATE"

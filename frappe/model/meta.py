@@ -147,7 +147,7 @@ class Meta(Document):
 		else:
 			super().__init__("DocType", doctype)
 
-		self.process()
+		self.execute_process()
 
 	def load_from_db(self):
 		try:

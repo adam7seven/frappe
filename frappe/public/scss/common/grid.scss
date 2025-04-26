@@ -517,10 +517,10 @@
 	top: 5%;
 	left: 50%;
 	transform: translate(-50%, 0%);
-	width: 100%;
 	.grid-form-body {
 		max-height: 80vh;
-		overflow: scroll;
+		overflow-x: hidden;
+		overflow-y: scroll;
 	}
 }
 
