@@ -141,6 +141,7 @@ class DocType(Document):
 		max_attachments: DF.Int
 		migration_hash: DF.Data | None
 		module: DF.Link
+		name: DF.Data
 		naming_rule: DF.Literal[
 			"",
 			"Set by user",
@@ -195,6 +196,9 @@ class DocType(Document):
 		self.check_developer_mode()
 
 		self.validate_id()
+
+		if not self.name:
+			self.name = self.id
 
 		self.set_defaults_for_single_and_table()
 		self.scrub_field_names()

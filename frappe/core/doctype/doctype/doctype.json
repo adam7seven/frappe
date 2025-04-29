@@ -24,6 +24,7 @@
   "allow_rename",
   "settings_tab",
   "sb0",
+  "name",
   "module",
   "is_submittable",
   "istable",
@@ -106,6 +107,15 @@
    "oldfieldtype": "Section Break"
   },
   {
+   "fieldname": "name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Name",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
    "fieldname": "module",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -114,8 +124,7 @@
    "oldfieldname": "module",
    "oldfieldtype": "Link",
    "options": "Module Def",
-   "reqd": 1,
-   "search_index": 1
+   "reqd": 1
   },
   {
    "default": "0",
@@ -775,7 +784,7 @@
    "link_fieldname": "document_type"
   }
  ],
- "modified": "2025-03-27 18:16:53.286909",
+ "modified": "2025-04-29 15:18:00.263465",
  "modified_by": "Administrator",
  "module": "Core",
  "id": "DocType",
@@ -808,9 +817,11 @@
  "row_format": "Dynamic",
  "search_fields": "module",
  "show_id_in_global_search": 1,
+ "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": [],
+ "states": [], 
+ "title_field": "name",
  "track_changes": 1,
  "translated_doctype": 1
 }
