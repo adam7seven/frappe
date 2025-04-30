@@ -108,7 +108,7 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm extends frappe.ui.Dialog {
             this.docfields = [
                 {
                     fieldname: "__newid",
-                    label: __("{0} ID", [__(this.meta.id)]),
+                    label: __("{0} ID", [__(this.meta.name)]),
                     reqd: 1,
                     fieldtype: "Data",
                 },
@@ -163,9 +163,9 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm extends frappe.ui.Dialog {
         if (this.title) {
             return this.title;
         } else if (this.meta.issingle) {
-            return __(this.doctype);
+            return __(this.meta.name);
         } else {
-            return __("New {0}", [__(this.doctype)]);
+            return __("New {0}", [__(this.meta.name)]);
         }
     }
 
@@ -193,45 +193,45 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm extends frappe.ui.Dialog {
         });
     }
 
-	insert() {
-		let me = this;
-		return new Promise((resolve) => {
-			me.update_doc();
-			frappe.call({
-				method: "frappe.client.save",
-				args: {
-					doc: me.dialog.doc,
-				},
-				callback: function (r) {
-					if (
-						r?.message?.docstatus === 0 &&
-						frappe.model.can_submit(me.doctype) &&
-						!frappe.model.has_workflow(me.doctype)
-					) {
-						frappe.run_serially([
-							() => (me.dialog.working = true),
-							() => {
-								me.dialog.set_primary_action(__("Submit"), function () {
-									me.submit(r.message);
-								});
-							},
-						]);
-					} else {
-						me.process_after_insert(r);
-					}
-				},
-				error: function () {
-					if (!me.skip_redirect_on_error) {
-						me.open_doc(true);
-					}
-				},
-				always: function () {
-					me.dialog.working = false;
-					resolve(me.dialog.doc);
-				},
-			});
-		});
-	}
+    insert() {
+        let me = this;
+        return new Promise((resolve) => {
+            me.update_doc();
+            frappe.call({
+                method: "frappe.client.save",
+                args: {
+                    doc: me.dialog.doc,
+                },
+                callback: function (r) {
+                    if (
+                        r?.message?.docstatus === 0 &&
+                        frappe.model.can_submit(me.doctype) &&
+                        !frappe.model.has_workflow(me.doctype)
+                    ) {
+                        frappe.run_serially([
+                            () => (me.dialog.working = true),
+                            () => {
+                                me.dialog.set_primary_action(__("Submit"), function () {
+                                    me.submit(r.message);
+                                });
+                            },
+                        ]);
+                    } else {
+                        me.process_after_insert(r);
+                    }
+                },
+                error: function () {
+                    if (!me.skip_redirect_on_error) {
+                        me.open_doc(true);
+                    }
+                },
+                always: function () {
+                    me.dialog.working = false;
+                    resolve(me.dialog.doc);
+                },
+            });
+        });
+    }
 
     submit(doc) {
         var me = this;

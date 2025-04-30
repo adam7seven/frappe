@@ -124,7 +124,8 @@
    "oldfieldname": "module",
    "oldfieldtype": "Link",
    "options": "Module Def",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 2
   },
   {
    "default": "0",
@@ -710,6 +711,7 @@
  ],
  "grid_page_length": 50,
  "icon": "fa fa-bolt",
+ "id": "DocType",
  "idx": 6,
  "index_web_pages_for_search": 1,
  "links": [
@@ -784,10 +786,10 @@
    "link_fieldname": "document_type"
   }
  ],
- "modified": "2025-04-29 15:18:00.263465",
+ "modified": "2025-04-30 08:20:35.355236",
  "modified_by": "Administrator",
  "module": "Core",
- "id": "DocType",
+ "name": "DocType",
  "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [
@@ -817,10 +819,9 @@
  "row_format": "Dynamic",
  "search_fields": "module",
  "show_id_in_global_search": 1,
- "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": [], 
+ "states": [],
  "title_field": "name",
  "track_changes": 1,
  "translated_doctype": 1

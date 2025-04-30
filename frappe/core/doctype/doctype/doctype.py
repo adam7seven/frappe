@@ -142,18 +142,7 @@ class DocType(Document):
 		migration_hash: DF.Data | None
 		module: DF.Link
 		name: DF.Data
-		naming_rule: DF.Literal[
-			"",
-			"Set by user",
-			"Autoincrement",
-			"By fieldname",
-			'By "Naming Series" field',
-			"Expression",
-			"Expression (old style)",
-			"Random",
-			"UUID",
-			"By script",
-		]
+		naming_rule: DF.Literal["", "Set by user", "Autoincrement", "By fieldname", "By \"Naming Series\" field", "Expression", "Expression (old style)", "Random", "UUID", "By script"]
 		nsm_parent_field: DF.Data | None
 		permissions: DF.Table[DocPerm]
 		protect_attached_files: DF.Check

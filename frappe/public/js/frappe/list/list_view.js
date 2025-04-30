@@ -275,7 +275,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
     set_primary_action() {
         if (this.can_create && !frappe.boot.read_only) {
-            const doctype_id = __(frappe.router.doctype_layout) || __(this.doctype);
+            const doctype_id = __(frappe.router.doctype_layout) || __(this.meta?.name) || __(this.doctype);
             this.page.set_primary_action(
                 __("Add {0}", [doctype_id], "Primary action in list view"),
                 () => {
@@ -470,19 +470,20 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
     }
 
     get_no_result_message() {
+        let doctype_name = __(this.meta?.name || this.doctype);
         let help_link = this.get_documentation_link();
         let filters = this.filter_area && this.filter_area.get();
 
         let has_filters_set = filters && filters.length;
         let no_result_message = has_filters_set
-            ? __("No {0} found with matching filters. Clear filters to see all {0}.", [__(this.doctype)])
+            ? __("No {0} found with matching filters. Clear filters to see all {0}.", [doctype_name])
             : this.meta.description
             ? __(this.meta.description)
-            : __("You haven't created a {0} yet", [__(this.doctype)]);
+            : __("You haven't created a {0} yet", [doctype_name]);
 
         let new_button_label = has_filters_set
-            ? __("Create a new {0}", [__(this.doctype)], "Create a new document from list view")
-            : __("Create your first {0}", [__(this.doctype)], "Create a new document from list view");
+            ? __("Create a new {0}", [doctype_name], "Create a new document from list view")
+            : __("Create your first {0}", [doctype_name], "Create a new document from list view");
 
         const new_button = this.can_create
             ? `<p><button class="btn btn-default btn-sm btn-new-doc hidden-xs">
