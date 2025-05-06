@@ -125,7 +125,7 @@
    "oldfieldtype": "Link",
    "options": "Module Def",
    "reqd": 1,
-   "search_index": 2
+   "search_index": 1
   },
   {
    "default": "0",
@@ -786,7 +786,7 @@
    "link_fieldname": "document_type"
   }
  ],
- "modified": "2025-04-30 08:20:35.355236",
+ "modified": "2025-05-06 08:48:11.181868",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "DocType",
@@ -819,6 +819,7 @@
  "row_format": "Dynamic",
  "search_fields": "module",
  "show_id_in_global_search": 1,
+ "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],

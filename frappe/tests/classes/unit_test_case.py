@@ -118,7 +118,7 @@ def _get_doctype_from_module(cls):
 		json_file_path = Path(path).joinpath(f"{doctype_snake_case}.json")
 		if json_file_path.is_file():
 			doctype_data = json.loads(json_file_path.read_text())
-			return doctype_data.get("name")
+			return doctype_data.get("id")
 	except (ValueError, IndexError):
 		# 'doctype' not found in module_path
 		pass
