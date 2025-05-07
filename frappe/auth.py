@@ -162,12 +162,31 @@ class LoginManager:
 
 	def post_login(self, session_end: str | None = None, audit_user: str | None = None):
 		self.run_trigger("on_login")
+		self.validate_licence()
 		validate_ip_address(self.user)
 		self.validate_hour()
 		self.get_user_info()
 		self.make_session(session_end=session_end, audit_user=audit_user)
 		self.setup_boot_cache()
 		self.set_user_info()
+
+	def validate_licence(self):
+		from frappe.app_core import get_license
+
+		license = get_license()
+		license_count = license.get("COUNT")
+		if not license_count:
+			license_count = 0
+		if license_count == 0:
+			frappe.throw(
+				_("The maximum number of logged-in users has been reached."), frappe.AuthenticationError
+			)
+
+		session_count = frappe.db.count("Sessions", {"status": "Active"})
+		if session_count >= license_count:
+			frappe.throw(
+				_("The maximum number of logged-in users has been reached."), frappe.AuthenticationError
+			)
 
 	def get_user_info(self):
 		self.info = frappe.get_cached_value(

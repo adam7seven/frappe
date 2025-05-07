@@ -118,6 +118,24 @@ def check_license(request):
 		raise frappe.LicenseExpiredError
 
 
+def get_license():
+	if hasattr(frappe, "license"):
+		return frappe.license
+	else:
+		result, license = load_license_from_file()
+		if license:
+			frappe.license = license
+
+		if result == "NotFound":
+			raise frappe.LicenseNotFoundError
+		elif result == "Invalid":
+			raise frappe.LicenseInvalidError
+		elif result == "Expired":
+			raise frappe.LicenseExpiredError
+
+		return license
+
+
 def load_license_from_file():
 	# Get the license file from the system
 	license_file = frappe.get_site_path("license.lic")
