@@ -52,7 +52,7 @@ frappe.ui.form.on("DocType", {
         if (!frm.is_new() && !frm.doc.istable) {
             const button_text = frm.doc.issingle
                 ? __("Go to {0}", [__(frm.doc.id)])
-                : __("Go to {0} List", [__(frm.doc.id)]);
+                : __("Go to {0} List", [__(frm.doc.name || frm.doc.id)]);
             frm.add_custom_button(button_text, () => {
                 window.open(`/app/${frappe.router.slug(frm.doc.id)}`);
             });
