@@ -521,6 +521,7 @@ class Document(BaseDocument, DocRef):
 		self.set_id_in_children()
 
 		self.validate_higher_perm_levels()
+		self.run_method("before_validate_links")
 		self._validate_links()
 		self.run_before_save_methods()
 
