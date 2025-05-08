@@ -288,6 +288,24 @@ login.login_handlers = (function () {
 			}
 		},
 		401: get_error_handler({{ _("Invalid Login. Try again.") | tojson }}),
+		403: function (data) {
+			if(data.responseJSON && data.responseJSON.exc_type){
+				let exc_type = data.responseJSON.exc_type;
+				if(exc_type === "LicenseNotFoundError" ||
+					exc_type === "LicenseInvalidError" ||
+					exc_type === "LicenseExpireError"){
+					window.location.href = `/license?redirect-to=${encodeURIComponent(
+						window.location.pathname + window.location.search
+					)}`;
+				}
+				else{
+					get_error_handler({{ _("Login is forbidden.") | tojson }});
+				}
+			}
+			else{
+				get_error_handler({{ _("Login is forbidden.") | tojson }});
+			}
+		},
 		417: get_error_handler({{ _("Oops! Something went wrong.") | tojson }}),
 		404: get_error_handler({{ _("User does not exist.") | tojson }}),
 		500: get_error_handler({{ _("Something went wrong.") | tojson }})
