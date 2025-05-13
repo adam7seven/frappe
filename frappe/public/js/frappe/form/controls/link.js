@@ -9,6 +9,7 @@ frappe.ui.form.recent_link_validations = {};
 
 frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlData {
     static trigger_change_on_input_event = false;
+    doc_type_is_link = undefined;
     make_input() {
         var me = this;
         $(`<div class="link-field ui-front" style="position: relative;">
@@ -24,12 +25,12 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
         this.$link = this.$input_area.find(".link-btn");
         this.$link_open = this.$link.find(".btn-open");
         this.set_input_attributes();
-        this.$input.on("focus", function () {
+        this.$input.on("focus", async function () {
             if (!me.$input.val()) {
                 me.$input.val("").trigger("input");
             }
 
-            me.show_link_and_clear_buttons();
+            await me.show_link_and_clear_buttons();
         });
         this.$input.on("blur", function () {
             // if this disappears immediately, the user's click
@@ -40,8 +41,8 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
             }, 250);
         });
 
-        this.$input_area.on("mouseenter", () => {
-            this.show_link_and_clear_buttons();
+        this.$input_area.on("mouseenter", async () => {
+            await this.show_link_and_clear_buttons();
         });
 
         this.$input_area.on("mouseleave", () => {
@@ -59,12 +60,18 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
         this.bind_change_event();
     }
 
-    show_link_and_clear_buttons() {
+    async show_link_and_clear_buttons() {
         if (this.$input.val() && this.get_options()) {
             const doctype = this.get_options();
             const id = this.get_input_value();
-            this.$link.toggle(true);
-            this.$link_open.attr("href", frappe.utils.get_form_link(doctype, id));
+
+            if (this.doc_type_is_link === undefined) {
+                this.doc_type_is_link = await frappe.db.get_value("DocType", doctype, "istable");
+            }
+            if (this.doc_type_is_link === false) {
+                this.$link.toggle(true);
+                this.$link_open.attr("href", frappe.utils.get_form_link(doctype, id));
+            }
         }
     }
 
@@ -241,9 +248,9 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
                     html += '<br><span class="small">' + __(d.description) + "</span>";
                 }
                 return $(`<div role="option">`)
-                    .on("click", (event) => {
+                    .on("click", async (event) => {
                         me.awesomplete.select(event.currentTarget, event.currentTarget);
-                        me.show_link_and_clear_buttons();
+                        await me.show_link_and_clear_buttons();
                     })
                     .data("item.autocomplete", d)
                     .prop("aria-selected", "false")
