@@ -951,23 +951,6 @@ class Document(BaseDocument, DocRef):
 
 		return permissions
 
-	def _set_defaults(self):
-		if frappe.flags.in_import:
-			return
-
-		if self.is_new():
-			new_doc = frappe.new_doc(self.doctype, as_dict=True)
-			self.update_if_missing(new_doc)
-
-		# children
-		for df in self.meta.get_table_fields():
-			new_doc = frappe.new_doc(df.options, parent_doc=self, parentfield=df.fieldname, as_dict=True)
-			value = self.get(df.fieldname)
-			if isinstance(value, list):
-				for d in value:
-					if d.is_new():
-						d.update_if_missing(new_doc)
-
 	def check_if_latest(self):
 		"""Checks if `modified` timestamp provided by document being updated is same as the
 		`modified` timestamp in the database. If there is a different, the document has been

@@ -299,6 +299,8 @@ class BaseDocument:
 			self.__dict__[key] = table = []
 
 		d = self._init_child(value, key)
+		if set_defaults:
+			d._set_defaults()
 
 		if position == -1:
 			table.append(d)
@@ -317,6 +319,23 @@ class BaseDocument:
 		d._parent_doc = self._weakref
 
 		return d
+
+	def _set_defaults(self):
+		if frappe.flags.in_import:
+			return
+
+		if self.is_new():
+			new_doc = frappe.new_doc(self.doctype, as_dict=True)
+			self.update_if_missing(new_doc)
+
+		# children
+		for df in self.meta.get_table_fields():
+			new_doc = frappe.new_doc(df.options, parent_doc=self, parentfield=df.fieldname, as_dict=True)
+			value = self.get(df.fieldname)
+			if isinstance(value, list):
+				for d in value:
+					if d.is_new():
+						d.update_if_missing(new_doc)
 
 	@property
 	def parent_doc(self):
