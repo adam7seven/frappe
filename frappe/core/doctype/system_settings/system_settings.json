@@ -695,7 +695,6 @@
    "options": "Currency"
   },
   {
-   "default": "1",
    "fieldname": "hide_empty_read_only_fields",
    "fieldtype": "Check",
    "label": "Hide Empty Read-Only Fields"
