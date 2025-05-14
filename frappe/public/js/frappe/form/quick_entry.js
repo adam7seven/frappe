@@ -258,7 +258,7 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm extends frappe.ui.Dialog {
         } else if (this.after_insert) {
             this.after_insert(this.doc);
         } else {
-            this.open_form_if_not_list();
+            this.open_form_or_refresh_list();
         }
     }
 
@@ -277,11 +277,17 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm extends frappe.ui.Dialog {
         });
     }
 
-    open_form_if_not_list() {
+    open_form_or_refresh_list() {
         if (this.meta.issingle) return;
         let route = frappe.get_route();
+        if (!route) {
+            return;
+        }
         let doc = this.doc;
-        if (route && !(route[0] === "List" && route[1] === doc.doctype)) {
+
+        if (route[0] === "List" && route[1] === doc.doctype) {
+            frappe.get_list_view(doc.doctype).refresh();
+        } else {
             frappe.run_serially([() => frappe.set_route("Form", doc.doctype, doc.id)]);
         }
     }
