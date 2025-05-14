@@ -66,9 +66,9 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
             const id = this.get_input_value();
 
             if (this.doc_type_is_link === undefined) {
-                this.doc_type_is_link = await frappe.db.get_value("DocType", doctype, "istable");
+                this.doc_type_is_link = (await frappe.db.get_value("DocType", doctype, "istable")).message.istable;
             }
-            if (this.doc_type_is_link === false) {
+            if (!this.doc_type_is_link) {
                 this.$link.toggle(true);
                 this.$link_open.attr("href", frappe.utils.get_form_link(doctype, id));
             }
