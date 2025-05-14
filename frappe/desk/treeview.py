@@ -41,7 +41,8 @@ def get_children(doctype, parent="", include_disabled=False, **filters):
 
 
 def _get_children(doctype, parent="", ignore_permissions=False, include_disabled=False):
-	parent_field = "parent_" + frappe.scrub(doctype)
+	nsm_parent_field = frappe.db.get_value("DocType", doctype, "nsm_parent_field")
+	parent_field = frappe.scrub(nsm_parent_field) if nsm_parent_field else "parent_" + frappe.scrub(doctype)
 	filters = [[f"ifnull(`{parent_field}`,'')", "=", parent], ["docstatus", "<", 2]]
 	if frappe.db.has_column(doctype, "disabled") and not include_disabled:
 		filters.append(["disabled", "=", False])
