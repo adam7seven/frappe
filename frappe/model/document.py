@@ -453,6 +453,10 @@ class Document(BaseDocument, DocRef):
 		if hasattr(self, "__unsaved"):
 			delattr(self, "__unsaved")
 
+		for d in self.get_all_children():
+			if hasattr(d, "__unsaved"):
+				delattr(d, "__unsaved")
+
 		if not (frappe.flags.in_migrate or frappe.local.flags.in_install or frappe.flags.in_setup_wizard):
 			if frappe.get_cached_value("User", frappe.session.user, "follow_created_documents"):
 				follow_document(self.doctype, self.id, frappe.session.user)
@@ -661,13 +665,11 @@ class Document(BaseDocument, DocRef):
 		# If autoname has set as Prompt (id)
 		if self.get("__newid") and autoname.lower() == "prompt":
 			self.id = validate_id(self.doctype, self.get("__newid"))
-			self.flags.id_set = True
-			return
-
-		if set_id:
-			self.id = validate_id(self.doctype, set_id)
 		else:
-			set_new_id(self)
+			if set_id:
+				self.id = validate_id(self.doctype, set_id)
+			else:
+				set_new_id(self)
 
 		if set_child_ids:
 			self.set_parent_in_children()
