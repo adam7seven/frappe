@@ -528,7 +528,7 @@
 	padding: var(--padding-sm) var(--padding-md);
 	font-size: var(--text-xl);
 	font-weight: 600;
-	// border-bottom: 1px solid var(--border-color);
+	border-bottom: 1px solid var(--border-color);
 }
 
 .grid-form-body {
@@ -619,7 +619,7 @@
 
 .grid-footer-toolbar {
 	padding: var(--padding-md) var(--padding-sm) var(--padding-xs) var(--padding-sm);
-	// border-top: 1px solid var(--border-color);
+	border-top: 1px solid var(--border-color);
 	span {
 		margin-right: var(--margin-xs);
 	}
