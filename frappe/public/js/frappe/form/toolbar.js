@@ -34,7 +34,7 @@ frappe.ui.form.Toolbar = class Toolbar {
     set_title() {
         let title;
         if (this.frm.is_new()) {
-            title = __("New {0}", [__(this.frm.meta.name)]);
+            title = __("New {0}", [__(this.frm.meta.name || this.frm.doctype)]);
         } else if (this.frm.meta.title_field) {
             let title_field = (this.frm.doc[this.frm.meta.title_field] || "").toString().trim();
             title = strip_html(title_field || this.frm.docid);
@@ -552,7 +552,7 @@ frappe.ui.form.Toolbar = class Toolbar {
         // New
         if (p[CREATE] && !this.frm.meta.issingle && !this.frm.meta.in_create) {
             this.page.add_menu_item(
-                __("New {0}", [__(this.frm.meta.name)]),
+                __("New {0}", [__(this.frm.meta.name || this.frm.doctype)]),
                 () => {
                     frappe.new_doc(this.frm.doctype, true);
                 },
