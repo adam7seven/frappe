@@ -15,7 +15,7 @@ class GoogleSettings(Document):
 		from frappe.types import DF
 
 		api_key: DF.Data | None
-		app_id: DF.Data | None
+		app_name: DF.Data | None
 		client_id: DF.Data | None
 		client_secret: DF.Password | None
 		enable: DF.Check
@@ -35,6 +35,6 @@ def get_file_picker_settings():
 
 	return {
 		"enabled": True,
-		"appId": google_settings.app_id,
+		"appId": google_settings.app_name,
 		"clientId": google_settings.client_id,
 	}

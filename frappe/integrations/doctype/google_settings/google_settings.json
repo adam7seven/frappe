@@ -12,7 +12,7 @@
     "api_key",
     "section_break_7",
     "google_drive_picker_enabled",
-    "app_id"
+    "app_name"
   ],
   "fields": [
     {
@@ -56,9 +56,9 @@
     {
       "depends_on": "google_drive_picker_enabled",
       "description": "The project number obtained from Google Cloud Console under <a href=\"https://console.cloud.google.com/iam-admin/settings\">\n\"IAM &amp; Admin\" &gt; \"Settings\"\n</a>",
-      "fieldname": "app_id",
+      "fieldname": "app_name",
       "fieldtype": "Data",
-      "label": "App ID",
+      "label": "App Name",
       "mandatory_depends_on": "google_drive_picker_enabled"
     },
     {

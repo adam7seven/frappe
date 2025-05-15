@@ -2088,7 +2088,7 @@ msgstr "هوية العميل للتطبيق"
 msgid "App Client Secret"
 msgstr "كلمة مرور التطبيق الثانوي"
 
-#. Label of the app_id (Data) field in DocType 'Google Settings'
+#. Label of the app_name (Data) field in DocType 'Google Settings'
 #: frappe/integrations/doctype/google_settings/google_settings.json
 msgid "App ID"
 msgstr ""

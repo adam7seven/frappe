@@ -20,7 +20,7 @@ class TestGoogleSettings(IntegrationTestCase):
 	def setUp(self):
 		settings = frappe.get_single("Google Settings")
 		settings.client_id = "test_client_id"
-		settings.app_id = "test_app_id"
+		settings.app_name = "test_app_name"
 		settings.api_key = "test_api_key"
 		settings.save()
 
@@ -48,4 +48,4 @@ class TestGoogleSettings(IntegrationTestCase):
 
 		self.assertEqual(True, settings.get("enabled", False))
 		self.assertEqual("test_client_id", settings.get("clientId", ""))
-		self.assertEqual("test_app_id", settings.get("appId", ""))
+		self.assertEqual("test_app_name", settings.get("appId", ""))

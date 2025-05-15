@@ -2080,7 +2080,7 @@ msgstr "crwdns128230:0crwdne128230:0"
 msgid "App Client Secret"
 msgstr "crwdns128232:0crwdne128232:0"
 
-#. Label of the app_id (Data) field in DocType 'Google Settings'
+#. Label of the app_name (Data) field in DocType 'Google Settings'
 #: frappe/integrations/doctype/google_settings/google_settings.json
 msgid "App ID"
 msgstr "crwdns128234:0crwdne128234:0"
