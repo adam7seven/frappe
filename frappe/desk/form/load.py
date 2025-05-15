@@ -177,7 +177,7 @@ def get_milestones(doctype, id):
 	return frappe.get_all(
 		"Milestone",
 		fields=["creation", "owner", "track_field", "value"],
-		filters=dict(reference_type=doctype, reference_id=id),
+		filters=dict(reference_type=doctype, reference_id=str(id)),
 	)
 
 
@@ -185,7 +185,7 @@ def get_attachments(dt, dn):
 	return frappe.get_all(
 		"File",
 		fields=["id", "file_name", "file_url", "is_private"],
-		filters={"attached_to_id": dn, "attached_to_doctype": dt},
+		filters={"attached_to_id": str(dn), "attached_to_doctype": dt},
 	)
 
 
@@ -333,7 +333,7 @@ def get_communication_data(
 		},
 		dict(
 			doctype=doctype,
-			id=id,
+			id=str(id),
 			start=frappe.utils.cint(start),
 			limit=limit,
 		),
@@ -347,7 +347,7 @@ def get_assignments(dt, dn):
 		fields=["id", "allocated_to as owner", "description", "status"],
 		filters={
 			"reference_type": dt,
-			"reference_id": dn,
+			"reference_id": str(dn),
 			"status": ("not in", ("Cancelled", "Closed")),
 			"allocated_to": ("is", "set"),
 		},
@@ -368,7 +368,7 @@ def get_view_logs(doc: "Document") -> list[dict]:
 		"View Log",
 		filters={
 			"reference_doctype": doc.doctype,
-			"reference_id": doc.id,
+			"reference_id": str(doc.id),
 		},
 		fields=["id", "creation", "owner"],
 		order_by="creation desc",
@@ -383,7 +383,7 @@ def get_tags(doctype: str, id: str) -> str:
 
 	tags = frappe.get_all(
 		"Tag Link",
-		filters={"document_type": doctype, "document_id": id},
+		filters={"document_type": doctype, "document_id": str(id)},
 		fields=["tag"],
 		pluck="tag",
 	)
@@ -435,7 +435,7 @@ def get_title_values_for_link_and_dynamic_link_fields(doc, link_fields=None):
 
 		doctype = field.options if field.fieldtype == "Link" else doc.get(field.options)
 
-		meta = frappe.get_meta(doctype)
+		meta = frappe.get_meta(doctype) if doctype else None
 		if not meta or not meta.title_field or not meta.show_title_field_in_link:
 			continue
 

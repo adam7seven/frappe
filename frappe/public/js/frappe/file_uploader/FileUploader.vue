@@ -5,7 +5,7 @@
 				<div class="text-center">
 					{{ __("Drag and drop files here or upload from") }}
 				</div>
-				<div class="mt-2 text-center">
+				<div class="mt-3 text-center">
 					<button class="btn btn-file-upload" @click="browse_files">
 						<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<circle cx="15" cy="15" r="15" fill="var(--subtle-fg)" />
@@ -62,15 +62,18 @@
 						</svg>
 						<div class="mt-1">{{ __("Camera") }}</div>
 					</button>
-					<button v-if="google_drive_settings.enabled" class="btn btn-file-upload"
-						@click="show_google_drive_picker">
+					<button
+						v-if="allow_google_drive && google_drive_settings.enabled"
+						class="btn btn-file-upload"
+						@click="show_google_drive_picker"
+					>
 						<svg width="30" height="30">
 							<image href="/assets/frappe/icons/social/google_drive.svg" width="30" height="30" />
 						</svg>
 						<div class="mt-1">{{ __("Google Drive") }}</div>
 					</button>
 				</div>
-				<div class="text-muted text-medium text-center">
+				<div class="mt-3 text-center" v-if="upload_notes">
 					{{ upload_notes }}
 				</div>
 			</div>
@@ -175,6 +178,9 @@
 		allow_toggle_optimize: {
 			default: true,
 		},
+		allow_google_drive: {
+			default: true,
+		},
 	});
 
 	// variables
@@ -202,25 +208,25 @@
 		allow_take_photo.value = window.navigator.mediaDevices;
 	}
 
-	if (frappe.user_id !== "Guest") {
-		frappe.call({
-			// method only available after login
-			method: "frappe.integrations.doctype.google_settings.google_settings.get_file_picker_settings",
-			callback: (resp) => {
-				if (!resp.exc) {
-					google_drive_settings.value = resp.message;
-				}
-			},
-		});
-	}
-	if (props.restrictions.max_file_size == null) {
-		frappe.call("frappe.core.api.file.get_max_file_size").then((res) => {
-			props.restrictions.max_file_size = Number(res.message);
-		});
-	}
-	if (props.restrictions.max_number_of_files == null && props.doctype) {
-		props.restrictions.max_number_of_files = frappe.get_meta(props.doctype)?.max_attachments;
-	}
+if (frappe.user_id !== "Guest" && props.allow_google_drive) {
+	frappe.call({
+		// method only available after login
+		method: "frappe.integrations.doctype.google_settings.google_settings.get_file_picker_settings",
+		callback: (resp) => {
+			if (!resp.exc) {
+				google_drive_settings.value = resp.message;
+			}
+		},
+	});
+}
+if (props.restrictions.max_file_size == null) {
+	frappe.call("frappe.core.api.file.get_max_file_size").then((res) => {
+		props.restrictions.max_file_size = Number(res.message);
+	});
+}
+if (props.restrictions.max_number_of_files == null && props.doctype) {
+	props.restrictions.max_number_of_files = frappe.get_meta(props.doctype)?.max_attachments;
+}
 
 	// methods
 	function dragover() {

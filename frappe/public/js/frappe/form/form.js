@@ -2034,6 +2034,10 @@ frappe.ui.form.Form = class FrappeForm {
                 !(["add", "update"].includes(action) && doc.doctype === "Comment" && doc.owner === frappe.session.user)
             ) {
                 this.timeline && this.timeline.refresh();
+
+                if (["add", "delete"].includes(action) && doc.doctype === "Comment") {
+				this.footer.refresh_comments_count();
+			}
             }
         });
     }

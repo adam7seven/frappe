@@ -148,7 +148,7 @@ def _get_users(doc: "Document") -> list:
 			"owner",
 			"creation",
 		],
-		filters=dict(share_doctype=doc.doctype, share_id=doc.id),
+		filters=dict(share_doctype=doc.doctype, share_id=str(doc.id)),
 	)
 
 

@@ -130,6 +130,10 @@ class FrappeAPITestCase(IntegrationTestCase):
 	def delete(self, path, **kwargs) -> TestResponse:
 		return make_request(target=self.TEST_CLIENT.delete, args=(path,), kwargs=kwargs)
 
+	def tearDown(self) -> None:
+		frappe.db.rollback()
+		return super().tearDown()
+
 
 class TestResourceAPI(FrappeAPITestCase):
 	DOCTYPE = "ToDo"
@@ -141,13 +145,14 @@ class TestResourceAPI(FrappeAPITestCase):
 		for _ in range(20):
 			doc = frappe.get_doc({"doctype": "ToDo", "description": frappe.mock("paragraph")}).insert()
 			cls.GENERATED_DOCUMENTS = []
-			cls.GENERATED_DOCUMENTS.append(doc.name)
+			cls.GENERATED_DOCUMENTS.append(doc.id)
 		frappe.db.commit()
 
 	@classmethod
 	def tearDownClass(cls):
-		for name in cls.GENERATED_DOCUMENTS:
-			frappe.delete_doc_if_exists(cls.DOCTYPE, name)
+		frappe.db.commit()
+		for id in cls.GENERATED_DOCUMENTS:
+			frappe.delete_doc_if_exists(cls.DOCTYPE, id)
 		frappe.db.commit()
 
 	def test_unauthorized_call(self):
@@ -202,7 +207,7 @@ class TestResourceAPI(FrappeAPITestCase):
 		data = {"description": frappe.mock("paragraph"), "sid": self.sid}
 		response = self.post(self.resource(self.DOCTYPE), data)
 		self.assertEqual(response.status_code, 200)
-		docid = response.json["data"]["name"]
+		docid = response.json["data"]["id"]
 		self.assertIsInstance(docid, str)
 		self.GENERATED_DOCUMENTS.append(docid)
 

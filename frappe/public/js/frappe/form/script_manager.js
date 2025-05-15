@@ -163,6 +163,11 @@ frappe.ui.form.ScriptManager = class ScriptManager {
 				handlers.new_style.push(fn);
 			});
 		}
+		if (frappe.ui.form.handlers["*"] && frappe.ui.form.handlers["*"][event_id]) {
+			$.each(frappe.ui.form.handlers["*"][event_id], function (i, fn) {
+				handlers.new_style.push(fn);
+			});
+		}
 		if (this.frm.cscript && this.frm.cscript[event_id]) {
 			handlers.old_style.push(event_id);
 		}

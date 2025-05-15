@@ -82,7 +82,7 @@ def add(args=None, *, ignore_permissions=False):
 					"doctype": "ToDo",
 					"allocated_to": assign_to,
 					"reference_type": args["doctype"],
-					"reference_id": args["id"],
+					"reference_id": str(args["id"]),
 					"description": args.get("description"),
 					"priority": args.get("priority", "Medium"),
 					"status": "Open",

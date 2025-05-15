@@ -90,8 +90,15 @@ def get_context(context) -> PrintContext:
 			settings=settings,
 		)
 
+	# Include selected print format id in access log
+	print_format_id = getattr(print_format, "id", "Standard")
+
 	make_access_log(
-		doctype=frappe.form_dict.doctype, document=frappe.form_dict.id, file_type="PDF", method="Print"
+		doctype=frappe.form_dict.doctype,
+		document=frappe.form_dict.id,
+		file_type="PDF",
+		method="Print",
+		page=f"Print Format: {print_format_id}",
 	)
 
 	return {

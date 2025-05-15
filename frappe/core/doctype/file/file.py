@@ -155,7 +155,7 @@ class File(Document):
 		self.validate_protected_file()
 		self._delete_file_on_disk()
 		if not self.is_folder:
-			self.add_comment_in_reference_doc("Attachment Removed", _("{0}").format(self.file_name))
+			self.add_comment_in_reference_doc("Attachment Removed", self.file_name)
 
 	def on_rollback(self):
 		rollback_flags = ("new_file", "original_content", "original_path")
@@ -477,11 +477,11 @@ class File(Document):
 		Allows deleting the attached file if the linked document is in draft. If submitted,
 		deletion is not allowed. If canceled, requires delete permissions on the linked document.
 		"""
-		if not (self.attached_to_doctype and self.attached_to_name):
+		if not (self.attached_to_doctype and self.attached_to_id):
 			return
 
 		try:
-			ref_doc = frappe.get_doc(self.attached_to_doctype, self.attached_to_name)
+			ref_doc = frappe.get_doc(self.attached_to_doctype, self.attached_to_id)
 		except DoesNotExistError:
 			return
 
@@ -767,7 +767,7 @@ class File(Document):
 
 		self.add_comment_in_reference_doc(
 			"Attachment",
-			_("{0}").format(f"<a href='{file_url}' target='_blank'>{file_name}</a>{icon}"),
+			f"<a href='{file_url}' target='_blank'>{file_name}</a>{icon}",
 		)
 
 	def add_comment_in_reference_doc(self, comment_type, text):

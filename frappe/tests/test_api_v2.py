@@ -28,13 +28,14 @@ class TestResourceAPIV2(FrappeAPITestCase):
 		for _ in range(20):
 			doc = frappe.get_doc({"doctype": "ToDo", "description": frappe.mock("paragraph")}).insert()
 			cls.GENERATED_DOCUMENTS = []
-			cls.GENERATED_DOCUMENTS.append(doc.name)
+			cls.GENERATED_DOCUMENTS.append(doc.id)
 		frappe.db.commit()
 
 	@classmethod
 	def tearDownClass(cls):
-		for name in cls.GENERATED_DOCUMENTS:
-			frappe.delete_doc_if_exists(cls.DOCTYPE, name)
+		frappe.db.commit()
+		for id in cls.GENERATED_DOCUMENTS:
+			frappe.delete_doc_if_exists(cls.DOCTYPE, id)
 		frappe.db.commit()
 
 	def test_unauthorized_call(self):
@@ -80,14 +81,14 @@ class TestResourceAPIV2(FrappeAPITestCase):
 		data = {"description": frappe.mock("paragraph"), "sid": self.sid}
 		response = self.post(self.resource(self.DOCTYPE), data)
 		self.assertEqual(response.status_code, 200)
-		docid = response.json["data"]["name"]
+		docid = response.json["data"]["id"]
 		self.assertIsInstance(docid, str)
 		self.GENERATED_DOCUMENTS.append(docid)
 
 	def test_copy_document(self):
 		doc = frappe.get_doc(self.DOCTYPE, self.GENERATED_DOCUMENTS[0])
 
-		response = self.get(self.resource(self.DOCTYPE, doc.name, "copy"))
+		response = self.get(self.resource(self.DOCTYPE, doc.id, "copy"))
 		self.assertEqual(response.status_code, 200)
 		data = response.json["data"]
 
@@ -96,7 +97,7 @@ class TestResourceAPIV2(FrappeAPITestCase):
 		self.assertEqual(data["status"], doc.status)
 		self.assertEqual(data["priority"], doc.priority)
 
-		self.assertNotIn("name", data)
+		self.assertNotIn("id", data)
 		self.assertNotIn("creation", data)
 		self.assertNotIn("modified", data)
 		self.assertNotIn("modified_by", data)
@@ -115,7 +116,7 @@ class TestResourceAPIV2(FrappeAPITestCase):
 
 	def test_execute_doc_method(self):
 		response = self.get(self.resource("Website Theme", "Standard", "method", "get_apps"))
-		self.assertEqual(response.json["data"][0]["name"], "frappe")
+		self.assertEqual(response.json["data"][0]["id"], "frappe")
 
 	def test_update_document(self):
 		generated_desc = frappe.mock("paragraph")
@@ -267,7 +268,7 @@ class TestDocTypeAPIV2(FrappeAPITestCase):
 	def test_meta(self):
 		response = self.get(self.doctype_path("ToDo", "meta"))
 		self.assertEqual(response.status_code, 200)
-		self.assertEqual(response.json["data"]["name"], "ToDo")
+		self.assertEqual(response.json["data"]["id"], "ToDo")
 
 	def test_count(self):
 		response = self.get(self.doctype_path("ToDo", "count"))

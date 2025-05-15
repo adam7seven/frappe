@@ -58,28 +58,28 @@ class TestFrappeClient(IntegrationTestCase):
 		DOCTYPE = "Note"
 		server = FrappeClient(get_url(), "Administrator", self.PASSWORD, verify=False)
 
-		NAME = server.insert({"doctype": DOCTYPE, "title": TITLE}).get("name")
+		NAME = server.insert({"doctype": DOCTYPE, "title": TITLE}).get("id")
 		doc = server.get_doc(DOCTYPE, NAME)
 
 		for field in default_fields:
 			self.assertIn(field, doc)
 
 		self.assertEqual(doc.get("doctype"), DOCTYPE)
-		self.assertEqual(doc.get("name"), NAME)
+		self.assertEqual(doc.get("id"), NAME)
 		self.assertEqual(doc.get("title"), TITLE)
 		self.assertEqual(doc.get("owner"), USER)
 
 	def test_get_value_by_filters(self):
 		CONTENT = "test get value"
 		server = FrappeClient(get_url(), "Administrator", self.PASSWORD, verify=False)
-		server.insert({"doctype": "Note", "title": "get_value", "content": CONTENT}).get("name")
+		server.insert({"doctype": "Note", "title": "get_value", "content": CONTENT}).get("id")
 
 		self.assertEqual(server.get_value("Note", "content", {"title": "get_value"}).get("content"), CONTENT)
 
 	def test_get_value_by_name(self):
 		server = FrappeClient(get_url(), "Administrator", self.PASSWORD, verify=False)
 		CONTENT = "test get value"
-		NAME = server.insert({"doctype": "Note", "title": "get_value", "content": CONTENT}).get("name")
+		NAME = server.insert({"doctype": "Note", "title": "get_value", "content": CONTENT}).get("id")
 
 		self.assertEqual(server.get_value("Note", "content", NAME).get("content"), CONTENT)
 
@@ -91,7 +91,7 @@ class TestFrappeClient(IntegrationTestCase):
 			FrappeException,
 			server.get_value,
 			"Note",
-			"(select (password) from(__Auth) order by name desc limit 1)",
+			"(select (password) from(__Auth) order by id desc limit 1)",
 			{"title": "get_value"},
 		)
 
@@ -105,12 +105,14 @@ class TestFrappeClient(IntegrationTestCase):
 		self.assertEqual(
 			server.get_value("Website Settings", "title_prefix").get("title_prefix"), "test-prefix"
 		)
+		frappe.db.rollback()  # Clear snapshot isolation
 		frappe.db.set_single_value("Website Settings", "title_prefix", "")
+		frappe.db.commit()
 
 	def test_update_doc(self):
 		server = FrappeClient(get_url(), "Administrator", self.PASSWORD, verify=False)
 		resp = server.insert({"doctype": "Note", "title": "Sing"})
-		doc = server.get_doc("Note", resp.get("name"))
+		doc = server.get_doc("Note", resp.get("id"))
 
 		CONTENT = "<h1>Hello, World!</h1>"
 		doc["content"] = CONTENT
@@ -150,7 +152,7 @@ class TestFrappeClient(IntegrationTestCase):
 		server.update(
 			{
 				"doctype": "Event Participants",
-				"name": event.get("event_participants")[0].get("name"),
+				"id": event.get("event_participants")[0].get("id"),
 				"reference_docid": "William Shakespeare",
 			}
 		)
@@ -161,7 +163,7 @@ class TestFrappeClient(IntegrationTestCase):
 
 	def test_delete_doc(self):
 		server = FrappeClient(get_url(), "Administrator", self.PASSWORD, verify=False)
-		NAME_TO_DELETE = server.insert({"doctype": "Note", "title": "Sing"}).get("name")
+		NAME_TO_DELETE = server.insert({"doctype": "Note", "title": "Sing"}).get("id")
 		server.delete("Note", NAME_TO_DELETE)
 		self.assertFalse(frappe.db.get_value("Note", NAME_TO_DELETE))
 

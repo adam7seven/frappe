@@ -232,7 +232,7 @@ def get_comments(doctype, doc_id, frequency, user):
 
 
 def is_document_followed(doctype, doc_id, user):
-	return frappe.db.exists("Document Follow", {"ref_doctype": doctype, "ref_docid": doc_id, "user": user})
+	return frappe.db.exists("Document Follow", {"ref_doctype": doctype, "ref_docid": str(doc_id), "user": user})
 
 
 @frappe.whitelist()

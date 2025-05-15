@@ -54,8 +54,8 @@ def get_doc(doctype: str, /) -> _SingleDocument:
 
 
 @overload
-def get_doc(doctype: str, name: str, /, *, for_update: bool | None = None) -> "Document":
-	"""Retrieve DocType from DB, doctype and name must be positional argument."""
+def get_doc(doctype: str, id: str, /, *, for_update: bool | None = None) -> "Document":
+	"""Retrieve DocType from DB, doctype and id must be positional argument."""
 	pass
 
 
@@ -190,8 +190,8 @@ class Document(BaseDocument, DocRef):
 
 	def _init_dispatch(self, arg, *args, **kwargs):
 		if isinstance(arg, str):
-			name = args[0] if args else arg
-			return self._init_known_doc(arg, name, **kwargs)
+			id = args[0] if args else arg
+			return self._init_known_doc(arg, id, **kwargs)
 
 		if isinstance(arg, dict):
 			return self._init_from_kwargs(arg)
@@ -311,7 +311,7 @@ class Document(BaseDocument, DocRef):
 						table_name=get_table_name(child_doctype, wrap_in_backticks=True),
 						for_update=for_update,
 					),
-					{"parent": self.id, "parenttype": self.doctype, "parentfield": fieldname},
+					{"parent": str(self.id), "parenttype": self.doctype, "parentfield": fieldname},
 					as_dict=True,
 				)
 
@@ -475,7 +475,7 @@ class Document(BaseDocument, DocRef):
 				"hide_on_success": True,
 				"args": {
 					"doctype": self.doctype,
-					"name": self.name,
+					"id": self.id,
 				},
 			}
 
@@ -604,7 +604,7 @@ class Document(BaseDocument, DocRef):
 			tbl = frappe.qb.DocType(df.options)
 			qry = (
 				frappe.qb.from_(tbl)
-				.where(tbl.parent == self.id)
+				.where(tbl.parent == str(self.id))
 				.where(tbl.parenttype == self.doctype)
 				.where(tbl.parentfield == fieldname)
 				.delete()
@@ -657,7 +657,7 @@ class Document(BaseDocument, DocRef):
 	def set_new_id(self, force=False, set_id=None, set_child_ids=True):
 		"""Calls `frappe.naming.set_new_id` for parent and child docs."""
 
-		if self.flags.id_set and not force:
+		if (frappe.flags.api_id_set or self.flags.id_set) and not force:
 			return
 
 		autoname = self.meta.autoname or ""
@@ -1688,16 +1688,20 @@ class Document(BaseDocument, DocRef):
 		else:
 			return []
 
+	@property
+	def __onload(self):
+		onload = self.get("__onload")
+		if onload is None:
+			onload = frappe._dict()
+			self.set("__onload", onload)
+
+		return onload
+
 	def set_onload(self, key, value):
-		if not self.get("__onload"):
-			self.set("__onload", frappe._dict())
-		self.get("__onload")[key] = value
+		self.__onload[key] = value
 
 	def get_onload(self, key=None):
-		if not key:
-			return self.get("__onload", frappe._dict())
-
-		return self.get("__onload")[key]
+		return self.__onload[key] if key else self.__onload
 
 	def queue_action(self, action, **kwargs):
 		"""Run an action in background. If the action has an inner function,
@@ -1720,7 +1724,7 @@ class Document(BaseDocument, DocRef):
 		return enqueue(
 			"frappe.model.document.execute_action",
 			__doctype=self.doctype,
-			__name=self.id,
+			__id=self.id,
 			__action=action,
 			enqueue_after_commit=enqueue_after_commit,
 			**kwargs,
@@ -1836,9 +1840,9 @@ class Document(BaseDocument, DocRef):
 		return f"<{self.__class__.__name__}: {doctype} {id}{docstatus}{parent}>"
 
 
-def execute_action(__doctype, __name, __action, **kwargs):
+def execute_action(__doctype, __id, __action, **kwargs):
 	"""Execute an action on a document (called by background worker)"""
-	doc = frappe.get_doc(__doctype, __name)
+	doc = frappe.get_doc(__doctype, __id)
 	doc.unlock()
 	try:
 		getattr(doc, __action)(**kwargs)

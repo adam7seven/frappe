@@ -190,7 +190,7 @@ def get_assignments(doc) -> list[dict]:
 		"ToDo",
 		fields=["id", "assignment_rule"],
 		filters=dict(
-			reference_type=doc.get("doctype"), reference_id=doc.get("id"), status=("!=", "Cancelled")
+			reference_type=doc.get("doctype"), reference_id=str(doc.get("id")), status=("!=", "Cancelled")
 		),
 		limit=5,
 	)
@@ -218,7 +218,7 @@ def reopen_closed_assignment(doc):
 		"ToDo",
 		filters={
 			"reference_type": doc.doctype,
-			"reference_id": doc.id,
+			"reference_id": str(doc.id),
 			"status": "Closed",
 		},
 		pluck="id",
@@ -310,7 +310,7 @@ def apply(doc=None, method=None, doctype=None, id=None):
 						"ToDo",
 						filters={
 							"reference_type": doc.doctype,
-							"reference_id": doc.id,
+							"reference_id": str(doc.id),
 						},
 						pluck="id",
 					)
@@ -365,7 +365,7 @@ def update_due_date(doc, state=None):
 				filters={
 					"assignment_rule": rule.get("id"),
 					"reference_type": doc.doctype,
-					"reference_id": doc.id,
+					"reference_id": str(doc.id),
 					"status": "Open",
 				},
 				pluck="id",
