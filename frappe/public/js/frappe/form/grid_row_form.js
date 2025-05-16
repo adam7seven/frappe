@@ -96,6 +96,10 @@ export default class GridRowForm {
     }
     set_form_events() {
         var me = this;
+        this.wrapper.find(".grid-collapse-row").on("click", function () {
+            me.row.toggle_view();
+            return false;
+        });
         this.wrapper.find(".grid-delete-row").on("click", function () {
             me.row.remove();
             return false;
