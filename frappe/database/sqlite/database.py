@@ -395,7 +395,7 @@ class SQLiteDatabase(SQLiteExceptionUtil, Database):
 
 	def updatedb(self, doctype, meta=None):
 		"""Syncs a `DocType` to the table."""
-		res = self.sql("SELECT issingle FROM `tabDocType` WHERE name=%s", (doctype,))
+		res = self.sql("SELECT issingle FROM `tabDocType` WHERE id=%s", (doctype,))
 		if not res:
 			raise Exception(f"Wrong doctype {doctype} in updatedb")
 

@@ -481,7 +481,7 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
 		* updates columns
 		* updates indices
 		"""
-		res = self.sql("select issingle from `tabDocType` where name=%s", (doctype,))
+		res = self.sql("select issingle from `tabDocType` where id=%s", (doctype,))
 		if not res:
 			raise Exception(f"Wrong doctype {doctype} in updatedb")
 
