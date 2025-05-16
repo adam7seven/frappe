@@ -327,7 +327,9 @@ frappe.ui.Sidebar = class Sidebar {
 				path = frappe.utils.generate_route({
 					type: item.link_type,
 					id: item.link_to,
-					is_query_report: item.report.report_type === "Query Report",
+					is_query_report: item.report.report_type === "Query Report"
+						|| item.report.report_type === "Script Report"
+						|| item.report.report_type === "Custom Report",
 					report_ref_doctype: item.report.ref_doctype,
 				});
 			} else {
@@ -359,11 +361,10 @@ frappe.ui.Sidebar = class Sidebar {
 						class="item-anchor ${item.is_editable ? "" : "block-click"}" title="${__(item.title)}"
 					>
 						<span class="sidebar-item-icon" item-icon=${item.icon || "folder-normal"}>
-							${
-								item.public || item.icon
-									? frappe.utils.icon(item.icon || "folder-normal", "md")
-									: `<span class="indicator ${item.indicator_color}"></span>`
-							}
+							${item.public || item.icon
+				? frappe.utils.icon(item.icon || "folder-normal", "md")
+				: `<span class="indicator ${item.indicator_color}"></span>`
+			}
 						</span>
 						<span class="sidebar-item-label">${__(item.title)}<span>
 					</a>
