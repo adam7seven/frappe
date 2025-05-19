@@ -86,8 +86,10 @@ class Workspace(Document):
 			frappe.throw(_("Content data shoud be a list"))
 
 		for d in self.get("links"):
-			if d.link_type == "Report" and d.is_query_report != 1:
-				d.report_ref_doctype = frappe.get_value("Report", d.link_to, "ref_doctype")
+			if d.link_type == "Report":
+				d.is_query_report = 1 if get_report_type(d.link_to) else 0
+				if d.is_query_report != 1:
+					d.report_ref_doctype = frappe.get_value("Report", d.link_to, "ref_doctype")
 
 		for shortcut in self.get("shortcuts"):
 			if shortcut.type == "Report":
