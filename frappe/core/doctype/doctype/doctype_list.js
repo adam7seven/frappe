@@ -25,6 +25,13 @@ frappe.listview_settings["DocType"] = {
 				reqd: 1,
 				default: doctype_id,
 			},
+			{
+				label: __("Name"),
+				fieldname: "name",
+				fieldtype: "Data",
+				reqd: 1,
+				default: doctype_id,
+			},
 			{ fieldtype: "Column Break" },
 			{
 				label: __("Module"),
