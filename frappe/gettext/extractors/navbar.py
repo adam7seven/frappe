@@ -11,7 +11,7 @@ def extract(fileobj, *args, **kwargs):
 	    python file containing two global variables `standard_navbar_items` and
 	    `standard_help_items` which are lists of dicts.
 	"""
-	module = get_module(fileobj.id)
+	module = get_module(fileobj.name)
 
 	if hasattr(module, "standard_navbar_items"):
 		standard_navbar_items = module.standard_navbar_items

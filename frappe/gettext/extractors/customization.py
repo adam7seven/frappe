@@ -1,5 +1,7 @@
 import json
 
+from frappe.utils.data import get_select_option_labels
+
 from .utils import EXCLUDE_SELECT_OPTIONS, extract_messages_from_docfield, extract_messages_from_links
 
 
@@ -32,7 +34,12 @@ def extract(fileobj, *args, **kwargs):
 		fieldname = property_setter.get("field_name")
 		if property_name == "options" and fieldname not in EXCLUDE_SELECT_OPTIONS:
 			message = property_setter.get("value")
-			select_options = [option for option in message.split("\n") if option and not option.isdigit()]
+			options_has_label = property_setter.get("options_has_label")
+			select_options = [
+				option
+				for option in get_select_option_labels(message, options_has_label)
+				if option and not option.isdigit()
+			]
 
 			if select_options and "icon" in select_options[0]:
 				continue
