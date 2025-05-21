@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tiadmin\n"
 "Report-Msgid-Bugs-To: developers@frappe.io\n"
 "POT-Creation-Date: 2025-05-21 08:40+0000\n"
-"PO-Revision-Date: 2025-05-21 08:44\n"
+"PO-Revision-Date: 2025-05-21 09:54\n"
 "Last-Translator: developers@frappe.io\n"
 "Language-Team: Chinese Simplified\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,7 @@ msgstr "到您的浏览器"
 #. Condition'
 #: frappe/core/doctype/document_naming_rule_condition/document_naming_rule_condition.json
 msgid "!="
-msgstr ""
+msgstr "!="
 
 #. Description of the 'Org History Heading' (Data) field in DocType 'About Us
 #. Settings'
@@ -51,7 +51,7 @@ msgstr "“ {0}”不是有效的Google表格网址"
 #. Label of the head_html (Code) field in DocType 'Website Settings'
 #: frappe/website/doctype/website_settings/website_settings.json
 msgid "&lt;head&gt; HTML"
-msgstr ""
+msgstr "&lt;head&gt; HTML"
 
 #: frappe/core/doctype/doctype/doctype.py:1373
 msgid "'In Global Search' not allowed for type {0} in row {1}"
@@ -167,13 +167,13 @@ msgstr "; 条件中不允许使用"
 #. Condition'
 #: frappe/core/doctype/document_naming_rule_condition/document_naming_rule_condition.json
 msgid "<"
-msgstr ""
+msgstr "<"
 
 #. Option for the 'Condition' (Select) field in DocType 'Document Naming Rule
 #. Condition'
 #: frappe/core/doctype/document_naming_rule_condition/document_naming_rule_condition.json
 msgid "<="
-msgstr ""
+msgstr "<="
 
 #. Content of the 'Help' (HTML) field in DocType 'Property Setter'
 #: frappe/custom/doctype/property_setter/property_setter.json
@@ -618,23 +618,23 @@ msgstr "<b><sp</span>an class=\"h4\"><b>报告 &amp; 大师</b></span>"
 #. Condition'
 #: frappe/core/doctype/document_naming_rule_condition/document_naming_rule_condition.json
 msgid "="
-msgstr ""
+msgstr "="
 
 #. Option for the 'Condition' (Select) field in DocType 'Document Naming Rule
 #. Condition'
 #: frappe/core/doctype/document_naming_rule_condition/document_naming_rule_condition.json
 msgid ">"
-msgstr ""
+msgstr ">"
 
 #. Option for the 'Condition' (Select) field in DocType 'Document Naming Rule
 #. Condition'
 #: frappe/core/doctype/document_naming_rule_condition/document_naming_rule_condition.json
 msgid ">="
-msgstr ""
+msgstr ">="
 
 #: frappe/core/doctype/doctype/doctype.py:1053
 msgid "A DocType's id should start with a letter and can only consist of letters, numbers, spaces, underscores and hyphens"
-msgstr ""
+msgstr "文档类型名称应以字母开头，只能包含字母、数字、空格、下划线和连字符"
 
 #: frappe/website/doctype/blog_post/blog_post.py:92
 msgid "A featured post must have a cover image"
@@ -642,7 +642,7 @@ msgstr "推荐文章必须包含封面图片"
 
 #: frappe/custom/doctype/custom_field/custom_field.py:175
 msgid "A field with the id {0} already exists in {1}"
-msgstr ""
+msgstr "字段{0}已在{1}中存在"
 
 #: frappe/core/doctype/file/file.py:257
 msgid "A file with same name {} already exists"
@@ -1843,7 +1843,7 @@ msgstr "匿名响应"
 
 #: frappe/model/rename_doc.py:379
 msgid "Another {0} with id {1} exists, select another id"
-msgstr ""
+msgstr "已存在ID为{1}的{0}，请选择其他ID"
 
 #. Description of the 'Raw Commands' (Code) field in DocType 'Print Format'
 #: frappe/printing/doctype/print_format/print_format.json
@@ -2223,11 +2223,11 @@ msgstr "附加到字段"
 #. Label of the attached_to_id (Data) field in DocType 'File'
 #: frappe/core/doctype/file/file.json
 msgid "Attached To ID"
-msgstr ""
+msgstr "附加到ID"
 
 #: frappe/core/doctype/file/file.py:142
 msgid "Attached To ID must be a string or an integer"
-msgstr ""
+msgstr "附加到ID必须是字符串或整数"
 
 #. Option for the 'Comment Type' (Select) field in DocType 'Comment'
 #. Label of the attachment (Attach) field in DocType 'Newsletter Attachment'
@@ -3641,7 +3641,7 @@ msgstr "类别描述"
 #. Label of the category_id (Data) field in DocType 'Help Category'
 #: frappe/website/doctype/help_category/help_category.json
 msgid "Category ID"
-msgstr ""
+msgstr "类别ID"
 
 #: frappe/utils/data.py:1519
 msgid "Cent"
@@ -4213,7 +4213,7 @@ msgstr "每小时评论限制"
 
 #: frappe/desk/form/utils.py:75
 msgid "Comment publicity can only be updated by the original author or a System Manager."
-msgstr ""
+msgstr "评论发布只能由原作者或系统管理员更新。"
 
 #: frappe/model/meta.py:57
 #: frappe/website/doctype/web_form/templates/web_form.html:122
@@ -4288,7 +4288,7 @@ msgstr "公司历史"
 #. Label of the company_id (Data) field in DocType 'Contact'
 #: frappe/contacts/doctype/contact/contact.json
 msgid "Company ID"
-msgstr ""
+msgstr "公司ID"
 
 #. Label of the company_introduction (Text Editor) field in DocType 'About Us
 #. Settings'
@@ -4592,7 +4592,7 @@ msgstr "内容类型"
 
 #: frappe/app_core.py:231
 msgid "Content cannot be empty"
-msgstr ""
+msgstr "内容不能为空"
 
 #: frappe/desk/doctype/workspace/workspace.py:86
 msgid "Content data shoud be a list"
@@ -4894,7 +4894,7 @@ msgstr "自定义基础URL"
 #. Block'
 #: frappe/desk/doctype/workspace_custom_block/workspace_custom_block.json
 msgid "Custom Block ID"
-msgstr ""
+msgstr "自定义区块名称"
 
 #. Label of the custom_blocks_tab (Tab Break) field in DocType 'Workspace'
 #. Label of the custom_blocks (Table) field in DocType 'Workspace'
@@ -5171,7 +5171,7 @@ msgstr "每日长格式"
 #. Option for the 'Frequency' (Select) field in DocType 'Scheduled Job Type'
 #: frappe/core/doctype/scheduled_job_type/scheduled_job_type.json
 msgid "Daily Maintenance"
-msgstr ""
+msgstr "日常维护"
 
 #. Option for the 'Style' (Select) field in DocType 'Workflow State'
 #: frappe/workflow/doctype/workflow_state/workflow_state.json
@@ -5723,7 +5723,7 @@ msgstr "已删除文档"
 #. Label of the deleted_id (Data) field in DocType 'Deleted Document'
 #: frappe/core/doctype/deleted_document/deleted_document.json
 msgid "Deleted ID"
-msgstr ""
+msgstr "已删除 ID"
 
 #: frappe/desk/reportview.py:604
 msgid "Deleted all documents successfully"
@@ -6183,7 +6183,7 @@ msgstr "文档共享"
 #: frappe/integrations/doctype/webhook/webhook.json
 #: frappe/printing/doctype/print_format/print_format.json
 msgid "DocType"
-msgstr ""
+msgstr "对象类型"
 
 #: frappe/core/doctype/doctype/doctype.py:1598
 msgid "DocType <b>{0}</b> provided for the field <b>{1}</b> must have atleast one Link field"
@@ -6271,7 +6271,7 @@ msgstr "未找到文档类型 {}"
 
 #: frappe/core/doctype/doctype/doctype.py:1047
 msgid "DocType's id should not start or end with whitespace"
-msgstr ""
+msgstr "对象ID首尾不可包含空格"
 
 #. Label of the ref_doctype (Link) field in DocType 'Document Follow'
 #: frappe/email/doctype/document_follow/document_follow.json
@@ -6280,7 +6280,7 @@ msgstr "文档类型"
 
 #: frappe/core/doctype/doctype/doctype.py:1041
 msgid "Doctype id is limited to {0} characters ({1})"
-msgstr ""
+msgstr "对象ID长度限制为 {0} 字符（当前：{1}）"
 
 #. Label of the reference_id (Data) field in DocType 'Milestone'
 #. Label of the document (Dynamic Link) field in DocType 'Audit Trail'
@@ -6329,11 +6329,11 @@ msgstr "文档关注通知"
 #: frappe/desk/doctype/tag_link/tag_link.json
 #: frappe/email/doctype/document_follow/document_follow.json
 msgid "Document ID"
-msgstr ""
+msgstr "文档 ID"
 
 #: frappe/client.py:406
 msgid "Document ID must be a string"
-msgstr ""
+msgstr "文档 ID 必须是字符串"
 
 #. Label of the document_id (Data) field in DocType 'Notification Log'
 #: frappe/desk/doctype/notification_log/notification_log.json
@@ -6737,7 +6737,7 @@ msgstr "重复条目"
 
 #: frappe/model/base_document.py:688 frappe/model/rename_doc.py:111
 msgid "Duplicate ID"
-msgstr ""
+msgstr "重复ID"
 
 #: frappe/public/js/form_builder/components/Field.vue:215
 msgid "Duplicate field"
@@ -7021,7 +7021,7 @@ msgstr "电子邮件组成员"
 #. Label of the email_header (Data) field in DocType 'Notification Log'
 #: frappe/desk/doctype/notification_log/notification_log.json
 msgid "Email Header"
-msgstr ""
+msgstr "邮件标题"
 
 #. Label of the email_id (Data) field in DocType 'Contact Email'
 #. Label of the email_id (Data) field in DocType 'User Email'
@@ -9130,7 +9130,7 @@ msgstr "谷歌"
 #. Label of the google_analytics_id (Data) field in DocType 'Website Settings'
 #: frappe/website/doctype/website_settings/website_settings.json
 msgid "Google Analytics ID"
-msgstr ""
+msgstr "谷歌分析ID"
 
 #. Label of the google_analytics_anonymize_ip (Check) field in DocType 'Website
 #. Settings'
@@ -9875,38 +9875,38 @@ msgstr "您当前无工作区访问权限，可创建专属工作区。点击<b>
 #: frappe/core/doctype/data_import/importer.py:1246
 #: frappe/desk/report/todo/todo.py:36 frappe/model/meta.py:48
 msgid "ID"
-msgstr "标识符"
+msgstr "ID"
 
 #: frappe/desk/reportview.py:491
 msgctxt "Label of id column in report"
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: frappe/public/js/print_format_builder/PrintFormatControls.vue:141
 msgid "ID (id)"
-msgstr ""
+msgstr "ID (id)"
 
 #. Description of the 'Field Name' (Data) field in DocType 'Property Setter'
 #: frappe/custom/doctype/property_setter/property_setter.json
 msgid "ID (id) of the entity whose property is to be set"
-msgstr ""
+msgstr "要设置属性的实体的 ID (id)"
 
 #: frappe/desk/utils.py:22
 msgid "ID already taken, please set a new id"
-msgstr ""
+msgstr "ID已经使用，请设置一个新的 id"
 
 #: frappe/model/naming.py:504
 msgid "ID cannot contain special characters like {0}"
-msgstr ""
+msgstr "ID不能包含特殊字符，例如 {0}"
 
 #: frappe/model/naming.py:499
 msgid "ID of {0} cannot be {1}"
-msgstr ""
+msgstr "{0} 的ID不能为 {1}"
 
 #. Description of the 'Section ID' (Data) field in DocType 'Web Page Block'
 #: frappe/website/doctype/web_page_block/web_page_block.json
 msgid "IDs must contain only alphanumeric characters, not contain spaces, and should be unique."
-msgstr "标识符须为唯一字母数字组合，不含空格"
+msgstr "标识符须为唯一字母数字组合，不含空格。"
 
 #. Label of the section_break_25 (Section Break) field in DocType 'Email
 #. Account'
@@ -10153,7 +10153,7 @@ msgstr "如果你在上传新纪录，那么“名录”必须指定。"
 
 #: frappe/core/doctype/data_export/exporter.py:187
 msgid "If you are uploading new records, leave the \"id\" (ID) column blank."
-msgstr ""
+msgstr "如果您正在上传新记录，请将“id”（ID）列留空。"
 
 #: frappe/utils/password.py:208
 msgid "If you have recently restored the site, you may need to copy the site_config.json containing the original encryption key."
@@ -10467,7 +10467,7 @@ msgstr "收件箱用户"
 #. Label of the include_id_field (Check) field in DocType 'Form Tour'
 #: frappe/desk/doctype/form_tour/form_tour.json
 msgid "Include ID Field"
-msgstr ""
+msgstr "包含 ID 字段"
 
 #. Label of the navbar_search (Check) field in DocType 'Website Settings'
 #: frappe/website/doctype/website_settings/website_settings.json
@@ -11867,11 +11867,11 @@ msgstr "许可证类型"
 
 #: frappe/app_core.py:239
 msgid "License file is expired"
-msgstr ""
+msgstr "许可证文件已过期"
 
 #: frappe/app_core.py:237
 msgid "License file is invalid"
-msgstr ""
+msgstr "许可证文件无效"
 
 #. Option for the 'Desk Theme' (Select) field in DocType 'User'
 #: frappe/core/doctype/user/user.json
@@ -12030,7 +12030,7 @@ msgstr "链接筛选器"
 #: frappe/core/doctype/communication_link/communication_link.json
 #: frappe/core/doctype/dynamic_link/dynamic_link.json
 msgid "Link ID"
-msgstr ""
+msgstr "链接ID"
 
 #. Label of the link_title (Read Only) field in DocType 'Communication Link'
 #. Label of the link_title (Read Only) field in DocType 'Dynamic Link'
@@ -12280,7 +12280,7 @@ msgstr "登录并在浏览器中查看"
 #: frappe/templates/includes/login/login.js:302
 #: frappe/templates/includes/login/login.js:306
 msgid "Login is forbidden."
-msgstr ""
+msgstr "登录被禁止。"
 
 #: frappe/templates/includes/login/login.js:69
 msgid "Login link sent to your email"
@@ -12441,7 +12441,7 @@ msgstr "主要"
 #. Label of the show_id_in_global_search (Check) field in DocType 'DocType'
 #: frappe/core/doctype/doctype/doctype.json
 msgid "Make \"id\" searchable in Global Search"
-msgstr ""
+msgstr "在全局搜索中搜索\"id\""
 
 #. Label of the make_attachment_public (Check) field in DocType 'DocField'
 #: frappe/core/doctype/docfield/docfield.json
@@ -12476,7 +12476,7 @@ msgstr "管理第三方应用"
 
 #: frappe/www/license.html:3
 msgid "Manage License"
-msgstr ""
+msgstr "管理许可证"
 
 #. Description of a Card Break in the Tools Workspace
 #: frappe/automation/workspace/tools/tools.json
@@ -13422,7 +13422,7 @@ msgstr "新文档已共享{0}"
 #. Label of the new_id (Read Only) field in DocType 'Deleted Document'
 #: frappe/core/doctype/deleted_document/deleted_document.json
 msgid "New ID"
-msgstr ""
+msgstr "新ID"
 
 #: frappe/desk/doctype/notification_log/notification_log.py:149
 msgid "New Mention on {0}"
@@ -13633,7 +13633,7 @@ msgstr "无Google日历事件需同步"
 
 #: frappe/model/naming.py:481
 msgid "No ID Specified for {0}"
-msgstr ""
+msgstr "未指定 {0} 的ID"
 
 #: frappe/integrations/doctype/ldap_settings/ldap_settings.py:363
 msgid "No LDAP User found for email: {0}"
@@ -13679,7 +13679,7 @@ msgstr "暂无自动优化建议"
 
 #: frappe/model/rename_doc.py:369
 msgid "No changes made because old and new id are the same."
-msgstr ""
+msgstr "新旧ID相同，未作更改"
 
 #: frappe/core/doctype/data_import/importer.py:299
 msgid "No changes to update"
@@ -14067,7 +14067,7 @@ msgstr "数字卡片"
 #. Card'
 #: frappe/desk/doctype/workspace_number_card/workspace_number_card.json
 msgid "Number Card ID"
-msgstr ""
+msgstr "数字卡片ID"
 
 #. ID of a DocType
 #: frappe/desk/doctype/number_card_link/number_card_link.json
@@ -14580,7 +14580,7 @@ msgstr "“动态链接”类型字段必须指向另一个选项为“文档类
 #. Label of the options_has_label (Check) field in DocType 'DocField'
 #: frappe/core/doctype/docfield/docfield.json
 msgid "Options Has Label"
-msgstr ""
+msgstr "选项有标签"
 
 #. Label of the options_help (HTML) field in DocType 'Custom Field'
 #: frappe/custom/doctype/custom_field/custom_field.json
@@ -14962,7 +14962,7 @@ msgstr "创建仪表板图表需要父文档类型"
 
 #: frappe/core/doctype/data_export/exporter.py:254
 msgid "Parent is the id of the document to which the data will get added to."
-msgstr ""
+msgstr "父项是数据将被添加到的对象ID"
 
 #: frappe/permissions.py:796
 msgid "Parentfield not specified in {0}: {1}"
@@ -15605,7 +15605,7 @@ msgstr "请在报表过滤器表中设置过滤值"
 
 #: frappe/model/naming.py:574
 msgid "Please set the document id"
-msgstr ""
+msgstr "请设置记录ID"
 
 #: frappe/desk/doctype/dashboard/dashboard.py:120
 msgid "Please set the following documents in this Dashboard as standard first."
@@ -15849,7 +15849,7 @@ msgstr "预览消息"
 #. Settings'
 #: frappe/core/doctype/document_naming_settings/document_naming_settings.json
 msgid "Preview of generated ids"
-msgstr ""
+msgstr "预览生成的ID"
 
 #: frappe/public/js/print_format_builder/Preview.vue:88
 msgid "Preview type"
@@ -16095,7 +16095,7 @@ msgstr "私有文件(MB)"
 #. 'Email Account'
 #: frappe/email/doctype/email_account/email_account.json
 msgid "ProTip: Add <code>Reference: {{ reference_doctype }} {{ reference_id }}</code> to send document reference"
-msgstr ""
+msgstr "专业建议：添加<code>Reference: {{ reference_doctype }} {{ reference_id }}</code>发送文档引用"
 
 #: frappe/desk/page/setup_wizard/install_fixtures.py:51
 msgid "Prof"
@@ -16805,7 +16805,7 @@ msgstr "参考日期时间"
 #. Label of the reference_id (Data) field in DocType 'Email Queue'
 #: frappe/email/doctype/email_queue/email_queue.json
 msgid "Reference Doc ID"
-msgstr ""
+msgstr " 引用文档ID"
 
 #. Label of the reference_doctype (Link) field in DocType 'Error Log'
 #. Label of the ref_doctype (Link) field in DocType 'Submission Queue'
@@ -16816,7 +16816,7 @@ msgstr "关联文档类型"
 
 #: frappe/email/doctype/email_unsubscribe/email_unsubscribe.py:26
 msgid "Reference DocType and Reference ID are required"
-msgstr ""
+msgstr "必须填写关联文档类型和名称"
 
 #. Label of the ref_docid (Dynamic Link) field in DocType 'Submission Queue'
 #. Label of the reference_docid (Dynamic Link) field in DocType 'Discussion
@@ -16824,7 +16824,7 @@ msgstr ""
 #: frappe/core/doctype/submission_queue/submission_queue.json
 #: frappe/website/doctype/discussion_topic/discussion_topic.json
 msgid "Reference Docid"
-msgstr ""
+msgstr "关联文档名称"
 
 #. Label of the reference_doctype (Data) field in DocType 'Webhook Request Log'
 #. Label of the reference_doctype (Link) field in DocType 'Discussion Topic'
@@ -16857,7 +16857,7 @@ msgstr "关联文档"
 #: frappe/core/doctype/document_share_key/document_share_key.json
 #: frappe/integrations/doctype/integration_request/integration_request.json
 msgid "Reference Document ID"
-msgstr ""
+msgstr "引用文档ID"
 
 #. Label of the reference_doctype (Link) field in DocType 'Auto Repeat'
 #. Label of the reference_doctype (Link) field in DocType 'Activity Log'
@@ -16924,7 +16924,7 @@ msgstr "关联文档类型"
 #: frappe/email/doctype/email_unsubscribe/email_unsubscribe.json
 #: frappe/workflow/doctype/workflow_action/workflow_action.json
 msgid "Reference ID"
-msgstr ""
+msgstr "关联ID"
 
 #. Label of the reference_owner (Read Only) field in DocType 'Activity Log'
 #. Label of the reference_owner (Data) field in DocType 'Comment'
@@ -16954,7 +16954,7 @@ msgstr "关联类型"
 #. Label of the reference_id (Dynamic Link) field in DocType 'View Log'
 #: frappe/core/doctype/view_log/view_log.json
 msgid "Reference id"
-msgstr ""
+msgstr "引用ID"
 
 #: frappe/templates/emails/auto_reply.html:3
 msgid "Reference: {0} {1}"
@@ -17791,7 +17791,7 @@ msgstr "行格式"
 #. Label of the row_id (Data) field in DocType 'Property Setter'
 #: frappe/custom/doctype/property_setter/property_setter.json
 msgid "Row ID"
-msgstr ""
+msgstr "行ID"
 
 #. Label of the row_index (Data) field in DocType 'Transaction Log'
 #: frappe/core/doctype/transaction_log/transaction_log.json
@@ -18719,7 +18719,7 @@ msgstr "发件人名称字段"
 #. Label of the sender_id_field (Data) field in DocType 'DocType'
 #: frappe/core/doctype/doctype/doctype.json
 msgid "Sender id Field"
-msgstr ""
+msgstr "发件人ID字段"
 
 #. Option for the 'Service' (Select) field in DocType 'Email Account'
 #: frappe/email/doctype/email_account/email_account.json
@@ -20870,7 +20870,7 @@ msgstr "以下值在{0}中不存在：{1}"
 
 #: frappe/templates/includes/license/license.js:24
 msgid "The license import successfully"
-msgstr ""
+msgstr "许可证导入成功"
 
 #: frappe/core/doctype/user_type/user_type.py:89
 msgid "The limit has not set for the user type {0} in the site config file."
@@ -20886,7 +20886,7 @@ msgstr "您尝试登录的链接无效或已过期。"
 
 #: frappe/auth.py:182 frappe/auth.py:188
 msgid "The maximum number of logged-in users has been reached."
-msgstr ""
+msgstr "已达到登录用户的最大数量。"
 
 #. Description of the 'Calendar Name' (Data) field in DocType 'Google Calendar'
 #: frappe/integrations/doctype/google_calendar/google_calendar.json
@@ -21011,7 +21011,7 @@ msgstr "构建此页面时出错"
 
 #: frappe/model/naming.py:494
 msgid "There were some errors setting the id, please contact the administrator"
-msgstr ""
+msgstr "设置ID时出错，请联系管理员"
 
 #. Description of the 'Announcement Widget' (Text Editor) field in DocType
 #. 'Navbar Settings'
@@ -21102,7 +21102,7 @@ msgstr "该文件已关联至受保护文档，不可删除。"
 
 #: frappe/public/js/frappe/file_uploader/FilePreview.vue:76
 msgid "This file is public and can be accessed by anyone, even without logging in. Mark it private to limit access."
-msgstr ""
+msgstr "此文件是公开的，任何人都可以访问，即使没有登录。标记为私有以限制访问。"
 
 #. Description of the 'Is Default' (Check) field in DocType 'Address Template'
 #: frappe/contacts/doctype/address_template/address_template.json
@@ -21330,7 +21330,7 @@ msgstr "时间轴字段"
 #. Label of the timeline_id (Dynamic Link) field in DocType 'Activity Log'
 #: frappe/core/doctype/activity_log/activity_log.json
 msgid "Timeline ID"
-msgstr ""
+msgstr "时间线 ID"
 
 #. Label of the timeline_links_sections (Section Break) field in DocType
 #. 'Communication'
@@ -21468,13 +21468,15 @@ msgstr "待办事项"
 #: frappe/automation/doctype/auto_repeat/auto_repeat.json
 msgid "To add dynamic subject, use jinja tags like\n\n"
 "<div><pre><code>New {{ doc.doctype }} #{{ doc.id }}</code></pre></div>"
-msgstr ""
+msgstr "要添加动态主题，请使用 jinja 标签，如\n\n"
+"<div><pre><code>新 {{ doc.doctype }} #{{ doc.id }}</code></pre></div>"
 
 #. Description of the 'Subject' (Data) field in DocType 'Notification'
 #: frappe/email/doctype/notification/notification.json
 msgid "To add dynamic subject, use jinja tags like\n\n"
 "<div><pre><code>{{ doc.id }} Delivered</code></pre></div>"
-msgstr ""
+msgstr "要添加动态主题，请使用 jinja 标签，如\n\n"
+"<div><pre><code>{{ doc.id }} 已发送</code></pre></div>"
 
 #. Description of the 'JSON Request Body' (Code) field in DocType 'Webhook'
 #: frappe/integrations/doctype/webhook/webhook.json
@@ -21483,7 +21485,11 @@ msgid "To add dynamic values from the document, use jinja tags like\n\n"
 "<pre><code>{ \"id\": \"{{ doc.id }}\" }</code>\n"
 "</pre>\n"
 "</div>"
-msgstr ""
+msgstr "要从文档添加动态值，请使用 jinja 标签，如\n\n"
+"<div>\n"
+"<pre><code>{ \"id\": \"{{ doc.id }}\" }</code>\n"
+"</pre>\n"
+"</div>"
 
 #: frappe/email/doctype/auto_email_report/auto_email_report.py:107
 msgid "To allow more reports update limit in System Settings."
@@ -23031,7 +23037,7 @@ msgstr "可见性"
 
 #: frappe/public/js/frappe/form/templates/timeline_message_box.html:40
 msgid "Visible to website/portal users."
-msgstr ""
+msgstr "网站/门户用户可见。"
 
 #. Option for the 'Type' (Select) field in DocType 'Communication'
 #: frappe/core/doctype/communication/communication.json
@@ -23064,7 +23070,7 @@ msgstr "警告：未设置命名规则"
 #. Description of the 'Counter' (Int) field in DocType 'Document Naming Rule'
 #: frappe/core/doctype/document_naming_rule/document_naming_rule.json
 msgid "Warning: Updating counter may lead to document id conflicts if not done properly"
-msgstr ""
+msgstr "警告：不当更新计数器可能导致记录ID冲突"
 
 #: frappe/website/doctype/help_article/templates/help_article.html:24
 msgid "Was this article helpful?"
@@ -25091,7 +25097,7 @@ msgstr "{0}：第{2}行链接或表格类型字段{1}需要设置选项"
 
 #: frappe/core/doctype/doctype/doctype.py:1341
 msgid "{0}: Options {1} must be the same as doctype id {2} for the field {3}"
-msgstr ""
+msgstr "{0}：字段{3}的选项{1}必须与记录ID{2}一致"
 
 #: frappe/core/doctype/doctype/doctype.py:1805
 msgid "{0}: Permission at level 0 must be set before higher levels are set"
