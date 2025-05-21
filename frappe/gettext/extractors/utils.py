@@ -126,7 +126,6 @@ def extract_messages_from_docfield(doctype: str, field: dict):
 				for option in get_select_option_labels(message, options_has_label, True)
 				if option and not option.isdigit()
 			]
-			print(f"options:{message}, options_has_label:{options_has_label}", select_options)
 			yield from (
 				(
 					option,
