@@ -166,6 +166,12 @@ def get_diff(old, new, for_child=False, compare_cancelled=False):
 						if link_meta.show_title_field_in_link and (
 							(title_field := link_meta.get_title_field()) != "id"
 						):
+							if link_meta.autoname == "autoincrement":
+								try:
+									old_value = int(old_value)
+								except ValueError:
+									old_value = 0
+
 							old_title_val, new_title_val = "", ""
 							result = frappe.db.get_values(
 								field_meta.options,
