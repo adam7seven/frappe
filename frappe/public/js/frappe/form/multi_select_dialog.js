@@ -15,6 +15,15 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
         this.child_page_length = 20;
         this.fields = this.get_fields();
 
+        let cached_docs = frappe.model.get_from_localstorage(this.doctype);
+        let current_doc = cached_docs.find((doc) => doc.id === this.doctype);
+        if (current_doc.istable) {
+            this.show_secondary_action = false;
+        }
+        else if (this.show_secondary_action === undefined) {
+            this.show_secondary_action = true;
+        }
+
         this.make();
 
         this.selected_fields = new Set();
@@ -58,7 +67,6 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
     }
 
     get_child_selection_fields() {
-        console.log("get_child_selection_fields");
         const fields = [];
         if (this.allow_child_item_selection && this.child_fieldname) {
             const show_more_child_results = () => {
@@ -85,7 +93,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
             fields: this.fields,
             size: this.size,
             primary_action_label: this.primary_action_label || __("Get Items"),
-            secondary_action_label: __("Make {0}", [__(this.doctype)]),
+            secondary_action_label: this.show_secondary_action ? __("Make {0}", [__(this.doctype)]) : null,
             primary_action: () => {
                 let filters_data = this.get_custom_filters();
                 const data_values = cur_dialog.get_values(); // to pass values of data fields
@@ -101,7 +109,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
                     filtered_children,
                 });
             },
-            secondary_action: this.make_new_document.bind(this),
+            secondary_action: this.show_secondary_action ? this.make_new_document.bind(this) : null,
         });
 
         if (this.add_filters_group) {
