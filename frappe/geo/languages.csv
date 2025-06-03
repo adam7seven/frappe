@@ -1,21 +1,21 @@
 language_code,language_name,enabled
 af,Afrikaans,0
 am,አማርኛ,0
-ar,العربية,1
+ar,العربية,0
 bg,Български,0
 bn,বাংলা,0
 bo,བོད་སྐད་,0
-bs,Bosanski,1
+bs,Bosanski,0
 ca,Català,0
 cs,Čeština,0
 da,Dansk,0
-de,Deutsch,1
+de,Deutsch,0
 el,Ελληνικά,0
 en,English,1
 en-GB,English (United Kingdom),0
 en-US,English (United States),0
 eo,In-Context Translation,0
-es,Español,1
+es,Español,0
 es-AR,Español (Argentina),0
 es-BO,Español (Bolivia),0
 es-CL,Español (Chile),0
@@ -27,10 +27,10 @@ es-MX,Español (México),0
 es-NI,Español (Nicaragua),0
 es-PE,Español (Perú),0
 et,Eesti,0
-fa,فارسی,1
+fa,فارسی,0
 fi,Suomi,0
 fil,Filipino,0
-fr,Français,1
+fr,Français,0
 gu,ગુજરાતી,0
 he,עברית,0
 hi,हिन्दी,0
@@ -67,15 +67,15 @@ sl,Slovenščina,0
 sq,Shqip,0
 sr,Српски,0
 sr-BA,Srpski,0
-sv,Svenska,1
+sv,Svenska,0
 sw,Kiswahili,0
 ta,தமிழ்,0
 te,తెలుగు,0
 th,ไทย,0
-tr,Türkçe,1
+tr,Türkçe,0
 uk,Українська,0
 ur,اردو,0
 uz,O‘Zbek,0
 vi,Tiếng Việt,0
-zh,中文,0
+zh,中文,1
 zh-TW,繁體中文,0
