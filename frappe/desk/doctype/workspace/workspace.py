@@ -120,10 +120,6 @@ class Workspace(Document):
 				if previous and previous.get("module") and previous.get("title"):
 					delete_folder(previous.get("module"), "Workspace", previous.get("title"))
 
-	def before_export(self, doc):
-		if doc.title != doc.label and doc.label == doc.id:
-			self.id = doc.id = doc.label = doc.title
-
 	def on_trash(self):
 		if self.public and not is_workspace_manager():
 			frappe.throw(_("You need to be Workspace Manager to delete a public workspace."))
