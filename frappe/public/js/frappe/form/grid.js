@@ -469,6 +469,8 @@ export default class Grid {
             if (this.grid_rows[ri] && !append_row) {
                 grid_row = this.grid_rows[ri];
                 grid_row.doc = d;
+                this.grid_rows_by_docid[d.id] = grid_row;
+
                 grid_row.refresh();
             } else {
                 grid_row = new GridRow({
@@ -480,9 +482,9 @@ export default class Grid {
                     grid: this,
                 });
                 this.grid_rows[ri] = grid_row;
+                this.grid_rows_by_docid[d.id] = grid_row;
             }
 
-            this.grid_rows_by_docid[d.id] = grid_row;
         }
     }
 
@@ -652,10 +654,10 @@ export default class Grid {
     get_modal_data() {
         return this.df.get_data
             ? this.df.get_data().filter((data) => {
-                  if (!this.deleted_docs || !this.deleted_docs.includes(data.id)) {
-                      return data;
-                  }
-              })
+                if (!this.deleted_docs || !this.deleted_docs.includes(data.id)) {
+                    return data;
+                }
+            })
             : [];
     }
 
