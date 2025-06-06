@@ -486,6 +486,10 @@ frappe.ui.form.Layout = class Layout {
 					collapse = false;
 				}
 
+				if (collapse && section.collapsed !== null) {
+					collapse = section.collapsed;
+				}
+
 				section.collapse(collapse);
 			}
 		}

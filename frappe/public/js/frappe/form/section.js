@@ -7,6 +7,7 @@ export default class Section {
 		this.columns = [];
 		this.fields_list = [];
 		this.fields_dict = {};
+		this.collapsed = null;  //store the state of section.
 
 		this.make();
 
@@ -116,6 +117,7 @@ export default class Section {
 			hide = !this.body.hasClass("hide");
 		}
 
+		this.collapsed = !!hide;
 		this.body.toggleClass("hide", hide);
 		this.head && this.head.toggleClass("collapsed", hide);
 
