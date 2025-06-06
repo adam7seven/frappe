@@ -268,10 +268,12 @@ frappe.ui.Sidebar = class Sidebar {
 		let direction;
 		if (this.sidebar_expanded) {
 			this.wrapper.addClass("expanded");
+			$(".main-section").addClass("expanded");
 			// this.sidebar_expanded = false
 			direction = "left";
 		} else {
 			this.wrapper.removeClass("expanded");
+			$(".main-section").removeClass("expanded");
 			// this.sidebar_expanded = true
 			direction = "right";
 		}
