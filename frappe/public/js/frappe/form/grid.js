@@ -252,7 +252,12 @@ export default class Grid {
         tasks.push(() => {
             if (dirty) {
                 this.refresh();
-                this.frm && this.frm.script_manager.trigger(this.df.fieldname + "_delete", this.doctype);
+                if (this.frm) {
+                    this.frm.script_manager.trigger(this.df.fieldname + "_delete", this.doctype);
+                }
+                else {
+                    this.df.on_delete_row && this.df.on_delete_row(selected_children);
+                }
             }
         });
 
