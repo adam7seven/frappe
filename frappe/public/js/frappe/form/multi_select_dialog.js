@@ -264,7 +264,17 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
             });
         } else {
             Object.keys(this.setters).forEach((setter, index) => {
-                let df_prop = frappe.meta.docfield_map[this.doctype][setter];
+                let df_prop = null;
+                let setter_value = this.setters[setter];
+                let setter_is_custom = false;
+                //手动指定Setter字段的属性，不需要从物料中取
+                if (setter_value instanceof Object) {
+                    df_prop = setter_value;
+                    setter_is_custom = true;
+                }
+                else {
+                    df_prop = frappe.meta.docfield_map[this.doctype][setter];
+                }
 
                 // Index + 1 to start filling from index 1
                 // Since Search is a standrd field already pushed
@@ -275,7 +285,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
                     options: df_prop.options,
                     read_only:
                         (this?.read_only_setters && this.read_only_setters.includes(setter)) || 0,
-                    default: this.setters[setter],
+                    default: setter_is_custom ? df_prop.default : this.setters[setter],
                 });
             });
         }
@@ -471,18 +481,32 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 
         let contents = ``;
         this.get_datatable_columns().forEach(function (column) {
+            let title = "", fieldname = "", fieldtype = "Data", field_options = null, value = "";
+            if (column instanceof Object) {
+                fieldname = column.fieldname;
+                title = __(column.label);
+                fieldtype = column.fieldtype || "Data";
+                field_options = column.options;
+            }
+            else {
+                fieldname = column;
+                title = __(frappe.model.unscrub(column));
+            }
+
+            value = result[fieldname];
+            if (value === null || value === undefined) {
+                value = "";
+            }
+            value = __(value);
+
             contents += `<div class="list-item__content ellipsis">
 				${head
-                    ? `<span class="ellipsis text-muted" title="${__(
-                        frappe.model.unscrub(column)
-                    )}">${__(frappe.model.unscrub(column))}</span>`
-                    : column !== "id"
-                        ? `<span class="ellipsis result-row" title="${__(
-                            result[column] || ""
-                        )}">${__(result[column] || "")}</span>`
-                        : `<a href="${"/app/" + frappe.router.slug(me.doctype) + "/" + result[column] || ""
-                        }" class="list-id ellipsis" title="${__(result[column] || "")}">
-							${__(result[column] || "")}</a>`
+                    ? `<span class="ellipsis text-muted" title="${title}">${title}</span>`
+                    : fieldname !== "id" && fieldtype !== "Link"
+                        ? `<span class="ellipsis result-row" title="${value}">${value}</span>`
+                        : `<a href="${"/app/" + frappe.router.slug(field_options || me.doctype) + "/" + result[fieldname] || ""
+                        }" class="list-id ellipsis" title="${value}">
+							${value}</a>`
                 }
 			</div>`;
         });
