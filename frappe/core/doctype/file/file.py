@@ -703,7 +703,7 @@ class File(Document):
 		if not file_exists:
 			if not overwrite:
 				self.file_name = generate_file_name(
-					id=self.file_name,
+					name=self.file_name,
 					suffix=self.content_hash[-6:],
 					is_private=self.is_private,
 				)
