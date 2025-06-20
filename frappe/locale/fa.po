@@ -2095,7 +2095,7 @@ msgstr "شناسه مشتری برنامه"
 msgid "App Client Secret"
 msgstr "راز مشتری برنامه"
 
-#. Label of the app_name (Data) field in DocType 'Google Settings'
+#. Label of the app_id (Data) field in DocType 'Google Settings'
 #: frappe/integrations/doctype/google_settings/google_settings.json
 msgid "App ID"
 msgstr "شناسه برنامه"
@@ -2588,7 +2588,7 @@ msgstr "پیوست به DocType"
 msgid "Attached To Field"
 msgstr "پیوست به فیلد"
 
-#. Label of the attached_to_id (Data) field in DocType 'File'
+#. Label of the attached_to_name (Data) field in DocType 'File'
 #: frappe/core/doctype/file/file.json
 msgid "Attached To Name"
 msgstr "پیوست به نام"
@@ -5492,7 +5492,7 @@ msgstr "ادامه هید"
 msgid "Contributed"
 msgstr "کمک کرد"
 
-#. Label of the contribution_docid (Data) field in DocType 'Translation'
+#. Label of the contribution_docname (Data) field in DocType 'Translation'
 #: frappe/core/doctype/translation/translation.json
 msgid "Contribution Document Name"
 msgstr "نام سند مشارکت"
@@ -7585,10 +7585,10 @@ msgstr "نام Doctype محدود به {0} کاراکتر ({1}) است"
 msgid "Doctype required"
 msgstr "Doctype مورد نیاز است"
 
-#. Label of the reference_id (Data) field in DocType 'Milestone'
+#. Label of the reference_name (Data) field in DocType 'Milestone'
 #. Label of the document (Dynamic Link) field in DocType 'Audit Trail'
 #. Option for the 'Show in Module Section' (Select) field in DocType 'DocType'
-#. Label of the docid (Dynamic Link) field in DocType 'Permission Inspector'
+#. Label of the docname (Dynamic Link) field in DocType 'Permission Inspector'
 #. Label of the document (Link) field in DocType 'Notification Subscribed
 #. Document'
 #: frappe/automation/doctype/milestone/milestone.json
@@ -7620,7 +7620,7 @@ msgstr "دنبال سند"
 msgid "Document Follow Notification"
 msgstr "اعلان پیگیری سند"
 
-#. Label of the document_id (Data) field in DocType 'Notification Log'
+#. Label of the document_name (Data) field in DocType 'Notification Log'
 #: frappe/desk/doctype/notification_log/notification_log.json
 msgid "Document Link"
 msgstr "لینک سند"
@@ -7655,12 +7655,12 @@ msgstr ""
 msgid "Document Links Row #{0}: Table Fieldname is mandatory for internal links"
 msgstr "پیوندهای سند ردیف #{0}: نام فیلد جدول برای پیوندهای داخلی اجباری است"
 
-#. Label of the reminder_docid (Dynamic Link) field in DocType 'Reminder'
+#. Label of the reminder_docname (Dynamic Link) field in DocType 'Reminder'
 #. Label of the share_name (Dynamic Link) field in DocType 'DocShare'
-#. Label of the document_id (Data) field in DocType 'Transaction Log'
-#. Label of the docid (Data) field in DocType 'Version'
-#. Label of the document_id (Dynamic Link) field in DocType 'Tag Link'
-#. Label of the ref_docid (Dynamic Link) field in DocType 'Document Follow'
+#. Label of the document_name (Data) field in DocType 'Transaction Log'
+#. Label of the docname (Data) field in DocType 'Version'
+#. Label of the document_name (Dynamic Link) field in DocType 'Tag Link'
+#. Label of the ref_docname (Dynamic Link) field in DocType 'Document Follow'
 #: frappe/automation/doctype/reminder/reminder.json
 #: frappe/core/doctype/docshare/docshare.json
 #: frappe/core/doctype/transaction_log/transaction_log.json
@@ -19870,8 +19870,8 @@ msgstr ""
 #. Description of the 'Auto Reply Message' (Text Editor) field in DocType
 #. 'Email Account'
 #: frappe/email/doctype/email_account/email_account.json
-msgid "ProTip: Add <code>Reference: {{ reference_doctype }} {{ reference_id }}</code> to send document reference"
-msgstr "نکته پیشنهادی: برای ارسال مرجع سند، <code>مرجع: {{ reference_doctype }} {{ reference_id }}</code> را اضافه کنید"
+msgid "ProTip: Add <code>Reference: {{ reference_doctype }} {{ reference_name }}</code> to send document reference"
+msgstr "نکته پیشنهادی: برای ارسال مرجع سند، <code>مرجع: {{ reference_doctype }} {{ reference_name }}</code> را اضافه کنید"
 
 #: frappe/core/doctype/document_naming_rule/document_naming_rule.js:22
 msgid "Proceed"
@@ -20691,7 +20691,7 @@ msgstr "تاریخ مرجع"
 msgid "Reference Datetime"
 msgstr ""
 
-#. Label of the reference_id (Data) field in DocType 'Email Queue'
+#. Label of the reference_name (Data) field in DocType 'Email Queue'
 #: frappe/email/doctype/email_queue/email_queue.json
 msgid "Reference DocName"
 msgstr "مرجع DocName"
@@ -20704,11 +20704,11 @@ msgid "Reference DocType"
 msgstr "DocType مرجع"
 
 #: frappe/email/doctype/email_unsubscribe/email_unsubscribe.py:26
-msgid "Reference DocType and Reference ID are required"
-msgstr "Reference DocType و Reference ID الزامی است"
+msgid "Reference DocType and Reference Name are required"
+msgstr "Reference DocType و Reference Name الزامی است"
 
-#. Label of the ref_docid (Dynamic Link) field in DocType 'Submission Queue'
-#. Label of the reference_docid (Dynamic Link) field in DocType 'Discussion
+#. Label of the ref_docname (Dynamic Link) field in DocType 'Submission Queue'
+#. Label of the reference_docname (Dynamic Link) field in DocType 'Discussion
 #. Topic'
 #: frappe/core/doctype/submission_queue/submission_queue.json
 #: frappe/website/doctype/discussion_topic/discussion_topic.json
@@ -20741,9 +20741,9 @@ msgstr "نوع مرجع"
 msgid "Reference Document"
 msgstr "سند مرجع"
 
-#. Label of the reference_docid (Dynamic Link) field in DocType 'Document
+#. Label of the reference_docname (Dynamic Link) field in DocType 'Document
 #. Share Key'
-#. Label of the reference_docid (Dynamic Link) field in DocType 'Integration
+#. Label of the reference_docname (Dynamic Link) field in DocType 'Integration
 #. Request'
 #: frappe/core/doctype/document_share_key/document_share_key.json
 #: frappe/integrations/doctype/integration_request/integration_request.json
@@ -20793,15 +20793,15 @@ msgstr "نام سند مرجع"
 msgid "Reference Document Type"
 msgstr "نوع سند مرجع"
 
-#. Label of the reference_id (Dynamic Link) field in DocType 'Activity Log'
-#. Label of the reference_id (Dynamic Link) field in DocType 'Comment'
-#. Label of the reference_id (Dynamic Link) field in DocType 'Communication'
-#. Label of the docid (Data) field in DocType 'Data Import Log'
-#. Label of the reference_id (Data) field in DocType 'Error Log'
-#. Label of the reference_docid (Dynamic Link) field in DocType 'Event
+#. Label of the reference_name (Dynamic Link) field in DocType 'Activity Log'
+#. Label of the reference_name (Dynamic Link) field in DocType 'Comment'
+#. Label of the reference_name (Dynamic Link) field in DocType 'Communication'
+#. Label of the docname (Data) field in DocType 'Data Import Log'
+#. Label of the reference_name (Data) field in DocType 'Error Log'
+#. Label of the reference_docname (Dynamic Link) field in DocType 'Event
 #. Participants'
-#. Label of the reference_id (Dynamic Link) field in DocType 'ToDo'
-#. Label of the reference_id (Dynamic Link) field in DocType 'Email
+#. Label of the reference_name (Dynamic Link) field in DocType 'ToDo'
+#. Label of the reference_name (Dynamic Link) field in DocType 'Email
 #. Unsubscribe'
 #. Label of the reference_name (Dynamic Link) field in DocType 'Workflow
 #. Action'
@@ -20816,7 +20816,7 @@ msgstr "نوع سند مرجع"
 #: frappe/desk/doctype/todo/todo.json
 #: frappe/email/doctype/email_unsubscribe/email_unsubscribe.json
 #: frappe/workflow/doctype/workflow_action/workflow_action.json
-msgid "Reference ID"
+msgid "Reference Name"
 msgstr "نام مرجع"
 
 #. Label of the reference_owner (Read Only) field in DocType 'Activity Log'

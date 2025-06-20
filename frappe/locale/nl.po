@@ -19867,16 +19867,9 @@ msgstr ""
 
 #. Description of the 'Auto Reply Message' (Text Editor) field in DocType
 #. 'Email Account'
-<<<<<<< HEAD
-#: email/doctype/email_account/email_account.json
-msgctxt "Email Account"
-msgid "ProTip: Add <code>Reference: {{ reference_doctype }} {{ reference_id }}</code> to send document reference"
-msgstr "Protip: Toevoegen <code>Reference: {{ reference_doctype }} {{ reference_id }}</code> te sturen documentverwijzing"
-=======
 #: frappe/email/doctype/email_account/email_account.json
 msgid "ProTip: Add <code>Reference: {{ reference_doctype }} {{ reference_name }}</code> to send document reference"
 msgstr ""
->>>>>>> develop
 
 #: frappe/core/doctype/document_naming_rule/document_naming_rule.js:22
 msgid "Proceed"
@@ -20708,21 +20701,9 @@ msgstr ""
 msgid "Reference DocType"
 msgstr ""
 
-<<<<<<< HEAD
-#. Label of a Link field in DocType 'Submission Queue'
-#: core/doctype/submission_queue/submission_queue.json
-msgctxt "Submission Queue"
-msgid "Reference DocType"
-msgstr "Referentie DocType"
-
-#: email/doctype/email_unsubscribe/email_unsubscribe.py:25
-msgid "Reference DocType and Reference ID are required"
-msgstr "Referentie DocType en referentie Naam noodzakelijk"
-=======
 #: frappe/email/doctype/email_unsubscribe/email_unsubscribe.py:26
 msgid "Reference DocType and Reference Name are required"
 msgstr ""
->>>>>>> develop
 
 #. Label of the ref_docname (Dynamic Link) field in DocType 'Submission Queue'
 #. Label of the reference_docname (Dynamic Link) field in DocType 'Discussion
@@ -20810,208 +20791,6 @@ msgstr ""
 msgid "Reference Document Type"
 msgstr ""
 
-<<<<<<< HEAD
-#. Label of a Link field in DocType 'Activity Log'
-#: core/doctype/activity_log/activity_log.json
-msgctxt "Activity Log"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Link field in DocType 'Auto Repeat'
-#: automation/doctype/auto_repeat/auto_repeat.json
-msgctxt "Auto Repeat"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Link field in DocType 'Calendar View'
-#: desk/doctype/calendar_view/calendar_view.json
-msgctxt "Calendar View"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Link field in DocType 'Comment'
-#: core/doctype/comment/comment.json
-msgctxt "Comment"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Link field in DocType 'Communication'
-#: core/doctype/communication/communication.json
-msgctxt "Communication"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Data field in DocType 'Custom DocPerm'
-#: core/doctype/custom_docperm/custom_docperm.json
-msgctxt "Custom DocPerm"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Data field in DocType 'Custom Role'
-#: core/doctype/custom_role/custom_role.json
-msgctxt "Custom Role"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Link field in DocType 'Document Share Key'
-#: core/doctype/document_share_key/document_share_key.json
-msgctxt "Document Share Key"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Link field in DocType 'Email Queue'
-#: email/doctype/email_queue/email_queue.json
-msgctxt "Email Queue"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Link field in DocType 'Email Unsubscribe'
-#: email/doctype/email_unsubscribe/email_unsubscribe.json
-msgctxt "Email Unsubscribe"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Link field in DocType 'Energy Point Log'
-#: social/doctype/energy_point_log/energy_point_log.json
-msgctxt "Energy Point Log"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Link field in DocType 'Energy Point Rule'
-#: social/doctype/energy_point_rule/energy_point_rule.json
-msgctxt "Energy Point Rule"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Link field in DocType 'Event Participants'
-#: desk/doctype/event_participants/event_participants.json
-msgctxt "Event Participants"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Link field in DocType 'Integration Request'
-#: integrations/doctype/integration_request/integration_request.json
-msgctxt "Integration Request"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Link field in DocType 'Kanban Board'
-#: desk/doctype/kanban_board/kanban_board.json
-msgctxt "Kanban Board"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Link field in DocType 'List Filter'
-#: desk/doctype/list_filter/list_filter.json
-msgctxt "List Filter"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Link field in DocType 'Portal Menu Item'
-#: website/doctype/portal_menu_item/portal_menu_item.json
-msgctxt "Portal Menu Item"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Link field in DocType 'Server Script'
-#: core/doctype/server_script/server_script.json
-msgctxt "Server Script"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Link field in DocType 'Success Action'
-#: core/doctype/success_action/success_action.json
-msgctxt "Success Action"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Data field in DocType 'Transaction Log'
-#: core/doctype/transaction_log/transaction_log.json
-msgctxt "Transaction Log"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Link field in DocType 'View Log'
-#: core/doctype/view_log/view_log.json
-msgctxt "View Log"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#. Label of a Link field in DocType 'Workflow Action'
-#: workflow/doctype/workflow_action/workflow_action.json
-msgctxt "Workflow Action"
-msgid "Reference Document Type"
-msgstr "Referentie Document Type"
-
-#: core/doctype/communication/communication.js:152
-#: core/report/transaction_log_report/transaction_log_report.py:94
-msgid "Reference ID"
-msgstr "Referentienaam"
-
-#. Label of a Dynamic Link field in DocType 'Activity Log'
-#: core/doctype/activity_log/activity_log.json
-msgctxt "Activity Log"
-msgid "Reference ID"
-msgstr "Referentienaam"
-
-#. Label of a Dynamic Link field in DocType 'Comment'
-#: core/doctype/comment/comment.json
-msgctxt "Comment"
-msgid "Reference ID"
-msgstr "Referentienaam"
-
-#. Label of a Dynamic Link field in DocType 'Communication'
-#: core/doctype/communication/communication.json
-msgctxt "Communication"
-msgid "Reference ID"
-msgstr "Referentienaam"
-
-#. Label of a Data field in DocType 'Data Import Log'
-#: core/doctype/data_import_log/data_import_log.json
-msgctxt "Data Import Log"
-msgid "Reference ID"
-msgstr "Referentienaam"
-
-#. Label of a Dynamic Link field in DocType 'Email Unsubscribe'
-#: email/doctype/email_unsubscribe/email_unsubscribe.json
-msgctxt "Email Unsubscribe"
-msgid "Reference ID"
-msgstr "Referentienaam"
-
-#. Label of a Data field in DocType 'Energy Point Log'
-#: social/doctype/energy_point_log/energy_point_log.json
-msgctxt "Energy Point Log"
-msgid "Reference ID"
-msgstr "Referentienaam"
-
-#. Label of a Data field in DocType 'Error Log'
-#: core/doctype/error_log/error_log.json
-msgctxt "Error Log"
-msgid "Reference ID"
-msgstr "Referentienaam"
-
-#. Label of a Dynamic Link field in DocType 'Event Participants'
-#: desk/doctype/event_participants/event_participants.json
-msgctxt "Event Participants"
-msgid "Reference ID"
-msgstr "Referentienaam"
-
-#. Label of a Dynamic Link field in DocType 'ToDo'
-#: desk/doctype/todo/todo.json
-msgctxt "ToDo"
-msgid "Reference ID"
-msgstr "Referentienaam"
-
-#. Label of a Dynamic Link field in DocType 'Workflow Action'
-#: workflow/doctype/workflow_action/workflow_action.json
-msgctxt "Workflow Action"
-msgid "Reference ID"
-msgstr "Referentienaam"
-
-#. Label of a Read Only field in DocType 'Activity Log'
-#: core/doctype/activity_log/activity_log.json
-msgctxt "Activity Log"
-=======
 #. Label of the reference_name (Dynamic Link) field in DocType 'Activity Log'
 #. Label of the reference_name (Dynamic Link) field in DocType 'Comment'
 #. Label of the reference_name (Dynamic Link) field in DocType 'Communication'
@@ -21044,7 +20823,6 @@ msgstr ""
 #: frappe/core/doctype/activity_log/activity_log.json
 #: frappe/core/doctype/comment/comment.json
 #: frappe/core/doctype/communication/communication.json
->>>>>>> develop
 msgid "Reference Owner"
 msgstr ""
 
