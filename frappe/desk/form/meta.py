@@ -122,14 +122,17 @@ class FormMeta(Meta):
 		self.add_code_via_hook("doctype_calendar_js", "__calendar_js")
 		self.add_html_templates(path)
 
-	def _add_code(self, path, fieldname):
+	def _add_code(self, path, fieldname, doctype=None):
 		js = get_js(path)
 		if js:
-			js = js.replace('frappe.ui.form.on("*"', f'frappe.ui.form.on("{self.id}"')
+			if not doctype:
+				doctype = self.id
+
+			js = js.replace('frappe.ui.form.on("*"', f'frappe.ui.form.on("{doctype}"')
 			bench_path = get_bench_path() + "/"
 			asset_path = path.replace(bench_path, "")
 			comment = f"\n\n/* Adding {asset_path} */\n\n"
-			sourceURL = f"\n\n//# sourceURL={scrub(self.id) + fieldname}"
+			sourceURL = f"\n\n//# sourceURL={scrub(doctype) + fieldname}"
 			self.set(fieldname, (self.get(fieldname) or "") + comment + js + sourceURL)
 
 	def add_html_templates(self, path):
@@ -146,6 +149,11 @@ class FormMeta(Meta):
 	def add_code_via_hook(self, hook, fieldname):
 		for path in get_code_files_via_hooks(hook, self.id):
 			self._add_code(path, fieldname)
+
+		for table_field in self._table_doctypes:
+			table_doctype = self._table_doctypes[table_field]
+			for path in get_code_files_via_hooks(hook, table_doctype):
+				self._add_code(path, fieldname, table_doctype)
 
 	def add_custom_script(self):
 		"""embed all require files"""
