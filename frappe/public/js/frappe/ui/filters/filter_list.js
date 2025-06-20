@@ -265,6 +265,7 @@ frappe.ui.FilterGroup = class {
     get_filters() {
         return this.filters
             .filter((f) => f.field)
+            .filter((f) => f.get_selected_value() != null)
             .map((f) => {
                 return f.get_value();
             });
@@ -308,13 +309,12 @@ frappe.ui.FilterGroup = class {
 						<button class="btn btn-secondary btn-xs clear-filters">
 							${__("Clear Filters")}
 						</button>
-						${
-                            this.filter_button
-                                ? `<button class="btn btn-primary btn-xs apply-filters">
+						${this.filter_button
+                ? `<button class="btn btn-primary btn-xs apply-filters">
 								${__("Apply Filters")}
 							</button>`
-                                : ""
-                        }
+                : ""
+            }
 					</div>
 				</div>
 			</div>`);

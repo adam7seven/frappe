@@ -233,8 +233,7 @@ class TestDBQuery(IntegrationTestCase):
 
 	def test_filters_1(self):
 		self.assertFalse(
-			{"id": "DocType"}
-			in DatabaseQuery("DocType").execute(filters=[["DocType", "id", "like", "J%"]])
+			{"id": "DocType"} in DatabaseQuery("DocType").execute(filters=[["DocType", "id", "like", "J%"]])
 		)
 
 	def test_filters_2(self):
@@ -248,9 +247,7 @@ class TestDBQuery(IntegrationTestCase):
 		)
 
 	def test_filters_4(self):
-		self.assertTrue(
-			{"id": "DocField"} in DatabaseQuery("DocType").execute(filters={"id": "DocField"})
-		)
+		self.assertTrue({"id": "DocField"} in DatabaseQuery("DocType").execute(filters={"id": "DocField"}))
 
 	def test_in_not_in_filters(self):
 		self.assertFalse(DatabaseQuery("DocType").execute(filters={"id": ["in", None]}))
@@ -1201,6 +1198,9 @@ class TestDBQuery(IntegrationTestCase):
 		self.assertIn("''", query)
 		self.assertNotIn("\\'", query)
 		self.assertNotIn("ifnull", query)
+		self.assertFalse(frappe.get_all("DocField", {"id": None}))
+		self.assertFalse(frappe.get_all("DocField", {"parent": None}))
+		self.assertNotIn("0", frappe.get_all("DocField", {"parent": None}, run=0))
 
 	def test_ifnull_fallback_types(self):
 		query = frappe.get_all("DocField", {"fieldname": ("!=", None)}, run=0)

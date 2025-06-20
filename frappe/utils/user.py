@@ -59,7 +59,7 @@ class UserPermissions:
 
 			return user
 
-		if not frappe.flags.in_install_db and not frappe.flags.in_test:
+		if not frappe.flags.in_install_db and not frappe.in_test:
 			user_doc = frappe.cache.hget("user_doc", self.id, get_user_doc)
 			if user_doc:
 				self.doc = frappe.get_doc(user_doc)
@@ -224,6 +224,7 @@ class UserPermissions:
 				"language",
 				"last_name",
 				"mute_sounds",
+				"show_absolute_datetime_in_timeline",
 				"send_me_a_copy",
 				"user_type",
 				"onboarding_status",

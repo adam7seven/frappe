@@ -478,8 +478,8 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
         let no_result_message = has_filters_set
             ? __("No {0} found with matching filters. Clear filters to see all {0}.", [doctype_name])
             : this.meta.description
-            ? __(this.meta.description)
-            : __("You haven't created a {0} yet", [doctype_name]);
+                ? __(this.meta.description)
+                : __("You haven't created a {0} yet", [doctype_name]);
 
         let new_button_label = has_filters_set
             ? __("Create a new {0}", [doctype_name], "Create a new document from list view")
@@ -629,10 +629,13 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
             if (this.count_upper_bound) {
                 $count.attr(
                     "title",
-                    __("The count shown is an estimated count. Click here to see the accurate count.")
+                    __(
+                        "The count shown is an estimated count. Click here to see the accurate count."
+                    )
                 );
                 $count.tooltip({ delay: { show: 600, hide: 100 }, trigger: "hover" });
                 $count.css("cursor", "pointer");
+                $count.css("white-space", "nowrap");
                 $count.on("click", () => {
                     me.count_upper_bound = 0;
                     $count.off("click");
@@ -690,7 +693,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
             .join("");
 
         const right_html = `
-			<span class="list-count"></span>
+			<span class="list-count" style=""></span>
 			<span class="level-item list-liked-by-me hidden-xs">
 				<span title="${__("Liked by me")}">
 					<svg class="icon icon-sm like-icon">
@@ -1670,7 +1673,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
         return frappe.model.user_settings.save(this.doctype, this.view_name, obj);
     }
 
-    on_update() {}
+    on_update() { }
 
     update_url_with_filters() {
         if (frappe.get_route_str() == this.page_name && !this.report_name) {
@@ -2101,7 +2104,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
         }
 
         // bulk delete
-        if (frappe.model.can_delete(doctype) && !frappe.model.has_workflow(doctype)) {
+        if (frappe.model.can_delete(doctype) && is_bulk_edit_allowed(doctype)) {
             actions_menu_items.push(bulk_delete());
         }
 

@@ -158,9 +158,9 @@ frappe.views.BaseList = class BaseList {
         return frappe.model.with_doctype(this.doctype);
     }
 
-    show_skeleton() {}
+    show_skeleton() { }
 
-    hide_skeleton() {}
+    hide_skeleton() { }
 
     check_permissions() {
         return true;
@@ -374,15 +374,15 @@ frappe.views.BaseList = class BaseList {
 				<div class="level-left">
 					<div class="btn-group">
 						${paging_values
-                            .map(
-                                (value) => `
+                .map(
+                    (value) => `
 							<button type="button" class="btn btn-default btn-sm btn-paging"
 								data-value="${value}">
 								${value}
 							</button>
 						`
-                            )
-                            .join("")}
+                )
+                .join("")}
 					</div>
 				</div>
 				<div class="level-right">
@@ -572,9 +572,9 @@ frappe.views.BaseList = class BaseList {
         // show a freeze message while data is loading
     }
 
-    before_render() {}
+    before_render() { }
 
-    after_render() {}
+    after_render() { }
 
     render() {
         // for child classes
@@ -625,8 +625,45 @@ class FilterArea {
         this.$filter_list_wrapper = this.list_view.$filter_section;
         this.trigger_refresh = true;
 
-        this.debounced_refresh_list_view = frappe.utils.debounce(this.refresh_list_view.bind(this), 300);
+        this.debounced_refresh_list_view = frappe.utils.debounce(
+            this.refresh_list_view.bind(this),
+            300
+        );
         this.setup();
+        if (frappe.is_mobile()) this.setup_mobile(list_view);
+    }
+    setup_mobile(list_view) {
+        const me = this;
+        this.standard_filters_visible = false;
+        this.standard_filters_wrapper.hide();
+        this.list_view.page.page_form.css("justify-content", "flex-end");
+        $(`<button class="filter-toggle btn btn-default btn-sm filter-button">
+					<span class="filter-icon button-icon">
+						${frappe.utils.icon("funnel-plus")}
+					</span>
+				</button>
+			</div>`)
+            .prependTo(this.$filter_list_wrapper.find(".filter-selector"))
+            .on("click", function () {
+                me.toggle_standard_filter();
+            });
+        let children = list_view.page.page_form.children();
+        list_view.page.page_form.append(children.get().reverse());
+    }
+
+    toggle_standard_filter() {
+        if (this.standard_filters_visible) {
+            this.standard_filters_visible = false;
+            this.standard_filters_wrapper.hide();
+        } else {
+            this.standard_filters_visible = true;
+            this.standard_filters_wrapper.show();
+        }
+        let icon_name = !this.standard_filters_visible ? "funnel-plus" : "funnel-x";
+        this.$filter_list_wrapper
+            .find(".filter-toggle")
+            .find("use")
+            .attr("href", `#icon-${icon_name}`);
     }
 
     setup() {

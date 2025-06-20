@@ -93,9 +93,7 @@ def application(request: Request):
 	response = None
 
 	try:
-		rollback = True
-
-		init_request(request, _site, _sites_path)
+		init_request(request)
 
 		validate_auth()
 
@@ -128,22 +126,18 @@ def application(request: Request):
 		else:
 			raise NotFound
 
-	except HTTPException as e:
-		return e
-
 	except Exception as e:
-		response = handle_exception(e)
+		response = e.get_response(request.environ) if isinstance(e, HTTPException) else handle_exception(e)
+		if db := getattr(frappe.local, "db", None):
+			db.rollback(chain=True)
 
 	else:
-		rollback = sync_database(rollback)
+		sync_database()
 
 	finally:
 		# Important note:
 		# this function *must* always return a response, hence any exception thrown outside of
 		# try..catch block like this finally block needs to be handled appropriately.
-
-		if rollback and request.method in UNSAFE_HTTP_METHODS and frappe.db:
-			frappe.db.rollback()
 
 		try:
 			run_after_request_hooks(request, response)
@@ -163,6 +157,59 @@ def run_after_request_hooks(request, response):
 
 	for after_request_task in frappe.get_hooks("after_request"):
 		frappe.call(after_request_task, response=response, request=request)
+
+
+def init_request(request):
+	frappe.local.request = request
+	frappe.local.request.after_response = CallbackManager()
+
+	frappe.local.is_ajax = frappe.get_request_header("X-Requested-With") == "XMLHttpRequest"
+
+	site = _site or request.headers.get("X-Frappe-Site-Name") or get_site_name(request.host)
+	frappe.init(site, sites_path=_sites_path, force=True)
+
+	if not (frappe.local.conf and frappe.local.conf.db_name):
+		# site does not exist
+		raise NotFound
+
+	frappe.connect(set_admin_as_user=False)
+	if frappe.local.conf.maintenance_mode:
+		if frappe.local.conf.allow_reads_during_maintenance:
+			setup_read_only_mode()
+		else:
+			raise frappe.SessionStopped("Session Stopped")
+
+	if request.path.startswith("/api/method/upload_file"):
+		from frappe.core.api.file import get_max_file_size
+
+		request.max_content_length = get_max_file_size()
+	else:
+		request.max_content_length = cint(frappe.local.conf.get("max_file_size")) or 25 * 1024 * 1024
+	make_form_dict(request)
+
+	if request.method != "OPTIONS":
+		frappe.local.http_request = HTTPRequest()
+
+	for before_request_task in frappe.get_hooks("before_request"):
+		frappe.call(before_request_task)
+
+
+def setup_read_only_mode():
+	"""During maintenance_mode reads to DB can still be performed to reduce downtime. This
+	function sets up read only mode
+
+	- Setting global flag so other pages, desk and database can know that we are in read only mode.
+	- Setup read only database access either by:
+	    - Connecting to read replica if one exists
+	    - Or setting up read only SQL transactions.
+	"""
+	frappe.flags.read_only = True
+
+	# If replica is available then just connect replica, else setup read only transaction.
+	if frappe.conf.read_from_replica:
+		frappe.connect_replica()
+	else:
+		frappe.db.begin(read_only=True)
 
 
 def log_request(request, response):
@@ -323,21 +370,21 @@ def handle_exception(e):
 	return response
 
 
-def sync_database(rollback: bool) -> bool:
+def sync_database():
+	db = getattr(frappe.local, "db", None)
+	if not db:
+		# db isn't initialized, can't commit or rollback
+		return
+
 	# if HTTP method would change server state, commit if necessary
-	if frappe.db and (frappe.local.flags.commit or frappe.local.request.method in UNSAFE_HTTP_METHODS):
-		frappe.db.commit()
-		rollback = False
-	elif frappe.db:
-		frappe.db.rollback()
-		rollback = False
+	if frappe.local.request.method in UNSAFE_HTTP_METHODS or frappe.local.flags.commit:
+		db.commit(chain=True)
+	else:
+		db.rollback(chain=True)
 
 	# update session
 	if session := getattr(frappe.local, "session_obj", None):
-		if session.update():
-			rollback = False
-
-	return rollback
+		session.update()
 
 
 # Always initialize sentry SDK if the DSN is sent

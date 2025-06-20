@@ -96,7 +96,7 @@ def get_docinfo(doc=None, doctype=None, id=None):
 	from frappe.share import _get_users as get_docshares
 
 	if not doc:
-		doc = frappe.get_doc(doctype, id)
+		doc = frappe.get_lazy_doc(doctype, id)
 		doc.check_permission("read")
 
 	all_communications = _get_communications(doc.doctype, doc.id, limit=21)
@@ -205,7 +205,7 @@ def get_versions(doc: "Document") -> list[dict]:
 def get_communications(doctype, id, start=0, limit=20):
 	from frappe.utils import cint
 
-	doc = frappe.get_doc(doctype, id)
+	doc = frappe.get_lazy_doc(doctype, id)
 	doc.check_permission("read")
 
 	return _get_communications(doctype, id, cint(start), cint(limit))
