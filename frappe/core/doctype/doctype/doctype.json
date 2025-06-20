@@ -36,6 +36,7 @@
   "editable_grid",
   "quick_entry",
   "grid_page_length",
+  "rows_threshold_for_grid_search",
   "cb01",
   "track_changes",
   "track_seen",
@@ -706,6 +707,14 @@
    "fieldname": "protect_attached_files",
    "fieldtype": "Check",
    "label": "Protect Attached Files"
+  },
+  {
+   "default": "0",
+   "depends_on": "istable",
+   "fieldname": "rows_threshold_for_grid_search",
+   "fieldtype": "Int",
+   "label": "Rows Threshold for Grid Search",
+   "non_negative": 1
   }
  ],
  "grid_page_length": 50,
@@ -785,7 +794,7 @@
    "link_fieldname": "document_type"
   }
  ],
- "modified": "2025-05-13 15:03:44.626494",
+ "modified": "2025-05-21 21:58:59.947374",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "DocType",

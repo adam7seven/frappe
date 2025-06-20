@@ -176,6 +176,7 @@ frappe.Application = class Application {
         }
         frappe.router.on("change", () => {
             $(".tooltip").hide();
+            if (frappe.frappe_toolbar && frappe.is_mobile()) frappe.frappe_toolbar.show_app_logo();
         });
     }
 
@@ -207,7 +208,11 @@ frappe.Application = class Application {
                 {
                     fieldname: "password",
                     fieldtype: "Password",
-                    label: __("Please enter the password for: <b>{0}</b>", [email_id], "Email Account"),
+                    label: __(
+                        "Please enter the password for: <b>{0}</b>",
+                        [email_id],
+                        "Email Account"
+                    ),
                     reqd: 1,
                 },
                 {
@@ -242,10 +247,7 @@ frappe.Application = class Application {
                     d.hide(); //hide waiting indication
                     if (!passed["message"]) {
                         frappe.show_alert(
-                            {
-                                message: __("Login Failed please try again"),
-                                indicator: "error",
-                            },
+                            { message: __("Login Failed please try again"), indicator: "error" },
                             5
                         );
                         me.email_password_prompt(email_account, user, i);
@@ -272,6 +274,14 @@ frappe.Application = class Application {
             if (frappe.boot.print_css) {
                 frappe.dom.set_style(frappe.boot.print_css, "print-style");
             }
+
+            let current_app = localStorage.current_app;
+            if (current_app) {
+                frappe.boot.setup_complete =
+                    frappe.boot.setup_wizard_not_required_apps?.includes(current_app) ||
+                    frappe.boot.setup_wizard_completed_apps?.includes(current_app);
+            }
+
             frappe.user.id = frappe.boot.user.id;
             frappe.router.setup();
         } else {
@@ -352,7 +362,9 @@ frappe.Application = class Application {
     make_page_container() {
         if ($("#body").length) {
             $(".splash").remove();
-            frappe.temp_container = $("<div id='temp-container' style='display: none;'>").appendTo("body");
+            frappe.temp_container = $("<div id='temp-container' style='display: none;'>").appendTo(
+                "body"
+            );
             frappe.container = new frappe.views.Container();
         }
     }
@@ -371,6 +383,7 @@ frappe.Application = class Application {
                 if (r.exc) {
                     return;
                 }
+
                 me.redirect_to_login();
             },
         });
@@ -380,11 +393,6 @@ frappe.Application = class Application {
     }
     redirect_to_login() {
         window.location.href = `/login?redirect-to=${encodeURIComponent(
-            window.location.pathname + window.location.search
-        )}`;
-    }
-    redirect_to_license() {
-        window.location.href = `/license?redirect-to=${encodeURIComponent(
             window.location.pathname + window.location.search
         )}`;
     }
@@ -465,11 +473,12 @@ frappe.Application = class Application {
         if (frappe.boot.notes.length) {
             frappe.boot.notes.forEach(function (note) {
                 if (!note.seen || note.notify_on_every_login) {
-                    var d = frappe.msgprint({ message: note.content, title: note.title });
+                    var d = new frappe.ui.Dialog({ content: note.content, title: note.title });
                     d.keep_open = true;
-                    d.custom_onhide = function () {
+                    d.msg_area = $('<div class="msgprint">').appendTo(d.body);
+                    d.msg_area.append(note.content);
+                    d.onhide = function () {
                         note.seen = true;
-
                         // Mark note as read if the Notify On Every Login flag is not set
                         if (!note.notify_on_every_login) {
                             frappe.call({
@@ -478,11 +487,13 @@ frappe.Application = class Application {
                                     note: note.id,
                                 },
                             });
+                        } else {
+                            frappe.call({
+                                method: "frappe.desk.doctype.note.note.reset_notes",
+                            });
                         }
-
-                        // next note
-                        me.show_notes();
                     };
+                    d.show();
                 }
             });
         }

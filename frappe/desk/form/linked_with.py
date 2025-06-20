@@ -42,7 +42,7 @@ def get_submitted_linked_docs(doctype: str, id: str, ignore_doctypes_on_cancel_a
 	if isinstance(ignore_doctypes_on_cancel_all, str):
 		ignore_doctypes_on_cancel_all = json.loads(ignore_doctypes_on_cancel_all)
 
-	frappe.has_permission(doctype, doc=id)
+	frappe.has_permission(doctype, doc=id, throw=True)
 	tree = SubmittableDocumentTree(doctype, id)
 	visited_documents = tree.get_all_children(ignore_doctypes_on_cancel_all)
 	docs = []
@@ -521,7 +521,7 @@ def get_linked_docs(doctype: str, id: str, linkinfo: dict | None = None) -> dict
 
 @frappe.whitelist()
 def get(doctype, docid):
-	frappe.has_permission(doctype, doc=docid)
+	frappe.has_permission(doctype, doc=docid, throw=True)
 	linked_doctypes = get_linked_doctypes(doctype=doctype)
 	return get_linked_docs(doctype=doctype, id=docid, linkinfo=linked_doctypes)
 

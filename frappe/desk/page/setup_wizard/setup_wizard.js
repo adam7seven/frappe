@@ -63,6 +63,13 @@ frappe.pages["setup-wizard"].on_page_show = function () {
 };
 
 frappe.setup.on("before_load", function () {
+    if (
+        frappe.boot.setup_wizard_completed_apps?.length &&
+        frappe.boot.setup_wizard_completed_apps.includes("frappe")
+    ) {
+        return;
+    }
+
     // load slides
     frappe.setup.slides_settings.forEach((s) => {
         if (!(s.id === "user" && frappe.boot.developer_mode)) {
@@ -207,7 +214,12 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
         }
         setTimeout(function () {
             // Reload
-            window.location.href = frappe.boot.apps_data.default_path || "/app";
+            let current_route = localStorage.current_route;
+
+            localStorage.current_route = "";
+            localStorage.current_app = "";
+
+            window.location.href = current_route || frappe.boot.apps_data.default_path || "/app";
         }, 2000);
     }
 
@@ -216,8 +228,8 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
         fail_msg = fail_msg
             ? fail_msg
             : frappe.last_response.setup_wizard_failure_message
-            ? frappe.last_response.setup_wizard_failure_message
-            : __("Failed to complete setup");
+                ? frappe.last_response.setup_wizard_failure_message
+                : __("Failed to complete setup");
 
         this.update_setup_message(__("Could not start up: ") + fail_msg);
 
@@ -405,6 +417,13 @@ frappe.setup.slides_settings = [
                 default: cint(frappe.telemetry.can_enable()),
                 depends_on: "eval:frappe.telemetry.can_enable()",
             },
+            {
+                fieldname: "allow_recording_first_session",
+                label: __("Allow recording my first session to improve user experience"),
+                fieldtype: "Check",
+                default: 0,
+                depends_on: "eval:frappe.telemetry.can_enable()",
+            },
         ],
 
         onload: function (slide) {
@@ -553,8 +572,8 @@ frappe.setup.utils = {
 
     setup_region_fields: function (slide) {
         /*
-			Set a slide's country, timezone and currency fields
-		*/
+            Set a slide's country, timezone and currency fields
+        */
         let data = frappe.setup.data.regional_data;
         let country_field = slide.get_field("country");
         let translated_countries = [];
@@ -625,8 +644,8 @@ frappe.setup.utils = {
 
     bind_region_events: function (slide) {
         /*
-			Bind a slide's country, timezone and currency fields
-		*/
+            Bind a slide's country, timezone and currency fields
+        */
         slide.get_input("country").on("change", function () {
             let data = frappe.setup.data.regional_data;
             let country = slide.get_input("country").val();

@@ -49,7 +49,7 @@ def print_has_permission_check_logs(func):
 		result = func(*args, **kwargs)
 
 		# print only if access denied
-		# and if user is checking his own permission
+		# and if user is checking their own permission
 		if not result and self_perm_check and print_logs:
 			msgprint(("<br>").join(frappe.flags.get("has_permission_check_logs", [])))
 
@@ -129,7 +129,8 @@ def has_permission(
 
 	if doc:
 		if isinstance(doc, str | int):
-			doc = frappe.get_doc(meta.id, doc)
+			# perf: Avoid loading child tables for perm checks
+			doc = frappe.get_lazy_doc(meta.id, doc)
 		perm = get_doc_permissions(doc, user=user, ptype=ptype, debug=debug).get(ptype)
 		if not perm:
 			debug and _debug_log(
@@ -235,7 +236,7 @@ def get_doc_permissions(doc, user=None, ptype=None, debug=False):
 			"User is owner of document, so permissions are updated to: " + frappe.as_json(permissions)
 		)
 
-	if not has_user_permission(doc, user, debug=debug):
+	if not has_user_permission(doc, user, debug=debug, ptype=ptype):
 		if is_user_owner():
 			# replace with owner permissions
 			permissions = permissions.get("if_owner", {})
@@ -322,7 +323,7 @@ def get_user_permissions(user):
 	return get_user_permissions(user)
 
 
-def has_user_permission(doc, user=None, debug=False):
+def has_user_permission(doc, user=None, debug=False, *, ptype=None):
 	"""Return True if User is allowed to view considering User Permissions."""
 	from frappe.core.doctype.user_permission.user_permission import get_user_permissions
 
@@ -333,6 +334,9 @@ def has_user_permission(doc, user=None, debug=False):
 		debug and _debug_log("User is not affected by any user permissions")
 		return True
 
+	doctype = doc.get("doctype")
+	docid = doc.get("id")
+
 	# don't apply strict user permissions for single doctypes since they contain empty link fields
 	apply_strict_user_permissions = (
 		False if doc.meta.issingle else frappe.get_system_settings("apply_strict_user_permissions")
@@ -340,8 +344,14 @@ def has_user_permission(doc, user=None, debug=False):
 	if apply_strict_user_permissions:
 		debug and _debug_log("Strict user permissions will be applied")
 
-	doctype = doc.get("doctype")
-	docid = doc.get("id")
+	if (
+		apply_strict_user_permissions
+		and doc.get("__islocal")
+		and ptype in ("read", "write")
+		and (not docid or (docid and not frappe.db.exists(doctype, docid, cache=True)))
+	):
+		apply_strict_user_permissions = False
+		debug and _debug_log("Strict permissions will be skipped on local document")
 
 	# STEP 1: ---------------------
 	# check user permissions on self
@@ -351,7 +361,7 @@ def has_user_permission(doc, user=None, debug=False):
 		# if allowed_docs is empty it states that there is no applicable permission under the current doctype
 
 		# only check if allowed_docs is not empty
-		if allowed_docs and str(docid) not in allowed_docs:
+		if allowed_docs and docid and str(docid) not in allowed_docs:
 			# no user permissions for this doc specified
 			debug and _debug_log(
 				"User doesn't have access to this document because of User Permissions, allowed documents: "
@@ -371,7 +381,7 @@ def has_user_permission(doc, user=None, debug=False):
 		#
 		# called for both parent and child records
 
-		meta = frappe.get_meta(d.get("doctype"))
+		meta = frappe.get_meta(d.doctype)
 
 		# check all link fields for user permissions
 		for field in meta.get_link_fields():
@@ -380,7 +390,6 @@ def has_user_permission(doc, user=None, debug=False):
 
 			# empty value, do you still want to apply user permissions?
 			if not d.get(field.fieldname) and not apply_strict_user_permissions:
-				# nah, not strict
 				continue
 
 			if field.options not in user_permissions:
@@ -398,7 +407,7 @@ def has_user_permission(doc, user=None, debug=False):
 					msg = _(
 						"You are not allowed to access this {0} record because it is linked to {1} '{2}' in row {3}, field {4}"
 					).format(
-						_(meta.name),
+						_(meta.id),
 						_(field.options),
 						d.get(field.fieldname) or _("empty"),
 						d.idx,
@@ -409,7 +418,7 @@ def has_user_permission(doc, user=None, debug=False):
 					msg = _(
 						"You are not allowed to access this {0} record because it is linked to {1} '{2}' in field {3}"
 					).format(
-						_(meta.name),
+						_(meta.id),
 						_(field.options),
 						d.get(field.fieldname) or _("empty"),
 						_(field.label, context=field.parent) if field.label else field.fieldname,

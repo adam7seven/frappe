@@ -544,9 +544,8 @@ export default class GridRow {
 
                 fields += `
 					<div class='control-input flex align-center form-control fields_order sortable-handle sortable'
-						style='display: block; margin-bottom: 5px; padding: 0 8px; cursor: pointer; height: 32px;' data-fieldname='${
-                            docfield.fieldname
-                        }'
+						style='display: block; margin-bottom: 5px; padding: 0 8px; cursor: pointer; height: 32px;' data-fieldname='${docfield.fieldname
+                    }'
 						data-label='${docfield.label}' data-type='${docfield.fieldtype}'>
 
 						<div class='row'>
@@ -838,7 +837,13 @@ export default class GridRow {
 
     show_search_row() {
         // show or remove search columns based on grid rows
-        this.show_search = this.show_search && (this.grid?.data?.length >= 20 || this.grid.filter_applied);
+        let show_length =
+            this.grid?.meta?.rows_threshold_for_grid_search > 0
+                ? this.grid.meta.rows_threshold_for_grid_search
+                : 20;
+        this.show_search =
+            this.show_search &&
+            (this.grid?.data?.length >= show_length || this.grid.filter_applied);
         !this.show_search && this.wrapper.remove();
         return this.show_search;
     }
