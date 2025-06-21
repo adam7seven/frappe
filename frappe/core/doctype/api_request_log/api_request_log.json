@@ -39,7 +39,7 @@
  "modified": "2025-05-21 17:09:55.054044",
  "modified_by": "Administrator",
  "module": "Core",
- "name": "API Request Log",
+ "id": "API Request Log",
  "owner": "Administrator",
  "permissions": [
   {

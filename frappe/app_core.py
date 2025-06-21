@@ -19,20 +19,19 @@ def init_request(request, site, sites_path):
 	frappe.local.is_ajax = frappe.get_request_header("X-Requested-With") == "XMLHttpRequest"
 
 	site = site or request.headers.get("X-Frappe-Site-Name") or get_site_name(request.host)
-	frappe.init(site=site, sites_path=sites_path, force=True)
+	frappe.init(site, sites_path=sites_path, force=True)
 
 	if not (frappe.local.conf and frappe.local.conf.db_name):
 		# site does not exist
 		raise NotFound
 
+	frappe.connect(set_admin_as_user=False)
 	if frappe.local.conf.maintenance_mode:
-		frappe.connect()
 		if frappe.local.conf.allow_reads_during_maintenance:
 			setup_read_only_mode()
 		else:
 			raise frappe.SessionStopped("Session Stopped")
-	else:
-		frappe.connect(set_admin_as_user=False)
+
 	if request.path.startswith("/api/method/upload_file"):
 		from frappe.core.api.file import get_max_file_size
 

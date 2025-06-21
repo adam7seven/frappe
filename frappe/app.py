@@ -93,7 +93,7 @@ def application(request: Request):
 	response = None
 
 	try:
-		init_request(request)
+		init_request(request, _site, _sites_path)
 
 		validate_auth()
 
@@ -157,41 +157,6 @@ def run_after_request_hooks(request, response):
 
 	for after_request_task in frappe.get_hooks("after_request"):
 		frappe.call(after_request_task, response=response, request=request)
-
-
-def init_request(request):
-	frappe.local.request = request
-	frappe.local.request.after_response = CallbackManager()
-
-	frappe.local.is_ajax = frappe.get_request_header("X-Requested-With") == "XMLHttpRequest"
-
-	site = _site or request.headers.get("X-Frappe-Site-Name") or get_site_name(request.host)
-	frappe.init(site, sites_path=_sites_path, force=True)
-
-	if not (frappe.local.conf and frappe.local.conf.db_name):
-		# site does not exist
-		raise NotFound
-
-	frappe.connect(set_admin_as_user=False)
-	if frappe.local.conf.maintenance_mode:
-		if frappe.local.conf.allow_reads_during_maintenance:
-			setup_read_only_mode()
-		else:
-			raise frappe.SessionStopped("Session Stopped")
-
-	if request.path.startswith("/api/method/upload_file"):
-		from frappe.core.api.file import get_max_file_size
-
-		request.max_content_length = get_max_file_size()
-	else:
-		request.max_content_length = cint(frappe.local.conf.get("max_file_size")) or 25 * 1024 * 1024
-	make_form_dict(request)
-
-	if request.method != "OPTIONS":
-		frappe.local.http_request = HTTPRequest()
-
-	for before_request_task in frappe.get_hooks("before_request"):
-		frappe.call(before_request_task)
 
 
 def setup_read_only_mode():
