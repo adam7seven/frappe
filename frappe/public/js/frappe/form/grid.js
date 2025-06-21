@@ -65,8 +65,8 @@ export default class Grid {
 				<span class="help"></span>
 				<p class="text-muted small grid-description"></p>
 				<div class="grid-custom-buttons"></div>
-				<div class="form-grid-container">
-					<div class="form-grid">
+				<div class="form-grid-container column-limit-reached">
+					<div class="form-grid ${(this.df.in_place_edit? "" : "last-col-is-action")}">
 						<div class="grid-heading-row"></div>
 						<div class="grid-body">
 							<div class="rows"></div>
