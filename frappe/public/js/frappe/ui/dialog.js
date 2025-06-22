@@ -58,8 +58,8 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 		if (this.primary_action || (this.action.primary && this.action.primary.onsubmit)) {
 			this.set_primary_action(
 				this.primary_action_label ||
-					this.action.primary.label ||
-					__("Submit", null, "Primary action in dialog"),
+				this.action.primary.label ||
+				__("Submit", null, "Primary action in dialog"),
 				this.primary_action || this.action.primary.onsubmit
 			);
 		}
@@ -306,10 +306,10 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 		$("body").css("overflow", bool ? "hidden" : "auto");
 	}
 
-	add_custom_action(label, action, css_class = null) {
+	add_custom_action(label, action, css_class = null, title = null) {
 		this.footer.removeClass("hide");
 		let action_button = $(`
-			<button class="btn btn-secondary btn-sm ${css_class || ""}">
+			<button ${(title ? `title="${title}"` : "")} class="btn btn-secondary btn-sm ${css_class || ""}">
 				${label}
 			</button>
 		`);
@@ -318,7 +318,7 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 		action && action_button.click(action);
 	}
 
-	add_custom_button() {}
+	add_custom_button() { }
 };
 
 frappe.ui.hide_open_dialog = () => {
