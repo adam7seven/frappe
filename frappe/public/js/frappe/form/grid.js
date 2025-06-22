@@ -246,7 +246,7 @@ export default class Grid {
 
 		let tasks = [];
 		let selected_children = [];
-		if (ids) {
+		if (ids && Array.isArray(ids)) {
 			selected_children = ids.map(id => this.get_row(id).doc);
 		}
 		else {
