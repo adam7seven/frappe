@@ -66,7 +66,7 @@ export default class Grid {
 				<p class="text-muted small grid-description"></p>
 				<div class="grid-custom-buttons"></div>
 				<div class="form-grid-container column-limit-reached">
-					<div class="form-grid ${(this.df.in_place_edit? "" : "last-col-is-action")}">
+					<div class="form-grid ${(this.df.in_place_edit ? "" : "last-col-is-action")}">
 						<div class="grid-heading-row"></div>
 						<div class="grid-body">
 							<div class="rows"></div>
@@ -241,11 +241,18 @@ export default class Grid {
 		});
 	}
 
-	delete_rows() {
+	delete_rows(ids = null) {
 		var dirty = false;
 
 		let tasks = [];
-		let selected_children = this.get_selected_children();
+		let selected_children = [];
+		if (ids) {
+			selected_children = ids.map(id => this.get_row(id).doc);
+		}
+		else {
+			selected_children = this.get_selected_children();
+		}
+
 		selected_children.forEach((doc) => {
 			tasks.push(() => {
 				if (!this.frm) {
@@ -503,6 +510,7 @@ export default class Grid {
 				this.grid_rows[ri] = grid_row;
 			}
 
+			this.grid_rows_by_docid[d.id] = grid_row;
 		}
 	}
 
@@ -818,6 +826,7 @@ export default class Grid {
 
 				const row_idx = this.df.data.length + 1;
 				this.df.data.push({ idx: row_idx, __islocal: true, ...defaults });
+				var d = this.df.data[this.df.data.length - 1];
 				this.df.on_add_row && this.df.on_add_row(row_idx);
 				this.refresh();
 			}
