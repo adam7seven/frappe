@@ -414,6 +414,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 			.with_doc("Report", this.report_name)
 			.then((doc) => {
 				this.report_doc = doc;
+				this.page_title = __(doc.report_name);
 			})
 			.then(() => frappe.model.with_doctype(this.report_doc?.ref_doctype));
 	}

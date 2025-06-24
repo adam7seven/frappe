@@ -399,15 +399,15 @@ def is_prepared_report_enabled(report):
 	return cint(frappe.db.get_value("Report", report, "prepared_report"))
 
 
-def get_report_module_dotted_path(module, report_name):
+def get_report_module_dotted_path(module, report_id):
 	return (
 		frappe.local.module_app[scrub(module)]
 		+ "."
 		+ scrub(module)
 		+ ".report."
-		+ scrub(report_name)
+		+ scrub(report_id)
 		+ "."
-		+ scrub(report_name)
+		+ scrub(report_id)
 	)
 
 
