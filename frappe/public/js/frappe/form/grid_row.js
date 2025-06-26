@@ -690,9 +690,22 @@ export default class GridRow {
         this.search_columns = {};
 
         this.grid.setup_visible_columns();
+        this.user_defined_fields = [];
+        if (this.grid.user_defined_columns && this.grid.user_defined_columns.length > 0) {
+            this.user_defined_fields = this.grid.user_defined_columns.map((row) => {
+                let column = this.docfields.find(field => field.fieldname == row.fieldname);
+                if (column) {
+                    column.in_list_view = 1;
+                    column.columns = row.columns;
+                    column.sticky = row.sticky;
+                    return column;
+                }
+            }).filter(Boolean);
+        }
+
         let fields =
-            this.grid.user_defined_columns && this.grid.user_defined_columns.length > 0
-                ? this.grid.user_defined_columns
+            this.user_defined_fields && this.user_defined_fields.length > 0
+                ? this.user_defined_fields
                 : this.docfields;
 
         let total_colsize = 0;
@@ -754,7 +767,7 @@ export default class GridRow {
                 }
             }
         });
-    
+
         if (this.show_search) {
             // last empty column
             $(`<div class="col grid-static-col search"></div>`).appendTo(this.row);
@@ -1395,8 +1408,8 @@ export default class GridRow {
     }
     refresh_field(fieldname, txt) {
         let fields =
-            this.grid.user_defined_columns && this.grid.user_defined_columns.length > 0
-                ? this.grid.user_defined_columns
+            this.user_defined_fields && this.user_defined_fields.length > 0
+                ? this.user_defined_fields
                 : this.docfields;
 
         let df = fields.find((col) => {

@@ -904,11 +904,22 @@ export default class Grid {
 
 		this.user_defined_columns = [];
 		this.setup_user_defined_columns();
-		var total_colsize = 1,
-			fields =
-				this.user_defined_columns && this.user_defined_columns.length > 0
-					? this.user_defined_columns
-					: this.editable_fields || this.docfields;
+		var total_colsize = 1, fields = [];
+		if (this.user_defined_columns && this.user_defined_columns.length > 0) {
+			fields = this.user_defined_columns.map((row) => {
+				let column = frappe.meta.get_docfield(this.doctype, row.fieldname);
+
+				if (column) {
+					column.in_list_view = 1;
+					column.columns = row.columns;
+					column.sticky = row.sticky;
+					return column;
+				}
+			}).filter(Boolean);
+		}
+		else {
+			fields = this.editable_fields || this.docfields;
+		}
 
 		this.visible_columns = [];
 
@@ -989,21 +1000,9 @@ export default class Grid {
 
 	setup_user_defined_columns() {
 		if (!this.frm) return;
-
 		let user_settings = frappe.get_user_settings(this.frm.doctype, "GridView");
 		if (user_settings && user_settings[this.doctype] && user_settings[this.doctype].length) {
-			this.user_defined_columns = user_settings[this.doctype]
-				.map((row) => {
-					let column = frappe.meta.get_docfield(this.doctype, row.fieldname);
-
-					if (column) {
-						column.in_list_view = 1;
-						column.columns = row.columns;
-						column.sticky = row.sticky;
-						return column;
-					}
-				})
-				.filter(Boolean);
+			this.user_defined_columns = user_settings[this.doctype];
 		}
 	}
 
@@ -1203,17 +1202,15 @@ export default class Grid {
 			} else {
 				throw `field ${fieldname} not found`;
 			}
+
+			let doc_field = row?.user_defined_fields?.find(d => d.fieldname === fieldname);
+			if (doc_field) {
+				doc_field[property] = value;
+			}
 		}
 
 		// update the parent too (for new rows)
 		this.docfields.find((d) => d.fieldname === fieldname)[property] = value;
-
-		if (this.user_defined_columns && this.user_defined_columns.length > 0) {
-			let field = this.user_defined_columns.find((d) => d.fieldname === fieldname);
-			if (field && Object.keys(field).includes(property)) {
-				field[property] = value;
-			}
-		}
 
 		this.debounced_refresh();
 	}

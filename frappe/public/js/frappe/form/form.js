@@ -1170,9 +1170,9 @@ frappe.ui.form.Form = class FrappeForm {
                 this.dashboard.clear_headline();
                 this.dashboard.set_headline_alert(
                     __("This form has been modified after you have loaded it") +
-                        '<button class="btn btn-xs btn-primary pull-right" onclick="cur_frm.reload_doc()">' +
-                        __("Refresh") +
-                        "</button>",
+                    '<button class="btn btn-xs btn-primary pull-right" onclick="cur_frm.reload_doc()">' +
+                    __("Refresh") +
+                    "</button>",
                     "alert-warning"
                 );
             } else {
@@ -1207,7 +1207,7 @@ frappe.ui.form.Form = class FrappeForm {
     add_web_link(path, label) {
         label = __(label) || __("See on Website");
         this.web_link = this.sidebar
-            .add_user_action(__(label), function () {})
+            .add_user_action(__(label), function () { })
             .attr("href", path || this.doc.route)
             .attr("target", "_blank");
     }
@@ -1591,10 +1591,10 @@ frappe.ui.form.Form = class FrappeForm {
             df[property] = value;
 
             if (table_field && table_row_id) {
-                let user_defined_columns = this.fields_dict[fieldname].grid.user_defined_columns;
-                let column = user_defined_columns.find((column) => column.fieldname == table_field);
-                if (column) {
-                    column[property] = value;
+                let user_defined_fields = this.fields_dict[fieldname].grid.grid_rows_by_docid[table_row_id].user_defined_fields;
+                let field = user_defined_fields.find((f) => f.fieldname == table_field);
+                if (field) {
+                    field[property] = value;
                 }
 
                 this.fields_dict[fieldname].grid.grid_rows_by_docid[table_row_id].refresh_field(table_field);
@@ -2036,8 +2036,8 @@ frappe.ui.form.Form = class FrappeForm {
                 this.timeline && this.timeline.refresh();
 
                 if (["add", "delete"].includes(action) && doc.doctype === "Comment") {
-				this.footer.refresh_comments_count();
-			}
+                    this.footer.refresh_comments_count();
+                }
             }
         });
     }
