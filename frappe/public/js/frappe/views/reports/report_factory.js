@@ -10,6 +10,7 @@ frappe.views.ReportFactory = class ReportFactory extends frappe.views.Factory {
 			_route.push(route[2]);
 		}
 
+		frappe.route_flags.replace_route = true;
 		frappe.set_route(_route);
 	}
 };
