@@ -157,8 +157,10 @@ class WorkflowState(Document):
 			"briefcase",
 			"fullscreen",
 		]
+		name: DF.Data
 		style: DF.Literal["", "Primary", "Info", "Success", "Warning", "Danger", "Inverse"]
-		workflow_state_name: DF.Data
 	# end: auto-generated types
 
-	pass
+	def before_save(self):
+		if not self.name:
+			self.name = self.id
