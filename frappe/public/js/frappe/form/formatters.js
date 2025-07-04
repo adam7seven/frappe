@@ -50,7 +50,17 @@ frappe.form.formatters = {
 			return value;
 		}
 
-		let options = df.options.split("\n");
+		let options = [];
+		if (typeof df.options === "string") {
+			options = df.options.split("\n");
+		}
+		else if (Array.isArray(df.options)) {
+			options = df.options;
+		}
+		else {
+			return value;
+		}
+
 		for (var i = 0; i < options.length; i++) {
 			var opt = options[i];
 			if (df.options_has_label) {

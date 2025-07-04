@@ -61,7 +61,7 @@ def make_test_module():
 	if not frappe.db.exists("Module Def", "Test Module for Package"):
 		frappe.get_doc(
 			doctype="Module Def",
-			module_name="Test Module for Package",
+			id="Test Module for Package",
 			custom=1,
 			app_name="frappe",
 			package="Test Package",

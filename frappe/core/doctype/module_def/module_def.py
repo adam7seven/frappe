@@ -75,7 +75,7 @@ class ModuleDef(Document):
 			frappe.db.after_commit.add(self.delete_module_from_file)
 
 	def delete_module_from_file(self):
-		delete_folder(self.module_name, "Module Def", self.id)
+		delete_folder(self.id, "Module Def", self.id)
 		modules = []
 
 		modules_txt = Path(frappe.get_app_path(self.app_name, "modules.txt"))

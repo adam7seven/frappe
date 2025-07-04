@@ -8,15 +8,15 @@ def get_modules_from_all_apps_for_user(user: str | None = None) -> list[dict]:
 	global_blocked_modules = frappe.get_doc("User", "Administrator").get_blocked_modules()
 	user_blocked_modules = frappe.get_doc("User", user).get_blocked_modules()
 	blocked_modules = global_blocked_modules + user_blocked_modules
-	allowed_modules_list = [m for m in all_modules if m.get("module_name") not in blocked_modules]
+	allowed_modules_list = [m for m in all_modules if m.get("id") not in blocked_modules]
 
 	empty_tables_by_module = get_all_empty_tables_by_module()
 
 	for module in allowed_modules_list:
-		module_name = module.get("module_name")
+		module_id = module.get("module_id")
 
 		# Apply onboarding status
-		if module_name in empty_tables_by_module:
+		if module_id in empty_tables_by_module:
 			module["onboard_present"] = 1
 
 	return allowed_modules_list
@@ -30,7 +30,7 @@ def get_modules_from_all_apps():
 
 
 def get_modules_from_app(app):
-	return frappe.get_all("Module Def", filters={"app_name": app}, fields=["module_name", "app_name as app"])
+	return frappe.get_all("Module Def", filters={"app_name": app}, fields=["id", "app_name as app"])
 
 
 def get_all_empty_tables_by_module():

@@ -39,9 +39,7 @@ def get_permission_query_conditions(user):
 
 	allowed_doctypes = [frappe.db.escape(doctype) for doctype in frappe.permissions.get_doctypes_with_read()]
 	allowed_reports = [frappe.db.escape(report) for report in get_allowed_report_names()]
-	allowed_modules = [
-		frappe.db.escape(module.get("module_name")) for module in get_modules_from_all_apps_for_user()
-	]
+	allowed_modules = [frappe.db.escape(module.get("id")) for module in get_modules_from_all_apps_for_user()]
 
 	if allowed_doctypes:
 		doctype_condition = "`tabDashboard Chart`.`document_type` in ({allowed_doctypes})".format(

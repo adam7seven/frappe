@@ -92,19 +92,19 @@ def install_basic_docs():
 		{"doctype": "Role", "role_name": "Translator"},
 		{
 			"doctype": "Workflow State",
-			"workflow_state_name": "Pending",
+			"id": "Pending",
 			"icon": "question-sign",
 			"style": "",
 		},
 		{
 			"doctype": "Workflow State",
-			"workflow_state_name": "Approved",
+			"id": "Approved",
 			"icon": "ok-sign",
 			"style": "Success",
 		},
 		{
 			"doctype": "Workflow State",
-			"workflow_state_name": "Rejected",
+			"id": "Rejected",
 			"icon": "remove",
 			"style": "Danger",
 		},

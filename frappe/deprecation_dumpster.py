@@ -863,13 +863,13 @@ def get_compat_frappe_test_case_preparation(cfg):
 					if filename.startswith("test_") and filename.endswith(".py"):
 						relative_path = os.path.relpath(path, app_path)
 						if relative_path == ".":
-							module_name = app
+							module_id = app
 						else:
 							relative_path = relative_path.replace("/", ".")
-							module_name = os.path.splitext(filename)[0]
-							module_name = f"{app}.{relative_path}.{module_name}"
+							module_id = os.path.splitext(filename)[0]
+							module_id = f"{app}.{relative_path}.{module_id}"
 
-						module = frappe.get_module(module_name)
+						module = frappe.get_module(module_id)
 						candidates.append((module, path, filename))
 			compat_preload_test_records_upfront(candidates)
 

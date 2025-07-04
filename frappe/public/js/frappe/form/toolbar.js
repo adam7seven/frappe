@@ -206,17 +206,13 @@ frappe.ui.form.Toolbar = class Toolbar {
                 }
 
                 if (!is_title_field_same_as_autoname) {
-                    fields.push(
-                        ...[
-                            {
-                                label: label,
-                                fieldname: "id",
-                                fieldtype: "Data",
-                                reqd: 1,
-                                default: docid,
-                            },
-                        ]
-                    );
+                    fields.splice(0, 0, {
+                        label: label,
+                        fieldname: "id",
+                        fieldtype: "Data",
+                        reqd: 1,
+                        default: docid,
+                    });
                 }
 
                 fields.push(

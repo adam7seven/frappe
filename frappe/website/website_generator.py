@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.modules import get_module_name
+from frappe.modules import get_module_id
 from frappe.search.website_search import remove_document_from_index, update_index_for_path
 from frappe.website.utils import cleanup_page_name, clear_cache
 
@@ -120,7 +120,7 @@ class WebsiteGenerator(Document):
 				"ref_doctype": self.doctype,
 				"idx": self.idx,
 				"docid": self.id,
-				"controller": get_module_name(self.doctype, self.meta.module),
+				"controller": get_module_id(self.doctype, self.meta.module),
 			}
 		)
 

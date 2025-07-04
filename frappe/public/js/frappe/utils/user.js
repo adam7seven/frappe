@@ -49,7 +49,7 @@ $.extend(frappe.user, {
 	get_desktop_items: function () {
 		// hide based on permission
 		var modules_list = $.map(frappe.boot.allowed_modules, function (icon) {
-			var m = icon.module_name;
+			var m = icon.module;
 			var type = frappe.modules[m] && frappe.modules[m].type;
 
 			if (frappe.boot.user.allow_modules.indexOf(m) === -1) return null;

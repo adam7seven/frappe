@@ -37,7 +37,7 @@ def write_document_file(doc, record_module=None, create_init=True, folder_name=N
 	doc.run_method("before_export", doc_export)
 
 	doc_export = strip_default_fields(doc, doc_export)
-	module = record_module or get_module_name(doc)
+	module = record_module or get_module_id(doc)
 	is_custom_module = frappe.db.get_value("Module Def", module, "custom")
 
 	# create folder
@@ -87,7 +87,7 @@ def write_code_files(folder, fname, doc, doc_export):
 				del doc_export[key]
 
 
-def get_module_name(doc):
+def get_module_id(doc):
 	if doc.doctype == "Module Def":
 		module = doc.id
 	elif doc.doctype == "Workflow":

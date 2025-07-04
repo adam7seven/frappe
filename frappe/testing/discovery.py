@@ -61,8 +61,8 @@ def discover_all_tests(apps: list[str], runner) -> "TestRunner":
 					and filename.endswith(".py")
 					and filename != "test_runner.py"
 				]:
-					module_name = f"{'.'.join(file.relative_to(app_path.parent).parent.parts)}.{file.stem}"
-					_add_module_tests(runner, app, module_name)
+					module_id = f"{'.'.join(file.relative_to(app_path.parent).parent.parts)}.{file.stem}"
+					_add_module_tests(runner, app, module_id)
 	except Exception as e:
 		logger.error(f"Error discovering all tests for {apps}: {e!s}")
 		raise TestRunnerError(f"Failed to discover tests for {apps}: {e!s}") from e
@@ -89,7 +89,7 @@ def discover_doctype_tests(doctypes: list[str], runner, app: str, force: bool = 
 				raise TestRunnerError(
 					f"Mismatch between specified app '{app}' and doctype app '{doctype_app}'"
 				)
-			test_module = frappe.modules.utils.get_module_name(doctype, module, "test_")
+			test_module = frappe.modules.utils.get_module_id(doctype, module, "test_")
 			force and frappe.db.delete(doctype)
 			_add_module_tests(runner, _app, test_module)
 		except Exception as e:

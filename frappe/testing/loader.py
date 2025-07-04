@@ -4,7 +4,7 @@ from collections import deque
 from pathlib import Path
 
 import frappe
-from frappe.modules.utils import get_module_name
+from frappe.modules.utils import get_module_id
 from frappe.testing.config import TestParameters
 
 
@@ -35,8 +35,8 @@ class FrappeTestLoader(unittest.TestLoader):
 		"""
 		_file_modules = []
 		for app_path, test_file in files:
-			module_name = f"{'.'.join(test_file.relative_to(app_path.parent).parent.parts)}.{test_file.stem}"
-			module = importlib.import_module(module_name)
+			module_id = f"{'.'.join(test_file.relative_to(app_path.parent).parent.parts)}.{test_file.stem}"
+			module = importlib.import_module(module_id)
 			_file_modules.append(module)
 		return _file_modules
 
@@ -62,7 +62,7 @@ class FrappeTestLoader(unittest.TestLoader):
 			# handle --doctype; will ignore --app
 			module = frappe.get_cached_value("DocType", self.params.doctype, "module")
 			app = frappe.get_cached_value("Module Def", module, "app_name")
-			pymodule_name = get_module_name(self.params.doctype, module, "test_", app=app)
+			pymodule_name = get_module_id(self.params.doctype, module, "test_", app=app)
 			pymodule = importlib.import_module(pymodule_name)
 			self.load_testsuites_in_pymodule([pymodule])
 

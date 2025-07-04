@@ -246,10 +246,10 @@ def _get_doctypes_for_module_def(app, module_def):
 		fields=["id", "module"],
 		as_list=True,
 	)
-	from frappe.modules import get_module_name
+	from frappe.modules import get_module_id
 
 	for doctype, module in doctypes_:
-		test_module = get_module_name(doctype, module, "test_", app=app)
+		test_module = get_module_id(doctype, module, "test_", app=app)
 		try:
 			import importlib
 

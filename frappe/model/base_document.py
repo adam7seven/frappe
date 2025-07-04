@@ -90,18 +90,18 @@ def import_controller(doctype):
 	from frappe.model.document import Document
 	from frappe.utils.nestedset import NestedSet
 
-	module_name = "Core"
+	module_id = "Core"
 	if doctype not in DOCTYPES_FOR_DOCTYPE:
 		doctype_info = frappe.db.get_value("DocType", doctype, ("module", "custom", "is_tree"), as_dict=True)
 		if doctype_info:
 			if doctype_info.custom:
 				return NestedSet if doctype_info.is_tree else Document
-			module_name = doctype_info.module
+			module_id = doctype_info.module
 
 	module_path = None
 	class_overrides = frappe.get_hooks("override_doctype_class")
 
-	module = load_doctype_module(doctype, module_name)
+	module = load_doctype_module(doctype, module_id)
 	classname = doctype.replace(" ", "").replace("-", "")
 	class_ = getattr(module, classname, None)
 
@@ -463,7 +463,7 @@ class BaseDocument:
 						)
 
 				fieldtype = df.fieldtype
-				if isinstance(value, list) and fieldtype not in table_fields:
+				if isinstance(value, list) and fieldtype not in table_fields and fieldtype != "JSON":
 					frappe.throw(_("Value for {0} cannot be a list").format(_(df.label, context=df.parent)))
 
 				if fieldtype == "Check":

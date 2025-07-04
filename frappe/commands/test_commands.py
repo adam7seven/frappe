@@ -875,7 +875,7 @@ class TestRemoveApp(IntegrationTestCase):
 
 		test_module = frappe.new_doc("Module Def")
 
-		test_module.update({"module_name": "RemoveThis", "app_name": "frappe"})
+		test_module.update({"id": "RemoveThis", "app_name": "frappe"})
 		test_module.save()
 
 		module_def_linked_doctype = frappe.get_doc(
@@ -902,11 +902,11 @@ class TestRemoveApp(IntegrationTestCase):
 		self.assertEqual(doctype_to_link_field_map[module_def_linked_doctype.id], "notmodule")
 		self.assertNotIn("DocType", doctype_to_link_field_map)
 
-		doctypes_to_delete = _delete_modules([test_module.module_name], dry_run=False)
+		doctypes_to_delete = _delete_modules([test_module.id], dry_run=False)
 		self.assertEqual(len(doctypes_to_delete), 1)
 
 		_delete_doctypes(doctypes_to_delete, dry_run=False)
-		self.assertFalse(frappe.db.exists("Module Def", test_module.module_name))
+		self.assertFalse(frappe.db.exists("Module Def", test_module.id))
 		self.assertFalse(frappe.db.exists("DocType", module_def_linked_doctype.name))
 
 	def test_dry_run(self):

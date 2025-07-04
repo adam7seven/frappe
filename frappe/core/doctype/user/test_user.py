@@ -445,7 +445,7 @@ class TestUser(IntegrationTestCase):
 		doc = frappe.response.docs[0]
 		self.assertListEqual(
 			sorted(doc.get("__onload").get("all_modules", [])),
-			sorted(m.get("module_name") for m in get_modules_from_all_apps()),
+			sorted(m.get("id") for m in get_modules_from_all_apps()),
 		)
 
 	@IntegrationTestCase.change_settings("System Settings", reset_password_link_expiry_duration=1)
