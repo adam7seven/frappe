@@ -29,6 +29,9 @@ class ModuleDef(Document):
 	def validate(self):
 		from frappe.modules.utils import get_module_app
 
+		if not self.module_name:
+			self.module_name = self.id
+
 		if not self.app_name and not self.custom:
 			self.app_name = get_module_app(self.id)
 
