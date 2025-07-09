@@ -6,7 +6,6 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "connections_tab",
   "details_tab",
   "section_break_dnma",
   "module_name",
@@ -14,7 +13,8 @@
   "restrict_to_domain",
   "package",
   "column_break_giia",
-  "custom"
+  "custom",
+  "connections_tab"
  ],
  "fields": [
   {
@@ -140,7 +140,7 @@
    "link_fieldname": "module"
   }
  ],
- "modified": "2025-07-03 14:12:09.453893",
+ "modified": "2025-07-09 09:55:05.896360",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Module Def",
