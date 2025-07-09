@@ -37,20 +37,7 @@ class Workspace(Document):
 		external_link: DF.Data | None
 		for_user: DF.Data | None
 		hide_custom: DF.Check
-		indicator_color: DF.Literal[
-			"green",
-			"cyan",
-			"blue",
-			"orange",
-			"yellow",
-			"gray",
-			"grey",
-			"red",
-			"pink",
-			"darkgrey",
-			"purple",
-			"light-blue",
-		]
+		indicator_color: DF.Literal["green", "cyan", "blue", "orange", "yellow", "gray", "grey", "red", "pink", "darkgrey", "purple", "light-blue"]
 		is_hidden: DF.Check
 		label: DF.Data
 		link_to: DF.DynamicLink | None
