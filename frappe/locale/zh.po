@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tiadmin\n"
 "Report-Msgid-Bugs-To: developers@frappe.io\n"
-"POT-Creation-Date: 2025-07-02 04:40+0000\n"
-"PO-Revision-Date: 2025-07-02 05:53\n"
+"POT-Creation-Date: 2025-07-11 05:39+0000\n"
+"PO-Revision-Date: 2025-07-11 05:57\n"
 "Last-Translator: developers@frappe.io\n"
 "Language-Team: Chinese Simplified\n"
 "MIME-Version: 1.0\n"
@@ -608,11 +608,6 @@ msgstr "<pre><code>doc.grand_total &gt; 0</code></pre>\n\n"
 #: frappe/core/workspace/welcome_workspace/welcome_workspace.json
 msgid "<span class=\"h2\">Hi,</span>"
 msgstr "<span class=\"h2\">你好,</span>"
-
-#. Header text in the Integrations Workspace
-#: frappe/integrations/workspace/integrations/integrations.json
-msgid "<span class=\"h4\"><b>Reports &amp; Masters</b></span>"
-msgstr "<b><sp</span>an class=\"h4\"><b>报告 &amp; 大师</b></span>"
 
 #. Option for the 'Condition' (Select) field in DocType 'Document Naming Rule
 #. Condition'
@@ -1328,7 +1323,7 @@ msgstr "创建数字卡片需要聚合字段"
 msgid "Aggregate Function Based On"
 msgstr "基于以下聚合函数"
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:412
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:415
 msgid "Aggregate Function field is required to create a dashboard chart"
 msgstr "创建仪表板图表需要聚合函数字段"
 
@@ -3401,7 +3396,7 @@ msgstr "提交后无法更新"
 msgid "Cannot access file path {0}"
 msgstr "无法访问文件路径{0}"
 
-#: frappe/workflow/doctype/workflow/workflow.py:109
+#: frappe/workflow/doctype/workflow/workflow.py:114
 msgid "Cannot cancel before submitting. See Transition {0}"
 msgstr "提交前无法取消。请查看转换{0}"
 
@@ -3413,7 +3408,7 @@ msgstr "无法将文档状态从0（草稿）更改为2（已取消）"
 msgid "Cannot change docstatus from 1 (Submitted) to 0 (Draft)"
 msgstr "无法将文档状态从1（已提交）更改为0（草稿）"
 
-#: frappe/workflow/doctype/workflow/workflow.py:98
+#: frappe/workflow/doctype/workflow/workflow.py:103
 msgid "Cannot change state of Cancelled Document. Transition row {0}"
 msgstr "无法更改已取消文档的状态。转换行{0}"
 
@@ -3425,7 +3420,7 @@ msgstr "在自定义表单中无法更改自动递增命名规则"
 msgid "Cannot create a {0} against a child document: {1}"
 msgstr "无法针对子文档{1}创建{0}"
 
-#: frappe/desk/doctype/workspace/workspace.py:270
+#: frappe/desk/doctype/workspace/workspace.py:257
 msgid "Cannot create private workspace of other users"
 msgstr "无法创建其他用户的私有工作空间"
 
@@ -3448,7 +3443,7 @@ msgstr "无法删除标准字段。您可以隐藏它"
 msgid "Cannot delete {0} as it has child nodes"
 msgstr "无法删除{0}，因为存在子节点"
 
-#: frappe/desk/doctype/dashboard/dashboard.py:48
+#: frappe/desk/doctype/dashboard/dashboard.py:53
 msgid "Cannot edit Standard Dashboards"
 msgstr "无法编辑标准仪表板"
 
@@ -3456,7 +3451,7 @@ msgstr "无法编辑标准仪表板"
 msgid "Cannot edit Standard Notification. To edit, please disable this and duplicate it"
 msgstr "无法编辑标准通知。如需编辑请禁用并复制"
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:390
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:393
 msgid "Cannot edit Standard charts"
 msgstr "无法编辑标准图表"
 
@@ -3648,10 +3643,18 @@ msgstr "图表"
 msgid "Chart Configuration"
 msgstr "图表配置"
 
-#. Label of the chart_name (Data) field in DocType 'Dashboard Chart'
-#. Label of the chart_name (Link) field in DocType 'Workspace Chart'
+#. Label of the chart_id (Data) field in DocType 'Dashboard Chart'
 #: frappe/desk/doctype/dashboard_chart/dashboard_chart.json
+msgid "Chart ID"
+msgstr ""
+
+#. Label of the chart_id (Link) field in DocType 'Workspace Chart'
 #: frappe/desk/doctype/workspace_chart/workspace_chart.json
+msgid "Chart Id"
+msgstr ""
+
+#. Label of the chart_name (Data) field in DocType 'Dashboard Chart'
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.json
 msgid "Chart Name"
 msgstr "图表名称"
 
@@ -4028,7 +4031,7 @@ msgstr "列1"
 msgid "Column 2"
 msgstr "列2"
 
-#: frappe/desk/doctype/kanban_board/kanban_board.py:84
+#: frappe/desk/doctype/kanban_board/kanban_board.py:88
 msgid "Column <b>{0}</b> already exist."
 msgstr "列<b>{0}</b>已存在。"
 
@@ -4055,7 +4058,7 @@ msgstr "列标签："
 msgid "Column Name"
 msgstr "列名"
 
-#: frappe/desk/doctype/kanban_board/kanban_board.py:45
+#: frappe/desk/doctype/kanban_board/kanban_board.py:49
 msgid "Column Name cannot be empty"
 msgstr "列名不能为空"
 
@@ -4507,7 +4510,7 @@ msgstr "内容类型"
 msgid "Content cannot be empty"
 msgstr ""
 
-#: frappe/desk/doctype/workspace/workspace.py:86
+#: frappe/desk/doctype/workspace/workspace.py:73
 msgid "Content data shoud be a list"
 msgstr "内容数据应为列表"
 
@@ -4611,6 +4614,11 @@ msgstr "国家"
 msgid "Country Code Required"
 msgstr "需要国家代码"
 
+#. Label of the country_id (Data) field in DocType 'Country'
+#: frappe/geo/doctype/country/country.json
+msgid "Country ID"
+msgstr ""
+
 #. Label of the country_name (Data) field in DocType 'Country'
 #: frappe/geo/doctype/country/country.json
 msgid "Country Name"
@@ -4681,7 +4689,7 @@ msgstr "创建时间"
 msgid "Created By"
 msgstr "创建人"
 
-#: frappe/workflow/doctype/workflow/workflow.py:64
+#: frappe/workflow/doctype/workflow/workflow.py:69
 msgid "Created Custom Field {0} in {1}"
 msgstr "在{1}中创建了自定义字段{0}"
 
@@ -4689,7 +4697,7 @@ msgstr "在{1}中创建了自定义字段{0}"
 msgid "Created On"
 msgstr "创建于"
 
-#: frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.py:41
+#: frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.py:45
 msgid "Creation of this document is only permitted in developer mode."
 msgstr "仅允许在开发者模式下创建此文档。"
 
@@ -4741,6 +4749,11 @@ msgstr "Ctrl+Enter添加评论"
 #: frappe/website/doctype/web_form_field/web_form_field.json
 msgid "Currency"
 msgstr "货币"
+
+#. Label of the currency_id (Data) field in DocType 'Currency'
+#: frappe/geo/doctype/currency/currency.json
+msgid "Currency ID"
+msgstr ""
 
 #. Label of the currency_name (Data) field in DocType 'Currency'
 #: frappe/geo/doctype/currency/currency.json
@@ -5127,6 +5140,11 @@ msgstr "仪表板图表链接"
 #: frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.json
 msgid "Dashboard Chart Source"
 msgstr "仪表板图表源"
+
+#. Label of the dashboard_id (Data) field in DocType 'Dashboard'
+#: frappe/desk/doctype/dashboard/dashboard.json
+msgid "Dashboard ID"
+msgstr ""
 
 #. Name of a role
 #: frappe/desk/doctype/dashboard/dashboard.json
@@ -5644,8 +5662,8 @@ msgstr "正在删除 {0}"
 msgid "Deletion Steps "
 msgstr "删除步骤"
 
-#: frappe/core/doctype/page/page.py:110
-#: frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.py:47
+#: frappe/core/doctype/page/page.py:114
+#: frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.py:51
 msgid "Deletion of this document is only permitted in developer mode."
 msgstr "仅在开发者模式下允许删除此文档"
 
@@ -6439,7 +6457,7 @@ msgstr "该用户未启用文档关注功能"
 msgid "Document renamed from {0} to {1}"
 msgstr "文档名称已从 {0} 更改为 {1}"
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:399
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:402
 msgid "Document type is required to create a dashboard chart"
 msgstr "创建仪表盘图表需指定文档类型"
 
@@ -8968,7 +8986,7 @@ msgstr "全局退订"
 msgid "Go to Page"
 msgstr "跳转到页面"
 
-#: frappe/integrations/doctype/slack_webhook_url/slack_webhook_url.py:53
+#: frappe/integrations/doctype/slack_webhook_url/slack_webhook_url.py:55
 msgid "Go to the document"
 msgstr "转到文档"
 
@@ -9081,8 +9099,6 @@ msgstr "谷歌联系人 - 无法更新谷歌联系人{0}中的联系人，错误
 msgid "Google Contacts Id"
 msgstr "谷歌联系人ID"
 
-#. Label of a Link in the Integrations Workspace
-#: frappe/integrations/workspace/integrations/integrations.json
 #: frappe/public/js/frappe/file_uploader/FileUploader.vue:73
 msgid "Google Drive"
 msgstr "谷歌云端硬盘"
@@ -9195,7 +9211,7 @@ msgstr "分组依据基础"
 msgid "Group By Type"
 msgstr "分组类型"
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:410
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:413
 msgid "Group By field is required to create a dashboard chart"
 msgstr "创建仪表板图表需要分组依据字段"
 
@@ -10770,8 +10786,8 @@ msgstr "无效过滤器：{0}"
 msgid "Invalid id type (integer) for varchar id column"
 msgstr ""
 
-#: frappe/desk/doctype/dashboard/dashboard.py:67
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:426
+#: frappe/desk/doctype/dashboard/dashboard.py:72
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:429
 msgid "Invalid json added in the custom options: {0}"
 msgstr "自定义选项中包含无效JSON：{0}"
 
@@ -12901,7 +12917,7 @@ msgid "Module HTML"
 msgstr "模块HTML"
 
 #. Label of the module_name (Data) field in DocType 'Module Def'
-#. Label of the module_name (Data) field in DocType 'Desktop Icon'
+#. Label of the module (Data) field in DocType 'Desktop Icon'
 #: frappe/core/doctype/module_def/module_def.json
 #: frappe/desk/doctype/desktop_icon/desktop_icon.json
 msgid "Module Name"
@@ -13222,7 +13238,7 @@ msgstr "导航栏模板值"
 msgid "Navigation Settings"
 msgstr "导航设置"
 
-#: frappe/desk/doctype/workspace/workspace.py:317
+#: frappe/desk/doctype/workspace/workspace.py:304
 msgid "Need Workspace Manager role to edit private workspace of other users"
 msgstr "需具备工作区管理员角色才能编辑其他用户的私有工作区"
 
@@ -13744,7 +13760,7 @@ msgstr "不允许打印草稿文档"
 msgid "Not allowed via controller permission check"
 msgstr "未通过控制器权限检查"
 
-#: frappe/core/doctype/page/page.py:62
+#: frappe/core/doctype/page/page.py:63
 msgid "Not in Developer Mode"
 msgstr "未启用开发者模式"
 
@@ -13895,8 +13911,7 @@ msgstr "数值"
 msgid "Number Card"
 msgstr "数字卡片"
 
-#. Label of the number_card_name (Link) field in DocType 'Workspace Number
-#. Card'
+#. Label of the number_card_id (Link) field in DocType 'Workspace Number Card'
 #: frappe/desk/doctype/workspace_number_card/workspace_number_card.json
 msgid "Number Card ID"
 msgstr ""
@@ -14199,7 +14214,7 @@ msgstr "单次请求最多允许插入200条记录"
 msgid "Only Administrator can delete Email Queue"
 msgstr "仅管理员可删除邮件队列"
 
-#: frappe/core/doctype/page/page.py:66
+#: frappe/core/doctype/page/page.py:67
 msgid "Only Administrator can edit"
 msgstr "仅管理员可编辑"
 
@@ -14661,6 +14676,11 @@ msgstr "页面构建块"
 msgid "Page HTML"
 msgstr "页面HTML"
 
+#. Label of the page_id (Data) field in DocType 'Page'
+#: frappe/core/doctype/page/page.json
+msgid "Page ID"
+msgstr ""
+
 #: frappe/public/js/print_format_builder/PrintFormatControls.vue:5
 msgid "Page Margins"
 msgstr "页面边距"
@@ -14775,7 +14795,7 @@ msgstr "父页面"
 msgid "Parent Table"
 msgstr "父表"
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:406
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:409
 msgid "Parent document type is required to create a dashboard chart"
 msgstr "创建仪表板图表需要父文档类型"
 
@@ -15420,7 +15440,7 @@ msgstr "请在报表过滤器表中设置过滤值"
 msgid "Please set the document id"
 msgstr ""
 
-#: frappe/desk/doctype/dashboard/dashboard.py:120
+#: frappe/desk/doctype/dashboard/dashboard.py:123
 msgid "Please set the following documents in this Dashboard as standard first."
 msgstr "请先将仪表板中的以下文档设为标准文档"
 
@@ -17399,6 +17419,11 @@ msgstr "Robots.txt文件"
 msgid "Role"
 msgstr "角色"
 
+#. Label of the role_id (Data) field in DocType 'Role'
+#: frappe/core/doctype/role/role.json
+msgid "Role ID"
+msgstr ""
+
 #. Label of the role_name (Data) field in DocType 'Role'
 #. Label of the role_profile (Data) field in DocType 'Role Profile'
 #: frappe/core/doctype/role/role.json
@@ -18121,7 +18146,7 @@ msgctxt "Button in web form"
 msgid "See previous responses"
 msgstr "查看之前的响应"
 
-#: frappe/integrations/doctype/slack_webhook_url/slack_webhook_url.py:49
+#: frappe/integrations/doctype/slack_webhook_url/slack_webhook_url.py:51
 msgid "See the document at {0}"
 msgstr "查看位于{0}的文档"
 
@@ -18171,7 +18196,7 @@ msgstr "选择"
 msgid "Select Columns"
 msgstr "选择列"
 
-#. Label of the dashboard_name (Link) field in DocType 'Form Tour'
+#. Label of the dashboard_id (Link) field in DocType 'Form Tour'
 #: frappe/desk/doctype/form_tour/form_tour.json
 msgid "Select Dashboard"
 msgstr "选择仪表板"
@@ -18221,7 +18246,7 @@ msgstr "选择分组依据..."
 msgid "Select List View"
 msgstr "选择列表视图"
 
-#. Label of the page_name (Link) field in DocType 'Form Tour'
+#. Label of the page_id (Link) field in DocType 'Form Tour'
 #: frappe/desk/doctype/form_tour/form_tour.json
 msgid "Select Page"
 msgstr "选择页面"
@@ -19278,7 +19303,7 @@ msgstr "Slack"
 msgid "Slack Channel"
 msgstr "Slack频道"
 
-#: frappe/integrations/doctype/slack_webhook_url/slack_webhook_url.py:65
+#: frappe/integrations/doctype/slack_webhook_url/slack_webhook_url.py:67
 msgid "Slack Webhook Error"
 msgstr "Slack Webhook错误"
 
@@ -19519,7 +19544,7 @@ msgstr "标准文档类型不可删除"
 msgid "Standard DocType cannot have default print format, use Customize Form"
 msgstr "标准文档类型不能有默认打印格式，请使用自定义表单"
 
-#: frappe/desk/doctype/dashboard/dashboard.py:58
+#: frappe/desk/doctype/dashboard/dashboard.py:63
 msgid "Standard Not Set"
 msgstr "未设置标准"
 
@@ -19545,11 +19570,11 @@ msgstr "标准报表不可编辑"
 msgid "Standard Sidebar Menu"
 msgstr "标准侧边栏菜单"
 
-#: frappe/core/doctype/role/role.py:46
+#: frappe/core/doctype/role/role.py:51
 msgid "Standard roles cannot be disabled"
 msgstr "标准角色不可禁用"
 
-#: frappe/core/doctype/role/role.py:32
+#: frappe/core/doctype/role/role.py:33
 msgid "Standard roles cannot be renamed"
 msgstr "标准角色不可重命名"
 
@@ -19611,14 +19636,17 @@ msgstr "开始于"
 
 #. Label of the state (Data) field in DocType 'Token Cache'
 #. Label of the state (Link) field in DocType 'Workflow Document State'
-#. Label of the workflow_state_name (Data) field in DocType 'Workflow State'
 #. Label of the state (Link) field in DocType 'Workflow Transition'
 #: frappe/integrations/doctype/token_cache/token_cache.json
 #: frappe/workflow/doctype/workflow_document_state/workflow_document_state.json
-#: frappe/workflow/doctype/workflow_state/workflow_state.json
 #: frappe/workflow/doctype/workflow_transition/workflow_transition.json
 msgid "State"
 msgstr "状态"
+
+#. Label of the name (Data) field in DocType 'Workflow State'
+#: frappe/workflow/doctype/workflow_state/workflow_state.json
+msgid "State Name"
+msgstr ""
 
 #: frappe/public/js/workflow_builder/components/Properties.vue:24
 msgid "State Properties"
@@ -19912,7 +19940,7 @@ msgstr "创建时提交"
 msgid "Submitted"
 msgstr "已提交"
 
-#: frappe/workflow/doctype/workflow/workflow.py:103
+#: frappe/workflow/doctype/workflow/workflow.py:108
 msgid "Submitted Document cannot be converted back to draft. Transition row {0}"
 msgstr "已提交文档无法转回草稿。转换行{0}"
 
@@ -19939,7 +19967,7 @@ msgstr "副标题"
 #: frappe/core/doctype/activity_log/activity_log.json
 #: frappe/core/doctype/data_import/data_import.json
 #: frappe/core/doctype/data_import_log/data_import_log.json
-#: frappe/desk/doctype/desktop_icon/desktop_icon.py:446
+#: frappe/desk/doctype/desktop_icon/desktop_icon.py:440
 #: frappe/templates/includes/login/login.js:230
 #: frappe/templates/includes/login/login.js:236
 #: frappe/templates/includes/login/login.js:269
@@ -20207,7 +20235,6 @@ msgstr "系统日志"
 #: frappe/desk/doctype/custom_html_block/custom_html_block.json
 #: frappe/desk/doctype/dashboard/dashboard.json
 #: frappe/desk/doctype/dashboard_chart/dashboard_chart.json
-#: frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.json
 #: frappe/desk/doctype/desktop_icon/desktop_icon.json
 #: frappe/desk/doctype/event/event.json
 #: frappe/desk/doctype/form_tour/form_tour.json
@@ -21089,7 +21116,7 @@ msgstr "查询耗时"
 msgid "Time in seconds to retain QR code image on server. Min:<strong>240</strong>"
 msgstr "二维码图片在服务器保留时间（秒）。最小值：<strong>240</strong>"
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:415
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:418
 msgid "Time series based on is required to create a dashboard chart"
 msgstr "创建仪表板图表需指定时间序列基准"
 
@@ -22005,7 +22032,7 @@ msgstr "从Frappe云更新"
 #. Option for the 'Status' (Select) field in DocType 'Permission Log'
 #: frappe/core/doctype/comment/comment.json
 #: frappe/core/doctype/permission_log/permission_log.json
-#: frappe/desk/doctype/desktop_icon/desktop_icon.py:446
+#: frappe/desk/doctype/desktop_icon/desktop_icon.py:440
 #: frappe/desk/doctype/workspace_settings/workspace_settings.py:41
 msgid "Updated"
 msgstr "已更新"
@@ -22463,7 +22490,7 @@ msgstr "用户{0}无权访问此文档"
 msgid "User {0} does not have doctype access via role permission for document {1}"
 msgstr "用户{0}通过角色权限无权访问文档{1}的类型"
 
-#: frappe/desk/doctype/workspace/workspace.py:273
+#: frappe/desk/doctype/workspace/workspace.py:260
 msgid "User {0} does not have the permission to create a Workspace."
 msgstr "用户{0}无权创建工作区"
 
@@ -23351,6 +23378,11 @@ msgstr "工作流详情"
 msgid "Workflow Document State"
 msgstr "工作流文档状态"
 
+#. Label of the workflow_id (Data) field in DocType 'Workflow'
+#: frappe/workflow/doctype/workflow/workflow.json
+msgid "Workflow ID"
+msgstr ""
+
 #. Label of the workflow_name (Data) field in DocType 'Workflow'
 #: frappe/workflow/doctype/workflow/workflow.json
 msgid "Workflow Name"
@@ -23670,7 +23702,7 @@ msgstr "无法为字段{0}设置'选项'"
 msgid "You can't set 'Translatable' for field {0}"
 msgstr "无法为字段{0}设置'可翻译'"
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:419
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:422
 msgid "You cannot create a dashboard chart from single DocTypes"
 msgstr "无法从单一文档类型创建仪表板图表"
 
@@ -23754,11 +23786,11 @@ msgstr "必须登录才能提交此表单"
 msgid "You need the '{0}' permission on {1} {2} to perform this action."
 msgstr "执行此操作需要{1} {2}的'{0}'权限"
 
-#: frappe/desk/doctype/workspace/workspace.py:125
+#: frappe/desk/doctype/workspace/workspace.py:112
 msgid "You need to be Workspace Manager to delete a public workspace."
 msgstr "需为工作区管理员才能删除公共工作区"
 
-#: frappe/desk/doctype/workspace/workspace.py:76
+#: frappe/desk/doctype/workspace/workspace.py:63
 msgid "You need to be Workspace Manager to edit this document"
 msgstr "您需要是工作空间管理员才能编辑此文档"
 
@@ -24588,7 +24620,7 @@ msgstr "{0}不是有效的Cron表达式"
 msgid "{0} is not a valid Email Address"
 msgstr "{0}不是有效的电子邮箱地址"
 
-#: frappe/geo/doctype/country/country.py:30
+#: frappe/geo/doctype/country/country.py:35
 msgid "{0} is not a valid ISO 3166 ALPHA-2 code."
 msgstr "{0}不是有效的ISO 3166 ALPHA-2代码"
 
@@ -24683,7 +24715,7 @@ msgstr "{0}必须为{1}{2}"
 msgid "{0} must begin and end with a letter and can only contain letters, hyphen or underscore."
 msgstr "{0}必须以字母开头和结尾，仅可包含字母、连字符或下划线"
 
-#: frappe/workflow/doctype/workflow/workflow.py:90
+#: frappe/workflow/doctype/workflow/workflow.py:95
 msgid "{0} not a valid State"
 msgstr "{0}不是有效状态"
 
@@ -24691,7 +24723,7 @@ msgstr "{0}不是有效状态"
 msgid "{0} not allowed to be renamed"
 msgstr "{0}不允许重命名"
 
-#: frappe/desk/doctype/desktop_icon/desktop_icon.py:365
+#: frappe/desk/doctype/desktop_icon/desktop_icon.py:361
 msgid "{0} not found"
 msgstr "未找到{0}"
 
