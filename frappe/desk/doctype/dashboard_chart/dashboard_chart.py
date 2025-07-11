@@ -87,7 +87,7 @@ def has_permission(doc, ptype, user):
 @frappe.whitelist()
 @cache_source
 def get(
-	chart_name=None,
+	chart_id=None,
 	chart=None,
 	no_cache=None,
 	filters=None,
@@ -98,8 +98,8 @@ def get(
 	heatmap_year=None,
 	refresh=None,
 ):
-	if chart_name:
-		chart: DashboardChart = frappe.get_doc("Dashboard Chart", chart_name)
+	if chart_id:
+		chart: DashboardChart = frappe.get_doc("Dashboard Chart", chart_id)
 	else:
 		chart = frappe._dict(frappe.parse_json(chart))
 
@@ -146,9 +146,9 @@ def create_dashboard_chart(args):
 	if args.get("custom_options"):
 		doc.custom_options = json.dumps(args.get("custom_options"))
 
-	if frappe.db.exists("Dashboard Chart", args.chart_name):
-		args.chart_name = append_number_if_id_exists("Dashboard Chart", args.chart_name)
-		doc.chart_name = args.chart_name
+	if frappe.db.exists("Dashboard Chart", args.chart_id):
+		args.chart_id = append_number_if_id_exists("Dashboard Chart", args.chart_id)
+		doc.chart_id = args.chart_id
 	doc.insert(ignore_permissions=True)
 	return doc
 
@@ -157,7 +157,7 @@ def create_dashboard_chart(args):
 def create_report_chart(args):
 	doc = create_dashboard_chart(args)
 	args = frappe.parse_json(args)
-	args.chart_name = doc.chart_name
+	args.chart_id = doc.chart_id
 	if args.dashboard:
 		add_chart_to_dashboard(json.dumps(args))
 
@@ -168,7 +168,7 @@ def add_chart_to_dashboard(args):
 
 	dashboard = frappe.get_doc("Dashboard", args.dashboard)
 	dashboard_link = frappe.new_doc("Dashboard Chart Link")
-	dashboard_link.chart = args.chart_name or args.id
+	dashboard_link.chart = args.chart_id or args.id
 
 	if args.set_standard and dashboard.is_standard:
 		chart = frappe.get_doc("Dashboard Chart", dashboard_link.chart)
@@ -346,6 +346,7 @@ class DashboardChart(Document):
 
 		aggregate_function_based_on: DF.Literal[None]
 		based_on: DF.Literal[None]
+		chart_id: DF.Data
 		chart_name: DF.Data
 		chart_type: DF.Literal["Count", "Sum", "Average", "Group By", "Custom", "Report"]
 		color: DF.Color | None
@@ -382,6 +383,10 @@ class DashboardChart(Document):
 		frappe.cache.delete_key(f"chart-data:{self.id}")
 		if frappe.conf.developer_mode and self.is_standard:
 			export_to_files(record_list=[["Dashboard Chart", self.id]], record_module=self.module)
+
+	def before_validate(self):
+		if not self.chart_name and self.chart_id:
+			self.chart_name = self.chart_id
 
 	def validate(self):
 		if not frappe.conf.developer_mode and self.is_standard:

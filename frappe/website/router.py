@@ -111,8 +111,8 @@ def get_pages_from_path(start, app, app_path):
 				fname = frappe.utils.cstr(fname)
 				if "." not in fname:
 					continue
-				page_name, extn = fname.rsplit(".", 1)
-				if extn in ("js", "css") and os.path.exists(os.path.join(basepath, page_name + ".html")):
+				page_id, extn = fname.rsplit(".", 1)
+				if extn in ("js", "css") and os.path.exists(os.path.join(basepath, page_id + ".html")):
 					# js, css is linked to html, skip
 					continue
 
@@ -136,12 +136,12 @@ def get_page_info(path, app, start, basepath=None, app_path=None, fname=None):
 	if basepath is None:
 		basepath = os.path.dirname(path)
 
-	page_name, extn = os.path.splitext(fname)
+	page_id, extn = os.path.splitext(fname)
 
 	# add website route
 	page_info = frappe._dict()
 
-	page_info.basename = page_name if extn in ("html", "md") else fname
+	page_info.basename = page_id if extn in ("html", "md") else fname
 	page_info.basepath = basepath
 	page_info.page_or_generator = "Page"
 
@@ -159,9 +159,9 @@ def get_page_info(path, app, start, basepath=None, app_path=None, fname=None):
 	if page_info.route.endswith(".md") or page_info.route.endswith(".html"):
 		page_info.route = page_info.route.rsplit(".", 1)[0]
 
-	page_info.id = page_info.page_name = page_info.route
+	page_info.id = page_info.page_id = page_info.route
 	# controller
-	page_info.controller_path = os.path.join(basepath, page_name.replace("-", "_") + ".py")
+	page_info.controller_path = os.path.join(basepath, page_id.replace("-", "_") + ".py")
 
 	if os.path.exists(page_info.controller_path):
 		controller = (

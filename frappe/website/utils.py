@@ -198,7 +198,7 @@ def is_signup_disabled():
 	return frappe.get_website_settings("disable_signup")
 
 
-def cleanup_page_name(title: str) -> str:
+def cleanup_page_id(title: str) -> str:
 	"""make page name from title"""
 	if not title:
 		return ""

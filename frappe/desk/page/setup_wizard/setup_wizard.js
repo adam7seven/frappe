@@ -84,7 +84,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
         super(args);
         $.extend(this, args);
 
-        this.page_name = "setup-wizard";
+        this.page_id = "setup-wizard";
         this.welcomed = true;
         frappe.set_route("setup-wizard/0");
     }
@@ -122,7 +122,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
     before_show_slide() {
         if (!this.welcomed) {
-            frappe.set_route(this.page_name);
+            frappe.set_route(this.page_id);
             return false;
         }
         return true;
@@ -133,7 +133,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
             return;
         }
         super.show_slide(id);
-        frappe.set_route(this.page_name, cstr(id));
+        frappe.set_route(this.page_id, cstr(id));
     }
 
     show_hide_prev_next(id) {
@@ -276,7 +276,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
     show_working_state() {
         this.container.hide();
-        frappe.set_route(this.page_name);
+        frappe.set_route(this.page_id);
 
         this.$working_state = this.get_message(__("Setting up your system"), __("Starting Frappe ...")).appendTo(
             this.parent
@@ -295,7 +295,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
         this.$abort_btn.on("click", () => {
             $(this.parent).find(".setup-in-progress").remove();
             this.container.show();
-            frappe.set_route(this.page_name, this.slides.length - 1);
+            frappe.set_route(this.page_id, this.slides.length - 1);
         });
 
         this.$abort_btn.hide();

@@ -33,6 +33,10 @@ class DashboardChartSource(Document):
 		timeseries: DF.Check
 	# end: auto-generated types
 
+	def before_validate(self):
+		if not self.source_name and self.id:
+			self.source_name = self.id
+
 	def on_update(self):
 		if not frappe.request:
 			return

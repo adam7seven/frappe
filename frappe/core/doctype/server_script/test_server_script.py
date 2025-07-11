@@ -142,7 +142,7 @@ class TestServerScript(IntegrationTestCase):
 			frappe.ValidationError, frappe.get_doc(doctype="ToDo", description="validate me").insert
 		)
 
-		role = frappe.get_doc(doctype="Role", role_name="_Test Role 9").insert(ignore_if_duplicate=True)
+		role = frappe.get_doc(doctype="Role", role_id="_Test Role 9").insert(ignore_if_duplicate=True)
 		role.rename("_Test Role 10")
 		role.reload()
 		self.assertEqual(role.disabled, 1)

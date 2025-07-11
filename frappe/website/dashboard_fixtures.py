@@ -15,7 +15,7 @@ def get_dashboards():
 	return [
 		{
 			"id": "Website",
-			"dashboard_name": "Website",
+			"dashboard_id": "Website",
 			"charts": [{"chart": "Website Analytics", "width": "Full"}],
 		}
 	]
@@ -24,7 +24,7 @@ def get_dashboards():
 def get_charts():
 	return [
 		{
-			"chart_name": "Website Analytics",
+			"chart_id": "Website Analytics",
 			"chart_type": "Report",
 			"custom_options": '{"type": "line", "lineOptions": {"regionFill": 1}, "axisOptions": {"shortenYAxisNumbers": 1}, "tooltipOptions": {}}',
 			"doctype": "Dashboard Chart",

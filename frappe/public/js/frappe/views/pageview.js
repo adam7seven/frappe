@@ -14,7 +14,7 @@ frappe.views.pageview = {
 			return;
 		}
 
-		if ((locals.Page && locals.Page[id] && locals.Page[id].script) || id == window.page_name) {
+		if ((locals.Page && locals.Page[id] && locals.Page[id].script) || id == window.page_id) {
 			// already loaded
 			callback();
 		} else if (localStorage["_page:" + id] && frappe.boot.developer_mode != 1) {
@@ -43,7 +43,7 @@ frappe.views.pageview = {
 
 	show: function (id) {
 		if (!id) {
-			id = frappe.boot ? frappe.boot.home_page : window.page_name;
+			id = frappe.boot ? frappe.boot.home_page : window.page_id;
 		}
 		frappe.model.with_doctype("Page", function () {
 			frappe.views.pageview.with_page(id, function (r) {
@@ -64,11 +64,11 @@ frappe.views.Page = class Page {
 		var me = this;
 
 		// web home page
-		if (id == window.page_name) {
+		if (id == window.page_id) {
 			this.wrapper = document.getElementById("page-" + id);
-			this.wrapper.label = document.title || window.page_name;
-			this.wrapper.page_name = window.page_name;
-			frappe.pages[window.page_name] = this.wrapper;
+			this.wrapper.label = document.title || window.page_id;
+			this.wrapper.page_id = window.page_id;
+			frappe.pages[window.page_id] = this.wrapper;
 		} else {
 			this.pagedoc = locals.Page[this.id];
 			if (!this.pagedoc) {
@@ -76,7 +76,7 @@ frappe.views.Page = class Page {
 				return;
 			}
 			this.wrapper = frappe.container.add_page(this.id);
-			this.wrapper.page_name = this.pagedoc.id;
+			this.wrapper.page_id = this.pagedoc.id;
 
 			// set content, script and style
 			if (this.pagedoc.content) this.wrapper.innerHTML = this.pagedoc.content;
@@ -105,17 +105,17 @@ frappe.views.Page = class Page {
 	}
 };
 
-frappe.show_not_found = function (page_name) {
+frappe.show_not_found = function (page_id) {
 	frappe.show_message_page({
-		page_name: page_name,
+		page_id: page_id,
 		message: __("Sorry! I could not find what you were looking for."),
 		img: "/assets/frappe/images/ui/bubble-tea-sorry.svg",
 	});
 };
 
-frappe.show_not_permitted = function (page_name) {
+frappe.show_not_permitted = function (page_id) {
 	frappe.show_message_page({
-		page_name: page_name,
+		page_id: page_id,
 		message: __("Sorry! You are not permitted to view this page."),
 		img: "/assets/frappe/images/ui/bubble-tea-sorry.svg",
 		// icon: "octicon octicon-circle-slash"
@@ -123,9 +123,9 @@ frappe.show_not_permitted = function (page_name) {
 };
 
 frappe.show_message_page = function (opts) {
-	// opts can include `page_name`, `message`, `icon` or `img`
-	if (!opts.page_name) {
-		opts.page_name = frappe.get_route_str();
+	// opts can include `page_id`, `message`, `icon` or `img`
+	if (!opts.page_id) {
+		opts.page_id = frappe.get_route_str();
 	}
 
 	if (opts.icon) {
@@ -134,7 +134,7 @@ frappe.show_message_page = function (opts) {
 		opts.img = repl('<img src="%(img)s" class="message-page-image">', opts);
 	}
 
-	var page = frappe.pages[opts.page_name] || frappe.container.add_page(opts.page_name);
+	var page = frappe.pages[opts.page_id] || frappe.container.add_page(opts.page_id);
 	$(page).html(
 		repl(
 			'<div class="page message-page">\
@@ -152,5 +152,5 @@ frappe.show_message_page = function (opts) {
 		)
 	);
 
-	frappe.container.change_to(opts.page_name);
+	frappe.container.change_to(opts.page_id);
 };

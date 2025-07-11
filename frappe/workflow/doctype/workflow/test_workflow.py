@@ -136,12 +136,12 @@ def create_todo_workflow():
 	TEST_ROLE = "Test Approver"
 
 	if not frappe.db.exists("Role", TEST_ROLE):
-		frappe.get_doc(doctype="Role", role_name=TEST_ROLE).insert(ignore_if_duplicate=True)
+		frappe.get_doc(doctype="Role", role_id=TEST_ROLE).insert(ignore_if_duplicate=True)
 		if frappe.db.exists("User", UI_TEST_USER):
 			frappe.get_doc("User", UI_TEST_USER).add_roles(TEST_ROLE)
 
 	workflow = frappe.new_doc("Workflow")
-	workflow.workflow_name = "Test ToDo"
+	workflow.workflow_id = "Test ToDo"
 	workflow.document_type = "ToDo"
 	workflow.workflow_state_field = "workflow_state"
 	workflow.is_active = 1

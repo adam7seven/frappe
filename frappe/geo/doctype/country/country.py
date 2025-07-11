@@ -18,6 +18,7 @@ class Country(Document):
 		from frappe.types import DF
 
 		code: DF.Data
+		country_id: DF.Data
 		country_name: DF.Data
 		date_format: DF.Data | None
 		time_format: DF.Data | None
@@ -25,6 +26,10 @@ class Country(Document):
 	# end: auto-generated types
 
 	# NOTE: During installation country docs are bulk inserted.
+
+	def before_validate(self):
+		if not self.country_name and self.id:
+			self.country_name = self.id
 
 	def validate(self):
 		error_msg = _("{0} is not a valid ISO 3166 ALPHA-2 code.").format(self.code)
@@ -64,6 +69,7 @@ def get_countries_and_currencies():
 			frappe.get_doc(
 				doctype="Country",
 				id=id,
+				country_id=id,
 				country_name=id,
 				code=country.code,
 				date_format=country.date_format or "dd-mm-yyyy",
@@ -78,7 +84,7 @@ def get_countries_and_currencies():
 				frappe.get_doc(
 					doctype="Currency",
 					id=country.currency,
-					currency_name=country.currency,
+					currency_id=country.currency,
 					fraction=country.currency_fraction,
 					symbol=country.currency_symbol,
 					fraction_units=country.currency_fraction_units,

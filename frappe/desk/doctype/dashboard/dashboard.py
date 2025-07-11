@@ -25,6 +25,7 @@ class Dashboard(Document):
 		cards: DF.Table[NumberCardLink]
 		chart_options: DF.Code | None
 		charts: DF.Table[DashboardChartLink]
+		dashboard_id: DF.Data
 		dashboard_name: DF.Data
 		is_default: DF.Check
 		is_standard: DF.Check
@@ -42,6 +43,10 @@ class Dashboard(Document):
 			export_to_files(
 				record_list=[["Dashboard", self.id, f"{self.module} Dashboard"]], record_module=self.module
 			)
+
+	def before_validate(self):
+		if not self.dashboard_name and self.dashboard_id:
+			self.dashboard_name = self.dashboard_id
 
 	def validate(self):
 		if not frappe.conf.developer_mode and self.is_standard:
@@ -83,9 +88,9 @@ def get_permission_query_conditions(user):
 
 
 @frappe.whitelist()
-def get_permitted_charts(dashboard_name):
+def get_permitted_charts(dashboard_id):
 	permitted_charts = []
-	dashboard = frappe.get_doc("Dashboard", dashboard_name)
+	dashboard = frappe.get_doc("Dashboard", dashboard_id)
 	for chart in dashboard.charts:
 		if frappe.has_permission("Dashboard Chart", doc=chart.chart):
 			chart_dict = frappe._dict()
@@ -99,8 +104,8 @@ def get_permitted_charts(dashboard_name):
 
 
 @frappe.whitelist()
-def get_permitted_cards(dashboard_name):
-	dashboard = frappe.get_doc("Dashboard", dashboard_name)
+def get_permitted_cards(dashboard_id):
+	dashboard = frappe.get_doc("Dashboard", dashboard_id)
 	return [card for card in dashboard.cards if frappe.has_permission("Number Card", doc=card.card)]
 
 

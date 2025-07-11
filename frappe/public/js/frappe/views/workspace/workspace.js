@@ -149,7 +149,7 @@ frappe.views.Workspace = class Workspace {
 							? JSON.parse(settings.chart_config)
 							: {};
 						this.page_data.charts.items.map((chart) => {
-							chart.chart_settings = chart_config[chart.chart_name] || {};
+							chart.chart_settings = chart_config[chart.chart_id] || {};
 						});
 						this.pages[page.id] = this.page_data;
 					}
@@ -168,7 +168,7 @@ frappe.views.Workspace = class Workspace {
 		} else if (
 			localStorage.current_page &&
 			this.sidebar.all_pages.filter((page) => page.id == localStorage.current_page).length !=
-				0
+			0
 		) {
 			default_page = {
 				id: localStorage.current_page,

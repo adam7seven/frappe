@@ -179,7 +179,7 @@ class TestReport(IntegrationTestCase):
 		frappe.db.delete("Has Role", {"parent": frappe.session.user, "role": "Test Has Role"})
 		frappe.db.commit()
 		if not frappe.db.exists("Role", "Test Has Role"):
-			frappe.get_doc({"doctype": "Role", "role_name": "Test Has Role"}).insert(ignore_permissions=True)
+			frappe.get_doc({"doctype": "Role", "role_id": "Test Has Role"}).insert(ignore_permissions=True)
 
 		if not frappe.db.exists("Report", "Test Report"):
 			report = frappe.get_doc(

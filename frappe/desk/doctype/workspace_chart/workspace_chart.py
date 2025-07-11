@@ -14,7 +14,7 @@ class WorkspaceChart(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		chart_name: DF.Link
+		chart_id: DF.Link
 		label: DF.Data | None
 		parent: DF.Data
 		parentfield: DF.Data

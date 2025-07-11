@@ -158,9 +158,9 @@ frappe.views.ListViewSelect = class ListViewSelect {
 						${__("No {0} Found", [__(view)])}
 				</div>`;
 		} else {
-			const page_name = this.get_page_name();
+			const page_id = this.get_page_id();
 			items.map((item) => {
-				if (item.id.toLowerCase() == page_name.toLowerCase()) {
+				if (item.id.toLowerCase() == page_id.toLowerCase()) {
 					placeholder = item.id;
 				} else {
 					html += `<li><a class="dropdown-item" href="${item.route}">${item.id}</a></li>`;
@@ -208,7 +208,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 		}
 	}
 
-	get_page_name() {
+	get_page_id() {
 		return frappe.utils.to_title_case(frappe.get_route().slice(-1)[0] || "");
 	}
 

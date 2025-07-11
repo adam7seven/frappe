@@ -49,7 +49,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 
 	setup_defaults() {
 		this.route = frappe.get_route();
-		this.page_name = frappe.get_route_str();
+		this.page_id = frappe.get_route_str();
 
 		// Setup buttons
 		this.primary_action = null;
@@ -62,7 +62,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 	}
 
 	update_url_with_filters() {
-		if (frappe.get_route_str() == this.page_name) {
+		if (frappe.get_route_str() == this.page_id) {
 			window.history.replaceState(null, null, this.get_url_with_filters());
 		}
 	}
@@ -161,7 +161,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 	load_report(route_options) {
 		this.page.clear_inner_toolbar();
 		this.route = frappe.get_route();
-		this.page_name = frappe.get_route_str();
+		this.page_id = frappe.get_route_str();
 		this.report_name = this.route[1];
 		this.page_title = __(this.report_name);
 		this.show_save = false;
@@ -284,8 +284,8 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				title: __("Create Chart"),
 				fields: [
 					{
-						fieldname: "dashboard_chart_name",
-						label: __("Chart Name"),
+						fieldname: "dashboard_chart_id",
+						label: __("Chart ID"),
 						fieldtype: "Data",
 					},
 					dashboard_field,
@@ -295,7 +295,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 					this.create_dashboard_chart(
 						this.chart_fields || this.chart_options,
 						values.dashboard,
-						values.dashboard_chart_name,
+						values.dashboard_chart_id,
 						set_standard
 					);
 					dialog.hide();
@@ -308,9 +308,9 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		}
 	}
 
-	create_number_card(values, dashboard_name, card_name, set_standard) {
+	create_number_card(values, dashboard_id, card_name, set_standard) {
 		let args = {
-			dashboard: dashboard_name || null,
+			dashboard: dashboard_id || null,
 			type: "Report",
 			report_name: this.report_name,
 			filters_json: JSON.stringify(this.get_filter_values()),
@@ -321,15 +321,15 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		this.add_to_dashboard(
 			"frappe.desk.doctype.number_card.number_card.create_report_number_card",
 			args,
-			dashboard_name,
+			dashboard_id,
 			card_name,
 			"Number Card"
 		);
 	}
 
-	create_dashboard_chart(chart_args, dashboard_name, chart_name, set_standard) {
+	create_dashboard_chart(chart_args, dashboard_id, chart_id, set_standard) {
 		let args = {
-			dashboard: dashboard_name || null,
+			dashboard: dashboard_id || null,
 			chart_type: "Report",
 			report_name: this.report_name,
 			type: chart_args.chart_type || frappe.model.unscrub(chart_args.type),
@@ -348,10 +348,10 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		if (this.chart_fields) {
 			let x_field_title = toTitle(chart_args.x_field);
 			let y_field_title = toTitle(chart_args.y_fields[0]);
-			chart_name = chart_name || `${this.report_name}: ${x_field_title} vs ${y_field_title}`;
+			chart_id = chart_id || `${this.report_name}: ${x_field_title} vs ${y_field_title}`;
 
 			Object.assign(args, {
-				chart_name: chart_name,
+				chart_id: chart_id,
 				x_field: chart_args.x_field,
 				y_axis: chart_args.y_axis_fields.map((f) => {
 					return { y_field: f.y_field, color: f.color };
@@ -359,9 +359,9 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				use_report_chart: 0,
 			});
 		} else {
-			chart_name = chart_name || this.report_name;
+			chart_id = chart_id || this.report_name;
 			Object.assign(args, {
-				chart_name: chart_name,
+				chart_id: chart_id,
 				use_report_chart: 1,
 			});
 		}
@@ -369,17 +369,17 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		this.add_to_dashboard(
 			"frappe.desk.doctype.dashboard_chart.dashboard_chart.create_report_chart",
 			args,
-			dashboard_name,
-			chart_name,
+			dashboard_id,
+			chart_id,
 			"Dashboard Chart"
 		);
 	}
 
-	add_to_dashboard(method, args, dashboard_name, id, doctype) {
+	add_to_dashboard(method, args, dashboard_id, id, doctype) {
 		frappe.xcall(method, { args: args }).then(() => {
 			let message;
-			if (dashboard_name) {
-				let dashboard_route_html = `<a href="/app/dashboard-view/${dashboard_name}">${dashboard_name}</a>`;
+			if (dashboard_id) {
+				let dashboard_route_html = `<a href="/app/dashboard-view/${dashboard_id}">${dashboard_id}</a>`;
 				message = __("New {0} {1} added to Dashboard {2}", [
 					__(doctype),
 					id,

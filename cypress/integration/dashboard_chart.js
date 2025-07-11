@@ -12,7 +12,7 @@ context("Dashboard Chart", () => {
 		cy.fill_field("document_type", "Workspace Link", "Link").focus().blur();
 		cy.get_field("document_type", "Link").should("have.value", "Workspace Link");
 
-		cy.fill_field("chart_name", "Test Chart", "Data");
+		cy.fill_field("chart_id", "Test Chart", "Data");
 
 		cy.get('[data-fieldname="filters_json"]').click().wait(200);
 		cy.get(".modal-body .filter-action-buttons .add-filter").click();

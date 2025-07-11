@@ -173,8 +173,8 @@ frappe.ui.form.on("Web Form", {
 
 	title: function (frm) {
 		if (frm.doc.__islocal) {
-			var page_name = frm.doc.title.toLowerCase().replace(/ /g, "-");
-			frm.set_value("route", page_name);
+			var page_id = frm.doc.title.toLowerCase().replace(/ /g, "-");
+			frm.set_value("route", page_id);
 		}
 	},
 
@@ -283,7 +283,7 @@ frappe.ui.form.on("Web Form", {
 			frm.filter_group = new frappe.ui.FilterGroup({
 				parent: dialog.get_field("filter_area").$wrapper,
 				doctype: frm.doc.doc_type,
-				on_change: () => {},
+				on_change: () => { },
 			});
 			filters && frm.filter_group.add_filters_to_filter_group(filters);
 

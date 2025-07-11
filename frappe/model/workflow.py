@@ -26,13 +26,13 @@ class WorkflowPermissionError(frappe.ValidationError):
 	pass
 
 
-def get_workflow_name(doctype):
-	workflow_name = frappe.cache.hget("workflow", doctype)
-	if workflow_name is None:
-		workflow_name = frappe.db.get_value("Workflow", {"document_type": doctype, "is_active": 1}, "id")
-		frappe.cache.hset("workflow", doctype, workflow_name or "")
+def get_workflow_id(doctype):
+	workflow_id = frappe.cache.hget("workflow", doctype)
+	if workflow_id is None:
+		workflow_id = frappe.db.get_value("Workflow", {"document_type": doctype, "is_active": 1}, "id")
+		frappe.cache.hset("workflow", doctype, workflow_id or "")
 
-	return workflow_name
+	return workflow_id
 
 
 @frappe.whitelist()
@@ -215,23 +215,23 @@ def validate_workflow(doc):
 
 
 def get_workflow(doctype) -> "Workflow":
-	return frappe.get_cached_doc("Workflow", get_workflow_name(doctype))
+	return frappe.get_cached_doc("Workflow", get_workflow_id(doctype))
 
 
 def has_approval_access(user, doc, transition):
 	return user == "Administrator" or transition.get("allow_self_approval") or user != doc.get("owner")
 
 
-def get_workflow_state_field(workflow_name):
-	return get_workflow_field_value(workflow_name, "workflow_state_field")
+def get_workflow_state_field(workflow_id):
+	return get_workflow_field_value(workflow_id, "workflow_state_field")
 
 
-def send_email_alert(workflow_name):
-	return get_workflow_field_value(workflow_name, "send_email_alert")
+def send_email_alert(workflow_id):
+	return get_workflow_field_value(workflow_id, "send_email_alert")
 
 
-def get_workflow_field_value(workflow_name, field):
-	return frappe.get_cached_value("Workflow", workflow_name, field)
+def get_workflow_field_value(workflow_id, field):
+	return frappe.get_cached_value("Workflow", workflow_id, field)
 
 
 @frappe.whitelist()
@@ -360,8 +360,8 @@ def show_progress(docids, message, i, description):
 		frappe.publish_progress(float(i) * 100 / n, title=message, description=description)
 
 
-def set_workflow_state_on_action(doc, workflow_name, action):
-	workflow = frappe.get_doc("Workflow", workflow_name)
+def set_workflow_state_on_action(doc, workflow_id, action):
+	workflow = frappe.get_doc("Workflow", workflow_id)
 	workflow_state_field = workflow.workflow_state_field
 
 	# If workflow state of doc is already correct, don't set workflow state

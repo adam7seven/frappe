@@ -1918,7 +1918,7 @@ def make_module_and_roles(doc, perm_fieldname="permissions"):
 		for role in list(set(roles)):
 			if frappe.db.table_exists("Role", cached=False) and not frappe.db.exists("Role", role):
 				r = frappe.new_doc("Role")
-				r.role_name = role
+				r.role_id = role
 				r.desk_access = 1
 				r.flags.ignore_mandatory = r.flags.ignore_permissions = True
 				r.insert()

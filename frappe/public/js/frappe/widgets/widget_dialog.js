@@ -113,7 +113,7 @@ class WidgetDialog {
 		this.filter_group = new frappe.ui.FilterGroup({
 			parent: this.dialog.get_field("filter_area").$wrapper,
 			doctype: doctype,
-			on_change: () => {},
+			on_change: () => { },
 		});
 
 		frappe.model.with_doctype(doctype, () => {
@@ -133,8 +133,8 @@ class ChartDialog extends WidgetDialog {
 		return [
 			{
 				fieldtype: "Link",
-				fieldname: "chart_name",
-				label: __("Chart Name"),
+				fieldname: "chart_id",
+				label: __("Chart ID"),
 				options: "Dashboard Chart",
 				reqd: 1,
 			},
@@ -147,7 +147,7 @@ class ChartDialog extends WidgetDialog {
 	}
 
 	process_data(data) {
-		data.label = data.label ? data.label : data.chart_name;
+		data.label = data.label ? data.label : data.chart_id;
 		return data;
 	}
 }
@@ -376,7 +376,7 @@ class CardDialog extends WidgetDialog {
 			});
 		}
 
-		data.label = data.label ? data.label : data.chart_name;
+		data.label = data.label ? data.label : data.chart_id;
 		return data;
 	}
 }

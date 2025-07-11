@@ -31,8 +31,8 @@ export default class Chart extends Block {
 		this.wrapper = document.createElement("div");
 		this.new("chart");
 
-		if (this.data && this.data.chart_name) {
-			let has_data = this.make("chart", this.data.chart_name);
+		if (this.data && this.data.chart_id) {
+			let has_data = this.make("chart", this.data.chart_id);
 			if (!has_data) return this.wrapper;
 		}
 
@@ -46,7 +46,7 @@ export default class Chart extends Block {
 	}
 
 	validate(savedData) {
-		if (!savedData.chart_name) {
+		if (!savedData.chart_id) {
 			return false;
 		}
 
@@ -55,7 +55,7 @@ export default class Chart extends Block {
 
 	save() {
 		return {
-			chart_name: this.wrapper.getAttribute("chart_name"),
+			chart_id: this.wrapper.getAttribute("chart_id"),
 			col: this.get_col(),
 			new: this.new_block_widget,
 		};

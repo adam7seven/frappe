@@ -62,7 +62,7 @@ class TestDashboardChart(IntegrationTestCase):
 
 		frappe.get_doc(
 			doctype="Dashboard Chart",
-			chart_name="Test Dashboard Chart",
+			chart_id="Test Dashboard Chart",
 			chart_type="Count",
 			document_type="DocType",
 			based_on="creation",
@@ -74,7 +74,7 @@ class TestDashboardChart(IntegrationTestCase):
 
 		cur_date = datetime.now() - relativedelta(years=1)
 
-		result = get(chart_name="Test Dashboard Chart", refresh=1)
+		result = get(chart_id="Test Dashboard Chart", refresh=1)
 
 		for idx in range(13):
 			month = get_last_day(cur_date)
@@ -90,7 +90,7 @@ class TestDashboardChart(IntegrationTestCase):
 
 		frappe.get_doc(
 			doctype="Dashboard Chart",
-			chart_name="Test Empty Dashboard Chart",
+			chart_id="Test Empty Dashboard Chart",
 			chart_type="Count",
 			document_type="Error Log",
 			based_on="creation",
@@ -102,7 +102,7 @@ class TestDashboardChart(IntegrationTestCase):
 
 		cur_date = datetime.now() - relativedelta(years=1)
 
-		result = get(chart_name="Test Empty Dashboard Chart", refresh=1)
+		result = get(chart_id="Test Empty Dashboard Chart", refresh=1)
 
 		for idx in range(13):
 			month = get_last_day(cur_date)
@@ -121,7 +121,7 @@ class TestDashboardChart(IntegrationTestCase):
 
 		frappe.get_doc(
 			doctype="Dashboard Chart",
-			chart_name="Test Empty Dashboard Chart 2",
+			chart_id="Test Empty Dashboard Chart 2",
 			chart_type="Count",
 			document_type="Error Log",
 			based_on="creation",
@@ -133,7 +133,7 @@ class TestDashboardChart(IntegrationTestCase):
 
 		cur_date = datetime.now() - relativedelta(years=1)
 
-		result = get(chart_name="Test Empty Dashboard Chart 2", refresh=1)
+		result = get(chart_id="Test Empty Dashboard Chart 2", refresh=1)
 
 		for idx in range(13):
 			month = get_last_day(cur_date)
@@ -152,14 +152,14 @@ class TestDashboardChart(IntegrationTestCase):
 
 		frappe.get_doc(
 			doctype="Dashboard Chart",
-			chart_name="Test Group By Dashboard Chart",
+			chart_id="Test Group By Dashboard Chart",
 			chart_type="Group By",
 			document_type="ToDo",
 			group_by_based_on="status",
 			filters_json="[]",
 		).insert()
 
-		result = get(chart_name="Test Group By Dashboard Chart", refresh=1)
+		result = get(chart_id="Test Group By Dashboard Chart", refresh=1)
 		todo_status_count = frappe.db.count("ToDo", {"status": result.get("labels")[0]})
 
 		self.assertEqual(result.get("datasets")[0].get("values")[0], todo_status_count)
@@ -172,7 +172,7 @@ class TestDashboardChart(IntegrationTestCase):
 
 		frappe.get_doc(
 			doctype="Dashboard Chart",
-			chart_name="Test Daily Dashboard Chart",
+			chart_id="Test Daily Dashboard Chart",
 			chart_type="Sum",
 			document_type=self.doctype_id,
 			based_on="date",
@@ -185,7 +185,7 @@ class TestDashboardChart(IntegrationTestCase):
 			timeseries=1,
 		).insert()
 
-		result = get(chart_name="Test Daily Dashboard Chart", refresh=1)
+		result = get(chart_id="Test Daily Dashboard Chart", refresh=1)
 
 		self.assertEqual(result.get("datasets")[0].get("values"), [200.0, 400.0, 300.0, 0.0, 100.0, 0.0])
 		self.assertEqual(
@@ -201,7 +201,7 @@ class TestDashboardChart(IntegrationTestCase):
 
 		frappe.get_doc(
 			doctype="Dashboard Chart",
-			chart_name="Test Weekly Dashboard Chart",
+			chart_id="Test Weekly Dashboard Chart",
 			chart_type="Sum",
 			document_type=self.doctype_id,
 			based_on="date",
@@ -215,7 +215,7 @@ class TestDashboardChart(IntegrationTestCase):
 		).insert()
 
 		with patch.object(frappe.utils.data, "get_first_day_of_the_week", return_value="Monday"):
-			result = get(chart_name="Test Weekly Dashboard Chart", refresh=1)
+			result = get(chart_id="Test Weekly Dashboard Chart", refresh=1)
 
 			self.assertEqual(result.get("datasets")[0].get("values"), [50.0, 300.0, 800.0, 0.0])
 			self.assertEqual(result.get("labels"), ["12-30-2018", "01-06-2019", "01-13-2019", "01-20-2019"])
@@ -228,7 +228,7 @@ class TestDashboardChart(IntegrationTestCase):
 
 		frappe.get_doc(
 			doctype="Dashboard Chart",
-			chart_name="Test Average Dashboard Chart",
+			chart_id="Test Average Dashboard Chart",
 			chart_type="Average",
 			document_type=self.doctype_id,
 			based_on="date",
@@ -242,7 +242,7 @@ class TestDashboardChart(IntegrationTestCase):
 		).insert()
 
 		with patch.object(frappe.utils.data, "get_first_day_of_the_week", return_value="Monday"):
-			result = get(chart_name="Test Average Dashboard Chart", refresh=1)
+			result = get(chart_id="Test Average Dashboard Chart", refresh=1)
 			self.assertEqual(result.get("labels"), ["12-30-2018", "01-06-2019", "01-13-2019", "01-20-2019"])
 			self.assertEqual(result.get("datasets")[0].get("values"), [50.0, 150.0, 266.6666666666667, 0.0])
 
@@ -251,7 +251,7 @@ class TestDashboardChart(IntegrationTestCase):
 
 		frappe.get_doc(
 			doctype="Dashboard Chart",
-			chart_name="Test Dashboard Chart Date Label",
+			chart_id="Test Dashboard Chart Date Label",
 			chart_type="Count",
 			document_type="DocType",
 			based_on="creation",
@@ -264,11 +264,11 @@ class TestDashboardChart(IntegrationTestCase):
 		).insert()
 
 		with patch.object(frappe.utils.data, "get_user_date_format", return_value="dd.mm.yyyy"):
-			result = get(chart_name="Test Dashboard Chart Date Label")
+			result = get(chart_id="Test Dashboard Chart Date Label")
 			self.assertEqual(sorted(result.get("labels")), sorted(["05.01.2019", "12.01.2019", "19.01.2019"]))
 
 		with patch.object(frappe.utils.data, "get_user_date_format", return_value="mm-dd-yyyy"):
-			result = get(chart_name="Test Dashboard Chart Date Label")
+			result = get(chart_id="Test Dashboard Chart Date Label")
 			self.assertEqual(sorted(result.get("labels")), sorted(["01-19-2019", "01-05-2019", "01-12-2019"]))
 
 

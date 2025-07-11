@@ -27,9 +27,14 @@ class Workflow(Document):
 		states: DF.Table[WorkflowDocumentState]
 		transitions: DF.Table[WorkflowTransition]
 		workflow_data: DF.JSON | None
+		workflow_id: DF.Data
 		workflow_name: DF.Data
 		workflow_state_field: DF.Data
 	# end: auto-generated types
+
+	def before_validate(self):
+		if not self.workflow_name and self.id:
+			self.workflow_name = self.id
 
 	def validate(self):
 		self.set_active()

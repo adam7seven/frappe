@@ -41,7 +41,7 @@
 		}
 		title.value = __("Workflow Details");
 		return store.workflowfields.filter(
-			(df) => !["states", "transitions", "workflow_data", "workflow_name"].includes(df.fieldname)
+			(df) => !["states", "transitions", "workflow_data", "workflow_id"].includes(df.fieldname)
 		);
 	});
 </script>

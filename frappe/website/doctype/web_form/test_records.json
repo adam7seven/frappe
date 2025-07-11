@@ -11,7 +11,7 @@
     "login_required": 1,
     "id": "manage-events",
     "owner": "Administrator",
-    "page_name": "manage-events",
+    "page_id": "manage-events",
     "published": 1,
     "success_url": "/manage-events",
     "title": "Manage Events",

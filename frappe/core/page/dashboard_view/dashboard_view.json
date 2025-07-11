@@ -9,7 +9,7 @@
   "module": "Core",
   "id": "dashboard-view",
   "owner": "Administrator",
-  "page_name": "dashboard-view",
+  "page_id": "dashboard-view",
   "roles": [],
   "script": null,
   "standard": "Yes",

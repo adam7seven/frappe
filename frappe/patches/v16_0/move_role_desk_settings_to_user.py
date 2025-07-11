@@ -10,8 +10,8 @@ def execute():
 
 	for user in frappe.get_list("User"):
 		user_desk_settings = {}
-		for role_name in frappe.get_roles(username=user.id):
-			if role := roles.get(role_name):
+		for role_id in frappe.get_roles(username=user.id):
+			if role := roles.get(role_id):
 				for key in desk_properties:
 					if role.get(key) is None:
 						role[key] = 1

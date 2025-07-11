@@ -26,6 +26,7 @@ class Page(Document):
 
 		icon: DF.Data | None
 		module: DF.Link
+		page_id: DF.Data
 		page_name: DF.Data
 		restrict_to_domain: DF.Link | None
 		roles: DF.Table[HasRole]
@@ -43,7 +44,7 @@ class Page(Document):
 		from frappe.utils import cint
 
 		if (self.id and self.id.startswith("New Page")) or not self.id:
-			self.id = self.page_name.lower().replace('"', "").replace("'", "").replace(" ", "-")[:20]
+			self.id = self.page_id.lower().replace('"', "").replace("'", "").replace(" ", "-")[:20]
 			if frappe.db.exists("Page", self.id):
 				cnt = frappe.db.sql(
 					"""select id from tabPage
@@ -64,6 +65,9 @@ class Page(Document):
 		# setting ignore_permissions via update_setup_wizard_access (setup_wizard.py)
 		if frappe.session.user != "Administrator" and not self.flags.ignore_permissions:
 			frappe.throw(_("Only Administrator can edit"))
+
+		if not self.page_name and self.page_id:
+			self.page_name = self.page_id
 
 	def get_permission_log_options(self, event=None):
 		return {"fields": ["roles"]}
@@ -143,19 +147,19 @@ class Page(Document):
 
 		self.script = ""
 
-		page_name = scrub(self.id)
+		page_id = scrub(self.id)
 
-		path = os.path.join(get_module_path(self.module), "page", page_name)
+		path = os.path.join(get_module_path(self.module), "page", page_id)
 
 		# script
-		fpath = os.path.join(path, page_name + ".js")
+		fpath = os.path.join(path, page_id + ".js")
 		if os.path.exists(fpath):
 			with open(fpath) as f:
 				self.script = render_include(f.read())
-				self.script += f"\n\n//# sourceURL={page_name}.js"
+				self.script += f"\n\n//# sourceURL={page_id}.js"
 
 		# css
-		fpath = os.path.join(path, page_name + ".css")
+		fpath = os.path.join(path, page_id + ".css")
 		if os.path.exists(fpath):
 			with open(fpath) as f:
 				self.style = safe_decode(f.read())
@@ -172,7 +176,7 @@ class Page(Document):
 								"{app}.{module}.page.{page}.{page}.get_context".format(
 									app=frappe.local.module_app[scrub(self.module)],
 									module=scrub(self.module),
-									page=page_name,
+									page=page_id,
 								)
 							)(context)
 

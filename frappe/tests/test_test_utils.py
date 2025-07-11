@@ -10,7 +10,7 @@ class TestTestUtils(IntegrationTestCase):
 
 	def test_document_assertions(self):
 		currency = frappe.new_doc("Currency")
-		currency.currency_name = "STONKS"
+		currency.currency_id = "STONKS"
 		currency.smallest_currency_fraction_value = 0.420_001
 		currency.save()
 

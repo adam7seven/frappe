@@ -33,7 +33,9 @@ class SlackWebhookURL(Document):
 		webhook_url: DF.Data
 	# end: auto-generated types
 
-	pass
+	def before_validate(self):
+		if not self.webhook_name and self.id:
+			self.webhook_name = self.id
 
 
 def send_slack_message(webhook_url, message, reference_doctype, reference_id):

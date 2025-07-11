@@ -30,7 +30,7 @@ def handle_not_exist(fn):
 
 class Workspace:
 	def __init__(self, page, minimal=False):
-		self.page_name = page.get("id")
+		self.page_id = page.get("id")
 		self.page_title = page.get("title")
 		self.public_page = page.get("public")
 		self.workspace_manager = "Workspace Manager" in frappe.get_roles()
@@ -38,7 +38,7 @@ class Workspace:
 		self.user = frappe.get_user()
 		self.allowed_modules = self.get_cached("user_allowed_modules", self.get_allowed_modules)
 
-		self.doc = frappe.get_cached_doc("Workspace", self.page_name)
+		self.doc = frappe.get_cached_doc("Workspace", self.page_id)
 		if (
 			self.doc
 			and self.doc.module
@@ -264,9 +264,9 @@ class Workspace:
 			charts = self.doc.charts
 
 			for chart in charts:
-				if frappe.has_permission("Dashboard Chart", doc=chart.chart_name):
+				if frappe.has_permission("Dashboard Chart", doc=chart.chart_id):
 					# Translate label
-					chart.label = _(chart.label) if chart.label else _(chart.chart_name)
+					chart.label = _(chart.label) if chart.label else _(chart.chart_id)
 					all_charts.append(chart)
 
 		return all_charts

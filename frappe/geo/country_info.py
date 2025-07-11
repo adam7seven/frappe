@@ -49,9 +49,9 @@ def get_translated_countries():
 
 	# country names && currencies
 	for country, info in get_all().items():
-		country_name = locale.territories.get((info.get("code") or "").upper())
-		if country_name and country != country_name:
-			translated_dict[country] = country_name
+		country_id = locale.territories.get((info.get("code") or "").upper())
+		if country_id and country != country_id:
+			translated_dict[country] = country_id
 
 	return translated_dict
 

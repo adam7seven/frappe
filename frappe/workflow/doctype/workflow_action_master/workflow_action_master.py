@@ -16,4 +16,6 @@ class WorkflowActionMaster(Document):
 		workflow_action_name: DF.Data
 	# end: auto-generated types
 
-	pass
+	def before_validate(self):
+		if not self.workflow_action_name and self.id:
+			self.workflow_action_name = self.id

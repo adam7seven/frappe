@@ -8,7 +8,7 @@
   "module": "Desk",
   "id": "backups",
   "owner": "Administrator",
-  "page_name": "backups",
+  "page_id": "backups",
   "roles": [
     {
       "role": "System Manager"

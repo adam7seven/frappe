@@ -52,12 +52,12 @@ class TestNaming(IntegrationTestCase):
 	def test_field_autoname_name_sync(self):
 		country = frappe.get_last_doc("Country")
 		original_name = country.name
-		country.country_name = "Not a country"
+		country.country_id = "Not a country"
 		country.save()
 		country.reload()
 
 		self.assertEqual(country.name, original_name)
-		self.assertEqual(country.name, country.country_name)
+		self.assertEqual(country.name, country.country_id)
 
 	def test_child_table_naming(self):
 		child_dt_with_naming = new_doctype(istable=1, autoname="field:some_fieldname").insert()
@@ -283,7 +283,7 @@ class TestNaming(IntegrationTestCase):
 		self.assertRaises(frappe.IDError, make_invalid_todo)
 
 		# name (via title field) cannot be the same as the doctype
-		note = frappe.get_doc({"doctype": "Currency", "currency_name": "Currency"})
+		note = frappe.get_doc({"doctype": "Currency", "currency_id": "Currency"})
 		self.assertRaises(frappe.IDError, note.insert)
 
 		# case 2: set name with "New ---"

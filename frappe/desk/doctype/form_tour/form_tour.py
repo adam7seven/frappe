@@ -19,7 +19,7 @@ class FormTour(Document):
 		from frappe.desk.doctype.form_tour_step.form_tour_step import FormTourStep
 		from frappe.types import DF
 
-		dashboard_name: DF.Link | None
+		dashboard_id: DF.Link | None
 		first_document: DF.Check
 		include_name_field: DF.Check
 		is_standard: DF.Check
@@ -28,7 +28,7 @@ class FormTour(Document):
 		]
 		module: DF.Link | None
 		new_document_form: DF.Check
-		page_name: DF.Link | None
+		page_id: DF.Link | None
 		page_route: DF.SmallText | None
 		reference_doctype: DF.Link | None
 		report_name: DF.Link | None
@@ -45,8 +45,8 @@ class FormTour(Document):
 		if self.is_standard and not self.module:
 			if self.workspace_name:
 				self.module = frappe.db.get_value("Workspace", self.workspace_name, "module")
-			elif self.dashboard_name:
-				dashboard_doctype = frappe.db.get_value("Dashboard", self.dashboard_name, "module")
+			elif self.dashboard_id:
+				dashboard_doctype = frappe.db.get_value("Dashboard", self.dashboard_id, "module")
 				self.module = frappe.db.get_value("DocType", dashboard_doctype, "module")
 			else:
 				self.module = "Desk"

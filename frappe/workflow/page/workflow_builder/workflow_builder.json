@@ -9,7 +9,7 @@
   "module": "Workflow",
   "id": "workflow-builder",
   "owner": "Administrator",
-  "page_name": "workflow-builder",
+  "page_id": "workflow-builder",
   "roles": [
     {
       "role": "System Manager"

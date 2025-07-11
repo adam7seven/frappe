@@ -98,7 +98,7 @@ class Dashboard {
 				let chart_config = settings.chart_config ? JSON.parse(settings.chart_config) : {};
 				this.charts = charts.map((chart) => {
 					return {
-						chart_name: chart.chart,
+						chart_id: chart.chart,
 						label: chart.chart,
 						chart_settings: chart_config[chart.chart] || {},
 						...chart,

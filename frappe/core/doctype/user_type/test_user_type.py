@@ -72,5 +72,5 @@ def create_user_type(user_type):
 def create_role():
 	if not frappe.db.exists("Role", "_Test User Type"):
 		frappe.get_doc(
-			{"doctype": "Role", "role_name": "_Test User Type", "desk_access": 1, "is_custom": 1}
+			{"doctype": "Role", "role_id": "_Test User Type", "desk_access": 1, "is_custom": 1}
 		).insert()

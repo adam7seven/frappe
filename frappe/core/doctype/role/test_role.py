@@ -30,7 +30,7 @@ class TestUser(IntegrationTestCase):
 		user = frappe.get_doc(
 			doctype="User", email="test-user-for-desk-access@example.com", first_name="test"
 		).insert()
-		role = frappe.get_doc(doctype="Role", role_name="desk-access-test", desk_access=0).insert()
+		role = frappe.get_doc(doctype="Role", role_id="desk-access-test", desk_access=0).insert()
 		user.add_roles(role.id)
 		user.save()
 		self.assertTrue(user.user_type == "Website User")

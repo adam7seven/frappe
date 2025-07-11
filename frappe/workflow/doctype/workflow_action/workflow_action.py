@@ -9,7 +9,7 @@ from frappe.email.doctype.email_template.email_template import get_email_templat
 from frappe.model.document import Document
 from frappe.model.workflow import (
 	apply_workflow,
-	get_workflow_name,
+	get_workflow_id,
 	get_workflow_state_field,
 	has_approval_access,
 	is_transition_condition_satisfied,
@@ -89,7 +89,7 @@ def has_permission(doc, user):
 
 
 def process_workflow_actions(doc, state):
-	workflow = get_workflow_name(doc.get("doctype"))
+	workflow = get_workflow_id(doc.get("doctype"))
 	if not workflow:
 		return
 
@@ -268,17 +268,17 @@ def update_completed_workflow_actions_using_role(user=None, workflow_action=None
 	).run()
 
 
-def get_next_possible_transitions(workflow_name, state, doc=None):
+def get_next_possible_transitions(workflow_id, state, doc=None):
 	transitions = frappe.get_all(
 		"Workflow Transition",
 		fields=["allowed", "action", "state", "allow_self_approval", "next_state", "condition"],
-		filters=[["parent", "=", workflow_name], ["state", "=", state]],
+		filters=[["parent", "=", workflow_id], ["state", "=", state]],
 	)
 
 	transitions_to_return = []
 
 	for transition in transitions:
-		is_next_state_optional = get_state_optional_field_value(workflow_name, transition.next_state)
+		is_next_state_optional = get_state_optional_field_value(workflow_id, transition.next_state)
 		# skip transition if next state of the transition is optional
 		if is_next_state_optional:
 			continue
@@ -427,8 +427,8 @@ def clear_workflow_actions(doctype, id):
 
 
 def get_doc_workflow_state(doc):
-	workflow_name = get_workflow_name(doc.get("doctype"))
-	workflow_state_field = get_workflow_state_field(workflow_name)
+	workflow_id = get_workflow_id(doc.get("doctype"))
+	workflow_state_field = get_workflow_state_field(workflow_id)
 	return doc.get(workflow_state_field)
 
 
@@ -471,11 +471,11 @@ def get_common_email_args(doc):
 
 def get_email_template_from_workflow(doc):
 	"""Return next_action_email_template for workflow state (if available) based on doc current workflow state."""
-	workflow_name = get_workflow_name(doc.get("doctype"))
+	workflow_id = get_workflow_id(doc.get("doctype"))
 	doc_state = get_doc_workflow_state(doc)
 	template_name = frappe.db.get_value(
 		"Workflow Document State",
-		{"parent": workflow_name, "state": doc_state},
+		{"parent": workflow_id, "state": doc_state},
 		"next_action_email_template",
 	)
 
@@ -487,7 +487,7 @@ def get_email_template_from_workflow(doc):
 	return get_email_template(template_name, doc)
 
 
-def get_state_optional_field_value(workflow_name, state):
+def get_state_optional_field_value(workflow_id, state):
 	return frappe.get_cached_value(
-		"Workflow Document State", {"parent": workflow_name, "state": state}, "is_optional_state"
+		"Workflow Document State", {"parent": workflow_id, "state": state}, "is_optional_state"
 	)

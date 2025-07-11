@@ -9,7 +9,7 @@
   "module": "Printing",
   "id": "print-format-builder",
   "owner": "Administrator",
-  "page_name": "print-format-builder",
+  "page_id": "print-format-builder",
   "roles": [
     {
       "role": "System Manager"

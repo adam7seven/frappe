@@ -4,7 +4,7 @@ import { get_workflow_elements, validate_transitions } from "./utils";
 import { useManualRefHistory, onKeyDown } from "@vueuse/core";
 
 export const useStore = defineStore("workflow-builder-store", () => {
-	let workflow_name = ref(null);
+	let workflow_id = ref(null);
 	let workflow_doc = ref(null);
 	let workflow_doc_fields = ref([]);
 	let workflow = ref({ elements: [], selected: null });
@@ -14,10 +14,10 @@ export const useStore = defineStore("workflow-builder-store", () => {
 	let ref_history = ref(null);
 
 	async function fetch() {
-		await frappe.model.clear_doc("Workflow", workflow_name.value);
-		await frappe.model.with_doc("Workflow", workflow_name.value);
+		await frappe.model.clear_doc("Workflow", workflow_id.value);
+		await frappe.model.with_doc("Workflow", workflow_id.value);
 
-		workflow_doc.value = frappe.get_doc("Workflow", workflow_name.value);
+		workflow_doc.value = frappe.get_doc("Workflow", workflow_id.value);
 		await frappe.model.with_doctype(workflow_doc.value.document_type);
 
 		if (!workflowfields.value.length) {
@@ -128,7 +128,7 @@ export const useStore = defineStore("workflow-builder-store", () => {
 	function setup_breadcrumbs() {
 		let breadcrumbs = `
 			<li><a href="/app/workflow">${__("Workflow")}</a></li>
-			<li><a href="/app/workflow/${workflow_name.value}">${__(workflow_name.value)}</a></li>
+			<li><a href="/app/workflow/${workflow_id.value}">${__(workflow_id.value)}</a></li>
 			<li class="disabled"><a href="#">${__("Workflow Builder")}</a></li>
 		`;
 		frappe.breadcrumbs.clear();
@@ -222,7 +222,7 @@ export const useStore = defineStore("workflow-builder-store", () => {
 	}
 
 	return {
-		workflow_name,
+		workflow_id,
 		workflow_doc,
 		workflow_doc_fields,
 		workflow,

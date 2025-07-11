@@ -9,7 +9,7 @@
   "module": "Core",
   "id": "permission-manager",
   "owner": "Administrator",
-  "page_name": "permission-manager",
+  "page_id": "permission-manager",
   "roles": [
     {
       "role": "System Manager"

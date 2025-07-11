@@ -9,7 +9,7 @@
   "module": "Desk",
   "id": "setup-wizard",
   "owner": "Administrator",
-  "page_name": "setup-wizard",
+  "page_id": "setup-wizard",
   "roles": [
     {
       "role": "System Manager"

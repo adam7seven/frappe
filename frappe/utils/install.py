@@ -89,7 +89,7 @@ def install_basic_docs():
 			"thread_notify": 0,
 			"send_me_a_copy": 0,
 		},
-		{"doctype": "Role", "role_name": "Translator"},
+		{"doctype": "Role", "role_id": "Translator"},
 		{
 			"doctype": "Workflow State",
 			"id": "Pending",
@@ -108,9 +108,9 @@ def install_basic_docs():
 			"icon": "remove",
 			"style": "Danger",
 		},
-		{"doctype": "Workflow Action Master", "workflow_action_name": "Approve"},
-		{"doctype": "Workflow Action Master", "workflow_action_name": "Reject"},
-		{"doctype": "Workflow Action Master", "workflow_action_name": "Review"},
+		{"doctype": "Workflow Action Master", "id": "Approve"},
+		{"doctype": "Workflow Action Master", "id": "Reject"},
+		{"doctype": "Workflow Action Master", "id": "Review"},
 	]
 
 	for d in install_docs:

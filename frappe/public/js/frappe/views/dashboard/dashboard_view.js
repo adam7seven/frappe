@@ -14,7 +14,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
         });
     }
 
-    render() {}
+    render() { }
 
     setup_page() {
         this.hide_page_form = true;
@@ -117,8 +117,8 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
         frappe.dashboard_utils.get_dashboard_settings().then((settings) => {
             this.dashboard_chart_settings = settings.chart_config ? JSON.parse(settings.chart_config) : {};
             this.charts.map((chart) => {
-                chart.label = chart.chart_name;
-                chart.chart_settings = this.dashboard_chart_settings[chart.chart_name] || {};
+                chart.label = chart.chart_id;
+                chart.chart_settings = this.dashboard_chart_settings[chart.chart_id] || {};
             });
             this.render_dashboard_charts();
         });
@@ -426,7 +426,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
             primary_action: (values) => {
                 let chart = values;
                 if (chart.new_or_existing == "New Chart") {
-                    chart.chart_name = chart.label;
+                    chart.chart_id = chart.label;
                     chart.chart_type = chart.chart_type == "Time Series" ? chart.chart_function : chart.chart_type;
                     chart.document_type = this.doctype;
                     chart.filters_json = "[]";
@@ -436,14 +436,14 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
                         })
                         .then((doc) => {
                             this.chart_group.new_widget.on_create({
-                                chart_name: doc.chart_name,
-                                id: doc.chart_name,
+                                chart_id: doc.chart_id,
+                                id: doc.chart_id,
                                 label: chart.label,
                             });
                         });
                 } else {
                     this.chart_group.new_widget.on_create({
-                        chart_name: chart.chart,
+                        chart_id: chart.chart,
                         label: chart.chart,
                         id: chart.chart,
                     });

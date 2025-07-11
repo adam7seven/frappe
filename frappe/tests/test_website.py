@@ -31,7 +31,7 @@ class TestWebsite(IntegrationTestCase):
 		).insert(ignore_if_duplicate=True)
 		user.reload()
 
-		role = frappe.get_doc(doctype="Role", role_name="home-page-test", desk_access=0).insert(
+		role = frappe.get_doc(doctype="Role", role_id="home-page-test", desk_access=0).insert(
 			ignore_if_duplicate=True
 		)
 

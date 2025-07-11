@@ -709,14 +709,14 @@ Object.assign(frappe.utils, {
 		var objPattern = new RegExp(
 			// Delimiters.
 			"(\\" +
-				strDelimiter +
-				"|\\r?\\n|\\r|^)" +
-				// Quoted fields.
-				'(?:"([^"]*(?:""[^"]*)*)"|' +
-				// Standard fields.
-				'([^"\\' +
-				strDelimiter +
-				"\\r\\n]*))",
+			strDelimiter +
+			"|\\r?\\n|\\r|^)" +
+			// Quoted fields.
+			'(?:"([^"]*(?:""[^"]*)*)"|' +
+			// Standard fields.
+			'([^"\\' +
+			strDelimiter +
+			"\\r\\n]*))",
 			"gi"
 		);
 
@@ -767,7 +767,7 @@ Object.assign(frappe.utils, {
 		return arrData;
 	},
 
-	warn_page_name_change: function () {
+	warn_page_id_change: function () {
 		frappe.msgprint(__("Note: Changing the Page Name will break previous URL to this page."));
 	},
 
@@ -1199,13 +1199,12 @@ Object.assign(frappe.utils, {
 		} else {
 			size_class = `icon-${size}`;
 		}
-		return `<svg class="${
-			is_espresso
+		return `<svg class="${is_espresso
 				? icon_name.startsWith("es-solid")
 					? "es-icon es-solid"
 					: "es-icon es-line"
 				: "icon"
-		} ${svg_class} ${size_class}" style="${icon_style}" aria-hidden="true">
+			} ${svg_class} ${size_class}" style="${icon_style}" aria-hidden="true">
 			<use class="${icon_class}" href="${icon_name}"></use>
 		</svg>`;
 	},
@@ -1380,9 +1379,8 @@ Object.assign(frappe.utils, {
 	build_summary_item(summary) {
 		if (summary.type == "separator") {
 			return $(`<div class="summary-separator">
-				<div class="summary-value ${summary.color ? summary.color.toLowerCase() : "text-muted"}">${
-				summary.value
-			}</div>
+				<div class="summary-value ${summary.color ? summary.color.toLowerCase() : "text-muted"}">${summary.value
+				}</div>
 			</div>`);
 		}
 		let df = { fieldtype: summary.datatype };
@@ -1396,8 +1394,8 @@ Object.assign(frappe.utils, {
 		let color = summary.indicator
 			? summary.indicator.toLowerCase()
 			: summary.color
-			? summary.color.toLowerCase()
-			: "";
+				? summary.color.toLowerCase()
+				: "";
 
 		return $(`<div class="summary-item">
 			<span class="summary-label">${__(summary.label)}</span>
@@ -1409,17 +1407,17 @@ Object.assign(frappe.utils, {
 		let w = window.open(
 			frappe.urllib.get_full_url(
 				"/printview?doctype=" +
-					encodeURIComponent(doctype) +
-					"&id=" +
-					encodeURIComponent(docid) +
-					"&trigger_print=1" +
-					"&format=" +
-					encodeURIComponent(print_format) +
-					"&no_letterhead=" +
-					(letterhead ? "0" : "1") +
-					"&letterhead=" +
-					encodeURIComponent(letterhead) +
-					(lang_code ? "&_lang=" + lang_code : "")
+				encodeURIComponent(doctype) +
+				"&id=" +
+				encodeURIComponent(docid) +
+				"&trigger_print=1" +
+				"&format=" +
+				encodeURIComponent(print_format) +
+				"&no_letterhead=" +
+				(letterhead ? "0" : "1") +
+				"&letterhead=" +
+				encodeURIComponent(letterhead) +
+				(lang_code ? "&_lang=" + lang_code : "")
 			)
 		);
 
@@ -1775,8 +1773,8 @@ Object.assign(frappe.utils, {
 
 				frappe.msgprint(
 					__("Tracking URL generated and copied to clipboard") +
-						": <br>" +
-						`<a href="${url}">${url.bold()}</a>`,
+					": <br>" +
+					`<a href="${url}">${url.bold()}</a>`,
 					__("Here's your tracking URL")
 				);
 			},

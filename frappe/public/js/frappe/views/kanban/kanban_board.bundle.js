@@ -167,14 +167,14 @@ frappe.provide("frappe.views");
 				if (card.new) {
 					method_name = "add_card";
 					args = {
-						board_name: context.state.board.id,
+						board_id: context.state.board.id,
 						docid: card.id,
 						colname: card.colname,
 					};
 				} else {
 					method_name = "update_order_for_single_card";
 					args = {
-						board_name: context.state.board.id,
+						board_id: context.state.board.id,
 						docid: card.id,
 						from_colname: card.from_colname,
 						to_colname: card.to_colname,
@@ -231,7 +231,7 @@ frappe.provide("frappe.views");
 					.call({
 						method: method_prefix + "update_order",
 						args: {
-							board_name: context.state.board.id,
+							board_id: context.state.board.id,
 							order: order,
 						},
 						callback: (r) => {
@@ -258,7 +258,7 @@ frappe.provide("frappe.views");
 					.call({
 						method: method_prefix + "update_column_order",
 						args: {
-							board_name: context.state.board.id,
+							board_id: context.state.board.id,
 							order: order,
 						},
 					})
@@ -275,7 +275,7 @@ frappe.provide("frappe.views");
 					.call({
 						method: method_prefix + "set_indicator",
 						args: {
-							board_name: context.state.board.id,
+							board_id: context.state.board.id,
 							column_name: column.title,
 							indicator: color,
 						},
@@ -295,7 +295,7 @@ frappe.provide("frappe.views");
 		var self = {};
 		self.wrapper = opts.wrapper;
 		self.cur_list = opts.cur_list;
-		self.board_name = opts.board_name;
+		self.board_id = opts.board_id;
 		self.board_perms = self.cur_list.board_perms;
 
 		self.update = function (cards) {
@@ -489,14 +489,14 @@ frappe.provide("frappe.views");
 			}, "");
 			var $dropdown = $(
 				"<div class='dropdown pull-right'>" +
-					"<a class='text-muted dropdown-toggle' data-toggle='dropdown'>" +
-					"<span class='dropdown-text'>" +
-					__("Archived Columns") +
-					"</span><i class='caret'></i></a>" +
-					"<ul class='dropdown-menu'>" +
-					options +
-					"</ul>" +
-					"</div>"
+				"<a class='text-muted dropdown-toggle' data-toggle='dropdown'>" +
+				"<span class='dropdown-text'>" +
+				__("Archived Columns") +
+				"</span><i class='caret'></i></a>" +
+				"<ul class='dropdown-menu'>" +
+				options +
+				"</ul>" +
+				"</div>"
 			);
 
 			list_row_right.html($dropdown);
@@ -611,7 +611,7 @@ frappe.provide("frappe.views");
 					};
 					store.dispatch("update_order_for_single_card", args);
 				},
-				onAdd: function () {},
+				onAdd: function () { },
 			});
 		}
 
@@ -919,10 +919,10 @@ frappe.provide("frappe.views");
 		});
 	}
 
-	function update_kanban_board(board_name, column_title, action) {
+	function update_kanban_board(board_id, column_title, action) {
 		var method;
 		var args = {
-			board_name: board_name,
+			board_id: board_id,
 			column_title: column_title,
 		};
 		if (action === "add") {

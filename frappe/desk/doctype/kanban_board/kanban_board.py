@@ -28,6 +28,10 @@ class KanbanBoard(Document):
 		show_labels: DF.Check
 	# end: auto-generated types
 
+	def before_validate(self):
+		if not self.kanban_board_name and self.id:
+			self.kanban_board_name = self.id
+
 	def validate(self):
 		self.validate_column_name()
 
@@ -76,9 +80,9 @@ def get_kanban_boards(doctype):
 
 
 @frappe.whitelist()
-def add_column(board_name, column_title):
+def add_column(board_id, column_title):
 	"""Adds new column to Kanban Board"""
-	doc = frappe.get_doc("Kanban Board", board_name)
+	doc = frappe.get_doc("Kanban Board", board_id)
 	for col in doc.columns:
 		if column_title == col.column_name:
 			frappe.throw(_("Column <b>{0}</b> already exist.").format(column_title))
@@ -89,9 +93,9 @@ def add_column(board_name, column_title):
 
 
 @frappe.whitelist()
-def archive_restore_column(board_name, column_title, status):
+def archive_restore_column(board_id, column_title, status):
 	"""Set column's status to status"""
-	doc = frappe.get_doc("Kanban Board", board_name)
+	doc = frappe.get_doc("Kanban Board", board_id)
 	for col in doc.columns:
 		if column_title == col.column_name:
 			col.status = status
@@ -101,9 +105,9 @@ def archive_restore_column(board_name, column_title, status):
 
 
 @frappe.whitelist()
-def update_order(board_name, order):
+def update_order(board_id, order):
 	"""Save the order of cards in columns"""
-	board = frappe.get_doc("Kanban Board", board_name)
+	board = frappe.get_doc("Kanban Board", board_id)
 	doctype = board.reference_doctype
 	updated_cards = []
 
@@ -129,9 +133,9 @@ def update_order(board_name, order):
 
 
 @frappe.whitelist()
-def update_order_for_single_card(board_name, docid, from_colname, to_colname, old_index, new_index):
+def update_order_for_single_card(board_id, docid, from_colname, to_colname, old_index, new_index):
 	"""Save the order of cards in columns"""
-	board = frappe.get_doc("Kanban Board", board_name)
+	board = frappe.get_doc("Kanban Board", board_id)
 	doctype = board.reference_doctype
 
 	frappe.has_permission(doctype, "write", throw=True)
@@ -171,8 +175,8 @@ def get_kanban_column_order_and_index(board, colname):
 
 
 @frappe.whitelist()
-def add_card(board_name, docid, colname):
-	board = frappe.get_doc("Kanban Board", board_name)
+def add_card(board_id, docid, colname):
+	board = frappe.get_doc("Kanban Board", board_id)
 
 	frappe.has_permission(board.reference_doctype, "write", throw=True)
 
@@ -185,13 +189,13 @@ def add_card(board_name, docid, colname):
 
 
 @frappe.whitelist()
-def quick_kanban_board(doctype, board_name, field_name, project=None):
+def quick_kanban_board(doctype, board_id, field_name, project=None):
 	"""Create new KanbanBoard quickly with default options"""
 
 	doc = frappe.new_doc("Kanban Board")
 	meta = frappe.get_meta(doctype)
 
-	doc.kanban_board_name = board_name
+	doc.id = board_id
 	doc.reference_doctype = doctype
 	doc.field_name = field_name
 
@@ -228,9 +232,9 @@ def get_order_for_column(board, colname):
 
 
 @frappe.whitelist()
-def update_column_order(board_name, order):
+def update_column_order(board_id, order):
 	"""Set the order of columns in Kanban Board"""
-	board = frappe.get_doc("Kanban Board", board_name)
+	board = frappe.get_doc("Kanban Board", board_id)
 	order = json.loads(order)
 	old_columns = board.columns
 	new_columns = []
@@ -260,9 +264,9 @@ def update_column_order(board_name, order):
 
 
 @frappe.whitelist()
-def set_indicator(board_name, column_name, indicator):
+def set_indicator(board_id, column_name, indicator):
 	"""Set the indicator color of column"""
-	board = frappe.get_doc("Kanban Board", board_name)
+	board = frappe.get_doc("Kanban Board", board_id)
 
 	for column in board.columns:
 		if column.column_name == column_name:
@@ -273,9 +277,9 @@ def set_indicator(board_name, column_name, indicator):
 
 
 @frappe.whitelist()
-def save_settings(board_name: str, settings: str) -> Document:
+def save_settings(board_id: str, settings: str) -> Document:
 	settings = json.loads(settings)
-	doc = frappe.get_doc("Kanban Board", board_name)
+	doc = frappe.get_doc("Kanban Board", board_id)
 
 	fields = settings["fields"]
 	if not isinstance(fields, str):

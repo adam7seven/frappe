@@ -47,9 +47,9 @@ class Domain(Document):
 		self.setup_data()
 
 		if self.data.restricted_roles:
-			for role_name in self.data.restricted_roles:
-				if frappe.db.exists("Role", role_name):
-					role = frappe.get_doc("Role", role_name)
+			for role_id in self.data.restricted_roles:
+				if frappe.db.exists("Role", role_id):
+					role = frappe.get_doc("Role", role_id)
 					role.disabled = 1
 					role.save()
 
@@ -76,13 +76,13 @@ class Domain(Document):
 		"""Enable roles that are restricted to this domain"""
 		if self.data.restricted_roles:
 			user = frappe.get_doc("User", frappe.session.user)
-			for role_name in self.data.restricted_roles:
-				user.append("roles", {"role": role_name})
-				if not frappe.db.get_value("Role", role_name):
-					frappe.get_doc(doctype="Role", role_name=role_name).insert()
+			for role_id in self.data.restricted_roles:
+				user.append("roles", {"role": role_id})
+				if not frappe.db.get_value("Role", role_id):
+					frappe.get_doc(doctype="Role", role_id=role_id).insert()
 					continue
 
-				role = frappe.get_doc("Role", role_name)
+				role = frappe.get_doc("Role", role_id)
 				role.disabled = 0
 				role.save()
 			user.save()

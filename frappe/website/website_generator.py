@@ -5,7 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.modules import get_module_id
 from frappe.search.website_search import remove_document_from_index, update_index_for_path
-from frappe.website.utils import cleanup_page_name, clear_cache
+from frappe.website.utils import cleanup_page_id, clear_cache
 
 
 class WebsiteGenerator(Document):
@@ -74,7 +74,7 @@ class WebsiteGenerator(Document):
 		frappe.db.after_rollback.add(lambda: clear_cache(self.route))
 
 	def scrub(self, text):
-		return cleanup_page_name(text).replace("_", "-")
+		return cleanup_page_id(text).replace("_", "-")
 
 	def get_parents(self, context):
 		"""Return breadcrumbs"""

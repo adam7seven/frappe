@@ -16,6 +16,7 @@ class Currency(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		currency_id: DF.Data
 		currency_name: DF.Data
 		enabled: DF.Check
 		fraction: DF.Data | None
@@ -37,6 +38,10 @@ class Currency(Document):
 		symbol: DF.Data | None
 		symbol_on_right: DF.Check
 	# end: auto-generated types
+
+	def before_validate(self):
+		if not self.currency_name and self.id:
+			self.currency_name = self.id
 
 	# NOTE: During installation country docs are bulk inserted.
 	def validate(self):

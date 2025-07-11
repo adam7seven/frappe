@@ -25,7 +25,7 @@ class RoleReplication(Document):
 
 		new_role = frappe.db.get_value("Role", self.new_role, "id")
 		if not new_role:
-			new_role = frappe.get_doc({"doctype": "Role", "role_name": self.new_role}).insert().id
+			new_role = frappe.get_doc({"doctype": "Role", "role_id": self.new_role}).insert().id
 
 		perms = get_permissions(role=self.existing_role)
 		for perm in perms:

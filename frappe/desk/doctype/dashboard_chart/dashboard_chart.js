@@ -38,7 +38,7 @@ frappe.ui.form.on("Dashboard Chart", {
 					"frappe.desk.doctype.dashboard_chart.dashboard_chart.add_chart_to_dashboard"
 				);
 
-				if (!frm.doc.chart_name) {
+				if (!frm.doc.chart_id) {
 					frappe.msgprint(__("Please create chart first"));
 				} else {
 					dialog.show();
@@ -406,7 +406,7 @@ frappe.ui.form.on("Dashboard Chart", {
 					parent: dialog.get_field("filter_area").$wrapper,
 					doctype: frm.doc.document_type,
 					parent_doctype: frm.doc.parent_document_type,
-					on_change: () => {},
+					on_change: () => { },
 				});
 
 				frm.filter_group.add_filters_to_filter_group(filters);

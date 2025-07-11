@@ -39,7 +39,7 @@ from frappe.model.base_document import (
 )
 from frappe.model.document import Document
 from frappe.model.utils import is_single_doctype
-from frappe.model.workflow import get_workflow_name
+from frappe.model.workflow import get_workflow_id
 from frappe.modules import load_doctype_module
 from frappe.utils import cached_property, cast, cint, cstr
 from frappe.utils.caching import site_cache
@@ -386,7 +386,7 @@ class Meta(Document):
 			return field.translatable
 
 	def get_workflow(self):
-		return get_workflow_name(self.id)
+		return get_workflow_id(self.id)
 
 	def get_naming_series_options(self) -> list[str]:
 		"""Get list naming series options."""

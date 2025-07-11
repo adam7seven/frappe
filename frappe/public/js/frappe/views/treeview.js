@@ -50,7 +50,7 @@ frappe.views.TreeView = class TreeView {
         this.doctype = opts.doctype;
         this.doctype_name = frappe.get_meta(this.doctype)?.name;
         this.args = { doctype: me.doctype };
-        this.page_name = frappe.get_route_str();
+        this.page_id = frappe.get_route_str();
         this.get_tree_nodes = me.opts.get_tree_nodes || "frappe.desk.treeview.get_children";
 
         this.get_permissions();
@@ -81,11 +81,11 @@ frappe.views.TreeView = class TreeView {
     make_page() {
         var me = this;
         if (!this.opts || !this.opts.do_not_make_page) {
-            this.parent = frappe.container.add_page(this.page_name);
+            this.parent = frappe.container.add_page(this.page_id);
             $(this.parent).addClass("treeview");
             frappe.ui.make_app_page({ parent: this.parent, single_column: true });
             this.page = this.parent.page;
-            frappe.container.change_to(this.page_name);
+            frappe.container.change_to(this.page_id);
             frappe.breadcrumbs.add(me.opts.breadcrumb || locals.DocType[me.doctype].module, me.doctype);
 
             this.set_title();
@@ -453,7 +453,7 @@ frappe.views.TreeView = class TreeView {
                 method: "frappe.core.doctype.access_log.access_log.make_access_log",
                 args: {
                     doctype: me.doctype,
-                    report_name: me.page_name,
+                    report_name: me.page_id,
                     page: tree,
                     method: "Print",
                 },

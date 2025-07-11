@@ -31,7 +31,7 @@ frappe.ui.form.on("Form Tour", {
 		if (
 			frm.doc.select_view == "List" &&
 			frm.doc.list_name == "Dashboard" &&
-			frm.doc.dashboard_name &&
+			frm.doc.dashboard_id &&
 			frm.doc.reference_doctype
 		) {
 			frappe.throw(
@@ -189,8 +189,8 @@ async function get_path(frm) {
 			frm.doc.list_name = "";
 			frm.doc.new_document_form = 0;
 			frm.doc.report_name = "";
-			frm.doc.page_name = "";
-			frm.doc.dashboard_name = "";
+			frm.doc.page_id = "";
+			frm.doc.dashboard_id = "";
 			frm.doc.reference_doctype = "";
 			if (!frm.doc.workspace_name) {
 				route.push("*");
@@ -205,12 +205,12 @@ async function get_path(frm) {
 			frm.doc.workspace_name = "";
 			frm.doc.new_document_form = 0;
 			frm.doc.list_name != "Report" && (frm.doc.report_name = "");
-			frm.doc.list_name != "Dashboard" && (frm.doc.dashboard_name = "");
-			frm.doc.page_name = "";
+			frm.doc.list_name != "Dashboard" && (frm.doc.dashboard_id = "");
+			frm.doc.page_id = "";
 			if (frm.doc.list_name == "File") return ["List", "File"];
 			if (!frm.doc.reference_doctype) {
 				if (frm.doc.list_name == "Dashboard")
-					return ["dashboard-view", frm.doc.dashboard_name || "*"];
+					return ["dashboard-view", frm.doc.dashboard_id || "*"];
 				route.push("*");
 			} else {
 				route.push(frm.doc.reference_doctype);
@@ -221,8 +221,8 @@ async function get_path(frm) {
 			frm.doc.workspace_name = "";
 			frm.doc.list_name = "";
 			frm.doc.report_name = "";
-			frm.doc.page_name = "";
-			frm.doc.dashboard_name = "";
+			frm.doc.page_id = "";
+			frm.doc.dashboard_id = "";
 			if (!frm.doc.reference_doctype) {
 				route.push("*");
 				frm.doc.new_document_form && route.push("new-*");
@@ -240,16 +240,16 @@ async function get_path(frm) {
 			frm.doc.list_name = "";
 			frm.doc.new_document_form = 0;
 			frm.doc.report_name = "";
-			frm.doc.page_name = "";
-			frm.doc.dashboard_name = "";
+			frm.doc.page_id = "";
+			frm.doc.dashboard_id = "";
 			return route;
 		case "Page":
 			frm.doc.workspace_name = "";
 			frm.doc.list_name = "";
 			frm.doc.new_document_form = 0;
 			frm.doc.report_name = "";
-			frm.doc.dashboard_name = "";
+			frm.doc.dashboard_id = "";
 			frm.doc.reference_doctype = "";
-			return [frm.doc.page_name];
+			return [frm.doc.page_id];
 	}
 }

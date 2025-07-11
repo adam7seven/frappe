@@ -9,7 +9,7 @@
   "module": "Printing",
   "id": "print",
   "owner": "Administrator",
-  "page_name": "Print",
+  "page_id": "Print",
   "roles": [],
   "script": null,
   "standard": "Yes",

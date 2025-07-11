@@ -58,8 +58,8 @@ function load_workflow_builder(wrapper) {
 					default: frappe.route_options ? frappe.route_options.doctype : null,
 				},
 				{
-					label: __("New Workflow Name"),
-					fieldname: "workflow_name",
+					label: __("New Workflow ID"),
+					fieldname: "workflow_id",
 					fieldtype: "Data",
 					depends_on: (doc) => doc.action === "Create",
 					mandatory_depends_on: (doc) => doc.action === "Create",
@@ -82,7 +82,7 @@ function load_workflow_builder(wrapper) {
 				},
 			],
 			primary_action_label: __("Edit"),
-			primary_action({ action, doctype, workflow, workflow_name }) {
+			primary_action({ action, doctype, workflow, workflow_id }) {
 				if (action === "Edit") {
 					frappe.set_route("workflow-builder", workflow);
 				} else if (action === "Create") {
@@ -90,7 +90,7 @@ function load_workflow_builder(wrapper) {
 					frappe.db
 						.insert({
 							doctype: "Workflow",
-							workflow_name: workflow_name,
+							workflow_id: workflow_id,
 							document_type: doctype,
 						})
 						.then((doc) => {

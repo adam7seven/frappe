@@ -14,7 +14,7 @@ export default class ChartWidget extends Widget {
 	get_config() {
 		return {
 			id: this.id,
-			chart_name: this.chart_name,
+			chart_id: this.chart_id,
 			label: this.label,
 			hidden: this.hidden,
 			width: this.width,
@@ -47,15 +47,13 @@ export default class ChartWidget extends Widget {
 		}
 
 		this.loading = $(
-			`<div class="chart-loading-state text-extra-muted" style="height: ${
-				this.height
+			`<div class="chart-loading-state text-extra-muted" style="height: ${this.height
 			}px;">${__("Loading...")}</div>`
 		);
 		this.loading.appendTo(this.body);
 
 		this.empty = $(
-			`<div class="chart-loading-state text-extra-muted" style="height: ${
-				this.height
+			`<div class="chart-loading-state text-extra-muted" style="height: ${this.height
 			}px;">${__("No Data")}</div>`
 		);
 		this.empty.hide().appendTo(this.body);
@@ -315,7 +313,7 @@ export default class ChartWidget extends Widget {
 				label: __("Export"),
 				action: "action-export",
 				handler: () => {
-					const data = [[this.chart_doc.chart_name]];
+					const data = [[this.chart_doc.chart_id]];
 					data.push([]);
 					data.push([]);
 
@@ -348,7 +346,7 @@ export default class ChartWidget extends Widget {
 					} else {
 						data.push(["", ...labels]);
 					}
-					frappe.tools.downloadify(data, null, this.chart_doc.chart_name);
+					frappe.tools.downloadify(data, null, this.chart_doc.chart_id);
 				},
 			},
 		];
@@ -433,7 +431,7 @@ export default class ChartWidget extends Widget {
 	setup_filter_dialog(fields) {
 		let me = this;
 		let dialog = new frappe.ui.Dialog({
-			title: __("Set Filters for {0}", [__(this.chart_doc.chart_name)]),
+			title: __("Set Filters for {0}", [__(this.chart_doc.chart_id)]),
 			fields: fields,
 			primary_action: function () {
 				let values = this.get_values();
@@ -474,7 +472,7 @@ export default class ChartWidget extends Widget {
 			{
 				reset: reset,
 				config: this.chart_settings,
-				chart_name: this.chart_doc.chart_name,
+				chart_id: this.chart_doc.chart_id,
 			}
 		);
 	}
@@ -512,13 +510,13 @@ export default class ChartWidget extends Widget {
 			</button>
 			<ul class="dropdown-menu dropdown-menu-right">
 				${actions
-					.map(
-						(action) =>
-							`<li><a class="dropdown-item" data-action="${action.action}">${__(
-								action.label
-							)}</a></li>`
-					)
-					.join("")}
+				.map(
+					(action) =>
+						`<li><a class="dropdown-item" data-action="${action.action}">${__(
+							action.label
+						)}</a></li>`
+				)
+				.join("")}
 			</ul>
 		</div>
 		`);
@@ -542,7 +540,7 @@ export default class ChartWidget extends Widget {
 			};
 		} else {
 			args = {
-				chart_name: this.chart_doc.id,
+				chart_id: this.chart_doc.id,
 				filters: filters,
 				refresh: refresh ? 1 : 0,
 				time_interval: args && args.time_interval ? args.time_interval : null,
@@ -663,8 +661,8 @@ export default class ChartWidget extends Widget {
 		if (this.chart_doc.type == "Heatmap") {
 			const heatmap_year = parseInt(
 				this.selected_heatmap_year ||
-					this.chart_settings.heatmap_year ||
-					this.chart_doc.heatmap_year
+				this.chart_settings.heatmap_year ||
+				this.chart_doc.heatmap_year
 			);
 			chart_args.data.start = new Date(`${heatmap_year}-01-01`);
 			chart_args.data.end = new Date(`${heatmap_year + 1}-01-01`);
@@ -812,7 +810,7 @@ export default class ChartWidget extends Widget {
 	}
 
 	get_settings() {
-		return frappe.model.with_doc("Dashboard Chart", this.chart_name).then((chart_doc) => {
+		return frappe.model.with_doc("Dashboard Chart", this.chart_id).then((chart_doc) => {
 			if (chart_doc) {
 				this.chart_doc = chart_doc;
 				if (this.chart_doc.chart_type == "Custom") {

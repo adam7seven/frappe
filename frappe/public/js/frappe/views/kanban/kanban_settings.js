@@ -51,7 +51,7 @@ export default class KanbanSettings {
 			frappe.call({
 				method: "frappe.desk.doctype.kanban_board.kanban_board.save_settings",
 				args: {
-					board_name: this.settings.id,
+					board_id: this.settings.id,
 					settings: this.dialog.get_values(),
 				},
 				callback: (r) => {

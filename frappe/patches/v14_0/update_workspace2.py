@@ -21,7 +21,7 @@ def create_content(doc):
 			if c.get_invalid_links()[0]:
 				invalid_links.append(c)
 			else:
-				content.append({"type": "chart", "data": {"chart_name": c.label, "col": 12}})
+				content.append({"type": "chart", "data": {"chart_id": c.label, "col": 12}})
 		for l in invalid_links:
 			del doc.charts[doc.charts.index(l)]
 	if doc.shortcuts:

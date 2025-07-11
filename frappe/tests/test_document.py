@@ -305,7 +305,7 @@ class TestDocument(IntegrationTestCase):
 		frappe.delete_doc_if_exists("Currency", "Frappe Coin", 1)
 
 		d = frappe.get_doc(
-			{"doctype": "Currency", "currency_name": "Frappe Coin", "smallest_currency_fraction_value": -1}
+			{"doctype": "Currency", "currency_id": "Frappe Coin", "smallest_currency_fraction_value": -1}
 		)
 
 		self.assertRaises(frappe.NonNegativeError, d.insert)
@@ -334,7 +334,7 @@ class TestDocument(IntegrationTestCase):
 		d = frappe.get_doc(
 			{
 				"doctype": "Currency",
-				"currency_name": "INR",
+				"currency_id": "INR",
 				"symbol": "₹",
 			}
 		).insert()

@@ -23,6 +23,7 @@ class Role(Document):
 		home_page: DF.Data | None
 		is_custom: DF.Check
 		restrict_to_domain: DF.Link | None
+		role_id: DF.Data
 		role_name: DF.Data
 		two_factor_auth: DF.Check
 	# end: auto-generated types
@@ -33,6 +34,10 @@ class Role(Document):
 
 	def after_insert(self):
 		frappe.cache.hdel("roles", "Administrator")
+
+	def before_validate(self):
+		if not self.role_name and self.role_id:
+			self.role_name = self.role_id
 
 	def validate(self):
 		if self.disabled:
