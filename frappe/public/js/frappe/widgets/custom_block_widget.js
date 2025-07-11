@@ -8,8 +8,8 @@ export default class CustomBlockWidget extends Widget {
 
 	get_config() {
 		return {
-			custom_block_name: this.custom_block_name,
-			label: this.custom_block_name,
+			custom_block_id: this.custom_block_id,
+			label: this.custom_block_id,
 		};
 	}
 
@@ -36,10 +36,10 @@ export default class CustomBlockWidget extends Widget {
 	}
 
 	async get_custom_block_data() {
-		this.label = this.custom_block_name;
+		this.label = this.custom_block_id;
 		let custom_block_doc = await frappe.model.with_doc(
 			"Custom HTML Block",
-			this.custom_block_name
+			this.custom_block_id
 		);
 		this.custom_block_doc = custom_block_doc ? custom_block_doc : "";
 	}

@@ -37,7 +37,7 @@ export default class Onboarding extends Block {
 	new(block, widget_type = block) {
 		let me = this;
 		const dialog_class = get_dialog_constructor(widget_type);
-		let block_name = block + "_name";
+		let block_name = block + "_id";
 		this.dialog = new dialog_class({
 			label: this.label,
 			type: widget_type,
@@ -98,7 +98,7 @@ export default class Onboarding extends Block {
 			docs_url: block_data.docs_url,
 			user_can_dismiss: block_data.user_can_dismiss,
 		});
-		this.wrapper.setAttribute(block + "_name", block_name);
+		this.wrapper.setAttribute(block + "_id", block_name);
 		if (!this.readOnly) {
 			this.block_widget.customize(this.options);
 		}

@@ -255,11 +255,11 @@ frappe.views.Workspace = class Workspace {
 		if (index !== -1) {
 			this.content.splice(index + 1, 0, {
 				type: "card",
-				data: { card_name: "Custom Documents", col: 4 },
+				data: { card_id: "Custom Documents", col: 4 },
 			});
 			this.content.splice(index + 2, 0, {
 				type: "card",
-				data: { card_name: "Custom Reports", col: 4 },
+				data: { card_id: "Custom Reports", col: 4 },
 			});
 		}
 	}
@@ -650,8 +650,8 @@ frappe.views.Workspace = class Workspace {
 				let blocks = outputData.blocks.filter(
 					(item) =>
 						item.type != "card" ||
-						(item.data.card_name !== "Custom Documents" &&
-							item.data.card_name !== "Custom Reports")
+						(item.data.card_id !== "Custom Documents" &&
+							item.data.card_id !== "Custom Reports")
 				);
 
 				if (

@@ -222,8 +222,8 @@ frappe.provide("frappe.views");
 					$(this)
 						.find(".kanban-card-wrapper")
 						.each(function () {
-							var card_name = decodeURIComponent($(this).data().id);
-							order[col_name].push(card_name);
+							var card_id = decodeURIComponent($(this).data().id);
+							order[col_name].push(card_id);
 						});
 				});
 

@@ -30,8 +30,8 @@ export default class CustomBlock extends Block {
 		this.wrapper = document.createElement("div");
 		this.new("custom_block");
 
-		if (this.data && this.data.custom_block_name) {
-			let has_data = this.make("custom_block", this.data.custom_block_name);
+		if (this.data && this.data.custom_block_id) {
+			let has_data = this.make("custom_block", this.data.custom_block_id);
 			if (!has_data) return this.wrapper;
 		}
 
@@ -45,7 +45,7 @@ export default class CustomBlock extends Block {
 	}
 
 	validate(savedData) {
-		if (!savedData.custom_block_name) {
+		if (!savedData.custom_block_id) {
 			return false;
 		}
 
@@ -54,7 +54,7 @@ export default class CustomBlock extends Block {
 
 	save() {
 		return {
-			custom_block_name: this.wrapper.getAttribute("custom_block_name"),
+			custom_block_id: this.wrapper.getAttribute("custom_block_id"),
 			col: this.get_col(),
 			new: this.new_block_widget,
 		};

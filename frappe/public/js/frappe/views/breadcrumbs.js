@@ -36,6 +36,7 @@ frappe.breadcrumbs = {
         } else {
             obj = {
                 module: module,
+                modue_name: frappe.get_module(module)?.title,
                 doctype: doctype,
                 type: type,
             };
@@ -121,7 +122,8 @@ frappe.breadcrumbs = {
             return;
         }
 
-        this.append_breadcrumb_element(`/app/${frappe.router.slug(breadcrumbs.workspace)}`, __(breadcrumbs.workspace));
+        this.append_breadcrumb_element(`/app/${frappe.router.slug(breadcrumbs.workspace)}`,
+            __(breadcrumbs.workspace_name || breadcrumbs.workspace));
     },
 
     set_workspace(breadcrumbs) {
@@ -167,6 +169,12 @@ frappe.breadcrumbs = {
                     breadcrumbs.workspace = frappe.boot.module_wise_workspaces[breadcrumbs.module][0];
                 }
             }
+        }
+
+        if (!breadcrumbs.workspace_name && breadcrumbs.workspace) {
+            frappe.db.get_value("Workspace", breadcrumbs.workspace, "title", (r) => {
+                breadcrumbs.workspace_name = r.title;
+            }, null, false);
         }
     },
 

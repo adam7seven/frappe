@@ -23,7 +23,7 @@ export default class Block {
 			api: this.api,
 			block: this.block,
 		});
-		this.wrapper.setAttribute(block + "_name", block_name);
+		this.wrapper.setAttribute(block + "_id", block_name);
 		if (!this.readOnly) {
 			this.block_widget.customize();
 		}
@@ -93,7 +93,7 @@ export default class Block {
 	new(block, widget_type = block) {
 		let me = this;
 		const dialog_class = get_dialog_constructor(widget_type);
-		let block_name = block + "_name";
+		let block_name = block + "_id";
 		this.dialog = new dialog_class({
 			for_workspace: true,
 			label: this.label,
@@ -128,9 +128,9 @@ export default class Block {
 	}
 
 	on_edit(block_obj) {
-		let block_name = block_obj.edit_dialog.type + "_name";
+		let block_name = block_obj.edit_dialog.type + "_id";
 		if (block_obj.edit_dialog.type == "links") {
-			block_name = "card_name";
+			block_name = "card_id";
 		}
 		let block = block_obj.get_config();
 		this.block_widget.widgets = block;

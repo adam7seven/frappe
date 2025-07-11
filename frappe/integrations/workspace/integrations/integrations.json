@@ -1,7 +1,7 @@
 {
  "app": "frappe",
  "charts": [],
- "content": "[{\"id\":\"ij1pcK8jst\",\"type\":\"card\",\"data\":{\"card_name\":\"Google Services\",\"col\":4}},{\"id\":\"aTlMujEHpN\",\"type\":\"card\",\"data\":{\"card_name\":\"Authentication\",\"col\":4}},{\"id\":\"gY5NXKtXss\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"n_CI3GGqW-\",\"type\":\"card\",\"data\":{\"card_name\":\"Push Notifications\",\"col\":4}}]",
+ "content": "[{\"id\":\"ij1pcK8jst\",\"type\":\"card\",\"data\":{\"card_id\":\"Google Services\",\"col\":4}},{\"id\":\"aTlMujEHpN\",\"type\":\"card\",\"data\":{\"card_id\":\"Authentication\",\"col\":4}},{\"id\":\"gY5NXKtXss\",\"type\":\"card\",\"data\":{\"card_id\":\"Settings\",\"col\":4}},{\"id\":\"n_CI3GGqW-\",\"type\":\"card\",\"data\":{\"card_id\":\"Push Notifications\",\"col\":4}}]",
  "creation": "2020-03-02 15:16:18.714190",
  "custom_blocks": [],
  "docstatus": 0,

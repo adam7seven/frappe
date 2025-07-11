@@ -31,8 +31,8 @@ export default class QuickList extends Block {
 		this.wrapper = document.createElement("div");
 		this.new("quick_list");
 
-		if (this.data && this.data.quick_list_name) {
-			let has_data = this.make("quick_list", this.data.quick_list_name);
+		if (this.data && this.data.quick_list_id) {
+			let has_data = this.make("quick_list", this.data.quick_list_id);
 			if (!has_data) return this.wrapper;
 		}
 
@@ -46,7 +46,7 @@ export default class QuickList extends Block {
 	}
 
 	validate(savedData) {
-		if (!savedData.quick_list_name) {
+		if (!savedData.quick_list_id) {
 			return false;
 		}
 
@@ -55,7 +55,7 @@ export default class QuickList extends Block {
 
 	save() {
 		return {
-			quick_list_name: this.wrapper.getAttribute("quick_list_name"),
+			quick_list_id: this.wrapper.getAttribute("quick_list_id"),
 			col: this.get_col(),
 			new: this.new_block_widget,
 		};

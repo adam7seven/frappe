@@ -39,7 +39,7 @@ frappe.db = {
 			}
 		});
 	},
-	get_value: function (doctype, filters, fieldname, callback, parent_doc) {
+	get_value: function (doctype, filters, fieldname, callback, parent_doc, async = true) {
 		return frappe.call({
 			method: "frappe.client.get_value",
 			type: "GET",
@@ -52,6 +52,7 @@ frappe.db = {
 			callback: function (r) {
 				callback && callback(r.message);
 			},
+			async: async,
 		});
 	},
 	get_single_value: (doctype, field) => {

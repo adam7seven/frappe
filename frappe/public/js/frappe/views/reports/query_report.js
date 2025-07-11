@@ -308,7 +308,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		}
 	}
 
-	create_number_card(values, dashboard_id, card_name, set_standard) {
+	create_number_card(values, dashboard_id, card_id, set_standard) {
 		let args = {
 			dashboard: dashboard_id || null,
 			type: "Report",
@@ -322,7 +322,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 			"frappe.desk.doctype.number_card.number_card.create_report_number_card",
 			args,
 			dashboard_id,
-			card_name,
+			card_id,
 			"Number Card"
 		);
 	}

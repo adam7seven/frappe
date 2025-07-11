@@ -624,7 +624,7 @@ class NumberCardDialog extends WidgetDialog {
 			return [
 				{
 					fieldtype: "Link",
-					fieldname: "number_card_name",
+					fieldname: "number_card_id",
 					label: __("Number Card"),
 					options: "Number Card",
 					reqd: 1,
@@ -769,7 +769,7 @@ class NumberCardDialog extends WidgetDialog {
 
 	process_data(data) {
 		if (this.for_workspace) {
-			data.label = data.label ? data.label : data.number_card_name;
+			data.label = data.label ? data.label : data.number_card_id;
 			return data;
 		}
 
@@ -791,7 +791,7 @@ class CustomBlockDialog extends WidgetDialog {
 		return [
 			{
 				fieldtype: "Link",
-				fieldname: "custom_block_name",
+				fieldname: "custom_block_id",
 				label: "Custom Block Name",
 				options: "Custom HTML Block",
 				reqd: 1,

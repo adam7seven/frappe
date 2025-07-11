@@ -30,8 +30,8 @@ export default class Card extends Block {
 		this.wrapper = document.createElement("div");
 		this.new("card", "links");
 
-		if (this.data && this.data.card_name) {
-			let has_data = this.make("card", this.data.card_name, "links");
+		if (this.data && this.data.card_id) {
+			let has_data = this.make("card", this.data.card_id, "links");
 			if (!has_data) return this.wrapper;
 		}
 
@@ -45,7 +45,7 @@ export default class Card extends Block {
 	}
 
 	validate(savedData) {
-		if (!savedData.card_name) {
+		if (!savedData.card_id) {
 			return false;
 		}
 
@@ -54,7 +54,7 @@ export default class Card extends Block {
 
 	save() {
 		return {
-			card_name: this.wrapper.getAttribute("card_name"),
+			card_id: this.wrapper.getAttribute("card_id"),
 			col: this.get_col(),
 			new: this.new_block_widget,
 		};

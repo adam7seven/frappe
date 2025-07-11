@@ -353,10 +353,10 @@ class Workspace:
 		if frappe.has_permission("Number Card", throw=False):
 			number_cards = self.doc.number_cards
 			for number_card in number_cards:
-				if frappe.has_permission("Number Card", doc=number_card.number_card_name):
+				if frappe.has_permission("Number Card", doc=number_card.number_card_id):
 					# Translate label
 					number_card.label = (
-						_(number_card.label) if number_card.label else _(number_card.number_card_name)
+						_(number_card.label) if number_card.label else _(number_card.number_card_id)
 					)
 					all_number_cards.append(number_card)
 
@@ -617,7 +617,7 @@ def clean_up(original_page, blocks):
 
 	for wid in ["shortcut", "card", "chart", "quick_list", "number_card", "custom_block"]:
 		# get list of widget's name from blocks
-		page_widgets[wid] = [x["data"][wid + "_name"] for x in loads(blocks) if x["type"] == wid]
+		page_widgets[wid] = [x["data"][wid + "_id"] for x in loads(blocks) if x["type"] == wid]
 
 	# shortcut, chart, quick_list, number_card & custom_block cleanup
 	for wid in ["shortcut", "chart", "quick_list", "number_card", "custom_block"]:

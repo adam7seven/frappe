@@ -38,7 +38,7 @@ def create_content(doc):
 			if s.get_invalid_links()[0]:
 				invalid_links.append(s)
 			else:
-				content.append({"type": "shortcut", "data": {"shortcut_name": s.label, "col": 4}})
+				content.append({"type": "shortcut", "data": {"shortcut_id": s.label, "col": 4}})
 		for l in invalid_links:
 			del doc.shortcuts[doc.shortcuts.index(l)]
 	if doc.links:
@@ -52,7 +52,7 @@ def create_content(doc):
 		)
 		for l in doc.links:
 			if l.type == "Card Break":
-				content.append({"type": "card", "data": {"card_name": l.label, "col": 4}})
+				content.append({"type": "card", "data": {"card_id": l.label, "col": 4}})
 			if l.get_invalid_links()[0]:
 				invalid_links.append(l)
 		for l in invalid_links:
