@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Framework VERSION\n"
 "Report-Msgid-Bugs-To: developers@frappe.io\n"
-"POT-Creation-Date: 2025-07-02 04:40+0000\n"
-"PO-Revision-Date: 2025-07-02 04:40+0000\n"
+"POT-Creation-Date: 2025-07-11 05:39+0000\n"
+"PO-Revision-Date: 2025-07-11 05:39+0000\n"
 "Last-Translator: developers@frappe.io\n"
 "Language-Team: developers@frappe.io\n"
 "MIME-Version: 1.0\n"
@@ -482,11 +482,6 @@ msgstr ""
 #. Header text in the Welcome Workspace Workspace
 #: frappe/core/workspace/welcome_workspace/welcome_workspace.json
 msgid "<span class=\"h2\">Hi,</span>"
-msgstr ""
-
-#. Header text in the Integrations Workspace
-#: frappe/integrations/workspace/integrations/integrations.json
-msgid "<span class=\"h4\"><b>Reports &amp; Masters</b></span>"
 msgstr ""
 
 #. Option for the 'Condition' (Select) field in DocType 'Document Naming Rule
@@ -1203,7 +1198,7 @@ msgstr ""
 msgid "Aggregate Function Based On"
 msgstr ""
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:412
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:415
 msgid "Aggregate Function field is required to create a dashboard chart"
 msgstr ""
 
@@ -3277,7 +3272,7 @@ msgstr ""
 msgid "Cannot access file path {0}"
 msgstr ""
 
-#: frappe/workflow/doctype/workflow/workflow.py:109
+#: frappe/workflow/doctype/workflow/workflow.py:114
 msgid "Cannot cancel before submitting. See Transition {0}"
 msgstr ""
 
@@ -3289,7 +3284,7 @@ msgstr ""
 msgid "Cannot change docstatus from 1 (Submitted) to 0 (Draft)"
 msgstr ""
 
-#: frappe/workflow/doctype/workflow/workflow.py:98
+#: frappe/workflow/doctype/workflow/workflow.py:103
 msgid "Cannot change state of Cancelled Document. Transition row {0}"
 msgstr ""
 
@@ -3301,7 +3296,7 @@ msgstr ""
 msgid "Cannot create a {0} against a child document: {1}"
 msgstr ""
 
-#: frappe/desk/doctype/workspace/workspace.py:270
+#: frappe/desk/doctype/workspace/workspace.py:257
 msgid "Cannot create private workspace of other users"
 msgstr ""
 
@@ -3324,7 +3319,7 @@ msgstr ""
 msgid "Cannot delete {0} as it has child nodes"
 msgstr ""
 
-#: frappe/desk/doctype/dashboard/dashboard.py:48
+#: frappe/desk/doctype/dashboard/dashboard.py:53
 msgid "Cannot edit Standard Dashboards"
 msgstr ""
 
@@ -3332,7 +3327,7 @@ msgstr ""
 msgid "Cannot edit Standard Notification. To edit, please disable this and duplicate it"
 msgstr ""
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:390
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:393
 msgid "Cannot edit Standard charts"
 msgstr ""
 
@@ -3525,10 +3520,18 @@ msgstr ""
 msgid "Chart Configuration"
 msgstr ""
 
-#. Label of the chart_name (Data) field in DocType 'Dashboard Chart'
-#. Label of the chart_name (Link) field in DocType 'Workspace Chart'
+#. Label of the chart_id (Data) field in DocType 'Dashboard Chart'
 #: frappe/desk/doctype/dashboard_chart/dashboard_chart.json
+msgid "Chart ID"
+msgstr ""
+
+#. Label of the chart_id (Link) field in DocType 'Workspace Chart'
 #: frappe/desk/doctype/workspace_chart/workspace_chart.json
+msgid "Chart Id"
+msgstr ""
+
+#. Label of the chart_name (Data) field in DocType 'Dashboard Chart'
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.json
 msgid "Chart Name"
 msgstr ""
 
@@ -3905,7 +3908,7 @@ msgstr ""
 msgid "Column 2"
 msgstr ""
 
-#: frappe/desk/doctype/kanban_board/kanban_board.py:84
+#: frappe/desk/doctype/kanban_board/kanban_board.py:88
 msgid "Column <b>{0}</b> already exist."
 msgstr ""
 
@@ -3932,7 +3935,7 @@ msgstr ""
 msgid "Column Name"
 msgstr ""
 
-#: frappe/desk/doctype/kanban_board/kanban_board.py:45
+#: frappe/desk/doctype/kanban_board/kanban_board.py:49
 msgid "Column Name cannot be empty"
 msgstr ""
 
@@ -4387,7 +4390,7 @@ msgstr ""
 msgid "Content cannot be empty"
 msgstr ""
 
-#: frappe/desk/doctype/workspace/workspace.py:86
+#: frappe/desk/doctype/workspace/workspace.py:73
 msgid "Content data shoud be a list"
 msgstr ""
 
@@ -4491,6 +4494,11 @@ msgstr ""
 msgid "Country Code Required"
 msgstr ""
 
+#. Label of the country_id (Data) field in DocType 'Country'
+#: frappe/geo/doctype/country/country.json
+msgid "Country ID"
+msgstr ""
+
 #. Label of the country_name (Data) field in DocType 'Country'
 #: frappe/geo/doctype/country/country.json
 msgid "Country Name"
@@ -4561,7 +4569,7 @@ msgstr ""
 msgid "Created By"
 msgstr ""
 
-#: frappe/workflow/doctype/workflow/workflow.py:64
+#: frappe/workflow/doctype/workflow/workflow.py:69
 msgid "Created Custom Field {0} in {1}"
 msgstr ""
 
@@ -4569,7 +4577,7 @@ msgstr ""
 msgid "Created On"
 msgstr ""
 
-#: frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.py:41
+#: frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.py:45
 msgid "Creation of this document is only permitted in developer mode."
 msgstr ""
 
@@ -4620,6 +4628,11 @@ msgstr ""
 #: frappe/geo/doctype/currency/currency.json
 #: frappe/website/doctype/web_form_field/web_form_field.json
 msgid "Currency"
+msgstr ""
+
+#. Label of the currency_id (Data) field in DocType 'Currency'
+#: frappe/geo/doctype/currency/currency.json
+msgid "Currency ID"
 msgstr ""
 
 #. Label of the currency_name (Data) field in DocType 'Currency'
@@ -5006,6 +5019,11 @@ msgstr ""
 #. ID of a DocType
 #: frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.json
 msgid "Dashboard Chart Source"
+msgstr ""
+
+#. Label of the dashboard_id (Data) field in DocType 'Dashboard'
+#: frappe/desk/doctype/dashboard/dashboard.json
+msgid "Dashboard ID"
 msgstr ""
 
 #. Name of a role
@@ -5524,8 +5542,8 @@ msgstr ""
 msgid "Deletion Steps "
 msgstr ""
 
-#: frappe/core/doctype/page/page.py:110
-#: frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.py:47
+#: frappe/core/doctype/page/page.py:114
+#: frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.py:51
 msgid "Deletion of this document is only permitted in developer mode."
 msgstr ""
 
@@ -6319,7 +6337,7 @@ msgstr ""
 msgid "Document renamed from {0} to {1}"
 msgstr ""
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:399
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:402
 msgid "Document type is required to create a dashboard chart"
 msgstr ""
 
@@ -8848,7 +8866,7 @@ msgstr ""
 msgid "Go to Page"
 msgstr ""
 
-#: frappe/integrations/doctype/slack_webhook_url/slack_webhook_url.py:53
+#: frappe/integrations/doctype/slack_webhook_url/slack_webhook_url.py:55
 msgid "Go to the document"
 msgstr ""
 
@@ -8961,8 +8979,6 @@ msgstr ""
 msgid "Google Contacts Id"
 msgstr ""
 
-#. Label of a Link in the Integrations Workspace
-#: frappe/integrations/workspace/integrations/integrations.json
 #: frappe/public/js/frappe/file_uploader/FileUploader.vue:73
 msgid "Google Drive"
 msgstr ""
@@ -9075,7 +9091,7 @@ msgstr ""
 msgid "Group By Type"
 msgstr ""
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:410
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:413
 msgid "Group By field is required to create a dashboard chart"
 msgstr ""
 
@@ -10650,8 +10666,8 @@ msgstr ""
 msgid "Invalid id type (integer) for varchar id column"
 msgstr ""
 
-#: frappe/desk/doctype/dashboard/dashboard.py:67
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:426
+#: frappe/desk/doctype/dashboard/dashboard.py:72
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:429
 msgid "Invalid json added in the custom options: {0}"
 msgstr ""
 
@@ -12781,7 +12797,7 @@ msgid "Module HTML"
 msgstr ""
 
 #. Label of the module_name (Data) field in DocType 'Module Def'
-#. Label of the module_name (Data) field in DocType 'Desktop Icon'
+#. Label of the module (Data) field in DocType 'Desktop Icon'
 #: frappe/core/doctype/module_def/module_def.json
 #: frappe/desk/doctype/desktop_icon/desktop_icon.json
 msgid "Module Name"
@@ -13101,7 +13117,7 @@ msgstr ""
 msgid "Navigation Settings"
 msgstr ""
 
-#: frappe/desk/doctype/workspace/workspace.py:317
+#: frappe/desk/doctype/workspace/workspace.py:304
 msgid "Need Workspace Manager role to edit private workspace of other users"
 msgstr ""
 
@@ -13623,7 +13639,7 @@ msgstr ""
 msgid "Not allowed via controller permission check"
 msgstr ""
 
-#: frappe/core/doctype/page/page.py:62
+#: frappe/core/doctype/page/page.py:63
 msgid "Not in Developer Mode"
 msgstr ""
 
@@ -13774,8 +13790,7 @@ msgstr ""
 msgid "Number Card"
 msgstr ""
 
-#. Label of the number_card_name (Link) field in DocType 'Workspace Number
-#. Card'
+#. Label of the number_card_id (Link) field in DocType 'Workspace Number Card'
 #: frappe/desk/doctype/workspace_number_card/workspace_number_card.json
 msgid "Number Card ID"
 msgstr ""
@@ -14078,7 +14093,7 @@ msgstr ""
 msgid "Only Administrator can delete Email Queue"
 msgstr ""
 
-#: frappe/core/doctype/page/page.py:66
+#: frappe/core/doctype/page/page.py:67
 msgid "Only Administrator can edit"
 msgstr ""
 
@@ -14540,6 +14555,11 @@ msgstr ""
 msgid "Page HTML"
 msgstr ""
 
+#. Label of the page_id (Data) field in DocType 'Page'
+#: frappe/core/doctype/page/page.json
+msgid "Page ID"
+msgstr ""
+
 #: frappe/public/js/print_format_builder/PrintFormatControls.vue:5
 msgid "Page Margins"
 msgstr ""
@@ -14654,7 +14674,7 @@ msgstr ""
 msgid "Parent Table"
 msgstr ""
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:406
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:409
 msgid "Parent document type is required to create a dashboard chart"
 msgstr ""
 
@@ -15299,7 +15319,7 @@ msgstr ""
 msgid "Please set the document id"
 msgstr ""
 
-#: frappe/desk/doctype/dashboard/dashboard.py:120
+#: frappe/desk/doctype/dashboard/dashboard.py:123
 msgid "Please set the following documents in this Dashboard as standard first."
 msgstr ""
 
@@ -17278,6 +17298,11 @@ msgstr ""
 msgid "Role"
 msgstr ""
 
+#. Label of the role_id (Data) field in DocType 'Role'
+#: frappe/core/doctype/role/role.json
+msgid "Role ID"
+msgstr ""
+
 #. Label of the role_name (Data) field in DocType 'Role'
 #. Label of the role_profile (Data) field in DocType 'Role Profile'
 #: frappe/core/doctype/role/role.json
@@ -18000,7 +18025,7 @@ msgctxt "Button in web form"
 msgid "See previous responses"
 msgstr ""
 
-#: frappe/integrations/doctype/slack_webhook_url/slack_webhook_url.py:49
+#: frappe/integrations/doctype/slack_webhook_url/slack_webhook_url.py:51
 msgid "See the document at {0}"
 msgstr ""
 
@@ -18050,7 +18075,7 @@ msgstr ""
 msgid "Select Columns"
 msgstr ""
 
-#. Label of the dashboard_name (Link) field in DocType 'Form Tour'
+#. Label of the dashboard_id (Link) field in DocType 'Form Tour'
 #: frappe/desk/doctype/form_tour/form_tour.json
 msgid "Select Dashboard"
 msgstr ""
@@ -18100,7 +18125,7 @@ msgstr ""
 msgid "Select List View"
 msgstr ""
 
-#. Label of the page_name (Link) field in DocType 'Form Tour'
+#. Label of the page_id (Link) field in DocType 'Form Tour'
 #: frappe/desk/doctype/form_tour/form_tour.json
 msgid "Select Page"
 msgstr ""
@@ -19136,7 +19161,7 @@ msgstr ""
 msgid "Slack Channel"
 msgstr ""
 
-#: frappe/integrations/doctype/slack_webhook_url/slack_webhook_url.py:65
+#: frappe/integrations/doctype/slack_webhook_url/slack_webhook_url.py:67
 msgid "Slack Webhook Error"
 msgstr ""
 
@@ -19377,7 +19402,7 @@ msgstr ""
 msgid "Standard DocType cannot have default print format, use Customize Form"
 msgstr ""
 
-#: frappe/desk/doctype/dashboard/dashboard.py:58
+#: frappe/desk/doctype/dashboard/dashboard.py:63
 msgid "Standard Not Set"
 msgstr ""
 
@@ -19403,11 +19428,11 @@ msgstr ""
 msgid "Standard Sidebar Menu"
 msgstr ""
 
-#: frappe/core/doctype/role/role.py:46
+#: frappe/core/doctype/role/role.py:51
 msgid "Standard roles cannot be disabled"
 msgstr ""
 
-#: frappe/core/doctype/role/role.py:32
+#: frappe/core/doctype/role/role.py:33
 msgid "Standard roles cannot be renamed"
 msgstr ""
 
@@ -19469,13 +19494,16 @@ msgstr ""
 
 #. Label of the state (Data) field in DocType 'Token Cache'
 #. Label of the state (Link) field in DocType 'Workflow Document State'
-#. Label of the workflow_state_name (Data) field in DocType 'Workflow State'
 #. Label of the state (Link) field in DocType 'Workflow Transition'
 #: frappe/integrations/doctype/token_cache/token_cache.json
 #: frappe/workflow/doctype/workflow_document_state/workflow_document_state.json
-#: frappe/workflow/doctype/workflow_state/workflow_state.json
 #: frappe/workflow/doctype/workflow_transition/workflow_transition.json
 msgid "State"
+msgstr ""
+
+#. Label of the name (Data) field in DocType 'Workflow State'
+#: frappe/workflow/doctype/workflow_state/workflow_state.json
+msgid "State Name"
 msgstr ""
 
 #: frappe/public/js/workflow_builder/components/Properties.vue:24
@@ -19770,7 +19798,7 @@ msgstr ""
 msgid "Submitted"
 msgstr ""
 
-#: frappe/workflow/doctype/workflow/workflow.py:103
+#: frappe/workflow/doctype/workflow/workflow.py:108
 msgid "Submitted Document cannot be converted back to draft. Transition row {0}"
 msgstr ""
 
@@ -19797,7 +19825,7 @@ msgstr ""
 #: frappe/core/doctype/activity_log/activity_log.json
 #: frappe/core/doctype/data_import/data_import.json
 #: frappe/core/doctype/data_import_log/data_import_log.json
-#: frappe/desk/doctype/desktop_icon/desktop_icon.py:446
+#: frappe/desk/doctype/desktop_icon/desktop_icon.py:440
 #: frappe/templates/includes/login/login.js:230
 #: frappe/templates/includes/login/login.js:236
 #: frappe/templates/includes/login/login.js:269
@@ -20065,7 +20093,6 @@ msgstr ""
 #: frappe/desk/doctype/custom_html_block/custom_html_block.json
 #: frappe/desk/doctype/dashboard/dashboard.json
 #: frappe/desk/doctype/dashboard_chart/dashboard_chart.json
-#: frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.json
 #: frappe/desk/doctype/desktop_icon/desktop_icon.json
 #: frappe/desk/doctype/event/event.json
 #: frappe/desk/doctype/form_tour/form_tour.json
@@ -20944,7 +20971,7 @@ msgstr ""
 msgid "Time in seconds to retain QR code image on server. Min:<strong>240</strong>"
 msgstr ""
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:415
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:418
 msgid "Time series based on is required to create a dashboard chart"
 msgstr ""
 
@@ -21865,7 +21892,7 @@ msgstr ""
 #. Option for the 'Status' (Select) field in DocType 'Permission Log'
 #: frappe/core/doctype/comment/comment.json
 #: frappe/core/doctype/permission_log/permission_log.json
-#: frappe/desk/doctype/desktop_icon/desktop_icon.py:446
+#: frappe/desk/doctype/desktop_icon/desktop_icon.py:440
 #: frappe/desk/doctype/workspace_settings/workspace_settings.py:41
 msgid "Updated"
 msgstr ""
@@ -22323,7 +22350,7 @@ msgstr ""
 msgid "User {0} does not have doctype access via role permission for document {1}"
 msgstr ""
 
-#: frappe/desk/doctype/workspace/workspace.py:273
+#: frappe/desk/doctype/workspace/workspace.py:260
 msgid "User {0} does not have the permission to create a Workspace."
 msgstr ""
 
@@ -23211,6 +23238,11 @@ msgstr ""
 msgid "Workflow Document State"
 msgstr ""
 
+#. Label of the workflow_id (Data) field in DocType 'Workflow'
+#: frappe/workflow/doctype/workflow/workflow.json
+msgid "Workflow ID"
+msgstr ""
+
 #. Label of the workflow_name (Data) field in DocType 'Workflow'
 #: frappe/workflow/doctype/workflow/workflow.json
 msgid "Workflow Name"
@@ -23530,7 +23562,7 @@ msgstr ""
 msgid "You can't set 'Translatable' for field {0}"
 msgstr ""
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:419
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:422
 msgid "You cannot create a dashboard chart from single DocTypes"
 msgstr ""
 
@@ -23614,11 +23646,11 @@ msgstr ""
 msgid "You need the '{0}' permission on {1} {2} to perform this action."
 msgstr ""
 
-#: frappe/desk/doctype/workspace/workspace.py:125
+#: frappe/desk/doctype/workspace/workspace.py:112
 msgid "You need to be Workspace Manager to delete a public workspace."
 msgstr ""
 
-#: frappe/desk/doctype/workspace/workspace.py:76
+#: frappe/desk/doctype/workspace/workspace.py:63
 msgid "You need to be Workspace Manager to edit this document"
 msgstr ""
 
@@ -24448,7 +24480,7 @@ msgstr ""
 msgid "{0} is not a valid Email Address"
 msgstr ""
 
-#: frappe/geo/doctype/country/country.py:30
+#: frappe/geo/doctype/country/country.py:35
 msgid "{0} is not a valid ISO 3166 ALPHA-2 code."
 msgstr ""
 
@@ -24543,7 +24575,7 @@ msgstr ""
 msgid "{0} must begin and end with a letter and can only contain letters, hyphen or underscore."
 msgstr ""
 
-#: frappe/workflow/doctype/workflow/workflow.py:90
+#: frappe/workflow/doctype/workflow/workflow.py:95
 msgid "{0} not a valid State"
 msgstr ""
 
@@ -24551,7 +24583,7 @@ msgstr ""
 msgid "{0} not allowed to be renamed"
 msgstr ""
 
-#: frappe/desk/doctype/desktop_icon/desktop_icon.py:365
+#: frappe/desk/doctype/desktop_icon/desktop_icon.py:361
 msgid "{0} not found"
 msgstr ""
 

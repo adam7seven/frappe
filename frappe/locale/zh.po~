@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: developers@frappe.io\n"
-"POT-Creation-Date: 2025-07-11 05:33+0000\n"
+"POT-Creation-Date: 2025-07-02 04:40+0000\n"
 "PO-Revision-Date: 2025-06-11 14:05\n"
 "Last-Translator: developers@frappe.io\n"
 "Language-Team: Chinese Simplified\n"
@@ -788,6 +788,11 @@ msgstr ""
 msgid "<span class=\"h2\">Hi,</span>"
 msgstr "<span class=\"h2\">你好,</span>"
 
+#. Header text in the Integrations Workspace
+#: frappe/integrations/workspace/integrations/integrations.json
+msgid "<span class=\"h4\"><b>Reports &amp; Masters</b></span>"
+msgstr "<b><sp</span>an class=\"h4\"><b>报告 &amp; 大师</b></span>"
+
 #. Option for the 'Condition' (Select) field in DocType 'Document Naming Rule
 #. Condition'
 #: frappe/core/doctype/document_naming_rule_condition/document_naming_rule_condition.json
@@ -1515,7 +1520,7 @@ msgstr "创建数字卡片需要聚合字段"
 msgid "Aggregate Function Based On"
 msgstr "基于以下聚合函数"
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:415
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:412
 msgid "Aggregate Function field is required to create a dashboard chart"
 msgstr "创建仪表板图表需要聚合函数字段"
 
@@ -3648,7 +3653,7 @@ msgstr "提交后无法更新"
 msgid "Cannot access file path {0}"
 msgstr "无法访问文件路径{0}"
 
-#: frappe/workflow/doctype/workflow/workflow.py:114
+#: frappe/workflow/doctype/workflow/workflow.py:109
 msgid "Cannot cancel before submitting. See Transition {0}"
 msgstr "提交前无法取消。请查看转换{0}"
 
@@ -3660,7 +3665,7 @@ msgstr "无法将文档状态从0（草稿）更改为2（已取消）"
 msgid "Cannot change docstatus from 1 (Submitted) to 0 (Draft)"
 msgstr "无法将文档状态从1（已提交）更改为0（草稿）"
 
-#: frappe/workflow/doctype/workflow/workflow.py:103
+#: frappe/workflow/doctype/workflow/workflow.py:98
 msgid "Cannot change state of Cancelled Document. Transition row {0}"
 msgstr "无法更改已取消文档的状态。转换行{0}"
 
@@ -3672,7 +3677,7 @@ msgstr "在自定义表单中无法更改自动递增命名规则"
 msgid "Cannot create a {0} against a child document: {1}"
 msgstr "无法针对子文档{1}创建{0}"
 
-#: frappe/desk/doctype/workspace/workspace.py:257
+#: frappe/desk/doctype/workspace/workspace.py:270
 msgid "Cannot create private workspace of other users"
 msgstr "无法创建其他用户的私有工作空间"
 
@@ -3695,7 +3700,7 @@ msgstr "无法删除标准字段。您可以隐藏它"
 msgid "Cannot delete {0} as it has child nodes"
 msgstr "无法删除{0}，因为存在子节点"
 
-#: frappe/desk/doctype/dashboard/dashboard.py:53
+#: frappe/desk/doctype/dashboard/dashboard.py:48
 msgid "Cannot edit Standard Dashboards"
 msgstr "无法编辑标准仪表板"
 
@@ -3705,7 +3710,7 @@ msgid ""
 "duplicate it"
 msgstr "无法编辑标准通知。如需编辑请禁用并复制"
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:393
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:390
 msgid "Cannot edit Standard charts"
 msgstr "无法编辑标准图表"
 
@@ -3909,20 +3914,10 @@ msgstr "图表"
 msgid "Chart Configuration"
 msgstr "图表配置"
 
-#. Label of the chart_id (Data) field in DocType 'Dashboard Chart'
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.json
-#, fuzzy
-msgid "Chart ID"
-msgstr "图表"
-
-#. Label of the chart_id (Link) field in DocType 'Workspace Chart'
-#: frappe/desk/doctype/workspace_chart/workspace_chart.json
-#, fuzzy
-msgid "Chart Id"
-msgstr "图表"
-
 #. Label of the chart_name (Data) field in DocType 'Dashboard Chart'
+#. Label of the chart_name (Link) field in DocType 'Workspace Chart'
 #: frappe/desk/doctype/dashboard_chart/dashboard_chart.json
+#: frappe/desk/doctype/workspace_chart/workspace_chart.json
 msgid "Chart Name"
 msgstr "图表名称"
 
@@ -4304,7 +4299,7 @@ msgstr "列1"
 msgid "Column 2"
 msgstr "列2"
 
-#: frappe/desk/doctype/kanban_board/kanban_board.py:88
+#: frappe/desk/doctype/kanban_board/kanban_board.py:84
 msgid "Column <b>{0}</b> already exist."
 msgstr "列<b>{0}</b>已存在。"
 
@@ -4331,7 +4326,7 @@ msgstr "列标签："
 msgid "Column Name"
 msgstr "列名"
 
-#: frappe/desk/doctype/kanban_board/kanban_board.py:49
+#: frappe/desk/doctype/kanban_board/kanban_board.py:45
 msgid "Column Name cannot be empty"
 msgstr "列名不能为空"
 
@@ -4806,7 +4801,7 @@ msgstr "内容类型"
 msgid "Content cannot be empty"
 msgstr "评论内容不能为空"
 
-#: frappe/desk/doctype/workspace/workspace.py:73
+#: frappe/desk/doctype/workspace/workspace.py:86
 msgid "Content data shoud be a list"
 msgstr "内容数据应为列表"
 
@@ -4912,12 +4907,6 @@ msgstr "国家"
 msgid "Country Code Required"
 msgstr "需要国家代码"
 
-#. Label of the country_id (Data) field in DocType 'Country'
-#: frappe/geo/doctype/country/country.json
-#, fuzzy
-msgid "Country ID"
-msgstr "国家"
-
 #. Label of the country_name (Data) field in DocType 'Country'
 #: frappe/geo/doctype/country/country.json
 msgid "Country Name"
@@ -4988,7 +4977,7 @@ msgstr "创建时间"
 msgid "Created By"
 msgstr "创建人"
 
-#: frappe/workflow/doctype/workflow/workflow.py:69
+#: frappe/workflow/doctype/workflow/workflow.py:64
 msgid "Created Custom Field {0} in {1}"
 msgstr "在{1}中创建了自定义字段{0}"
 
@@ -4996,7 +4985,7 @@ msgstr "在{1}中创建了自定义字段{0}"
 msgid "Created On"
 msgstr "创建于"
 
-#: frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.py:45
+#: frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.py:41
 msgid "Creation of this document is only permitted in developer mode."
 msgstr "仅允许在开发者模式下创建此文档。"
 
@@ -5047,12 +5036,6 @@ msgstr "Ctrl+Enter添加评论"
 #: frappe/geo/doctype/currency/currency.json
 #: frappe/website/doctype/web_form_field/web_form_field.json
 msgid "Currency"
-msgstr "货币"
-
-#. Label of the currency_id (Data) field in DocType 'Currency'
-#: frappe/geo/doctype/currency/currency.json
-#, fuzzy
-msgid "Currency ID"
 msgstr "货币"
 
 #. Label of the currency_name (Data) field in DocType 'Currency'
@@ -5449,12 +5432,6 @@ msgstr "仪表板图表链接"
 #: frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.json
 msgid "Dashboard Chart Source"
 msgstr "仪表板图表源"
-
-#. Label of the dashboard_id (Data) field in DocType 'Dashboard'
-#: frappe/desk/doctype/dashboard/dashboard.json
-#, fuzzy
-msgid "Dashboard ID"
-msgstr "仪表板"
 
 #. Name of a role
 #: frappe/desk/doctype/dashboard/dashboard.json
@@ -5973,8 +5950,8 @@ msgstr "正在删除 {0}"
 msgid "Deletion Steps "
 msgstr "删除步骤"
 
-#: frappe/core/doctype/page/page.py:114
-#: frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.py:51
+#: frappe/core/doctype/page/page.py:110
+#: frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.py:47
 msgid "Deletion of this document is only permitted in developer mode."
 msgstr "仅在开发者模式下允许删除此文档"
 
@@ -6786,7 +6763,7 @@ msgstr "该用户未启用文档关注功能"
 msgid "Document renamed from {0} to {1}"
 msgstr "文档名称已从 {0} 更改为 {1}"
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:402
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:399
 msgid "Document type is required to create a dashboard chart"
 msgstr "创建仪表盘图表需指定文档类型"
 
@@ -7275,12 +7252,12 @@ msgstr "邮件标头"
 #: frappe/core/doctype/user_email/user_email.json
 #: frappe/email/doctype/email_rule/email_rule.json
 msgid "Email ID"
-msgstr "电子邮件ID"
+msgstr "电子邮件标识符"
 
 #. Label of the email_ids (Table) field in DocType 'Contact'
 #: frappe/contacts/doctype/contact/contact.json
 msgid "Email IDs"
-msgstr "电子邮件ID清单"
+msgstr "电子邮件标识符集"
 
 #. Label of the email_id (Data) field in DocType 'Contact Us Settings'
 #: frappe/website/doctype/contact_us_settings/contact_us_settings.json
@@ -9386,7 +9363,7 @@ msgstr "全局退订"
 msgid "Go to Page"
 msgstr "跳转到页面"
 
-#: frappe/integrations/doctype/slack_webhook_url/slack_webhook_url.py:55
+#: frappe/integrations/doctype/slack_webhook_url/slack_webhook_url.py:53
 msgid "Go to the document"
 msgstr "转到文档"
 
@@ -9514,6 +9491,8 @@ msgstr "谷歌联系人 - 无法更新谷歌联系人{0}中的联系人，错误
 msgid "Google Contacts Id"
 msgstr "谷歌联系人ID"
 
+#. Label of a Link in the Integrations Workspace
+#: frappe/integrations/workspace/integrations/integrations.json
 #: frappe/public/js/frappe/file_uploader/FileUploader.vue:73
 msgid "Google Drive"
 msgstr "谷歌云端硬盘"
@@ -9630,7 +9609,7 @@ msgstr "分组依据基础"
 msgid "Group By Type"
 msgstr "分组类型"
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:413
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:410
 msgid "Group By field is required to create a dashboard chart"
 msgstr "创建仪表板图表需要分组依据字段"
 
@@ -10186,7 +10165,7 @@ msgstr "ID(id)"
 #: frappe/custom/doctype/property_setter/property_setter.json
 #, fuzzy
 msgid "ID (id) of the entity whose property is to be set"
-msgstr "待设置属性的实体ID(id)"
+msgstr "待设置属性的实体标识符(名称)"
 
 #: frappe/desk/utils.py:22
 #, fuzzy
@@ -10208,7 +10187,7 @@ msgstr "{0}的名称不能为{1}"
 msgid ""
 "IDs must contain only alphanumeric characters, not contain spaces, and "
 "should be unique."
-msgstr "ID须为唯一字母数字组合，不含空格"
+msgstr "标识符须为唯一字母数字组合，不含空格"
 
 #. Label of the section_break_25 (Section Break) field in DocType 'Email
 #. Account'
@@ -11273,8 +11252,8 @@ msgstr "无效过滤器：{0}"
 msgid "Invalid id type (integer) for varchar id column"
 msgstr "varchar名称列使用了整型名称类型"
 
-#: frappe/desk/doctype/dashboard/dashboard.py:72
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:429
+#: frappe/desk/doctype/dashboard/dashboard.py:67
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:426
 msgid "Invalid json added in the custom options: {0}"
 msgstr "自定义选项中包含无效JSON：{0}"
 
@@ -13168,7 +13147,7 @@ msgstr "成功完成时显示的提示信息"
 #. Label of the message_id (Code) field in DocType 'Unhandled Email'
 #: frappe/email/doctype/unhandled_email/unhandled_email.json
 msgid "Message-id"
-msgstr "消息ID"
+msgstr "消息标识符"
 
 #. Label of the messages (Code) field in DocType 'Data Import Log'
 #: frappe/core/doctype/data_import_log/data_import_log.json
@@ -13422,7 +13401,7 @@ msgid "Module HTML"
 msgstr "模块HTML"
 
 #. Label of the module_name (Data) field in DocType 'Module Def'
-#. Label of the module (Data) field in DocType 'Desktop Icon'
+#. Label of the module_name (Data) field in DocType 'Desktop Icon'
 #: frappe/core/doctype/module_def/module_def.json
 #: frappe/desk/doctype/desktop_icon/desktop_icon.json
 msgid "Module Name"
@@ -13764,7 +13743,7 @@ msgstr "导航栏模板值"
 msgid "Navigation Settings"
 msgstr "导航设置"
 
-#: frappe/desk/doctype/workspace/workspace.py:304
+#: frappe/desk/doctype/workspace/workspace.py:317
 msgid "Need Workspace Manager role to edit private workspace of other users"
 msgstr "需具备工作区管理员角色才能编辑其他用户的私有工作区"
 
@@ -14293,7 +14272,7 @@ msgstr "不允许打印草稿文档"
 msgid "Not allowed via controller permission check"
 msgstr "未通过控制器权限检查"
 
-#: frappe/core/doctype/page/page.py:63
+#: frappe/core/doctype/page/page.py:62
 msgid "Not in Developer Mode"
 msgstr "未启用开发者模式"
 
@@ -14447,7 +14426,8 @@ msgstr "数值"
 msgid "Number Card"
 msgstr "数字卡片"
 
-#. Label of the number_card_id (Link) field in DocType 'Workspace Number Card'
+#. Label of the number_card_name (Link) field in DocType 'Workspace Number
+#. Card'
 #: frappe/desk/doctype/workspace_number_card/workspace_number_card.json
 #, fuzzy
 msgid "Number Card ID"
@@ -14764,7 +14744,7 @@ msgstr "单次请求最多允许插入200条记录"
 msgid "Only Administrator can delete Email Queue"
 msgstr "仅管理员可删除邮件队列"
 
-#: frappe/core/doctype/page/page.py:67
+#: frappe/core/doctype/page/page.py:66
 msgid "Only Administrator can edit"
 msgstr "仅管理员可编辑"
 
@@ -15236,12 +15216,6 @@ msgstr "页面构建块"
 msgid "Page HTML"
 msgstr "页面HTML"
 
-#. Label of the page_id (Data) field in DocType 'Page'
-#: frappe/core/doctype/page/page.json
-#, fuzzy
-msgid "Page ID"
-msgstr "页面"
-
 #: frappe/public/js/print_format_builder/PrintFormatControls.vue:5
 msgid "Page Margins"
 msgstr "页面边距"
@@ -15356,7 +15330,7 @@ msgstr "父页面"
 msgid "Parent Table"
 msgstr "父表"
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:409
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:406
 msgid "Parent document type is required to create a dashboard chart"
 msgstr "创建仪表板图表需要父文档类型"
 
@@ -16026,7 +16000,7 @@ msgstr "请在报表过滤器表中设置过滤值"
 msgid "Please set the document id"
 msgstr "请设置文档名称"
 
-#: frappe/desk/doctype/dashboard/dashboard.py:123
+#: frappe/desk/doctype/dashboard/dashboard.py:120
 msgid "Please set the following documents in this Dashboard as standard first."
 msgstr "请先将仪表板中的以下文档设为标准文档"
 
@@ -18045,12 +18019,6 @@ msgstr "Robots.txt文件"
 msgid "Role"
 msgstr "角色"
 
-#. Label of the role_id (Data) field in DocType 'Role'
-#: frappe/core/doctype/role/role.json
-#, fuzzy
-msgid "Role ID"
-msgstr "角色"
-
 #. Label of the role_name (Data) field in DocType 'Role'
 #. Label of the role_profile (Data) field in DocType 'Role Profile'
 #: frappe/core/doctype/role/role.json
@@ -18780,7 +18748,7 @@ msgctxt "Button in web form"
 msgid "See previous responses"
 msgstr "查看之前的响应"
 
-#: frappe/integrations/doctype/slack_webhook_url/slack_webhook_url.py:51
+#: frappe/integrations/doctype/slack_webhook_url/slack_webhook_url.py:49
 msgid "See the document at {0}"
 msgstr "查看位于{0}的文档"
 
@@ -18830,7 +18798,7 @@ msgstr "选择"
 msgid "Select Columns"
 msgstr "选择列"
 
-#. Label of the dashboard_id (Link) field in DocType 'Form Tour'
+#. Label of the dashboard_name (Link) field in DocType 'Form Tour'
 #: frappe/desk/doctype/form_tour/form_tour.json
 msgid "Select Dashboard"
 msgstr "选择仪表板"
@@ -18881,7 +18849,7 @@ msgstr "选择分组依据..."
 msgid "Select List View"
 msgstr "选择列表视图"
 
-#. Label of the page_id (Link) field in DocType 'Form Tour'
+#. Label of the page_name (Link) field in DocType 'Form Tour'
 #: frappe/desk/doctype/form_tour/form_tour.json
 msgid "Select Page"
 msgstr "选择页面"
@@ -19964,7 +19932,7 @@ msgstr "Slack"
 msgid "Slack Channel"
 msgstr "Slack频道"
 
-#: frappe/integrations/doctype/slack_webhook_url/slack_webhook_url.py:67
+#: frappe/integrations/doctype/slack_webhook_url/slack_webhook_url.py:65
 msgid "Slack Webhook Error"
 msgstr "Slack Webhook错误"
 
@@ -20218,7 +20186,7 @@ msgstr "标准文档类型不可删除"
 msgid "Standard DocType cannot have default print format, use Customize Form"
 msgstr "标准文档类型不能有默认打印格式，请使用自定义表单"
 
-#: frappe/desk/doctype/dashboard/dashboard.py:63
+#: frappe/desk/doctype/dashboard/dashboard.py:58
 msgid "Standard Not Set"
 msgstr "未设置标准"
 
@@ -20244,11 +20212,11 @@ msgstr "标准报表不可编辑"
 msgid "Standard Sidebar Menu"
 msgstr "标准侧边栏菜单"
 
-#: frappe/core/doctype/role/role.py:51
+#: frappe/core/doctype/role/role.py:46
 msgid "Standard roles cannot be disabled"
 msgstr "标准角色不可禁用"
 
-#: frappe/core/doctype/role/role.py:33
+#: frappe/core/doctype/role/role.py:32
 msgid "Standard roles cannot be renamed"
 msgstr "标准角色不可重命名"
 
@@ -20310,18 +20278,14 @@ msgstr "开始于"
 
 #. Label of the state (Data) field in DocType 'Token Cache'
 #. Label of the state (Link) field in DocType 'Workflow Document State'
+#. Label of the workflow_state_name (Data) field in DocType 'Workflow State'
 #. Label of the state (Link) field in DocType 'Workflow Transition'
 #: frappe/integrations/doctype/token_cache/token_cache.json
 #: frappe/workflow/doctype/workflow_document_state/workflow_document_state.json
+#: frappe/workflow/doctype/workflow_state/workflow_state.json
 #: frappe/workflow/doctype/workflow_transition/workflow_transition.json
 msgid "State"
 msgstr "状态"
-
-#. Label of the name (Data) field in DocType 'Workflow State'
-#: frappe/workflow/doctype/workflow_state/workflow_state.json
-#, fuzzy
-msgid "State Name"
-msgstr "页面名称"
 
 #: frappe/public/js/workflow_builder/components/Properties.vue:24
 msgid "State Properties"
@@ -20622,7 +20586,7 @@ msgstr "创建时提交"
 msgid "Submitted"
 msgstr "已提交"
 
-#: frappe/workflow/doctype/workflow/workflow.py:108
+#: frappe/workflow/doctype/workflow/workflow.py:103
 msgid ""
 "Submitted Document cannot be converted back to draft. Transition row {0}"
 msgstr "已提交文档无法转回草稿。转换行{0}"
@@ -20650,7 +20614,7 @@ msgstr "副标题"
 #: frappe/core/doctype/activity_log/activity_log.json
 #: frappe/core/doctype/data_import/data_import.json
 #: frappe/core/doctype/data_import_log/data_import_log.json
-#: frappe/desk/doctype/desktop_icon/desktop_icon.py:440
+#: frappe/desk/doctype/desktop_icon/desktop_icon.py:446
 #: frappe/templates/includes/login/login.js:230
 #: frappe/templates/includes/login/login.js:236
 #: frappe/templates/includes/login/login.js:269
@@ -20918,6 +20882,7 @@ msgstr "系统日志"
 #: frappe/desk/doctype/custom_html_block/custom_html_block.json
 #: frappe/desk/doctype/dashboard/dashboard.json
 #: frappe/desk/doctype/dashboard_chart/dashboard_chart.json
+#: frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.json
 #: frappe/desk/doctype/desktop_icon/desktop_icon.json
 #: frappe/desk/doctype/event/event.json
 #: frappe/desk/doctype/form_tour/form_tour.json
@@ -21859,7 +21824,7 @@ msgid ""
 "Time in seconds to retain QR code image on server. Min:<strong>240</strong>"
 msgstr "二维码图片在服务器保留时间（秒）。最小值：<strong>240</strong>"
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:418
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:415
 msgid "Time series based on is required to create a dashboard chart"
 msgstr "创建仪表板图表需指定时间序列基准"
 
@@ -22566,7 +22531,7 @@ msgstr "界面导览"
 #: frappe/email/doctype/email_flag_queue/email_flag_queue.json
 #: frappe/email/doctype/unhandled_email/unhandled_email.json
 msgid "UID"
-msgstr "唯一ID"
+msgstr "唯一标识符"
 
 #. Label of the uidnext (Int) field in DocType 'Email Account'
 #. Label of the uidnext (Data) field in DocType 'IMAP Folder'
@@ -22828,7 +22793,7 @@ msgstr "从Frappe云更新"
 #. Option for the 'Status' (Select) field in DocType 'Permission Log'
 #: frappe/core/doctype/comment/comment.json
 #: frappe/core/doctype/permission_log/permission_log.json
-#: frappe/desk/doctype/desktop_icon/desktop_icon.py:440
+#: frappe/desk/doctype/desktop_icon/desktop_icon.py:446
 #: frappe/desk/doctype/workspace_settings/workspace_settings.py:41
 msgid "Updated"
 msgstr "已更新"
@@ -23290,7 +23255,7 @@ msgid ""
 "User {0} does not have doctype access via role permission for document {1}"
 msgstr "用户{0}通过角色权限无权访问文档{1}的类型"
 
-#: frappe/desk/doctype/workspace/workspace.py:260
+#: frappe/desk/doctype/workspace/workspace.py:273
 msgid "User {0} does not have the permission to create a Workspace."
 msgstr "用户{0}无权创建工作区"
 
@@ -24205,12 +24170,6 @@ msgstr "工作流详情"
 msgid "Workflow Document State"
 msgstr "工作流文档状态"
 
-#. Label of the workflow_id (Data) field in DocType 'Workflow'
-#: frappe/workflow/doctype/workflow/workflow.json
-#, fuzzy
-msgid "Workflow ID"
-msgstr "工作流"
-
 #. Label of the workflow_name (Data) field in DocType 'Workflow'
 #: frappe/workflow/doctype/workflow/workflow.json
 msgid "Workflow Name"
@@ -24539,7 +24498,7 @@ msgstr "无法为字段{0}设置'选项'"
 msgid "You can't set 'Translatable' for field {0}"
 msgstr "无法为字段{0}设置'可翻译'"
 
-#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:422
+#: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:419
 msgid "You cannot create a dashboard chart from single DocTypes"
 msgstr "无法从单一文档类型创建仪表板图表"
 
@@ -24625,11 +24584,11 @@ msgstr "必须登录才能提交此表单"
 msgid "You need the '{0}' permission on {1} {2} to perform this action."
 msgstr "执行此操作需要{1} {2}的'{0}'权限"
 
-#: frappe/desk/doctype/workspace/workspace.py:112
+#: frappe/desk/doctype/workspace/workspace.py:125
 msgid "You need to be Workspace Manager to delete a public workspace."
 msgstr "需为工作区管理员才能删除公共工作区"
 
-#: frappe/desk/doctype/workspace/workspace.py:63
+#: frappe/desk/doctype/workspace/workspace.py:76
 msgid "You need to be Workspace Manager to edit this document"
 msgstr "您需要是工作空间管理员才能编辑此文档"
 
@@ -25473,7 +25432,7 @@ msgstr "{0}不是有效的Cron表达式"
 msgid "{0} is not a valid Email Address"
 msgstr "{0}不是有效的电子邮箱地址"
 
-#: frappe/geo/doctype/country/country.py:35
+#: frappe/geo/doctype/country/country.py:30
 msgid "{0} is not a valid ISO 3166 ALPHA-2 code."
 msgstr "{0}不是有效的ISO 3166 ALPHA-2代码"
 
@@ -25573,7 +25532,7 @@ msgid ""
 "underscore."
 msgstr "{0}必须以字母开头和结尾，仅可包含字母、连字符或下划线"
 
-#: frappe/workflow/doctype/workflow/workflow.py:95
+#: frappe/workflow/doctype/workflow/workflow.py:90
 msgid "{0} not a valid State"
 msgstr "{0}不是有效状态"
 
@@ -25581,7 +25540,7 @@ msgstr "{0}不是有效状态"
 msgid "{0} not allowed to be renamed"
 msgstr "{0}不允许重命名"
 
-#: frappe/desk/doctype/desktop_icon/desktop_icon.py:361
+#: frappe/desk/doctype/desktop_icon/desktop_icon.py:365
 msgid "{0} not found"
 msgstr "未找到{0}"
 
@@ -25833,3 +25792,4722 @@ msgstr "PATH中未找到{}！执行备份需要此组件"
 #: frappe/public/js/frappe/file_uploader/WebLink.vue:4
 msgid "← Back to upload files"
 msgstr "← 返回上传文件"
+
+#~ msgid "\"amended_from\" field must be present to do an amendment."
+#~ msgstr "必须出现“modified_from”字段才能进行修改。"
+
+#~ msgid "#{0}"
+#~ msgstr "#{0}"
+
+#~ msgid "${values.doctype_name} has been added to queue for optimization"
+#~ msgstr "${values.doctype_name} 已加入优化队列"
+
+#~ msgid "&copy; Frappe Technologies Pvt. Ltd. and contributors"
+#~ msgstr "&copy; Frappe科技有限公司及贡献者"
+
+#~ msgid "'In Global Search' is not allowed for field {0} of type {1}"
+#~ msgstr "字段类型{1}的字段{0}不允许启用'全局搜索'"
+
+#~ msgid "'In List View' is not allowed for field {0} of type {1}"
+#~ msgstr "字段类型{1}的字段{0}不允许显示在'列表视图'"
+
+#~ msgid "(Mandatory)"
+#~ msgstr "(必填项)"
+
+#~ msgid "+ Add / Remove Fields"
+#~ msgstr "+ 添加/移除字段"
+
+#~ msgid "1 = True & 0 = False"
+#~ msgstr "1=真 & 0=假"
+
+#~ msgid "1 Day"
+#~ msgstr "1天"
+
+#~ msgid "1 Report"
+#~ msgstr "1个报表"
+
+#~ msgid "1 hour"
+#~ msgstr "1小时"
+
+#~ msgid "1 record will be exported"
+#~ msgstr "将导出1条记录"
+
+#~ msgid "30 minutes"
+#~ msgstr "30分钟"
+
+#~ msgid "4 hours"
+#~ msgstr "4小时"
+
+#~ msgid "5 Records"
+#~ msgstr "5条记录"
+
+#~ msgid "<b>{0}</b> is not a valid URL"
+#~ msgstr "<b>{0}</b> 不是有效的URL"
+
+#~ msgid ""
+#~ "<strong>Warning:</strong> This field is system generated and may be "
+#~ "overwritten by a future update. Modify it using {0} instead."
+#~ msgstr ""
+#~ "<strong>警告:</strong> 本字段为系统生成，可能被后续更新覆盖。请使用{0}进行"
+#~ "修改。"
+
+#~ msgid "About {0} minute remaining"
+#~ msgstr "剩余约{0}分钟"
+
+#~ msgid "About {0} minutes remaining"
+#~ msgstr "剩余约{0}分钟"
+
+#~ msgid "About {0} seconds remaining"
+#~ msgstr "剩余约{0}秒"
+
+#~ msgid "Access Key ID"
+#~ msgstr "访问密钥ID"
+
+#~ msgid "Access Key Secret"
+#~ msgstr "访问密钥"
+
+#~ msgid "Action Complete"
+#~ msgstr "操作完成"
+
+#~ msgid "Add / Remove Columns"
+#~ msgstr "添加/删除列"
+
+#~ msgid "Add / Update"
+#~ msgstr "添加/更新"
+
+#~ msgid "Add A New Rule"
+#~ msgstr "添加新规则"
+
+#~ msgid "Add Attachment"
+#~ msgstr "添加附件"
+
+#~ msgid "Add Card to Dashboard"
+#~ msgstr "添加卡片到仪表板"
+
+#~ msgid "Add Chart to Dashboard"
+#~ msgstr "添加图表到仪表板"
+
+#~ msgid "Add Child"
+#~ msgstr "添加子项"
+
+#~ msgid "Add Contact"
+#~ msgstr "添加联系人"
+
+#~ msgid "Add Contacts"
+#~ msgstr "添加联系人"
+
+#~ msgid "Add Filters"
+#~ msgstr "添加过滤器"
+
+#~ msgid "Add Group"
+#~ msgstr "添加组"
+
+#~ msgid "Add Indexes"
+#~ msgstr "添加索引"
+
+#~ msgid "Add Multiple"
+#~ msgstr "批量添加"
+
+#~ msgid "Add New Permission Rule"
+#~ msgstr "添加新权限规则"
+
+#~ msgid "Add Participants"
+#~ msgstr "添加参与者"
+
+#~ msgid "Add Row"
+#~ msgstr "添加行"
+
+#~ msgid "Add Subscribers"
+#~ msgstr "添加订阅者"
+
+#~ msgid "Add Tags"
+#~ msgstr "添加标签"
+
+#~ msgctxt "Button in list view actions menu"
+#~ msgid "Add Tags"
+#~ msgstr "添加标签"
+
+#~ msgid "Add Template"
+#~ msgstr "添加模板"
+
+#~ msgid "Add User Permissions"
+#~ msgstr "添加用户权限"
+
+#~ msgid "Add a Filter"
+#~ msgstr "添加过滤器"
+
+#~ msgid "Add a Row"
+#~ msgstr "添加行"
+
+#~ msgid "Add a row above the current row"
+#~ msgstr "在当前行上方插入行"
+
+#~ msgid "Add a row at the bottom"
+#~ msgstr "在底部添加行"
+
+#~ msgid "Add a row at the top"
+#~ msgstr "在顶部添加行"
+
+#~ msgid "Add a row below the current row"
+#~ msgstr "在当前行下方插入行"
+
+#~ msgid "Add a {0} Chart"
+#~ msgstr "添加{0}图表"
+
+#~ msgid "Add script for Child Table"
+#~ msgstr "为子表添加脚本"
+
+#~ msgid "Add to Dashboard"
+#~ msgstr "添加到仪表板"
+
+#~ msgid "Add to ToDo"
+#~ msgstr "添加到待办事项"
+
+#~ msgid "Add to table"
+#~ msgstr "添加到表格"
+
+#~ msgid "Add to this activity by mailing to {0}"
+#~ msgstr "发送邮件至{0}参与此活动"
+
+#~ msgctxt "Primary action in list view"
+#~ msgid "Add {0}"
+#~ msgstr "添加{0}"
+
+#~ msgid "Added {0} ({1})"
+#~ msgstr "已添加{0} ({1})"
+
+#~ msgid "Administration"
+#~ msgstr "系统管理"
+
+#~ msgid "Advanced Search"
+#~ msgstr "高级搜索"
+
+#~ msgid "After"
+#~ msgstr "之后"
+
+#~ msgid "Align Value"
+#~ msgstr "数值对齐"
+
+#~ msgid "All Records"
+#~ msgstr "所有记录"
+
+#~ msgid "All Submissions"
+#~ msgstr "所有提交"
+
+#~ msgid "All customizations will be removed. Please confirm."
+#~ msgstr "所有自定义内容将被移除，请确认。"
+
+#~ msgid "Allow Dropbox Access"
+#~ msgstr "允许Dropbox访问"
+
+#~ msgid "Allow Google Drive Access"
+#~ msgstr "允许访问Google Drive"
+
+#~ msgid "Allow sending usage data for improving applications"
+#~ msgstr "允许发送使用数据以改进应用程序"
+
+#~ msgid "Allowing DocType, DocType. Be careful!"
+#~ msgstr "允许文档类型，文档类型。请谨慎操作！"
+
+#~ msgid "Also adding the dependent currency field {0}"
+#~ msgstr "同时添加依赖货币字段{0}"
+
+#~ msgid "Also adding the status dependency field {0}"
+#~ msgstr "同时添加状态依赖字段{0}"
+
+#~ msgctxt "Freeze message while amending a document"
+#~ msgid "Amending"
+#~ msgstr "修订中"
+
+#~ msgid "An error occurred while setting Session Defaults"
+#~ msgstr "设置会话默认值时发生错误"
+
+#~ msgid "Ancestors Of"
+#~ msgstr "上级节点"
+
+#~ msgid ""
+#~ "Another transaction is blocking this one. Please try again in a few "
+#~ "seconds."
+#~ msgstr "另一个事务正在阻塞当前操作，请稍后重试。"
+
+#~ msgid "App Access Key"
+#~ msgstr "应用访问密钥"
+
+#~ msgid "App Access Key and/or Secret Key are not present."
+#~ msgstr "应用访问密钥和/或密钥不存在。"
+
+#~ msgid "App ID"
+#~ msgstr "应用ID"
+
+#~ msgid "App Secret Key"
+#~ msgstr "应用密钥"
+
+#~ msgid "Applicable Document Types"
+#~ msgstr "适用文档类型"
+
+#~ msgctxt "Button in list view actions menu"
+#~ msgid "Apply Assignment Rule"
+#~ msgstr "应用分配规则"
+
+#~ msgid "Apply Filters"
+#~ msgstr "应用筛选器"
+
+#~ msgid "Apply to all Documents Types"
+#~ msgstr "应用到所有文档类型"
+
+#~ msgctxt "Number system"
+#~ msgid "Ar"
+#~ msgstr "阿拉伯语"
+
+#~ msgid "Archived Columns"
+#~ msgstr "归档列"
+
+#~ msgid "Are you sure you want to clear the assignments?"
+#~ msgstr "确定要清除分配吗？"
+
+#~ msgid "Are you sure you want to delete all rows?"
+#~ msgstr "确定要删除所有行吗？"
+
+#~ msgid "Are you sure you want to delete the attachment?"
+#~ msgstr "确定要删除附件吗？"
+
+#~ msgid "Are you sure you want to discard the changes?"
+#~ msgstr "确定要放弃更改吗？"
+
+#~ msgid "Are you sure you want to generate a new report?"
+#~ msgstr "确定要生成新报告吗？"
+
+#~ msgid "Are you sure you want to merge {0} with {1}?"
+#~ msgstr "确定要将{0}与{1}合并吗？"
+
+#~ msgid "Are you sure you want to proceed?"
+#~ msgstr "确定要继续吗？"
+
+#~ msgid "Are you sure you want to re-enable scheduler?"
+#~ msgstr "确定要重新启用调度程序吗？"
+
+#~ msgid "Are you sure you want to relink this communication to {0}?"
+#~ msgstr "确定要重新关联此沟通记录到{0}吗？"
+
+#~ msgid "Are you sure you want to remove all failed jobs?"
+#~ msgstr "确定要移除所有失败作业吗？"
+
+#~ msgid "Are you sure you want to remove the {0} filter?"
+#~ msgstr "确定要移除{0}筛选器吗？"
+
+#~ msgid "Are you sure you want to reset all customizations?"
+#~ msgstr "确定要重置所有自定义设置吗？"
+
+#~ msgid "Are you sure you want to save this document?"
+#~ msgstr "确定要保存此文档吗？"
+
+#~ msgid "Are you sure you want to send this newsletter now?"
+#~ msgstr "确定要立即发送此新闻稿吗？"
+
+#~ msgid "Are you sure?"
+#~ msgstr "确定吗？"
+
+#~ msgid "Assign To"
+#~ msgstr "分配给"
+
+#~ msgctxt "Button in list view actions menu"
+#~ msgid "Assign To"
+#~ msgstr "分配给"
+
+#~ msgid "Assign To User Group"
+#~ msgstr "分配给用户组"
+
+#~ msgid "Assign a user"
+#~ msgstr "分配用户"
+
+#~ msgid "Assign one by one, in sequence"
+#~ msgstr "逐个按顺序分配"
+
+#~ msgid "Assign to me"
+#~ msgstr "分配给我"
+
+#~ msgid "Assign to the one who has the least assignments"
+#~ msgstr "分配给任务最少的人"
+
+#~ msgid "Assign to the user set in this field"
+#~ msgstr "分配给此字段设置的用户"
+
+#~ msgid "Assigning..."
+#~ msgstr "正在分配..."
+
+#~ msgid "At least one column is required to show in the grid."
+#~ msgstr "网格中需要至少显示一列。"
+
+#~ msgid "At least one field is required in Web Form Fields Table"
+#~ msgstr "Web表单字段表中需要至少一个字段"
+
+#~ msgid "At least one field of Parent Document Type is mandatory"
+#~ msgstr "父文档类型必须至少有一个字段"
+
+#~ msgid "Attach Document Print"
+#~ msgstr "附加文档打印"
+
+#~ msgid "Attach files / urls and add in table."
+#~ msgstr "附加文件/URL并添加至表格。"
+
+#~ msgid "Attempting Connection to QZ Tray..."
+#~ msgstr "正在尝试连接QZ Tray..."
+
+#~ msgid "Attempting to launch QZ Tray..."
+#~ msgstr "正在尝试启动QZ Tray..."
+
+#~ msgid "Authorize Google Drive Access"
+#~ msgstr "授权Google云端硬盘访问"
+
+#~ msgid "Auto Repeat Schedule"
+#~ msgstr "自动重复计划"
+
+#~ msgid "Auto Repeat created for this document"
+#~ msgstr "已为此文档创建自动重复"
+
+#~ msgid ""
+#~ "Automatically applied a filter for recent data. You can disable this "
+#~ "behavior from the list view settings."
+#~ msgstr "已自动应用最近数据筛选器。您可以在列表视图设置中禁用此行为。"
+
+#~ msgid "Average of {0}"
+#~ msgstr "{0}的平均值"
+
+#~ msgid "Awesome Work"
+#~ msgstr "出色的工作"
+
+#~ msgid "Awesome, now try making an entry yourself"
+#~ msgstr "很棒，现在请尝试自己创建条目"
+
+#~ msgctxt "Number system"
+#~ msgid "B"
+#~ msgstr "B"
+
+#~ msgctxt "Email Recipients"
+#~ msgid "BCC"
+#~ msgstr "密送"
+
+#~ msgid "Background Print (required for >25 documents)"
+#~ msgstr "后台打印（超过25个文档时需要）"
+
+#~ msgid "Backing up Data."
+#~ msgstr "正在备份数据。"
+
+#~ msgid "Backing up to Google Drive."
+#~ msgstr "正在备份到Google云端硬盘。"
+
+#~ msgid "Backup"
+#~ msgstr "备份"
+
+#~ msgid "Backup Details"
+#~ msgstr "备份详情"
+
+#~ msgid "Backup Encryption Key"
+#~ msgstr "备份加密密钥"
+
+#~ msgid "Backup Files"
+#~ msgstr "备份文件"
+
+#~ msgid "Backup Folder ID"
+#~ msgstr "备份文件夹ID"
+
+#~ msgid "Backup Folder Name"
+#~ msgstr "备份文件夹名称"
+
+#~ msgid "Backup Frequency"
+#~ msgstr "备份频率"
+
+#~ msgid "Backup Path"
+#~ msgstr "备份路径"
+
+#~ msgid "Backup public and private files along with the database."
+#~ msgstr "备份公共和私有文件及数据库。"
+
+#~ msgid "Before"
+#~ msgstr "之前"
+
+#~ msgid "Beginning with"
+#~ msgstr "开始于"
+
+#~ msgid "Between"
+#~ msgstr "介于"
+
+#~ msgid "Blank Template"
+#~ msgstr "空白模板"
+
+#~ msgid "Both DocType and Name required"
+#~ msgstr "需要文档类型和名称"
+
+#~ msgid "Browser not supported"
+#~ msgstr "不支持的浏览器"
+
+#~ msgid "Bucket Name"
+#~ msgstr "存储桶名称"
+
+#~ msgid "Bucket {0} not found."
+#~ msgstr "未找到存储桶{0}。"
+
+#~ msgid "Build {0}"
+#~ msgstr "构建{0}"
+
+#~ msgid "Bulk Delete"
+#~ msgstr "批量删除"
+
+#~ msgid "Bulk Edit"
+#~ msgstr "批量编辑"
+
+#~ msgid "Bulk Edit {0}"
+#~ msgstr "批量编辑{0}"
+
+#~ msgid "Bulk PDF Export"
+#~ msgstr "批量PDF导出"
+
+#~ msgid ""
+#~ "By default the title is used as meta title, adding a value here will "
+#~ "override it."
+#~ msgstr "默认使用标题作为元标题，在此处添加值将覆盖默认设置。"
+
+#~ msgid "By default, emails are only sent for failed backups."
+#~ msgstr "默认仅针对备份失败发送电子邮件。"
+
+#~ msgctxt "Email Recipients"
+#~ msgid "CC"
+#~ msgstr "抄送"
+
+#~ msgid "COLOR PICKER"
+#~ msgstr "颜色选择器"
+
+#~ msgid "Calculate"
+#~ msgstr "计算"
+
+#~ msgctxt "Button in list view actions menu"
+#~ msgid "Cancel"
+#~ msgstr "取消"
+
+#~ msgctxt "Secondary button in warning dialog"
+#~ msgid "Cancel"
+#~ msgstr "取消"
+
+#~ msgid "Cancel All"
+#~ msgstr "全部取消"
+
+#~ msgid "Cancel All Documents"
+#~ msgstr "取消所有文档"
+
+#~ msgid "Cancel Scheduling"
+#~ msgstr "取消调度"
+
+#~ msgctxt "Title of confirmation dialog"
+#~ msgid "Cancel {0} documents?"
+#~ msgstr "确定要取消{0}个文档吗？"
+
+#~ msgctxt "Freeze message while cancelling a document"
+#~ msgid "Cancelling"
+#~ msgstr "正在取消"
+
+#~ msgid ""
+#~ "Cannot cancel before submitting while transitioning from <b>{0} State</b> "
+#~ "to <b>{1} State</b>"
+#~ msgstr "从<b>{0}状态</b>转换到<b>{1}状态</b>时，提交前无法取消"
+
+#~ msgid "Cannot cancel {0}."
+#~ msgstr "无法取消{0}。"
+
+#~ msgid "Cannot change state of Cancelled Document <b>({0} State)</b>"
+#~ msgstr "无法更改已取消文档的状态<b>({0}状态)</b>"
+
+#~ msgid "Cannot delete standard action. You can hide it if you want"
+#~ msgstr "无法删除标准操作。您可以隐藏它"
+
+#~ msgid "Cannot delete standard document state."
+#~ msgstr "无法删除标准文档状态。"
+
+#~ msgid ""
+#~ "Cannot delete standard field <strong>{0}</strong>. You can hide it "
+#~ "instead."
+#~ msgstr "无法删除标准字段<strong>{0}</strong>。您可以隐藏它。"
+
+#~ msgid "Cannot delete standard link. You can hide it if you want"
+#~ msgstr "无法删除标准链接。您可以隐藏它"
+
+#~ msgid ""
+#~ "Cannot delete system generated field <strong>{0}</strong>. You can hide "
+#~ "it instead."
+#~ msgstr "无法删除系统生成字段<strong>{0}</strong>。您可以隐藏它。"
+
+#~ msgid "Cannot delete {0}"
+#~ msgstr "无法删除{0}"
+
+#~ msgid "Cannot edit filters for standard charts"
+#~ msgstr "无法编辑标准图表筛选器"
+
+#~ msgid "Cannot edit filters for standard number cards"
+#~ msgstr "无法编辑标准数字卡筛选器"
+
+#~ msgid "Cannot have multiple printers mapped to a single print format."
+#~ msgstr "不能将多个打印机映射到单个打印格式。"
+
+#~ msgid "Cannot import table with more than 5000 rows."
+#~ msgstr "无法导入超过5000行的表格。"
+
+#~ msgid "Cannot move row"
+#~ msgstr "无法移动行"
+
+#~ msgid "Cannot remove ID field"
+#~ msgstr "无法移除ID字段"
+
+#~ msgid "Cannot submit {0}."
+#~ msgstr "无法提交{0}。"
+
+#~ msgid "Cannot update {0}"
+#~ msgstr "无法更新{0}"
+
+#~ msgid "Cannot {0} {1}."
+#~ msgstr "无法{0} {1}。"
+
+#~ msgid "Capture"
+#~ msgstr "捕获"
+
+#~ msgid "Card Label"
+#~ msgstr "卡片标签"
+
+#~ msgid "Card Links"
+#~ msgstr "卡片链接"
+
+#~ msgid "Category Name"
+#~ msgstr "类别名称"
+
+#~ msgid "Change Print Format"
+#~ msgstr "更改打印格式"
+
+#~ msgid ""
+#~ "Changing any setting will reflect on all the email accounts associated "
+#~ "with this domain."
+#~ msgstr "任何设置更改将影响与此域关联的所有电子邮件账户。"
+
+#~ msgid ""
+#~ "Changing rounding method on site with data can result in unexpected "
+#~ "behaviour."
+#~ msgstr "在已有数据的站点更改舍入方法可能导致意外行为。"
+
+#~ msgid "Check broken links"
+#~ msgstr "检查损坏链接"
+
+#~ msgid ""
+#~ "Check this if you don't want users to sign up for an account on your "
+#~ "site. Users won't get desk access unless you explicitly provide it."
+#~ msgstr "勾选此项可禁止用户注册账户。除非明确授权，否则用户无法访问工作台。"
+
+#~ msgid "Checking broken links..."
+#~ msgstr "正在检查损坏链接..."
+
+#~ msgid "Checking one moment"
+#~ msgstr "正在检查，请稍候"
+
+#~ msgid ""
+#~ "Checking this will enable tracking page views for blogs, web pages, etc."
+#~ msgstr "勾选此项将启用博客、网页等的页面浏览跟踪"
+
+#~ msgid ""
+#~ "Checking this will publish the page on your website and it'll be visible "
+#~ "to everyone."
+#~ msgstr "勾选此项将在网站上发布该页面，所有人可见。"
+
+#~ msgid ""
+#~ "Checking this will show a text area where you can write custom javascript "
+#~ "that will run on this page."
+#~ msgstr "勾选此项将显示文本区，可编写在此页面运行的JavaScript代码。"
+
+#~ msgid "Choose Existing Card or create New Card"
+#~ msgstr "选择现有卡片或创建新卡片"
+
+#~ msgid "Choose a block or continue typing"
+#~ msgstr "选择块或继续输入"
+
+#~ msgid "Clear"
+#~ msgstr "清除"
+
+#~ msgid "Clear & Add Template"
+#~ msgstr "清除并添加模板"
+
+#~ msgid "Clear & Add template"
+#~ msgstr "清除并添加模板"
+
+#~ msgctxt "Button in list view actions menu"
+#~ msgid "Clear Assignment"
+#~ msgstr "清除分配"
+
+#~ msgid "Clear Cache and Reload"
+#~ msgstr "清除缓存并重新加载"
+
+#~ msgid "Clear Error Logs"
+#~ msgstr "清除错误日志"
+
+#~ msgid "Clear Filters"
+#~ msgstr "清除筛选器"
+
+#~ msgid "Clear User Permissions"
+#~ msgstr "清除用户权限"
+
+#~ msgid "Clear the email message and add the template"
+#~ msgstr "清除邮件内容并添加模板"
+
+#~ msgid "Click On Customize to add your first widget"
+#~ msgstr "点击'自定义'添加第一个组件"
+
+#~ msgid ""
+#~ "Click on <b>Authorize Google Drive Access</b> to authorize Google Drive "
+#~ "Access."
+#~ msgstr "点击<b>授权Google云端硬盘访问</b>进行授权。"
+
+#~ msgid "Click table to edit"
+#~ msgstr "点击表格编辑"
+
+#~ msgid "Click to Set Dynamic Filters"
+#~ msgstr "点击设置动态筛选器"
+
+#~ msgid "Click to Set Filters"
+#~ msgstr "点击设置筛选器"
+
+#~ msgid "Click to sort by {0}"
+#~ msgstr "点击按{0}排序"
+
+#~ msgid "Close"
+#~ msgstr "关闭"
+
+#~ msgctxt "Shrink code field."
+#~ msgid "Collapse"
+#~ msgstr "折叠"
+
+#~ msgid "Collapse All"
+#~ msgstr "全部折叠"
+
+#~ msgid "Column Width"
+#~ msgstr "列宽"
+
+#~ msgid "Column width cannot be zero."
+#~ msgstr "列宽不能为零。"
+
+#~ msgid "Column {0}"
+#~ msgstr "列{0}"
+
+#~ msgid "Columns based on"
+#~ msgstr "基于的列"
+
+#~ msgid "Compare Versions"
+#~ msgstr "版本对比"
+
+#~ msgid "Complete By"
+#~ msgstr "完成人"
+
+#~ msgctxt "Finish the setup wizard"
+#~ msgid "Complete Setup"
+#~ msgstr "完成设置"
+
+#~ msgid "Compose Email"
+#~ msgstr "撰写邮件"
+
+#~ msgid "Configure Chart"
+#~ msgstr "配置图表"
+
+#~ msgid "Configure Columns"
+#~ msgstr "配置列"
+
+#~ msgid "Configure Recorder"
+#~ msgstr "配置记录器"
+
+#~ msgctxt "Title of confirmation dialog"
+#~ msgid "Confirm"
+#~ msgstr "确认"
+
+#~ msgid "Confirm New Password"
+#~ msgstr "确认新密码"
+
+#~ msgid ""
+#~ "Congratulations on completing the module setup. If you want to learn more "
+#~ "you can refer to the documentation <a target=\"_blank\" "
+#~ "href=\"{0}\">here</a>."
+#~ msgstr ""
+#~ "恭喜您完成模块设置。如果您想了解更多信息，可以参考文档 <a "
+#~ "target=\"_blank\" href=\"{0}\">这里</a>。"
+
+#~ msgid "Connect to {}"
+#~ msgstr "连接到{}"
+
+#~ msgid "Connected to QZ Tray!"
+#~ msgstr "已连接至QZ托盘!"
+
+#~ msgid "Connection Lost"
+#~ msgstr "连接丢失"
+
+#~ msgid "Connection lost. Some features might not work."
+#~ msgstr "连接丢失，部分功能可能不可用。"
+
+#~ msgid "Content type for building the page"
+#~ msgstr "页面构建的内容类型"
+
+#~ msgid "Continue"
+#~ msgstr "继续"
+
+#~ msgid "Copied to clipboard."
+#~ msgstr "已复制到剪贴板。"
+
+#~ msgid "Copy embed code"
+#~ msgstr "复制嵌入代码"
+
+#~ msgid "Copy error to clipboard"
+#~ msgstr "复制错误到剪贴板"
+
+#~ msgid "Copy to Clipboard"
+#~ msgstr "复制到剪贴板"
+
+#~ msgid "Correct version :"
+#~ msgstr "正确版本："
+
+#~ msgid "Could not start up: "
+#~ msgstr "无法启动："
+
+#~ msgid "Couldn't save, please check the data you have entered"
+#~ msgstr "保存失败，请检查输入数据"
+
+#~ msgid "Count Customizations"
+#~ msgstr "自定义项计数"
+
+#~ msgctxt "Number system"
+#~ msgid "Cr"
+#~ msgstr "贷方"
+
+#~ msgid "Create & Continue"
+#~ msgstr "创建并继续"
+
+#~ msgid "Create Address"
+#~ msgstr "创建地址"
+
+#~ msgid "Create Card"
+#~ msgstr "创建卡片"
+
+#~ msgid "Create Chart"
+#~ msgstr "创建图表"
+
+#~ msgid "Create New"
+#~ msgstr "新建"
+
+#~ msgctxt "Create a new document from list view"
+#~ msgid "Create New"
+#~ msgstr "新建"
+
+#~ msgid "Create New DocType"
+#~ msgstr "新建文档类型"
+
+#~ msgid "Create New Kanban Board"
+#~ msgstr "新建看板面板"
+
+#~ msgid "Create User Email"
+#~ msgstr "创建用户邮箱"
+
+#~ msgid "Create a Reminder"
+#~ msgstr "创建提醒"
+
+#~ msgid "Create a new ..."
+#~ msgstr "新建..."
+
+#~ msgid "Create a new record"
+#~ msgstr "新建记录"
+
+#~ msgid "Create a new {0}"
+#~ msgstr "新建{0}"
+
+#~ msgid "Create or Edit Print Format"
+#~ msgstr "创建或编辑打印格式"
+
+#~ msgid "Create or Edit Workflow"
+#~ msgstr "创建或编辑工作流"
+
+#~ msgid "Create your first {0}"
+#~ msgstr "创建您的首个{0}"
+
+#~ msgid "Create your workflow visually using the Workflow Builder."
+#~ msgstr "使用工作流构建器可视化创建您的工作流。"
+
+#~ msgid "Creating {0}"
+#~ msgstr "正在创建{0}"
+
+#~ msgid "Ctrl + Down"
+#~ msgstr "Ctrl + 下箭头"
+
+#~ msgid "Ctrl + Up"
+#~ msgstr "Ctrl + 上箭头"
+
+#~ msgid "Current status"
+#~ msgstr "当前状态"
+
+#~ msgid "Currently Viewing"
+#~ msgstr "当前查看"
+
+#~ msgid "Custom Block Name"
+#~ msgstr "自定义区块名称"
+
+#~ msgid "Customizations Discarded"
+#~ msgstr "已放弃自定义"
+
+#~ msgid "Customizations Reset"
+#~ msgstr "重置自定义"
+
+#~ msgctxt "Button in list view menu"
+#~ msgid "Customize"
+#~ msgstr "自定义"
+
+#~ msgid "Customize Child Table"
+#~ msgstr "自定义子表"
+
+#~ msgid "Customize Dashboard"
+#~ msgstr "自定义仪表板"
+
+#~ msgid "Customize Form - {0}"
+#~ msgstr "自定义表单 - {0}"
+
+#~ msgid "Cut"
+#~ msgstr "剪切"
+
+#~ msgid "Dark Theme"
+#~ msgstr "暗色主题"
+
+#~ msgid "Dashboard View"
+#~ msgstr "仪表板视图"
+
+#~ msgid "Data Clipped"
+#~ msgstr "数据截断"
+
+#~ msgid "Database Row Size Utilization"
+#~ msgstr "数据库行大小利用率"
+
+#~ msgid ""
+#~ "Database Table Row Size Utilization: {0}%, this limits number of fields "
+#~ "you can add."
+#~ msgstr "数据库表行大小利用率: {0}%，这将限制可添加的字段数量。"
+
+#~ msgid "Date {0} must be in format: {1}"
+#~ msgstr "日期{0}必须符合格式: {1}"
+
+#~ msgid "Deadlock Occurred"
+#~ msgstr "发生死锁"
+
+#~ msgid "Decimal Separator must be '.' when Quoting is set to Non-numeric"
+#~ msgstr "当报价设置为非数字时，小数分隔符必须为'.'"
+
+#~ msgid "Decimal Separator must be a single character"
+#~ msgstr "小数分隔符必须为单个字符"
+
+#~ msgid "Default Inbox"
+#~ msgstr "默认收件箱"
+
+#~ msgid "Default Sending"
+#~ msgstr "默认发送"
+
+#~ msgid "Default Sending and Inbox"
+#~ msgstr "默认发送与收件"
+
+#~ msgid "Default Theme"
+#~ msgstr "默认主题"
+
+#~ msgctxt "Button in list view actions menu"
+#~ msgid "Delete"
+#~ msgstr "删除"
+
+#~ msgid "Delete All"
+#~ msgstr "全部删除"
+
+#~ msgid "Delete Data"
+#~ msgstr "删除数据"
+
+#~ msgid "Delete Kanban Board"
+#~ msgstr "删除看板"
+
+#~ msgid "Delete and Generate New"
+#~ msgstr "删除并生成新项"
+
+#~ msgid "Delete comment?"
+#~ msgstr "确认删除评论？"
+
+#~ msgctxt "Title of confirmation dialog"
+#~ msgid "Delete {0} item permanently?"
+#~ msgstr "永久删除 {0} 项？"
+
+#~ msgctxt "Title of confirmation dialog"
+#~ msgid "Delete {0} items permanently?"
+#~ msgstr "永久删除 {0} 项？"
+
+#~ msgid "Deleted Name"
+#~ msgstr "已删除名称"
+
+#~ msgid "Deleting {0} records..."
+#~ msgstr "正在删除 {0} 条记录..."
+
+#~ msgid "Deleting {0}..."
+#~ msgstr "正在删除 {0}..."
+
+#~ msgid "Delimiter must be a single character"
+#~ msgstr "分隔符必须为单个字符"
+
+#~ msgid "Dependencies & Licenses"
+#~ msgstr "依赖项与许可证"
+
+#~ msgid "Descendants Of"
+#~ msgstr "子代节点"
+
+#~ msgid "Descendants Of (inclusive)"
+#~ msgstr "子代节点（包含自身）"
+
+#~ msgid "Did not add"
+#~ msgstr "未添加"
+
+#~ msgid "Did not remove"
+#~ msgstr "未移除"
+
+#~ msgid "Diff"
+#~ msgstr "差异"
+
+#~ msgid "Disable Report"
+#~ msgstr "禁用报表"
+
+#~ msgid "Disable Signup for your site"
+#~ msgstr "禁用站点注册"
+
+#~ msgid "Disabled Auto Reply"
+#~ msgstr "禁用自动回复"
+
+#~ msgid "Discard"
+#~ msgstr "放弃"
+
+#~ msgctxt "Discard Email"
+#~ msgid "Discard"
+#~ msgstr "放弃"
+
+#~ msgid "Discard {0}"
+#~ msgstr "放弃 {0}"
+
+#~ msgid "Discard?"
+#~ msgstr "确认放弃？"
+
+#~ msgctxt "Stop showing the onboarding widget."
+#~ msgid "Dismiss"
+#~ msgstr "关闭"
+
+#~ msgid "Do not edit headers which are preset in the template"
+#~ msgstr "请勿修改模板中预设的标题"
+
+#~ msgid "Do not have permission to access bucket {0}."
+#~ msgstr "无权限访问存储桶 {0}"
+
+#~ msgid "Do you still want to proceed?"
+#~ msgstr "是否继续操作？"
+
+#~ msgid "Do you want to cancel all linked documents?"
+#~ msgstr "是否取消所有关联文档？"
+
+#~ msgid ""
+#~ "DocStatus of the following states have changed:<br><strong>{0}</"
+#~ "strong><br>\n"
+#~ "\t\t\t\tDo you want to update the docstatus of existing documents in "
+#~ "those states?<br>\n"
+#~ "\t\t\t\tThis does not undo any effect bought in by the document's "
+#~ "existing docstatus.\n"
+#~ "\t\t\t\t"
+#~ msgstr ""
+#~ "以下状态的文档状态已更改：<br><strong>{0}</strong><br>\n"
+#~ "\t\t\t\t您想更新这些状态下现有文档的 docstatus 吗？<br>\n"
+#~ "\t\t\t\t这不会消除文档现有 docstatus 所带来的任何影响。\n"
+#~ "\t\t\t\t"
+
+#~ msgid "DocType must have atleast one field"
+#~ msgstr "文档类型必须至少包含一个字段"
+
+#~ msgid "DocType required"
+#~ msgstr "需指定文档类型"
+
+#~ msgid "DocTypes cannot be modified, please use {0} instead"
+#~ msgstr "文档类型不可修改，请使用 {0}"
+
+#~ msgid "Doctype required"
+#~ msgstr "需指定文档类型"
+
+#~ msgid "Document Name"
+#~ msgstr "文档名称"
+
+#~ msgid "Document Restoration Summary"
+#~ msgstr "文档恢复摘要"
+
+#~ msgid "Document Saved"
+#~ msgstr "文档已保存"
+
+#~ msgid "Document has been cancelled"
+#~ msgstr "文档已取消"
+
+#~ msgid "Document has been submitted"
+#~ msgstr "文档已提交"
+
+#~ msgid "Document is in draft state"
+#~ msgstr "文档处于草稿状态"
+
+#~ msgid "Document is only editable by users with role"
+#~ msgstr "仅具有指定角色的用户可编辑此文档"
+
+#~ msgid "Document not Relinked"
+#~ msgstr "文档未重新链接"
+
+#~ msgid "Document renaming from {0} to {1} has been queued"
+#~ msgstr "文档重命名（从 {0} 到 {1}）已加入队列"
+
+#~ msgid "Documents restored successfully"
+#~ msgstr "文档恢复成功"
+
+#~ msgid "Documents that failed to restore"
+#~ msgstr "恢复失败的文档"
+
+#~ msgid "Documents that were already restored"
+#~ msgstr "已恢复的文档"
+
+#~ msgid "Don't Import"
+#~ msgstr "不导入"
+
+#~ msgid "Download"
+#~ msgstr "下载"
+
+#~ msgctxt "Export report"
+#~ msgid "Download"
+#~ msgstr "下载"
+
+#~ msgid "Download Files Backup"
+#~ msgstr "下载文件备份"
+
+#~ msgid "Download PDF"
+#~ msgstr "下载PDF"
+
+#~ msgid "Download Report"
+#~ msgstr "下载报表"
+
+#~ msgid "Download vCard"
+#~ msgstr "下载vCard"
+
+#~ msgid "Download vCards"
+#~ msgstr "下载vCards"
+
+#~ msgid "Draft"
+#~ msgstr "草稿"
+
+#~ msgid "Drag"
+#~ msgstr "拖动"
+
+#~ msgid "Dropbox Access Token"
+#~ msgstr "Dropbox访问令牌"
+
+#~ msgid "Dropbox Refresh Token"
+#~ msgstr "Dropbox刷新令牌"
+
+#~ msgid "Dropbox Settings"
+#~ msgstr "Dropbox设置"
+
+#~ msgid "Dropbox Setup"
+#~ msgstr "Dropbox设置"
+
+#~ msgid "Duplicate Filter Name"
+#~ msgstr "过滤器名称重复"
+
+#~ msgid "Duplicate Name"
+#~ msgstr "名称重复"
+
+#~ msgid "Duplicate current row"
+#~ msgstr "复制当前行"
+
+#~ msgid "ESC"
+#~ msgstr "退出键"
+
+#~ msgctxt "Button in list view actions menu"
+#~ msgid "Edit"
+#~ msgstr "编辑"
+
+#~ msgctxt "Edit grid row"
+#~ msgid "Edit"
+#~ msgstr "编辑"
+
+#~ msgid "Edit Address in Form"
+#~ msgstr "在表单中编辑地址"
+
+#~ msgid "Edit Chart"
+#~ msgstr "编辑图表"
+
+#~ msgid "Edit Custom Block"
+#~ msgstr "编辑自定义块"
+
+#~ msgid "Edit Custom HTML"
+#~ msgstr "编辑自定义HTML"
+
+#~ msgid "Edit DocType"
+#~ msgstr "编辑文档类型"
+
+#~ msgctxt "Button in list view menu"
+#~ msgid "Edit DocType"
+#~ msgstr "编辑文档类型"
+
+#~ msgid "Edit Existing"
+#~ msgstr "编辑现有项"
+
+#~ msgid "Edit Filters"
+#~ msgstr "编辑过滤器"
+
+#~ msgid "Edit Format"
+#~ msgstr "编辑格式"
+
+#~ msgid "Edit Full Form"
+#~ msgstr "编辑完整表单"
+
+#~ msgid "Edit Links"
+#~ msgstr "编辑链接"
+
+#~ msgid "Edit Number Card"
+#~ msgstr "编辑数字卡片"
+
+#~ msgid "Edit Onboarding"
+#~ msgstr "编辑入职流程"
+
+#~ msgid "Edit Print Format"
+#~ msgstr "编辑打印格式"
+
+#~ msgid "Edit Properties"
+#~ msgstr "编辑属性"
+
+#~ msgid "Edit Quick List"
+#~ msgstr "编辑快速列表"
+
+#~ msgid "Edit Shortcut"
+#~ msgstr "编辑快捷方式"
+
+#~ msgid "Edit mode"
+#~ msgstr "编辑模式"
+
+#~ msgid "Edit to add content"
+#~ msgstr "点击编辑添加内容"
+
+#~ msgctxt "Button in web form"
+#~ msgid "Edit your response"
+#~ msgstr "编辑您的回复"
+
+#~ msgid "Edit your workflow visually using the Workflow Builder."
+#~ msgstr "使用工作流构建器可视化编辑工作流"
+
+#~ msgid "Edit {0}"
+#~ msgstr "编辑 {0}"
+
+#~ msgid "Editing Row"
+#~ msgstr "正在编辑行"
+
+#~ msgid "Editing {0}"
+#~ msgstr "正在编辑 {0}"
+
+#~ msgid "Email Addresses"
+#~ msgstr "电子邮件地址"
+
+#~ msgid "Email has been marked as spam"
+#~ msgstr "邮件已被标记为垃圾邮件"
+
+#~ msgid "Email has been moved to trash"
+#~ msgstr "邮件已移至回收站"
+
+#~ msgid "Email is mandatory to create User Email"
+#~ msgstr "创建用户电子邮件时必须填写邮箱地址"
+
+#~ msgid "Email not sent to {0} (unsubscribed / disabled)"
+#~ msgstr "未向{0}发送邮件（已退订/禁用）"
+
+#~ msgid ""
+#~ "Email queue is currently suspended. Resume to automatically send other "
+#~ "emails."
+#~ msgstr "邮件队列已暂停。恢复后系统将自动发送其他邮件。"
+
+#~ msgid "Emails Pulled"
+#~ msgstr "已拉取电子邮件"
+
+#~ msgid "Embed code copied"
+#~ msgstr "嵌入代码已复制"
+
+#~ msgid "Enable Automatic Backup"
+#~ msgstr "启用自动备份"
+
+#~ msgid "Enable Report"
+#~ msgstr "启用报告"
+
+#~ msgid "Enable Scheduler"
+#~ msgstr "启用调度程序"
+
+#~ msgid "Enable Tracking Page Views"
+#~ msgstr "启用页面访问跟踪"
+
+#~ msgid "Enabled Scheduler"
+#~ msgstr "已启用调度程序"
+
+#~ msgid ""
+#~ "Enabling auto reply on an incoming email account will send automated "
+#~ "replies to all the synchronized emails. Do you wish to continue?"
+#~ msgstr "在接收邮件账户启用自动回复将向所有同步邮件发送自动回复。是否继续？"
+
+#~ msgid "Endpoint URL"
+#~ msgstr "端点URL"
+
+#~ msgid "Enter Email Recipient(s)"
+#~ msgstr "输入电子邮件收件人"
+
+#~ msgctxt "Title of prompt dialog"
+#~ msgid "Enter Value"
+#~ msgstr "输入值"
+
+#~ msgid "Enter a name for this {0}"
+#~ msgstr "为此{0}输入名称"
+
+#~ msgid "Enter folder name"
+#~ msgstr "输入文件夹名称"
+
+#~ msgid "Enter your password"
+#~ msgstr "输入密码"
+
+#~ msgid "Entity Name"
+#~ msgstr "实体名称"
+
+#~ msgid "Entity Type"
+#~ msgstr "实体类型"
+
+#~ msgid "Equals"
+#~ msgstr "等于"
+
+#~ msgctxt "Title of error message in web form"
+#~ msgid "Error"
+#~ msgstr "错误"
+
+#~ msgid ""
+#~ "Error connecting to QZ Tray Application...<br><br> You need to have QZ "
+#~ "Tray application installed and running, to use the Raw Print feature."
+#~ "<br><br><a target=\"_blank\" href=\"https://qz.io/download/\">Click here "
+#~ "to Download and install QZ Tray</a>.<br> <a target=\"_blank\" "
+#~ "href=\"https://erpnext.com/docs/user/manual/en/setting-up/print/raw-"
+#~ "printing\">Click here to learn more about Raw Printing</a>."
+#~ msgstr ""
+#~ "连接到QZ托盘应用程序时出错... <br><br>您需要安装并运行QZ Tray应用程序，才"
+#~ "能使用Raw Print功能。 <br><br> <a href=\"https://qz.io/download/\" "
+#~ "target=\"_blank\">单击此处下载并安装QZ托盘</a> 。 <br> <a href=\"https://"
+#~ "erpnext.com/docs/user/manual/en/setting-up/print/raw-printing\" "
+#~ "target=\"_blank\">单击此处以了解有关原始印刷的更多信息</a> 。"
+
+#~ msgid "Error in Client Script"
+#~ msgstr "客户端脚本错误"
+
+#~ msgid "Error in Client Script."
+#~ msgstr "客户端脚本错误。"
+
+#~ msgid "Error in Header/Footer Script"
+#~ msgstr "页眉/页脚脚本错误"
+
+#~ msgid "Events"
+#~ msgstr "事件集"
+
+#~ msgid "Excellent"
+#~ msgstr "优秀"
+
+#~ msgid "Execute Console script"
+#~ msgstr "执行控制台脚本"
+
+#~ msgid "Executing..."
+#~ msgstr "正在执行..."
+
+#~ msgid "Execution Time: {0} sec"
+#~ msgstr "执行时间：{0}秒"
+
+#~ msgid "Expand"
+#~ msgstr "展开"
+
+#~ msgctxt "Enlarge code field."
+#~ msgid "Expand"
+#~ msgstr "展开"
+
+#~ msgid "Expand All"
+#~ msgstr "全部展开"
+
+#~ msgctxt "Button in list view actions menu"
+#~ msgid "Export"
+#~ msgstr "导出"
+
+#~ msgid "Export 1 record"
+#~ msgstr "导出1条记录"
+
+#~ msgid "Export Custom Permissions"
+#~ msgstr "导出自定义权限"
+
+#~ msgid "Export Customizations"
+#~ msgstr "导出自定义项"
+
+#~ msgid "Export Errored Rows"
+#~ msgstr "导出错误行"
+
+#~ msgid "Export Import Log"
+#~ msgstr "导出导入日志"
+
+#~ msgctxt "Export report"
+#~ msgid "Export Report: {0}"
+#~ msgstr "导出报告：{0}"
+
+#~ msgid "Export Type"
+#~ msgstr "导出类型"
+
+#~ msgid "Export all matching rows?"
+#~ msgstr "导出所有匹配行？"
+
+#~ msgid "Export all {0} rows?"
+#~ msgstr "导出全部{0}行？"
+
+#~ msgid "Export as zip"
+#~ msgstr "压缩导出"
+
+#~ msgid "Export not allowed. You need {0} role to export."
+#~ msgstr "无导出权限。需要{0}角色进行导出。"
+
+#~ msgid "Export {0} records"
+#~ msgstr "导出{0}条记录"
+
+#~ msgid ""
+#~ "Exported permissions will be force-synced on every migrate overriding any "
+#~ "other customization."
+#~ msgstr "导出的权限将在每次迁移时强制同步，覆盖其他自定义设置。"
+
+#~ msgid "Failed to enable scheduler: {0}"
+#~ msgstr "启用调度程序失败：{0}"
+
+#~ msgid "Failed to generate preview of series"
+#~ msgstr "无法生成序列预览"
+
+#~ msgid "Failure"
+#~ msgstr "故障"
+
+#~ msgid "Fetch Images"
+#~ msgstr "提取图像"
+
+#~ msgid "Fetch attached images from document"
+#~ msgstr "从文档提取附件图片"
+
+#~ msgid "Field \"value\" is mandatory. Please specify value to be updated"
+#~ msgstr "字段“值”是强制性的。请指定值进行更新"
+
+#~ msgid "Field {0} not found."
+#~ msgstr "未找到字段{0}。"
+
+#~ msgid "Fieldname which will be the DocType for this link field."
+#~ msgstr "将作为此链接字段文档类型的字段名。"
+
+#~ msgid "Fieldname {0} appears multiple times"
+#~ msgstr "字段名{0}重复出现"
+
+#~ msgid "File Backup"
+#~ msgstr "文件备份"
+
+#~ msgid "File Manager"
+#~ msgstr "文件管理器"
+
+#~ msgid "File too big"
+#~ msgstr "文件过大"
+
+#~ msgid "Filter"
+#~ msgstr "筛选器"
+
+#~ msgid "Filtered Records"
+#~ msgstr "已过滤记录"
+
+#~ msgid "Filters applied for {0}"
+#~ msgstr "应用于{0}的过滤器"
+
+#~ msgid "Filters saved"
+#~ msgstr "过滤器已保存"
+
+#~ msgid "Filters {0}"
+#~ msgstr "过滤器{0}"
+
+#~ msgid "Filters:"
+#~ msgstr "过滤器："
+
+#~ msgid "Find '{0}' in ..."
+#~ msgstr "在...中查找'{0}'"
+
+#~ msgid "Find {0} in {1}"
+#~ msgstr "在{1}中查找{0}"
+
+#~ msgid "First set the name and save the record."
+#~ msgstr "请先设置名称并保存记录"
+
+#~ msgid "Folder name should not include '/' (slash)"
+#~ msgstr "文件夹名称不应包含'/'（斜杠）"
+
+#~ msgid "Following fields have invalid values:"
+#~ msgstr "以下字段包含无效值："
+
+#~ msgid "Following fields have missing values"
+#~ msgstr "以下字段缺少值"
+
+#~ msgid "Following fields have missing values:"
+#~ msgstr "以下字段缺少值："
+
+#~ msgid "Following links are broken in the email content: {0}"
+#~ msgstr "邮件内容中存在失效链接：{0}"
+
+#~ msgid "Footer might not be visible as {0} option is disabled</div>"
+#~ msgstr "页脚可能不可见，因为{0}选项已禁用</div>"
+
+#~ msgid "For Document Type"
+#~ msgstr "针对文档类型"
+
+#~ msgid "For Example: {} Open"
+#~ msgstr "示例：{} 打开"
+
+#~ msgid ""
+#~ "For comparison, use >5, <10 or =324. For ranges, use 5:10 (for values "
+#~ "between 5 & 10)."
+#~ msgstr "比较使用>5、<10或=324。范围使用5:10（表示5到10之间的值）"
+
+#~ msgid "For example:"
+#~ msgstr "例如："
+
+#~ msgid "For example: If you want to include the document ID, use {0}"
+#~ msgstr "示例：如需包含文档ID，请使用{0}"
+
+#~ msgid "For more information, {0}."
+#~ msgstr "更多信息，请{0}。"
+
+#~ msgid "Force Stop job"
+#~ msgstr "强制终止作业"
+
+#~ msgid "Forward"
+#~ msgstr "转发"
+
+#~ msgid "Frappe Framework"
+#~ msgstr "Frappe框架"
+
+#~ msgid "Frappe Light"
+#~ msgstr "Frappe Light主题"
+
+#~ msgid "Frappe page builder using components"
+#~ msgstr "使用组件的Frappe页面构建器"
+
+#~ msgctxt "Email Sender"
+#~ msgid "From"
+#~ msgstr "从"
+
+#~ msgid "From Document Type"
+#~ msgstr "来源文档类型"
+
+#~ msgid "From version"
+#~ msgstr "从版本"
+
+#~ msgid "Function Based On"
+#~ msgstr "函数依据"
+
+#~ msgid "Further nodes can be only created under 'Group' type nodes"
+#~ msgstr "后续节点只能在'组'类型节点下创建"
+
+#~ msgid "Fw: {0}"
+#~ msgstr "转发：{0}"
+
+#~ msgid "Gantt View"
+#~ msgstr "甘特视图"
+
+#~ msgid "Generate New Report"
+#~ msgstr "生成新报表"
+
+#~ msgid "Generate Random Password"
+#~ msgstr "生成随机密码"
+
+#~ msgid "Generate Tracking URL"
+#~ msgstr "生成跟踪URL"
+
+#~ msgid "Get Alerts for Today"
+#~ msgstr "获取今日提醒"
+
+#~ msgid "Get Backup Encryption Key"
+#~ msgstr "获取备份加密密钥"
+
+#~ msgid "Get Fields"
+#~ msgstr "获取字段"
+
+#~ msgid "Get Header and Footer wkhtmltopdf variables"
+#~ msgstr "获取页眉页脚wkhtmltopdf变量"
+
+#~ msgid "Get Items"
+#~ msgstr "获取物料"
+
+#~ msgid "Get OpenID Configuration"
+#~ msgstr "获取OpenID配置"
+
+#~ msgid "Get more insights with"
+#~ msgstr "通过以下方式获取更多洞察："
+
+#~ msgid "Github flavoured markdown syntax"
+#~ msgstr "GitHub风格的Markdown语法"
+
+#~ msgid "Global Search Document Types Reset."
+#~ msgstr "全局搜索文档类型已重置"
+
+#~ msgid "Global Shortcuts"
+#~ msgstr "全局快捷键"
+
+#~ msgid "Go"
+#~ msgstr "前往"
+
+#~ msgid "Go Back"
+#~ msgstr "返回"
+
+#~ msgid "Go to Notification Settings List"
+#~ msgstr "转到通知设置列表"
+
+#~ msgid "Go to Workflow"
+#~ msgstr "转到工作流"
+
+#~ msgid "Go to Workspace"
+#~ msgstr "转到工作区"
+
+#~ msgid "Go to next record"
+#~ msgstr "转到下一条记录"
+
+#~ msgid "Go to previous record"
+#~ msgstr "转到上一条记录"
+
+#~ msgid "Go to {0}"
+#~ msgstr "转到{0}"
+
+#~ msgid "Go to {0} List"
+#~ msgstr "转到{0}列表"
+
+#~ msgid "Go to {0} Page"
+#~ msgstr "转到{0}页面"
+
+#~ msgid ""
+#~ "Google Drive - Could not create folder in Google Drive - Error Code {0}"
+#~ msgstr "谷歌云端硬盘 - 无法创建文件夹，错误代码{0}"
+
+#~ msgid ""
+#~ "Google Drive - Could not find folder in Google Drive - Error Code {0}"
+#~ msgstr "谷歌云端硬盘 - 找不到文件夹，错误代码{0}"
+
+#~ msgid "Google Drive - Could not locate - {0}"
+#~ msgstr "谷歌云端硬盘 - 无法定位 - {0}"
+
+#~ msgid "Google Drive Backup Successful."
+#~ msgstr "谷歌云端硬盘备份成功"
+
+#~ msgid "Greater Than"
+#~ msgstr "大于"
+
+#~ msgid "Greater Than Or Equal To"
+#~ msgstr "大于等于"
+
+#~ msgid "Grid Shortcuts"
+#~ msgstr "网格快捷键"
+
+#~ msgid "Group Node"
+#~ msgstr "组节点"
+
+#~ msgid "Grouped by <span style='font-weight:600;'>{0}</b>"
+#~ msgstr "按<span style='font-weight:600;'>{0}</b>分组"
+
+#~ msgid "HTML with jinja support"
+#~ msgstr "支持jinja的HTML"
+
+#~ msgid "Header/Footer scripts can be used to add dynamic behaviours."
+#~ msgstr "页眉/页脚脚本可用于添加动态行为"
+
+#~ msgid "Help on Search"
+#~ msgstr "搜索帮助"
+
+#~ msgid "Here's your tracking URL"
+#~ msgstr "这是您的跟踪URL"
+
+#~ msgid "Hide Label"
+#~ msgstr "隐藏标签"
+
+#~ msgid "Hide Preview"
+#~ msgstr "隐藏预览"
+
+#~ msgid "Hide Saved"
+#~ msgstr "隐藏已保存"
+
+#~ msgid "Hide Tags"
+#~ msgstr "隐藏标签"
+
+#~ msgid "Hide Weekends"
+#~ msgstr "隐藏周末"
+
+#~ msgid "Hide details"
+#~ msgstr "隐藏详情"
+
+#~ msgctxt "Label of name column in report"
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "If it's empty, it will backup to the root of the bucket."
+#~ msgstr "如果为空，它将备份到存储桶的根目录。"
+
+#~ msgid "Illegal Access Token. Please try again"
+#~ msgstr "非法访问令牌，请重试"
+
+#~ msgid "Image View"
+#~ msgstr "图片视图"
+
+#~ msgid "Image optimized"
+#~ msgstr "图片已优化"
+
+#~ msgid "Images"
+#~ msgstr "图片集"
+
+#~ msgid "Impersonate as {0}"
+#~ msgstr "模拟为{0}"
+
+#~ msgid "Impersonated by {0}"
+#~ msgstr "被{0}模拟登录"
+
+#~ msgctxt "Button in list view menu"
+#~ msgid "Import"
+#~ msgstr "导入"
+
+#~ msgid "Import Email From"
+#~ msgstr "从邮件导入"
+
+#~ msgid "Import Progress"
+#~ msgstr "导入进度"
+
+#~ msgid "Import Subscribers"
+#~ msgstr "导入订阅者"
+
+#~ msgid "Import Zip"
+#~ msgstr "导入压缩包"
+
+#~ msgid "Import timed out, please re-try."
+#~ msgstr "导入超时，请重试"
+
+#~ msgid "Importing {0} of {1}"
+#~ msgstr "正在导入{1}中的{0}"
+
+#~ msgid "Importing {0} of {1}, {2}"
+#~ msgstr "正在导入{1}中的{0}，{2}"
+
+#~ msgid "In"
+#~ msgstr "包含"
+
+#~ msgid "In Grid View"
+#~ msgstr "网格视图中"
+
+#~ msgid "In Minutes"
+#~ msgstr "分钟内"
+
+#~ msgid "In Progress"
+#~ msgstr "进行中"
+
+#~ msgid "Inactive"
+#~ msgstr "未激活"
+
+#~ msgid "Inbox View"
+#~ msgstr "收件箱视图"
+
+#~ msgid "Include Disabled"
+#~ msgstr "包含已禁用"
+
+#~ msgid "Include Theme from Apps"
+#~ msgstr "包含应用主题"
+
+#~ msgid "Include filters"
+#~ msgstr "包含过滤器"
+
+#~ msgid "Include indentation"
+#~ msgstr "包含缩进"
+
+#~ msgid "Include symbols, numbers and capital letters in the password"
+#~ msgstr "密码需包含符号、数字和大写字母"
+
+#~ msgid "Indicator color"
+#~ msgstr "指示器颜色"
+
+#~ msgid "Insert"
+#~ msgstr "插入"
+
+#~ msgid "Insert Above"
+#~ msgstr "在上方插入"
+
+#~ msgid "Insert Below"
+#~ msgstr "在下方插入"
+
+#~ msgid "Insert Column Before {0}"
+#~ msgstr "在{0}前插入列"
+
+#~ msgid "Insert Image in Markdown"
+#~ msgstr "在Markdown中插入图片"
+
+#~ msgid "Install {0} from Marketplace"
+#~ msgstr "从应用市场安装{0}"
+
+#~ msgid "Installed Apps"
+#~ msgstr "已安装应用"
+
+#~ msgid "Internal Server Error"
+#~ msgstr "服务器内部错误"
+
+#~ msgid "Invalid \"depends_on\" expression"
+#~ msgstr "“depends_on”表达式无效"
+
+#~ msgid "Invalid \"depends_on\" expression set in filter {0}"
+#~ msgstr "在过滤器{0}中设置了无效的“ depends_on”表达式"
+
+#~ msgid "Invalid \"mandatory_depends_on\" expression"
+#~ msgstr "“mandatory_depends_on”表达式无效"
+
+#~ msgid ""
+#~ "Invalid Filter Format for field {0} of type {1}. Try using filter icon on "
+#~ "the field to set it correctly"
+#~ msgstr "{1}类型字段{0}的过滤格式无效，请使用字段过滤图标正确设置"
+
+#~ msgid "Invalid Transition"
+#~ msgstr "无效转换"
+
+#~ msgid "Invalid Values"
+#~ msgstr "无效值"
+
+#~ msgid "Invalid column"
+#~ msgstr "无效列"
+
+#~ msgid "Invalid expression set in filter {0}"
+#~ msgstr "过滤器{0}中的表达式无效"
+
+#~ msgid "Invalid expression set in filter {0} ({1})"
+#~ msgstr "过滤器{0}({1})中的表达式无效"
+
+#~ msgctxt "Error message in web form"
+#~ msgid "Invalid values for fields:"
+#~ msgstr "字段包含无效值："
+
+#~ msgid "Invalid wkhtmltopdf version"
+#~ msgstr "wkhtmltopdf版本无效"
+
+#~ msgid "Invite as User"
+#~ msgstr "邀请为用户"
+
+#~ msgid "Is"
+#~ msgstr "是"
+
+#~ msgid "Is Global"
+#~ msgstr "是否全局"
+
+#~ msgid "Job Stopped Successfully"
+#~ msgstr "作业已成功停止"
+
+#~ msgid "Join video conference with {0}"
+#~ msgstr "加入与{0}的视频会议"
+
+#~ msgid "Jump to field"
+#~ msgstr "跳转到字段"
+
+#~ msgctxt "Number system"
+#~ msgid "K"
+#~ msgstr "千"
+
+#~ msgctxt "Button in kanban view menu"
+#~ msgid "Kanban Settings"
+#~ msgstr "看板设置"
+
+#~ msgid "Kanban View"
+#~ msgstr "看板视图"
+
+#~ msgctxt "Number system"
+#~ msgid "Kh"
+#~ msgstr "高棉语"
+
+#~ msgctxt "Number system"
+#~ msgid "L"
+#~ msgstr "升"
+
+#~ msgid "Landscape"
+#~ msgstr "横向"
+
+#~ msgid "Last 14 Days"
+#~ msgstr "过去14天"
+
+#~ msgid "Last 30 Days"
+#~ msgstr "过去30天"
+
+#~ msgid "Last 6 Months"
+#~ msgstr "过去6个月"
+
+#~ msgid "Last 7 Days"
+#~ msgstr "过去7天"
+
+#~ msgid "Last 90 Days"
+#~ msgstr "过去90天"
+
+#~ msgid "Last Backup On"
+#~ msgstr "最后备份时间"
+
+#~ msgid "Last Modified Date"
+#~ msgstr "最后修改日期"
+
+#~ msgid "Last Modified On"
+#~ msgstr "最后修改时间"
+
+#~ msgid "Last synced {0}"
+#~ msgstr "最后同步于{0}"
+
+#~ msgid "Layout Reset"
+#~ msgstr "布局重置"
+
+#~ msgid ""
+#~ "Layout will be reset to standard layout, are you sure you want to do this?"
+#~ msgstr "布局将重置为标准布局，确定继续？"
+
+#~ msgid ""
+#~ "Length of passed data array is greater than value of maximum allowed "
+#~ "label points!"
+#~ msgstr "传入数据数组长度超过最大允许标签点数！"
+
+#~ msgid "Less"
+#~ msgstr "小于"
+
+#~ msgid "Less Than"
+#~ msgstr "小于"
+
+#~ msgid "Less Than Or Equal To"
+#~ msgstr "小于等于"
+
+#~ msgid "Let us continue with the onboarding"
+#~ msgstr "让我们继续完成初始化配置"
+
+#~ msgid "Let's Get Started"
+#~ msgstr "开始吧"
+
+#~ msgid "Let's set up your account"
+#~ msgstr "让我们设置您的账户"
+
+#~ msgid "Let's take you back to onboarding"
+#~ msgstr "让我们带您回到初始化配置"
+
+#~ msgid "Letter Head Scripts"
+#~ msgstr "信头脚本"
+
+#~ msgid ""
+#~ "Level 0 is for document level permissions, higher levels for field level "
+#~ "permissions."
+#~ msgstr "层级0为文档级权限，更高层级为字段级权限。"
+
+#~ msgid "Light Theme"
+#~ msgstr "浅色主题"
+
+#~ msgid "Limit Number of DB Backups"
+#~ msgstr "限制数据库备份数量"
+
+#~ msgid "Link Name"
+#~ msgstr "链接名称"
+
+#~ msgid "Link To in Row"
+#~ msgstr "行内链接到"
+
+#~ msgid "Link Type in Row"
+#~ msgstr "行内链接类型"
+
+#~ msgid "Link for About Us Page is \"/about\"."
+#~ msgstr "关于我们的页面的链接是“/about”。"
+
+#~ msgid "Linked With"
+#~ msgstr "关联对象"
+
+#~ msgctxt "Button in list view menu"
+#~ msgid "List Settings"
+#~ msgstr "列表设置"
+
+#~ msgid "List View"
+#~ msgstr "列表视图"
+
+#~ msgid "List a document type"
+#~ msgstr "列出文档类型"
+
+#~ msgid "Lists"
+#~ msgstr "列表"
+
+#~ msgctxt "Form timeline"
+#~ msgid "Load More Communications"
+#~ msgstr "加载更多沟通记录"
+
+#~ msgid "Loading Filters..."
+#~ msgstr "正在加载筛选器..."
+
+#~ msgid "Loading import file..."
+#~ msgstr "正在加载导入文件..."
+
+#~ msgid "Loading versions..."
+#~ msgstr "正在加载版本..."
+
+#~ msgid "Login Failed please try again"
+#~ msgstr "登录失败，请重试"
+
+#~ msgid ""
+#~ "Login is required to see web form list view. Enable {0} to see list "
+#~ "settings"
+#~ msgstr "需要登录才能查看Web表单列表视图。启用{0}以查看列表设置"
+
+#~ msgid "Logout All Sessions"
+#~ msgstr "退出所有会话"
+
+#~ msgid "Looks like you didn't change the value"
+#~ msgstr "您似乎未更改该值"
+
+#~ msgid "Looks like you haven’t received any notifications."
+#~ msgstr "您似乎未收到任何通知。"
+
+#~ msgctxt "Number system"
+#~ msgid "M"
+#~ msgstr "百万"
+
+#~ msgid "Make {0}"
+#~ msgstr "设为{0}"
+
+#~ msgid "Makes the page public"
+#~ msgstr "使页面公开可见"
+
+#~ msgid "Mandatory field: set role for"
+#~ msgstr "必填字段：设置角色"
+
+#~ msgid "Mandatory field: {0}"
+#~ msgstr "必填字段：{0}"
+
+#~ msgid "Mandatory fields required in table {0}, Row {1}"
+#~ msgstr "表{0}第{1}行缺少必填字段"
+
+#~ msgid "Mandatory fields required in {0}"
+#~ msgstr "{0}中缺少必填字段"
+
+#~ msgctxt "Error message in web form"
+#~ msgid "Mandatory fields required:"
+#~ msgstr "需要以下必填字段："
+
+#~ msgid "Map Columns"
+#~ msgstr "映射列"
+
+#~ msgid "Map View"
+#~ msgstr "地图视图"
+
+#~ msgid "Map columns from {0} to fields in {1}"
+#~ msgstr "将{0}的列映射到{1}的字段"
+
+#~ msgid "Mark all as read"
+#~ msgstr "全部标记为已读"
+
+#~ msgid "Mark as Read"
+#~ msgstr "标记为已读"
+
+#~ msgid "Mark as Spam"
+#~ msgstr "标记为垃圾邮件"
+
+#~ msgid "Mark as Unread"
+#~ msgstr "标记为未读"
+
+#~ msgid "Maximum attachment limit of {0} has been reached."
+#~ msgstr "已达到{0}的最大附件限制"
+
+#~ msgid "Me"
+#~ msgstr "我"
+
+#~ msgid "Meets Condition?"
+#~ msgstr "满足条件？"
+
+#~ msgid "Merge with existing"
+#~ msgstr "与现有合并"
+
+#~ msgid "Message clipped"
+#~ msgstr "消息截断"
+
+#~ msgid "Message not setup"
+#~ msgstr "消息未配置"
+
+#~ msgid "Meta title for SEO"
+#~ msgstr "SEO元标题"
+
+#~ msgid "Missing Fields"
+#~ msgstr "缺失字段"
+
+#~ msgid "Missing Values Required"
+#~ msgstr "缺少必要值"
+
+#~ msgid "Module to Export"
+#~ msgstr "待导出模块"
+
+#~ msgid "Month"
+#~ msgstr "月"
+
+#~ msgid "Most Used"
+#~ msgstr "最常用"
+
+#~ msgid "Move"
+#~ msgstr "移动"
+
+#~ msgid "Move To"
+#~ msgstr "移动到"
+
+#~ msgid "Move To Trash"
+#~ msgstr "移至回收站"
+
+#~ msgid "Move cursor to above row"
+#~ msgstr "移动光标至上一行"
+
+#~ msgid "Move cursor to below row"
+#~ msgstr "移动光标至下一行"
+
+#~ msgid "Move cursor to next column"
+#~ msgstr "移动光标至下一列"
+
+#~ msgid "Move cursor to previous column"
+#~ msgstr "移动光标至上一列"
+
+#~ msgid "Move to Row Number"
+#~ msgstr "跳转至行号"
+
+#~ msgid "My Workspaces"
+#~ msgstr "我的工作区"
+
+#~ msgid ""
+#~ "NOTE: If you add states or transitions in the table, it will be reflected "
+#~ "in the Workflow Builder but you will have to position them manually. Also "
+#~ "Workflow Builder is currently in <b>BETA</b>."
+#~ msgstr ""
+#~ "注意：在表格中添加状态或转换后需在工作流构建器中手动调整位置。工作流构建器"
+#~ "目前为<b>测试版</b>"
+
+#~ msgid "Name (Doc Name)"
+#~ msgstr "名称（文档名）"
+
+#~ msgid ""
+#~ "Name of the Document Type (DocType) you want this field to be linked to. "
+#~ "e.g. Customer"
+#~ msgstr "要关联的文档类型名称（DocType），例如：客户"
+
+#~ msgid "Name of the new Print Format"
+#~ msgstr "新打印格式名称"
+
+#~ msgctxt "Description of a list view shortcut"
+#~ msgid "Navigate list down"
+#~ msgstr "向下导航列表"
+
+#~ msgctxt "Description of a list view shortcut"
+#~ msgid "Navigate list up"
+#~ msgstr "向上导航列表"
+
+#~ msgid "Navigate to main content"
+#~ msgstr "跳转到主要内容"
+
+#~ msgid "New Activity"
+#~ msgstr "新建活动"
+
+#~ msgid "New Chart"
+#~ msgstr "新建图表"
+
+#~ msgid "New Custom Block"
+#~ msgstr "新建自定义块"
+
+#~ msgid "New Custom Print Format"
+#~ msgstr "新建自定义打印格式"
+
+#~ msgid "New Email"
+#~ msgstr "新建邮件"
+
+#~ msgid "New Email Account"
+#~ msgstr "新建邮件账户"
+
+#~ msgid "New Event"
+#~ msgstr "新建事件"
+
+#~ msgid "New Folder"
+#~ msgstr "新建文件夹"
+
+#~ msgid "New Kanban Board"
+#~ msgstr "新建看板"
+
+#~ msgid "New Links"
+#~ msgstr "新建链接"
+
+#~ msgid "New Name"
+#~ msgstr "新名称"
+
+#~ msgid "New Newsletter"
+#~ msgstr "新建简讯"
+
+#~ msgid "New Number Card"
+#~ msgstr "新建数字卡片"
+
+#~ msgid "New Onboarding"
+#~ msgstr "新建入门指引"
+
+#~ msgid "New Print Format Name"
+#~ msgstr "新打印格式名称"
+
+#~ msgid "New Quick List"
+#~ msgstr "新建快速列表"
+
+#~ msgid "New Report name"
+#~ msgstr "新报表名称"
+
+#~ msgid "New Shortcut"
+#~ msgstr "新建快捷方式"
+
+#~ msgid "New Workflow Name"
+#~ msgstr "新工作流名称"
+
+#~ msgid "New Workspace"
+#~ msgstr "新建工作区"
+
+#~ msgid "New {0} Created"
+#~ msgstr "已创建新{0}"
+
+#~ msgid "New {0} {1} added to Dashboard {2}"
+#~ msgstr "新{0}{1}已添加到仪表盘{2}"
+
+#~ msgid "New {0} {1} created"
+#~ msgstr "已创建新{0}{1}"
+
+#~ msgctxt "Go to next slide"
+#~ msgid "Next"
+#~ msgstr "下一步"
+
+#~ msgid "Next 14 Days"
+#~ msgstr "未来 14 天"
+
+#~ msgid "Next 30 Days"
+#~ msgstr "未来30天"
+
+#~ msgid "Next 6 Months"
+#~ msgstr "未来6个月"
+
+#~ msgid "Next 7 Days"
+#~ msgstr "未来 7 天"
+
+#~ msgid "Next Month"
+#~ msgstr "下月"
+
+#~ msgid "Next Quarter"
+#~ msgstr "下季度"
+
+#~ msgid "Next Week"
+#~ msgstr "下周"
+
+#~ msgid "Next Year"
+#~ msgstr "明年"
+
+#~ msgid "Next actions"
+#~ msgstr "后续操作"
+
+#~ msgctxt "Checkbox is not checked"
+#~ msgid "No"
+#~ msgstr "否"
+
+#~ msgctxt "Dismiss confirmation dialog"
+#~ msgid "No"
+#~ msgstr "否"
+
+#~ msgid "No Data..."
+#~ msgstr "无数据..."
+
+#~ msgid "No Email Account"
+#~ msgstr "无邮件账户"
+
+#~ msgid "No Email Accounts Assigned"
+#~ msgstr "未分配邮件账户"
+
+#~ msgid "No Emails"
+#~ msgstr "无邮件"
+
+#~ msgid "No Filters Set"
+#~ msgstr "未设置过滤器"
+
+#~ msgid "No Images"
+#~ msgstr "无图像"
+
+#~ msgid "No New notifications"
+#~ msgstr "无新通知"
+
+#~ msgid "No Permissions set for this criteria."
+#~ msgstr "未为此条件设置权限"
+
+#~ msgid "No Permitted Charts"
+#~ msgstr "无可用图表"
+
+#~ msgid "No Permitted Charts on this Dashboard"
+#~ msgstr "该仪表盘无可用图表"
+
+#~ msgid "No Preview"
+#~ msgstr "无预览"
+
+#~ msgid "No Preview Available"
+#~ msgstr "无可用预览"
+
+#~ msgid "No Printer is Available."
+#~ msgstr "无可用打印机"
+
+#~ msgid "No RQ Workers connected. Try restarting the bench."
+#~ msgstr "无RQ工作进程连接，请尝试重启服务"
+
+#~ msgid "No Results"
+#~ msgstr "无结果"
+
+#~ msgid "No Results found"
+#~ msgstr "未找到结果"
+
+#~ msgid "No Select Field Found"
+#~ msgstr "未找到选择字段"
+
+#~ msgid "No Upcoming Events"
+#~ msgstr "无即将发生的事件"
+
+#~ msgid "No alerts for today"
+#~ msgstr "今日无提醒"
+
+#~ msgid "No broken links found in the email content"
+#~ msgstr "邮件内容中未发现失效链接"
+
+#~ msgid "No changes in document"
+#~ msgstr "文档无变更"
+
+#~ msgid "No changes made"
+#~ msgstr "未作更改"
+
+#~ msgid "No changes to sync"
+#~ msgstr "无变更需同步"
+
+#~ msgid "No documents found tagged with {0}"
+#~ msgstr "未找到标记为{0}的文档"
+
+#~ msgid ""
+#~ "No email account associated with the User. Please add an account under "
+#~ "User > Email Inbox."
+#~ msgstr "用户未关联邮件账户，请通过 用户 > 收件箱 添加"
+
+#~ msgid "No failed logs"
+#~ msgstr "无失败日志"
+
+#~ msgid ""
+#~ "No fields found that can be used as a Kanban Column. Use the Customize "
+#~ "Form to add a Custom Field of type \"Select\"."
+#~ msgstr ""
+#~ "没有找到可用作看板的列的字段。使用自定义表单添加类型“选择”的自定义字段。"
+
+#~ msgid "No filters found"
+#~ msgstr "未找到筛选器"
+
+#~ msgid "No filters selected"
+#~ msgstr "未选择筛选器"
+
+#~ msgid "No more items to display"
+#~ msgstr "无更多项目可显示"
+
+#~ msgid "No of Columns"
+#~ msgstr "列数"
+
+#~ msgctxt "{0} = verb, {1} = object"
+#~ msgid "No permission to '{0}' {1}"
+#~ msgstr "无权限'{0}' {1}"
+
+#~ msgid "No records deleted"
+#~ msgstr "未删除记录"
+
+#~ msgid "No records will be exported"
+#~ msgstr "无记录可导出"
+
+#~ msgid "No rows"
+#~ msgstr "无行数据"
+
+#~ msgid "No values to show"
+#~ msgstr "无值可显示"
+
+#~ msgid "No {0} Found"
+#~ msgstr "未找到{0}"
+
+#~ msgid "No {0} found"
+#~ msgstr "未找到{0}"
+
+#~ msgid "No {0} found with matching filters. Clear filters to see all {0}."
+#~ msgstr "未找到匹配筛选条件的{0}。清除筛选器查看全部{0}。"
+
+#~ msgid "No {0} mail"
+#~ msgstr "无{0}邮件"
+
+#~ msgctxt "Title of the 'row number' column"
+#~ msgid "No."
+#~ msgstr "编号"
+
+#~ msgid "None"
+#~ msgstr "无"
+
+#~ msgid "None: End of Workflow"
+#~ msgstr "无：工作流结束"
+
+#~ msgid "Not Ancestors Of"
+#~ msgstr "非上级节点"
+
+#~ msgid "Not Descendants Of"
+#~ msgstr "非下级节点"
+
+#~ msgid "Not Equals"
+#~ msgstr "不等于"
+
+#~ msgid "Not In"
+#~ msgstr "不包含于"
+
+#~ msgid "Not Like"
+#~ msgstr "不类似"
+
+#~ msgid "Not Linked to any record"
+#~ msgstr "未关联到任何记录"
+
+#~ msgid "Not Published"
+#~ msgstr "未发布"
+
+#~ msgid "Not Seen"
+#~ msgstr "未读"
+
+#~ msgid "Not Set"
+#~ msgstr "未设置"
+
+#~ msgctxt "Field value is not set"
+#~ msgid "Not Set"
+#~ msgstr "未设置"
+
+#~ msgid "Not active"
+#~ msgstr "未激活"
+
+#~ msgid "Not found"
+#~ msgstr "未找到"
+
+#~ msgid "Not permitted to view {0}"
+#~ msgstr "无权限查看{0}"
+
+#~ msgid "Note: By default emails for failed backups are sent."
+#~ msgstr "注：默认发送备份失败通知邮件。"
+
+#~ msgid "Note: Changing the Page Name will break previous URL to this page."
+#~ msgstr "注：更改页面名称将导致旧URL失效。"
+
+#~ msgid "Note: Etc timezones have their signs reversed."
+#~ msgstr "注：Etc时区符号取反。"
+
+#~ msgid "Note: This will be shared with user."
+#~ msgstr "注：此信息将与用户共享。"
+
+#~ msgid ""
+#~ "Note: Your request for account deletion will be fulfilled within {0} "
+#~ "hours."
+#~ msgstr "注：您的账户删除请求将在{0}小时内处理。"
+
+#~ msgid "Nothing New"
+#~ msgstr "无新内容"
+
+#~ msgid "Nothing left to redo"
+#~ msgstr "无内容可重做"
+
+#~ msgid "Nothing left to undo"
+#~ msgstr "无内容可撤销"
+
+#~ msgid "Nothing to update"
+#~ msgstr "无更新内容"
+
+#~ msgid "Notifications Disabled"
+#~ msgstr "通知已禁用"
+
+#~ msgid "Now"
+#~ msgstr "现在"
+
+#~ msgid "Number Card Name"
+#~ msgstr "数字卡片名称"
+
+#~ msgid "Number of DB Backups"
+#~ msgstr "数据库备份数量"
+
+#~ msgid "Number of DB backups cannot be less than 1"
+#~ msgstr "数据库备份数量不能少于1"
+
+#~ msgid ""
+#~ "OAuth has been enabled but not authorised. Please use \"Authorise API "
+#~ "Access\" button to do the same."
+#~ msgstr ""
+#~ "OAuth 已启用但未授权。请使用\"Authorise API Access\"按钮进行同样操作。"
+
+#~ msgid "Official Documentation"
+#~ msgstr "官方文档"
+
+#~ msgid "On or After"
+#~ msgstr "在或之后"
+
+#~ msgid "On or Before"
+#~ msgstr "在或之前"
+
+#~ msgid "On {0}, {1} wrote:"
+#~ msgstr "于{0}，{1}写道："
+
+#~ msgid "Onboarding Name"
+#~ msgstr "入职流程名称"
+
+#~ msgid "Onboarding complete"
+#~ msgstr "入职完成"
+
+#~ msgid "Only Workspace Manager can edit public workspaces"
+#~ msgstr "仅工作区管理员可编辑公共工作区"
+
+#~ msgid ""
+#~ "Only change this if you want to use other S3 compatible object storage "
+#~ "backends."
+#~ msgstr "如需使用其他S3兼容对象存储后端，请修改此设置。"
+
+#~ msgctxt "Access"
+#~ msgid "Open"
+#~ msgstr "打开"
+
+#~ msgid "Open Awesomebar"
+#~ msgstr "打开智能栏"
+
+#~ msgid "Open Help"
+#~ msgstr "打开帮助"
+
+#~ msgid "Open Settings"
+#~ msgstr "打开设置"
+
+#~ msgid "Open Source Applications for the Web"
+#~ msgstr "开源Web应用"
+
+#~ msgid "Open a module or tool"
+#~ msgstr "打开模块或工具"
+
+#~ msgctxt "Description of a list view shortcut"
+#~ msgid "Open list item"
+#~ msgstr "打开列表项"
+
+#~ msgid "Open reference document"
+#~ msgstr "打开引用文档"
+
+#~ msgid "Optimizing image..."
+#~ msgstr "正在优化图像..."
+
+#~ msgid "Option 1"
+#~ msgstr "选项1"
+
+#~ msgid "Option 2"
+#~ msgstr "选项2"
+
+#~ msgid "Option 3"
+#~ msgstr "选项3"
+
+#~ msgid "Options for select. Each option on a new line."
+#~ msgstr "选择项。每行一个选项。"
+
+#~ msgid "Options is required for field {0} of type {1}"
+#~ msgstr "{1}类型字段{0}必须设置选项"
+
+#~ msgid "Orientation"
+#~ msgstr "方向"
+
+#~ msgid "PDF generation may not work as expected."
+#~ msgstr "PDF生成可能无法按预期工作。"
+
+#~ msgid "PDF printing via \"Raw Print\" is not supported."
+#~ msgstr "不支持通过 \"原始打印 \"进行 PDF 打印。"
+
+#~ msgid "Page Height (in mm)"
+#~ msgstr "页面高度（毫米）"
+
+#~ msgid "Page Shortcuts"
+#~ msgstr "页面快捷方式"
+
+#~ msgid "Page Size"
+#~ msgstr "页面尺寸"
+
+#~ msgid "Page Width (in mm)"
+#~ msgstr "页面宽度（毫米）"
+
+#~ msgid "Parent"
+#~ msgstr "父级"
+
+#~ msgid "Parent-to-child or child-to-parent grouping is not allowed."
+#~ msgstr "禁止父子层级互相嵌套的分组方式。"
+
+#~ msgid "Password cannot be filtered"
+#~ msgstr "密码不可被过滤"
+
+#~ msgid "Password missing in Email Account"
+#~ msgstr "邮箱账户缺少密码"
+
+#~ msgid "Passwords do not match!"
+#~ msgstr "密码不匹配！"
+
+#~ msgid "Paste"
+#~ msgstr "粘贴"
+
+#~ msgid "Permanently Cancel {0}?"
+#~ msgstr "永久取消{0}？"
+
+#~ msgid "Permanently Discard {0}?"
+#~ msgstr "永久丢弃{0}？"
+
+#~ msgid "Permanently Submit {0}?"
+#~ msgstr "永久提交{0}？"
+
+#~ msgid "Permanently delete {0}?"
+#~ msgstr "永久删除{0}？"
+
+#~ msgid "Pick Columns"
+#~ msgstr "选择列"
+
+#~ msgid "Please Set Chart"
+#~ msgstr "请设置图表"
+
+#~ msgid "Please attach a file first."
+#~ msgstr "请先附加文件"
+
+#~ msgid "Please check OpenID Configuration URL"
+#~ msgstr "请检查OpenID配置URL"
+
+#~ msgid "Please click Edit on the Workspace for best results"
+#~ msgstr "请在工作区点击编辑以获得最佳效果"
+
+#~ msgid ""
+#~ "Please click on 'Export Errored Rows', fix the errors and import again."
+#~ msgstr "请点击'导出错误行'，修正错误后重新导入"
+
+#~ msgid "Please close this window"
+#~ msgstr "请关闭此窗口"
+
+#~ msgid "Please contact your system manager to install correct version."
+#~ msgstr "请联系系统管理员安装正确版本"
+
+#~ msgid "Please create Card first"
+#~ msgstr "请先创建卡片"
+
+#~ msgid "Please create chart first"
+#~ msgstr "请先创建图表"
+
+#~ msgid "Please duplicate this to make changes"
+#~ msgstr "请复制此项进行修改"
+
+#~ msgid "Please enable pop-ups"
+#~ msgstr "请启用弹窗"
+
+#~ msgid "Please enable pop-ups in your browser"
+#~ msgstr "请在浏览器中启用弹窗"
+
+#~ msgid "Please enter OpenID Configuration URL"
+#~ msgstr "请输入OpenID配置URL"
+
+#~ msgctxt "Email Account"
+#~ msgid "Please enter the password for: <b>{0}</b>"
+#~ msgstr "请输入<b>{0}</b>的密码"
+
+#~ msgid "Please remove the printer mapping in Printer Settings and try again."
+#~ msgstr "请在打印机设置中移除打印机映射后重试"
+
+#~ msgid "Please save before attaching."
+#~ msgstr "附加前请先保存"
+
+#~ msgid "Please save the document before assignment"
+#~ msgstr "分配前请先保存文档"
+
+#~ msgid "Please save the document before removing assignment"
+#~ msgstr "移除分配前请先保存文档"
+
+#~ msgid "Please save the report first"
+#~ msgstr "请先保存报表"
+
+#~ msgid "Please save to edit the template."
+#~ msgstr "请保存后编辑模板"
+
+#~ msgid "Please select DocType first"
+#~ msgstr "请先选择文档类型"
+
+#~ msgid "Please select Entity Type first"
+#~ msgstr "请先选择实体类型"
+
+#~ msgid "Please select X and Y fields"
+#~ msgstr "请选择X和Y字段"
+
+#~ msgid "Please select applicable Doctypes"
+#~ msgstr "请选择适用文档类型"
+
+#~ msgid "Please select the Document Type."
+#~ msgstr "请选择文档类型"
+
+#~ msgid "Please select {0}"
+#~ msgstr "请选择{0}"
+
+#~ msgid "Please set Dropbox access keys in site config or doctype"
+#~ msgstr "请在站点配置或文档类型中设置Dropbox访问密钥"
+
+#~ msgid ""
+#~ "Please set a printer mapping for this print format in the Printer Settings"
+#~ msgstr "请在打印机设置中为此打印格式设置打印机映射"
+
+#~ msgid "Please set filters"
+#~ msgstr "请设置过滤器"
+
+#~ msgid "Please setup a message first"
+#~ msgstr "请先设置消息"
+
+#~ msgid "Please specify"
+#~ msgstr "请具体说明"
+
+#~ msgid "Please try again"
+#~ msgstr "请重试"
+
+#~ msgid "Portrait"
+#~ msgstr "纵向"
+
+#~ msgid "Preparing Report"
+#~ msgstr "正在准备报表"
+
+#~ msgid "Prepend the template to the email message"
+#~ msgstr "将模板添加到邮件正文前部"
+
+#~ msgid "Press Alt Key to trigger additional shortcuts in Menu and Sidebar"
+#~ msgstr "按Alt键触发菜单和侧边栏的附加快捷键"
+
+#~ msgid "Press Enter to save"
+#~ msgstr "按Enter键保存"
+
+#~ msgid "Preview Mode"
+#~ msgstr "预览模式"
+
+#~ msgid "Preview on {0}"
+#~ msgstr "在{0}上预览"
+
+#~ msgid "Preview:"
+#~ msgstr "预览："
+
+#~ msgctxt "Go to previous slide"
+#~ msgid "Previous"
+#~ msgstr "上一条"
+
+#~ msgid "Previous Submission"
+#~ msgstr "前次提交"
+
+#~ msgctxt "Button in list view actions menu"
+#~ msgid "Print"
+#~ msgstr "打印"
+
+#~ msgid "Print Documents"
+#~ msgstr "打印文档"
+
+#~ msgid "Print Language"
+#~ msgstr "打印语言"
+
+#~ msgid "Print Sent to the printer!"
+#~ msgstr "打印已发送至打印机！"
+
+#~ msgid "Print document"
+#~ msgstr "打印文档"
+
+#~ msgid "Printer"
+#~ msgstr "打印机"
+
+#~ msgid "Printer Mapping"
+#~ msgstr "打印机映射"
+
+#~ msgid "Printer Settings"
+#~ msgstr "打印机设置"
+
+#~ msgid "Printer mapping not set."
+#~ msgstr "未设置打印机映射"
+
+#~ msgid "Proceed"
+#~ msgstr "继续"
+
+#~ msgid "Proceed Anyway"
+#~ msgstr "仍然继续"
+
+#~ msgid "Processing"
+#~ msgstr "处理中"
+
+#~ msgid "Processing..."
+#~ msgstr "处理中..."
+
+#~ msgid "Progress"
+#~ msgstr "进度"
+
+#~ msgid "Project"
+#~ msgstr "项目"
+
+#~ msgid "Pull Emails"
+#~ msgstr "拉取邮件"
+
+#~ msgid "Pulling emails..."
+#~ msgstr "正在拉取邮件..."
+
+#~ msgid "Put on Hold"
+#~ msgstr "暂停处理"
+
+#~ msgid "QZ Tray Failed: "
+#~ msgstr "QZ托盘失败: "
+
+#~ msgid "Queued for backup. It may take a few minutes to an hour."
+#~ msgstr "已加入备份队列，预计需要数分钟至一小时"
+
+#~ msgid "Queued {0} emails"
+#~ msgstr "已排队{0}封邮件"
+
+#~ msgid "Queuing emails..."
+#~ msgstr "正在加入邮件队列..."
+
+#~ msgid "Quoting must be between 0 and 3"
+#~ msgstr "引用级别须在0至3之间"
+
+#~ msgid "Range"
+#~ msgstr "范围"
+
+#~ msgid "Raw Printing Setting"
+#~ msgstr "原始打印设置"
+
+#~ msgid "Re-Run in Console"
+#~ msgstr "在控制台重新运行"
+
+#~ msgid "Re: {0}"
+#~ msgstr "回复：{0}"
+
+#~ msgid "Read mode"
+#~ msgstr "阅读模式"
+
+#~ msgid "Rebuild"
+#~ msgstr "重建"
+
+#~ msgid "Rebuild Tree"
+#~ msgstr "重建树结构"
+
+#~ msgid "Recents"
+#~ msgstr "最近记录"
+
+#~ msgid "Redo"
+#~ msgstr "重做"
+
+#~ msgid "Redo last action"
+#~ msgstr "重做上一步操作"
+
+#~ msgid ""
+#~ "Referance Doctype and Dashboard Name both can't be used at the same time."
+#~ msgstr "关联文档类型与仪表板名称不可同时使用"
+
+#~ msgid "Reference Docname"
+#~ msgstr "关联文档名称"
+
+#~ msgid "Reference Document Name"
+#~ msgstr "关联文档名称"
+
+#~ msgid "Reference Name"
+#~ msgstr "关联名称"
+
+#~ msgid "Reference name"
+#~ msgstr "关联名称"
+
+#~ msgid "Refresh All"
+#~ msgstr "全部刷新"
+
+#~ msgctxt "Document count in list view"
+#~ msgid "Refreshing"
+#~ msgstr "正在刷新"
+
+#~ msgid "Refreshing..."
+#~ msgstr "正在刷新..."
+
+#~ msgid "Relink"
+#~ msgstr "重新关联"
+
+#~ msgid "Relink Communication"
+#~ msgstr "重新关联通讯记录"
+
+#~ msgid "Reload File"
+#~ msgstr "重新加载文件"
+
+#~ msgid "Reload List"
+#~ msgstr "重新加载列表"
+
+#~ msgid "Reload Report"
+#~ msgstr "重新加载报表"
+
+#~ msgid "Remind Me"
+#~ msgstr "提醒我"
+
+#~ msgid "Remind Me In"
+#~ msgstr "在之后提醒"
+
+#~ msgid "Reminder set at {0}"
+#~ msgstr "提醒设置于{0}"
+
+#~ msgid "Remove Failed Jobs"
+#~ msgstr "移除失败作业"
+
+#~ msgid "Remove Field"
+#~ msgstr "移除字段"
+
+#~ msgid "Remove Section"
+#~ msgstr "移除章节"
+
+#~ msgid "Remove all customizations?"
+#~ msgstr "移除所有自定义？"
+
+#~ msgid "Rename"
+#~ msgstr "重命名"
+
+#~ msgid "Rename Fieldname"
+#~ msgstr "重命名字段名"
+
+#~ msgid "Rename {0}"
+#~ msgstr "重命名{0}"
+
+#~ msgid "Reopen"
+#~ msgstr "重新打开"
+
+#~ msgid "Repeat"
+#~ msgstr "重复"
+
+#~ msgid "Repeats {0}"
+#~ msgstr "重复{0}"
+
+#~ msgid "Replicate"
+#~ msgstr "复制"
+
+#~ msgid "Replicating..."
+#~ msgstr "正在复制..."
+
+#~ msgid "Replication completed."
+#~ msgstr "复制完成"
+
+#~ msgid "Reply All"
+#~ msgstr "回复全部"
+
+#~ msgid "Report View"
+#~ msgstr "报表视图"
+
+#~ msgid ""
+#~ "Report has no data, please modify the filters or change the Report Name"
+#~ msgstr "报表无数据，请调整过滤器或更换报表名称"
+
+#~ msgid "Report has no numeric fields, please change the Report Name"
+#~ msgstr "报表无数字字段，请更换报表名称"
+
+#~ msgid "Report initiated, click to view status"
+#~ msgstr "报表已初始化，点击查看状态"
+
+#~ msgid "Report was not saved (there were errors)"
+#~ msgstr "报表未保存(存在错误)"
+
+#~ msgid "Report with more than 10 columns looks better in Landscape mode."
+#~ msgstr "超过10列的报表更适合横向模式"
+
+#~ msgid "Report {0}"
+#~ msgstr "报表{0}"
+
+#~ msgid "Report:"
+#~ msgstr "报表："
+
+#~ msgid "Reports already in Queue"
+#~ msgstr "报表已加入队列"
+
+#~ msgid "Request Body"
+#~ msgstr "请求体"
+
+#~ msgid "Request Timed Out"
+#~ msgstr "请求超时"
+
+#~ msgid "Res: {0}"
+#~ msgstr "回复：{0}"
+
+#~ msgid "Reset"
+#~ msgstr "重置"
+
+#~ msgid "Reset All Customizations"
+#~ msgstr "重置所有自定义"
+
+#~ msgid "Reset Changes"
+#~ msgstr "重置变更"
+
+#~ msgid "Reset Chart"
+#~ msgstr "重置图表"
+
+#~ msgid "Reset Dashboard Customizations"
+#~ msgstr "重置仪表板自定义"
+
+#~ msgid "Reset Fields"
+#~ msgstr "重置字段"
+
+#~ msgid "Reset LDAP Password"
+#~ msgstr "重置LDAP密码"
+
+#~ msgid "Reset Layout"
+#~ msgstr "重置布局"
+
+#~ msgid "Reset OTP Secret"
+#~ msgstr "重置OTP密钥"
+
+#~ msgid "Reset Permissions for {0}?"
+#~ msgstr "重置{0}的权限？"
+
+#~ msgid "Reset sorting"
+#~ msgstr "重置排序"
+
+#~ msgid "Reset to default"
+#~ msgstr "重置为默认"
+
+#~ msgid "Reset to defaults"
+#~ msgstr "重置为默认值"
+
+#~ msgid "Rest of the day"
+#~ msgstr "今日剩余时间"
+
+#~ msgid "Restore"
+#~ msgstr "恢复"
+
+#~ msgid "Restore Original Permissions"
+#~ msgstr "恢复原始权限"
+
+#~ msgid "Restore to default settings?"
+#~ msgstr "恢复默认设置？"
+
+#~ msgctxt "Title of message showing restrictions in list view"
+#~ msgid "Restrictions"
+#~ msgstr "限制条件"
+
+#~ msgid "Result"
+#~ msgstr "结果"
+
+#~ msgid "Resume Sending"
+#~ msgstr "恢复发送"
+
+#~ msgid "Retry Sending"
+#~ msgstr "重试发送"
+
+#~ msgid "Role 'All' will be given to all system + website users."
+#~ msgstr "'所有'角色将赋予所有系统和网站用户。"
+
+#~ msgid "Role 'Desk User' will be given to all system users."
+#~ msgstr "'工作台用户'角色将赋予所有系统用户。"
+
+#~ msgctxt "Button in list view menu"
+#~ msgid "Role Permissions Manager"
+#~ msgstr "角色权限管理器"
+
+#~ msgid "Row Name"
+#~ msgstr "行名称"
+
+#~ msgid "Row Number"
+#~ msgstr "行号"
+
+#~ msgid "Row {0}"
+#~ msgstr "第{0}行"
+
+#~ msgid "S3 Backup Settings"
+#~ msgstr "S3备份设置"
+
+#~ msgid "S3 Backup complete!"
+#~ msgstr "S3备份完成！"
+
+#~ msgid "S3 Bucket Details"
+#~ msgstr "S3存储桶详情"
+
+#~ msgid "SWATCHES"
+#~ msgstr "色板"
+
+#~ msgid "Save API Secret: {0}"
+#~ msgstr "保存API密钥：{0}"
+
+#~ msgid "Save Anyway"
+#~ msgstr "仍然保存"
+
+#~ msgid "Save As"
+#~ msgstr "另存为"
+
+#~ msgid "Save Customizations"
+#~ msgstr "保存自定义"
+
+#~ msgid "Save Report"
+#~ msgstr "保存报告"
+
+#~ msgid "Save filters"
+#~ msgstr "保存筛选器"
+
+#~ msgid "Save the document."
+#~ msgstr "保存文档。"
+
+#~ msgid "Saving"
+#~ msgstr "正在保存"
+
+#~ msgctxt "Freeze message while saving a document"
+#~ msgid "Saving"
+#~ msgstr "正在保存"
+
+#~ msgid "Saving Customization..."
+#~ msgstr "正在保存自定义..."
+
+#~ msgid ""
+#~ "Saving this will export this document as well as the steps linked here as "
+#~ "json."
+#~ msgstr "保存将导出此文档及其关联步骤为JSON格式。"
+
+#~ msgid "Saving..."
+#~ msgstr "保存中..."
+
+#~ msgid "Scan QRCode"
+#~ msgstr "扫描二维码"
+
+#~ msgid "Schedule Newsletter"
+#~ msgstr "计划发送新闻稿"
+
+#~ msgid "Schedule Send At"
+#~ msgstr "计划发送时间"
+
+#~ msgid "Schedule sending"
+#~ msgstr "计划发送"
+
+#~ msgid "Scheduled to send"
+#~ msgstr "计划发送"
+
+#~ msgid "Scheduler: Active"
+#~ msgstr "调度器：激活"
+
+#~ msgid "Scheduler: Inactive"
+#~ msgstr "调度器：未激活"
+
+#~ msgid "Search Help"
+#~ msgstr "搜索帮助"
+
+#~ msgid "Search for anything"
+#~ msgstr "搜索任何内容"
+
+#~ msgid "Search for {0}"
+#~ msgstr "搜索{0}"
+
+#~ msgid "Search in a document type"
+#~ msgstr "在文档类型中搜索"
+
+#~ msgid "Searching ..."
+#~ msgstr "正在搜索..."
+
+#~ msgid "Section Heading"
+#~ msgstr "节标题"
+
+#~ msgid "See all Activity"
+#~ msgstr "查看所有活动"
+
+#~ msgid "See all past reports."
+#~ msgstr "查看所有历史报告。"
+
+#~ msgid "See on Website"
+#~ msgstr "在网站上查看"
+
+#~ msgid "Select All"
+#~ msgstr "全选"
+
+#~ msgid "Select Attachments"
+#~ msgstr "选择附件"
+
+#~ msgid "Select Child Table"
+#~ msgstr "选择子表"
+
+#~ msgid "Select Column"
+#~ msgstr "选择列"
+
+#~ msgid "Select Country"
+#~ msgstr "选择国家"
+
+#~ msgid "Select Currency"
+#~ msgstr "选择货币"
+
+#~ msgid "Select Document Type"
+#~ msgstr "选择文档类型"
+
+#~ msgid "Select Document Type or Role to start."
+#~ msgstr "选择文档类型或角色以开始。"
+
+#~ msgid "Select Fields"
+#~ msgstr "选择字段"
+
+#~ msgid "Select Fields To Insert"
+#~ msgstr "选择要插入的字段"
+
+#~ msgid "Select Fields To Update"
+#~ msgstr "选择要更新的字段"
+
+#~ msgid "Select Filters"
+#~ msgstr "选择筛选器"
+
+#~ msgid "Select Kanban"
+#~ msgstr "选择看板"
+
+#~ msgid "Select Language"
+#~ msgstr "选择语言"
+
+#~ msgid "Select Mandatory"
+#~ msgstr "选择必填项"
+
+#~ msgid "Select Module"
+#~ msgstr "选择模块"
+
+#~ msgid "Select Network Printer"
+#~ msgstr "选择网络打印机"
+
+#~ msgid "Select Print Format"
+#~ msgstr "选择打印格式"
+
+#~ msgid "Select Print Format to Edit"
+#~ msgstr "选择要编辑的打印格式"
+
+#~ msgid "Select Table Columns for {0}"
+#~ msgstr "为{0}选择表格列"
+
+#~ msgid "Select Time Zone"
+#~ msgstr "选择时区"
+
+#~ msgid "Select Workflow"
+#~ msgstr "选择工作流"
+
+#~ msgid "Select a Brand Image first."
+#~ msgstr "请先选择品牌图片。"
+
+#~ msgid "Select a DocType to make a new format"
+#~ msgstr "选择文档类型以创建新格式"
+
+#~ msgid "Select a group node first."
+#~ msgstr "请先选择组节点。"
+
+#~ msgid "Select an Image"
+#~ msgstr "选择图片"
+
+#~ msgid "Select atleast 1 record for printing"
+#~ msgstr "至少选择1条记录进行打印"
+
+#~ msgid "Select atleast 2 actions"
+#~ msgstr "至少选择2个操作"
+
+#~ msgctxt "Description of a list view shortcut"
+#~ msgid "Select list item"
+#~ msgstr "选择列表项"
+
+#~ msgctxt "Description of a list view shortcut"
+#~ msgid "Select multiple list items"
+#~ msgstr "选择多个列表项"
+
+#~ msgid "Select or drag across time slots to create a new event."
+#~ msgstr "选择或拖动时间槽以创建新事件。"
+
+#~ msgid "Select records for assignment"
+#~ msgstr "选择要分配的记录"
+
+#~ msgid "Select records for removing assignment"
+#~ msgstr "选择要移除分配的记录"
+
+#~ msgid "Select two versions to view the diff."
+#~ msgstr "选择两个版本来查看差异。"
+
+#~ msgctxt "Send Email"
+#~ msgid "Send"
+#~ msgstr "发送"
+
+#~ msgid "Send Email for Successful Backup"
+#~ msgstr "备份成功时发送邮件"
+
+#~ msgid "Send Email for Successful backup"
+#~ msgstr "备份成功发送邮件通知"
+
+#~ msgid "Send Notification To"
+#~ msgstr "发送通知给"
+
+#~ msgid "Send Notifications To"
+#~ msgstr "发送通知给"
+
+#~ msgid "Send Now"
+#~ msgstr "立即发送"
+
+#~ msgid "Send Read Receipt"
+#~ msgstr "发送已读回执"
+
+#~ msgid "Send Test Email"
+#~ msgstr "发送测试邮件"
+
+#~ msgid "Send a test email"
+#~ msgstr "发送测试邮件"
+
+#~ msgid "Send again"
+#~ msgstr "重新发送"
+
+#~ msgid "Send me a copy"
+#~ msgstr "发送副本给我"
+
+#~ msgid "Send now"
+#~ msgstr "立即发送"
+
+#~ msgid "Sending emails"
+#~ msgstr "发送邮件中"
+
+#~ msgid "Sending..."
+#~ msgstr "发送中..."
+
+#~ msgid "Server Scripts feature is not available on this site."
+#~ msgstr "此站点未启用服务器脚本功能"
+
+#~ msgid ""
+#~ "Server failed to process this request because of a concurrent conflicting "
+#~ "request. Please try again."
+#~ msgstr "因并发请求冲突，服务器未能处理本请求。请稍后重试。"
+
+#~ msgid "Server was too busy to process this request. Please try again."
+#~ msgstr "服务器繁忙，请稍后重试"
+
+#~ msgid "Session Defaults Saved"
+#~ msgstr "会话默认值已保存"
+
+#~ msgid "Set"
+#~ msgstr "设置"
+
+#~ msgctxt "Field value is set"
+#~ msgid "Set"
+#~ msgstr "设置"
+
+#~ msgid "Set Chart"
+#~ msgstr "设置图表"
+
+#~ msgid "Set Dynamic Filters"
+#~ msgstr "设置动态过滤器"
+
+#~ msgid "Set Filters for {0}"
+#~ msgstr "为{0}设置过滤器"
+
+#~ msgid "Set Level"
+#~ msgstr "设置层级"
+
+#~ msgid "Set Number of Backups"
+#~ msgstr "设置备份数量"
+
+#~ msgid "Set Permissions"
+#~ msgstr "设置权限"
+
+#~ msgid "Set Properties"
+#~ msgstr "设置属性"
+
+#~ msgid "Set Quantity"
+#~ msgstr "设置数量"
+
+#~ msgid "Set User Permissions"
+#~ msgstr "设置用户权限"
+
+#~ msgid "Set all private"
+#~ msgstr "全部设为私有"
+
+#~ msgid "Set all public"
+#~ msgstr "全部设为公开"
+
+#~ msgid "Set as Default"
+#~ msgstr "设为默认"
+
+#~ msgid "Set as Default Theme"
+#~ msgstr "设为默认主题"
+
+#~ msgid ""
+#~ "Set dynamic filter values in JavaScript for the required fields here."
+#~ msgstr "在此处用JavaScript为必填字段设置动态过滤值"
+
+#~ msgid "Setting up your system"
+#~ msgstr "系统设置中"
+
+#~ msgid "Setup Auto Email"
+#~ msgstr "设置自动邮件"
+
+#~ msgid "Setup failed"
+#~ msgstr "设置失败"
+
+#~ msgid "Share With"
+#~ msgstr "共享给"
+
+#~ msgid "Share {0} with"
+#~ msgstr "将{0}共享给"
+
+#~ msgid "Show Calendar"
+#~ msgstr "显示日历"
+
+#~ msgid "Show Fieldname (click to copy on clipboard)"
+#~ msgstr "显示字段名（点击复制到剪贴板）"
+
+#~ msgid "Show Keyboard Shortcuts"
+#~ msgstr "显示键盘快捷键"
+
+#~ msgid "Show Links"
+#~ msgstr "显示链接"
+
+#~ msgid "Show Permissions"
+#~ msgstr "显示权限"
+
+#~ msgid "Show Preview"
+#~ msgstr "显示预览"
+
+#~ msgid "Show Related Errors"
+#~ msgstr "显示相关错误"
+
+#~ msgid "Show Saved"
+#~ msgstr "显示已保存"
+
+#~ msgid "Show Totals"
+#~ msgstr "显示总计"
+
+#~ msgid "Show Tour"
+#~ msgstr "显示引导"
+
+#~ msgid "Show Traceback"
+#~ msgstr "显示回溯信息"
+
+#~ msgid "Show Warnings"
+#~ msgstr "显示警告"
+
+#~ msgid "Show Weekends"
+#~ msgstr "显示周末"
+
+#~ msgid "Show all Versions"
+#~ msgstr "显示所有版本"
+
+#~ msgid "Show all activity"
+#~ msgstr "显示所有活动"
+
+#~ msgid "Show more details"
+#~ msgstr "显示更多详情"
+
+#~ msgid "Show {0} List"
+#~ msgstr "显示{0}列表"
+
+#~ msgid "Showing only Numeric fields from Report"
+#~ msgstr "仅显示报表中的数值字段"
+
+#~ msgid "Showing only first {0} rows out of {1}"
+#~ msgstr "仅显示前{0}行（共{1}行）"
+
+#~ msgid "Size"
+#~ msgstr "大小"
+
+#~ msgid "Skip"
+#~ msgstr "跳过"
+
+#~ msgid "Skip Step"
+#~ msgstr "跳过步骤"
+
+#~ msgid "Skipping {0} of {1}, {2}"
+#~ msgstr "跳过{1}的第{0}项，{2}"
+
+#~ msgid "Snippet and more variables:  {0}"
+#~ msgstr "代码段及更多变量：{0}"
+
+#~ msgid ""
+#~ "Some of the features might not work in your browser. Please update your "
+#~ "browser to the latest version."
+#~ msgstr "部分功能可能无法在您的浏览器中使用，请升级至最新版本"
+
+#~ msgid "Something went wrong"
+#~ msgstr "发生错误"
+
+#~ msgid "Sorry! I could not find what you were looking for."
+#~ msgstr "抱歉！未找到您需要的内容"
+
+#~ msgid "Sorry! You are not permitted to view this page."
+#~ msgstr "抱歉！您无权查看此页面"
+
+#~ msgid "Sort Ascending"
+#~ msgstr "升序排序"
+
+#~ msgid "Sort Descending"
+#~ msgstr "降序排序"
+
+#~ msgid "Special Characters are not allowed"
+#~ msgstr "不允许使用特殊字符"
+
+#~ msgid "Standard Permissions"
+#~ msgstr "标准权限"
+
+#~ msgid ""
+#~ "Standard Web Forms can not be modified, duplicate the Web Form instead."
+#~ msgstr "标准Web表单不可修改，请复制后编辑副本"
+
+#~ msgid "Standard rich text editor with controls"
+#~ msgstr "带控件的标准富文本编辑器"
+
+#~ msgid "Start Import"
+#~ msgstr "开始导入"
+
+#~ msgid "Start Recording"
+#~ msgstr "开始录制"
+
+#~ msgid "Start new Format"
+#~ msgstr "开始新格式"
+
+#~ msgid "Starting Frappe ..."
+#~ msgstr "正在启动Frappe..."
+
+#~ msgid ""
+#~ "Status Updated. The email will be picked up in the next scheduled run."
+#~ msgstr "状态已更新，邮件将在下次计划运行时处理"
+
+#~ msgid "Stop"
+#~ msgstr "停止"
+
+#~ msgid "Strong"
+#~ msgstr "强"
+
+#~ msgctxt "Button in list view actions menu"
+#~ msgid "Submit"
+#~ msgstr "提交"
+
+#~ msgctxt "Primary action in dialog"
+#~ msgid "Submit"
+#~ msgstr "提交"
+
+#~ msgctxt "Primary action of prompt dialog"
+#~ msgid "Submit"
+#~ msgstr "提交"
+
+#~ msgctxt "Submit password for Email Account"
+#~ msgid "Submit"
+#~ msgstr "提交"
+
+#~ msgid "Submit this document to complete this step."
+#~ msgstr "提交此文档以完成此步骤"
+
+#~ msgid "Submit this document to confirm"
+#~ msgstr "提交此文档以确认"
+
+#~ msgctxt "Title of confirmation dialog"
+#~ msgid "Submit {0} documents?"
+#~ msgstr "是否提交{0}个文档？"
+
+#~ msgid ""
+#~ "Submitted document cannot be converted back to draft while transitioning "
+#~ "from <b>{0} State</b> to <b>{1} State</b>"
+#~ msgstr "从<b>{0}状态</b>转换至<b>{1}状态</b>时，已提交文档无法转回草稿"
+
+#~ msgctxt "Freeze message while submitting a document"
+#~ msgid "Submitting"
+#~ msgstr "提交中"
+
+#~ msgid "Successfully Updated"
+#~ msgstr "更新成功"
+
+#~ msgid "Successfully imported {0}"
+#~ msgstr "成功导入{0}"
+
+#~ msgid "Successfully imported {0} out of {1} records."
+#~ msgstr "成功导入{1}条记录中的{0}条。"
+
+#~ msgid "Successfully updated translations"
+#~ msgstr "翻译更新成功"
+
+#~ msgid "Successfully updated {0}"
+#~ msgstr "成功更新{0}"
+
+#~ msgid "Successfully updated {0} out of {1} records."
+#~ msgstr "成功更新{1}条记录中的{0}条。"
+
+#~ msgid "Suggest Optimizations"
+#~ msgstr "建议优化"
+
+#~ msgid "Sum of {0}"
+#~ msgstr "{0}的合计"
+
+#~ msgid "Summary"
+#~ msgstr "摘要"
+
+#~ msgid "Suspend Sending"
+#~ msgstr "暂停发送"
+
+#~ msgid "Switch Camera"
+#~ msgstr "切换摄像头"
+
+#~ msgid "Switch Theme"
+#~ msgstr "切换主题"
+
+#~ msgid "Switch to Frappe CRM for smarter sales"
+#~ msgstr "切换至Frappe CRM以获取更智能的销售管理"
+
+#~ msgid "Switching Camera"
+#~ msgstr "正在切换摄像头"
+
+#~ msgid "Sync Calendar"
+#~ msgstr "同步日历"
+
+#~ msgid "Sync Contacts"
+#~ msgstr "同步联系人"
+
+#~ msgid "Sync on Migrate"
+#~ msgstr "迁移时同步"
+
+#~ msgid "Sync {0} Fields"
+#~ msgstr "同步{0}字段"
+
+#~ msgid "Synced Fields"
+#~ msgstr "已同步字段"
+
+#~ msgid "Syncing"
+#~ msgstr "同步中"
+
+#~ msgid "Syncing {0} of {1}"
+#~ msgstr "正在同步{1}中的{0}"
+
+#~ msgid "System Manager privileges required."
+#~ msgstr "需要系统管理员权限。"
+
+#~ msgctxt "Number system"
+#~ msgid "T"
+#~ msgstr "T"
+
+#~ msgid "Table Trimmed"
+#~ msgstr "表格已截断"
+
+#~ msgid "Table updated"
+#~ msgstr "表格已更新"
+
+#~ msgid "Take Backup"
+#~ msgstr "执行备份"
+
+#~ msgid "Take Backup Now"
+#~ msgstr "立即备份"
+
+#~ msgid "Take Photo"
+#~ msgstr "拍照"
+
+#~ msgid "Task"
+#~ msgstr "任务"
+
+#~ msgid "Templates"
+#~ msgstr "模板集"
+
+#~ msgid "The CSV format is case sensitive"
+#~ msgstr "CSV格式区分大小写"
+
+#~ msgid ""
+#~ "The application has been updated to a new version, please refresh this "
+#~ "page"
+#~ msgstr "应用已更新至新版本，请刷新此页面"
+
+#~ msgid "The attachments could not be correctly linked to the new document"
+#~ msgstr "附件未能正确链接到新文档"
+
+#~ msgid ""
+#~ "The count shown is an estimated count. Click here to see the accurate "
+#~ "count."
+#~ msgstr "显示数量为估算值。点击此处查看精确数量。"
+
+#~ msgid "The document could not be correctly assigned"
+#~ msgstr "文档未能正确分配"
+
+#~ msgid "The document has been assigned to {0}"
+#~ msgstr "文档已分配给{0}"
+
+#~ msgid ""
+#~ "The following Header Script will add the current date to an element in "
+#~ "'Header HTML' with class 'header-content'"
+#~ msgstr "以下页眉脚本将当前日期添加至类名为'header-content'的页眉HTML元素中"
+
+#~ msgid ""
+#~ "The meta description is an HTML attribute that provides a brief summary "
+#~ "of a web page. Search engines such as Google often display the meta "
+#~ "description in search results, which can influence click-through rates."
+#~ msgstr ""
+#~ "元描述是HTML属性，提供网页摘要。Google等搜索引擎常在搜索结果中显示元描述，"
+#~ "影响点击率。"
+
+#~ msgid ""
+#~ "The meta image is unique image representing the content of the page. "
+#~ "Images for this Card should be at least 280px in width, and at least "
+#~ "150px in height."
+#~ msgstr ""
+#~ "元图像是代表页面内容的唯一图像。卡片图像宽度至少280px，高度至少150px。"
+
+#~ msgid ""
+#~ "The value you pasted was {0} characters long. Max allowed characters is "
+#~ "{1}."
+#~ msgstr "您粘贴的值长度为{0}个字符。最大允许字符数为{1}。"
+
+#~ msgid "Theme Changed"
+#~ msgstr "主题已更改"
+
+#~ msgid ""
+#~ "There are documents which have workflow states that do not exist in this "
+#~ "Workflow. It is recommended that you add these states to the Workflow and "
+#~ "change their states before removing these states."
+#~ msgstr ""
+#~ "存在文档的工作流状态未包含在此工作流中。建议在移除前将这些状态添加至工作流"
+#~ "并修改文档状态。"
+
+#~ msgid "There are no upcoming events for you."
+#~ msgstr "您没有即将发生的事件。"
+
+#~ msgid "There are {0} with the same filters already in the queue:"
+#~ msgstr "队列中已有{0}条相同筛选条件的记录："
+
+#~ msgid "There can be only 9 Page Break fields in a Web Form"
+#~ msgstr "网页表单最多允许9个分页符字段"
+
+#~ msgid "There is nothing new to show you right now."
+#~ msgstr "当前无新内容可显示。"
+
+#~ msgid "There is {0} with the same filters already in the queue:"
+#~ msgstr "队列中已有{0}条相同筛选条件的记录："
+
+#~ msgid "There was an error saving filters"
+#~ msgstr "保存筛选器时出错"
+
+#~ msgid "There were errors"
+#~ msgstr "存在错误"
+
+#~ msgid "There were errors while creating the document. Please try again."
+#~ msgstr "创建文档时出错。请重试。"
+
+#~ msgid "There were errors while sending email. Please try again."
+#~ msgstr "发送邮件时出错。请重试。"
+
+#~ msgid "This Currency is disabled. Enable to use in transactions"
+#~ msgstr "此货币已禁用。启用后方可用于交易"
+
+#~ msgid "This Kanban Board will be private"
+#~ msgstr "此看板将设为私有"
+
+#~ msgid "This Month"
+#~ msgstr "本月"
+
+#~ msgid "This Quarter"
+#~ msgstr "本季度"
+
+#~ msgid "This Week"
+#~ msgstr "本周"
+
+#~ msgid "This Year"
+#~ msgstr "本年"
+
+#~ msgid "This action is irreversible. Do you wish to continue?"
+#~ msgstr "此操作不可逆。是否继续？"
+
+#~ msgid "This cannot be undone"
+#~ msgstr "此操作不可撤销"
+
+#~ msgid "This doctype has no orphan fields to trim"
+#~ msgstr "此文档类型无孤立字段需清理"
+
+#~ msgid ""
+#~ "This document has unsaved changes which might not appear in final PDF. "
+#~ "<br> Consider saving the document before printing."
+#~ msgstr ""
+#~ "此文档存在未保存更改，可能不会反映在最终PDF中。<br>打印前请先保存文档。"
+
+#~ msgid "This document is already amended, you cannot ammend it again"
+#~ msgstr "此文档已修订，不可再次修订"
+
+#~ msgid "This file is public. It can be accessed without authentication."
+#~ msgstr "此文件为公开文件，无需认证即可访问。"
+
+#~ msgid "This form has been modified after you have loaded it"
+#~ msgstr "此表单在您加载后已被修改"
+
+#~ msgid "This form is not editable due to a Workflow."
+#~ msgstr "由于工作流限制，此表单不可编辑。"
+
+#~ msgid ""
+#~ "This is a background report. Please set the appropriate filters and then "
+#~ "generate a new one."
+#~ msgstr "此为后台报告。请设置合适筛选条件后生成新报告。"
+
+#~ msgid "This is a virtual doctype and data is cleared periodically."
+#~ msgstr "此为虚拟文档类型，数据定期清除。"
+
+#~ msgid "This may get printed on multiple pages"
+#~ msgstr "可能分多页打印"
+
+#~ msgid "This newsletter is scheduled to be sent on {0}"
+#~ msgstr "此简讯计划于{0}发送"
+
+#~ msgid ""
+#~ "This newsletter was scheduled to send on a later date. Are you sure you "
+#~ "want to send it now?"
+#~ msgstr "此简讯原计划稍后发送。确定要立即发送吗？"
+
+#~ msgid ""
+#~ "This report contains {0} rows and is too big to display in browser, you "
+#~ "can {1} this report instead."
+#~ msgstr "此报告包含{0}行数据，浏览器显示过大，建议{1}此报告。"
+
+#~ msgid "This report was generated {0}."
+#~ msgstr "此报告生成于{0}。"
+
+#~ msgid ""
+#~ "This site is running in developer mode. Any change made here will be "
+#~ "updated in code."
+#~ msgstr "此站点运行于开发者模式，此处修改将同步至代码。"
+
+#~ msgid ""
+#~ "This title will be used as the title of the webpage as well as in meta "
+#~ "tags"
+#~ msgstr "此标题将作为网页标题及元标签内容"
+
+#~ msgid "This value is fetched from {0}'s {1} field"
+#~ msgstr "此值取自{0}的{1}字段"
+
+#~ msgid ""
+#~ "This will be automatically generated when you publish the page, you can "
+#~ "also enter a route yourself if you wish"
+#~ msgstr "发布页面时将自动生成路由，也可手动输入自定义路由"
+
+#~ msgid "This will reset this tour and show it to all users. Are you sure?"
+#~ msgstr "将重置此导览并向所有用户显示。是否继续？"
+
+#~ msgid ""
+#~ "This will terminate the job immediately and might be dangerous, are you "
+#~ "sure? "
+#~ msgstr "将立即终止任务，此操作可能危险，是否继续？"
+
+#~ msgid "Time {0} must be in format: {1}"
+#~ msgstr "时间{0}必须符合格式：{1}"
+
+#~ msgid "Timeless Night"
+#~ msgstr "永恒之夜主题"
+
+#~ msgid "Timeline Name"
+#~ msgstr "时间轴名称"
+
+#~ msgid "Title of the page"
+#~ msgstr "页面标题"
+
+#~ msgctxt "Email Recipients"
+#~ msgid "To"
+#~ msgstr "至"
+
+#~ msgid "To configure Auto Repeat, enable \"Allow Auto Repeat\" from {0}."
+#~ msgstr "要配置自动重复，请从{0}启用“允许自动重复”。"
+
+#~ msgid "To enable server scripts, read the {0}."
+#~ msgstr "启用服务端脚本请参阅{0}"
+
+#~ msgid ""
+#~ "To export this step as JSON, link it in a Onboarding document and save "
+#~ "the document."
+#~ msgstr "导出此步骤为JSON需关联到入职文档并保存"
+
+#~ msgid "To generate password click {0}"
+#~ msgstr "生成密码请点击{0}"
+
+#~ msgid "To get the updated report, click on {0}."
+#~ msgstr "获取更新后的报表请点击{0}"
+
+#~ msgid "To know more click {0}"
+#~ msgstr "了解更多请点击{0}"
+
+#~ msgid "To use Google Calendar, enable {0}."
+#~ msgstr "使用Google日历需启用{0}"
+
+#~ msgid "To use Google Contacts, enable {0}."
+#~ msgstr "使用Google联系人需启用{0}"
+
+#~ msgid "To use Google Drive, enable {0}."
+#~ msgstr "使用Google云端硬盘需启用{0}"
+
+#~ msgid "To version"
+#~ msgstr "至版本"
+
+#~ msgid "Today"
+#~ msgstr "今日"
+
+#~ msgid "Toggle Chart"
+#~ msgstr "切换图表"
+
+#~ msgid "Toggle Grid View"
+#~ msgstr "切换网格视图"
+
+#~ msgid "Toggle Sidebar"
+#~ msgstr "切换侧边栏"
+
+#~ msgctxt "Button in list view menu"
+#~ msgid "Toggle Sidebar"
+#~ msgstr "切换侧边栏"
+
+#~ msgid "Tomorrow"
+#~ msgstr "明天"
+
+#~ msgid "Top 10"
+#~ msgstr "前十项"
+
+#~ msgid "Total Images"
+#~ msgstr "总图片数"
+
+#~ msgid "Totals"
+#~ msgstr "合计"
+
+#~ msgid "Totals Row"
+#~ msgstr "合计行"
+
+#~ msgid "Tracking URL generated and copied to clipboard"
+#~ msgstr "跟踪URL已生成并复制到剪贴板"
+
+#~ msgid "Translate Data"
+#~ msgstr "翻译数据"
+
+#~ msgid "Translate values"
+#~ msgstr "翻译值"
+
+#~ msgid "Translate {0}"
+#~ msgstr "翻译{0}"
+
+#~ msgid "Translations"
+#~ msgstr "翻译项"
+
+#~ msgid "Tree View"
+#~ msgstr "树形视图"
+
+#~ msgid "Tree view is not available for {0}"
+#~ msgstr "{0}不支持树形视图"
+
+#~ msgid "Trigger Primary Action"
+#~ msgstr "触发主要操作"
+
+#~ msgid "Trim Table"
+#~ msgstr "精简表格"
+
+#~ msgid "Try Again"
+#~ msgstr "重试"
+
+#~ msgid "Try the new Print Designer"
+#~ msgstr "试用新版打印设计器"
+
+#~ msgid "Type a reply / comment"
+#~ msgstr "输入回复/评论"
+
+#~ msgid "URL of the page"
+#~ msgstr "页面URL"
+
+#~ msgid "Unable to load camera."
+#~ msgstr "无法加载摄像头"
+
+#~ msgid "Unable to load: {0}"
+#~ msgstr "无法加载：{0}"
+
+#~ msgid "Unable to update event"
+#~ msgstr "无法更新事件"
+
+#~ msgid "Unchanged"
+#~ msgstr "未变更"
+
+#~ msgid "Undo"
+#~ msgstr "撤销"
+
+#~ msgid "Undo last action"
+#~ msgstr "撤销上一步操作"
+
+#~ msgid "Unknown"
+#~ msgstr "未知"
+
+#~ msgid "Unknown Column: {0}"
+#~ msgstr "未知列：{0}"
+
+#~ msgid "Unlock Reference Document"
+#~ msgstr "解锁参考文档"
+
+#~ msgid "Unpublish"
+#~ msgstr "取消发布"
+
+#~ msgid "Unselect All"
+#~ msgstr "取消全选"
+
+#~ msgid "Untitled Column"
+#~ msgstr "未命名列"
+
+#~ msgid "Unzip"
+#~ msgstr "解压缩"
+
+#~ msgid "Unzipped {0} files"
+#~ msgstr "已解压{0}个文件"
+
+#~ msgid "Unzipping files..."
+#~ msgstr "正在解压文件..."
+
+#~ msgid "Update Hooks Resolution Order"
+#~ msgstr "更新钩子解析顺序"
+
+#~ msgid "Update Order"
+#~ msgstr "更新顺序"
+
+#~ msgid "Update Password"
+#~ msgstr "更新密码"
+
+#~ msgid "Update Translations"
+#~ msgstr "更新翻译"
+
+#~ msgid "Update {0} records"
+#~ msgstr "更新{0}条记录"
+
+#~ msgid "Updated Successfully"
+#~ msgstr "更新成功"
+
+#~ msgid "Updated To A New Version 🎉"
+#~ msgstr "已更新至新版本🎉"
+
+#~ msgid "Updated successfully"
+#~ msgstr "更新成功"
+
+#~ msgctxt "Freeze message while updating a document"
+#~ msgid "Updating"
+#~ msgstr "更新中"
+
+#~ msgid ""
+#~ "Updating Email Queue Statuses. The emails will be picked up in the next "
+#~ "scheduled run."
+#~ msgstr "正在更新邮件队列状态，邮件将在下次定时任务中处理"
+
+#~ msgid ""
+#~ "Updating counter may lead to document name conflicts if not done properly"
+#~ msgstr "不当更新计数器可能导致文档名称冲突"
+
+#~ msgid "Updating naming series options"
+#~ msgstr "更新命名系列选项"
+
+#~ msgid "Updating related fields..."
+#~ msgstr "正在更新相关字段..."
+
+#~ msgid "Updating {0} of {1}, {2}"
+#~ msgstr "正在更新{1}的{0}，{2}"
+
+#~ msgid "Upgrade plan"
+#~ msgstr "升级计划"
+
+#~ msgid "Upgrade your support experience with Frappe Helpdesk"
+#~ msgstr "使用Frappe Helpdesk提升支持体验"
+
+#~ msgid "Uploading backup to Google Drive."
+#~ msgstr "正在将备份上传至Google云端硬盘"
+
+#~ msgid "Uploading successful."
+#~ msgstr "上传成功"
+
+#~ msgid "Uploading to Google Drive"
+#~ msgstr "正在上传至Google云端硬盘"
+
+#~ msgid "Use the new Print Format Builder"
+#~ msgstr "使用新版打印格式构建器"
+
+#~ msgid "User Changed"
+#~ msgstr "用户已变更"
+
+#~ msgctxt "Button in list view menu"
+#~ msgid "User Permissions"
+#~ msgstr "用户权限"
+
+#~ msgid "User Permissions created successfully"
+#~ msgstr "用户权限创建成功"
+
+#~ msgid "Users with role {0}:"
+#~ msgstr "拥有{0}角色的用户："
+
+#~ msgid "Uses system's theme to switch between light and dark mode"
+#~ msgstr "使用系统主题切换亮/暗模式"
+
+#~ msgid ""
+#~ "Using this console may allow attackers to impersonate you and steal your "
+#~ "information. Do not enter or paste code that you do not understand."
+#~ msgstr "使用此控制台可能使攻击者冒充您窃取信息，请勿输入或粘贴未知代码"
+
+#~ msgid "Validation Error"
+#~ msgstr "验证错误"
+
+#~ msgid "Value for a check field can be either 0 or 1"
+#~ msgstr "复选框字段值只能是0或1"
+
+#~ msgid "Verify Password"
+#~ msgstr "确认密码"
+
+#~ msgid "Version Updated"
+#~ msgstr "版本已更新"
+
+#~ msgid "View All"
+#~ msgstr "查看全部"
+
+#~ msgid "View Audit Trail"
+#~ msgstr "查看审计跟踪"
+
+#~ msgid "View Doctype Permissions"
+#~ msgstr "查看文档类型权限"
+
+#~ msgid "View File"
+#~ msgstr "查看文件"
+
+#~ msgid "View Full Log"
+#~ msgstr "查看完整日志"
+
+#~ msgid "View List"
+#~ msgstr "查看列表"
+
+#~ msgid "View Permitted Documents"
+#~ msgstr "查看授权文档"
+
+#~ msgctxt "Button in web form"
+#~ msgid "View your response"
+#~ msgstr "查看您的响应"
+
+#~ msgid "View {0}"
+#~ msgstr "查看{0}"
+
+#~ msgid "Visit Web Page"
+#~ msgstr "访问网页"
+
+#~ msgid ""
+#~ "Warning: DATA LOSS IMMINENT! Proceeding will permanently delete following "
+#~ "database columns from doctype {0}:"
+#~ msgstr "警告：即将数据丢失！继续操作将永久删除{0}的数据库列："
+
+#~ msgid "Warning: Unable to find {0} in any table related to {1}"
+#~ msgstr "警告：在{1}相关表中未找到{0}"
+
+#~ msgid "Watch Tutorial"
+#~ msgstr "观看教程"
+
+#~ msgid ""
+#~ "We do not allow editing of this document. Simply click the Edit button on "
+#~ "the workspace page to make your workspace editable and customize it as "
+#~ "you wish"
+#~ msgstr "本文档不允许编辑。点击工作区页面编辑按钮可自定义工作区"
+
+#~ msgid "Weak"
+#~ msgstr "弱"
+
+#~ msgid "Web Page URL"
+#~ msgstr "网页URL"
+
+#~ msgid "Week"
+#~ msgstr "周"
+
+#~ msgid "Welcome"
+#~ msgstr "欢迎"
+
+#~ msgid "What's New"
+#~ msgstr "最新动态"
+
+#~ msgid "Will be your login ID"
+#~ msgstr "将作为登录ID"
+
+#~ msgid "Will only be shown if section headings are enabled"
+#~ msgstr "仅启用章节标题时显示"
+
+#~ msgid "With Letter head"
+#~ msgstr "带信头"
+
+#~ msgid "Workflow Builder"
+#~ msgstr "工作流构建器"
+
+#~ msgid ""
+#~ "Workflow Builder allows you to create workflows visually. You can drag "
+#~ "and drop states and link them to create transitions. Also you can update "
+#~ "thieir properties from the sidebar."
+#~ msgstr ""
+#~ "工作流构建器支持可视化创建工作流，可拖放状态并创建转换，侧边栏更新属性"
+
+#~ msgid "Workflow States Don't Exist"
+#~ msgstr "工作流状态不存在"
+
+#~ msgid "Workflow updated successfully"
+#~ msgstr "工作流更新成功"
+
+#~ msgid "Workspace <b>{0}</b> does not exist"
+#~ msgstr "工作区<b>{0}</b>不存在"
+
+#~ msgid "Workspace {0} created"
+#~ msgstr "工作区{0}已创建"
+
+#~ msgid ""
+#~ "Would you like to publish this comment? This means it will become visible "
+#~ "to website/portal users."
+#~ msgstr "是否确认发布本评论？发布后网站/门户用户可见。"
+
+#~ msgid ""
+#~ "Would you like to unpublish this comment? This means it will no longer be "
+#~ "visible to website/portal users."
+#~ msgstr "是否确认取消发布本评论？取消后网站/门户用户将不可见。"
+
+#~ msgid "X Axis Field"
+#~ msgstr "X轴字段"
+
+#~ msgid "Y Axis Fields"
+#~ msgstr "Y轴字段"
+
+#~ msgctxt "Approve confirmation dialog"
+#~ msgid "Yes"
+#~ msgstr "是"
+
+#~ msgctxt "Checkbox is checked"
+#~ msgid "Yes"
+#~ msgstr "是"
+
+#~ msgid "Yesterday"
+#~ msgstr "昨天"
+
+#~ msgctxt ""
+#~ "Name of the current user. For example: You edited this 5 hours ago."
+#~ msgid "You"
+#~ msgstr "您"
+
+#~ msgid "You Liked"
+#~ msgstr "您已点赞"
+
+#~ msgid "You are connected to internet."
+#~ msgstr "您已连接到互联网"
+
+#~ msgid "You are not allowed to create columns"
+#~ msgstr "您无权创建列"
+
+#~ msgid "You are not allowed to print this report"
+#~ msgstr "您无权打印此报表"
+
+#~ msgid "You are not allowed to send emails related to this document"
+#~ msgstr "您无权发送与此文档相关的邮件"
+
+#~ msgid "You are not connected to Internet. Retry after sometime."
+#~ msgstr "未连接互联网，请稍后重试"
+
+#~ msgid "You are not permitted to access this page without login."
+#~ msgstr "未登录状态下无权访问此页面"
+
+#~ msgid ""
+#~ "You are now following this document. You will receive daily updates via "
+#~ "email. You can change this in User Settings."
+#~ msgstr "您已订阅此文档，将通过邮件接收每日更新，可在用户设置中修改"
+
+#~ msgid ""
+#~ "You are selecting Sync Option as ALL, It will resync all read as well as "
+#~ "unread message from server. This may also cause the duplication of "
+#~ "Communication (emails)."
+#~ msgstr "选择全量同步将重新同步服务器所有消息，可能导致通讯记录重复"
+
+#~ msgctxt "Form timeline"
+#~ msgid "You attached {0}"
+#~ msgstr "您已附加{0}"
+
+#~ msgid ""
+#~ "You can add dynamic properties from the document by using Jinja "
+#~ "templating."
+#~ msgstr "可通过Jinja模板从文档添加动态属性"
+
+#~ msgid "You can also access wkhtmltopdf variables (valid only in PDF print):"
+#~ msgstr "可使用wkhtmltopdf变量（仅限PDF打印）："
+
+#~ msgid "You can change the retention policy from {0}."
+#~ msgstr "可从{0}修改保留策略"
+
+#~ msgid "You can continue with the onboarding after exploring this page"
+#~ msgstr "浏览本页后可继续完成新手引导"
+
+#~ msgid "You can only insert images in Markdown fields"
+#~ msgstr "仅可在Markdown字段插入图片"
+
+#~ msgid "You can only print upto {0} documents at a time"
+#~ msgstr "一次最多打印{0}个文档"
+
+#~ msgid "You can select one from the following,"
+#~ msgstr "可从以下选项中选择："
+
+#~ msgid "You can use wildcard %"
+#~ msgstr "可使用通配符%"
+
+#~ msgctxt "Form timeline"
+#~ msgid "You cancelled this document"
+#~ msgstr "您已取消此文档"
+
+#~ msgctxt "Form timeline"
+#~ msgid "You cancelled this document {1}"
+#~ msgstr "您已取消此文档{1}"
+
+#~ msgid "You changed the value of {0}"
+#~ msgstr "您已修改{0}的值"
+
+#~ msgid "You changed the value of {0} {1}"
+#~ msgstr "您已修改{1} {0}的值"
+
+#~ msgid "You changed the values for {0}"
+#~ msgstr "您已修改{0}的值"
+
+#~ msgid "You changed the values for {0} {1}"
+#~ msgstr "您已修改{1} {0}的值"
+
+#~ msgctxt "Form timeline"
+#~ msgid "You changed {0} to {1}"
+#~ msgstr "您已将{0}改为{1}"
+
+#~ msgid "You created this"
+#~ msgstr "您创建了此文档"
+
+#~ msgid ""
+#~ "You do not have enough permissions to access this resource. Please "
+#~ "contact your manager to get access."
+#~ msgstr "权限不足，请联系管理员获取访问权限"
+
+#~ msgid "You do not have permissions to cancel all linked documents."
+#~ msgstr "您无权取消所有关联文档"
+
+#~ msgid "You have not entered a value. The field will be set to empty."
+#~ msgstr "未输入值，该字段将被置空"
+
+#~ msgid ""
+#~ "You have unsaved changes in this form. Please save before you continue."
+#~ msgstr "表单存在未保存更改，请先保存"
+
+#~ msgid "You haven't added any Dashboard Charts or Number Cards yet."
+#~ msgstr "尚未添加任何仪表板图表或数字卡片"
+
+#~ msgid "You haven't created a {0} yet"
+#~ msgstr "尚未创建{0}"
+
+#~ msgid "You last edited this"
+#~ msgstr "您最后编辑于"
+
+#~ msgid "You must add atleast one link."
+#~ msgstr "必须至少添加一个链接"
+
+#~ msgid "You need to create these first: "
+#~ msgstr "您需要先创建以下内容："
+
+#~ msgid "You need to select indexes you want to add first."
+#~ msgstr "您需要先选择要添加的索引"
+
+#~ msgctxt "Form timeline"
+#~ msgid "You removed attachment {0}"
+#~ msgstr "您移除了附件{0}"
+
+#~ msgid "You seem good to go!"
+#~ msgstr "您已准备就绪！"
+
+#~ msgid "You selected Draft or Cancelled documents"
+#~ msgstr "您选择了草稿或已取消的文档"
+
+#~ msgctxt "Form timeline"
+#~ msgid "You submitted this document"
+#~ msgstr "您提交了此文档"
+
+#~ msgctxt "Form timeline"
+#~ msgid "You submitted this document {0}"
+#~ msgstr "您于{0}提交了此文档"
+
+#~ msgid "You unfollowed this document"
+#~ msgstr "您取消关注此文档"
+
+#~ msgid "You viewed this"
+#~ msgstr "您查看了此内容"
+
+#~ msgid ""
+#~ "You've logged in as another user from another tab. Refresh this page to "
+#~ "continue using system."
+#~ msgstr "您已在其他标签页以其他用户身份登录。请刷新此页面继续使用系统"
+
+#~ msgid "Your Country"
+#~ msgstr "您的国家"
+
+#~ msgid "Your Language"
+#~ msgstr "您的语言"
+
+#~ msgid "Your PDF is ready for download"
+#~ msgstr "您的PDF文件已准备就绪可供下载"
+
+#~ msgid "Your browser does not support the audio element."
+#~ msgstr "您的浏览器不支持音频元素"
+
+#~ msgid "Your browser does not support the video element."
+#~ msgstr "您的浏览器不支持视频元素"
+
+#~ msgid "Your form has been successfully updated"
+#~ msgstr "您的表单已成功更新"
+
+#~ msgid "[Action taken by {0}]"
+#~ msgstr "[操作由{0}执行]"
+
+#~ msgid "added rows for {0}"
+#~ msgstr "为{0}添加了行"
+
+#~ msgid "by Role"
+#~ msgstr "按角色"
+
+#~ msgid "calendar"
+#~ msgstr "日历"
+
+#~ msgctxt "Days (Field: Duration)"
+#~ msgid "d"
+#~ msgstr "天"
+
+#~ msgid "dashboard"
+#~ msgstr "仪表板"
+
+#~ msgid "document type..., e.g. customer"
+#~ msgstr "文档类型...，例如客户"
+
+#~ msgid "e.g. (55 + 434) / 4 or =Math.sin(Math.PI/2)..."
+#~ msgstr "例如（55 + 434）/4 或 =Math.sin(Math.PI/2)..."
+
+#~ msgid "e.g.:"
+#~ msgstr "例如："
+
+#~ msgid "email inbox"
+#~ msgstr "电子邮件收件箱"
+
+#~ msgctxt "Hours (Field: Duration)"
+#~ msgid "h"
+#~ msgstr "小时"
+
+#~ msgid "hub"
+#~ msgstr "中心"
+
+#~ msgid "just now"
+#~ msgstr "刚刚"
+
+#~ msgid "login_required"
+#~ msgstr "需要登录"
+
+#~ msgctxt "Minutes (Field: Duration)"
+#~ msgid "m"
+#~ msgstr "月"
+
+#~ msgid "module name..."
+#~ msgstr "模块名称..."
+
+#~ msgid "new"
+#~ msgstr "新建"
+
+#~ msgid "new type of document"
+#~ msgstr "新文档类型"
+
+#~ msgid "now"
+#~ msgstr "现在"
+
+#~ msgid "of"
+#~ msgstr "的"
+
+#~ msgid "removed rows for {0}"
+#~ msgstr "移除了{0}的行"
+
+#~ msgctxt "Seconds (Field: Duration)"
+#~ msgid "s"
+#~ msgstr "秒"
+
+#~ msgid "since last month"
+#~ msgstr "自上月以来"
+
+#~ msgid "since last week"
+#~ msgstr "自上周以来"
+
+#~ msgid "since last year"
+#~ msgstr "自去年以来"
+
+#~ msgid "since yesterday"
+#~ msgstr "自昨日以来"
+
+#~ msgid "starting the setup..."
+#~ msgstr "正在启动设置..."
+
+#~ msgid "tag name..., e.g. #tag"
+#~ msgstr "标签名称...，例如#标签"
+
+#~ msgid "text in document type"
+#~ msgstr "文档类型中的文本"
+
+#~ msgid "this form"
+#~ msgstr "此表单"
+
+#~ msgid "use % as wildcard"
+#~ msgstr "使用%作为通配符"
+
+#~ msgid "values separated by commas"
+#~ msgstr "用逗号分隔的值"
+
+#~ msgid "via {0}"
+#~ msgstr "通过{0}"
+
+#~ msgid "wkhtmltopdf 0.12.x (with patched qt)."
+#~ msgstr "wkhtmltopdf 0.12.x（带补丁的qt）"
+
+#~ msgid "yesterday"
+#~ msgstr "昨日"
+
+#~ msgid "{0}"
+#~ msgstr "{0}"
+
+#~ msgid "{0} ${skip_list ? \"\" : type}"
+#~ msgstr "{0} ${skip_list ? \"\" : 类型}"
+
+#~ msgid "{0} ${type}"
+#~ msgstr "{0} ${type}"
+
+#~ msgid "{0} ({1})"
+#~ msgstr "{0}（{1}）"
+
+#~ msgid "{0} ({1}) (1 row mandatory)"
+#~ msgstr "{0}（{1}）（至少1行）"
+
+#~ msgid "{0} ({1}) - {2}%"
+#~ msgstr "{0}（{1}）- {2}%"
+
+#~ msgid "{0} = {1}"
+#~ msgstr "{0} = {1}"
+
+#~ msgid "{0} Calendar"
+#~ msgstr "{0}日历"
+
+#~ msgid "{0} Chart"
+#~ msgstr "{0}图表"
+
+#~ msgid "{0} Dashboard"
+#~ msgstr "{0}仪表板"
+
+#~ msgid "{0} Fields"
+#~ msgstr "{0}字段"
+
+#~ msgid "{0} Liked"
+#~ msgstr "{0}点赞"
+
+#~ msgid "{0} M"
+#~ msgstr "{0} M"
+
+#~ msgid "{0} Map"
+#~ msgstr "{0}地图"
+
+#~ msgid "{0} Name"
+#~ msgstr "{0}名称"
+
+#~ msgid "{0} Report"
+#~ msgstr "{0}报告"
+
+#~ msgid "{0} Reports"
+#~ msgstr "{0}报告"
+
+#~ msgid "{0} Settings"
+#~ msgstr "{0}设置"
+
+#~ msgid "{0} Tree"
+#~ msgstr "{0}树状结构"
+
+#~ msgid "{0} Web page views"
+#~ msgstr "{0}次网页浏览"
+
+#~ msgid "{0} Workspace"
+#~ msgstr "{0}工作空间"
+
+#~ msgid "{0} added"
+#~ msgstr "已添加{0}"
+
+#~ msgid "{0} already exists. Select another name"
+#~ msgstr "{0}已存在，请选择其他名称"
+
+#~ msgid "{0} are currently {1}"
+#~ msgstr "{0}当前状态为{1}"
+
+#~ msgctxt "Form timeline"
+#~ msgid "{0} attached {1}"
+#~ msgstr "{0}附加了{1}"
+
+#~ msgid "{0} cancelled this document"
+#~ msgstr "{0}取消了此文档"
+
+#~ msgctxt "Form timeline"
+#~ msgid "{0} cancelled this document {1}"
+#~ msgstr "{0}于{1}取消了此文档"
+
+#~ msgid "{0} cannot be hidden and mandatory without any default value"
+#~ msgstr "{0}没有默认值不能同时隐藏和设为必填"
+
+#~ msgid "{0} changed the value of {1}"
+#~ msgstr "{0}更改了{1}的值"
+
+#~ msgid "{0} changed the value of {1} {2}"
+#~ msgstr "{0}更改了{1} {2}的值"
+
+#~ msgid "{0} changed the values for {1}"
+#~ msgstr "{0}更改了{1}的值"
+
+#~ msgid "{0} changed the values for {1} {2}"
+#~ msgstr "{0}更改了{1} {2}的值"
+
+#~ msgctxt "Form timeline"
+#~ msgid "{0} changed {1} to {2}"
+#~ msgstr "{0}将{1}更改为{2}"
+
+#~ msgid "{0} created successfully"
+#~ msgstr "成功创建{0}"
+
+#~ msgid "{0} created this"
+#~ msgstr "{0}创建了此内容"
+
+#~ msgid "{0} d"
+#~ msgstr "{0}天"
+
+#~ msgid "{0} days ago"
+#~ msgstr "{0}天前"
+
+#~ msgid "{0} from {1} to {2}"
+#~ msgstr "{0}从{1}到{2}"
+
+#~ msgid "{0} from {1} to {2} in row #{3}"
+#~ msgstr "第{3}行的{0}从{1}更改为{2}"
+
+#~ msgid "{0} h"
+#~ msgstr "{0}小时"
+
+#~ msgid "{0} hours ago"
+#~ msgstr "{0}小时前"
+
+#~ msgid "{0} is between {1} and {2}"
+#~ msgstr "{0}介于{1}和{2}之间"
+
+#~ msgid "{0} is currently {1}"
+#~ msgstr "{0}当前状态为{1}"
+
+#~ msgid "{0} is equal to {1}"
+#~ msgstr "{0}等于{1}"
+
+#~ msgid "{0} is greater than or equal to {1}"
+#~ msgstr "{0}大于或等于{1}"
+
+#~ msgid "{0} is greater than {1}"
+#~ msgstr "{0}大于{1}"
+
+#~ msgid "{0} is less than or equal to {1}"
+#~ msgstr "{0}小于或等于{1}"
+
+#~ msgid "{0} is less than {1}"
+#~ msgstr "{0}小于{1}"
+
+#~ msgid "{0} is like {1}"
+#~ msgstr "{0}类似于{1}"
+
+#~ msgid "{0} is not a valid Calendar. Redirecting to default Calendar."
+#~ msgstr "{0}不是有效的日历，正在重定向到默认日历"
+
+#~ msgid "{0} is not a valid DocType for Dynamic Link"
+#~ msgstr "{0}不是有效的动态链接文档类型"
+
+#~ msgid "{0} is not equal to {1}"
+#~ msgstr "{0}不等于{1}"
+
+#~ msgid "{0} is not like {1}"
+#~ msgstr "{0}与{1}不相似"
+
+#~ msgid "{0} is not one of {1}"
+#~ msgstr "{0}不属于{1}"
+
+#~ msgid "{0} is not set"
+#~ msgstr "{0}未设置"
+
+#~ msgid "{0} is one of {1}"
+#~ msgstr "{0}属于{1}"
+
+#~ msgid "{0} is set"
+#~ msgstr "{0}已设置"
+
+#~ msgid "{0} is within {1}"
+#~ msgstr "{0}在{1}范围内"
+
+#~ msgid "{0} items selected"
+#~ msgstr "已选择{0}项"
+
+#~ msgid "{0} last edited this"
+#~ msgstr "{0}最后编辑"
+
+#~ msgid "{0} m"
+#~ msgstr "{0}分钟前"
+
+#~ msgid "{0} minutes ago"
+#~ msgstr "{0}分钟前"
+
+#~ msgid "{0} months ago"
+#~ msgstr "{0}个月前"
+
+#~ msgid "{0} of {1} ({2} rows with children)"
+#~ msgstr "{1}中的第{0}项（含{2}行子项）"
+
+#~ msgid "{0} of {1} sent"
+#~ msgstr "已发送{1}中的{0}"
+
+#~ msgid "{0} record deleted"
+#~ msgstr "已删除{0}条记录"
+
+#~ msgid "{0} records are not automatically deleted."
+#~ msgstr "{0}条记录不会自动删除"
+
+#~ msgid "{0} records are retained for {1} days."
+#~ msgstr "{0}条记录将保留{1}天"
+
+#~ msgid "{0} records deleted"
+#~ msgstr "已删除{0}条记录"
+
+#~ msgid "{0} records will be exported"
+#~ msgstr "将导出{0}条记录"
+
+#~ msgctxt "Form timeline"
+#~ msgid "{0} removed attachment {1}"
+#~ msgstr "{0}移除了附件{1}"
+
+#~ msgid "{0} role does not have permission on any doctype"
+#~ msgstr "{0}角色无任何文档类型权限"
+
+#~ msgid "{0} submitted this document"
+#~ msgstr "{0}提交了此文档"
+
+#~ msgctxt "Form timeline"
+#~ msgid "{0} submitted this document {1}"
+#~ msgstr "{0}于{1}提交了此文档"
+
+#~ msgid "{0} to {1}"
+#~ msgstr "{0}至{1}"
+
+#~ msgid "{0} values selected"
+#~ msgstr "已选择{0}个值"
+
+#~ msgid "{0} viewed this"
+#~ msgstr "{0}查看了此项"
+
+#~ msgid "{0} w"
+#~ msgstr "{0}周前"
+
+#~ msgid "{0} weeks ago"
+#~ msgstr "{0}周前"
+
+#~ msgid "{0} y"
+#~ msgstr "{0}年前"
+
+#~ msgid "{0} years ago"
+#~ msgstr "{0}年前"
+
+#~ msgid "{0} {1} added"
+#~ msgstr "已添加{0}{1}"
+
+#~ msgid "{0} {1} added to Dashboard {2}"
+#~ msgstr "{0}{1}已添加到仪表盘{2}"
+
+#~ msgid "{0} {1} is linked with the following submitted documents: {2}"
+#~ msgstr "{0}{1}关联了以下已提交文档：{2}"
+
+#~ msgid "{0}: Other permission rules may also apply"
+#~ msgstr "{0}：可能同时适用其他权限规则"
+
+#~ msgid "{0}: You can increase the limit for the field if required via {1}"
+#~ msgstr "{0}：可通过{1}按需调整字段限制"
+
+#~ msgid "{0}: {1}"
+#~ msgstr "{0}：{1}"
+
+#~ msgid "{0}: {1} vs {2}"
+#~ msgstr "{0}：{1}与{2}"
+
+#~ msgid "{1} saved"
+#~ msgstr "{1}已保存"
+
+#~ msgid "{count} cell copied"
+#~ msgstr "已复制{count}个单元格"
+
+#~ msgid "{count} cells copied"
+#~ msgstr "已复制{count}个单元格"
+
+#~ msgid "{count} row selected"
+#~ msgstr "已选择{count}行"
+
+#~ msgid "{count} rows selected"
+#~ msgstr "已选择{count}行"
+
+#~ msgid "{} Complete"
+#~ msgstr "已完成{}"
