@@ -125,18 +125,20 @@ $.extend(frappe.model, {
                 typeof f.options === "string" &&
                 !["[Select]", "Loading..."].includes(f.options)
             ) {
-                var options = f.options;
+                var options = f.options.split("\n");
                 //如果选项中包含逗号，则按逗号隔开
-                for (var i = 0; i < options.length; i++) {
-                    var opt = options[i];
-                    var comma_index = opt.indexOf(",");
-                    if (comma_index === 0) {
-                        options[i] = { label: __(opt.substring(1)), value: "" };
-                    } else if (comma_index > 0) {
-                        options[i] = {
-                            label: __(opt.substring(comma_index + 1)),
-                            value: opt.substring(0, comma_index),
-                        };
+                if (f.options_has_label) {
+                    for (var i = 0; i < options.length; i++) {
+                        var opt = options[i];
+                        var comma_index = opt.indexOf(",");
+                        if (comma_index === 0) {
+                            options[i] = { label: __(opt.substring(1)), value: "" };
+                        } else if (comma_index > 0) {
+                            options[i] = {
+                                label: __(opt.substring(comma_index + 1)),
+                                value: opt.substring(0, comma_index),
+                            };
+                        }
                     }
                 }
                 doc[f.fieldname] = options[0];
