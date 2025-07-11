@@ -70,6 +70,12 @@
 		z-index: 1;
 	}
 
+	.row-config {
+		position: sticky;
+		right: 0;
+		z-index: 1;
+	}
+
 	.row-index {
 		left: 31px;
 	}
@@ -139,6 +145,13 @@
 	.row-index {
 		position: sticky;
 		left: 0;
+		background-color: var(--fg-color);
+		z-index: 1;
+	}
+
+	.row-config {
+		position: sticky;
+		right: 0;
 		background-color: var(--fg-color);
 		z-index: 1;
 	}
