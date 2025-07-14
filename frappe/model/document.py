@@ -419,6 +419,7 @@ class Document(BaseDocument):
 		self.run_before_save_methods()
 		self._validate()
 		self.set_docstatus()
+		self.update_is_group_if_is_tree()
 		self.flags.in_insert = False
 
 		# run validate, on update etc.
@@ -434,6 +435,7 @@ class Document(BaseDocument):
 			for d in self.get_all_children():
 				d.db_insert()
 
+		self.update_parent_is_group_if_is_tree()
 		self.run_method("after_insert")
 		self.flags.in_insert = True
 
@@ -524,7 +526,6 @@ class Document(BaseDocument):
 		self.set_parent_in_children()
 		self.set_id_in_children()
 
-		self.validate_higher_perm_levels()
 		self.run_method("before_validate_links")
 		self._validate_links()
 		self.run_before_save_methods()
@@ -535,6 +536,7 @@ class Document(BaseDocument):
 		if self._action == "update_after_submit":
 			self.validate_update_after_submit()
 
+		self.update_is_group_if_is_tree()
 		self.set_docstatus()
 
 		# parent
@@ -544,6 +546,7 @@ class Document(BaseDocument):
 			self.db_update()
 
 		self.update_children()
+		self.update_parent_is_group_if_is_tree()
 		self.run_post_save_methods()
 
 		# clear unsaved flag
@@ -717,6 +720,28 @@ class Document(BaseDocument):
 
 		if self.doctype in frappe.db.value_cache:
 			frappe.db.value_cache.pop(self.doctype, None)
+
+	def update_is_group_if_is_tree(self):
+		if not self.meta.is_tree:
+			return
+
+		nsm_parent_field = self.meta.nsm_parent_field or "parent"
+		child_docs = frappe.get_all(
+			self.meta.id, fields=["id"], filters={nsm_parent_field: self.id}, limit_page_length=1
+		)
+		self.is_group = len(child_docs) > 0
+
+	def update_parent_is_group_if_is_tree(self):
+		if not self.meta.is_tree:
+			return
+
+		nsm_parent_field = self.meta.nsm_parent_field or "parent"
+		parent_val = self.get(nsm_parent_field)
+		if parent_val:
+			parent_doc: Document = frappe.get_doc(self.meta.id, parent_val)
+			if not parent_doc.is_group:
+				parent_doc.is_group = True
+				parent_doc.save()
 
 	def set_user_and_timestamp(self):
 		self._original_modified = self.modified
