@@ -4,7 +4,11 @@
   "doctype": "DocType",
   "editable_grid": 1,
   "engine": "InnoDB",
-  "field_order": ["viewed_by", "reference_doctype", "reference_id"],
+  "field_order": [
+    "viewed_by",
+    "reference_doctype",
+    "reference_id"
+  ],
   "fields": [
     {
       "fieldname": "viewed_by",
@@ -22,7 +26,7 @@
     {
       "fieldname": "reference_id",
       "fieldtype": "Dynamic Link",
-      "label": "Reference id",
+      "label": "Reference ID",
       "options": "reference_doctype",
       "search_index": 1,
       "set_only_once": 1
