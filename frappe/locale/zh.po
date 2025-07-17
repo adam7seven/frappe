@@ -2766,11 +2766,11 @@ msgstr "附加到字段"
 #. Label of the attached_to_id (Data) field in DocType 'File'
 #: frappe/core/doctype/file/file.json
 msgid "Attached To ID"
-msgstr ""
+msgstr "附加到ID"
 
 #: frappe/core/doctype/file/file.py:142
 msgid "Attached To ID must be a string or an integer"
-msgstr ""
+msgstr "附加到ID必须是字符串或整数"
 
 #. Option for the 'Comment Type' (Select) field in DocType 'Comment'
 #. Label of the attachment (Attach) field in DocType 'Newsletter Attachment'
@@ -2826,7 +2826,7 @@ msgstr "归属"
 #. Label of the email_group (Table) field in DocType 'Newsletter'
 #: frappe/email/doctype/newsletter/newsletter.json
 msgid "Audience"
-msgstr ""
+msgstr "受众"
 
 #. Name of a report
 #: frappe/custom/report/audit_system_hooks/audit_system_hooks.json
@@ -3598,7 +3598,7 @@ msgstr "机器人"
 
 #: frappe/printing/page/print_format_builder/print_format_builder.js:126
 msgid "Both DocType and ID required"
-msgstr ""
+msgstr "DocType和ID都是必需的"
 
 #: frappe/templates/includes/login/login.js:24
 #: frappe/templates/includes/login/login.js:96
@@ -4074,7 +4074,7 @@ msgstr "取消所有文档"
 
 #: frappe/email/doctype/newsletter/newsletter.js:132
 msgid "Cancel Scheduling"
-msgstr ""
+msgstr "取消计划"
 
 #: frappe/public/js/frappe/list/list_view.js:1998
 msgctxt "Title of confirmation dialog"
@@ -4367,7 +4367,7 @@ msgstr "类别描述"
 #. Label of the category_id (Data) field in DocType 'Help Category'
 #: frappe/website/doctype/help_category/help_category.json
 msgid "Category ID"
-msgstr ""
+msgstr "类别ID"
 
 #: frappe/utils/data.py:1525
 msgid "Cent"
@@ -4486,12 +4486,12 @@ msgstr "图表配置"
 #: frappe/public/js/frappe/views/reports/query_report.js:288
 #: frappe/public/js/frappe/widgets/widget_dialog.js:137
 msgid "Chart ID"
-msgstr ""
+msgstr "图表ID"
 
 #. Label of the chart_id (Link) field in DocType 'Workspace Chart'
 #: frappe/desk/doctype/workspace_chart/workspace_chart.json
 msgid "Chart Id"
-msgstr ""
+msgstr "图表ID"
 
 #. Label of the chart_name (Data) field in DocType 'Dashboard Chart'
 #: frappe/desk/doctype/dashboard_chart/dashboard_chart.json
@@ -4552,7 +4552,7 @@ msgstr "检查请求URL"
 
 #: frappe/email/doctype/newsletter/newsletter.js:18
 msgid "Check broken links"
-msgstr ""
+msgstr "检查断开的链接"
 
 #: frappe/printing/page/print_format_builder/print_format_builder_column_selector.html:1
 msgid "Check columns to select, drag to set order."
@@ -4575,11 +4575,11 @@ msgstr "勾选此项将强制用户在保存前选择序列。若勾选则无默
 #. Description of the 'Show Full Number' (Check) field in DocType 'Number Card'
 #: frappe/desk/doctype/number_card/number_card.json
 msgid "Check to display the full numeric value (e.g., 1,234,567 instead of 1.2M)."
-msgstr ""
+msgstr "选中以显示完整数值（例如，1,234,567 而不是 1.2M）。"
 
 #: frappe/email/doctype/newsletter/newsletter.js:20
 msgid "Checking broken links..."
-msgstr ""
+msgstr "检查断开的链接中..."
 
 #: frappe/public/js/frappe/desk.js:229
 msgid "Checking one moment"
@@ -4718,7 +4718,7 @@ msgstr "点击此处"
 
 #: frappe/email/doctype/newsletter/newsletter.py:335
 msgid "Click here to verify"
-msgstr ""
+msgstr "点击此处验证"
 
 #: frappe/public/js/frappe/file_uploader/FileUploader.vue:408
 msgid "Click on a file to select it."
@@ -5192,7 +5192,7 @@ msgstr "公司历史"
 #. Label of the company_id (Data) field in DocType 'Contact'
 #: frappe/contacts/doctype/contact/contact.json
 msgid "Company ID"
-msgstr ""
+msgstr "公司ID"
 
 #. Label of the company_introduction (Text Editor) field in DocType 'About Us
 #. Settings'
@@ -5386,7 +5386,7 @@ msgstr "确认请求"
 
 #: frappe/email/doctype/newsletter/newsletter.py:330
 msgid "Confirm Your Email"
-msgstr ""
+msgstr "确认您的邮箱"
 
 #. Label of the confirmation_email_template (Link) field in DocType 'Email
 #. Group'
@@ -5570,7 +5570,7 @@ msgstr "内容类型"
 
 #: frappe/app_core.py:230
 msgid "Content cannot be empty"
-msgstr ""
+msgstr "内容不能为空"
 
 #: frappe/desk/doctype/workspace/workspace.py:73
 msgid "Content data shoud be a list"
@@ -5707,7 +5707,7 @@ msgstr "计数过滤器"
 
 #: frappe/public/js/frappe/form/dashboard.js:509
 msgid "Count of linked documents"
-msgstr ""
+msgstr "关联文档数量"
 
 #. Label of the counter (Int) field in DocType 'Document Naming Rule'
 #: frappe/core/doctype/document_naming_rule/document_naming_rule.json
@@ -5734,7 +5734,7 @@ msgstr "需要国家代码"
 #. Label of the country_id (Data) field in DocType 'Country'
 #: frappe/geo/doctype/country/country.json
 msgid "Country ID"
-msgstr ""
+msgstr "国家ID"
 
 #. Label of the country_name (Data) field in DocType 'Country'
 #: frappe/geo/doctype/country/country.json
@@ -5861,7 +5861,7 @@ msgstr "新建{0}"
 #: frappe/public/js/frappe/list/list_view.js:485
 msgctxt "Create a new document from list view"
 msgid "Create a new {0}"
-msgstr ""
+msgstr "创建新的{0}"
 
 #: frappe/www/login.html:162
 msgid "Create a {0} Account"
@@ -5870,7 +5870,7 @@ msgstr "创建{0}账户"
 #. Description of a DocType
 #: frappe/email/doctype/newsletter/newsletter.json
 msgid "Create and send emails to a specific group of subscribers periodically."
-msgstr ""
+msgstr "定期向特定订阅者群组创建和发送邮件。"
 
 #: frappe/printing/page/print_format_builder_beta/print_format_builder_beta.js:34
 msgid "Create or Edit Print Format"
@@ -5883,7 +5883,7 @@ msgstr "创建或编辑工作流"
 #: frappe/public/js/frappe/list/list_view.js:486
 msgctxt "Create a new document from list view"
 msgid "Create your first {0}"
-msgstr ""
+msgstr "创建您的第一个{0}"
 
 #: frappe/workflow/doctype/workflow/workflow.js:16
 msgid "Create your workflow visually using the Workflow Builder."
@@ -5989,7 +5989,7 @@ msgstr "货币"
 #. Label of the currency_id (Data) field in DocType 'Currency'
 #: frappe/geo/doctype/currency/currency.json
 msgid "Currency ID"
-msgstr ""
+msgstr "货币ID"
 
 #. Label of the currency_name (Data) field in DocType 'Currency'
 #: frappe/geo/doctype/currency/currency.json
@@ -6066,7 +6066,7 @@ msgstr "自定义基础URL"
 #. Block'
 #: frappe/desk/doctype/workspace_custom_block/workspace_custom_block.json
 msgid "Custom Block ID"
-msgstr ""
+msgstr "自定义区块ID"
 
 #. Label of the custom_blocks_tab (Tab Break) field in DocType 'Workspace'
 #. Label of the custom_blocks (Table) field in DocType 'Workspace'
@@ -6439,7 +6439,7 @@ msgstr "仪表板图表源"
 #. Label of the dashboard_id (Data) field in DocType 'Dashboard'
 #: frappe/desk/doctype/dashboard/dashboard.json
 msgid "Dashboard ID"
-msgstr ""
+msgstr "仪表板ID"
 
 #. Name of a role
 #: frappe/desk/doctype/dashboard/dashboard.json
@@ -7033,7 +7033,7 @@ msgstr "已删除文档"
 #. Label of the deleted_id (Data) field in DocType 'Deleted Document'
 #: frappe/core/doctype/deleted_document/deleted_document.json
 msgid "Deleted ID"
-msgstr ""
+msgstr "已删除ID"
 
 #: frappe/desk/reportview.py:604
 msgid "Deleted all documents successfully"
@@ -7698,7 +7698,7 @@ msgstr "未找到文档类型 {}"
 
 #: frappe/core/doctype/doctype/doctype.py:1059
 msgid "DocType's id should not start or end with whitespace"
-msgstr ""
+msgstr "DocType 的 id 不能以空格开头或结尾"
 
 #: frappe/core/doctype/doctype/doctype.js:67
 msgid "DocTypes cannot be modified, please use {0} instead"
@@ -7712,7 +7712,7 @@ msgstr "文档类型"
 
 #: frappe/core/doctype/doctype/doctype.py:1053
 msgid "Doctype id is limited to {0} characters ({1})"
-msgstr ""
+msgstr "Doctype id 限制为 {0} 个字符 ({1})"
 
 #: frappe/public/js/frappe/list/bulk_operations.js:3
 msgid "Doctype required"
@@ -7768,11 +7768,11 @@ msgstr "文档关注通知"
 #: frappe/email/doctype/document_follow/document_follow.json
 #: frappe/public/js/frappe/form/form_tour.js:62
 msgid "Document ID"
-msgstr ""
+msgstr "文档ID"
 
 #: frappe/client.py:406
 msgid "Document ID must be a string"
-msgstr ""
+msgstr "文档ID必须为字符串"
 
 #. Label of the document_id (Data) field in DocType 'Notification Log'
 #: frappe/desk/doctype/notification_log/notification_log.json
@@ -8189,7 +8189,7 @@ msgstr "下载您的数据"
 
 #: frappe/core/doctype/prepared_report/prepared_report.js:49
 msgid "Download as CSV"
-msgstr ""
+msgstr "下载为CSV"
 
 #: frappe/contacts/doctype/contact/contact.js:98
 msgid "Download vCard"
@@ -8266,15 +8266,15 @@ msgstr "重复条目"
 
 #: frappe/public/js/frappe/list/list_filter.js:144
 msgid "Duplicate Filter ID"
-msgstr ""
+msgstr "过滤器ID重复"
 
 #: frappe/model/base_document.py:685 frappe/model/rename_doc.py:111
 msgid "Duplicate ID"
-msgstr ""
+msgstr "ID重复"
 
 #: frappe/public/js/frappe/form/grid.js:62
 msgid "Duplicate Row"
-msgstr ""
+msgstr "复制行"
 
 #: frappe/public/js/frappe/form/form.js:208
 msgid "Duplicate current row"
@@ -8646,7 +8646,7 @@ msgstr "未设置电子邮件账户。请通过 设置 > 电子邮件账户 创�
 
 #: frappe/email/doctype/email_account/email_account.py:576
 msgid "Email Account {0} Disabled"
-msgstr ""
+msgstr "邮箱账户 {0} 已禁用"
 
 #. Label of the email_id (Data) field in DocType 'Address'
 #. Label of the email_id (Data) field in DocType 'Contact'
@@ -8779,7 +8779,7 @@ msgstr "已发送电子邮件"
 #. Label of the email_sent_at (Datetime) field in DocType 'Newsletter'
 #: frappe/email/doctype/newsletter/newsletter.json
 msgid "Email Sent At"
-msgstr ""
+msgstr "电子邮件发送时间"
 
 #. Label of the email_settings_sb (Section Break) field in DocType 'DocType'
 #. Label of the email_settings_section (Section Break) field in DocType
@@ -9230,7 +9230,7 @@ msgstr "输入值"
 
 #: frappe/public/js/frappe/form/form_tour.js:60
 msgid "Enter a id for this {0}"
-msgstr ""
+msgstr "为此{0}输入ID"
 
 #. Description of the 'User Defaults' (Table) field in DocType 'User'
 #: frappe/core/doctype/user/user.json
@@ -9265,7 +9265,7 @@ msgstr "输入密码"
 
 #: frappe/contacts/report/addresses_and_contacts/addresses_and_contacts.js:22
 msgid "Entity ID"
-msgstr ""
+msgstr "实体ID"
 
 #: frappe/contacts/report/addresses_and_contacts/addresses_and_contacts.js:9
 msgid "Entity Type"
@@ -9514,7 +9514,7 @@ msgstr "执行控制台脚本"
 
 #: frappe/public/js/frappe/ui/dropdown_console.js:125
 msgid "Executing Code"
-msgstr ""
+msgstr "正在执行代码"
 
 #: frappe/desk/doctype/system_console/system_console.js:18
 msgid "Executing..."
@@ -9825,7 +9825,7 @@ msgstr "导出Python类型提示失败"
 
 #: frappe/core/doctype/document_naming_settings/document_naming_settings.py:249
 msgid "Failed to generate ids from the series"
-msgstr ""
+msgstr "无法从序列生成 id"
 
 #: frappe/core/doctype/document_naming_settings/document_naming_settings.js:75
 msgid "Failed to generate preview of series"
@@ -10080,7 +10080,7 @@ msgstr "字段名称"
 
 #: frappe/core/doctype/doctype/doctype.py:275
 msgid "Fieldname '{0}' conflicting with a {1} of the id {2} in {3}"
-msgstr ""
+msgstr "字段名'{0}'与{3}中ID为{2}的{1}冲突"
 
 #: frappe/core/doctype/doctype/doctype.py:1107
 msgid "Fieldname called {0} must exist to enable autonaming"
@@ -10300,7 +10300,7 @@ msgstr "过滤数据"
 
 #: frappe/public/js/frappe/list/list_filter.js:33
 msgid "Filter ID"
-msgstr ""
+msgstr "过滤器ID"
 
 #. Label of the filter_list (HTML) field in DocType 'Data Export'
 #: frappe/core/doctype/data_export/data_export.json
@@ -10457,7 +10457,7 @@ msgstr "首列数据必须为空"
 
 #: frappe/website/doctype/website_slideshow/website_slideshow.js:7
 msgid "First set the id and save the record."
-msgstr ""
+msgstr "请先设置ID并保存记录。"
 
 #: frappe/public/js/workflow_builder/WorkflowBuilder.vue:304
 msgid "Fit"
@@ -10567,7 +10567,7 @@ msgstr "以下字段缺少值："
 
 #: frappe/email/doctype/newsletter/newsletter.js:30
 msgid "Following links are broken in the email content: {0}"
-msgstr ""
+msgstr "电子邮件内容中以下链接已失效：{0}"
 
 #. Label of the font (Select) field in DocType 'Print Settings'
 #: frappe/printing/doctype/print_settings/print_settings.json
@@ -11204,7 +11204,7 @@ msgstr "获取PDF"
 #. Naming Settings'
 #: frappe/core/doctype/document_naming_settings/document_naming_settings.json
 msgid "Get a preview of generated ids with a series."
-msgstr ""
+msgstr "获取一个根据序列生成的 id 用于预览。"
 
 #: frappe/public/js/frappe/list/list_sidebar.js:305
 msgid "Get more insights with"
@@ -11698,7 +11698,7 @@ msgstr "拥有角色"
 #. Application'
 #: frappe/core/doctype/installed_application/installed_application.json
 msgid "Has Setup Wizard"
-msgstr ""
+msgstr "具有安装向导"
 
 #. Label of the has_web_view (Check) field in DocType 'DocType'
 #: frappe/core/doctype/doctype/doctype.json
@@ -11758,7 +11758,7 @@ msgstr "头部信息"
 
 #: frappe/email/email_body.py:320
 msgid "Headers must be a dictionary"
-msgstr ""
+msgstr "头部信息必须是字典类型"
 
 #. Option for the 'Type' (Select) field in DocType 'DocField'
 #. Option for the 'Field Type' (Select) field in DocType 'Custom Field'
@@ -11999,6 +11999,7 @@ msgstr "隐藏标准菜单"
 #: frappe/public/js/frappe/list/list_view.js:1655
 msgid "Hide Tags"
 msgstr "隐藏标签"
+msgstr "隐藏标签"
 
 #: frappe/public/js/frappe/views/calendar/calendar.js:179
 msgid "Hide Weekends"
@@ -12158,36 +12159,36 @@ msgstr "标识符"
 #: frappe/public/js/frappe/views/reports/report_view.js:980
 msgctxt "Label of id column in report"
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: frappe/integrations/doctype/webhook/webhook.js:29
 msgid "ID (Doc ID)"
-msgstr ""
+msgstr "ID (单据 ID)"
 
 #: frappe/public/js/print_format_builder/PrintFormatControls.vue:141
 msgid "ID (id)"
-msgstr ""
+msgstr "ID (id)"
 
 #. Description of the 'Field Name' (Data) field in DocType 'Property Setter'
 #: frappe/custom/doctype/property_setter/property_setter.json
 msgid "ID (id) of the entity whose property is to be set"
-msgstr ""
+msgstr "要设置属性的实体的ID"
 
 #: frappe/desk/utils.py:22
 msgid "ID already taken, please set a new id"
-msgstr ""
+msgstr "ID已被使用，请设置新的id"
 
 #: frappe/model/naming.py:504
 msgid "ID cannot contain special characters like {0}"
-msgstr ""
+msgstr "id不能包含{0}等特殊字符"
 
 #: frappe/custom/doctype/custom_field/custom_field.js:91
 msgid "ID of the Document Type (DocType) you want this field to be linked to. e.g. Customer"
-msgstr ""
+msgstr "您希望此字段链接到的文档类型(DocType)的ID，例如：Customer"
 
 #: frappe/model/naming.py:499
 msgid "ID of {0} cannot be {1}"
-msgstr ""
+msgstr "{0}的ID不能为{1}"
 
 #. Description of the 'Section ID' (Data) field in DocType 'Web Page Block'
 #: frappe/website/doctype/web_page_block/web_page_block.json
@@ -12294,7 +12295,7 @@ msgstr "勾选后货币/数量/计数的负值显示为正值"
 #. Description of the 'Options Has Label' (Check) field in DocType 'DocField'
 #: frappe/core/doctype/docfield/docfield.json
 msgid "If checked, select options will split by first comma, the first part is value, and the second part is label."
-msgstr ""
+msgstr "勾选后，选项将按第一个逗号分割，第一部分为值，第二部分为标签文本。"
 
 #. Description of the 'Skip Authorization' (Check) field in DocType 'OAuth
 #. Client'
@@ -12433,7 +12434,7 @@ msgstr "如果你在上传新纪录，那么“名录”必须指定。"
 
 #: frappe/core/doctype/data_export/exporter.py:187
 msgid "If you are uploading new records, leave the \"id\" (ID) column blank."
-msgstr ""
+msgstr "如果你正在上传新记录，请将"id"（ID）列留空。"
 
 #: frappe/utils/password.py:208
 msgid "If you have recently restored the site, you may need to copy the site_config.json containing the original encryption key."
@@ -12829,7 +12830,7 @@ msgstr "包含已禁用"
 #. Label of the include_id_field (Check) field in DocType 'Form Tour'
 #: frappe/desk/doctype/form_tour/form_tour.json
 msgid "Include ID Field"
-msgstr ""
+msgstr "包含 ID 字段"
 
 #. Label of the navbar_search (Check) field in DocType 'Website Settings'
 #: frappe/website/doctype/website_settings/website_settings.json
@@ -13389,7 +13390,7 @@ msgstr "无效过滤器：{0}"
 
 #: frappe/model/naming.py:490
 msgid "Invalid id type (integer) for varchar id column"
-msgstr ""
+msgstr "varchar类型的id列不能使用整数类型"
 
 #: frappe/desk/doctype/dashboard/dashboard.py:72
 #: frappe/desk/doctype/dashboard_chart/dashboard_chart.py:429
@@ -13606,7 +13607,7 @@ msgstr "是否为远程请求"
 #. Application'
 #: frappe/core/doctype/installed_application/installed_application.json
 msgid "Is Setup Complete?"
-msgstr ""
+msgstr "安装已完成？"
 
 #. Label of the issingle (Check) field in DocType 'DocType'
 #. Label of the is_single (Check) field in DocType 'Onboarding Step'
@@ -13809,7 +13810,7 @@ msgstr "作业已成功停止"
 
 #: frappe/core/doctype/rq_job/rq_job.py:121
 msgid "Job is in {0} state and can't be cancelled"
-msgstr ""
+msgstr "作业处于{0}状态，无法取消"
 
 #: frappe/core/doctype/rq_job/rq_job.py:113
 msgid "Job is not running."
@@ -13853,7 +13854,7 @@ msgstr "看板面板列"
 
 #: frappe/public/js/frappe/views/kanban/kanban_view.js:386
 msgid "Kanban Board ID"
-msgstr ""
+msgstr "看板ID"
 
 #. Label of the kanban_board_name (Data) field in DocType 'Kanban Board'
 #: frappe/desk/doctype/kanban_board/kanban_board.json
@@ -14514,11 +14515,11 @@ msgstr "许可证类型"
 
 #: frappe/app_core.py:238
 msgid "License file is expired"
-msgstr ""
+msgstr "许可证文件已过期"
 
 #: frappe/app_core.py:236
 msgid "License file is invalid"
-msgstr ""
+msgstr "许可证文件无效"
 
 #. Option for the 'Desk Theme' (Select) field in DocType 'User'
 #: frappe/core/doctype/user/user.json
@@ -14678,7 +14679,7 @@ msgstr "链接筛选器"
 #: frappe/core/doctype/communication_link/communication_link.json
 #: frappe/core/doctype/dynamic_link/dynamic_link.json
 msgid "Link ID"
-msgstr ""
+msgstr "链接ID"
 
 #. Label of the link_title (Read Only) field in DocType 'Communication Link'
 #. Label of the link_title (Read Only) field in DocType 'Dynamic Link'
@@ -14904,7 +14905,7 @@ msgstr "日志"
 #. Label of the log_api_requests (Check) field in DocType 'System Settings'
 #: frappe/core/doctype/system_settings/system_settings.json
 msgid "Log API Requests"
-msgstr ""
+msgstr "记录API请求"
 
 #. Label of the log_data_section (Section Break) field in DocType 'Access Log'
 #: frappe/core/doctype/access_log/access_log.json
@@ -15010,7 +15011,7 @@ msgstr "登录并在浏览器中查看"
 #: frappe/templates/includes/login/login.js:302
 #: frappe/templates/includes/login/login.js:306
 msgid "Login is forbidden."
-msgstr ""
+msgstr "禁止登录。"
 
 #: frappe/website/doctype/web_form/web_form.js:367
 msgid "Login is required to see web form list view. Enable {0} to see list settings"
@@ -15193,7 +15194,7 @@ msgstr "主要"
 #. Label of the show_id_in_global_search (Check) field in DocType 'DocType'
 #: frappe/core/doctype/doctype/doctype.json
 msgid "Make \"id\" searchable in Global Search"
-msgstr ""
+msgstr "在全局搜索时搜索\"id\"列"
 
 #. Label of the make_attachment_public (Check) field in DocType 'DocField'
 #: frappe/core/doctype/docfield/docfield.json
@@ -15236,7 +15237,7 @@ msgstr "管理第三方应用"
 
 #: frappe/www/license.html:3
 msgid "Manage License"
-msgstr ""
+msgstr "管理许可证"
 
 #. Description of a Card Break in the Tools Workspace
 #: frappe/automation/workspace/tools/tools.json
@@ -15440,7 +15441,7 @@ msgstr "最大长度"
 #. Label of the max_report_rows (Int) field in DocType 'System Settings'
 #: frappe/core/doctype/system_settings/system_settings.json
 msgid "Max Report Rows"
-msgstr ""
+msgstr "最大报告行数"
 
 #. Label of the max_value (Int) field in DocType 'Web Form Field'
 #: frappe/website/doctype/web_form_field/web_form_field.json
@@ -15595,12 +15596,12 @@ msgstr "消息"
 #. Label of the message_html (HTML Editor) field in DocType 'Newsletter'
 #: frappe/email/doctype/newsletter/newsletter.json
 msgid "Message (HTML)"
-msgstr ""
+msgstr "消息（HTML）"
 
 #. Label of the message_md (Markdown Editor) field in DocType 'Newsletter'
 #: frappe/email/doctype/newsletter/newsletter.json
 msgid "Message (Markdown)"
-msgstr ""
+msgstr "消息（Markdown）"
 
 #. Label of the message_examples (HTML) field in DocType 'Notification'
 #: frappe/email/doctype/notification/notification.json
@@ -16423,7 +16424,7 @@ msgstr "新建文件夹"
 #: frappe/public/js/frappe/form/toolbar.js:201
 #: frappe/public/js/frappe/model/model.js:758
 msgid "New ID"
-msgstr ""
+msgstr "新 ID"
 
 #: frappe/public/js/frappe/views/kanban/kanban_view.js:342
 msgid "New Kanban Board"
@@ -16496,7 +16497,7 @@ msgstr "新值"
 
 #: frappe/workflow/page/workflow_builder/workflow_builder.js:61
 msgid "New Workflow ID"
-msgstr ""
+msgstr "新工作流 ID"
 
 #: frappe/public/js/frappe/views/workspace/workspace.js:390
 msgid "New Workspace"
@@ -16568,17 +16569,17 @@ msgstr "新创建用户{0}未启用任何角色"
 #: frappe/automation/workspace/tools/tools.json
 #: frappe/email/doctype/newsletter/newsletter.json
 msgid "Newsletter"
-msgstr ""
+msgstr "新闻通讯"
 
 #. ID of a DocType
 #: frappe/email/doctype/newsletter_attachment/newsletter_attachment.json
 msgid "Newsletter Attachment"
-msgstr ""
+msgstr "新闻通讯附件"
 
 #. ID of a DocType
 #: frappe/email/doctype/newsletter_email_group/newsletter_email_group.json
 msgid "Newsletter Email Group"
-msgstr ""
+msgstr "新闻通讯邮件组"
 
 #. Name of a role
 #: frappe/email/doctype/email_group/email_group.json
@@ -16590,19 +16591,19 @@ msgstr "简讯管理员"
 
 #: frappe/email/doctype/newsletter/newsletter.py:128
 msgid "Newsletter has already been sent"
-msgstr ""
+msgstr "新闻通讯已发送"
 
 #: frappe/email/doctype/newsletter/newsletter.py:147
 msgid "Newsletter must be published to send webview link in email"
-msgstr ""
+msgstr "新闻通讯必须发布才能在邮件中发送网页视图链接"
 
 #: frappe/email/doctype/newsletter/newsletter.py:135
 msgid "Newsletter should have atleast one recipient"
-msgstr ""
+msgstr "新闻通讯至少应有一个收件人"
 
 #: frappe/email/doctype/newsletter/newsletter.py:390
 msgid "Newsletters"
-msgstr ""
+msgstr "新闻通讯"
 
 #: frappe/public/js/frappe/form/form_tour.js:14
 #: frappe/public/js/frappe/form/form_tour.js:324
@@ -16648,7 +16649,7 @@ msgstr "下一步操作HTML"
 
 #: frappe/public/js/frappe/form/toolbar.js:297
 msgid "Next Document"
-msgstr ""
+msgstr "下一个文档"
 
 #. Label of the next_execution (Datetime) field in DocType 'Scheduled Job Type'
 #: frappe/core/doctype/scheduled_job_type/scheduled_job_type.json
@@ -16792,7 +16793,7 @@ msgstr "无Google日历事件需同步"
 
 #: frappe/model/naming.py:481
 msgid "No ID Specified for {0}"
-msgstr ""
+msgstr "未指定 {0} 的 ID"
 
 #: frappe/public/js/frappe/ui/capture.js:262
 msgid "No Images"
@@ -16899,7 +16900,7 @@ msgstr "暂无自动优化建议"
 
 #: frappe/email/doctype/newsletter/newsletter.js:34
 msgid "No broken links found in the email content"
-msgstr ""
+msgstr "在邮件内容中未发现断开的链接"
 
 #: frappe/public/js/frappe/form/save.js:36
 msgid "No changes in document"
@@ -16911,7 +16912,7 @@ msgstr "未作更改"
 
 #: frappe/model/rename_doc.py:369
 msgid "No changes made because old and new id are the same."
-msgstr ""
+msgstr "未做出更改，因为旧 id 和新 id 相同。"
 
 #: frappe/custom/doctype/doctype_layout/doctype_layout.js:59
 msgid "No changes to sync"
@@ -17478,7 +17479,7 @@ msgstr "数字卡片"
 #. Label of the number_card_id (Link) field in DocType 'Workspace Number Card'
 #: frappe/desk/doctype/workspace_number_card/workspace_number_card.json
 msgid "Number Card ID"
-msgstr ""
+msgstr "数字卡片 ID"
 
 #. ID of a DocType
 #: frappe/desk/doctype/number_card_link/number_card_link.json
@@ -17967,7 +17968,7 @@ msgstr "打开模块或工具"
 
 #: frappe/public/js/frappe/ui/keyboard.js:366
 msgid "Open console"
-msgstr ""
+msgstr "打开控制台"
 
 #: frappe/public/js/print_format_builder/Preview.vue:12
 msgid "Open in a new tab"
@@ -18083,7 +18084,7 @@ msgstr "“动态链接”类型字段必须指向另一个选项为“文档类
 #. Label of the options_has_label (Check) field in DocType 'DocField'
 #: frappe/core/doctype/docfield/docfield.json
 msgid "Options Has Label"
-msgstr ""
+msgstr "选项中有标签文本"
 
 #. Label of the options_help (HTML) field in DocType 'Custom Field'
 #: frappe/custom/doctype/custom_field/custom_field.json
@@ -18375,7 +18376,7 @@ msgstr "页面高度（毫米）"
 #. Label of the page_id (Data) field in DocType 'Page'
 #: frappe/core/doctype/page/page.json
 msgid "Page ID"
-msgstr ""
+msgstr "页面 ID"
 
 #: frappe/public/js/print_format_builder/PrintFormatControls.vue:5
 msgid "Page Margins"
@@ -18516,7 +18517,7 @@ msgstr "创建仪表板图表需要父文档类型"
 
 #: frappe/core/doctype/data_export/exporter.py:254
 msgid "Parent is the id of the document to which the data will get added to."
-msgstr ""
+msgstr "父级是将要添加数据的文档的 id。"
 
 #: frappe/public/js/frappe/ui/group_by/group_by.js:251
 msgid "Parent-to-child or child-to-parent grouping is not allowed."
@@ -18646,7 +18647,7 @@ msgstr "密码不匹配！"
 
 #: frappe/email/doctype/newsletter/newsletter.py:157
 msgid "Past dates are not allowed for Scheduling."
-msgstr ""
+msgstr "不允许使用过去的日期进行计划。"
 
 #: frappe/public/js/frappe/views/file/file_view.js:151
 msgid "Paste"
@@ -19220,7 +19221,7 @@ msgstr "附加前请先保存"
 
 #: frappe/email/doctype/newsletter/newsletter.py:131
 msgid "Please save the Newsletter before sending"
-msgstr ""
+msgstr "请在发送前保存新闻通讯"
 
 #: frappe/public/js/frappe/form/sidebar/assign_to.js:52
 msgid "Please save the document before assignment"
@@ -19318,7 +19319,7 @@ msgstr "请在报表过滤器表中设置过滤值"
 
 #: frappe/model/naming.py:572
 msgid "Please set the document id"
-msgstr ""
+msgstr "请设置文档 id"
 
 #: frappe/desk/doctype/dashboard/dashboard.py:123
 msgid "Please set the following documents in this Dashboard as standard first."
@@ -19387,7 +19388,7 @@ msgstr "请使用有效的LDAP搜索过滤器"
 
 #: frappe/email/doctype/newsletter/newsletter.py:333
 msgid "Please verify your Email Address"
-msgstr ""
+msgstr "请验证您的邮箱地址"
 
 #: frappe/utils/password.py:212
 msgid "Please visit https://frappecloud.com/docs/sites/migrate-an-existing-site#encryption-key for more information."
@@ -19606,7 +19607,7 @@ msgstr "预览模式"
 #. Settings'
 #: frappe/core/doctype/document_naming_settings/document_naming_settings.json
 msgid "Preview of generated ids"
-msgstr ""
+msgstr "预览生成的 id "
 
 #: frappe/public/js/frappe/views/render_preview.js:19
 msgid "Preview on {0}"
@@ -19635,7 +19636,7 @@ msgstr "上一条"
 
 #: frappe/public/js/frappe/form/toolbar.js:289
 msgid "Previous Document"
-msgstr ""
+msgstr "上一个文档"
 
 #. Label of the previous_hash (Small Text) field in DocType 'Transaction Log'
 #: frappe/core/doctype/transaction_log/transaction_log.json
@@ -19932,7 +19933,7 @@ msgstr "私有文件(MB)"
 #. 'Email Account'
 #: frappe/email/doctype/email_account/email_account.json
 msgid "ProTip: Add <code>Reference: {{ reference_doctype }} {{ reference_id }}</code> to send document reference"
-msgstr ""
+msgstr "小贴士：添加 <code>Reference: {{ reference_doctype }} {{ reference_id }}</code> 以发送文档引用"
 
 #: frappe/core/doctype/document_naming_rule/document_naming_rule.js:22
 msgid "Proceed"
@@ -20061,7 +20062,7 @@ msgstr "发布"
 #. 'Newsletter'
 #: frappe/email/doctype/newsletter/newsletter.json
 msgid "Publish as a web page"
-msgstr ""
+msgstr "发布为网页"
 
 #. Label of the published (Check) field in DocType 'Comment'
 #. Label of the published (Check) field in DocType 'Newsletter'
@@ -20318,7 +20319,7 @@ msgstr "已加入备份队列，下载链接将通过邮件发送"
 
 #: frappe/email/doctype/newsletter/newsletter.js:95
 msgid "Queued {0} emails"
-msgstr ""
+msgstr "已队列 {0} 封邮件"
 
 #. Label of the queues (Data) field in DocType 'System Health Report Workers'
 #: frappe/desk/doctype/system_health_report_workers/system_health_report_workers.json
@@ -20327,7 +20328,7 @@ msgstr "队列列表"
 
 #: frappe/email/doctype/newsletter/newsletter.js:90
 msgid "Queuing emails..."
-msgstr ""
+msgstr "正在队列邮件..."
 
 #: frappe/desk/doctype/bulk_update/bulk_update.py:85
 msgid "Queuing {0} for Submission"
@@ -20748,7 +20749,7 @@ msgstr "参考日期时间"
 #. Label of the reference_id (Data) field in DocType 'Email Queue'
 #: frappe/email/doctype/email_queue/email_queue.json
 msgid "Reference Doc ID"
-msgstr ""
+msgstr "参考文档 ID"
 
 #. Label of the reference_doctype (Link) field in DocType 'Error Log'
 #. Label of the ref_doctype (Link) field in DocType 'Submission Queue'
@@ -20759,7 +20760,7 @@ msgstr "关联文档类型"
 
 #: frappe/email/doctype/email_unsubscribe/email_unsubscribe.py:26
 msgid "Reference DocType and Reference ID are required"
-msgstr ""
+msgstr "参考文档类型和参考 ID 是必需的"
 
 #. Label of the ref_docid (Dynamic Link) field in DocType 'Submission Queue'
 #. Label of the reference_docid (Dynamic Link) field in DocType 'Discussion
@@ -20767,7 +20768,7 @@ msgstr ""
 #: frappe/core/doctype/submission_queue/submission_queue.json
 #: frappe/website/doctype/discussion_topic/discussion_topic.json
 msgid "Reference Docid"
-msgstr ""
+msgstr "参考文档 ID"
 
 #. Label of the reference_doctype (Data) field in DocType 'Webhook Request Log'
 #. Label of the reference_doctype (Link) field in DocType 'Discussion Topic'
@@ -20802,7 +20803,7 @@ msgstr "关联文档"
 #: frappe/core/doctype/document_share_key/document_share_key.json
 #: frappe/integrations/doctype/integration_request/integration_request.json
 msgid "Reference Document ID"
-msgstr ""
+msgstr "参考文档 ID"
 
 #. Label of the reference_doctype (Link) field in DocType 'Auto Repeat'
 #. Label of the reference_doctype (Link) field in DocType 'Activity Log'
@@ -20872,7 +20873,7 @@ msgstr "关联文档类型"
 #: frappe/email/doctype/email_unsubscribe/email_unsubscribe.json
 #: frappe/workflow/doctype/workflow_action/workflow_action.json
 msgid "Reference ID"
-msgstr ""
+msgstr "参考 ID"
 
 #. Label of the reference_owner (Read Only) field in DocType 'Activity Log'
 #. Label of the reference_owner (Data) field in DocType 'Comment'
@@ -21826,7 +21827,7 @@ msgstr "'工作台用户'角色将赋予所有系统用户。"
 #. Label of the role_id (Data) field in DocType 'Role'
 #: frappe/core/doctype/role/role.json
 msgid "Role ID"
-msgstr ""
+msgstr "角色 ID"
 
 #. Label of the role_name (Data) field in DocType 'Role'
 #. Label of the role_profile (Data) field in DocType 'Role Profile'
@@ -22033,7 +22034,7 @@ msgstr "行格式"
 #. Label of the row_id (Data) field in DocType 'Property Setter'
 #: frappe/custom/doctype/property_setter/property_setter.json
 msgid "Row ID"
-msgstr ""
+msgstr "行 ID"
 
 #. Label of the row_index (Data) field in DocType 'Transaction Log'
 #: frappe/core/doctype/transaction_log/transaction_log.json
@@ -22082,7 +22083,7 @@ msgstr "移除行"
 #. Label of the rows_threshold_for_grid_search (Int) field in DocType 'DocType'
 #: frappe/core/doctype/doctype/doctype.json
 msgid "Rows Threshold for Grid Search"
-msgstr ""
+msgstr "网格搜索行数阈值"
 
 #. Label of the rule (Select) field in DocType 'Assignment Rule'
 #: frappe/automation/doctype/assignment_rule/assignment_rule.json
@@ -22386,7 +22387,7 @@ msgstr "计划"
 
 #: frappe/email/doctype/newsletter/newsletter.js:106
 msgid "Schedule Newsletter"
-msgstr ""
+msgstr "计划新闻通讯"
 
 #: frappe/public/js/frappe/views/communication.js:94
 msgid "Schedule Send At"
@@ -22394,12 +22395,12 @@ msgstr "计划发送时间"
 
 #: frappe/email/doctype/newsletter/newsletter.js:70
 msgid "Schedule sending"
-msgstr ""
+msgstr "计划发送"
 
 #. Label of the schedule_sending (Check) field in DocType 'Newsletter'
 #: frappe/email/doctype/newsletter/newsletter.json
 msgid "Schedule sending at a later time"
-msgstr ""
+msgstr "计划在稍后时间发送"
 
 #. Option for the 'Delivery Status' (Select) field in DocType 'Communication'
 #. Option for the 'Status' (Select) field in DocType 'Scheduled Job Log'
@@ -22443,12 +22444,12 @@ msgstr "计划作业日志"
 #. 'Newsletter'
 #: frappe/email/doctype/newsletter/newsletter.json
 msgid "Scheduled Sending"
-msgstr ""
+msgstr "计划发送"
 
 #. Label of the scheduled_to_send (Int) field in DocType 'Newsletter'
 #: frappe/email/doctype/newsletter/newsletter.json
 msgid "Scheduled To Send"
-msgstr ""
+msgstr "计划发送"
 
 #: frappe/core/doctype/server_script/server_script.py:148
 msgid "Scheduled execution for script {0} has updated"
@@ -23086,7 +23087,7 @@ msgstr "发送邮件提醒"
 #. Label of the schedule_send (Datetime) field in DocType 'Newsletter'
 #: frappe/email/doctype/newsletter/newsletter.json
 msgid "Send Email At"
-msgstr ""
+msgstr "发送邮件时间"
 
 #. Label of the send_email (Check) field in DocType 'Workflow Document State'
 #: frappe/workflow/doctype/workflow_document_state/workflow_document_state.json
@@ -23147,7 +23148,7 @@ msgstr "发送系统通知"
 
 #: frappe/email/doctype/newsletter/newsletter.js:153
 msgid "Send Test Email"
-msgstr ""
+msgstr "发送测试邮件"
 
 #. Label of the send_to_all_assignees (Check) field in DocType 'Notification'
 #: frappe/email/doctype/notification/notification.json
@@ -23157,12 +23158,12 @@ msgstr "发送给所有负责人"
 #. Label of the send_unsubscribe_link (Check) field in DocType 'Newsletter'
 #: frappe/email/doctype/newsletter/newsletter.json
 msgid "Send Unsubscribe Link"
-msgstr ""
+msgstr "发送取消订阅链接"
 
 #. Label of the send_webview_link (Check) field in DocType 'Newsletter'
 #: frappe/email/doctype/newsletter/newsletter.json
 msgid "Send Web View Link"
-msgstr ""
+msgstr "发送网页视图链接"
 
 #. Label of the send_welcome_email (Check) field in DocType 'User'
 #: frappe/core/doctype/user/user.json
@@ -23171,11 +23172,11 @@ msgstr "发送欢迎邮件"
 
 #: frappe/email/doctype/newsletter/newsletter.js:10
 msgid "Send a test email"
-msgstr ""
+msgstr "发送测试邮件"
 
 #: frappe/email/doctype/newsletter/newsletter.js:166
 msgid "Send again"
-msgstr ""
+msgstr "重新发送"
 
 #. Description of the 'Reference Date' (Select) field in DocType 'Notification'
 #: frappe/email/doctype/notification/notification.json
@@ -23226,7 +23227,7 @@ msgstr "发送副本给我"
 
 #: frappe/email/doctype/newsletter/newsletter.js:46
 msgid "Send now"
-msgstr ""
+msgstr "立即发送"
 
 #. Label of the send_if_data (Check) field in DocType 'Auto Email Report'
 #: frappe/email/doctype/auto_email_report/auto_email_report.json
@@ -23286,7 +23287,7 @@ msgstr "发件人名称字段"
 #. Label of the sender_id_field (Data) field in DocType 'DocType'
 #: frappe/core/doctype/doctype/doctype.json
 msgid "Sender id Field"
-msgstr ""
+msgstr "发送者 ID 字段"
 
 #. Option for the 'Service' (Select) field in DocType 'Email Account'
 #: frappe/email/doctype/email_account/email_account.json
@@ -23303,11 +23304,11 @@ msgstr "正在发送"
 
 #: frappe/email/doctype/newsletter/newsletter.js:203
 msgid "Sending emails"
-msgstr ""
+msgstr "发送邮件中"
 
 #: frappe/email/doctype/newsletter/newsletter.js:164
 msgid "Sending..."
-msgstr ""
+msgstr "发送中..."
 
 #. Option for the 'Delivery Status' (Select) field in DocType 'Communication'
 #. Option for the 'Sent or Received' (Select) field in DocType 'Communication'
@@ -23861,7 +23862,7 @@ msgstr "在博客中显示“行动号召”"
 #: frappe/core/doctype/system_settings/system_settings.json
 #: frappe/core/doctype/user/user.json
 msgid "Show Absolute Datetime in Timeline"
-msgstr ""
+msgstr "在时间线中显示绝对日期时间"
 
 #. Label of the absolute_value (Check) field in DocType 'Print Format'
 #: frappe/printing/doctype/print_format/print_format.json
@@ -23929,7 +23930,7 @@ msgstr "显示完整表单？"
 #. Label of the show_full_number (Check) field in DocType 'Number Card'
 #: frappe/desk/doctype/number_card/number_card.json
 msgid "Show Full Number"
-msgstr ""
+msgstr "显示完整数字"
 
 #: frappe/public/js/frappe/ui/keyboard.js:234
 msgid "Show Keyboard Shortcuts"
@@ -24734,7 +24735,7 @@ msgstr "状态"
 #. Label of the name (Data) field in DocType 'Workflow State'
 #: frappe/workflow/doctype/workflow_state/workflow_state.json
 msgid "State Name"
-msgstr ""
+msgstr "状态名称"
 
 #: frappe/public/js/workflow_builder/components/Properties.vue:24
 msgid "State Properties"
@@ -25779,7 +25780,7 @@ msgstr "测试西班牙语"
 
 #: frappe/email/doctype/newsletter/newsletter.py:92
 msgid "Test email sent to {0}"
-msgstr ""
+msgstr "测试邮件已发送到 {0}"
 
 #: frappe/core/doctype/file/test_file.py:379
 msgid "Test_Folder"
@@ -25858,7 +25859,7 @@ msgstr "感谢您的反馈！"
 
 #: frappe/email/doctype/newsletter/newsletter.py:332
 msgid "Thank you for your interest in subscribing to our updates"
-msgstr ""
+msgstr "感谢您对订阅我们更新的兴趣"
 
 #: frappe/templates/includes/contact.js:36
 msgid "Thank you for your message"
@@ -26000,7 +26001,7 @@ msgstr "以下值在{0}中不存在：{1}"
 
 #: frappe/templates/includes/license/license.js:24
 msgid "The license import successfully"
-msgstr ""
+msgstr "许可证导入成功"
 
 #: frappe/core/doctype/user_type/user_type.py:89
 msgid "The limit has not set for the user type {0} in the site config file."
@@ -26016,7 +26017,7 @@ msgstr "您尝试登录的链接无效或已过期。"
 
 #: frappe/auth.py:182 frappe/auth.py:188
 msgid "The maximum number of logged-in users has been reached."
-msgstr ""
+msgstr "已达到最大登录用户数量。"
 
 #: frappe/website/doctype/web_page/web_page.js:125
 msgid "The meta description is an HTML attribute that provides a brief summary of a web page. Search engines such as Google often display the meta description in search results, which can influence click-through rates."
@@ -26200,7 +26201,7 @@ msgstr "发送邮件时出错。请重试。"
 
 #: frappe/model/naming.py:494
 msgid "There were some errors setting the id, please contact the administrator"
-msgstr ""
+msgstr "设置 id 时出现错误，请联系管理员"
 
 #. Description of the 'Announcement Widget' (Text Editor) field in DocType
 #. 'Navbar Settings'
@@ -26406,12 +26407,12 @@ msgstr "此密码与常用密码相似。"
 #: frappe/public/js/frappe/form/grid_row_form.js:130
 #: frappe/public/js/frappe/form/grid_row_form.js:141
 msgid "This is the first row"
-msgstr ""
+msgstr "这是第一行"
 
 #: frappe/public/js/frappe/form/grid_row_form.js:154
 #: frappe/public/js/frappe/form/grid_row_form.js:167
 msgid "This is the last row"
-msgstr ""
+msgstr "这是最后一行"
 
 #. Description of the 'Current Value' (Int) field in DocType 'Document Naming
 #. Settings'
@@ -26437,11 +26438,11 @@ msgstr "本月"
 
 #: frappe/email/doctype/newsletter/newsletter.js:223
 msgid "This newsletter is scheduled to be sent on {0}"
-msgstr ""
+msgstr "此新闻邮件计划在 {0} 发送"
 
 #: frappe/email/doctype/newsletter/newsletter.js:50
 msgid "This newsletter was scheduled to send on a later date. Are you sure you want to send it now?"
-msgstr ""
+msgstr "此新闻邮件原计划在稍后日期发送。您确定现在要发送吗？"
 
 #: frappe/public/js/frappe/views/reports/query_report.js:1036
 msgid "This report contains {0} rows and is too big to display in browser, you can {1} this report instead."
@@ -26483,7 +26484,7 @@ msgstr "此值取自{0}的{1}字段"
 #. Settings'
 #: frappe/core/doctype/system_settings/system_settings.json
 msgid "This value specifies the max number of rows that can be rendered in report view. "
-msgstr ""
+msgstr "此值指定在报告视图中可以呈现的最大行数。"
 
 #: frappe/website/doctype/web_page/web_page.js:85
 msgid "This will be automatically generated when you publish the page, you can also enter a route yourself if you wish"
@@ -26658,7 +26659,7 @@ msgstr "时间轴字段"
 #. Label of the timeline_id (Dynamic Link) field in DocType 'Activity Log'
 #: frappe/core/doctype/activity_log/activity_log.json
 msgid "Timeline ID"
-msgstr ""
+msgstr "时间线 ID"
 
 #. Label of the timeline_links_sections (Section Break) field in DocType
 #. 'Communication'
@@ -26706,7 +26707,7 @@ msgstr "时间戳"
 
 #: frappe/desk/doctype/system_console/system_console.js:41
 msgid "Tip: Try the new dropdown console using"
-msgstr ""
+msgstr "提示：使用新的下拉控制台"
 
 #. Label of the title (Data) field in DocType 'DocType State'
 #. Label of the method (Data) field in DocType 'Error Log'
@@ -27098,7 +27099,7 @@ msgstr "总发送邮件数"
 #. Label of the total_recipients (Int) field in DocType 'Newsletter'
 #: frappe/email/doctype/newsletter/newsletter.json
 msgid "Total Recipients"
-msgstr ""
+msgstr "总接收者数"
 
 #. Label of the total_subscribers (Int) field in DocType 'Email Group'
 #. Label of the total_subscribers (Read Only) field in DocType 'Newsletter
@@ -27116,7 +27117,7 @@ msgstr "总用户数"
 #. Label of the total_views (Int) field in DocType 'Newsletter'
 #: frappe/email/doctype/newsletter/newsletter.json
 msgid "Total Views"
-msgstr ""
+msgstr "总浏览量"
 
 #. Label of the total_working_time (Duration) field in DocType 'RQ Worker'
 #: frappe/core/doctype/rq_worker/rq_worker.json
@@ -27843,7 +27844,7 @@ msgstr "正在更新邮件队列状态，邮件将在下次定时任务中处理
 
 #: frappe/core/doctype/document_naming_rule/document_naming_rule.js:17
 msgid "Updating counter may lead to document id conflicts if not done properly"
-msgstr ""
+msgstr "更新计数器如果操作不当可能导致文档 id 冲突"
 
 #: frappe/desk/page/setup_wizard/setup_wizard.py:23
 msgid "Updating global settings"
@@ -28810,7 +28811,7 @@ msgstr "警告：在{1}相关表中未找到{0}"
 #. Description of the 'Counter' (Int) field in DocType 'Document Naming Rule'
 #: frappe/core/doctype/document_naming_rule/document_naming_rule.json
 msgid "Warning: Updating counter may lead to document id conflicts if not done properly"
-msgstr ""
+msgstr "警告：更新计数器如果操作不当可能导致文档 id 冲突"
 
 #: frappe/website/doctype/help_article/templates/help_article.html:24
 msgid "Was this article helpful?"
@@ -29376,7 +29377,7 @@ msgstr "工作流文档状态"
 #. Label of the workflow_id (Data) field in DocType 'Workflow'
 #: frappe/workflow/doctype/workflow/workflow.json
 msgid "Workflow ID"
-msgstr ""
+msgstr "工作流 ID"
 
 #. Label of the workflow_name (Data) field in DocType 'Workflow'
 #: frappe/workflow/doctype/workflow/workflow.json
@@ -29642,7 +29643,7 @@ msgstr "昨天"
 #: frappe/public/js/frappe/utils/user.js:33
 msgctxt "ID of the current user. For example: You edited this 5 hours ago."
 msgid "You"
-msgstr ""
+msgstr "您"
 
 #: frappe/public/js/frappe/form/footer/form_timeline.js:446
 msgid "You Liked"
@@ -29717,7 +29718,7 @@ msgstr "您无权访问此页面"
 
 #: frappe/__init__.py:676
 msgid "You are not permitted to access this resource. Login to access"
-msgstr ""
+msgstr "您无权访问此资源。请登录以访问"
 
 #: frappe/public/js/frappe/form/sidebar/document_follow.js:131
 msgid "You are now following this document. You will receive daily updates via email. You can change this in User Settings."
@@ -29877,7 +29878,7 @@ msgstr "您创建了此文档"
 #: frappe/public/js/frappe/form/footer/version_timeline_content_builder.js:247
 msgctxt "Form timeline"
 msgid "You created this document {0}"
-msgstr ""
+msgstr "您创建了此文档 {0}"
 
 #: frappe/client.py:417
 msgid "You do not have Read or Select Permissions for {}"
@@ -30093,7 +30094,7 @@ msgstr "您已在其他标签页以其他用户身份登录。请刷新此页面
 
 #: frappe/core/doctype/prepared_report/prepared_report.js:57
 msgid "Your CSV file is being generated and will appear in the Attachments section once ready. Additionally, you will get notified when the file is available for download."
-msgstr ""
+msgstr "您的 CSV 文件正在生成中，准备好后将显示在附件部分。此外，当文件可供下载时您将收到通知。"
 
 #: frappe/desk/page/setup_wizard/setup_wizard.js:388
 msgid "Your Country"
@@ -30847,7 +30848,7 @@ msgstr "通过分配规则"
 
 #: frappe/automation/doctype/auto_repeat/auto_repeat.py:242
 msgid "via Auto Repeat"
-msgstr ""
+msgstr "通过自动重复"
 
 #: frappe/core/doctype/data_import/importer.py:272
 #: frappe/core/doctype/data_import/importer.py:293
@@ -30980,7 +30981,7 @@ msgstr "已同步{0}个Google联系人"
 
 #: frappe/public/js/frappe/form/quick_entry.js:111
 msgid "{0} ID"
-msgstr ""
+msgstr "{0} ID"
 
 #: frappe/public/js/frappe/form/footer/form_timeline.js:447
 msgid "{0} Liked"
@@ -31042,7 +31043,7 @@ msgstr "已添加{0}"
 
 #: frappe/public/js/frappe/form/controls/data.js:204
 msgid "{0} already exists. Select another id"
-msgstr ""
+msgstr "{0} 已存在。请选择另一个 id"
 
 #: frappe/email/doctype/email_unsubscribe/email_unsubscribe.py:36
 msgid "{0} already unsubscribed"
@@ -31139,7 +31140,7 @@ msgstr "{0}创建了此内容"
 #: frappe/public/js/frappe/form/footer/version_timeline_content_builder.js:250
 msgctxt "Form timeline"
 msgid "{0} created this document {1}"
-msgstr ""
+msgstr "{0} 创建了此文档 {1}"
 
 #: frappe/public/js/frappe/utils/pretty_date.js:33
 msgid "{0} d"
@@ -31180,7 +31181,7 @@ msgstr "{0}已为{1}分配默认值"
 
 #: frappe/email/doctype/newsletter/newsletter.py:380
 msgid "{0} has been successfully added to the Email Group."
-msgstr ""
+msgstr "{0} 已成功添加到邮件组。"
 
 #: frappe/email/queue.py:123
 msgid "{0} has left the conversation in {1} {2}"
@@ -31444,7 +31445,7 @@ msgstr "{1}中的第{0}项（含{2}行子项）"
 
 #: frappe/email/doctype/newsletter/newsletter.js:205
 msgid "{0} of {1} sent"
-msgstr ""
+msgstr "已发送 {0} / {1}"
 
 #: frappe/utils/data.py:1560
 msgctxt "Money in words"
@@ -31694,7 +31695,7 @@ msgstr "{0}：第{2}行链接或表格类型字段{1}需要设置选项"
 
 #: frappe/core/doctype/doctype/doctype.py:1353
 msgid "{0}: Options {1} must be the same as doctype id {2} for the field {3}"
-msgstr ""
+msgstr "{0}：选项 {1} 必须与字段 {3} 的文档类型 id {2} 相同"
 
 #: frappe/public/js/frappe/form/workflow.js:45
 msgid "{0}: Other permission rules may also apply"
@@ -31732,7 +31733,7 @@ msgstr "{0}：类型为{1}的字段{2}不可建立索引"
 #: frappe/public/js/frappe/form/quick_entry.js:184
 msgctxt "<b>${this.doc.id}</b>"
 msgid "{1} saved"
-msgstr ""
+msgstr "{1} 已保存"
 
 #: frappe/public/js/frappe/utils/datatable.js:12
 msgid "{count} cell copied"
