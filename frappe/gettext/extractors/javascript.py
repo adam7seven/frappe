@@ -82,7 +82,7 @@ def extract_javascript(code, keywords=None, options=None, lineno=1):
 	):
 		if (  # Turn keyword`foo` expressions into keyword("foo") calls:
 			funcname
-			and (last_token and last_token.type == "id")  # have a keyword...
+			and (last_token and last_token.type == "name")  # have a keyword...
 			and token.type
 			== "template_string"  # we've seen nothing after the keyword...  # this is a template string
 		):
@@ -160,9 +160,9 @@ def extract_javascript(code, keywords=None, options=None, lineno=1):
 
 		elif (
 			call_stack == -1
-			and token.type == "id"
+			and token.type == "name"
 			and token.value in keywords
-			and (last_token is None or last_token.type != "id" or last_token.value != "function")
+			and (last_token is None or last_token.type != "name" or last_token.value != "function")
 		):
 			funcname = token.value
 
