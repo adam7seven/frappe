@@ -8718,12 +8718,12 @@ msgstr "邮件标头"
 #: frappe/core/doctype/user_email/user_email.json
 #: frappe/email/doctype/email_rule/email_rule.json
 msgid "Email ID"
-msgstr "电子邮件标识符"
+msgstr "电子邮件 ID"
 
 #. Label of the email_ids (Table) field in DocType 'Contact'
 #: frappe/contacts/doctype/contact/contact.json
 msgid "Email IDs"
-msgstr "电子邮件标识符集"
+msgstr "电子邮件 ID 列表"
 
 #. Label of the email_id (Data) field in DocType 'Contact Us Settings'
 #: frappe/website/doctype/contact_us_settings/contact_us_settings.json
@@ -12153,7 +12153,7 @@ msgstr "您当前无工作区访问权限，可创建专属工作区。点击<b>
 #: frappe/public/js/frappe/model/model.js:122
 #: frappe/website/doctype/website_slideshow/website_slideshow.js:25
 msgid "ID"
-msgstr "标识符"
+msgstr "ID"
 
 #: frappe/desk/reportview.py:491
 #: frappe/public/js/frappe/views/reports/report_view.js:980
@@ -12193,7 +12193,7 @@ msgstr "{0}的ID不能为{1}"
 #. Description of the 'Section ID' (Data) field in DocType 'Web Page Block'
 #: frappe/website/doctype/web_page_block/web_page_block.json
 msgid "IDs must contain only alphanumeric characters, not contain spaces, and should be unique."
-msgstr "标识符须为唯一字母数字组合，不含空格"
+msgstr "ID 须为唯一字母数字组合，不含空格"
 
 #. Label of the section_break_25 (Section Break) field in DocType 'Email
 #. Account'
@@ -15649,7 +15649,7 @@ msgstr "成功完成时显示的提示信息"
 #. Label of the message_id (Code) field in DocType 'Unhandled Email'
 #: frappe/email/doctype/unhandled_email/unhandled_email.json
 msgid "Message-id"
-msgstr "消息标识符"
+msgstr "消息 ID"
 
 #. Label of the messages (Code) field in DocType 'Data Import Log'
 #: frappe/core/doctype/data_import_log/data_import_log.json
@@ -27456,14 +27456,14 @@ msgstr "界面导览"
 #: frappe/email/doctype/email_flag_queue/email_flag_queue.json
 #: frappe/email/doctype/unhandled_email/unhandled_email.json
 msgid "UID"
-msgstr "唯一标识符"
+msgstr "唯一 ID"
 
 #. Label of the uidnext (Int) field in DocType 'Email Account'
 #. Label of the uidnext (Data) field in DocType 'IMAP Folder'
 #: frappe/email/doctype/email_account/email_account.json
 #: frappe/email/doctype/imap_folder/imap_folder.json
 msgid "UIDNEXT"
-msgstr "下一个UID"
+msgstr "UIDNEXT"
 
 #. Label of the uidvalidity (Data) field in DocType 'Email Account'
 #. Label of the uidvalidity (Data) field in DocType 'IMAP Folder'
