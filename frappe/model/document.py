@@ -722,20 +722,20 @@ class Document(BaseDocument):
 			frappe.db.value_cache.pop(self.doctype, None)
 
 	def update_is_group_if_is_tree(self):
-		if not self.meta.is_tree:
+		if not self.meta.get("is_tree"):
 			return
 
-		nsm_parent_field = self.meta.nsm_parent_field or "parent"
+		nsm_parent_field = self.meta.get("nsm_parent_field") or "parent"
 		child_docs = frappe.get_all(
 			self.meta.id, fields=["id"], filters={nsm_parent_field: self.id}, limit_page_length=1
 		)
 		self.is_group = len(child_docs) > 0
 
 	def update_parent_is_group_if_is_tree(self):
-		if not self.meta.is_tree:
+		if not self.meta.get("is_tree"):
 			return
 
-		nsm_parent_field = self.meta.nsm_parent_field or "parent"
+		nsm_parent_field = self.meta.get("nsm_parent_field") or "parent"
 		parent_val = self.get(nsm_parent_field)
 		if parent_val:
 			parent_doc: Document = frappe.get_doc(self.meta.id, parent_val)
