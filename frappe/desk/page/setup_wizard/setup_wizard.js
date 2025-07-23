@@ -596,6 +596,7 @@ frappe.setup.utils = {
 
         slide.get_input("timezone").empty().add_options(data.all_timezones);
 
+        // slide.get_field("country").set_input(null);
         slide.get_field("currency").set_input(frappe.wizard.values.currency);
         slide.get_field("timezone").set_input(frappe.wizard.values.timezone);
 
@@ -605,9 +606,11 @@ frappe.setup.utils = {
             data.default_country ||
             guess_country(frappe.setup.data.regional_data.country_info);
 
-        if (country) {
+        if (country != slide.get_field("country").value) {
             country_field.set_input(country);
             $(country_field.input).change();
+        } else {
+            this.handle_on_country_change(slide);
         }
     },
 
@@ -647,47 +650,53 @@ frappe.setup.utils = {
             Bind a slide's country, timezone and currency fields
         */
         slide.get_input("country").on("change", function () {
-            let data = frappe.setup.data.regional_data;
-            let country = slide.get_input("country").val();
-            if (!(country in data.country_info)) return;
-
-            let $timezone = slide.get_input("timezone");
-
-            $timezone.empty();
-
-            if (!country) return;
-            // add country specific timezones first
-            const timezone_list = data.country_info[country].timezones || [];
-            $timezone.add_options(timezone_list.sort());
-            slide.get_field("currency").set_input(data.country_info[country].currency);
-            slide.get_field("currency").$input.trigger("change");
-
-            // add all timezones at the end, so that user has the option to change it to any timezone
-            $timezone.add_options(data.all_timezones);
-            slide.get_field("timezone").set_input($timezone.val());
-
-            // temporarily set date format
-            frappe.boot.sysdefaults.date_format = data.country_info[country].date_format || "dd-mm-yyyy";
+            frappe.setup.utils.handle_on_country_change(slide);
         });
 
         slide.get_input("currency").on("change", function () {
-            let currency = slide.get_input("currency").val();
-            if (!currency) return;
-            frappe.model.with_doc("Currency", currency, function () {
-                frappe.provide("locals.:Currency." + currency);
-                let currency_doc = frappe.model.get_doc("Currency", currency);
-                let number_format = currency_doc.number_format;
-                if (number_format === "#.###") {
-                    number_format = "#.###,##";
-                } else if (number_format === "#,###") {
-                    number_format = "#,###.##";
-                }
-
-                frappe.boot.sysdefaults.number_format = number_format;
-                locals[":Currency"][currency] = $.extend({}, currency_doc);
-            });
+            frappe.setup.utils.handle_on_currency_change(slide);
         });
     },
+    handle_on_country_change: function (slide) {
+        let data = frappe.setup.data.regional_data;
+        let country = slide.get_input("country").val();
+        if (!(country in data.country_info)) return;
+
+        let $timezone = slide.get_input("timezone");
+
+        $timezone.empty();
+
+        if (!country) return;
+        // add country specific timezones first
+        const timezone_list = data.country_info[country].timezones || [];
+        $timezone.add_options(timezone_list.sort());
+        slide.get_field("currency").set_input(data.country_info[country].currency);
+        slide.get_field("currency").$input.trigger("change");
+
+        // add all timezones at the end, so that user has the option to change it to any timezone
+        $timezone.add_options(data.all_timezones);
+        slide.get_field("timezone").set_input($timezone.val());
+
+        // temporarily set date format
+        frappe.boot.sysdefaults.date_format = data.country_info[country].date_format || "dd-mm-yyyy";
+    },
+    handle_on_currency_change: function (slide) {
+        let currency = slide.get_input("currency").val();
+        if (!currency) return;
+        frappe.model.with_doc("Currency", currency, function () {
+            frappe.provide("locals.:Currency." + currency);
+            let currency_doc = frappe.model.get_doc("Currency", currency);
+            let number_format = currency_doc.number_format;
+            if (number_format === "#.###") {
+                number_format = "#.###,##";
+            } else if (number_format === "#,###") {
+                number_format = "#,###.##";
+            }
+
+            frappe.boot.sysdefaults.number_format = number_format;
+            locals[":Currency"][currency] = $.extend({}, currency_doc);
+        });
+    }
 };
 
 // https://github.com/eggert/tz/blob/main/backward add more if required.
