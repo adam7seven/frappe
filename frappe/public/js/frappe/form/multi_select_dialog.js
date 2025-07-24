@@ -86,7 +86,8 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
     }
 
     make() {
-        let title = __("Select {0}", [this.for_select ? __("value") : __(this.doctype)]);
+        let meta = frappe.get_meta(this.doctype);
+        let title = __("Select {0}", [this.for_select ? __("value") : __(meta?.name || this.doctype)]);
 
         this.dialog = new frappe.ui.Dialog({
             title: title,
