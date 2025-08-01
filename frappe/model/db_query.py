@@ -821,7 +821,10 @@ from {tables}
 				value = cstr(f.value)
 				can_be_null = False
 				fallback = f"'{FallBackDateTimeStr}'"
-
+			elif f.fieldname in ("docstatus"):
+				value = cint(f.value)
+				can_be_null = False
+				fallback = 0
 			elif f.operator.lower() in ("between") and (
 				f.fieldname in ("creation", "modified")
 				or (df and (df.fieldtype == "Date" or df.fieldtype == "Datetime"))
