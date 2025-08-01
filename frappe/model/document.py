@@ -412,6 +412,10 @@ class Document(BaseDocument):
 		self._validate_links()
 		self.check_permission("create")
 		self.run_method("before_insert")
+
+		if self.docstatus.is_submitted():
+			self._action = "submit"
+
 		self.set_new_id(set_id=set_id, set_child_ids=set_child_ids)
 		self.validate_higher_perm_levels()
 
@@ -995,7 +999,7 @@ class Document(BaseDocument):
 		previous = self._doc_before_save
 		# previous is None for new document insert
 		if not previous and self._action != "discard":
-			self.check_docstatus_transition(0)
+			self.check_docstatus_transition(self.docstatus)
 			return
 
 		if cstr(previous.modified) != cstr(self._original_modified):
@@ -1296,6 +1300,10 @@ class Document(BaseDocument):
 			self.run_method("before_save")
 		elif self._action == "submit":
 			self.run_method("validate")
+
+			if not self._doc_before_save:
+				self.run_method("before_save")  # 添加并提交时,需要执行before_save
+
 			self.run_method("before_submit")
 		elif self._action == "cancel":
 			self.run_method("before_cancel")
