@@ -416,7 +416,6 @@ class Document(BaseDocument):
 		if self.docstatus.is_submitted():
 			self._action = "submit"
 
-		self.set_new_id(set_id=set_id, set_child_ids=set_child_ids)
 		self.validate_higher_perm_levels()
 
 		self.flags.in_insert = True
@@ -425,7 +424,7 @@ class Document(BaseDocument):
 		self.update_is_group_if_is_tree()
 		self.flags.in_insert = False
 
-		# run validate, on update etc.
+		self.set_new_id(set_id=set_id, set_child_ids=set_child_ids)
 
 		# parent
 		if getattr(self.meta, "issingle", 0):
