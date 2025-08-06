@@ -15,7 +15,7 @@ from typing_extensions import Self, override
 from werkzeug.exceptions import NotFound
 
 import frappe
-from frappe import _, is_whitelisted, msgprint
+from frappe import _, _dict, is_whitelisted, msgprint
 from frappe.core.doctype.file.utils import relink_mismatched_files
 from frappe.core.doctype.server_script.server_script_utils import run_server_script_for_doc_event
 from frappe.desk.form.document_follow import follow_document
@@ -425,6 +425,8 @@ class Document(BaseDocument):
 		self.flags.in_insert = False
 
 		self.set_new_id(set_id=set_id, set_child_ids=set_child_ids)
+		for d in self.get_all_children():
+			d._validate_parent_mandatory()
 
 		# parent
 		if getattr(self.meta, "issingle", 0):
@@ -1081,6 +1083,44 @@ class Document(BaseDocument):
 		missing = self._get_missing_mandatory_fields()
 		for d in self.get_all_children():
 			missing.extend(d._get_missing_mandatory_fields())
+
+		if not missing:
+			return
+
+		for idx, msg in missing:  # noqa: B007
+			msgprint(msg)
+
+		if frappe.flags.print_messages:
+			print(self.as_json().encode("utf-8"))
+
+		raise frappe.MandatoryError(
+			"[{doctype}, {id}]: {fields}".format(
+				fields=", ".join(each[0] for each in missing), doctype=self.doctype, id=self.id
+			)
+		)
+
+	def _validate_parent_mandatory(self):
+		# check for missing parent and parenttype
+		def get_msg(df):
+			if df.fieldtype in table_fields:
+				return _("Error: Data missing in table {0}").format(_(df.label, context=df.parent))
+
+			# check if parentfield exists (only applicable for child table doctype)
+			elif self.get("parentfield"):
+				return _("Error: {0} Row #{1}: Value missing for: {2}").format(
+					frappe.bold(_(self.doctype)),
+					self.idx,
+					_(df.label, context=df.parent),
+				)
+
+			return _("Error: Value missing for {0}: {1}").format(_(df.parent), _(df.label, context=df.parent))
+
+		missing = []
+
+		if self.meta.istable:
+			for fieldname in ("parent", "parenttype"):
+				if not self.get(fieldname):
+					missing.append((fieldname, get_msg(_dict(label=fieldname))))
 
 		if not missing:
 			return

@@ -855,12 +855,6 @@ class BaseDocument:
 			if self.get(df.fieldname) in (None, []) or not has_content(df):
 				missing.append((df.fieldname, get_msg(df)))
 
-		# check for missing parent and parenttype
-		if self.meta.istable:
-			for fieldname in ("parent", "parenttype"):
-				if not self.get(fieldname):
-					missing.append((fieldname, get_msg(_dict(label=fieldname))))
-
 		return missing
 
 	def get_invalid_links(self, is_submittable=False):
