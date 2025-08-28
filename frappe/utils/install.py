@@ -93,18 +93,21 @@ def install_basic_docs():
 		{
 			"doctype": "Workflow State",
 			"id": "Pending",
+			"name": "Pending",
 			"icon": "question-sign",
 			"style": "",
 		},
 		{
 			"doctype": "Workflow State",
 			"id": "Approved",
+			"name": "Approved",
 			"icon": "ok-sign",
 			"style": "Success",
 		},
 		{
 			"doctype": "Workflow State",
 			"id": "Rejected",
+			"name": "Rejected",
 			"icon": "remove",
 			"style": "Danger",
 		},
