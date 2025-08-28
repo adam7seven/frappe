@@ -25,7 +25,7 @@
 					v-slot="{ active }"
 				>
 					<li :class="['combo-box-option', active ? 'active' : '']">
-						{{ __(field.label) }}
+						{{ translate_labels ? __(field.label) : field.label }}
 					</li>
 				</ComboboxOption>
 			</div>
@@ -53,6 +53,10 @@ const props = defineProps({
 	show: {
 		type: Boolean,
 		default: false,
+	},
+	translate_labels: {
+		type: Boolean,
+		default: true,
 	},
 });
 

@@ -8,7 +8,7 @@
 			<div class="autocomplete" ref="autocomplete_ref">
 				<div v-show="show">
 					<Autocomplete v-model:show="show" :value="autocomplete_value" :options="fields"
-						@change="add_new_field" :placeholder="__('Search fieldtypes...')" />
+						@change="add_new_field" :placeholder="__('Search fieldtypes...')" :translate_labels="false" />
 				</div>
 			</div>
 		</Teleport>

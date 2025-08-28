@@ -25,9 +25,8 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
 		}
 	}
 	set_placeholder(is_xs_input) {
-		const placeholder_html = `<div class="placeholder ellipsis text-extra-muted ${
-			is_xs_input ? "xs" : ""
-		}">
+		const placeholder_html = `<div class="placeholder ellipsis text-extra-muted ${is_xs_input ? "xs" : ""
+			}">
 				<span>${this.df.placeholder}</span>
 			</div>`;
 		if (this.only_input) {
@@ -204,7 +203,11 @@ function parse_option(v, doctype) {
 		is_disabled = Boolean(v.disabled);
 		is_selected = Boolean(v.selected);
 
-		if (is_value_null && is_label_null && typeof v !== "object") {
+		if (doctype === "DocField") {
+			value = v.value;
+			label = v.label;
+		}
+		else if (is_value_null && is_label_null && typeof v !== "object") {
 			value = v;
 			label = __(v, null, doctype);
 		} else {
