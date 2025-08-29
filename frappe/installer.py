@@ -16,6 +16,7 @@ import click
 from semantic_version import Version
 
 import frappe
+from frappe import _
 from frappe.defaults import _clear_cache
 from frappe.utils import cint, is_git_url
 from frappe.utils.dashboard import sync_dashboards
@@ -687,7 +688,7 @@ def add_module_defs(app, ignore_if_duplicate=False):
 		d = frappe.new_doc("Module Def")
 		d.app_name = app
 		d.id = module
-		d.module_name = __(module)
+		d.module_name = _(module)
 		d.insert(ignore_permissions=True, ignore_if_duplicate=ignore_if_duplicate)
 
 
