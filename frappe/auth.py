@@ -182,7 +182,11 @@ class LoginManager:
 				_("The maximum number of logged-in users has been reached."), frappe.AuthenticationError
 			)
 
-		session_count = frappe.db.count("Sessions", {"status": "Active"})
+		login_users = frappe.db.sql(
+			'select distinct t10."user" from "tabSessions" t10 where t10.status = \'Active\''
+		)
+		login_users = list(set(login_users))
+		session_count = len(login_users)
 		if session_count >= license_count:
 			frappe.throw(
 				_("The maximum number of logged-in users has been reached."), frappe.AuthenticationError
