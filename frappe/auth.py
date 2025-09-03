@@ -209,13 +209,19 @@ class LoginManager:
 
 		self.full_name = " ".join(filter(None, [self.info.first_name, self.info.last_name]))
 
+		secure = frappe.conf.cookie_secure or False
+		samesite = frappe.conf.cookie_samesite or False
 		if self.info.user_type == "Website User":
-			frappe.local.cookie_manager.set_cookie("system_user", "no", deduplicate=True)
+			frappe.local.cookie_manager.set_cookie(
+				"system_user", "no", secure=secure, samesite=samesite, deduplicate=True
+			)
 			if not resume:
 				frappe.local.response["message"] = "No App"
 				frappe.local.response["home_page"] = get_default_path() or "/" + get_home_page()
 		else:
-			frappe.local.cookie_manager.set_cookie("system_user", "yes", deduplicate=True)
+			frappe.local.cookie_manager.set_cookie(
+				"system_user", "yes", secure=secure, samesite=samesite, deduplicate=True
+			)
 			if not resume:
 				frappe.local.response["message"] = "Logged In"
 				frappe.local.response["home_page"] = get_default_path() or "/app"
@@ -228,10 +234,18 @@ class LoginManager:
 			frappe.local.response["redirect_to"] = redirect_to
 			frappe.cache.hdel("redirect_after_login", self.user)
 
-		frappe.local.cookie_manager.set_cookie("full_name", self.full_name, deduplicate=True)
-		frappe.local.cookie_manager.set_cookie("user_id", self.user, deduplicate=True)
-		frappe.local.cookie_manager.set_cookie("user_image", self.info.user_image or "", deduplicate=True)
-		frappe.local.cookie_manager.set_cookie("user_lang", frappe.local.lang, deduplicate=True)
+		frappe.local.cookie_manager.set_cookie(
+			"full_name", self.full_name, secure=secure, samesite=samesite, deduplicate=True
+		)
+		frappe.local.cookie_manager.set_cookie(
+			"user_id", self.user, secure=secure, samesite=samesite, deduplicate=True
+		)
+		frappe.local.cookie_manager.set_cookie(
+			"user_image", self.info.user_image or "", secure=secure, samesite=samesite, deduplicate=True
+		)
+		frappe.local.cookie_manager.set_cookie(
+			"user_lang", frappe.local.lang, secure=secure, samesite=samesite, deduplicate=True
+		)
 
 	def clear_preferred_language(self):
 		frappe.local.cookie_manager.delete_cookie("preferred_language")
@@ -406,7 +420,14 @@ class CookieManager:
 			return
 
 		if frappe.session.sid:
-			self.set_cookie("sid", frappe.session.sid, max_age=get_expiry_in_seconds(), httponly=True)
+			self.set_cookie(
+				"sid",
+				frappe.session.sid,
+				max_age=get_expiry_in_seconds(),
+				secure=frappe.conf.cookie_secure or False,
+				httponly=True,
+				samesite=frappe.conf.cookie_samesite or False,
+			)
 
 	def set_cookie(
 		self,
