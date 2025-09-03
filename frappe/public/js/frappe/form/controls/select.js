@@ -205,7 +205,7 @@ function parse_option(v, doctype) {
 
 		if (doctype === "DocField") {
 			value = v.value;
-			label = v.label;
+			label = v.value;
 		}
 		else if (is_value_null && is_label_null && typeof v !== "object") {
 			value = v;
