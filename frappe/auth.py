@@ -210,7 +210,7 @@ class LoginManager:
 		self.full_name = " ".join(filter(None, [self.info.first_name, self.info.last_name]))
 
 		secure = frappe.conf.cookie_secure or False
-		samesite = frappe.conf.cookie_samesite or False
+		samesite = frappe.conf.cookie_samesite or 'Lax'
 		if self.info.user_type == "Website User":
 			frappe.local.cookie_manager.set_cookie(
 				"system_user", "no", secure=secure, samesite=samesite, deduplicate=True
@@ -426,7 +426,7 @@ class CookieManager:
 				max_age=get_expiry_in_seconds(),
 				secure=frappe.conf.cookie_secure or False,
 				httponly=True,
-				samesite=frappe.conf.cookie_samesite or False,
+				samesite=frappe.conf.cookie_samesite or 'Lax',
 			)
 
 	def set_cookie(
