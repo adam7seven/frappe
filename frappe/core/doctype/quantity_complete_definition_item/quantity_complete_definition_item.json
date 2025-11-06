@@ -1,0 +1,116 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2025-11-06 14:35:37.176502",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "main_doctype",
+  "qty_doctype",
+  "qty_field",
+  "direction",
+  "column_break_qmlz",
+  "baseid_field",
+  "basetype_field",
+  "section_break_lleb",
+  "complete_logic",
+  "modify_logic"
+ ],
+ "fields": [
+  {
+   "columns": 3,
+   "fieldname": "main_doctype",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "\u4e3bDocType",
+   "link_filters": "[[\"DocType\",\"istable\",\"=\",0],[\"DocType\",\"is_tree\",\"=\",0],[\"DocType\",\"issingle\",\"=\",0],[\"DocType\",\"is_virtual\",\"=\",0]]",
+   "options": "DocType",
+   "reqd": 1
+  },
+  {
+   "columns": 3,
+   "fieldname": "qty_doctype",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "\u6570\u91cfDocType",
+   "options_has_label": 1,
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "qty_field",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "\u6570\u91cf\u5b57\u6bb5",
+   "options_has_label": 1,
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "default": "1",
+   "fieldname": "direction",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "\u65b9\u5411",
+   "length": 2,
+   "options": "1,\u6b63\n-1,\u8d1f",
+   "options_has_label": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_qmlz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "columns": 2,
+   "fieldname": "baseid_field",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "\u57fa\u4e8eID\u5b57\u6bb5",
+   "options_has_label": 1,
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "description": "\u53ef\u9009\u3002\u5982\u679c\u4e3a\u7a7a\uff0c\u57fa\u4e8e\u7c7b\u578b\u5b57\u6bb5\u4e0d\u4f1a\u4f5c\u4e3a\u8fc7\u6ee4\u6761\u4ef6\u3002",
+   "fieldname": "basetype_field",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "\u57fa\u4e8e\u7c7b\u578b\u5b57\u6bb5",
+   "options_has_label": 1
+  },
+  {
+   "fieldname": "section_break_lleb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "complete_logic",
+   "fieldtype": "Data",
+   "label": "\u5b8c\u6210\u903b\u8f91",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.complete_logic && parent.disabled",
+   "fieldname": "modify_logic",
+   "fieldtype": "Button",
+   "label": "\u4fee\u6539\u903b\u8f91"
+  }
+ ],
+ "grid_page_length": 50,
+ "id": "Quantity Complete Definition Item",
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-11-06 14:37:32.544625",
+ "modified_by": "Administrator",
+ "module": "Core",
+ "name": "\u6570\u91cf\u5b8c\u6210\u5b9a\u4e49-\u5b8c\u6210DocType",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

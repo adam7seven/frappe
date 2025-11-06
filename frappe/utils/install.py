@@ -3,9 +3,12 @@
 import getpass
 
 import frappe
+from frappe.database.db_manager import DbManager
 from frappe.geo.doctype.country.country import import_country_and_currency
 from frappe.utils import cint
 from frappe.utils.password import update_password
+
+import os
 
 
 def before_install():
@@ -54,6 +57,9 @@ def after_install():
 	add_standard_navbar_items()
 
 	frappe.db.commit()
+
+	# Install sql scripts
+	install_sql_scripts()
 
 
 def create_user_type():
@@ -180,3 +186,22 @@ def add_standard_navbar_items():
 		navbar_settings.append("help_dropdown", item)
 
 	navbar_settings.save()
+
+
+def install_sql_scripts():
+	base_path = os.path.dirname(__file__)
+	source_sql = os.path.join(
+		base_path, "core", "doctype", "quantity_complete_definition", "create_table.sql"
+	)
+	install_sql_scripts(source_sql)
+
+
+def install_sql_script(source_sql: str, verbose: bool = False):
+	if verbose:
+		print("Installing sql script...")
+	db_name = frappe.conf.db_name
+	DbManager(frappe.local.db).restore_database(
+		verbose, db_name, source_sql, frappe.conf.db_user, frappe.conf.db_password
+	)
+	if verbose:
+		print("Installed sql script: {}".format(source_sql))

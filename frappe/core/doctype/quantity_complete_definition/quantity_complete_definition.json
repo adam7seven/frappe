@@ -1,0 +1,264 @@
+{
+ "actions": [],
+ "creation": "2025-11-06 14:38:19.105901",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "name",
+  "column_break_xikp",
+  "disabled",
+  "predefined",
+  "section_break_zugb",
+  "main_doctype",
+  "qty_doctype",
+  "qty_field",
+  "complete_qty_field",
+  "column_break_tjso",
+  "status_field",
+  "closed_value",
+  "validation_field",
+  "column_break_cjvl",
+  "qty_logic",
+  "modify_qty_logic",
+  "section_break_mtur",
+  "items",
+  "closed_rule_section",
+  "closed_rule",
+  "closed_standard",
+  "column_break_oqvc",
+  "limit_excess",
+  "exceed_percent",
+  "section_break_wnbb",
+  "mirror_table",
+  "add_mirror_table_for_current_doctype",
+  "column_break_lsle",
+  "complete_table",
+  "add_complete_table_for_current_doctype",
+  "section_break_bnja",
+  "remark"
+ ],
+ "fields": [
+  {
+   "fieldname": "name",
+   "fieldtype": "Data",
+   "label": "\u540d\u79f0"
+  },
+  {
+   "fieldname": "column_break_xikp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "\u5df2\u7981\u7528",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "predefined",
+   "fieldtype": "Check",
+   "label": "\u9884\u5b9a\u4e49"
+  },
+  {
+   "fieldname": "section_break_zugb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "main_doctype",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "\u4e3bDocType",
+   "link_filters": "[[\"DocType\",\"istable\",\"=\",0],[\"DocType\",\"issingle\",\"=\",0],[\"DocType\",\"is_tree\",\"=\",0],[\"DocType\",\"is_virtual\",\"=\",0]]",
+   "options": "DocType",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "qty_doctype",
+   "fieldtype": "Select",
+   "label": "\u6570\u91cfDocType",
+   "options_has_label": 1,
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "qty_field",
+   "fieldtype": "Select",
+   "label": "\u6570\u91cf\u5b57\u6bb5",
+   "options_has_label": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "complete_qty_field",
+   "fieldtype": "Select",
+   "label": "\u5b8c\u6210\u6570\u91cf\u5b57\u6bb5",
+   "options_has_label": 1,
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "column_break_tjso",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status_field",
+   "fieldtype": "Select",
+   "label": "\u72b6\u6001\u5b57\u6bb5",
+   "options_has_label": 1
+  },
+  {
+   "fieldname": "closed_value",
+   "fieldtype": "Data",
+   "label": "\u5173\u95ed\u72b6\u6001\u503c"
+  },
+  {
+   "fieldname": "validation_field",
+   "fieldtype": "Select",
+   "label": "\u8f85\u52a9\u6821\u9a8c\u5b57\u6bb5",
+   "options_has_label": 1
+  },
+  {
+   "fieldname": "column_break_cjvl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "qty_logic",
+   "fieldtype": "Data",
+   "label": "\u6570\u91cf\u8ba1\u7b97\u903b\u8f91",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:!!doc.qty_logic && doc.disabled",
+   "fieldname": "modify_qty_logic",
+   "fieldtype": "Button",
+   "label": "\u4fee\u6539\u903b\u8f91"
+  },
+  {
+   "fieldname": "section_break_mtur",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "\u5b8c\u6210DocType\u660e\u7ec6",
+   "options": "Quantity Complete Definition Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "closed_rule_section",
+   "fieldtype": "Section Break",
+   "label": "\u5173\u95ed\u89c4\u5219"
+  },
+  {
+   "default": "0",
+   "fieldname": "closed_rule",
+   "fieldtype": "Select",
+   "label": "\u5173\u95ed\u89c4\u5219",
+   "options": "0,\u624b\u52a8\n1,\u5b8c\u6210\u6570\u91cf\u5927\u4e8e\u7b49\u4e8e%\n2,\u672a\u6e05\u6570\u91cf\u5c0f\u4e8e\u7b49\u4e8e\u503c",
+   "options_has_label": 1,
+   "reqd": 1
+  },
+  {
+   "default": "100",
+   "fieldname": "closed_standard",
+   "fieldtype": "Float",
+   "label": "\u5173\u95ed\u6807\u51c6",
+   "read_only_depends_on": "eval:doc.closed_rule === '0'"
+  },
+  {
+   "fieldname": "column_break_oqvc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "limit_excess",
+   "fieldtype": "Check",
+   "label": "\u9650\u5236\u5b8c\u6210\u6570\u91cf\u8d85\u91cf"
+  },
+  {
+   "default": "0",
+   "fieldname": "exceed_percent",
+   "fieldtype": "Float",
+   "label": "\u8d85\u91cf\u767e\u5206\u6bd4(%)",
+   "read_only_depends_on": "eval:!doc.limit_excess"
+  },
+  {
+   "fieldname": "section_break_wnbb",
+   "fieldtype": "Section Break",
+   "label": "\u5b58\u50a8\u8868\u5b9a\u4e49"
+  },
+  {
+   "default": "tabQcdM",
+   "fieldname": "mirror_table",
+   "fieldtype": "Select",
+   "label": "\u955c\u50cf\u8868",
+   "options": "tabQcdM",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval: doc.disabled",
+   "fieldname": "add_mirror_table_for_current_doctype",
+   "fieldtype": "Button",
+   "label": "\u4e3a\u5f53\u524dDocType\u751f\u6210\u65b0\u955c\u50cf\u8868"
+  },
+  {
+   "fieldname": "column_break_lsle",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "tabQcdL",
+   "fieldname": "complete_table",
+   "fieldtype": "Select",
+   "label": "\u5b8c\u6210\u8868",
+   "options": "tabQcdL",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval: doc.disabled",
+   "fieldname": "add_complete_table_for_current_doctype",
+   "fieldtype": "Button",
+   "label": "\u4e3a\u5f53\u524dDocType\u751f\u6210\u65b0\u5b8c\u6210\u8868"
+  },
+  {
+   "fieldname": "section_break_bnja",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "remark",
+   "fieldtype": "Small Text",
+   "label": "\u5907\u6ce8"
+  }
+ ],
+ "grid_page_length": 50,
+ "id": "Quantity Complete Definition",
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-11-06 15:08:07.802046",
+ "modified_by": "Administrator",
+ "module": "Core",
+ "name": "\u6570\u91cf\u5b8c\u6210\u5b9a\u4e49",
+ "naming_rule": "By script",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "show_title_field_in_link": 1,
+ "sort_field": "id",
+ "sort_order": "ASC",
+ "states": [],
+ "title_field": "name"
+}
