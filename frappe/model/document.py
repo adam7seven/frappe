@@ -86,23 +86,23 @@ def get_doc(*args, **kwargs) -> "Document":
 
 	There are multiple ways to call `get_doc`
 
-	        # will fetch the latest user object (with child table) from the database
-	        user = get_doc("User", "test@example.com")
+			# will fetch the latest user object (with child table) from the database
+			user = get_doc("User", "test@example.com")
 
-	        # create a new object
-	        user = get_doc({
-	                "doctype":"User"
-	                "email_id": "test@example.com",
-	                "roles: [
-	                        {"role": "System Manager"}
-	                ]
-	        })
+			# create a new object
+			user = get_doc({
+					"doctype":"User"
+					"email_id": "test@example.com",
+					"roles: [
+							{"role": "System Manager"}
+					]
+			})
 
-	        # create new object with keyword arguments
-	        user = get_doc(doctype='User', email_id='test@example.com')
+			# create new object with keyword arguments
+			user = get_doc(doctype='User', email_id='test@example.com')
 
-	        # select a document for update
-	        user = get_doc("User", "test@example.com", for_update=True)
+			# select a document for update
+			user = get_doc("User", "test@example.com", for_update=True)
 	"""
 	if not args and kwargs:
 		return get_doc_from_dict(kwargs)
@@ -690,8 +690,10 @@ class Document(BaseDocument):
 	def set_title_field(self):
 		"""Set title field based on template"""
 
-		def get_values():
-			values = self.as_dict()
+		def get_values(obj=None):
+			if obj is None:
+				obj = self
+			values = obj.as_dict()
 			# format values
 			for key, value in values.items():
 				if value is None:
@@ -706,6 +708,21 @@ class Document(BaseDocument):
 			elif self.is_new() and not self.get(df.fieldname) and df.default:
 				# set default title for new transactions (if default)
 				self.set(df.fieldname, df.default.format(**get_values()))
+
+		# 设置子表的title字段
+		for table_field in self.meta.get_table_fields():
+			table_field_meta = frappe.get_meta(table_field.options)
+			if table_field_meta.title_field == "title":
+				df = table_field_meta.get_field(table_field_meta.title_field)
+				all_rows = self.get(table_field.fieldname)
+				for row in all_rows:
+					if df.options:
+						row.set(df.fieldname, df.options.format(**get_values(row)))
+					elif row.is_new() and not row.get(df.fieldname) and df.default:
+						# set default title for new transactions (if default)
+						row.set(df.fieldname, df.default.format(**get_values(row)))
+					elif self.meta.autoname == "autoincrement":
+						row.set(df.fieldname, f"{row.parent}-{row.idx}")
 
 	def update_single(self, d):
 		"""Updates values for Single type Document in `tabSingles`."""
@@ -1906,9 +1923,9 @@ def bulk_insert(
 	"""Insert simple Documents objects to database in bulk.
 
 	Warning/Info:
-	        - All documents are inserted without triggering ANY hooks.
-	        - This function assumes you've done the due dilligence and inserts in similar fashion as db_insert
-	        - Documents can be any iterable / generator containing Document objects
+			- All documents are inserted without triggering ANY hooks.
+			- This function assumes you've done the due dilligence and inserts in similar fashion as db_insert
+			- Documents can be any iterable / generator containing Document objects
 	"""
 
 	doctype_meta = frappe.get_meta(doctype)

@@ -1644,7 +1644,11 @@ def validate_fields(meta: Meta):
 		if docfield.get("is_virtual"):
 			return
 
-		if docfield.fieldtype == "Data" and not (docfield.oldfieldtype and docfield.oldfieldtype != "Data"):
+		if (
+			docfield.fieldtype == "Data"
+			and not (docfield.fieldname == "title" and meta.title_field == docfield.fieldname)
+			and not (docfield.oldfieldtype and docfield.oldfieldtype != "Data")
+		):
 			if docfield.options and (docfield.options not in data_field_options):
 				df_str = frappe.bold(_(docfield.label, context=docfield.parent))
 				text_str = (
@@ -1694,6 +1698,18 @@ def validate_fields(meta: Meta):
 
 	fields = meta.get("fields")
 	fieldname_list = [d.fieldname for d in fields]
+	fieldname_list = [
+		*fieldname_list,
+		"id",
+		"idx",
+		"creation",
+		"modified",
+		"modified_by",
+		"owner",
+		"docstatus",
+	]
+	if meta.istable:
+		fieldname_list = [*fieldname_list, "parent", "parentfield", "parenttype"]
 
 	in_ci = os.environ.get("CI")
 
