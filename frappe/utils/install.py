@@ -56,10 +56,39 @@ def after_install():
 
 	add_standard_navbar_items()
 
-	frappe.db.commit()
+	frappe.db.sql("""
+create table if not exists "tabQcdM"
+(
+	id bigserial primary key,
+	def_id varchar(140) not null,
+	doc_type varchar(140) not null,
+	doc_id varchar(140) not null,
+	doc_idx int not null,
+	vrf_value varchar(140),
+	qty numeric(21, 9) not null default 0,
+	complete_qty numeric(21, 9) not null default 0,
+	complete_count int not null default 0,
+	status varchar(10),
+	update_ts timestamptz default now()
+);
+	""")
 
-	# Install sql scripts
-	install_sql_scripts()
+	frappe.db.sql("""
+create table if not exists "tabQcdL"
+(
+	id bigserial primary key,
+	def_id varchar(140) not null,
+	doc_type varchar(140) not null,
+	doc_id varchar(140) not null,
+	doc_idx int not null,
+	complete_doctype varchar(140),
+	complete_docid varchar(140),
+	complete_docidx int not null,
+	complete_qty numeric(21, 9) not null default 0,
+	update_ts timestamptz default now()
+);""")
+
+	frappe.db.commit()
 
 
 def create_user_type():
@@ -186,22 +215,3 @@ def add_standard_navbar_items():
 		navbar_settings.append("help_dropdown", item)
 
 	navbar_settings.save()
-
-
-def install_sql_scripts():
-	base_path = os.path.dirname(__file__)
-	source_sql = os.path.join(
-		base_path, "core", "doctype", "quantity_complete_definition", "create_table.sql"
-	)
-	install_sql_scripts(source_sql)
-
-
-def install_sql_script(source_sql: str, verbose: bool = False):
-	if verbose:
-		print("Installing sql script...")
-	db_name = frappe.conf.db_name
-	DbManager(frappe.local.db).restore_database(
-		verbose, db_name, source_sql, frappe.conf.db_user, frappe.conf.db_password
-	)
-	if verbose:
-		print("Installed sql script: {}".format(source_sql))
